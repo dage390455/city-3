@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@drawable/shape_index_item"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y350">
+    <com.sensoro.smartcity.widget.SensoroAlarmView
+        android:id="@+id/item_list_sensor_call"
+        android:layout_marginLeft="-8dp"
+        android:layout_marginTop="-2dp"
+        android:layout_width="@dimen/x150"
+        android:layout_height="@dimen/y150" />
+    <RelativeLayout
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/item_list_iv_type"
+            android:layout_marginRight="-10dp"
+            android:layout_width="@dimen/x300"
+            android:layout_height="@dimen/y300" />
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_marginLeft="@dimen/x40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/item_list_iv_status"
+                android:layout_marginTop="@dimen/y45"
+                android:src="@drawable/shape_status_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/item_list_tv_name"
+                android:textSize="@dimen/city_normal_size"
+                android:layout_toRightOf="@id/item_list_iv_status"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginTop="@dimen/y30"
+                android:layout_width="@dimen/x500"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/item_list_struct1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/y50"
+                android:id="@+id/item_linearlayout_struct1"
+                android:layout_alignParentRight="true"
+                android:gravity="right"
+                android:layout_marginRight="@dimen/x30"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/item_list_value1"
+                    android:textSize="@dimen/city_super_size"
+                    android:textColor="@color/sensoro_alarm"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/item_list_unit1"
+                    android:textColor="@color/sensoro_alarm"
+                    android:textSize="@dimen/city_normal_size"
+                    android:layout_marginLeft="@dimen/x6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+            <LinearLayout
+                android:layout_toLeftOf="@id/item_linearlayout_struct1"
+                android:orientation="horizontal"
+                android:layout_marginTop="@dimen/y50"
+                android:layout_marginRight="@dimen/x60"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
+                <TextView
+                    android:id="@+id/item_list_value2"
+                    android:textColor="@color/sensoro_alarm"
+                    android:textSize="@dimen/city_super_size"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+                <TextView
+                    android:id="@+id/item_list_unit2"
+                    android:textColor="@color/sensoro_alarm"
+                    android:textSize="@dimen/city_normal_size"
+                    android:layout_marginLeft="@dimen/x6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </LinearLayout>
+        </RelativeLayout>
+    </RelativeLayout>
+    <RelativeLayout
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/x30"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/item_list_tv_date"
+            android:layout_alignParentRight="true"
+            android:layout_marginTop="@dimen/y30"
+            android:layout_marginBottom="@dimen/y30"
+            android:textSize="@dimen/city_normal_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+</RelativeLayout>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <com.sensoro.smartcity.widget.SensoroImageView
+            android:id="@+id/login_bg_iv"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+        <ImageView
+            android:adjustViewBounds="true"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_login_bg"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
+
+    <View
+        android:id="@+id/login_cover"
+        android:alpha="0.9"
+        android:background="@color/white"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y400"
+            android:gravity="center"
+            android:orientation="vertical"
+            >
+            <ImageView
+                android:src="@mipmap/ic_login_logo"
+                android:adjustViewBounds="true"
+                android:scaleType="fitXY"
+                android:id="@+id/login_logo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_marginTop="@dimen/y240"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <EditText
+                android:id="@+id/login_email"
+                android:layout_marginLeft="@dimen/x105"
+                android:layout_marginRight="@dimen/x105"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y180"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/x50"
+                android:textSize="15sp"
+                android:hint="@string/account"
+                android:textColorHint="@color/c_626262"
+                android:text=""
+                android:textColor="@color/c_626262"
+                android:inputType="none"
+                android:background="@drawable/shape_et_login"
+                android:maxLines="1" >
+            </EditText>
+            <!--13811208812-->
+            <EditText
+                android:id="@+id/login_pwd"
+                android:layout_marginTop="@dimen/y35"
+                android:layout_marginLeft="@dimen/x105"
+                android:layout_marginRight="@dimen/x105"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y180"
+                android:gravity="left|center_vertical"
+                android:paddingLeft="@dimen/x50"
+                android:text=""
+                android:textColor="@color/c_626262"
+                android:textSize="15sp"
+                android:hint="@string/password"
+                android:textColorHint="@color/c_626262"
+                android:inputType="textPassword"
+                android:background="@drawable/shape_et_login"
+                android:maxLines="1" >
+            </EditText>
+            <!--Bjsz13811208812S-->
+        </LinearLayout>
+        <LinearLayout
+            android:gravity="center"
+            android:layout_marginTop="@dimen/y130"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <Button
+                android:id="@+id/login_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_marginLeft="@dimen/x105"
+                android:layout_marginRight="@dimen/x105"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:textSize="@dimen/city_btn_text_size"
+                android:textColor="@color/white"
+                android:background="@drawable/shape_button"
+                android:text="@string/login" />
+        </LinearLayout>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_gravity="bottom"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:layout_marginBottom="@dimen/y50"
+            android:text="Copyright©2017 SENSORO"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+</FrameLayout>

@@ -1,0 +1,38 @@
+[
+    {
+        "merged": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/default_ptr_flip.png",
+        "source": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/default_ptr_flip.png"
+    },
+    {
+        "merged": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/default_ptr_rotate.png",
+        "source": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/default_ptr_rotate.png"
+    },
+    {
+        "merged": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/indicator_arrow.png",
+        "source": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/indicator_arrow.png"
+    },
+    {
+        "merged": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/default_ptr_rotate.png",
+        "source": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/default_ptr_rotate.png"
+    },
+    {
+        "merged": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/indicator_arrow.png",
+        "source": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/indicator_arrow.png"
+    },
+    {
+        "merged": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/default_ptr_flip.png",
+        "source": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/default_ptr_flip.png"
+    },
+    {
+        "merged": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/default_ptr_flip.png",
+        "source": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/default_ptr_flip.png"
+    },
+    {
+        "merged": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/indicator_arrow.png",
+        "source": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/indicator_arrow.png"
+    },
+    {
+        "merged": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/drawable-mdpi-v4/default_ptr_rotate.png",
+        "source": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/drawable-mdpi-v4/default_ptr_rotate.png"
+    }
+]

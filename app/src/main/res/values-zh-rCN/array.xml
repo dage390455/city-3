@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="drawer_title_array">
+        <item>主页</item>
+        <item>预警记录</item>
+        <item>商户切换</item>
+        <item>点位部署</item>
+    </array>
+</resources>

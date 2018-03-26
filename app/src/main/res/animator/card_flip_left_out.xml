@@ -1,0 +1,28 @@
+<set xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- 先缩小 -->
+    <objectAnimator
+        android:duration="300"
+        android:propertyName="scaleX"
+        android:valueFrom="1.0"
+        android:valueTo="0.8" />
+    <objectAnimator
+        android:duration="300"
+        android:propertyName="scaleY"
+        android:valueFrom="1.0"
+        android:valueTo="0.8" />
+    <!-- 再旋转 -->
+    <objectAnimator
+        android:duration="300"
+        android:interpolator="@android:interpolator/accelerate_decelerate"
+        android:propertyName="rotationY"
+        android:startOffset="200"
+        android:valueFrom="0"
+        android:valueTo="90" />
+    <!-- 同时透明度变化 -->
+    <objectAnimator
+        android:duration="300"
+        android:propertyName="alpha"
+        android:startOffset="200"
+        android:valueFrom="1.0"
+        android:valueTo="0.0" />
+</set>

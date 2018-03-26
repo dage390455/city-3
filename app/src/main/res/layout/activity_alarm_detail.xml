@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:id="@+id/alarm_detail_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y200">
+
+            <ImageView
+                android:id="@+id/alarm_detail_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:padding="12dp"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:src="@mipmap/ic_back" />
+
+            <TextView
+                android:id="@+id/alarm_detail_title"
+                android:layout_centerInParent="true"
+                android:text="@string/alarm_detail"
+                android:textSize="@dimen/city_large_size"
+                android:textColor="@color/c_626262"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y350">
+            <RelativeLayout
+                android:layout_alignParentRight="true"
+                android:layout_alignParentBottom="true"
+                android:gravity="right"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <ImageView
+                    android:id="@+id/alarm_detail_iv_type"
+                    android:src="@mipmap/ic_sensor_bg_co"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+            </RelativeLayout>
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_marginLeft="@dimen/x80"
+                android:layout_centerVertical="true"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <ImageView
+                        android:id="@+id/alarm_detail_status_iv"
+                        android:layout_marginTop="@dimen/y20"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:background="@drawable/shape_status_alarm"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/alarm_detail_status"
+                        android:layout_marginLeft="@dimen/x80"
+                        android:textSize="@dimen/city_normal_size"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:layout_marginLeft="@dimen/x20"
+                        android:textSize="@dimen/city_normal_size"
+                        android:layout_toRightOf="@id/alarm_detail_status"
+                        android:background="@drawable/shape_display_text"
+                        android:id="@+id/alarm_detail_display_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+                <RelativeLayout
+                    android:layout_marginTop="@dimen/y20"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:id="@+id/alarm_detail_name"
+                        android:textSize="@dimen/city_normal_size"
+                        android:text="22222"
+                        android:textColor="@color/c_626262"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="@dimen/x80"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                    <TextView
+                        android:id="@+id/alarm_detail_confirm_status"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/city_small_size"
+                        android:text="@string/confirming"
+                        android:background="@drawable/shape_confirm_text"
+                        android:layout_centerVertical="true"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="@dimen/x50"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </RelativeLayout>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                    <TextView
+                        android:textSize="@dimen/city_normal_size"
+                        android:text="4556"
+                        android:textColor="@color/c_626262"
+                        android:layout_marginLeft="@dimen/x80"
+                        android:layout_marginBottom="@dimen/y30"
+                        android:id="@+id/alarm_detail_date"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
+                </LinearLayout>
+            </LinearLayout>
+
+        </RelativeLayout>
+        <View
+            android:background="@color/list_sep_color"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y50"/>
+        <LinearLayout
+            android:layout_marginLeft="@dimen/x50"
+            android:layout_marginTop="@dimen/y100"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <ExpandableListView
+                android:id="@+id/alarm_detail_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:divider="@null"
+                android:groupIndicator="@null"
+                android:listSelector="@null"
+                />
+        </LinearLayout>
+    </LinearLayout>
+    <RelativeLayout
+        android:id="@+id/alarm_detail_popup_layout"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true">
+        <com.sensoro.smartcity.widget.SensoroShadowView
+            android:orientation="vertical"
+            android:background="@color/item_text_color"
+            android:alpha="0.5"
+            android:clickable="false"
+            android:visibility="gone"
+            android:id="@+id/alarm_detail_popup_shadow"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+        <com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView
+            android:id="@+id/alarm_detail_popup_view"
+            android:visibility="gone"
+            android:layout_alignParentBottom="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </RelativeLayout>
+
+</RelativeLayout>

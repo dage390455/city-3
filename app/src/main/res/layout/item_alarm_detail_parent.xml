@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:descendantFocusability="beforeDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_marginLeft="@dimen/x20"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <TextView
+            android:id="@+id/item_alarm_detail_parent_time"
+            android:textColor="@color/c_626262"
+            android:textSize="@dimen/city_normal_size"
+            android:layout_marginTop="@dimen/y1"
+            android:text="11/10 21:00:00"
+            android:layout_width="@dimen/x250"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_marginLeft="@dimen/x293"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/item_alarm_detail_parent_status"
+            android:src="@drawable/shape_time_point"
+            android:layout_marginTop="@dimen/y10"
+            android:layout_width="@dimen/x40"
+            android:layout_height="@dimen/x40" />
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginLeft="@dimen/x310"
+        android:gravity="center_horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
+        <View
+            android:layout_marginTop="@dimen/y80"
+            android:id="@+id/item_alarm_detail_parent_line"
+            android:background="@color/c_979797"
+            android:layout_width="@dimen/x3"
+            android:layout_height="match_parent"/>
+    </LinearLayout>
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_marginLeft="@dimen/x350"
+        android:layout_marginBottom="@dimen/y50"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/item_alarm_detail_parent_title"
+            android:textColor="@color/c_626262"
+            android:inputType="textMultiLine"
+            android:textSize="@dimen/city_normal_size"
+            android:layout_marginRight="@dimen/x20"
+            android:layout_marginLeft="@dimen/x50"
+            android:layout_marginTop="@dimen/y5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
+</FrameLayout>

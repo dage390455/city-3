@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/search_alarm_top_rl"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+        <ImageView
+            android:src="@mipmap/ic_search"
+            android:id="@+id/search_alarm_icon"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x30"
+            android:layout_width="@dimen/x60"
+            android:layout_height="@dimen/y60" />
+        <EditText
+            android:id="@+id/search_alarm_et"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y130"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/search_alarm_icon"
+            android:layout_toLeftOf="@+id/search_alarm_cancel_tv"
+            android:background="@null"
+            android:gravity="left|center_vertical"
+            android:hint="@string/search_alarm_tips"
+            android:imeOptions="actionSearch"
+            android:maxLength="10"
+            android:paddingLeft="14dp"
+            android:paddingRight="14dp"
+            android:drawablePadding="@dimen/x50"
+            android:singleLine="true"
+            android:textSize="14sp" />
+
+        <ImageView
+            android:id="@+id/search_alarm_clear_iv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@id/search_alarm_et"
+            android:layout_centerVertical="true"
+            android:padding="8dp"
+            android:src="@mipmap/ic_search_clear"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/search_alarm_cancel_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@android:color/transparent"
+            android:paddingBottom="14dp"
+            android:paddingLeft="15dp"
+            android:paddingRight="14dp"
+            android:paddingTop="14dp"
+            android:text="@string/cancel"
+            android:textColor="@color/c_626262"
+            android:textSize="13sp" />
+    </RelativeLayout>
+    <View
+        android:background="@color/search_color"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y3"/>
+    <LinearLayout
+        android:id="@+id/search_alarm_tag_layout"
+        android:layout_marginTop="@dimen/y50"
+        android:gravity="center_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_alarm_tag_rv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:gravity="center"
+        android:visibility="gone"
+        android:id="@+id/search_alarm_tips"
+        android:layout_marginTop="@dimen/y60"
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:src="@mipmap/ic_gantan"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <TextView
+            android:layout_marginTop="@dimen/y20"
+            android:textSize="13sp"
+            android:text="@string/tips_no_search_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <View
+        android:background="@color/search_color"
+        android:layout_marginLeft="@dimen/x40"
+        android:layout_marginRight="@dimen/x40"
+        android:layout_marginTop="@dimen/y50"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y3"/>
+    <LinearLayout
+        android:id="@+id/search_alarm_history_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_marginTop="@dimen/y30"
+        android:layout_below="@id/search_alarm_top_rl"
+        android:orientation="vertical"
+        android:visibility="visible">
+        <RelativeLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/search_alarm_recent_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingBottom="4dp"
+                android:paddingLeft="10dp"
+                android:paddingTop="4dp"
+                android:textStyle="bold"
+                android:text="@string/recent"
+                android:textColor="@color/c_626262"
+                android:textSize="15sp" />
+            <ImageView
+                android:id="@+id/search_alarm_clear_btn"
+                android:layout_width="@dimen/x142"
+                android:layout_height="@dimen/y60"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/y20"
+                android:layout_alignParentRight="true"
+                android:src="@mipmap/ic_rubbish"
+                android:text="@string/clear" />
+        </RelativeLayout>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/search_alarm_history_rv"
+            android:layout_marginLeft="@dimen/x40"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+</LinearLayout>

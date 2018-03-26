@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/MPChartLib/MPChartLib.iml" filepath="$PROJECT_DIR$/MPChartLib/MPChartLib.iml" />
+      <module fileurl="file://$PROJECT_DIR$/SmartCity.iml" filepath="$PROJECT_DIR$/SmartCity.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/cosmocalendar/cosmocalendar.iml" filepath="$PROJECT_DIR$/cosmocalendar/cosmocalendar.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libcityserver/libcityserver.iml" filepath="$PROJECT_DIR$/libcityserver/libcityserver.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libpulltorefresh/libpulltorefresh.iml" filepath="$PROJECT_DIR$/libpulltorefresh/libpulltorefresh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/menudrawer/menudrawer.iml" filepath="$PROJECT_DIR$/menudrawer/menudrawer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libpulltorefresh/pulltorefresh/pulltorefresh.iml" filepath="$PROJECT_DIR$/libpulltorefresh/pulltorefresh/pulltorefresh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/volleymanager/volleymanager.iml" filepath="$PROJECT_DIR$/volleymanager/volleymanager.iml" />
+      <module fileurl="file://$PROJECT_DIR$/xrecyclerview/xrecyclerview.iml" filepath="$PROJECT_DIR$/xrecyclerview/xrecyclerview.iml" />
+    </modules>
+  </component>
+</project>

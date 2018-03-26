@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:gravity="center"
+    android:paddingBottom="@dimen/y140"
+    android:paddingTop="@dimen/y140"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <TextView
+        android:id="@+id/item_index_status_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="1111"
+        android:drawablePadding="@dimen/x10"
+        android:textColor="@color/c_626262"
+        android:textSize="12sp" />
+</LinearLayout>

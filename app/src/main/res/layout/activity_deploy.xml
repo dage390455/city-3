@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/sensor_deploy_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y200"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/deploy_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x10"
+            android:padding="15dp"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_back" />
+
+        <TextView
+            android:id="@+id/deploy_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/input_name"
+            android:textColor="@color/c_626262"
+            android:textSize="@dimen/city_large_size" />
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y1"
+        android:background="@color/c_e7e7e7" />
+
+    <LinearLayout
+        android:background="@color/c_f3f5f6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/deploy_lonlan_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y60"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+
+            <RelativeLayout
+                android:id="@+id/deploy_name_relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y160"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/deploy_name_address_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/deploy_name_address"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/c_626262"
+                    android:textSize="@dimen/city_tiny_large_size" />
+
+                <TextView
+                    android:id="@+id/deploy_name_address_et"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x350"
+                    android:gravity="left"
+                    android:maxLines="1"
+                    android:layout_centerVertical="true"
+                    android:text="@string/tips_hint_name_address"
+                    android:textColor="@color/c_888888"
+                    android:textSize="@dimen/city_tiny_large_size" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:padding="15dp"
+                    android:src="@mipmap/ic_forward" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:layout_marginLeft="12dp"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+
+            <RelativeLayout
+                android:id="@+id/deploy_tag_relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y160"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/deploy_tag_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/sensor_detail_tag"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/c_626262"
+                    android:textSize="@dimen/city_tiny_large_size" />
+
+                <LinearLayout
+                    android:id="@+id/deploy_tag_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/x350"
+                    android:layout_marginRight="@dimen/x150"
+                    android:orientation="horizontal" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:padding="15dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@mipmap/ic_forward" />
+
+            </RelativeLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:layout_marginLeft="12dp"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+            <RelativeLayout
+                android:id="@+id/deploy_contact_relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y160"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/deploy_contact_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/deploy_contact"
+                    android:layout_centerVertical="true"
+                    android:textColor="@color/c_626262"
+                    android:textSize="@dimen/city_tiny_large_size" />
+
+                <TextView
+                    android:id="@+id/deploy_contact_et"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x350"
+                    android:gravity="left"
+                    android:maxLines="1"
+                    android:layout_centerVertical="true"
+                    android:text="@string/tips_hint_contact"
+                    android:textColor="@color/c_888888"
+                    android:textSize="@dimen/city_tiny_large_size" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:padding="15dp"
+                    android:src="@mipmap/ic_forward" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+        </LinearLayout>
+
+
+        <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y1"
+            android:layout_marginTop="@dimen/y30"
+            android:background="@color/c_e7e7e7"
+            android:contentDescription="@null" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y160"
+            android:background="@drawable/bg_item_selector"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="15dp"
+                android:text="@string/location"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/city_tiny_large_size" />
+
+            <TextView
+                android:id="@+id/deploy_location_et"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_marginRight="12dp"
+                android:gravity="right"
+                android:maxLines="1"
+                android:text="@string/tips_hint_location"
+                android:textColor="@color/c_888888"
+                android:textSize="@dimen/city_tiny_large_size" />
+
+        </RelativeLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y1"
+        android:background="@color/c_e7e7e7"
+        android:contentDescription="@null" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <com.amap.api.maps.MapView
+                android:id="@+id/deploy_map"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+        <RelativeLayout
+            android:gravity="right"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:layout_marginTop="@dimen/y20"
+                android:layout_marginRight="@dimen/x30"
+                android:textColor="@color/white"
+                android:paddingLeft="@dimen/x30"
+                android:paddingRight="@dimen/x30"
+                android:padding="@dimen/x20"
+                android:textSize="13sp"
+                android:drawableRight="@mipmap/ic_refresh_signal"
+                android:id="@+id/deploy_device_signal"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/y100">
+
+            <Button
+                android:id="@+id/deploy_upload_btn"
+                style="?android:attr/borderlessButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x100"
+                android:layout_marginRight="@dimen/x100"
+                android:background="@drawable/shape_button"
+                android:text="@string/upload"
+                android:textColor="@color/white"
+                android:textSize="@dimen/city_btn_text_size" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <array name="drawer_title_array">
+        <item>Home</item>
+        <item>Alarm Log</item>
+        <item>Merchant Switch</item>
+        <item>Point Deployment</item>
+    </array>
+
+</resources>

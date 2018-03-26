@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+    tools:showIn="@layout/fragment_index">
+
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y200"
+        android:background="@color/index_list_bg"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+        <include
+            layout="@layout/layout_index_list"
+            />
+    </LinearLayout>
+    <com.sensoro.smartcity.widget.SensoroShadowView
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/index_type_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <com.sensoro.smartcity.widget.SensoroShadowView
+        android:orientation="vertical"
+        android:visibility="gone"
+        android:id="@+id/index_status_shadow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+    <include
+        layout="@layout/layout_index_head2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+</RelativeLayout>

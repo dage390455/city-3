@@ -1,0 +1,164 @@
+apply plugin: 'com.android.application'
+apply plugin: 'android-apt'
+android {
+    def verName = "2.0.1"
+
+    def verCode = 1
+    def buildCode = 1
+    def connector = '_beta'
+    def versionPropsFile = file('version.properties')
+
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/NOTICE.txt'
+    }
+    signingConfigs {
+        release {
+            keyAlias 'sensoro'
+            keyPassword 'sensoro'
+            storeFile file('/users/Sensoro/Work/AppKey/sensoro.keystore')
+            storePassword 'sensoro'
+        }
+        debug {
+            keyAlias 'sensoro'
+            keyPassword 'sensoro'
+            storeFile file('/users/Sensoro/Work/AppKey/sensoro.keystore')
+            storePassword 'sensoro'
+        }
+    }
+    compileSdkVersion 25
+    buildToolsVersion '25.0.0'
+//    useLibrary 'org.apache.http.legacy'
+    defaultConfig {
+        applicationId "com.sensoro.smartcity"
+        minSdkVersion 20
+        targetSdkVersion 28
+        versionCode verCode
+        versionName verName + connector + buildCode
+        // Enabling multidex support.
+        multiDexEnabled true
+        manifestPlaceholders = [
+                GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
+                GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
+                GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A"
+        ]
+    }
+    buildTypes {
+        debug {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            debuggable true
+        }
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.release
+            debuggable false
+        }
+    }
+    android {
+        lintOptions {
+            abortOnError false
+            disable 'InvalidPackage'
+        }
+
+        packagingOptions {
+            exclude 'META-INF/DEPENDENCIES'
+            exclude 'META-INF/LICENSE'
+            exclude 'META-INF/LICENSE.txt'
+            exclude 'META-INF/license.txt'
+            exclude 'META-INF/NOTICE'
+            exclude 'META-INF/NOTICE.txt'
+            exclude 'META-INF/notice.txt'
+            exclude 'META-INF/ASL2.0'
+        }
+    }
+
+    // 多渠道打包
+    productFlavors {
+        Master {}
+        productFlavors.all { flavor ->
+            flavor.manifestPlaceholders = [AVOS_CHANNEL_VALUE: name]
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_7
+        targetCompatibility JavaVersion.VERSION_1_7
+    }
+    sourceSets {
+        main {
+            jniLibs.srcDir 'libs'
+        }
+
+    }
+
+    if (versionPropsFile.canRead()) {
+        def Properties versionProps = new Properties()
+        versionProps.load(new FileInputStream(versionPropsFile))
+
+        buildCode = versionProps['BUILD_CODE'].toInteger()
+        verCode = versionProps['VERSION_CODE'].toInteger()
+
+        def runTasks = gradle.startParameter.taskNames
+
+
+        for (int i = 0; i < runTasks.size(); i++) {
+            println runTasks[i]
+        }
+
+        if (':app:assembleBaiDuDebug' in runTasks) {
+            buildCode++
+        }
+
+        if ('build' in runTasks) {
+            verCode++
+            buildCode++
+
+            android.applicationVariants.all { variant ->
+                def file = variant.outputs[0].outputFile
+                variant.outputs[0].outputFile = new File(file.parent, file.name.replace(".apk", "-" + defaultConfig.versionName + ".apk"))
+            }
+        }
+
+        versionProps['BUILD_CODE'] = buildCode.toString()
+        versionProps['VERSION_CODE'] = verCode.toString()
+        versionProps.store(versionPropsFile.newWriter(), null)
+        defaultConfig {
+            versionCode = verCode
+            versionName verName + connector + buildCode
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+        exclude group: 'com.android.support', module: 'support-annotations'
+    })
+    compile project(':MPChartLib')
+    compile project(':libcityserver')
+    compile project(':xrecyclerview')
+    compile project(':cosmocalendar')
+    compile project(':libpulltorefresh:pulltorefresh')
+    compile project(':menudrawer')
+    compile files('libs/GetuiSDK2.10.2.0.jar')
+    compile files('libs/AMap_Location_V3.5.0_20170731.jar')
+    compile files('libs/AMap3DMap_5.7.0_AMapNavi_5.6.0_20180109.jar')
+    compile files('libs/AMap_Search_V5.7.0_20171229.jar')
+    compile files('libs/Baidu_Mtj_3.8.2.1.jar')
+    annotationProcessor 'com.github.jokermonn:permissions4m:1.0.2-processor'
+    compile 'com.jakewharton:butterknife:8.0.1'
+    compile 'com.android.support:appcompat-v7:25.1.0'
+    compile 'com.android.support:design:25.0.0'
+//    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    compile 'com.github.nkzawa:socket.io-client:0.3.0'
+    compile 'de.hdodenhof:circleimageview:2.1.0'
+    compile 'com.android.support:multidex:1.0.0'
+    compile 'com.squareup.okhttp:okhttp:2.4.0'
+    compile 'com.squareup.okio:okio:1.5.0'
+    compile 'com.zhy:okhttputils:2.0.0'
+    testCompile 'junit:junit:4.12'
+    apt 'com.jakewharton:butterknife-compiler:8.0.1'
+    apt 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
+}

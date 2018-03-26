@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/white"
+    android:descendantFocusability="beforeDescendants"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+    <com.sensoro.smartcity.widget.SensoroAlarmView
+        android:id="@+id/alarm_sensor_call"
+        android:layout_marginLeft="-8dp"
+        android:layout_marginTop="-3dp"
+        android:layout_width="@dimen/x150"
+        android:layout_height="@dimen/y150" />
+    <RelativeLayout
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+        <ImageView
+            android:id="@+id/alarm_sensor_iv_type"
+            android:src="@mipmap/ic_sensor_bg_co"
+            android:layout_marginRight="-10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_marginTop="@dimen/y30"
+        android:layout_marginLeft="@dimen/x30"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:id="@+id/alarm_sensor_status_iv"
+                android:layout_marginTop="@dimen/y20"
+                android:layout_marginLeft="@dimen/x10"
+                android:background="@drawable/shape_status_alarm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:id="@+id/alarm_sensor_status"
+                android:layout_marginLeft="@dimen/city_super_size"
+                android:textSize="@dimen/city_normal_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <TextView
+                android:layout_marginLeft="@dimen/x20"
+                android:layout_toRightOf="@id/alarm_sensor_status"
+                android:background="@drawable/shape_display_text"
+                android:id="@+id/alarm_sensor_display_status"
+                android:textSize="@dimen/city_normal_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <RelativeLayout
+            android:layout_marginTop="@dimen/y20"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:id="@+id/alarm_sensor_name"
+                android:text="22222"
+                android:textSize="@dimen/city_normal_size"
+                android:textColor="@color/c_626262"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x80"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+            <ImageView
+                android:id="@+id/alarm_sensor_arrow"
+                android:layout_marginRight="@dimen/x30"
+                android:src="@mipmap/ic_forward"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/y60" />
+            <TextView
+                android:id="@+id/alarm_sensor_confirm_status"
+                android:textColor="@color/white"
+                android:textSize="@dimen/city_small_size"
+                android:text="@string/confirming"
+                android:background="@drawable/shape_confirm_text"
+                android:layout_centerVertical="true"
+                android:layout_toLeftOf="@+id/alarm_sensor_arrow"
+                android:layout_marginRight="@dimen/x20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </RelativeLayout>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <TextView
+                android:textSize="@dimen/city_normal_size"
+                android:text="4556"
+                android:textColor="@color/c_626262"
+                android:layout_marginLeft="@dimen/x80"
+                android:layout_marginBottom="@dimen/y30"
+                android:id="@+id/alarm_sensor_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" />
+        </LinearLayout>
+    </LinearLayout>
+
+</RelativeLayout>
