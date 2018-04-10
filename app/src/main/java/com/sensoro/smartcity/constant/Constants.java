@@ -68,7 +68,7 @@ public interface Constants {
             "门锁检测", "追踪器", "水位检测", "光线"
     };
     String[] ALARM_TAG_EN_ARRAY = {"co", "co2", "ch4", "lpg", "no2", "drop", "cover,level",
-            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll","waterPressure",
+            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
             "magnetic", "tracker", "distance", "light"
     };
     String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
@@ -99,8 +99,8 @@ public interface Constants {
     String EXTRA_ALARM_END_DATE = "extra_alarm_end_date";
     String EXTRA_ACTIVITY_CANCEL = "extra_activity_cancel";
     String EXTRA_SETTING_NAME_ADDRESS = "extra_setting_name_address";
-    String EXTRA_SETTING_CONTACT= "extra_setting_contact";
-    String EXTRA_SETTING_CONTENT= "extra_setting_content";
+    String EXTRA_SETTING_CONTACT = "extra_setting_contact";
+    String EXTRA_SETTING_CONTENT = "extra_setting_content";
     String EXTRA_SETTING_INDEX = "extra_setting_index";
     String EXTRA_SETTING_TAG_LIST = "extra_tag_list";
     String EXTRA_CONTAINS_DATA = "extra_contains_data";
@@ -110,7 +110,7 @@ public interface Constants {
     int RESULT_CODE_MAP = 100;
     int RESULT_CODE_SEARCH_DEVICE = 101;
     int RESULT_CODE_SEARCH_ALARM = 102;
-    int RESULT_CODE_SEARCH_MERCHANT= 111;
+    int RESULT_CODE_SEARCH_MERCHANT = 111;
     int RESULT_CODE_DEPLOY = 103;
     int RESULT_CODE_ALARM = 104;
     int RESULT_CODE_CALENDAR = 105;
@@ -145,4 +145,5 @@ public interface Constants {
     int SETTING_CONTACT = 2;
     int SETTING_CONTENT = 3;
     String ENCODE = "HmacSHA512";
+    String APP_ID = "wxa65d8bad62a982e1";
 }

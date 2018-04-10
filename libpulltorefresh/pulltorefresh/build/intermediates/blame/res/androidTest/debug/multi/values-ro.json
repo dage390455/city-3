@@ -1,6 +1,6 @@
 [
     {
-        "outputFile": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-ro/values-ro.xml",
+        "outputFile": "/Users/sensoro/develop/smartcity/libpulltorefresh/pulltorefresh/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-ro/values-ro.xml",
         "map": [
             {
                 "to": {
@@ -11,7 +11,7 @@
                     "endOffset": 134
                 },
                 "from": {
-                    "file": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
+                    "file": "/Users/sensoro/develop/smartcity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
                     "position": {
                         "startLine": 2,
                         "startColumn": 4,
@@ -30,7 +30,7 @@
                     "endOffset": 206
                 },
                 "from": {
-                    "file": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
+                    "file": "/Users/sensoro/develop/smartcity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
                     "position": {
                         "startLine": 3,
                         "startColumn": 4,
@@ -49,131 +49,7 @@
                     "endOffset": 298
                 },
                 "from": {
-                    "file": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 4,
-                        "startOffset": 211,
-                        "endColumn": 91,
-                        "endOffset": 298
-                    }
-                }
-            }
-        ]
-    },
-    {
-        "outputFile": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-ro/values-ro.xml",
-        "map": [
-            {
-                "to": {
-                    "startLine": 2,
-                    "startColumn": 4,
-                    "startOffset": 55,
-                    "endColumn": 83,
-                    "endOffset": 134
-                },
-                "from": {
-                    "file": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
-                    "position": {
-                        "startLine": 2,
-                        "startColumn": 4,
-                        "startOffset": 55,
-                        "endColumn": 83,
-                        "endOffset": 134
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 3,
-                    "startColumn": 4,
-                    "startOffset": 139,
-                    "endColumn": 71,
-                    "endOffset": 206
-                },
-                "from": {
-                    "file": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
-                    "position": {
-                        "startLine": 3,
-                        "startColumn": 4,
-                        "startOffset": 139,
-                        "endColumn": 71,
-                        "endOffset": 206
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 4,
-                    "startColumn": 4,
-                    "startOffset": 211,
-                    "endColumn": 91,
-                    "endOffset": 298
-                },
-                "from": {
-                    "file": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
-                    "position": {
-                        "startLine": 4,
-                        "startColumn": 4,
-                        "startOffset": 211,
-                        "endColumn": 91,
-                        "endOffset": 298
-                    }
-                }
-            }
-        ]
-    },
-    {
-        "outputFile": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/incremental/mergeDebugAndroidTestResources/merged.dir/values-ro/values-ro.xml",
-        "map": [
-            {
-                "to": {
-                    "startLine": 2,
-                    "startColumn": 4,
-                    "startOffset": 55,
-                    "endColumn": 83,
-                    "endOffset": 134
-                },
-                "from": {
-                    "file": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
-                    "position": {
-                        "startLine": 2,
-                        "startColumn": 4,
-                        "startOffset": 55,
-                        "endColumn": 83,
-                        "endOffset": 134
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 3,
-                    "startColumn": 4,
-                    "startOffset": 139,
-                    "endColumn": 71,
-                    "endOffset": 206
-                },
-                "from": {
-                    "file": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
-                    "position": {
-                        "startLine": 3,
-                        "startColumn": 4,
-                        "startOffset": 139,
-                        "endColumn": 71,
-                        "endOffset": 206
-                    }
-                }
-            },
-            {
-                "to": {
-                    "startLine": 4,
-                    "startColumn": 4,
-                    "startOffset": 211,
-                    "endColumn": 91,
-                    "endOffset": 298
-                },
-                "from": {
-                    "file": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
+                    "file": "/Users/sensoro/develop/smartcity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/values-ro/values-ro.xml",
                     "position": {
                         "startLine": 4,
                         "startColumn": 4,

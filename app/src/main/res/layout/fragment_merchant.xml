@@ -78,28 +78,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
     </RelativeLayout>
+
     <LinearLayout
-        android:layout_marginTop="@dimen/y150"
-        android:orientation="vertical"
-        android:background="@color/white"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y150"
+        android:background="@color/white"
+        android:orientation="vertical">
+
         <View
-            android:background="@color/c_e7e7e7"
             android:id="@+id/merchant_list_sep"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y1"/>
+            android:layout_height="@dimen/y1"
+            android:background="@color/c_e7e7e7"/>
+
         <ListView
             android:id="@+id/merchant_list"
-            android:dividerHeight="@dimen/y1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/x100"
             android:divider="@color/c_e7e7e7"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:dividerHeight="@dimen/y1"/>
+
         <View
-            android:background="@color/c_e7e7e7"
             android:id="@+id/merchant_list_bottom_sep"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y1"/>
+            android:layout_height="@dimen/y1"
+            android:background="@color/c_e7e7e7"/>
     </LinearLayout>
 </LinearLayout>

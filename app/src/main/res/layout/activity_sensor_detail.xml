@@ -401,6 +401,19 @@
                     android:text="@string/navigation"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
+                <Button
+                    android:id="@+id/sensor_detail_share_btn"
+                    style="?android:attr/borderlessButtonStyle"
+                    android:layout_width="@dimen/x160"
+                    android:layout_height="@dimen/y100"
+                    android:layout_toLeftOf="@+id/sensor_detail_navi_btn"
+                    android:layout_marginRight="@dimen/x50"
+                    android:layout_marginTop="@dimen/y50"
+                    android:padding="@dimen/x5"
+                    android:background="@drawable/shape_button_tiny"
+                    android:text="@string/detail_share"
+                    android:textColor="@color/white"
+                    android:textSize="12sp" />
             </RelativeLayout>
         </LinearLayout>
     </ScrollView>

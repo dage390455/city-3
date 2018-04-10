@@ -11,6 +11,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -65,6 +66,7 @@ import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.Util;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.BatteryMarkerView;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -72,6 +74,10 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.XYMarkerView;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 import com.sensoro.volleymanager.NumberDeserializer;
+import com.tencent.mm.opensdk.modelmsg.GetMessageFromWX;
+import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -91,7 +97,8 @@ import butterknife.OnClick;
  * Created by sensoro on 17/11/20.
  */
 
-public class SensorDetailActivity extends BaseActivity implements Constants, OnChartValueSelectedListener, AMapLocationListener, View.OnScrollChangeListener, AMap.OnMapTouchListener {
+public class SensorDetailActivity extends BaseActivity implements Constants, OnChartValueSelectedListener,
+        AMapLocationListener, View.OnScrollChangeListener, AMap.OnMapTouchListener {
 
     @BindView(R.id.sensor_detail_back)
     ImageView backImageView;
@@ -167,6 +174,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     private LatLng destPosition = null;
     private LatLng startPosition = null;
     private List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
+    private Bundle bundle;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -176,7 +184,14 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         mMapView.onCreate(savedInstanceState);// 此方法必须重写
         mMapView.setVisibility(View.GONE);
         init();
+        bundle = getIntent().getExtras();
         StatusBarCompat.setStatusBarColor(this);
+    }
+
+    @Override
+    public void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        bundle = intent.getExtras();
     }
 
     @Override
@@ -265,7 +280,8 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                 public void onItemClick(View view, int position) {
                     batteryMarkerView.setVisibility(View.VISIBLE);
                     DeviceRecentInfo deviceRecentInfo = mBatteryAdapter.getData().get(position);
-                    batteryMarkerView.refreshContent(view.getX(),  view.getY(), deviceRecentInfo.getBatteryAvg(), deviceRecentInfo.getDate());
+                    batteryMarkerView.refreshContent(view.getX(), view.getY(), deviceRecentInfo.getBatteryAvg(),
+                            deviceRecentInfo.getDate());
                 }
             });
             snTextView.setText(mDeviceInfo.getSn());
@@ -300,7 +316,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             rightNameTextView.setTextColor(textColor);
             initMap();
             List<SensorStruct> sensorStructList = new ArrayList<>();
-            String []tempSensorTypes = mDeviceInfo.getSensorTypes();
+            String[] tempSensorTypes = mDeviceInfo.getSensorTypes();
             if (tempSensorTypes.length == 3) {
                 List<String> tempList = Arrays.asList(tempSensorTypes);
                 Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
@@ -384,11 +400,11 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     public void locate() {
 
-       AMapLocationClient  mLocationClient = new AMapLocationClient(this);
+        AMapLocationClient mLocationClient = new AMapLocationClient(this);
         //设置定位回调监听
         mLocationClient.setLocationListener(this);
         //初始化定位参数
-        AMapLocationClientOption  mLocationOption = new AMapLocationClientOption();
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
         //设置定位模式为Hight_Accuracy高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
         mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         //设置是否返回地址信息（默认返回地址信息）
@@ -447,9 +463,12 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                 BitmapDescriptor bitmapDescriptor = null;
                 Bitmap srcBitmap = BitmapFactory.decodeResource(this.getResources(), statusId);
                 if (WidgetUtil.judgeSensorType(mDeviceInfo.getSensorTypes()) != 0) {
-                    Bitmap targetBitmap = BitmapFactory.decodeResource(this.getResources(), WidgetUtil.judgeSensorType(mDeviceInfo.getSensorTypes()));
-                    Bitmap filterTargetBitmap = WidgetUtil.tintBitmap(targetBitmap, getResources().getColor(R.color.white));
-                    bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(WidgetUtil.createBitmapDrawable(this, mDeviceInfo.getSensorTypes()[0], srcBitmap, filterTargetBitmap).getBitmap());
+                    Bitmap targetBitmap = BitmapFactory.decodeResource(this.getResources(), WidgetUtil
+                            .judgeSensorType(mDeviceInfo.getSensorTypes()));
+                    Bitmap filterTargetBitmap = WidgetUtil.tintBitmap(targetBitmap, getResources().getColor(R.color
+                            .white));
+                    bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(WidgetUtil.createBitmapDrawable(this,
+                            mDeviceInfo.getSensorTypes()[0], srcBitmap, filterTargetBitmap).getBitmap());
                 } else {
                     bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
                 }
@@ -468,51 +487,54 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         long endTime = mDeviceInfo.getUpdatedTime();
         long startTime = endTime - 2 * 1000 * 60 * 60 * 24;
         SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getDeviceHistoryList(mDeviceInfo.getSn(), startTime, endTime, new Response.Listener<DeviceRecentRsp>() {
-            @Override
-            public void onResponse(DeviceRecentRsp response) {
-                mProgressDialog.dismiss();
-                String data = response.getData().toString();
-                try {
-                    mMapView.setVisibility(View.VISIBLE);
-                    JSONObject jsonObject = new JSONObject(data);
-                    sensorTypes = response.getSensorTypes();
-                    if (sensorTypes.length == 3) {
-                        List<String> tempList = Arrays.asList(sensorTypes);
-                        Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
-                        if (tempList.contains("collision")) {//collision, pitch,roll
-                            sensorTypes[0] = "pitch";
-                            sensorTypes[1] = "roll";
-                            sensorTypes[2] = "collision";
-                        } else if (tempList.contains("flame")) {//temperature,humidity,flame
-                            sensorTypes[0] = "temperature";
-                            sensorTypes[1] = "humidity";
-                            sensorTypes[2] = "flame";
+        sensoroCityApplication.smartCityServer.getDeviceHistoryList(mDeviceInfo.getSn(), startTime, endTime, new
+                Response.Listener<DeviceRecentRsp>() {
+                    @Override
+                    public void onResponse(DeviceRecentRsp response) {
+                        mProgressDialog.dismiss();
+                        String data = response.getData().toString();
+                        try {
+                            mMapView.setVisibility(View.VISIBLE);
+                            JSONObject jsonObject = new JSONObject(data);
+                            sensorTypes = response.getSensorTypes();
+                            if (sensorTypes.length == 3) {
+                                List<String> tempList = Arrays.asList(sensorTypes);
+                                Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
+                                if (tempList.contains("collision")) {//collision, pitch,roll
+                                    sensorTypes[0] = "pitch";
+                                    sensorTypes[1] = "roll";
+                                    sensorTypes[2] = "collision";
+                                } else if (tempList.contains("flame")) {//temperature,humidity,flame
+                                    sensorTypes[0] = "temperature";
+                                    sensorTypes[1] = "humidity";
+                                    sensorTypes[2] = "flame";
+                                }
+                            }
+                            Iterator<String> iterator = jsonObject.keys();
+                            while (iterator.hasNext()) {
+                                String str = iterator.next();
+                                JSONObject firstJsonObject = jsonObject.getJSONObject(str);
+                                DeviceRecentInfo recentInfo = gson.fromJson(firstJsonObject.toString(),
+                                        DeviceRecentInfo.class);
+                                recentInfo.setDate(str);
+                                mRecentInfoList.add(recentInfo);
+                            }
+                            Collections.sort(mRecentInfoList);
+                            refreshBatteryLayout();
+                            refreshKLayout();
+                        } catch (JSONException e) {
+                            e.printStackTrace();
                         }
                     }
-                    Iterator<String> iterator = jsonObject.keys();
-                    while (iterator.hasNext()) {
-                        String str = iterator.next();
-                        JSONObject firstJsonObject = jsonObject.getJSONObject(str);
-                        DeviceRecentInfo recentInfo = gson.fromJson(firstJsonObject.toString(), DeviceRecentInfo.class);
-                        recentInfo.setDate(str);
-                        mRecentInfoList.add(recentInfo);
-                    }
-                    Collections.sort(mRecentInfoList);
-                    refreshBatteryLayout();
-                    refreshKLayout();
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        }, new Response.ErrorListener() {
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 if (volleyError.networkResponse != null) {
                     String reason = new String(volleyError.networkResponse.data);
                     try {
                         JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
+                                .show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -613,9 +635,9 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             DeviceRecentInfo deviceRecentInfo = mRecentInfoList.get(i);
             if (deviceRecentInfo.getMaxValue(sensorType) != null && deviceRecentInfo.getMinValue(sensorType) != null &&
                     deviceRecentInfo.getAvgValue(sensorType) != null) {
-                float max =  deviceRecentInfo.getMaxValue(sensorType);
-                float min =  deviceRecentInfo.getMinValue(sensorType);
-                float avg =  deviceRecentInfo.getAvgValue(sensorType);
+                float max = deviceRecentInfo.getMaxValue(sensorType);
+                float min = deviceRecentInfo.getMinValue(sensorType);
+                float avg = deviceRecentInfo.getAvgValue(sensorType);
                 if (minValue > min) {
                     minValue = min;
                 }
@@ -655,7 +677,8 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             for (int i = 0; i < mRecentInfoList.size(); i++) {
                 String sensorType = sensorTypes[1];
                 DeviceRecentInfo deviceRecentInfo = mRecentInfoList.get(i);
-                if (deviceRecentInfo.getMaxValue(sensorType) != null && deviceRecentInfo.getMinValue(sensorType) != null &&
+                if (deviceRecentInfo.getMaxValue(sensorType) != null && deviceRecentInfo.getMinValue(sensorType) !=
+                        null &&
                         deviceRecentInfo.getAvgValue(sensorType) != null) {
                     float max = (float) deviceRecentInfo.getMaxValue(sensorType);
                     float min = (float) deviceRecentInfo.getMinValue(sensorType);
@@ -815,14 +838,98 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         }
     }
 
+    @OnClick(R.id.sensor_detail_share_btn)
+    public void detailShare() {
+//        if (startPosition == null) {
+//            Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+//        if (isAppInstalled(this, "com.autonavi.minimap")) {
+//            openGaoDeMap();
+//        } else if (isAppInstalled(this, "com.baidu.BaiduMap")) {
+//            openBaiDuMap();
+//        } else {
+//            openOther();
+//        }
+//        Toast.makeText(this, "ddd", Toast.LENGTH_SHORT).show();
+        toShareWeChat();
+    }
+
+    private void toShareWeChat() {
+//        username : gh_6b7a86071f47
+//        webpageUrl : https://www.sensoro.com
+//        path : /pages/index + 查询条件，参考http://gitlab.sensoro.com/cloud/mini-city/blob/master/小程序调用参数.md
+        WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
+        miniProgramObj.miniprogramType =WXMiniProgramObject.MINIPROGRAM_TYPE_PREVIEW;
+        miniProgramObj.webpageUrl = "https://www.sensoro.com"; // 兼容低版本的网页链接
+        miniProgramObj.userName = "gh_6b7a86071f47";
+        miniProgramObj.withShareTicket=false;
+        // 小程序原始id
+        final String tempData = "/pages/index?lon=144.3333&lat=74.3333&name=ddong1031&address=北京望京&status=0&tags=3，4" +
+                "，5，6，7，8，9&uptime=" + SystemClock.currentThreadTimeMillis();
+//        miniProgramObj.path = "/pages/media";            //小程序页面路径
+        miniProgramObj.path = tempData;            //小程序页面路径
+        WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
+        msg.title = "小程序";                    // 小程序消息title
+        msg.description = "小程序消息Desc";
+        // 小程序消息desc
+//        msg.thumbData = getThumb();                      // 小程序消息封面图片，小于128k
+        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.mipmap.send_music_thumb);
+        Bitmap thumbBmp = Bitmap.createScaledBitmap(thumb, 150, 150, true);
+        msg.thumbData = Util.bmpToByteArray(thumb, true);
+        thumbBmp.recycle();
+        thumb.recycle();
+        thumb.recycle();
+        SendMessageToWX.Req req = new SendMessageToWX.Req();
+        req.transaction = buildTransaction("webpage");
+
+//        req.transaction = getTransaction();
+
+        req.message = msg;
+        req.scene = SendMessageToWX.Req.WXSceneSession;  // 目前支持会话
+        SensoroCityApplication.getInstance().api.sendReq(req);
+
+        //
+//        WXMiniProgramObject miniProgram = new WXMiniProgramObject();
+//        miniProgram.webpageUrl = "http://www.qq.com";
+//        miniProgram.userName = "gh_d43f693ca31f";
+//        miniProgram.path = "pages/play/index?cid=fvue88y1fsnk4w2&ptag=vicyao&seek=3219";
+//        WXMediaMessage msg = new WXMediaMessage(miniProgram);
+//        msg.title = "分享小程序Title";
+//        msg.description = "分享小程序描述信息";
+//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.send_music_thumb);
+//        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
+//        bmp.recycle();
+//        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
+//
+//        SendMessageToWX.Req req = new SendMessageToWX.Req();
+//        req.transaction = buildTransaction("webpage");
+//        req.message = msg;
+//        req.scene = SendMessageToWX.Req.WXSceneTimeline;
+//        api.sendReq(req);
+//        finish();
+    }
+    private String buildTransaction(final String type) {
+        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+    }
+    private String getTransaction() {
+        try {
+            final GetMessageFromWX.Req req = new GetMessageFromWX.Req(bundle);
+            return req.transaction;
+        } catch (Exception e) {
+            return "";
+        }
+    }
+
     private void openGaoDeMap() {
 
         Intent intent = new Intent();
         intent.setAction(Intent.ACTION_VIEW);
         intent.addCategory(Intent.CATEGORY_DEFAULT);
         Uri uri = Uri.parse("amapuri://route/plan/?sid=BGVIS1&slat=" + startPosition.latitude + "&slon=" +
-                startPosition.longitude + "&sname=当前位置"+ "&did=BGVIS2&dlat="+destPosition.latitude+"&dlon="+destPosition.longitude+
-                "&dname=设备部署位置"+"&dev=0&t=0");
+                startPosition.longitude + "&sname=当前位置" + "&did=BGVIS2&dlat=" + destPosition.latitude + "&dlon=" +
+                destPosition.longitude +
+                "&dname=设备部署位置" + "&dev=0&t=0");
         intent.setData(uri);
         //启动该页面即可
         startActivity(intent);
@@ -830,16 +937,20 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     private void openBaiDuMap() {
         Intent intent = new Intent();
-        intent.setData(Uri.parse("baidumap://map/direction?origin=name:当前位置|latlng:" + startPosition.latitude + "," + startPosition.longitude+
-                "&destination=name:设备部署位置|latlng:" + destPosition.latitude + "," + destPosition.longitude + "&mode=driving&coord_type=gcj02"));
+        intent.setData(Uri.parse("baidumap://map/direction?origin=name:当前位置|latlng:" + startPosition.latitude + "," +
+                startPosition.longitude +
+                "&destination=name:设备部署位置|latlng:" + destPosition.latitude + "," + destPosition.longitude +
+                "&mode=driving&coord_type=gcj02"));
         startActivity(intent);
     }
 
     private void openOther() {
         Intent intent = new Intent();
         intent.setAction("android.intent.action.VIEW");
-        String url = "http://uri.amap.com/navigation?from="+startPosition.longitude+"," +startPosition.latitude+",当前位置" +
-                "&to="+destPosition.longitude + "," + destPosition.latitude+ ",设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
+        String url = "http://uri.amap.com/navigation?from=" + startPosition.longitude + "," + startPosition.latitude
+                + ",当前位置" +
+                "&to=" + destPosition.longitude + "," + destPosition.latitude + "," +
+                "设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
         Uri content_url = Uri.parse(url);
         intent.setData(content_url);
         startActivity(intent);
@@ -886,7 +997,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     @Override
     public void onScrollChange(View v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-        if (Math.abs(scrollY - oldScrollY) > 50 ) {
+        if (Math.abs(scrollY - oldScrollY) > 50) {
             mChart.getMarkerView().setVisible(false);
         }
     }

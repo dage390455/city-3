@@ -1,4 +1,6 @@
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:tools="http://schemas.android.com/tools"
+           tools:ignore="MissingTranslation">
     <string name="listview_header_hint_normal">pull to refresh</string>
     <string name="listview_header_hint_release">release to start refresh</string>
     <string name="listview_loading">loading...</string>

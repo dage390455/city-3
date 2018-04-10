@@ -1,26 +1,10 @@
 [
     {
-        "merged": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/layout/pull_to_refresh_header_vertical.xml",
-        "source": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/layout/pull_to_refresh_header_vertical.xml"
+        "merged": "/Users/sensoro/develop/smartcity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/layout/pull_to_refresh_header_horizontal.xml",
+        "source": "/Users/sensoro/develop/smartcity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/layout/pull_to_refresh_header_horizontal.xml"
     },
     {
-        "merged": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/layout/pull_to_refresh_header_horizontal.xml",
-        "source": "/Users/pingfang/dev/android/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/layout/pull_to_refresh_header_horizontal.xml"
-    },
-    {
-        "merged": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/layout/pull_to_refresh_header_vertical.xml",
-        "source": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/layout/pull_to_refresh_header_vertical.xml"
-    },
-    {
-        "merged": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/layout/pull_to_refresh_header_vertical.xml",
-        "source": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/layout/pull_to_refresh_header_vertical.xml"
-    },
-    {
-        "merged": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/layout/pull_to_refresh_header_horizontal.xml",
-        "source": "/Users/sensoro/Downloads/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/layout/pull_to_refresh_header_horizontal.xml"
-    },
-    {
-        "merged": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/layout/pull_to_refresh_header_horizontal.xml",
-        "source": "/Users/sensoro/Documents/Android/SensoroCity/2.0/SmartCity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/layout/pull_to_refresh_header_horizontal.xml"
+        "merged": "/Users/sensoro/develop/smartcity/libpulltorefresh/pulltorefresh/build/intermediates/res/merged/androidTest/debug/layout/pull_to_refresh_header_vertical.xml",
+        "source": "/Users/sensoro/develop/smartcity/libpulltorefresh/pulltorefresh/build/intermediates/bundles/debug/res/layout/pull_to_refresh_header_vertical.xml"
     }
 ]

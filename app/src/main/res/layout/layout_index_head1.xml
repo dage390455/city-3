@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/y1200"
+    android:layout_height="@dimen/y1000"
     android:orientation="vertical"
     android:id="@+id/index_layout_head1"
-    android:gravity="center_horizontal">
+    android:gravity="center">
     <LinearLayout
         android:orientation="vertical"
-        android:layout_marginTop="@dimen/y200"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_weight="1"
+        android:layout_height="0dp">
         <TextView
             android:text=""
             android:id="@+id/index_head_alarm_num"
@@ -29,8 +29,7 @@
     </LinearLayout>
     <LinearLayout
         android:id="@+id/index_head_alarm_layout"
-        android:layout_marginTop="@dimen/y100"
-        android:layout_marginBottom="@dimen/y150"
+        android:layout_marginBottom="@dimen/y50"
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

@@ -11,11 +11,14 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 
 import com.sensoro.smartcity.activity.MainActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.server.ISmartCityServer;
 import com.sensoro.smartcity.server.SmartCityServerImpl;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.tencent.mm.opensdk.openapi.IWXAPI;
+import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,10 +32,13 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     public ISmartCityServer smartCityServer;
     public static PushHandler pushHandler = new PushHandler();
     private List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
+    public IWXAPI api;
+    private static volatile SensoroCityApplication instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
+        instance=this;
         init();
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
@@ -41,7 +47,9 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
             }
         });
     }
-
+    public static SensoroCityApplication getInstance(){
+        return instance;
+    }
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -75,6 +83,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     void init() {
         smartCityServer = SmartCityServerImpl.getInstance(getApplicationContext());
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID,true);
+        api.registerApp(Constants.APP_ID);
     }
 
 
