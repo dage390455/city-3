@@ -15,6 +15,8 @@ import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -40,6 +42,11 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.services.core.LatLonPoint;
+import com.amap.api.services.geocoder.GeocodeResult;
+import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeQuery;
+import com.amap.api.services.geocoder.RegeocodeResult;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.baidu.mobstat.StatService;
@@ -64,8 +71,10 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
+import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.Util;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.BatteryMarkerView;
@@ -74,7 +83,6 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.XYMarkerView;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 import com.sensoro.volleymanager.NumberDeserializer;
-import com.tencent.mm.opensdk.modelmsg.GetMessageFromWX;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
@@ -98,7 +106,8 @@ import butterknife.OnClick;
  */
 
 public class SensorDetailActivity extends BaseActivity implements Constants, OnChartValueSelectedListener,
-        AMapLocationListener, View.OnScrollChangeListener, AMap.OnMapTouchListener {
+        AMapLocationListener, View.OnScrollChangeListener, AMap.OnMapTouchListener, GeocodeSearch
+                .OnGeocodeSearchListener {
 
     @BindView(R.id.sensor_detail_back)
     ImageView backImageView;
@@ -175,12 +184,26 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     private LatLng startPosition = null;
     private List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
     private Bundle bundle;
+    private Bitmap tempUpBitmap;
+    private GeocodeSearch geocoderSearch;
+    private String tempAddress = "null";
+
+    private final String TAG = getClass().getSimpleName();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor_detail);
         ButterKnife.bind(this);
+        geocoderSearch = new GeocodeSearch(this);
+        geocoderSearch.setOnGeocodeSearchListener(this);
+        //获取当前控件的布局对象
+        RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
+        DisplayMetrics dm = getResources().getDisplayMetrics();
+        params.width = dm.widthPixels;
+        //设置当前控件布局的高度
+        params.height = dm.widthPixels*4/5;
+        mMapView.setLayoutParams(params);//将设置好的布局参数应用到控件中
         mMapView.onCreate(savedInstanceState);// 此方法必须重写
         mMapView.setVisibility(View.GONE);
         init();
@@ -240,6 +263,10 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     public void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        if (tempUpBitmap != null) {
+            tempUpBitmap.recycle();
+            tempUpBitmap = null;
+        }
     }
 
     private void init() {
@@ -254,6 +281,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
             gson = gsonBuilder.create();
             mDeviceInfo = (DeviceInfo) this.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+            //
             int textColor = getResources().getColor(R.color.sensoro_alarm);
             switch (mDeviceInfo.getStatus()) {
                 case SENSOR_STATUS_ALARM:
@@ -354,6 +382,38 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
         }
 
+
+    }
+    //补全tags标签信息
+    private void requestData() {
+        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
+        sensoroCityApplication.smartCityServer.getDeviceDetailInfoList(mDeviceInfo.getSn(), null, 1, new Response.Listener<DeviceInfoListRsp>() {
+            @Override
+            public void onResponse(DeviceInfoListRsp response) {
+                mProgressDialog.dismiss();
+                if(response!=null&&response.getData().size()>0){
+                    DeviceInfo deviceInfo = response.getData().get(0);
+                    String[] tags = deviceInfo.getTags();
+                    mDeviceInfo.setTags(tags);
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError volleyError) {
+                mProgressDialog.dismiss();
+                if (volleyError.networkResponse != null) {
+                    String reason = new String(volleyError.networkResponse.data);
+                    try {
+                        JSONObject jsonObject = new JSONObject(reason);
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    Toast.makeText(getApplicationContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void initChart() {
@@ -472,12 +532,17 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                 } else {
                     bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
                 }
-
+                tempUpBitmap = bitmapDescriptor.getBitmap();
                 MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
                         .position(destPosition)
                         .draggable(true);
                 Marker marker = aMap.addMarker(markerOption);
+
                 marker.showInfoWindow();
+                RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(mDeviceInfo.getLonlat()[1], mDeviceInfo
+                        .getLonlat()[0]), 200, GeocodeSearch.AMAP);
+                geocoderSearch.getFromLocationAsyn(query);
+
             }
 
         }
@@ -491,7 +556,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                 Response.Listener<DeviceRecentRsp>() {
                     @Override
                     public void onResponse(DeviceRecentRsp response) {
-                        mProgressDialog.dismiss();
+//                        mProgressDialog.dismiss();
                         String data = response.getData().toString();
                         try {
                             mMapView.setVisibility(View.VISIBLE);
@@ -519,11 +584,14 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                                 recentInfo.setDate(str);
                                 mRecentInfoList.add(recentInfo);
                             }
+
                             Collections.sort(mRecentInfoList);
                             refreshBatteryLayout();
                             refreshKLayout();
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        }finally {
+                            requestData();
                         }
                     }
                 }, new Response.ErrorListener() {
@@ -840,85 +908,59 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     @OnClick(R.id.sensor_detail_share_btn)
     public void detailShare() {
-//        if (startPosition == null) {
-//            Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-//        if (isAppInstalled(this, "com.autonavi.minimap")) {
-//            openGaoDeMap();
-//        } else if (isAppInstalled(this, "com.baidu.BaiduMap")) {
-//            openBaiDuMap();
-//        } else {
-//            openOther();
-//        }
-//        Toast.makeText(this, "ddd", Toast.LENGTH_SHORT).show();
         toShareWeChat();
     }
 
+    /**
+     * 微信分享
+     */
     private void toShareWeChat() {
-//        username : gh_6b7a86071f47
-//        webpageUrl : https://www.sensoro.com
-//        path : /pages/index + 查询条件，参考http://gitlab.sensoro.com/cloud/mini-city/blob/master/小程序调用参数.md
         WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
-        miniProgramObj.miniprogramType =WXMiniProgramObject.MINIPROGRAM_TYPE_PREVIEW;
+        miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPROGRAM_TYPE_PREVIEW;
         miniProgramObj.webpageUrl = "https://www.sensoro.com"; // 兼容低版本的网页链接
         miniProgramObj.userName = "gh_6b7a86071f47";
-        miniProgramObj.withShareTicket=false;
-        // 小程序原始id
-        final String tempData = "/pages/index?lon=144.3333&lat=74.3333&name=ddong1031&address=北京望京&status=0&tags=3，4" +
-                "，5，6，7，8，9&uptime=" + SystemClock.currentThreadTimeMillis();
-//        miniProgramObj.path = "/pages/media";            //小程序页面路径
-        miniProgramObj.path = tempData;            //小程序页面路径
-        WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
-        msg.title = "小程序";                    // 小程序消息title
-        msg.description = "小程序消息Desc";
-        // 小程序消息desc
-//        msg.thumbData = getThumb();                      // 小程序消息封面图片，小于128k
-        Bitmap thumb = BitmapFactory.decodeResource(getResources(), R.mipmap.send_music_thumb);
-        Bitmap thumbBmp = Bitmap.createScaledBitmap(thumb, 150, 150, true);
-        msg.thumbData = Util.bmpToByteArray(thumb, true);
-        thumbBmp.recycle();
-        thumb.recycle();
-        thumb.recycle();
-        SendMessageToWX.Req req = new SendMessageToWX.Req();
-        req.transaction = buildTransaction("webpage");
-
-//        req.transaction = getTransaction();
-
-        req.message = msg;
-        req.scene = SendMessageToWX.Req.WXSceneSession;  // 目前支持会话
-        SensoroCityApplication.getInstance().api.sendReq(req);
-
-        //
-//        WXMiniProgramObject miniProgram = new WXMiniProgramObject();
-//        miniProgram.webpageUrl = "http://www.qq.com";
-//        miniProgram.userName = "gh_d43f693ca31f";
-//        miniProgram.path = "pages/play/index?cid=fvue88y1fsnk4w2&ptag=vicyao&seek=3219";
-//        WXMediaMessage msg = new WXMediaMessage(miniProgram);
-//        msg.title = "分享小程序Title";
-//        msg.description = "分享小程序描述信息";
-//        Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.send_music_thumb);
-//        Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, THUMB_SIZE, THUMB_SIZE, true);
-//        bmp.recycle();
-//        msg.thumbData = Util.bmpToByteArray(thumbBmp, true);
-//
-//        SendMessageToWX.Req req = new SendMessageToWX.Req();
-//        req.transaction = buildTransaction("webpage");
-//        req.message = msg;
-//        req.scene = SendMessageToWX.Req.WXSceneTimeline;
-//        api.sendReq(req);
-//        finish();
-    }
-    private String buildTransaction(final String type) {
-        return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
-    }
-    private String getTransaction() {
-        try {
-            final GetMessageFromWX.Req req = new GetMessageFromWX.Req(bundle);
-            return req.transaction;
-        } catch (Exception e) {
-            return "";
+        miniProgramObj.withShareTicket = false;
+        String name = mDeviceInfo.getName();
+        if (TextUtils.isEmpty(name)) {
+            name = mDeviceInfo.getSn();
         }
+        int status = mDeviceInfo.getStatus();
+        String[] tags = mDeviceInfo.getTags();
+        String tempTagStr = "";
+        if (tags != null) {
+            for (String tag : tags) {
+                tempTagStr += tag + ",";
+            }
+            tempTagStr=tempTagStr.substring(0, tempTagStr.lastIndexOf(","));
+        }
+        long updatedTime = mDeviceInfo.getUpdatedTime();
+        final String tempData = "/pages/index?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
+                [1] +
+                "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
+                updatedTime;
+        miniProgramObj.path = tempData;            //小程序页面路径
+        final WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
+        msg.title = "传感器位置";                    // 小程序消息title
+        msg.description = "通过此工具，可以查看，以及导航到相应的传感器设备";
+        aMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
+            @Override
+            public void onMapScreenShot(Bitmap bitmap) {
+                Bitmap ratio = ImageFactory.ratio(bitmap, 500, 400);
+                msg.thumbData = Util.bmpToByteArray(ratio, true);
+                ratio.recycle();
+                SendMessageToWX.Req req = new SendMessageToWX.Req();
+                req.transaction = SystemClock.currentThreadTimeMillis() + "";
+                req.scene = SendMessageToWX.Req.WXSceneSession;
+                req.message = msg;
+                boolean b = SensoroCityApplication.getInstance().api.sendReq(req);
+                Log.e(TAG, "toShareWeChat: isSuc = " + b);
+            }
+
+            @Override
+            public void onMapScreenShot(Bitmap bitmap, int i) {
+                Log.e(TAG, "onMapScreenShot: i = " + i);
+            }
+        });
     }
 
     private void openGaoDeMap() {
@@ -1021,4 +1063,20 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                     + aMapLocation.getErrorInfo());
         }
     }
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
+        String formatAddress = regeocodeResult.getRegeocodeAddress().getFormatAddress();
+        Log.e(TAG, "onRegeocodeSearched: " + "code = " + i + ",address = " + formatAddress);
+        tempAddress = formatAddress;
+    }
+
+    @Override
+    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
+        Log.e(TAG, "onGeocodeSearched: " + "onGeocodeSearched");
+
+    }
+
+
 }

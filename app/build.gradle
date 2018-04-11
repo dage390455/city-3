@@ -17,13 +17,13 @@ android {
         release {
             keyAlias 'sensoro'
             keyPassword 'sensoro'
-            storeFile file('/users/Sensoro/Work/AppKey/sensoro.keystore')
+            storeFile file('/Users/sensoro/Work/AppKey/sensoro.keystore')
             storePassword 'sensoro'
         }
         debug {
             keyAlias 'sensoro'
             keyPassword 'sensoro'
-            storeFile file('/users/Sensoro/Work/AppKey/sensoro.keystore')
+            storeFile file('/Users/sensoro/Work/AppKey/sensoro.keystore')
             storePassword 'sensoro'
         }
     }
@@ -135,7 +135,7 @@ android {
 }
 
 dependencies {
-    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile fileTree(include: ['*.jar'], dir: 'libs')
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
@@ -154,7 +154,7 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.0.0'
-//    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    //    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     compile 'com.github.nkzawa:socket.io-client:0.3.0'
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:multidex:1.0.0'

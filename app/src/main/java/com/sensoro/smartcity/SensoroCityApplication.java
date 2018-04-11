@@ -83,7 +83,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     void init() {
         smartCityServer = SmartCityServerImpl.getInstance(getApplicationContext());
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
-        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID,true);
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID,false);
         api.registerApp(Constants.APP_ID);
     }
 

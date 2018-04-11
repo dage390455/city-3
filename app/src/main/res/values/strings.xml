@@ -3,7 +3,7 @@
            tools:ignore="MissingTranslation">
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
-    <string name="search_tips"> SN、Name、Tag、Status</string>
+    <string name="search_tips"> SN、Name、Tag</string>
     <string name="search_alarm_tips">SN,Name</string>
     <string name="cancel">Cancel</string>
     <string name="recent">Recent Search</string>

@@ -2,10 +2,10 @@ package com.sensoro.smartcity.wxapi;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
-import android.widget.TextView;
-import android.widget.Toast;
+import android.view.View;
 
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.tencent.mm.opensdk.constants.ConstantsAPI;
@@ -28,9 +28,11 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		TextView textView = new TextView(this);
-		textView.setText("----------------------------------");
-		setContentView(textView);
+
+//		TextView textView = new TextView(this);
+//		textView.setText("----------------------------------");
+		setContentView(new View(this));
+		this.getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
 
 		// 通过WXAPIFactory工厂，获取IWXAPI的实例
 //		api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
@@ -80,8 +82,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 	@Override
 	public void onResp(BaseResp resp) {
 		String result;
-
-		Toast.makeText(this, "baseresp.getType = " + resp.getType(), Toast.LENGTH_SHORT).show();
+		Log.d(TAG, "onResp: "+"baseresp.getType = " + resp.getType());
 
 		switch (resp.errCode) {
 			case BaseResp.ErrCode.ERR_OK:
@@ -101,8 +102,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 				result = "errcode_unknown";
 				break;
 		}
-
-		Toast.makeText(this, result+", errorCode = "+resp.errCode, Toast.LENGTH_LONG).show();
+		Log.d(TAG, "onResp: "+result+", errorCode = "+resp.errCode+",str = "+resp.errStr);
 		finish();
 	}
 
