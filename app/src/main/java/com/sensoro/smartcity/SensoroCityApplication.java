@@ -20,6 +20,7 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ import java.util.List;
  * Created by sensoro on 17/7/24.
  */
 
-public class SensoroCityApplication extends MultiDexApplication implements SensoroPushListener{
+public class SensoroCityApplication extends MultiDexApplication implements SensoroPushListener,Serializable{
 
     public ISmartCityServer smartCityServer;
     public static PushHandler pushHandler = new PushHandler();

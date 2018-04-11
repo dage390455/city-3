@@ -960,6 +960,9 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             case R.id.index_iv_search_reverse:
                 Intent intent = new Intent(getActivity(), SearchDeviceActivity.class);
                 intent.putExtra(EXTRA_FRAGMENT_INDEX, 1);
+                int size = mDataList.size();
+//                intent.putExtra("", value);
+                Bundle bundle = new Bundle();
                 startActivityForResult(intent, REQUEST_CODE_SEARCH_DEVICE);
                 break;
             case R.id.index_iv_switch:

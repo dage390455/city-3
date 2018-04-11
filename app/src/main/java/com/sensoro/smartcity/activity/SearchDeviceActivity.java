@@ -130,13 +130,14 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     private int mStatusSelectedIndex = 0;
     private int page = 1;
     private List<DeviceInfo> mDataList = new ArrayList<>();
-
+    private final List<DeviceInfo> orginList = new ArrayList<>();
+    private List<String> searchStrList =new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(this);
-        sensoroCityApplication = (SensoroCityApplication) this.getApplication();
+        sensoroCityApplication = SensoroCityApplication.getInstance();
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
         mPref = getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
@@ -151,6 +152,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         initRelation();
         StatusBarCompat.setStatusBarColor(this);
         initIndex();
+        orginList.addAll(sensoroCityApplication.getData());
     }
 
     @Override
@@ -587,7 +589,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
 
     public void filterDeviceInfo(String filter) {
         List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
-        originDeviceInfoList.addAll(sensoroCityApplication.getData());
+        originDeviceInfoList.addAll(orginList);
         ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
             if (deviceInfo.getName() != null) {
@@ -599,22 +601,27 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             }
 
         }
-        for (DeviceInfo deviceInfo : deleteDeviceInfoList) {
-            originDeviceInfoList.remove(deviceInfo);
-        }
+        originDeviceInfoList.removeAll(deleteDeviceInfoList);
         List<String> tempList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
             if (deviceInfo.getName() != null) {
                 tempList.add(deviceInfo.getName());
             }
         }
+        searchStrList.clear();
+        searchStrList.addAll(tempList);
         mRelationAdapter.setData(tempList);
         mRelationAdapter.notifyDataSetChanged();
+        originDeviceInfoList.clear();
+        tempList.clear();
+        deleteDeviceInfoList.clear();
+
+
 
     }
 
-    public void save() {
-        String text = mKeywordEt.getText().toString();
+    public void save(String text) {
+//        String text = mKeywordEt.getText().toString();
         String oldText = mPref.getString(PREFERENCE_KEY_DEVICE, "");
         if (!TextUtils.isEmpty(text)) {
             if (mHistoryKeywords.contains(text)) {
@@ -657,6 +664,83 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         String type = mTypeSelectedIndex == 0 ? null: INDEX_TYPE_VALUES[mTypeSelectedIndex];
         Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
         String text = mKeywordEt.getText().toString();
+        if (direction == DIRECTION_DOWN) {
+            page = 1;
+            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response.Listener<DeviceInfoListRsp>() {
+                @Override
+                public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+                    try {
+                        if (deviceBriefInfoRsp.getData().size() == 0) {
+                            tipsLinearLayout.setVisibility(View.VISIBLE);
+                            mDataList.clear();
+                            refreshData();
+                        } else {
+                            sensoroCityApplication.setData(deviceBriefInfoRsp.getData());
+                            refreshCacheData();
+                        }
+
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    } finally {
+                        mListRecyclerView.refreshComplete();
+                        mGridRecyclerView.refreshComplete();
+                        mProgressDialog.dismiss();
+                    }
+
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    mListRecyclerView.refreshComplete();
+                    mGridRecyclerView.refreshComplete();
+                    mProgressDialog.dismiss();
+                    if (volleyError.networkResponse != null) {
+                        byte[] data = volleyError.networkResponse.data;
+                        Toast.makeText(sensoroCityApplication, new String(data), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        } else {
+            page++;
+            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response.Listener<DeviceInfoListRsp>() {
+                @Override
+                public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+                    try {
+                        if (deviceBriefInfoRsp.getData().size() == 0) {
+                            page--;
+                        } else {
+                            sensoroCityApplication.addData(deviceBriefInfoRsp.getData());
+                            refreshCacheData();
+                        }
+                    } catch (Exception e) {
+                        page--;
+                        e.printStackTrace();
+                    } finally {
+                        mListRecyclerView.loadMoreComplete();
+                        mGridRecyclerView.loadMoreComplete();
+                        mProgressDialog.dismiss();
+                    }
+                }
+            }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError volleyError) {
+                    page--;
+                    mProgressDialog.dismiss();
+                    mListRecyclerView.loadMoreComplete();
+                    mGridRecyclerView.loadMoreComplete();
+                    if (volleyError.networkResponse != null) {
+                        byte[] data = volleyError.networkResponse.data;
+                        Toast.makeText(sensoroCityApplication, new String(data), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
+        }
+    }
+    public void requestWithDirection(int direction,String seacherStr) {
+        mProgressDialog.show();
+        String type = mTypeSelectedIndex == 0 ? null: INDEX_TYPE_VALUES[mTypeSelectedIndex];
+        Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
+        String text = seacherStr;
         if (direction == DIRECTION_DOWN) {
             page = 1;
             sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response.Listener<DeviceInfoListRsp>() {
@@ -797,6 +881,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             mSearchHistoryLayout.setVisibility(View.GONE);
             mRelationLayout.setVisibility(View.VISIBLE);
             filterDeviceInfo(s.toString());
+
         } else {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
             mRelationLayout.setVisibility(View.GONE);
@@ -812,7 +897,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            save();
+            save(mKeywordEt.getText().toString());
             mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
@@ -824,17 +909,32 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onItemClick(View view, int position) {
-        int index = position - 1;
-        if (index >= 0 ) {
-            DeviceInfo deviceInfo = mDataList.get(index);
-            Intent intent = new Intent(this, SensorDetailActivity.class);
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
-            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
-            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
-            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
-            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
-            startActivity(intent);
+//        int index = position - 1;
+        if (position >= 0 ) {
+            String s = searchStrList.get(position);
+//            List<DeviceInfo> data = SensoroCityApplication.getInstance().getData();
+//            for(int i=0;i<data.size();i++){
+//                String tempStr =data.get(i).getName();
+//                if (tempStr!=null&&tempStr.equalsIgnoreCase(s)){
+//                    position=i;
+//                }
+//            }
+            save(s);
+            mClearKeywordIv.setVisibility(View.VISIBLE);
+            mKeywordEt.clearFocus();
+            dismissInputMethodManager(view);
+            requestWithDirection(DIRECTION_DOWN,s);
+//            int size = data.size();
+//            Log.e("", "onItemClick: "+mDataList.size());
+//            DeviceInfo deviceInfo = data.get(position);
+//            Intent intent = new Intent(this, SensorDetailActivity.class);
+//            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
+//            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
+//            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
+//            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
+//            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
+//            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
+//            startActivity(intent);
         }
 
 //        String searchText = mRelationAdapter.getData().get(position);
