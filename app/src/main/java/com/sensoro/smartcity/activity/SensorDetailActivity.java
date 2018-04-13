@@ -34,7 +34,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.UiSettings;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
@@ -162,7 +162,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     @BindView(R.id.recent_days_power_supply)
     RelativeLayout powerLayout;
     @BindView(R.id.sensor_detail_map)
-    MapView mMapView;
+    TextureMapView mMapView;
     @BindView(R.id.sensor_chart)
     CombinedChart mChart;
     @BindView(R.id.sensor_detail_scroll)
@@ -199,16 +199,16 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor_detail);
         ButterKnife.bind(this);
+        mMapView.onCreate(savedInstanceState);// 此方法必须重写
         geocoderSearch = new GeocodeSearch(this);
         geocoderSearch.setOnGeocodeSearchListener(this);
         //获取当前控件的布局对象
-        RelativeLayout.LayoutParams params= (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
         DisplayMetrics dm = getResources().getDisplayMetrics();
         params.width = dm.widthPixels;
         //设置当前控件布局的高度
-        params.height = dm.widthPixels*4/5;
+        params.height = dm.widthPixels * 4 / 5;
         mMapView.setLayoutParams(params);//将设置好的布局参数应用到控件中
-        mMapView.onCreate(savedInstanceState);// 此方法必须重写
         mMapView.setVisibility(View.GONE);
         init();
         bundle = getIntent().getExtras();
@@ -229,6 +229,12 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     @Override
     public void onStart() {
         super.onStart();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 
     /**
@@ -390,14 +396,16 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
 
     }
+
     //补全tags标签信息
     private void requestData() {
         SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getDeviceDetailInfoList(mDeviceInfo.getSn(), null, 1, new Response.Listener<DeviceInfoListRsp>() {
+        sensoroCityApplication.smartCityServer.getDeviceDetailInfoList(mDeviceInfo.getSn(), null, 1, new Response
+                .Listener<DeviceInfoListRsp>() {
             @Override
             public void onResponse(DeviceInfoListRsp response) {
                 mProgressDialog.dismiss();
-                if(response!=null&&response.getData().size()>0){
+                if (response != null && response.getData().size() > 0) {
                     DeviceInfo deviceInfo = response.getData().get(0);
                     String[] tags = deviceInfo.getTags();
                     mDeviceInfo.setTags(tags);
@@ -411,7 +419,8 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                     String reason = new String(volleyError.networkResponse.data);
                     try {
                         JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
+                                .show();
                     } catch (JSONException e) {
                         e.printStackTrace();
                     }
@@ -598,7 +607,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                             refreshKLayout();
                         } catch (JSONException e) {
                             e.printStackTrace();
-                        }finally {
+                        } finally {
                             requestData();
                         }
                     }
@@ -939,7 +948,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             for (String tag : tags) {
                 tempTagStr += tag + ",";
             }
-            tempTagStr=tempTagStr.substring(0, tempTagStr.lastIndexOf(","));
+            tempTagStr = tempTagStr.substring(0, tempTagStr.lastIndexOf(","));
         }
         long updatedTime = mDeviceInfo.getUpdatedTime();
         final String tempData = "/pages/index?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
