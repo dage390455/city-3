@@ -114,7 +114,8 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
             }
             switch (alarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
-                    holder.item_confirm_status.setVisibility(View.VISIBLE);
+//                    holder.item_confirm_status.setVisibility(View.VISIBLE);
+                    holder.item_confirm_status.setText(R.string.confirming);
                     holder.item_display_status.setVisibility(View.GONE);
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -126,19 +127,40 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
 //                    holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                     break;
                 case DISPLAY_STATUS_ALARM:
-                    holder.item_confirm_status.setVisibility(View.GONE);
+                    holder.item_confirm_status.setText(R.string.confirming_again);
+                    holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mListener.onItemClick(v, position);
+                        }
+                    });
+//                    holder.item_confirm_status.setVisibility(View.GONE);
                     holder.item_display_status.setVisibility(View.VISIBLE);
                     holder.item_display_status.setText(R.string.true_alarm);
 //                    holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_normal));
                     break;
                 case DISPLAY_STATUS_MISDESCRIPTION:
-                    holder.item_confirm_status.setVisibility(View.GONE);
+                    holder.item_confirm_status.setText(R.string.confirming_again);
+                    holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mListener.onItemClick(v, position);
+                        }
+                    });
+//                    holder.item_confirm_status.setVisibility(View.GONE);
                     holder.item_display_status.setVisibility(View.VISIBLE);
                     holder.item_display_status.setText(R.string.misdescription);
 //                    holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_normal));
                     break;
                 case DISPLAY_STATUS_TEST:
-                    holder.item_confirm_status.setVisibility(View.GONE);
+                    holder.item_confirm_status.setText(R.string.confirming_again);
+                    holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mListener.onItemClick(v, position);
+                        }
+                    });
+//                    holder.item_confirm_status.setVisibility(View.GONE);
                     holder.item_display_status.setVisibility(View.VISIBLE);
                     holder.item_display_status.setText(R.string.alarm_test);
 //                    holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_normal));

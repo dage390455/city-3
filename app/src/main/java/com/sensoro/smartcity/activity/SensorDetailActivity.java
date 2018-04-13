@@ -101,6 +101,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
+
 /**
  * Created by sensoro on 17/11/20.
  */
@@ -171,6 +173,8 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     RelativeLayout notDeployLayout;
     @BindView(R.id.sensor_detail_map_layout)
     RelativeLayout mapLayout;
+    @BindView(R.id.ll_battery_layout)
+    LinearLayout llBatteryLayout;
     private AMap aMap;
     private Gson gson;
     private BatteryAdapter mBatteryAdapter;
@@ -322,15 +326,17 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             }
             if (mDeviceInfo.getSensoroDetails().getBattery() != null) {
                 if (Float.parseFloat(mDeviceInfo.getSensoroDetails().getBattery().getValue().toString()) == -1) {
-                    batteryLayout.setVisibility(View.GONE);
-                    powerLayout.setVisibility(View.VISIBLE);
+                    llBatteryLayout.setVisibility(View.GONE);
+//                    batteryLayout.setVisibility(View.GONE);
+//                    powerLayout.setVisibility(View.VISIBLE);
                 } else {
                     batteryLayout.setVisibility(View.VISIBLE);
                     powerLayout.setVisibility(View.GONE);
                 }
             } else {
-                batteryLayout.setVisibility(View.VISIBLE);
-                powerLayout.setVisibility(View.GONE);
+                llBatteryLayout.setVisibility(View.GONE);
+//                batteryLayout.setVisibility(View.VISIBLE);
+//                powerLayout.setVisibility(View.GONE);
             }
 
             batteryMarkerView.setVisibility(View.GONE);
@@ -451,6 +457,8 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         aMap.getUiSettings().setTiltGesturesEnabled(false);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
+//        aMap.getUiSettings().setScaleControlsEnabled(true);
+        aMap.setMapType(MAP_TYPE_NORMAL);
 //        aMap.setOnMapTouchListener(this);
         String styleName = "custom_config.data";
         aMap.setCustomMapStylePath(getFilesDir().getAbsolutePath() + "/" + styleName);
@@ -500,7 +508,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                 notDeployLayout.setVisibility(View.GONE);
                 //可视化区域，将指定位置指定到屏幕中心位置
                 mUpdata = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(destPosition, 15, 0, 30));
+                        .newCameraPosition(new CameraPosition(destPosition, 16, 0, 30));
                 aMap.moveCamera(mUpdata);
 
                 int statusId = R.mipmap.ic_sensor_status_normal;
@@ -916,7 +924,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
      */
     private void toShareWeChat() {
         WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
-        miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPROGRAM_TYPE_PREVIEW;
+        miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;
         miniProgramObj.webpageUrl = "https://www.sensoro.com"; // 兼容低版本的网页链接
         miniProgramObj.userName = "gh_6b7a86071f47";
         miniProgramObj.withShareTicket = false;

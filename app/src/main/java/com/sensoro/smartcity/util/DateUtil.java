@@ -17,8 +17,8 @@ import java.util.Locale;
  */
 public class DateUtil {
     /*
- * 将时间戳转为字符串 ，格式：yyyy-MM-dd HH:mm
- */
+     * 将时间戳转为字符串 ，格式：yyyy-MM-dd HH:mm
+     */
     public static String getStrTime_ymd_hm(String cc_time) {
         String re_StrTime = "";
         if (TextUtils.isEmpty(cc_time) || "null".equals(cc_time)) {
@@ -164,10 +164,10 @@ public class DateUtil {
     public static String parseDateToString(String text) {
         String dateFormat = "yyyy-MM-dd+HH:mm:ss";
         try {
-            if (text == null) return null;
+            if (text == null) return " - ";
             return getFullParseDate(new SimpleDateFormat(dateFormat).parse(text).getTime());
         } catch (ParseException e) {
-            return null;
+            return " - ";
         }
     }
 
@@ -180,6 +180,8 @@ public class DateUtil {
             return null;
         }
     }
+
+
 
     public static String getDate(long time) {
         return new SimpleDateFormat("yyyy-MM-dd", Locale.ROOT).format(new Date(time));
@@ -241,9 +243,9 @@ public class DateUtil {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);
             if (dataString.equalsIgnoreCase(nowString)) {
-                return "今天 " + apm_text  + formatTime;
+                return "今天 " + apm_text + formatTime;
             } else {
-                return "昨天 " + apm_text  + formatTime;
+                return "昨天 " + apm_text + formatTime;
             }
         } else if (day > 1 && day < 2) {
             return "昨天 " + apm_text + formatTime;

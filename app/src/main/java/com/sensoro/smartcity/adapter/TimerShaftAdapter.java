@@ -5,6 +5,7 @@ import android.text.Spannable;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.TextPaint;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ForegroundColorSpan;
@@ -37,7 +38,8 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
     private OnGroupItemClickListener itemClickListener;
     private List<AlarmInfo.RecordInfo> timeShaftParentBeans;
 
-    public TimerShaftAdapter(Context context, List<AlarmInfo.RecordInfo> timeShaftBeans, OnGroupItemClickListener listener) {
+    public TimerShaftAdapter(Context context, List<AlarmInfo.RecordInfo> timeShaftBeans, OnGroupItemClickListener
+            listener) {
         inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         this.timeShaftParentBeans = timeShaftBeans;
         this.mContext = context;
@@ -59,6 +61,9 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
         if (events != null) {
             return events.length;
         } else {
+            if (!TextUtils.isEmpty(timeShaftParentBeans.get(groupPosition).getRemark())){
+                return 1;
+            }
             return 0;
         }
 
@@ -114,22 +119,66 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
         groupHolder.tvDay.setText(time);
         groupHolder.lineView.setVisibility(View.VISIBLE);
         if ("confirm".equals(recordInfo.getType())) {
-            String[] confirmStatusArray = {"待确认", "真实预警", "误报", "测试/巡检"};
+            String[] confirmStatusArray = {"待确认", "真实预警", "误报", "巡检/测试"};
             String source = recordInfo.getSource();
             String confirm_text = null;
             if ("auto".equals(source)) {
-                confirm_text = "48小时无人确认，系统自动确认为误报";
+                confirm_text = "48小时无人确认，系统自动确认为巡检/测试";
             } else if ("app".equals(source)) {
-                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过App端确认本次预警类型为:" + confirmStatusArray[recordInfo.getDisplayStatus()];
+                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过App端确认本次预警类型为:" +
+                        confirmStatusArray[recordInfo.getDisplayStatus()];
             } else if ("platform".equals(source)) {
-                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过Web端确认本次预警类型为:" + confirmStatusArray[recordInfo.getDisplayStatus()];
+                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过Web端确认本次预警类型为:" +
+                        confirmStatusArray[recordInfo.getDisplayStatus()];
             }
-            groupHolder.tvTitle.setText(ToDBC(confirm_text));
-            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_progress));
+            String remark = recordInfo.getRemark();
+            if (!TextUtils.isEmpty(remark)) {
+                final StringBuffer stringBuffer = new StringBuffer();
+                stringBuffer.append(confirm_text+"\n");
+                stringBuffer.append("备注 ");
+                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer.toString());
+                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
+                        .color.popup_selected_text_color));
+                int start = stringBuffer.length() - 3;
+                int end = stringBuffer.length();
+                spannableStringBuilder.setSpan(new ClickableSpan() {
+                    @Override
+                    public void onClick(View widget) {
+                        itemClickListener.onGroupItemClick(groupPosition, isExpanded);
+                    }
+
+                    @Override
+                    public void updateDrawState(TextPaint ds) {
+                        super.updateDrawState(ds);
+                        ds.setUnderlineText(false);
+                    }
+                }, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(foregroundColorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+                int drawableId = R.mipmap.ic_pack_down;
+                if (isExpanded) {
+                    drawableId = R.mipmap.ic_pack_up;
+                }
+                spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end, Spanned
+                        .SPAN_EXCLUSIVE_EXCLUSIVE);
+                groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
+                        .shape_status_progress));
+                groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
+                groupHolder.tvTitle.setText(spannableStringBuilder);
+            }else {
+                groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
+                        .shape_status_progress));
+                groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
+                groupHolder.tvTitle.setText(confirm_text);
+//            groupHolder.tvTitle.setText(ToDBC(confirm_text));
+                groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
+                        .shape_status_normal));
+            }
+
+
         } else if ("recovery".equals(recordInfo.getType())) {
             groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_normal));
-//            groupHolder.tvTitle.setText("低于预警值,恢复正常");
-            groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), 0));
+            groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo
+                    .getThresholds(), 0));
         } else if ("sendVoice".equals(recordInfo.getType())) {
             StringBuffer stringBuffer = new StringBuffer();
             stringBuffer.append("系统电话至:");
@@ -144,7 +193,8 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             }
             stringBuffer.append(" 查看电话接听结果 ");
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer);
-            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.popup_selected_text_color));
+            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
+                    .color.popup_selected_text_color));
             int start = stringBuffer.length() - 9;
             int end = stringBuffer.length();
             spannableStringBuilder.setSpan(new ClickableSpan() {
@@ -165,8 +215,10 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             if (isExpanded) {
                 drawableId = R.mipmap.ic_pack_up;
             }
-            spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_progress));
+            spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end, Spanned
+                    .SPAN_EXCLUSIVE_EXCLUSIVE);
+            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
+                    .shape_status_progress));
             groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
             groupHolder.tvTitle.setText(spannableStringBuilder);
         } else if ("sendSMS".equals(recordInfo.getType())) {
@@ -184,7 +236,8 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             }
             stringBuffer.append(" 查看短信发送结果 ");
             SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer.toString());
-            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.popup_selected_text_color));
+            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
+                    .color.popup_selected_text_color));
             int start = stringBuffer.length() - 9;
             int end = stringBuffer.length();
             spannableStringBuilder.setSpan(new ClickableSpan() {
@@ -204,18 +257,23 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             if (isExpanded) {
                 drawableId = R.mipmap.ic_pack_up;
             }
-            spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_progress));
+            spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end, Spanned
+                    .SPAN_EXCLUSIVE_EXCLUSIVE);
+            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
+                    .shape_status_progress));
             groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
             groupHolder.tvTitle.setText(spannableStringBuilder);
         } else if ("alarm".equals(recordInfo.getType())) {
             groupHolder.lineView.setVisibility(View.GONE);
             groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_alarm));
-            if (WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), 1) == null) {
-                groupHolder.tvTitle.setText("数值" + recordInfo.getThresholds() + "达到预警值");
-            } else {
-                groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), 1));
-            }
+//            if (WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(),recordInfo.getThresholds(), 1) == null) {
+//                groupHolder.tvTitle.setText("未知传感器 值为 " + recordInfo.getThresholds() + " 达到预警值");
+//            } else {
+//                groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(),recordInfo
+// .getThresholds(), 1));
+//            }
+            groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo
+                    .getThresholds(), 1));
 
         }
         if (isExpanded) {
@@ -229,7 +287,8 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
 
 
     @Override
-    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
+    public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup
+            parent) {
         ChildViewHolder childHolder = null;
         AlarmInfo.RecordInfo.Event childBean = (AlarmInfo.RecordInfo.Event) getChild(groupPosition, childPosition);
         if (convertView == null) {
@@ -239,6 +298,12 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             convertView.setTag(childHolder);
         } else {
             childHolder = (ChildViewHolder) convertView.getTag();
+        }
+        if ("confirm".equals(timeShaftParentBeans.get(groupPosition).getType())){
+            String remark = timeShaftParentBeans.get(groupPosition).getRemark();
+            if (!TextUtils.isEmpty(remark)){
+                childHolder.tvTitle.setText(remark);
+            }
         }
         if (childBean != null) {
             AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(groupPosition);
@@ -250,7 +315,8 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                 } else if (childBean.getReciveStatus() == 2) {
                     statusString = "电话接收失败";
                 }
-                childHolder.tvTitle.setText(childBean.getName() + "(" + childBean.getNumber() + ")于"
+                childHolder.tvTitle.setText(WidgetUtil.distinguishContacts(childBean.getSource()) + " - " + childBean
+                        .getName() + "(" + childBean.getNumber() + ")于"
                         + DateUtil.parseDateToString(childBean.getReceiveTime()) + statusString);
             } else if ("sendSMS".equals(recordType)) {
                 String statusString = "短信接收中";
@@ -259,22 +325,23 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                 } else if (childBean.getReciveStatus() == 2) {
                     statusString = "短信接收失败";
                 }
-                childHolder.tvTitle.setText(childBean.getName() + "(" + childBean.getNumber() + ")于"
+                childHolder.tvTitle.setText(WidgetUtil.distinguishContacts(childBean.getSource()) + " - " + childBean
+                        .getName() + "(" + childBean.getNumber() + ")于"
                         + DateUtil.parseDateToString(childBean.getReceiveTime()) + statusString);
             }
 
         }
-
         return convertView;
     }
 
     public static String ToDBC(String input) {
         char[] c = input.toCharArray();
-        for (int i = 0; i< c.length; i++) {
+        for (int i = 0; i < c.length; i++) {
             if (c[i] == 12288) {
                 c[i] = (char) 32;
                 continue;
-            }if (c[i]> 65280&& c[i]< 65375)
+            }
+            if (c[i] > 65280 && c[i] < 65375)
                 c[i] = (char) (c[i] - 65248);
         }
         return new String(c);

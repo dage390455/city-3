@@ -111,27 +111,25 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
             }
             switch (deviceAlarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
-                    confirmTextView.setVisibility(View.VISIBLE);
+//                    confirmTextView.setVisibility(View.VISIBLE);
+                    confirmTextView.setText(R.string.confirming);
                     displayStatusTextView.setVisibility(View.GONE);
-                    confirmTextView.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-
-                        }
-                    });
                     break;
                 case DISPLAY_STATUS_ALARM:
-                    confirmTextView.setVisibility(View.GONE);
+                    confirmTextView.setText(R.string.confirming_again);
+//                    confirmTextView.setVisibility(View.GONE);
                     displayStatusTextView.setVisibility(View.VISIBLE);
                     displayStatusTextView.setText(R.string.true_alarm);
                     break;
                 case DISPLAY_STATUS_MISDESCRIPTION:
-                    confirmTextView.setVisibility(View.GONE);
+                    confirmTextView.setText(R.string.confirming_again);
+//                    confirmTextView.setVisibility(View.GONE);
                     displayStatusTextView.setVisibility(View.VISIBLE);
                     displayStatusTextView.setText(R.string.misdescription);
                     break;
                 case DISPLAY_STATUS_TEST:
-                    confirmTextView.setVisibility(View.GONE);
+                    confirmTextView.setText(R.string.confirming_again);
+//                    confirmTextView.setVisibility(View.GONE);
                     displayStatusTextView.setVisibility(View.VISIBLE);
                     displayStatusTextView.setText(R.string.alarm_test);
                     break;

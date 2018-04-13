@@ -64,7 +64,8 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
  * Created by sensoro on 17/7/11.
  */
 
-public class SearchDeviceActivity extends BaseActivity implements View.OnClickListener, Constants, TextView.OnEditorActionListener, TextWatcher, RecycleViewItemClickListener {
+public class SearchDeviceActivity extends BaseActivity implements View.OnClickListener, Constants, TextView
+        .OnEditorActionListener, TextWatcher, RecycleViewItemClickListener {
     @BindView(R.id.search_device_et)
     EditText mKeywordEt;
     @BindView(R.id.search_device_cancel_tv)
@@ -131,7 +132,8 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     private int page = 1;
     private List<DeviceInfo> mDataList = new ArrayList<>();
     private final List<DeviceInfo> orginList = new ArrayList<>();
-    private List<String> searchStrList =new ArrayList<>();
+    private List<String> searchStrList = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -351,20 +353,20 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     }
 
     private boolean isMatcher(DeviceInfo deviceInfo) {
-        if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0 ) {
+        if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0) {
             return true;
         } else {
             boolean isMatcherType = false;
             boolean isMatcherStatus = false;
             String unionType = deviceInfo.getUnionType();
             if (unionType != null) {
-                String []unionTypeArray = unionType.split("\\|");
+                String[] unionTypeArray = unionType.split("\\|");
                 List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                String []menuTypeArray = SENSOR_MENU_ARRAY[mTypeSelectedIndex].split("\\|");
+                String[] menuTypeArray = SENSOR_MENU_ARRAY[mTypeSelectedIndex].split("\\|");
                 if (mTypeSelectedIndex == 0) {
                     isMatcherType = true;
                 } else {
-                    for (int j = 0 ; j < menuTypeArray.length; j++) {
+                    for (int j = 0; j < menuTypeArray.length; j++) {
                         String menuType = menuTypeArray[j];
                         if (unionTypeList.contains(menuType)) {
                             isMatcherType = true;
@@ -387,7 +389,24 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
 
 
     private void initRelation() {
-        mRelationAdapter = new RelationAdapter(this, this);
+        mRelationAdapter = new RelationAdapter(this, new RecycleViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                String s = searchStrList.get(position);
+////            List<DeviceInfo> data = SensoroCityApplication.getInstance().getData();
+////            for(int i=0;i<data.size();i++){
+////                String tempStr =data.get(i).getName();
+////                if (tempStr!=null&&tempStr.equalsIgnoreCase(s)){
+////                    position=i;
+////                }
+////            }
+                save(s);
+                mClearKeywordIv.setVisibility(View.VISIBLE);
+                mKeywordEt.clearFocus();
+                dismissInputMethodManager(view);
+                requestWithDirection(DIRECTION_DOWN, s);
+            }
+        });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRelationRecyclerView.setLayoutManager(linearLayoutManager);
@@ -593,7 +612,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
             if (deviceInfo.getName() != null) {
-                if (!(deviceInfo.getName().contains(filter.toUpperCase() ))) {
+                if (!(deviceInfo.getName().contains(filter.toUpperCase()))) {
                     deleteDeviceInfoList.add(deviceInfo);
                 }
             } else {
@@ -615,7 +634,6 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         originDeviceInfoList.clear();
         tempList.clear();
         deleteDeviceInfoList.clear();
-
 
 
     }
@@ -661,12 +679,13 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
 
     public void requestWithDirection(int direction) {
         mProgressDialog.show();
-        String type = mTypeSelectedIndex == 0 ? null: INDEX_TYPE_VALUES[mTypeSelectedIndex];
+        String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
         Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
         String text = mKeywordEt.getText().toString();
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response.Listener<DeviceInfoListRsp>() {
+            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
+                    .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
                     try {
@@ -702,7 +721,8 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             });
         } else {
             page++;
-            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response.Listener<DeviceInfoListRsp>() {
+            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
+                    .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
                     try {
@@ -736,14 +756,16 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             });
         }
     }
-    public void requestWithDirection(int direction,String seacherStr) {
+
+    public void requestWithDirection(int direction, String seacherStr) {
         mProgressDialog.show();
-        String type = mTypeSelectedIndex == 0 ? null: INDEX_TYPE_VALUES[mTypeSelectedIndex];
+        String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
         Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
         String text = seacherStr;
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response.Listener<DeviceInfoListRsp>() {
+            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
+                    .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
                     try {
@@ -779,7 +801,8 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             });
         } else {
             page++;
-            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response.Listener<DeviceInfoListRsp>() {
+            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
+                    .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
                     try {
@@ -909,34 +932,23 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
 
     @Override
     public void onItemClick(View view, int position) {
-//        int index = position - 1;
-        if (position >= 0 ) {
-            String s = searchStrList.get(position);
-//            List<DeviceInfo> data = SensoroCityApplication.getInstance().getData();
-//            for(int i=0;i<data.size();i++){
-//                String tempStr =data.get(i).getName();
-//                if (tempStr!=null&&tempStr.equalsIgnoreCase(s)){
-//                    position=i;
-//                }
-//            }
-            save(s);
-            mClearKeywordIv.setVisibility(View.VISIBLE);
-            mKeywordEt.clearFocus();
-            dismissInputMethodManager(view);
-            requestWithDirection(DIRECTION_DOWN,s);
-//            int size = data.size();
-//            Log.e("", "onItemClick: "+mDataList.size());
-//            DeviceInfo deviceInfo = data.get(position);
-//            Intent intent = new Intent(this, SensorDetailActivity.class);
-//            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-//            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
-//            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
-//            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
-//            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
-//            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
-//            startActivity(intent);
-        }
+//            Log.e(TAG, "onItemClick: ", );
+        int index = position - 1;
+        if (position >= 0) {
+//            int size = mDataList.size();
+////            Log.e("", "onItemClick: "+mDataList.size());
+            DeviceInfo deviceInfo = mDataList.get(index);
+            Intent intent = new Intent(this, SensorDetailActivity.class);
+            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
+            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
+            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
+            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
+            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
+            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
+            startActivity(intent);
 
+        }
+//
 //        String searchText = mRelationAdapter.getData().get(position);
 //        List<DeviceInfo> tempList = new ArrayList<>();
 //        for (DeviceInfo deviceInfo : sensoroCityApplication.getData()) {

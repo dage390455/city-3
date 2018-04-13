@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import android.widget.Toast;
 
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
@@ -45,6 +46,15 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
                 ex.printStackTrace();
+                String message = ex.getMessage();
+                Toast.makeText(SensoroCityApplication.this,"程序出错："+message,Toast.LENGTH_SHORT).show();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }finally {
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
             }
         });
     }

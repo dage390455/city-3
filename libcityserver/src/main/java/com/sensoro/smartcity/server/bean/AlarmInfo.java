@@ -144,6 +144,7 @@ public class AlarmInfo implements Serializable{
         private String source;
         private int displayStatus;
         private String name;
+        private String remark;
         private Event []phoneList;
 
         public String getType() {
@@ -210,11 +211,21 @@ public class AlarmInfo implements Serializable{
             this.phoneList = phoneList;
         }
 
+        public String getRemark() {
+            return remark;
+        }
+
+        public void setRemark(String remark) {
+            this.remark = remark;
+        }
+
         public class Event implements Serializable{
+
             private String name;
             private String type;
             private String error_msg;
             private String number;
+            private String source;
             private String receiveTime;
             private long updatedTime;
             private int reciveStatus;
@@ -273,6 +284,14 @@ public class AlarmInfo implements Serializable{
 
             public void setUpdatedTime(long updatedTime) {
                 this.updatedTime = updatedTime;
+            }
+
+            public String getSource() {
+                return source;
+            }
+
+            public void setSource(String source) {
+                this.source = source;
             }
         }
     }

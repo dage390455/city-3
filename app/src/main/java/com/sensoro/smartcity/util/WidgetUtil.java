@@ -11,6 +11,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -57,7 +58,8 @@ public class WidgetUtil {
 
     }
 
-    public static BitmapDrawable createBigBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap targetBitmap) {
+    public static BitmapDrawable createBigBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
+            targetBitmap) {
         int width = srcBitmap.getWidth();
         int height = srcBitmap.getHeight();
         int x_offset = 0;
@@ -94,7 +96,8 @@ public class WidgetUtil {
 
     }
 
-    public static BitmapDrawable createBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap targetBitmap) {
+    public static BitmapDrawable createBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
+            targetBitmap) {
         int width = srcBitmap.getWidth();
         int height = srcBitmap.getHeight();
         Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
@@ -108,25 +111,25 @@ public class WidgetUtil {
         int x_offset = -1;
         int y_offset = 2;
         if (sensorType.contains("pm")) {
-            y_offset -=5;
-            x_offset +=2;
+            y_offset -= 5;
+            x_offset += 2;
         } else if (sensorType.contains("alarm")) {
             x_offset -= 5;
             y_offset -= 5;
         } else if (sensorType.contains("smoke")) {
             y_offset -= 4;
             x_offset -= 0;
-        } else if (sensorType.contains("cover") ) {
+        } else if (sensorType.contains("cover")) {
             x_offset += 3;
             y_offset += 3;
-        } else if (sensorType.contains("co") || sensorType.contains("co2") ) {
+        } else if (sensorType.contains("co") || sensorType.contains("co2")) {
             x_offset += 2;
             y_offset -= 5;
         } else if (sensorType.contains("ch4")) {
             y_offset -= 5;
         } else if (sensorType.contains("level") || sensorType.contains("distance")) {
             x_offset += -2;
-        }  else if (sensorType.contains("no2") ) {
+        } else if (sensorType.contains("no2")) {
             x_offset += 2;
             y_offset -= 2;
         } else if (sensorType.contains("latitude") || sensorType.contains("longitude")) {
@@ -134,7 +137,7 @@ public class WidgetUtil {
         } else if (sensorType.contains("yaw") || sensorType.contains("roll") || sensorType.contains("pitch")) {
             y_offset += 2;
         } else if (sensorType.contains("temperature") || sensorType.contains("humidity")) {
-            y_offset +=2;
+            y_offset += 2;
         }
 
         Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
@@ -145,7 +148,8 @@ public class WidgetUtil {
         Matrix matrix = new Matrix();
         matrix.postScale(0.8f, 0.8f);
         // 得到新的图片
-        Bitmap newbm = Bitmap.createBitmap(targetBitmap, 0, 0, targetBitmap.getWidth(), targetBitmap.getHeight(), matrix,
+        Bitmap newbm = Bitmap.createBitmap(targetBitmap, 0, 0, targetBitmap.getWidth(), targetBitmap.getHeight(),
+                matrix,
                 true);
 
         canvas.drawBitmap(newbm, width / 5 - x_offset, height / 5 - 5 - y_offset,
@@ -157,22 +161,24 @@ public class WidgetUtil {
 
     }
 
-    public static Bitmap tintBitmap(Bitmap inBitmap , int tintColor) {
+    public static Bitmap tintBitmap(Bitmap inBitmap, int tintColor) {
         if (inBitmap == null) {
             return null;
         }
 
-        Bitmap outBitmap = Bitmap.createBitmap (inBitmap.getWidth(), inBitmap.getHeight() , inBitmap.getConfig());
+        Bitmap outBitmap = Bitmap.createBitmap(inBitmap.getWidth(), inBitmap.getHeight(), inBitmap.getConfig());
         Canvas canvas = new Canvas(outBitmap);
         Paint paint = new Paint();
-        paint.setColorFilter( new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN)) ;
-        canvas.drawBitmap(inBitmap , 0, 0, paint) ;
-        return outBitmap ;
+        paint.setColorFilter(new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(inBitmap, 0, 0, paint);
+        return outBitmap;
     }
 
-    public static void judgeSensorTypeWithEnUnit(Context context, SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {
+    public static void judgeSensorTypeWithEnUnit(Context context, SensorStruct sensorStruct, TextView valueTextView,
+                                                 TextView unitTextView) {
         if (sensorStruct != null) {
-            LinearLayout.LayoutParams unitParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            LinearLayout.LayoutParams unitParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT);
             int unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
             int unit_leftMargin = context.getResources().getDimensionPixelSize(R.dimen.x30);
             int unit_topMargin = 0;
@@ -248,7 +254,9 @@ public class WidgetUtil {
                     unitTextView.setText("-");
                 }
             } else {
-                if (sensorStruct.getSensorType().equals("pitch") || sensorStruct.getSensorType().equals("roll") || sensorStruct.getSensorType().equals("yaw") || sensorStruct.getSensorType().equals("collision")) {
+                if (sensorStruct.getSensorType().equals("pitch") || sensorStruct.getSensorType().equals("roll") ||
+                        sensorStruct.getSensorType().equals("yaw") || sensorStruct.getSensorType().equals
+                        ("collision")) {
 //                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y150);
                     unit_topMargin = -80;
                 } else if (sensorStruct.getSensorType().equals("temperature")) {
@@ -257,7 +265,8 @@ public class WidgetUtil {
                     unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y15);
                 } else if (sensorType.equals("co") || sensorType.equals("co2") || sensorType.equals("ch4")) {
                     unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y20);
-                } else if (sensorType.equals("no2") || sensorType.equals("so2") || sensorType.equalsIgnoreCase("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
+                } else if (sensorType.equals("no2") || sensorType.equals("so2") || sensorType.equalsIgnoreCase
+                        ("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
                     unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
                 } else if (sensorType.equals("distance")) {
                     unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
@@ -279,7 +288,8 @@ public class WidgetUtil {
                         unitTextView.setText(sensorStruct.getUnit());
                     } else {
                         unitTextView.setText("" + sensorStruct.getUnit());
-                        valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue().toString())));
+                        valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue()
+                                .toString())));
 
                     }
                 }
@@ -294,7 +304,8 @@ public class WidgetUtil {
 
     }
 
-    public static void judgeSensorTypeWithEnUnit(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {
+    public static void judgeSensorTypeWithEnUnit(SensorStruct sensorStruct, TextView valueTextView, TextView
+            unitTextView) {
         if (sensorStruct != null) {
             Object value = sensorStruct.getValue();
             String sensorType = sensorStruct.getSensorType();
@@ -391,7 +402,8 @@ public class WidgetUtil {
 //                            unitTextView.setText("" + sensorStruct.getUnit());
 //                        }
                         unitTextView.setText("" + sensorStruct.getUnit());
-                        valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue().toString())));
+                        valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue()
+                                .toString())));
 
                     }
                 }
@@ -491,7 +503,8 @@ public class WidgetUtil {
                         unitTextView.setText(sensorStruct.getUnit());
                     } else {
                         unitTextView.setText("" + sensorStruct.getUnit());
-                        valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue().toString())));
+                        valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
+                                .toString())));
 
                     }
                 }
@@ -502,7 +515,6 @@ public class WidgetUtil {
         }
 
     }
-
 
 
     public static int judgeSensorType(String[] sensorTypes) {
@@ -522,13 +534,14 @@ public class WidgetUtil {
                 return R.mipmap.ic_sensor_pm;
             } else if (tempList.contains("light")) {
                 return R.mipmap.ic_sensor_light;
-            } else if (tempList.size() > 1 && (tempList.contains("collision") || tempList.contains("pitch") || tempList.contains("roll"))) {
+            } else if (tempList.size() > 1 && (tempList.contains("collision") || tempList.contains("pitch") ||
+                    tempList.contains("roll"))) {
                 return R.mipmap.ic_sensor_angle;
             } else if (tempList.contains("temperature") || tempList.contains("humidity")) {
                 return R.mipmap.ic_sensor_temp_humi;
             } else if (tempList.contains("smoke")) {
                 return R.mipmap.ic_sensor_smoke;
-            }  else if (tempList.contains("drop")) {
+            } else if (tempList.contains("drop")) {
                 return R.mipmap.ic_sensor_drop;
             } else if (tempList.contains("distance")) {
                 return R.mipmap.ic_sensor_level;
@@ -542,7 +555,8 @@ public class WidgetUtil {
                 return R.mipmap.ic_sensor_lock;
             } else if (tempList.contains("waterPressure")) {
                 return R.mipmap.ic_sensor_water_pressure;
-            }  else if (tempList.contains("altitude") || tempList.contains("longitude") || tempList.contains("latitude")) {
+            } else if (tempList.contains("altitude") || tempList.contains("longitude") || tempList.contains
+                    ("latitude")) {
                 return R.mipmap.ic_sensor_tracker;
             } else {
                 return 0;
@@ -559,8 +573,10 @@ public class WidgetUtil {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("co2")) {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("so2")) {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("no2")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("pm2_5") || sensorStruct.getSensorType().equalsIgnoreCase("pm10")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("temperature") || sensorStruct.getSensorType().equalsIgnoreCase("humidity")) {
+        } else if (sensorStruct.getSensorType().equalsIgnoreCase("pm2_5") || sensorStruct.getSensorType()
+                .equalsIgnoreCase("pm10")) {
+        } else if (sensorStruct.getSensorType().equalsIgnoreCase("temperature") || sensorStruct.getSensorType()
+                .equalsIgnoreCase("humidity")) {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("smoke")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
@@ -571,7 +587,8 @@ public class WidgetUtil {
             }
             unitTextView.setText("");
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("leak")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("cover") || sensorStruct.getSensorType().equalsIgnoreCase("level") || sensorStruct.getSensorType().equalsIgnoreCase("jinggai")) {
+        } else if (sensorStruct.getSensorType().equalsIgnoreCase("cover") || sensorStruct.getSensorType()
+                .equalsIgnoreCase("level") || sensorStruct.getSensorType().equalsIgnoreCase("jinggai")) {
             Boolean isTrue = (Boolean) value;
             isBool = true;
             if (isTrue) {
@@ -585,7 +602,9 @@ public class WidgetUtil {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("light")) {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("distance")) {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("lpg")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("roll") || sensorStruct.getSensorType().equalsIgnoreCase("yaw") || sensorStruct.getSensorType().equalsIgnoreCase("pitch") || sensorStruct.getSensorType().equalsIgnoreCase("angle")) {
+        } else if (sensorStruct.getSensorType().equalsIgnoreCase("roll") || sensorStruct.getSensorType()
+                .equalsIgnoreCase("yaw") || sensorStruct.getSensorType().equalsIgnoreCase("pitch") || sensorStruct
+                .getSensorType().equalsIgnoreCase("angle")) {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("collision")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
@@ -624,7 +643,8 @@ public class WidgetUtil {
             unitTextView.setText("");
         } else if (sensorStruct.getSensorType().equals("waterPressure")) {
         } else if (sensorStruct.getSensorType().equals("artificialGas")) {
-        } else if (sensorStruct.getSensorType().equals("latitude") || sensorStruct.getSensorType().equals("longitude") || sensorStruct.getSensorType().equals("altitude")) {
+        } else if (sensorStruct.getSensorType().equals("latitude") || sensorStruct.getSensorType().equals
+                ("longitude") || sensorStruct.getSensorType().equals("altitude")) {
         }
 
         if (!isBool) {
@@ -665,7 +685,7 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("distance")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_level);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("level")  || sensorType.equalsIgnoreCase("distance")) {
+        } else if (sensorType.equalsIgnoreCase("level") || sensorType.equalsIgnoreCase("distance")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_level);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equalsIgnoreCase("cover")) {
@@ -680,7 +700,8 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("lpg")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lpg);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType.equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
+        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
+                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_angle);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equalsIgnoreCase("collision")) {
@@ -708,7 +729,8 @@ public class WidgetUtil {
         srcImageView.setLayoutParams(layoutParams);
     }
 
-    public static void judgeSensorType(Context context,ImageView srcImageView, TextView valueTextView, TextView unitTextView, String sensorType, Object value, String unit) {
+    public static void judgeSensorType(Context context, ImageView srcImageView, TextView valueTextView, TextView
+            unitTextView, String sensorType, Object value, String unit) {
         boolean isBool = false;
         int x_ = context.getResources().getDimensionPixelSize(R.dimen.x300);
         int y_ = context.getResources().getDimensionPixelSize(R.dimen.y400);
@@ -794,7 +816,8 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("lpg")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lpg);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType.equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
+        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
+                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_angle);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equalsIgnoreCase("collision")) {
@@ -854,7 +877,8 @@ public class WidgetUtil {
         }
     }
 
-    public static void judgeIndexSensorType(Context context, TextView valueTextView, TextView unitTextView, String sensorType, SensorStruct sensorStruct) {
+    public static void judgeIndexSensorType(Context context, TextView valueTextView, TextView unitTextView, String
+            sensorType, SensorStruct sensorStruct) {
         boolean isBool = false;
         Object value = sensorStruct.getValue();
 
@@ -905,7 +929,8 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("light")) {
         } else if (sensorType.equalsIgnoreCase("distance")) {
         } else if (sensorType.equalsIgnoreCase("lpg")) {
-        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType.equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
+        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
+                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
         } else if (sensorType.equalsIgnoreCase("collision")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
@@ -1169,6 +1194,209 @@ public class WidgetUtil {
                     break;
                 default:
                     info = null;
+                    break;
+            }
+        }
+        return info;
+    }
+    /**
+     * 区分联系人
+     *
+     * @return
+     */
+    public static String distinguishContacts(String source) {
+        if (!TextUtils.isEmpty(source)) {
+            switch (source) {
+                case "attach":
+                    return "单独联系人";
+                case "group":
+                    return "分组联系人";
+                case "notification":
+                    return "账户联系人";
+                default:
+                    return "";
+            }
+        }
+        return "";
+
+    }
+    /**
+     * 根据标识显示相关的状态信息和数据
+     * @param sensorType
+     * @param thresholds
+     * @param status
+     * @return
+     */
+    public static String getAlarmDetailInfo(String sensorType, int thresholds, int status) {
+        String info = null;
+        if (status == 0) {
+            switch (sensorType) {
+                case "smoke":
+                    info = "无烟，恢复正常";
+                    break;
+                case "cover":
+                case "jinggai":
+                    info = "井盖闭合，恢复正常";
+                    break;
+                case "level":
+                    info = "水位未溢出, 恢复正常";
+                    break;
+                case "alarm":
+                    info = "紧急呼叫解除，恢复正常";
+                    break;
+                case "flame":
+                    info = "未检测到火焰，恢复正常";
+                    break;
+                case "collision":
+                    info = "碰撞解除，恢复正常";
+                    break;
+                case "drop":
+                case "leak":
+                    info = "未检测到滴漏，恢复正常";
+                    break;
+                case "door":
+                    info = "门锁关闭，恢复正常";
+                    break;
+                case "temperature":
+                    info = "温度低于预警值, 恢复正常";
+                    break;
+                case "humidity":
+                    info = "湿度低于预警值, 恢复正常";
+                    break;
+                case "battery":
+                    info = "电量低于预警值, 恢复正常";
+                    break;
+                case "co":
+                    info = "一氧化碳低于预警值, 恢复正常";
+                    break;
+                case "co2":
+                    info = "二氧化碳低于预警值, 恢复正常";
+                    break;
+                case "lpg":
+                    info = "液化石油气低于预警值, 恢复正常";
+                    break;
+                case "ch4":
+                    info = "甲烷低于预警值, 恢复正常";
+                    break;
+                case "no2":
+                    info = "二氧化氮低于预警值, 恢复正常";
+                    break;
+                case "pm2_5":
+                    info = "PM2.5低于预警值, 恢复正常";
+                    break;
+                case "pm10":
+                    info = "PM10低于预警值, 恢复正常";
+                    break;
+                case "distance":
+                    info = "液位低于预警值, 恢复正常";
+                    break;
+                case "light":
+                    info = "光线低于预警值, 恢复正常";
+                    break;
+                case "pitch":
+                    info = "俯仰角低于预警值, 恢复正常";
+                    break;
+                case "roll":
+                    info = "横滚角低于预警值, 恢复正常";
+                    break;
+                case "altitude":
+                    info = "海拔低于预警值, 恢复正常";
+                    break;
+                case "latitude":
+                    info = "维度低于预警值, 恢复正常";
+                    break;
+                case "longitude":
+                    info = "经度低于预警值, 恢复正常";
+                    break;
+                default:
+                    info = "未知传感器低于预警值, 恢复正常";
+                    break;
+            }
+        } else
+
+        {
+            switch (sensorType) {
+                case "smoke":
+                    info = "烟雾浓度高，设备预警";
+                    break;
+                case "cover":
+                case "jinggai":
+                    info = "井盖打开，设备预警";
+                    break;
+                case "level":
+                    info = "水位溢出, 设备预警";
+                    break;
+                case "alarm":
+                    info = "触发紧急呼叫，设备预警";
+                    break;
+                case "flame":
+                    info = "检测到火焰，设备预警";
+                    break;
+                case "collision":
+                    info = "碰撞解除，恢复正常";
+                    break;
+                case "drop":
+                    info = "发生滴漏，设备预警";
+                    break;
+                case "leak":
+                    info = "发生滴漏，设备预警";
+                    break;
+                case "door":
+                    info = "门锁打开，设备预警";
+                    break;
+                case "temperature":
+                    info = "温度 值为 " + thresholds + "°C 达到预警值";
+                    break;
+                case "humidity":
+                    info = "湿度 值为 " + thresholds + "% 达到预警值";
+                    break;
+                case "battery":
+                    info = "电量 值为 " + thresholds + "% 达到预警值";
+                    break;
+                case "co":
+                    info = "一氧化碳 值为 " + thresholds + "ppm 达到预警值";
+                    break;
+                case "co2":
+                    info = "二氧化碳 值为 " + thresholds + "ppm 达到预警值";
+                    break;
+                case "lpg":
+                    info = "液化石油气 值为 " + thresholds + "达到预警值";
+                    break;
+                case "ch4":
+                    info = "甲烷 值为 " + thresholds + "ppm 达到预警值";
+                    break;
+                case "no2":
+                    info = "二氧化氮 值为 " + thresholds + "ug/m³ 达到预警值";
+                    break;
+                case "pm2_5":
+                    info = "PM2.5 值为 " + thresholds + "ug/m³ 达到预警值";
+                    break;
+                case "pm10":
+                    info = "PM10 值为 " + thresholds + "ug/m³ 达到预警值";
+                    break;
+                case "distance":
+                    info = "液位 值为 " + thresholds + "cm 达到预警值";
+                    break;
+                case "light":
+                    info = "光线 值为 " + thresholds + "Lux 达到预警值";
+                    break;
+                case "pitch":
+                    info = "俯仰角 值为 " + thresholds + "  达到预警值";
+                    break;
+                case "roll":
+                    info = "横滚角 值为 " + thresholds + "  达到预警值";
+                    break;
+                case "altitude":
+                    info = "海拔 值为 " + thresholds + "  达到预警值";
+                    break;
+                case "latitude":
+                    info = "维度 值为 " + thresholds + "  达到预警值";
+                    break;
+                case "longitude":
+                    info = "经度 值为 " + thresholds + " 达到预警值";
+                    break;
+                default:
+                    info = "未知传感器 值为 " + thresholds + "  达到预警值";
                     break;
             }
         }

@@ -129,6 +129,7 @@
     <string name="misdescription">Mis</string>
     <string name="alarm_test">Test</string>
     <string name="confirming">Confirming</string>
+    <string name="confirming_again">Confirming Again</string>
     <string name="setting_name_address">Name/Address</string>
     <string name="setting_tag">Setting Tag</string>
     <string name="fix_behavior">com.sensoro.smartcity.widget.FixScrollingFooterBehavior</string>
