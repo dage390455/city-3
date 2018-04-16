@@ -115,10 +115,17 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         if (mSocket != null) {
             mSocket.disconnect();
             mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+            //
+            mSocket.close();
         }
         if (mHandler != null) {
             mHandler.removeCallbacks(mRunnable);
         }
+    }
+
+    @Override
+    protected void onPostResume() {
+        super.onPostResume();
     }
 
     private void init() {

@@ -254,13 +254,13 @@
             android:layout_height="wrap_content">
             <TextView
                 android:layout_marginTop="@dimen/y20"
-                android:layout_marginRight="@dimen/x30"
+                android:layout_marginEnd="@dimen/x30"
                 android:textColor="@color/white"
                 android:paddingLeft="@dimen/x30"
                 android:paddingRight="@dimen/x30"
                 android:padding="@dimen/x20"
                 android:textSize="13sp"
-                android:drawableRight="@mipmap/ic_refresh_signal"
+                android:drawableEnd="@mipmap/ic_refresh_signal"
                 android:id="@+id/deploy_device_signal"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />

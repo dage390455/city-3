@@ -99,7 +99,7 @@
     <string name="status_inactive">未激活</string>
     <string name="status_lost">失联</string>
     <string name="history">历史记录</string>
-    <string name="all_tag">所有标签</string>
+    <string name="all_tag">历史记录</string>
     <string name="today_alarm">预警</string>
     <string name="alarm_type">预警类型</string>
     <string name="remarks">备注</string>

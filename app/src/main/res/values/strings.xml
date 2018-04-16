@@ -112,7 +112,7 @@
     <string name="status_inactive">Inactive</string>
     <string name="status_lost">Lost</string>
     <string name="history">History</string>
-    <string name="all_tag">All Tag</string>
+    <string name="all_tag">History Record</string>
     <string name="today_alarm">Alarm</string>
     <string name="alarm_type">Alarm Type</string>
     <string name="remarks">Remarks</string>

@@ -101,6 +101,24 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
             mEditor = mPref.edit();
             mHistoryKeywords = new ArrayList<String>();
             mKeywordEt.setOnEditorActionListener(this);
+            mKeywordEt.setOnKeyListener(new View.OnKeyListener() {
+                @Override
+                public boolean onKey(View v, int keyCode, KeyEvent event) {
+                    if (TextUtils.isEmpty(mKeywordEt.getText())){
+                        if (keyCode == KeyEvent.KEYCODE_DEL
+                                && event.getAction() == KeyEvent.ACTION_DOWN) {
+                            if (mTagList.size()>0){
+                                mTagList.remove(mTagList.size()-1);
+                                initInputLayout();
+
+                            }
+                            return true;
+                        }
+                    }
+
+                    return false;
+                }
+            });
             mKeywordEt.addTextChangedListener(this);
             mKeywordEt.requestFocus();
             initRelation();
@@ -113,6 +131,9 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
     }
 
     private void initInputLayout() {
+        inputLayout.removeAllViews();
+        mKeywordEt.getText().clear();
+        inputLayout.addView(mKeywordEt);
         int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
         mTagList = getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
         for (int i = 0; i < mTagList.size(); i ++) {
@@ -133,11 +154,12 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
                     inputLayout.removeView(v);
                 }
             });
+//            inputLayout.remo
             int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
             textView.measure(spec,spec);
             inputLayout.addView(textView, i, params);
         }
-
+        mKeywordEt.requestFocus();
     }
 
     private void initSearchHistory() {
@@ -166,6 +188,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
                 mKeywordEt.clearFocus();
                 mKeywordEt.setSelection(mHistoryKeywords.get(position).trim().length());
                 dismissInputMethodManager(view);
+                doChoose(false);
 
             }
         });
@@ -223,7 +246,6 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         }
         mRelationAdapter.setData(tempList);
         mRelationAdapter.notifyDataSetChanged();
-
     }
 
     public void dismissInputMethodManager(View view) {
@@ -235,7 +257,9 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         String text = mKeywordEt.getText().toString();
         String oldText = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
         if (add_count > 1) {
-            Toast.makeText(cityApplication, "标签每次添加一次", Toast.LENGTH_SHORT).show();
+            mKeywordEt.getText().clear();
+            mKeywordEt.clearFocus();
+            Toast.makeText(cityApplication, "标签不能重复", Toast.LENGTH_SHORT).show();
         }
         if (!TextUtils.isEmpty(text)) {
             if (mHistoryKeywords.contains(text)) {
@@ -267,20 +291,34 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         }
     }
 
-    public void doChoose() {
-        if (!mTagList.contains(mKeywordEt.getText().toString()) && !mKeywordEt.getText().toString().trim().equals("")) {
-            mTagList.add(mKeywordEt.getText().toString());
+    public void doChoose(Boolean isFinish) {
+        if (TextUtils.isEmpty(mKeywordEt.getText().toString().trim())){
+            if (!isFinish){
+                return;
+            }
+        }else {
+            if (!mTagList.contains(mKeywordEt.getText().toString()) ) {
+                mTagList.add(mKeywordEt.getText().toString());
+                initInputLayout();
+            }else {
+                mKeywordEt.getText().clear();
+                mKeywordEt.clearFocus();
+                Toast.makeText(this,"标签不能重复",Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
         save();
-        Intent data = new Intent();
-        data.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) mTagList);
-        setResult(RESULT_CODE_SETTING_TAG, data);
-        finish();
+        if (isFinish){
+            Intent data = new Intent();
+            data.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) mTagList);
+            setResult(RESULT_CODE_SETTING_TAG, data);
+            finish();
+        }
     }
 
     @OnClick(R.id.deploy_setting_tag_finish)
     public void doFinish() {
-        doChoose();
+        doChoose(true);
     }
 
 
@@ -294,7 +332,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
-            doChoose();
+            doChoose(false);
             return true;
         }
         return false;
@@ -327,7 +365,9 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
     @Override
     public void onItemClick(View view, int position) {
         String text = mRelationAdapter.getData().get(position);
-        mKeywordEt.setText(text);
+//        mKeywordEt.setText(text);
+//        addTagtoInputLayout(text);
+        initInputLayout();
         mRelationAdapter.getData().clear();
         mRelationAdapter.notifyDataSetChanged();
     }
