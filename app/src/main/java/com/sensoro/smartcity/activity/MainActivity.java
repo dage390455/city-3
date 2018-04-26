@@ -9,9 +9,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.Settings;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
@@ -64,9 +67,11 @@ import java.util.List;
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, Constants, View.OnClickListener {
-    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 100;
-    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 101;
+public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, Constants, View
+        .OnClickListener {
+    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 0x100;
+    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 0x101;
+    public static final int REQUEST_TAKE_PHOTO_PERMISSION = 0x102;
     private MenuInfoAdapter mMenuInfoAdapter = null;
     private SensoroPager sensoroPager = null;
     private MenuDrawer mMenuDrawer = null;
@@ -80,16 +85,26 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private TextView mVersionTextView = null;
     private LinearLayout mExitLayout = null;
     private Socket mSocket = null;
-    private DeviceInfoListener mInfoListener = null;
+    private DeviceInfoListener mInfoListener = new DeviceInfoListener();
+    ;
     private String mUserName = null;
     private String mPhone = null;
     private String mPhoneId = null;
     private Character mCharacter = null;
     private Handler mHandler = new Handler();
-    private TaskRunnable mRunnable = new TaskRunnable();
+    private final TaskRunnable mRunnable = new TaskRunnable();
     private long exitTime = 0;
     private ProgressDialog mProgressDialog = null;
     private String roles;
+
+    private int current_iteam = 0;
+    public static final int SUPPER_ACCOUNT = 1;
+    public static final int NORMOL_ACCOUNT = 2;
+    public static final int BUSSISE_ACCOUNT = 3;
+    private int accountType = NORMOL_ACCOUNT;
+    final List<String> dataSupper = new ArrayList<>();
+    final List<String> dataNormal = new ArrayList<>();
+    final List<String> dataBussise = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -115,12 +130,17 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         if (mSocket != null) {
             mSocket.disconnect();
             mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-            //
-            mSocket.close();
+            mSocket = null;
         }
         if (mHandler != null) {
             mHandler.removeCallbacks(mRunnable);
         }
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        //do nothing
     }
 
     @Override
@@ -130,6 +150,19 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private void init() {
         try {
+            String[] titleArray = getResources().getStringArray(R.array.drawer_title_array);
+
+            for (String s : titleArray) {
+                dataNormal.add(s);
+            }
+            String[] titleArray_no = getResources().getStringArray(R.array.drawer_title_array_nobussise);
+            for (String s : titleArray_no) {
+                dataBussise.add(s);
+            }
+            String[] titleArray_supper = getResources().getStringArray(R.array.drawer_title_array_supper);
+            for (String s : titleArray_supper) {
+                dataSupper.add(s);
+            }
             StatService.setDebugOn(true);
             StatService.start(this);
             mUserName = this.getIntent().getStringExtra(EXTRA_USER_NAME);
@@ -139,6 +172,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             roles = getIntent().getStringExtra(EXTRA_USER_ROLES);
             initWidget();
             mHandler.postDelayed(mRunnable, 3000L);
+
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
@@ -155,7 +189,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private void initWidget() {
         try {
             requireCameraPermission();
-            mInfoListener = new DeviceInfoListener();
+
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.loading));
             mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
@@ -172,7 +206,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             mExitLayout = (LinearLayout) findViewById(R.id.main_left_exit);
             mExitLayout.setOnClickListener(this);
             mNameTextView.setText(mUserName);
-            mPhoneTextView.setText(mPhone == null ? mPhone : "");
+            mPhoneTextView.setText(mPhone == null ? "" : mPhone);
             mMenuInfoAdapter = new MenuInfoAdapter(this);
             mListView.setAdapter(mMenuInfoAdapter);
             mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -200,11 +234,42 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
             }
             mExitLayout.setLayoutParams(params);
+            if ("true".equalsIgnoreCase(this.getIntent().getStringExtra(EXTRA_IS_SPECIFIC))) {
+                sensoroPager.setCurrentItem(2);
+                //考虑到生命周期问题，暂时延缓
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        isSupperAccount();
+                    }
+                }, 50);
+            }
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    /**
+     * 简单判断账户类型
+     */
+    private void isSupperAccount() {
+        if ("true".equalsIgnoreCase(this.getIntent().getStringExtra(EXTRA_IS_SPECIFIC))) {
+            accountType = SUPPER_ACCOUNT;
+            mMenuInfoAdapter.setDataList(dataSupper);
+        } else if (this.roles.equalsIgnoreCase("business")) {
+            accountType = BUSSISE_ACCOUNT;
+            mMenuInfoAdapter.setDataList(dataBussise);
+        } else {
+            accountType = NORMOL_ACCOUNT;
+            mMenuInfoAdapter.setDataList(dataNormal);
+        }
+        pointDeployFragment.hiddenRootView();
+        merchantFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
+        sensoroPager.setCurrentItem(2);
+        mMenuInfoAdapter.showAccountSwitch(accountType);
+        merchantFragment.requestData();
     }
 
     public void getAPPVersionCode() {
@@ -221,8 +286,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void requestUpdate() {
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getUpdateInfo(new Response.Listener<UpdateRsp>() {
+        SensoroCityApplication.getInstance().smartCityServer.getUpdateInfo(new Response.Listener<UpdateRsp>() {
             @Override
             public void onResponse(UpdateRsp response) {
                 Log.d("ok===========", response.toString());
@@ -245,7 +309,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     }
 
     private void showSimpleDialog(String log, final String url) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(log);
         builder.setTitle("版本更新");
         builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
@@ -269,12 +333,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private boolean requireLocationPermission() {
 
-        // Here, thisActivity is the current activity
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.ACCESS_COARSE_LOCATION)) {
 
@@ -282,11 +344,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 ActivityCompat.requestPermissions(this,
                         new String[]{
                                 Manifest.permission.ACCESS_COARSE_LOCATION},
-                        100);
+                        MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
 
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
             return false;
         } else {
@@ -294,28 +353,20 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         }
     }
 
-    private boolean requireCameraPermission() {
-        // Here, thisActivity is the current activity
+    public boolean requireCameraPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
 
-            // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(this,
                     Manifest.permission.CAMERA)) {
 
-
             } else {
-                // No explanation needed, we can request the permission.
 
                 ActivityCompat.requestPermissions(this,
                         new String[]{
                                 Manifest.permission.CAMERA},
                         MY_PERMISSIONS_REQUEST_CAMERA);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
             }
             return false;
         } else {
@@ -323,19 +374,104 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         }
     }
 
+    private void toTakePhotoFragment() {
+        boolean isRequire = requireLocationPermission();
+        if (isRequire) {
+            pointDeployFragment.showRootView();
+            sensoroPager.setCurrentItem(3);
+        } else {
+            mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
+            mMenuInfoAdapter.notifyDataSetChanged();
+            Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
+        }
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
+            grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        Log.e("", "onRequestPermissionsResult: -----" + requestCode);
+        if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
+            requireLocationPermission();
+            Log.e("", "onRequestPermissionsResult: -----MY_PERMISSIONS_REQUEST_CAMERA");
+        }
+        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
+
+        }
+
+    }
+
+    //    private void takePhotoRequestPermission() {
+//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager
+// .PERMISSION_GRANTED) {
+//            //判断是否需要主动弹出对话框
+//            if (SpUtil.getInstance().getFlag() &&
+//                    !ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//                //满足条件弹出自定义dialog
+//                if (dialog == null) {
+//                    dialog = MyDialog.newInstance("相机故障", "需要开启读写数据权限才可以使用拍照功能");
+//                    dialog.setOnAllowClickListener(new MyDialog.OnAllowClickListener() {
+//                        @Override
+//                        public void onClick() {
+//                            //用户点击 GO SETTING 的时候跳转到应用设置界面
+//                            startAppSetting();
+//                        }
+//                    });
+//                }
+//                dialog.show(getSupportFragmentManager(), "dialog");
+//            } else {
+//                //保存 shouldShowRequestPermissionRationale的返回值
+//                SpUtil.getInstance().putFlag(ActivityCompat.shouldShowRequestPermissionRationale(this,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE));
+//                //直接申请权限
+//                ActivityCompat.requestPermissions(this,
+//                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+//                        REQUEST_TAKE_PHOTO_PERMISSION);
+//            }
+//        } else {
+//            takePhoto();
+//        }
+//    }
+    public void showRequestPermissionDialot() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(getString(R.string.app_name));
+        builder.setMessage(getString(R.string.msg_camera_framework_bug));
+        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                //TODO 设置界面
+                startAppSetting();
+            }
+        }).setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+                pointDeployFragment.hiddenRootView();
+                indexFragment.requestWithDirection(DIRECTION_DOWN);
+                sensoroPager.setCurrentItem(current_iteam);
+                mMenuInfoAdapter.setSelectedIndex(current_iteam);
+                mMenuInfoAdapter.showAccountSwitch(accountType);
+            }
+        });
+//        builder.setOnCancelListener(`new FinishListener(this));
+        builder.show();
+    }
+
     private void createSocket() {
         try {
-            String sessionId = SmartCityServerImpl.getInstance(this).getSessionId();
+            String sessionId = SensoroCityApplication.getInstance().smartCityServer.getSessionId();
             IO.Options options = new IO.Options();
             options.query = "session=" + sessionId;
             options.forceNew = true;
             mSocket = IO.socket(SmartCityServerImpl.SCOPE, options);
             mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
             mSocket.connect();
-
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+
     }
 
     public String getRoles() {
@@ -346,11 +482,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         try {
             if (mSocket != null) {
                 mSocket.disconnect();
-
                 mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket = null;
             }
-
-            String sessionId = SmartCityServerImpl.getInstance(this).getSessionId();
+            String sessionId = SensoroCityApplication.getInstance().smartCityServer.getSessionId();
             IO.Options options = new IO.Options();
             options.query = "session=" + sessionId;
             options.forceNew = true;
@@ -363,7 +498,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         }
     }
 
-    public void reconnectSocketIO(String userName, String phone, String roles) {
+    public void reconnectSocketIO(String userName, String phone, String roles, String isSpecific) {
         mUserName = userName;
         mPhone = phone;
         mNameTextView.setText(mUserName);
@@ -372,18 +507,31 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             mMenuInfoAdapter.setSelectedIndex(0);
             sensoroPager.setCurrentItem(0);
             indexFragment.requestWithDirection(Constants.DIRECTION_DOWN);
-            mMenuInfoAdapter.notifyDataSetChanged();
+            if ("true".equalsIgnoreCase(isSpecific)) {
+                accountType = SUPPER_ACCOUNT;
+                mMenuInfoAdapter.setDataList(dataSupper);
+            } else {
+                if (this.roles.equalsIgnoreCase("business")) {
+                    accountType = BUSSISE_ACCOUNT;
+                    mMenuInfoAdapter.setDataList(dataBussise);
+                } else {
+                    accountType = NORMOL_ACCOUNT;
+                    mMenuInfoAdapter.setDataList(dataNormal);
+                }
+            }
+            mMenuInfoAdapter.showAccountSwitch(accountType);
             reconnect();
         }
     }
+
 
     private void logout() {
         mProgressDialog.setMessage(getString(R.string.tips_logout));
         mProgressDialog.show();
         String phoneId = this.getIntent().getStringExtra(EXTRA_PHONE_ID);
         String uid = this.getIntent().getStringExtra(EXTRA_USER_ID);
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.logout(phoneId, uid, new Response.Listener<ResponseBase>() {
+        SensoroCityApplication.getInstance().smartCityServer.logout(phoneId, uid, new Response.Listener<ResponseBase>
+                () {
             @Override
             public void onResponse(ResponseBase response) {
                 mProgressDialog.dismiss();
@@ -419,7 +567,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     public void exit() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(getApplicationContext(), R.string.exit_main,
+            Toast.makeText(MainActivity.this, R.string.exit_main,
                     Toast.LENGTH_SHORT).show();
             exitTime = System.currentTimeMillis();
         } else {
@@ -435,50 +583,121 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mMenuInfoAdapter.setSelectedIndex(position);
-        mMenuInfoAdapter.notifyDataSetChanged();
+        mMenuInfoAdapter.showAccountSwitch(accountType);
         mMenuDrawer.closeMenu();
-        switch (position) {
-            case 0:
-                pointDeployFragment.hiddenRootView();
-                sensoroPager.setCurrentItem(position);
-                indexFragment.requestWithDirection(DIRECTION_DOWN);
-                sensoroPager.setCurrentItem(0);
-                break;
-            case 1:
-                pointDeployFragment.hiddenRootView();
-                alarmListFragment.requestData(DIRECTION_DOWN, true);
-                sensoroPager.setCurrentItem(1);
-                break;
-            case 2:
+        //账户切换
+        switch (accountType) {
+            case SUPPER_ACCOUNT:
+                current_iteam = position;
                 pointDeployFragment.hiddenRootView();
                 merchantFragment.requestData();
                 merchantFragment.refreshData(mUserName, mPhone, mPhoneId);
                 sensoroPager.setCurrentItem(2);
                 break;
-            case 3:
-                if (requireCameraPermission()) {
-                    boolean isRequire = requireLocationPermission();
-                    if (isRequire) {
-                        pointDeployFragment.showRootView();
-                        sensoroPager.setCurrentItem(3);
-                    } else {
-                        mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
-                        mMenuInfoAdapter.notifyDataSetChanged();
-                        Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
-                    }
+            case NORMOL_ACCOUNT:
+                switch (position) {
+                    case 0:
+                        current_iteam = position;
+                        pointDeployFragment.hiddenRootView();
+                        indexFragment.requestWithDirection(DIRECTION_DOWN);
+                        sensoroPager.setCurrentItem(position);
+//                sensoroPager.setCurrentItem(0);
+                        break;
+                    case 1:
+                        current_iteam = position;
+                        pointDeployFragment.hiddenRootView();
+                        alarmListFragment.requestData(DIRECTION_DOWN, true);
+                        sensoroPager.setCurrentItem(position);
+                        break;
+                    case 2:
+                        current_iteam = position;
+                        pointDeployFragment.hiddenRootView();
+                        merchantFragment.requestData();
+                        merchantFragment.refreshData(mUserName, mPhone, mPhoneId);
+                        sensoroPager.setCurrentItem(position);
+                        break;
+                    case 3:
+                        if (requireCameraPermission()) {
+                            boolean isRequire = requireLocationPermission();
+                            if (isRequire) {
+                                pointDeployFragment.showRootView();
+                                sensoroPager.setCurrentItem(3);
+                            } else {
+                                mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
+                                mMenuInfoAdapter.showAccountSwitch(accountType);
+                                Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
+                            }
 
-                } else {
-                    Toast.makeText(this, R.string.tips_camera_permission, Toast.LENGTH_SHORT).show();
+                        } else {
+                            pointDeployFragment.hiddenRootView();
+                            sensoroPager.setCurrentItem(position);
+                            indexFragment.requestWithDirection(DIRECTION_DOWN);
+                            sensoroPager.setCurrentItem(current_iteam);
+                            showRequestPermissionDialot();
+
+                        }
+                        break;
+                    case 4:
+                        logout();
+                        break;
+                    default:
+                        pointDeployFragment.hiddenRootView();
+                        break;
                 }
                 break;
-            case 4:
-                logout();
-                break;
-            default:
-                pointDeployFragment.hiddenRootView();
+            case BUSSISE_ACCOUNT:
+                switch (position) {
+                    case 0:
+                        current_iteam = position;
+                        pointDeployFragment.hiddenRootView();
+                        indexFragment.requestWithDirection(DIRECTION_DOWN);
+                        sensoroPager.setCurrentItem(position);
+                        break;
+                    case 1:
+                        current_iteam = position;
+                        pointDeployFragment.hiddenRootView();
+                        alarmListFragment.requestData(DIRECTION_DOWN, true);
+                        sensoroPager.setCurrentItem(position);
+                        break;
+                    case 2:
+                        if (requireCameraPermission()) {
+                            boolean isRequire = requireLocationPermission();
+                            if (isRequire) {
+                                pointDeployFragment.showRootView();
+                                sensoroPager.setCurrentItem(3);
+                            } else {
+                                mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
+                                mMenuInfoAdapter.showAccountSwitch(accountType);
+                                Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
+                            }
+
+                        } else {
+                            pointDeployFragment.hiddenRootView();
+                            sensoroPager.setCurrentItem(position);
+                            indexFragment.requestWithDirection(DIRECTION_DOWN);
+                            sensoroPager.setCurrentItem(current_iteam);
+                            showRequestPermissionDialot();
+                        }
+                        break;
+                    case 3:
+                        logout();
+                        break;
+                    default:
+                        pointDeployFragment.hiddenRootView();
+                        break;
+                }
                 break;
         }
 
+
+    }
+
+    //使用startActivityForResult的方式启动应用设置界面
+    public void startAppSetting() {
+        Intent in = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+        Uri uri = Uri.fromParts("package", getPackageName(), null);
+        in.setData(uri);
+        startActivityForResult(in, REQUEST_TAKE_PHOTO_PERMISSION);
     }
 
     public SensoroPager getSensoroPager() {
@@ -488,6 +707,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        onCheckPermission(requestCode);
+
         if (resultCode == RESULT_CODE_ORIGIN) {
             sensoroPager.setCurrentItem(0);
             mMenuInfoAdapter.setSelectedIndex(0);
@@ -569,7 +790,27 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                 indexFragment.refreshDeviceInfo(deviceInfo);
             }
         }
-        mMenuInfoAdapter.notifyDataSetChanged();
+        mMenuInfoAdapter.showAccountSwitch(accountType);
+    }
+
+    public void onCheckPermission(int requestCode) {
+        if (requestCode == REQUEST_TAKE_PHOTO_PERMISSION) {
+            if (requireCameraPermission()) {
+                boolean isRequire = requireLocationPermission();
+                if (isRequire) {
+                    pointDeployFragment.showRootView();
+                    sensoroPager.setCurrentItem(current_iteam);
+                    mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
+                    mMenuInfoAdapter.showAccountSwitch(accountType);
+                } else {
+                    mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
+                    mMenuInfoAdapter.showAccountSwitch(accountType);
+                    Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                showRequestPermissionDialot();
+            }
+        }
     }
 
     @Override
@@ -581,7 +822,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         }
     }
 
-    private boolean isMainActivityTop(){
+    private boolean isMainActivityTop() {
         ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
         String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
         return name.equals(MainActivity.class.getName());
@@ -625,10 +866,10 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             try {
                 for (int i = 0; i < args.length; i++) {
                     if (args[i] instanceof JSONObject) {
-                        JSONObject jsonObject = (JSONObject) args[i];
+//                        JSONObject jsonObject = (JSONObject) args[i];
                     } else {
                         JSONArray jsonArray = (JSONArray) args[i];
-                        JSONObject jsonObject = jsonArray.getJSONObject(0);
+                        final JSONObject jsonObject = jsonArray.getJSONObject(0);
                         if (isMainActivityTop()) {
                             indexFragment.refreshWithJsonData(jsonObject.toString());
                         }
@@ -640,6 +881,4 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
         }
     }
-
-
 }

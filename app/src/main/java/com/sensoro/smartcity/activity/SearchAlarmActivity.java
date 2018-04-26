@@ -53,6 +53,7 @@ import butterknife.ButterKnife;
  */
 
 public class SearchAlarmActivity extends BaseActivity implements View.OnClickListener, Constants, TextView.OnEditorActionListener, TextWatcher{
+
     @BindView(R.id.search_alarm_et)
     EditText mKeywordEt;
     @BindView(R.id.search_alarm_cancel_tv)
@@ -242,6 +243,8 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                         Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }catch (Exception e){
+
                     }
                 } else {
                     Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT).show();

@@ -51,6 +51,7 @@ import butterknife.ButterKnife;
  */
 
 public class SearchMerchantActivity extends BaseActivity implements View.OnClickListener, Constants, TextView.OnEditorActionListener, TextWatcher {
+
     @BindView(R.id.search_merchant_et)
     EditText mKeywordEt;
     @BindView(R.id.search_merchant_cancel_tv)
@@ -215,6 +216,8 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
                         Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }catch (Exception e){
+
                     }
                 } else {
                     Toast.makeText(getApplicationContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();

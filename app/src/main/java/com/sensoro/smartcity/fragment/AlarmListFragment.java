@@ -50,6 +50,7 @@ import java.util.List;
  */
 
 public class AlarmListFragment extends Fragment implements View.OnClickListener, Constants, AdapterView.OnItemClickListener, AlarmListAdapter.AlarmItemClickListener, SensoroPopupAlarmView.OnPopupCallbackListener, AbsListView.OnScrollListener {
+
     private PullToRefreshListView mPtrListView;
     private ImageView mDateImageView;
     private ImageView mSearchImageView;
@@ -275,11 +276,10 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
             temp_startTime = startTime;
             temp_endTime = endTime;
         }
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getActivity().getApplication();
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
-                sensoroCityApplication.smartCityServer.getDeviceAlarmLogList(temp_startTime, temp_endTime, null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(temp_startTime, temp_endTime, null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
                     @Override
                     public void onResponse(DeviceAlarmLogRsp response) {
                         mProgressDialog.dismiss();
@@ -296,6 +296,8 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                                 Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            }catch (Exception e){
+
                             }
                         } else {
                             Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
@@ -306,7 +308,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                sensoroCityApplication.smartCityServer.getDeviceAlarmLogList(temp_startTime, temp_endTime,  null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(temp_startTime, temp_endTime,  null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
                     @Override
                     public void onResponse(DeviceAlarmLogRsp response) {
                         mProgressDialog.dismiss();
@@ -328,6 +330,8 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                                 Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                             } catch (JSONException e) {
                                 e.printStackTrace();
+                            }catch (Exception e){
+
                             }
                         } else {
                             Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
@@ -348,8 +352,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
         startTime = DateUtil.strToDate(startDate).getTime();
         endTime = DateUtil.strToDate(endDate).getTime();
         mSelectedDateTextView.setText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil.getMothDayFormatDate(endTime));
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getActivity().getApplication();
-        sensoroCityApplication.smartCityServer.getDeviceAlarmLogList(startTime, endTime, null, null, 1, new Response.Listener<DeviceAlarmLogRsp>() {
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(startTime, endTime, null, null, 1, new Response.Listener<DeviceAlarmLogRsp>() {
             @Override
             public void onResponse(DeviceAlarmLogRsp response) {
                 mProgressDialog.dismiss();
@@ -415,9 +418,8 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onItemClick(View view, int position) {
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getActivity().getApplication();
         DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
-        mAlarmPopupView.show(sensoroCityApplication, deviceAlarmLogInfo, mShadowView, this);
+        mAlarmPopupView.show(SensoroCityApplication.getInstance(), deviceAlarmLogInfo, mShadowView, this);
     }
 
     @Override

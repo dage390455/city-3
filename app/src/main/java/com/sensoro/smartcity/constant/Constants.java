@@ -22,6 +22,9 @@ public interface Constants {
     String INPUT = "INPUT";
     int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
             R.mipmap.ic_menu_location,};
+    int LEFT_MENU_ICON_UNSELECT_BUSSIES[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
+            R.mipmap.ic_menu_location,};
+    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
     String[] DEVICE_STATUS_ARRAY = {"预警", "正常", "失联", "未激活"};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
@@ -78,6 +81,7 @@ public interface Constants {
     String EXTRA_PHONE = "extra_phone";
     String EXTRA_CHARACTER = "extra_character";
     String EXTRA_PHONE_ID = "extra_phone_id";
+    String EXTRA_IS_SPECIFIC = "extra_is_specific";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_SENSOR_SN = "extra_sn";
     String EXTRA_SENSOR_NAME = "extra_name";

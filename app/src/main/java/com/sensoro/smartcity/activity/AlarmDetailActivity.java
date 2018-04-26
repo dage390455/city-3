@@ -37,6 +37,7 @@ import butterknife.OnClick;
 public class AlarmDetailActivity extends BaseActivity implements Constants, SensoroPopupAlarmView.OnPopupCallbackListener, View.OnClickListener, View.OnTouchListener {
 
 
+
     @BindView(R.id.alarm_detail_status_iv)
     ImageView statusImageView;
     @BindView(R.id.alarm_detail_iv_type)
@@ -203,8 +204,7 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
     }
 
     public void showConfirmPopup() {
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        mAlarmPopupView.show(sensoroCityApplication, deviceAlarmLogInfo, mShadowView, this);
+        mAlarmPopupView.show(SensoroCityApplication.getInstance(), deviceAlarmLogInfo, mShadowView, this);
     }
 
     @OnClick(R.id.alarm_detail_back)

@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -10,9 +11,11 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
@@ -107,6 +110,8 @@ import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
  * Created by sensoro on 17/11/20.
  */
 
+@SuppressLint("NewApi")
+@RequiresApi(api = Build.VERSION_CODES.M)
 public class SensorDetailActivity extends BaseActivity implements Constants, OnChartValueSelectedListener,
         AMapLocationListener, View.OnScrollChangeListener, AMap.OnMapTouchListener, GeocodeSearch
                 .OnGeocodeSearchListener {
@@ -273,6 +278,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     public void onDestroy() {
         super.onDestroy();
         mMapView.onDestroy();
+        mRecentInfoList.clear();
         if (tempUpBitmap != null) {
             tempUpBitmap.recycle();
             tempUpBitmap = null;
@@ -399,36 +405,40 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     //补全tags标签信息
     private void requestData() {
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getDeviceDetailInfoList(mDeviceInfo.getSn(), null, 1, new Response
-                .Listener<DeviceInfoListRsp>() {
-            @Override
-            public void onResponse(DeviceInfoListRsp response) {
-                mProgressDialog.dismiss();
-                if (response != null && response.getData().size() > 0) {
-                    DeviceInfo deviceInfo = response.getData().get(0);
-                    String[] tags = deviceInfo.getTags();
-                    mDeviceInfo.setTags(tags);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                mProgressDialog.dismiss();
-                if (volleyError.networkResponse != null) {
-                    String reason = new String(volleyError.networkResponse.data);
-                    try {
-                        JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
-                                .show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(mDeviceInfo.getSn(), null, 1,
+                new Response
+                        .Listener<DeviceInfoListRsp>() {
+                    @Override
+                    public void onResponse(DeviceInfoListRsp response) {
+                        mProgressDialog.dismiss();
+                        if (response != null && response.getData().size() > 0) {
+                            DeviceInfo deviceInfo = response.getData().get(0);
+                            String[] tags = deviceInfo.getTags();
+                            mDeviceInfo.setTags(tags);
+                        }
                     }
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        mProgressDialog.dismiss();
+                        if (volleyError.networkResponse != null) {
+                            String reason = new String(volleyError.networkResponse.data);
+                            try {
+                                JSONObject jsonObject = new JSONObject(reason);
+                                Toast.makeText(SensorDetailActivity.this, jsonObject.getString("errmsg"), Toast
+                                        .LENGTH_SHORT)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+
+                            }
+                        } else {
+                            Toast.makeText(SensorDetailActivity.this, R.string.tips_network_error, Toast
+                                    .LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 
     private void initChart() {
@@ -568,67 +578,73 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     private void requestDeviceRecentLog() {
         long endTime = mDeviceInfo.getUpdatedTime();
         long startTime = endTime - 2 * 1000 * 60 * 60 * 24;
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getDeviceHistoryList(mDeviceInfo.getSn(), startTime, endTime, new
-                Response.Listener<DeviceRecentRsp>() {
-                    @Override
-                    public void onResponse(DeviceRecentRsp response) {
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceHistoryList(mDeviceInfo.getSn(), startTime,
+                endTime, new
+                        Response.Listener<DeviceRecentRsp>() {
+                            @Override
+                            public void onResponse(DeviceRecentRsp response) {
 //                        mProgressDialog.dismiss();
-                        String data = response.getData().toString();
-                        try {
-                            mMapView.setVisibility(View.VISIBLE);
-                            JSONObject jsonObject = new JSONObject(data);
-                            sensorTypes = response.getSensorTypes();
-                            if (sensorTypes.length == 3) {
-                                List<String> tempList = Arrays.asList(sensorTypes);
-                                Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
-                                if (tempList.contains("collision")) {//collision, pitch,roll
-                                    sensorTypes[0] = "pitch";
-                                    sensorTypes[1] = "roll";
-                                    sensorTypes[2] = "collision";
-                                } else if (tempList.contains("flame")) {//temperature,humidity,flame
-                                    sensorTypes[0] = "temperature";
-                                    sensorTypes[1] = "humidity";
-                                    sensorTypes[2] = "flame";
+                                String data = response.getData().toString();
+                                try {
+                                    mMapView.setVisibility(View.VISIBLE);
+                                    JSONObject jsonObject = new JSONObject(data);
+                                    sensorTypes = response.getSensorTypes();
+                                    if (sensorTypes.length == 3) {
+                                        List<String> tempList = Arrays.asList(sensorTypes);
+                                        Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
+                                        if (tempList.contains("collision")) {//collision, pitch,roll
+                                            sensorTypes[0] = "pitch";
+                                            sensorTypes[1] = "roll";
+                                            sensorTypes[2] = "collision";
+                                        } else if (tempList.contains("flame")) {//temperature,humidity,flame
+                                            sensorTypes[0] = "temperature";
+                                            sensorTypes[1] = "humidity";
+                                            sensorTypes[2] = "flame";
+                                        }
+                                    }
+                                    Iterator<String> iterator = jsonObject.keys();
+                                    while (iterator.hasNext()) {
+                                        String str = iterator.next();
+                                        JSONObject firstJsonObject = jsonObject.getJSONObject(str);
+                                        DeviceRecentInfo recentInfo = gson.fromJson(firstJsonObject.toString(),
+                                                DeviceRecentInfo.class);
+                                        recentInfo.setDate(str);
+                                        mRecentInfoList.add(recentInfo);
+                                    }
+
+                                    Collections.sort(mRecentInfoList);
+                                    refreshBatteryLayout();
+                                    refreshKLayout();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (Exception e) {
+
+                                } finally {
+                                    requestData();
                                 }
                             }
-                            Iterator<String> iterator = jsonObject.keys();
-                            while (iterator.hasNext()) {
-                                String str = iterator.next();
-                                JSONObject firstJsonObject = jsonObject.getJSONObject(str);
-                                DeviceRecentInfo recentInfo = gson.fromJson(firstJsonObject.toString(),
-                                        DeviceRecentInfo.class);
-                                recentInfo.setDate(str);
-                                mRecentInfoList.add(recentInfo);
-                            }
+                        }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        if (volleyError.networkResponse != null) {
+                            String reason = new String(volleyError.networkResponse.data);
+                            try {
+                                JSONObject jsonObject = new JSONObject(reason);
+                                Toast.makeText(SensorDetailActivity.this, jsonObject.getString("errmsg"), Toast
+                                        .LENGTH_SHORT)
+                                        .show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
 
-                            Collections.sort(mRecentInfoList);
-                            refreshBatteryLayout();
-                            refreshKLayout();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        } finally {
-                            requestData();
+                            }
+                        } else {
+                            Toast.makeText(SensorDetailActivity.this, R.string.tips_network_error, Toast
+                                    .LENGTH_SHORT).show();
                         }
+                        mProgressDialog.dismiss();
                     }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                if (volleyError.networkResponse != null) {
-                    String reason = new String(volleyError.networkResponse.data);
-                    try {
-                        JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
-                                .show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                } else {
-                    Toast.makeText(getApplicationContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                }
-                mProgressDialog.dismiss();
-            }
-        });
+                });
     }
 
     private void refreshStructLayout(List<SensorStruct> sensorStructList) {
@@ -892,7 +908,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         mBatteryAdapter.notifyDataSetChanged();
     }
 
-    public static boolean isAppInstalled(Context context, String packageName) {
+    public boolean isAppInstalled(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
         //获取所有已安装程序的包信息
         List<PackageInfo> pInfo = packageManager.getInstalledPackages(0);
@@ -944,7 +960,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         int status = mDeviceInfo.getStatus();
         String[] tags = mDeviceInfo.getTags();
         String tempTagStr = "";
-        if (tags != null) {
+        if (tags != null&&tags.length>0) {
             for (String tag : tags) {
                 tempTagStr += tag + ",";
             }

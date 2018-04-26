@@ -38,7 +38,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeploySettingNameActivity extends BaseActivity implements Constants, TextView.OnEditorActionListener, TextWatcher, RecycleViewItemClickListener {
+public class DeploySettingNameActivity extends BaseActivity implements Constants, TextView.OnEditorActionListener,
+        TextWatcher, RecycleViewItemClickListener {
+
 
     @BindView(R.id.deploy_setting_back)
     ImageView backImageView;
@@ -60,7 +62,6 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
     private List<String> mHistoryKeywords = new ArrayList<>();
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private RelationAdapter mRelationAdapter;
-    private SensoroCityApplication cityApplication;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -85,20 +86,18 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
 
     private void init() {
         try {
-            cityApplication = (SensoroCityApplication) getApplication();
             mPref = getSharedPreferences(PREFERENCE_DEPLOY_NAME_HISTORY, Activity.MODE_PRIVATE);
             mEditor = mPref.edit();
-            mHistoryKeywords = new ArrayList<String>();
-            mKeywordEt.setOnEditorActionListener(this);
-            mKeywordEt.addTextChangedListener(this);
-            mKeywordEt.requestFocus();
+            initRelation();
+            initSearchHistory();
             String name = getIntent().getStringExtra(EXTRA_SETTING_NAME_ADDRESS);
             if (name != null) {
                 mKeywordEt.setText(name);
+                mKeywordEt.setSelection(name.length());
             }
-
-            initRelation();
-            initSearchHistory();
+            mKeywordEt.requestFocus();
+            mKeywordEt.setOnEditorActionListener(this);
+            mKeywordEt.addTextChangedListener(this);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -153,10 +152,10 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
 
     private void filterDeviceInfoByNameAndAddress(String filter) {
         List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
-        originDeviceInfoList.addAll(cityApplication.getData());
+        originDeviceInfoList.addAll(SensoroCityApplication.getInstance().getData());
         ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
-            if (deviceInfo.getName() != null) {
+            if (!TextUtils.isEmpty(deviceInfo.getName())) {
                 if (!deviceInfo.getName().contains(filter.toUpperCase())) {
                     deleteDeviceInfoList.add(deviceInfo);
                 }
@@ -170,7 +169,7 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
         }
         List<String> tempList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
-            if (deviceInfo.getName() != null) {
+            if (!TextUtils.isEmpty(deviceInfo.getName())) {
                 tempList.add(deviceInfo.getName());
             }
         }
@@ -251,7 +250,7 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!s.toString().equals("")) {
+        if (!TextUtils.isEmpty(s)) {
             mSearchHistoryLayout.setVisibility(View.GONE);
             mSearchRelationLayout.setVisibility(View.VISIBLE);
             filterDeviceInfoByNameAndAddress(s.toString());

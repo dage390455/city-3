@@ -1,10 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
     <array name="drawer_title_array">
         <item>Home</item>
         <item>Alarm Log</item>
         <item>Merchant Switch</item>
         <item>Point Deployment</item>
     </array>
-
+    <array name="drawer_title_array_nobussise">
+        <item>Home</item>
+        <item>Alarm Log</item>
+        <item>Point Deployment</item>
+    </array>
+    <array name="drawer_title_array_supper">
+        <item>Merchant Switch</item>
+    </array>
 </resources>

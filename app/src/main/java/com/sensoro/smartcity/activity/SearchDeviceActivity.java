@@ -120,7 +120,6 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     private SharedPreferences mPref;
     private Editor mEditor;
     private List<String> mHistoryKeywords = new ArrayList<>();
-    private SensoroCityApplication sensoroCityApplication;
     private ProgressDialog mProgressDialog;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private RelationAdapter mRelationAdapter;
@@ -139,7 +138,6 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(this);
-        sensoroCityApplication = SensoroCityApplication.getInstance();
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.loading));
         mPref = getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
@@ -154,7 +152,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         initRelation();
         StatusBarCompat.setStatusBarColor(this);
         initIndex();
-        orginList.addAll(sensoroCityApplication.getData());
+        orginList.addAll(SensoroCityApplication.getInstance().getData());
     }
 
     @Override
@@ -327,8 +325,8 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         this.mDataList.clear();
         this.mRelationLayout.setVisibility(View.GONE);
         this.mIndexListLayout.setVisibility(VISIBLE);
-        for (int i = 0; i < sensoroCityApplication.getData().size(); i++) {
-            DeviceInfo deviceInfo = sensoroCityApplication.getData().get(i);
+        for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
+            DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
             switch (deviceInfo.getStatus()) {
                 case SENSOR_STATUS_ALARM:
                     deviceInfo.setSort(1);
@@ -684,7 +682,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         String text = mKeywordEt.getText().toString();
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
+            SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
                     .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
@@ -694,7 +692,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                             mDataList.clear();
                             refreshData();
                         } else {
-                            sensoroCityApplication.setData(deviceBriefInfoRsp.getData());
+                            SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
                             refreshCacheData();
                         }
 
@@ -715,13 +713,13 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                     mProgressDialog.dismiss();
                     if (volleyError.networkResponse != null) {
                         byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(sensoroCityApplication, new String(data), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         } else {
             page++;
-            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
+            SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
                     .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
@@ -729,7 +727,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                         if (deviceBriefInfoRsp.getData().size() == 0) {
                             page--;
                         } else {
-                            sensoroCityApplication.addData(deviceBriefInfoRsp.getData());
+                            SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
                             refreshCacheData();
                         }
                     } catch (Exception e) {
@@ -750,7 +748,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                     mGridRecyclerView.loadMoreComplete();
                     if (volleyError.networkResponse != null) {
                         byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(sensoroCityApplication, new String(data), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -764,7 +762,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         String text = seacherStr;
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
+            SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
                     .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
@@ -774,7 +772,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                             mDataList.clear();
                             refreshData();
                         } else {
-                            sensoroCityApplication.setData(deviceBriefInfoRsp.getData());
+                            SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
                             refreshCacheData();
                         }
 
@@ -795,13 +793,13 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                     mProgressDialog.dismiss();
                     if (volleyError.networkResponse != null) {
                         byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(sensoroCityApplication, new String(data), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
         } else {
             page++;
-            sensoroCityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
+            SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new Response
                     .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
@@ -809,7 +807,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                         if (deviceBriefInfoRsp.getData().size() == 0) {
                             page--;
                         } else {
-                            sensoroCityApplication.addData(deviceBriefInfoRsp.getData());
+                            SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
                             refreshCacheData();
                         }
                     } catch (Exception e) {
@@ -830,7 +828,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                     mGridRecyclerView.loadMoreComplete();
                     if (volleyError.networkResponse != null) {
                         byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(sensoroCityApplication, new String(data), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -840,7 +838,10 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
+        if (returnTopAnimation != null) {
+            returnTopAnimation.cancel();
+            returnTopAnimation = null;
+        }
     }
 
     @Override

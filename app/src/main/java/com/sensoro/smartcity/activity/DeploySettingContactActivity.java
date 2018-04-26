@@ -40,6 +40,7 @@ import butterknife.OnClick;
 
 public class DeploySettingContactActivity extends BaseActivity implements Constants,  RecycleViewItemClickListener, TextView.OnEditorActionListener, TextWatcher {
 
+
     @BindView(R.id.deploy_setting_contact_back)
     ImageView backImageView;
     @BindView(R.id.deploy_setting_contact_et)
@@ -96,10 +97,8 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
             mNameEditor = mNamePref.edit();
             mPhonePref = getSharedPreferences(PREFERENCE_DEPLOY_CONTENT_HISTORY, Activity.MODE_PRIVATE);
             mPhoneEditor = mPhonePref.edit();
-            mNameEt.setOnEditorActionListener(this);
-            mNameEt.addTextChangedListener(this);
-            mPhoneEt.setOnEditorActionListener(this);
-            mPhoneEt.addTextChangedListener(this);
+            initSearchNameHistory();
+            initSearchPhoneHistory();
             String contact = getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
             String content = getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
             if (contact != null) {
@@ -108,9 +107,10 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
             if (content != null) {
                 mPhoneEt.setText(content);
             }
-
-            initSearchNameHistory();
-            initSearchPhoneHistory();
+            mNameEt.setOnEditorActionListener(this);
+            mNameEt.addTextChangedListener(this);
+            mPhoneEt.setOnEditorActionListener(this);
+            mPhoneEt.addTextChangedListener(this);
         } catch (Exception e) {
             e.printStackTrace();
         }

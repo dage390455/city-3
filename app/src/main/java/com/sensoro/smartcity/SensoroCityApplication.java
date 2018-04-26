@@ -15,9 +15,9 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
-import com.sensoro.smartcity.server.ISmartCityServer;
 import com.sensoro.smartcity.server.SmartCityServerImpl;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
@@ -29,38 +29,40 @@ import java.util.List;
  * Created by sensoro on 17/7/24.
  */
 
-public class SensoroCityApplication extends MultiDexApplication implements SensoroPushListener,Serializable{
+public class SensoroCityApplication extends MultiDexApplication implements SensoroPushListener, Serializable {
 
-    public ISmartCityServer smartCityServer;
-    public static PushHandler pushHandler = new PushHandler();
-    private List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
+    public SmartCityServerImpl smartCityServer;
+    public final static PushHandler pushHandler = new PushHandler();
+    private final List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        instance=this;
+        instance = this;
         init();
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
-                ex.printStackTrace();
-                String message = ex.getMessage();
-                Toast.makeText(SensoroCityApplication.this,"程序出错："+message,Toast.LENGTH_SHORT).show();
-                try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }finally {
-                    android.os.Process.killProcess(android.os.Process.myPid());
-                }
+                Toast.makeText(SensoroCityApplication.this, "程序出错：" + thread.getId() + "," + ex.getMessage(), Toast
+                        .LENGTH_SHORT).show();
+                android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
+
+        if (LeakCanary.isInAnalyzerProcess(this)) {
+            // This process is dedicated to LeakCanary for heap analysis.
+            // You should not init your app in this process.
+            return;
+        }
+        LeakCanary.install(this);
     }
-    public static SensoroCityApplication getInstance(){
+
+    public static SensoroCityApplication getInstance() {
         return instance;
     }
+
     @Override
     protected void attachBaseContext(Context base) {
         super.attachBaseContext(base);
@@ -74,6 +76,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     public void setData(List<DeviceInfo> list) {
         this.mDeviceInfoList.clear();
         this.mDeviceInfoList.addAll(list);
+
     }
 
     public List<DeviceInfo> getData() {
@@ -94,7 +97,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     void init() {
         smartCityServer = SmartCityServerImpl.getInstance(getApplicationContext());
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
-        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID,false);
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
         api.registerApp(Constants.APP_ID);
     }
 
@@ -126,13 +129,12 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
         @Override
         public void handleMessage(Message msg) {
 
-            String data = (String)msg.obj;
+            String data = (String) msg.obj;
             SensoroPushListener sensoroPushListener = SensoroPushManager.getInstance().getSensoroPushListener();
             if (sensoroPushListener != null) {
                 sensoroPushListener.onPushCallBack(data);
             }
         }
     }
-
 
 }

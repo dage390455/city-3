@@ -22,7 +22,8 @@ public class ZoomJob extends ViewPortJob {
         pool.setReplenishPercentage(0.5f);
     }
 
-    public static ZoomJob getInstance(ViewPortHandler viewPortHandler, float scaleX, float scaleY, float xValue, float yValue,
+    public static ZoomJob getInstance(ViewPortHandler viewPortHandler, float scaleX, float scaleY, float xValue,
+                                      float yValue,
                                       Transformer trans, YAxis.AxisDependency axis, View v) {
         ZoomJob result = pool.get();
         result.xValue = xValue;
@@ -36,7 +37,7 @@ public class ZoomJob extends ViewPortJob {
         return result;
     }
 
-    public static void recycleInstance(ZoomJob instance) {
+    public void recycleInstance(ZoomJob instance) {
         pool.recycle(instance);
     }
 
@@ -45,7 +46,8 @@ public class ZoomJob extends ViewPortJob {
 
     protected YAxis.AxisDependency axisDependency;
 
-    public ZoomJob(ViewPortHandler viewPortHandler, float scaleX, float scaleY, float xValue, float yValue, Transformer trans,
+    public ZoomJob(ViewPortHandler viewPortHandler, float scaleX, float scaleY, float xValue, float yValue,
+                   Transformer trans,
                    YAxis.AxisDependency axis, View v) {
         super(viewPortHandler, xValue, yValue, trans, v);
 

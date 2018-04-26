@@ -28,6 +28,7 @@ import butterknife.OnClick;
 
 public class DeployManualActivity extends BaseActivity implements Constants, TextView.OnEditorActionListener, TextWatcher {
 
+
     @BindView(R.id.deploy_manual_close)
     ImageView closeImageView;
     @BindView(R.id.deploy_clear_iv)

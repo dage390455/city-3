@@ -45,6 +45,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/y1"/>
     <RelativeLayout
+        android:id="@+id/rl_title_account"
         android:background="@drawable/shape_normal_layout"
         android:gravity="center_vertical"
         android:layout_marginTop="@dimen/y150"
@@ -55,7 +56,6 @@
             android:textColor="@color/slide_menu_item_bg"
             android:id="@+id/merchant_current_name"
             android:layout_marginLeft="@dimen/x100"
-            android:text="1222333"
             android:layout_marginTop="@dimen/y30"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />

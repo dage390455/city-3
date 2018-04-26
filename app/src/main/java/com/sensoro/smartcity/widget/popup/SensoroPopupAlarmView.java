@@ -166,6 +166,8 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                         Toast.makeText(mContext, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }catch (Exception e){
+
                     }
                 } else {
                     Toast.makeText(mContext, R.string.tips_network_error, Toast.LENGTH_SHORT).show();

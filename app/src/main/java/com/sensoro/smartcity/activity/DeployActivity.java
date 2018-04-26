@@ -79,6 +79,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class DeployActivity extends BaseActivity implements Constants, AMapLocationListener, AMap.OnMapClickListener, AMap.OnCameraChangeListener, GeocodeSearch.OnGeocodeSearchListener, AMap.InfoWindowAdapter, AMap.OnMapLoadedListener, AMap.OnMarkerClickListener, AMap.OnMapTouchListener {
 
+
     @BindView(R.id.deploy_name_address_et)
     TextView nameAddressEditText;
     @BindView(R.id.deploy_location_et)
@@ -394,7 +395,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
         final String name = nameAddressEditText.getText().toString();
         String tags = tagListToString();
         String name_default = getString(R.string.tips_hint_name_address);
-        if (name == null || name.equals(name_default)) {
+        if (TextUtils.isEmpty(name) || name.equals(name_default)) {
             SensoroToast sensoroToast = SensoroToast.makeText(sensoroCityApplication, getString(R.string.tips_input_name), Toast.LENGTH_SHORT);
             sensoroToast.setGravity(Gravity.CENTER, 0, 0);
             sensoroToast.show();
@@ -505,12 +506,14 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
                     String reason = new String(volleyError.networkResponse.data);
                     try {
                         JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(DeployActivity.this, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    }catch (Exception e){
+
                     }
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
                 }
             }
         });

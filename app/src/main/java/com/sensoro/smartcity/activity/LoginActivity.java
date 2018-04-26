@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -35,11 +35,15 @@ import com.sensoro.smartcity.server.SmartCityServerImpl;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
+import com.sensoro.smartcity.util.PermissionUtils;
+import com.sensoro.smartcity.util.PermissionsResultObserve;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.SensoroImageView;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,6 +55,7 @@ import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity implements Constants {
 
+    private static final String TAG = "LoginActivity";
     @BindView(R.id.login_email)
     EditText accountEt;
     @BindView(R.id.login_pwd)
@@ -63,6 +68,19 @@ public class LoginActivity extends BaseActivity implements Constants {
     Button login_btn;
     ProgressDialog mProgressDialog;
     private static final int REQUEST_PERMISSION = 0;
+    private static final int MY_REQUEST_PERMISSION_CODE = 0x14;
+    protected static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
+        {
+            add(Manifest.permission.INTERNET);
+            add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            add(Manifest.permission.ACCESS_FINE_LOCATION);
+            add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            add(Manifest.permission.READ_PHONE_STATE);
+            add(Manifest.permission.CAMERA);
+        }
+    };
+    private PermissionUtils mPermissionUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,10 +89,30 @@ public class LoginActivity extends BaseActivity implements Constants {
         ButterKnife.bind(this);
         StatService.setDebugOn(true);
         StatService.start(this);
-        requireLocationPermission();
+        mPermissionUtils = new PermissionUtils(this);
+        requestPermissions();
         readLoginData();
         init();
         initSeverUrl();
+    }
+
+    private void requestPermissions() {
+        mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE, new
+                PermissionsResultObserve() {
+                    @Override
+                    public void onPermissionGranted() {
+                        PushManager.getInstance().initialize(LoginActivity.this.getApplicationContext(),
+                                SensoroPushService
+                                        .class);
+                        Log.e(TAG, "onPermissionGranted: 权限获取完毕 ");
+                    }
+
+                    @Override
+                    public void onPermissionDenied() {
+                        //TODO 非必要权限
+
+                    }
+                });
     }
 
     @Override
@@ -138,18 +176,9 @@ public class LoginActivity extends BaseActivity implements Constants {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        if (requestCode == REQUEST_PERMISSION) {
-            if ((grantResults.length == 2 && grantResults[0] == PackageManager.PERMISSION_GRANTED
-                    && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-                PushManager.getInstance().initialize(this.getApplicationContext(), SensoroPushService.class);
-            } else {
-                Log.e("", "We highly recommend that you need to grant the special permissions before initializing the SDK, otherwise some "
-                        + "functions will not work");
-                PushManager.getInstance().initialize(this.getApplicationContext(), SensoroPushService.class);
-            }
-        } else {
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        }
+        mPermissionUtils.onRequestPermissionsResult(MY_REQUEST_PERMISSION_CODE, requestCode, permissions, grantResults,
+                FORCE_REQUIRE_PERMISSIONS);
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void readLoginData() {
@@ -201,7 +230,7 @@ public class LoginActivity extends BaseActivity implements Constants {
                 if (str.equals("SENSORO")) {
                     switchApi();
                 } else {
-                    Toast.makeText(getApplicationContext(), "密码错误！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, "密码错误！", Toast.LENGTH_SHORT).show();
                 }
                 dialog.cancel();
             }
@@ -270,7 +299,11 @@ public class LoginActivity extends BaseActivity implements Constants {
 
     @OnClick(R.id.login_btn)
     public void doForwardMain() {
-
+        SharedPreferences sp = getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
+        String url = sp.getString(PREFERENCE_KEY_URL, null);
+        if (!TextUtils.isEmpty(url)) {
+            SmartCityServerImpl.SCOPE = url;
+        }
         mProgressDialog.show();
         final String account = accountEt.getText().toString();
         final String pwd = pwdEt.getText().toString();
@@ -279,19 +312,21 @@ public class LoginActivity extends BaseActivity implements Constants {
         } else if (pwd == null) {
             Toast.makeText(this, R.string.tips_login_pwd_empty, Toast.LENGTH_SHORT).show();
         } else {
-            String phoneId = PushManager.getInstance().getClientid(this);
-            SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-            sensoroCityApplication.smartCityServer.login(account, pwd, phoneId, new Response.Listener<LoginRsp>() {
+            String phoneId = PushManager.getInstance().getClientid(getApplicationContext());
+            SensoroCityApplication.getInstance().smartCityServer.login(account, pwd, phoneId, new Response
+                    .Listener<LoginRsp>() {
                 @Override
                 public void onResponse(LoginRsp response) {
                     if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                        String isSpecific = response.getData().getIsSpecific();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
                         intent.putExtra(EXTRA_USER_ID, response.getData().get_id());
                         intent.putExtra(EXTRA_USER_NAME, response.getData().getNickname());
                         intent.putExtra(EXTRA_PHONE, response.getData().getPhone());
                         intent.putExtra(EXTRA_CHARACTER, response.getData().getCharacter());
                         intent.putExtra(EXTRA_USER_ROLES, response.getData().getRoles());
-                        intent.putExtra(EXTRA_PHONE_ID, PushManager.getInstance().getClientid(LoginActivity.this));
+                        intent.putExtra(EXTRA_IS_SPECIFIC, isSpecific);
+                        intent.putExtra(EXTRA_PHONE_ID, PushManager.getInstance().getClientid(getApplicationContext()));
                         startActivity(intent);
                         PreferencesHelper.getInstance().saveLoginData(LoginActivity.this, account, pwd);
                         finish();
@@ -307,9 +342,12 @@ public class LoginActivity extends BaseActivity implements Constants {
                         String reason = new String(error.networkResponse.data);
                         try {
                             JSONObject jsonObject = new JSONObject(reason);
-                            Toast.makeText(LoginActivity.this, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(LoginActivity.this, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
+                                    .show();
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        } catch (Exception e) {
+
                         }
                     } else {
                         Toast.makeText(LoginActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
@@ -321,7 +359,8 @@ public class LoginActivity extends BaseActivity implements Constants {
     }
 
     void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_PHONE_STATE},
+        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest
+                        .permission.READ_PHONE_STATE},
                 REQUEST_PERMISSION);
     }
 
@@ -331,11 +370,13 @@ public class LoginActivity extends BaseActivity implements Constants {
 
         // 读写 sd card 权限非常重要, android6.0默认禁止的, 建议初始化之前就弹窗让用户赋予该权限
         boolean sdCardWritePermission =
-                pkgManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) == PackageManager.PERMISSION_GRANTED;
+                pkgManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) ==
+                        PackageManager.PERMISSION_GRANTED;
 
         // read phone state用于获取 imei 设备信息
         boolean phoneSatePermission =
-                pkgManager.checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName()) == PackageManager.PERMISSION_GRANTED;
+                pkgManager.checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName()) == PackageManager
+                        .PERMISSION_GRANTED;
 
         if (Build.VERSION.SDK_INT >= 23 && !sdCardWritePermission || !phoneSatePermission) {
             requestPermission();
@@ -346,33 +387,10 @@ public class LoginActivity extends BaseActivity implements Constants {
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
         // IntentService, 必须在 AndroidManifest 中声明)
-        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), SensoroPushIntentService.class);
+        PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), SensoroPushIntentService
+                .class);
     }
 
-    void requireLocationPermission() {
-
-        // Here, thisActivity is the current activity
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_COARSE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            // Should we show an explanation?
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
-
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{
-                                Manifest.permission.ACCESS_COARSE_LOCATION},
-                        100);
-
-                // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
-            }
-        }
-    }
 
     private void init() {
         mProgressDialog = new ProgressDialog(this);
@@ -380,4 +398,9 @@ public class LoginActivity extends BaseActivity implements Constants {
         initPushSDK();
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPermissionUtils.onActivityResult(requestCode, resultCode, data, MY_REQUEST_PERMISSION_CODE);
+    }
 }

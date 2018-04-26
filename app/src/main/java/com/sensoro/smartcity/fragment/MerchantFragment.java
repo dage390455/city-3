@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,9 @@ import java.util.List;
  * Created by sensoro on 17/7/24.
  */
 
-public class MerchantFragment extends Fragment implements Constants, AdapterView.OnItemClickListener, View.OnClickListener {
+public class MerchantFragment extends Fragment implements Constants, AdapterView.OnItemClickListener, View
+        .OnClickListener {
+
     private ListView mListView;
     private ImageView mMenuListImageView;
     private ImageView mSearchImageView;
@@ -52,6 +55,8 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     private String phoneId = null;
     private ProgressDialog mProgressDialog = null;
     private List<UserInfo> mUserInfoList = new ArrayList<>();
+    private RelativeLayout rlTitleAccount;
+
 
     public static MerchantFragment newInstance(String input) {
         MerchantFragment merchantFragment = new MerchantFragment();
@@ -92,6 +97,10 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
         return rootView;
     }
 
+    @Override
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    }
 
     @Override
     public void onStart() {
@@ -113,13 +122,15 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
             mListView = (ListView) rootView.findViewById(R.id.merchant_list);
             mMenuListImageView = (ImageView) rootView.findViewById(R.id.merchant_iv_menu_list);
             mMenuListImageView.setOnClickListener(this);
-            mSearchImageView = (ImageView) rootView.findViewById(R.id.merchant_iv_search) ;
+            mSearchImageView = (ImageView) rootView.findViewById(R.id.merchant_iv_search);
             mSearchImageView.setOnClickListener(this);
             mCurrentNameTextView = (TextView) rootView.findViewById(R.id.merchant_current_name);
             mCurrentPhoneTextView = (TextView) rootView.findViewById(R.id.merchant_current_phone);
             mCurrentStatusImageView = (ImageView) rootView.findViewById(R.id.merchant_current_status);
             seperatorView = rootView.findViewById(R.id.merchant_list_sep);
-            seperatorBottomView =  rootView.findViewById(R.id.merchant_list_bottom_sep);
+            seperatorBottomView = rootView.findViewById(R.id.merchant_list_bottom_sep);
+            rlTitleAccount = (RelativeLayout) rootView.findViewById(R.id.rl_title_account);
+
             mMerchantAdapter = new MerchantAdapter(getContext(), mUserInfoList);
             mListView.setAdapter(mMerchantAdapter);
             mListView.setOnItemClickListener(this);
@@ -138,14 +149,17 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     }
 
     public void requestData() {
-        mProgressDialog.show();
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getActivity().getApplication();
-        sensoroCityApplication.smartCityServer.getUserAccountList(null, null, null, null, "100000", new Response.Listener<UserAccountRsp>() {
-            @Override
-            public void onResponse(UserAccountRsp response) {
-                refresh(response);
-            }
-        }, new Response.ErrorListener() {
+        if (mProgressDialog != null) {
+            mProgressDialog.show();
+        }
+        SensoroCityApplication.getInstance().smartCityServer.getUserAccountList(null, null, null, null, "100000", new
+                Response
+                        .Listener<UserAccountRsp>() {
+                    @Override
+                    public void onResponse(UserAccountRsp response) {
+                        refresh(response);
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
                 mProgressDialog.dismiss();
@@ -156,6 +170,8 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
                         Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    } catch (Exception e) {
+
                     }
                 } else {
                     Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
@@ -165,13 +181,15 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     }
 
     public void refresh(UserAccountRsp userAccountRsp) {
-        mProgressDialog.dismiss();
+
         List<UserInfo> list = userAccountRsp.getData();
         mUserInfoList.clear();
         mUserInfoList.addAll(list);
         mMerchantAdapter.setSelectedIndex(-1);
         mMerchantAdapter.notifyDataSetChanged();
-        mProgressDialog.dismiss();
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
         if (list.size() == 0) {
             seperatorView.setVisibility(View.GONE);
             seperatorBottomView.setVisibility(View.GONE);
@@ -180,15 +198,17 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
         }
     }
 
-    private void doAccountSwitch(String uid){
+    private void doAccountSwitch(String uid) {
         mProgressDialog.show();
-        final SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getActivity().getApplication();
-        sensoroCityApplication.smartCityServer.doAccountControl(uid, phoneId, new Response.Listener<UserAccountControlRsp>() {
+        SensoroCityApplication.getInstance().smartCityServer.doAccountControl(uid, phoneId, new Response
+                .Listener<UserAccountControlRsp>() {
             @Override
             public void onResponse(UserAccountControlRsp response) {
                 if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    sensoroCityApplication.smartCityServer.setSessionId(response.getData().getSessionID());
-                    ((MainActivity)getActivity()).reconnectSocketIO(response.getData().getNickname(), response.getData().getPhone(), response.getData().getRoles());
+                    SensoroCityApplication.getInstance().smartCityServer.setSessionId(response.getData().getSessionID
+                            ());
+                    ((MainActivity) getActivity()).reconnectSocketIO(response.getData().getNickname(), response
+                            .getData().getPhone(), response.getData().getRoles(), response.getData().getIsSpecific());
                 } else {
 
                 }
@@ -204,6 +224,8 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
                         Toast.makeText(getActivity(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
+                    } catch (Exception e) {
+
                     }
                 } else {
                     Toast.makeText(getActivity(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
@@ -229,7 +251,7 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.merchant_iv_menu_list:
-                ((MainActivity)getActivity()).getMenuDrawer().openMenu();
+                ((MainActivity) getActivity()).getMenuDrawer().openMenu();
                 break;
             case R.id.merchant_iv_search:
                 Intent searchIntent = new Intent(getContext(), SearchMerchantActivity.class);

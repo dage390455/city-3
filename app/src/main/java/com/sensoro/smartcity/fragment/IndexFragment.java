@@ -18,6 +18,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -68,7 +69,8 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
  * Created by sensoro on 17/11/6.
  */
 
-public class IndexFragment extends Fragment implements Runnable, Constants, View.OnClickListener, RecycleViewItemClickListener, ViewPager.OnPageChangeListener, AppBarLayout.OnOffsetChangedListener {
+public class IndexFragment extends Fragment implements Runnable, Constants, View.OnClickListener,
+        RecycleViewItemClickListener, ViewPager.OnPageChangeListener, AppBarLayout.OnOffsetChangedListener {
 
     private View rootView;
     private ImageView mSwitchImageView;
@@ -111,13 +113,16 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     private Animation returnTopAnimation;
     private ProgressDialog mProgressDialog;
     private List<DeviceInfo> mDataList = new ArrayList<>();
-    private SensoroCityApplication cityApplication;
     private Handler mHandler;
     private Gson gson;
     private SoundPool soundPool;
     private int soundId = 0;
     private int page = 1;
     private volatile boolean isAlarmPlay = false;
+    private volatile boolean isNeesRefresh = false;
+    private AnimatorSet mAnimatorSetOut;
+    private AnimatorSet mAnimatorSetIn;
+    private Animation mInAnimation;
 
     public static IndexFragment newInstance(Character input) {
         IndexFragment indexFragment = new IndexFragment();
@@ -165,13 +170,25 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
         if (mHandler != null) {
-            mHandler.removeCallbacks(this);
+            mHandler.removeCallbacksAndMessages(null);
         }
         if (mGridAdapter != null) {
             mGridAdapter.getData().clear();
         }
         if (mListAdapter != null) {
             mListAdapter.getData().clear();
+        }
+        if (mAnimatorSetOut != null) {
+            mAnimatorSetOut.cancel();
+            mAnimatorSetOut = null;
+        }
+        if (mAnimatorSetIn != null) {
+            mAnimatorSetIn.cancel();
+            mAnimatorSetIn = null;
+        }
+        if (mInAnimation != null) {
+            mInAnimation.cancel();
+            mInAnimation = null;
         }
     }
 
@@ -198,7 +215,6 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             mHandler = new Handler();
             mHandler.postDelayed(this, 3000);
             gson = gsonBuilder.create();
-            cityApplication = (SensoroCityApplication) getActivity().getApplication();
             mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
             collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
             mAppBarLayout = (AppBarLayout) rootView.findViewById(R.id.app_bar);
@@ -207,7 +223,7 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             mAppBarLayout.addOnOffsetChangedListener(this);
             mTitleTextView = (TextView) rootView.findViewById(R.id.index_tv_title);
             mHeadLayout = (LinearLayout) rootView.findViewById(R.id.index_layout_head1);
-            alarmLayout = (LinearLayout) rootView.findViewById(R.id.index_head_alarm_layout) ;
+            alarmLayout = (LinearLayout) rootView.findViewById(R.id.index_head_alarm_layout);
             mHeadAlarmNumTextView = (TextView) rootView.findViewById(R.id.index_head_alarm_num);
             mHeadLostNumTextView = (TextView) rootView.findViewById(R.id.index_head_lost_num);
             mHeadInactiveNumTextView = (TextView) rootView.findViewById(R.id.index_head_inactive_num);
@@ -252,7 +268,7 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             switchType = TYPE_LIST;
             initListView();
             initGridView();
-            Character character = (Character)getArguments().getSerializable(INPUT);
+            Character character = (Character) getArguments().getSerializable(INPUT);
             refreshCityInfo(character);
         } catch (Exception e) {
             e.printStackTrace();
@@ -286,7 +302,8 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE && toolbarDirection == DIRECTION_DOWN) {
+                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
+                        toolbarDirection == DIRECTION_DOWN) {
 //                    mListRecyclerView.setre
                 }
                 if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
@@ -363,7 +380,7 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     }
 
     public void playSound() {
-        String roles = ((MainActivity)getActivity()).getRoles();
+        String roles = ((MainActivity) getActivity()).getRoles();
         if (roles != null && !roles.equals("admin")) {
             soundPool.play(soundId, 1, 1, 0, 0, 1);
         }
@@ -394,8 +411,8 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     }
 
     public void showGridLayout() {
-        Animation inAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.layout_in_anim);
-        inAnimation.setAnimationListener(new Animation.AnimationListener() {
+        mInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.layout_in_anim);
+        mInAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
                 mListLayout.setVisibility(View.GONE);
@@ -413,12 +430,13 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             }
         });
         mGridLayout.setVisibility(View.VISIBLE);
-        mGridLayout.setAnimation(inAnimation);
-        mGridLayout.startAnimation(inAnimation);
+        mGridLayout.setAnimation(mInAnimation);
+        mGridLayout.startAnimation(mInAnimation);
     }
 
     private void requestDeviceTypeCountData(final boolean isShowAnimation) {
-        cityApplication.smartCityServer.getDeviceTypeCount(new Response.Listener<DeviceTypeCountRsp>() {
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceTypeCount(new Response
+                .Listener<DeviceTypeCountRsp>() {
             @Override
             public void onResponse(DeviceTypeCountRsp response) {
                 int alarmCount = response.getData().getAlarm();
@@ -436,6 +454,7 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             }
         });
     }
+
     private void refreshTop(boolean isShowAnimation, int alarmCount, int lostCount, int inactiveCount) {
 
         mHeadAlarmNumTextView.setText(String.valueOf(alarmCount));
@@ -479,73 +498,82 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     }
 
     public void requestWithDirection(int direction) {
-        mProgressDialog.show();
-        String type = mTypeSelectedIndex == 0 ? null: INDEX_TYPE_VALUES[mTypeSelectedIndex];
-        Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-        if (direction == DIRECTION_DOWN) {
-            page = 1;
-            cityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, null, new Response.Listener<DeviceInfoListRsp>() {
-                @Override
-                public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                    try {
-                        cityApplication.setData(deviceBriefInfoRsp.getData());
-                        refreshCacheData();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    } finally {
-                        mListRecyclerView.refreshComplete();
-                        mGridRecyclerView.refreshComplete();
-                        mProgressDialog.dismiss();
-                    }
+        try {
+            mProgressDialog.show();
+            String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
+            Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
+            if (direction == DIRECTION_DOWN) {
+                page = 1;
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, null,
+                        new Response
+                                .Listener<DeviceInfoListRsp>() {
+                            @Override
+                            public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+                                try {
+                                    SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
+                                    refreshCacheData();
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                } finally {
+                                    mListRecyclerView.refreshComplete();
+                                    mGridRecyclerView.refreshComplete();
+                                    mProgressDialog.dismiss();
+                                }
 
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    mListRecyclerView.refreshComplete();
-                    mGridRecyclerView.refreshComplete();
-                    mProgressDialog.dismiss();
-                    if (volleyError.networkResponse != null) {
-                        byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(cityApplication, new String(data), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        } else {
-            page++;
-            cityApplication.smartCityServer.getDeviceBriefInfoList(page, type, status, null, new Response.Listener<DeviceInfoListRsp>() {
-                @Override
-                public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                    try {
-                        if (deviceBriefInfoRsp.getData().size() == 0) {
-                            page--;
-                        } else {
-                            cityApplication.addData(deviceBriefInfoRsp.getData());
-                            refreshCacheData();
-                        }
-                    } catch (Exception e) {
-                        page--;
-                        e.printStackTrace();
-                    } finally {
-                        mListRecyclerView.loadMoreComplete();
-                        mGridRecyclerView.loadMoreComplete();
-                        mProgressDialog.dismiss();
-                    }
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    page--;
-                    mProgressDialog.dismiss();
-                    mListRecyclerView.loadMoreComplete();
-                    mGridRecyclerView.loadMoreComplete();
-                    if (volleyError.networkResponse != null) {
-                        byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(cityApplication, new String(data), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                mListRecyclerView.refreshComplete();
+                                mGridRecyclerView.refreshComplete();
+                                mProgressDialog.dismiss();
+                                if (volleyError.networkResponse != null) {
+                                    byte[] data = volleyError.networkResponse.data;
+                                    Toast.makeText(getActivity(), new String(data), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            } else {
+                page++;
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, null,
+                        new Response
+                                .Listener<DeviceInfoListRsp>() {
+                            @Override
+                            public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+                                try {
+                                    if (deviceBriefInfoRsp.getData().size() == 0) {
+                                        page--;
+                                    } else {
+                                        SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
+                                        refreshCacheData();
+                                    }
+                                } catch (Exception e) {
+                                    page--;
+                                    e.printStackTrace();
+                                } finally {
+                                    mListRecyclerView.loadMoreComplete();
+                                    mGridRecyclerView.loadMoreComplete();
+                                    mProgressDialog.dismiss();
+                                }
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError volleyError) {
+                                page--;
+                                mProgressDialog.dismiss();
+                                mListRecyclerView.loadMoreComplete();
+                                mGridRecyclerView.loadMoreComplete();
+                                if (volleyError.networkResponse != null) {
+                                    byte[] data = volleyError.networkResponse.data;
+                                    Toast.makeText(getActivity(), new String(data), Toast.LENGTH_SHORT).show();
+                                }
+                            }
+                        });
+            }
+        } catch (Exception e) {
+
         }
+
     }
 
     @Override
@@ -557,14 +585,14 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
         DeviceInfo data = gson.fromJson(json, DeviceInfo.class);
         if (data != null && !this.isHidden()) {
             boolean isContains = false;
-            for (int i = 0; i < cityApplication.getData().size(); i++) {
-                DeviceInfo deviceInfo = cityApplication.getData().get(i);
+            for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
+                DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
                 if (deviceInfo.getSn().equals(data.getSn())) {
                     if (data.getStatus() == SENSOR_STATUS_ALARM && deviceInfo.getStatus() != SENSOR_STATUS_ALARM) {
                         isAlarmPlay = true;
                     }
                     data.setPushDevice(true);
-                    cityApplication.getData().set(i, data);
+                    SensoroCityApplication.getInstance().getData().set(i, data);
                     isContains = true;
                     break;
                 }
@@ -575,8 +603,9 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
                 }
                 data.setNewDevice(true);
                 data.setPushDevice(true);
-                cityApplication.getData().add(data);
+                SensoroCityApplication.getInstance().getData().add(data);
             }
+            isNeesRefresh = true;
         }
     }
 
@@ -610,8 +639,8 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
 
     public void refreshCacheData() {
         this.mDataList.clear();
-        for (int i = 0; i < cityApplication.getData().size(); i++) {
-            DeviceInfo deviceInfo = cityApplication.getData().get(i);
+        for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
+            DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
             switch (deviceInfo.getStatus()) {
                 case SENSOR_STATUS_ALARM:
                     deviceInfo.setSort(1);
@@ -652,31 +681,32 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     }
 
     private void playFlipAnimation(View targetView) {
-        AnimatorSet animatorSetOut = (AnimatorSet) AnimatorInflater
+        mAnimatorSetOut = (AnimatorSet) AnimatorInflater
                 .loadAnimator(getContext(), R.animator.card_flip_left_out);
 
-        final AnimatorSet animatorSetIn = (AnimatorSet) AnimatorInflater
+        mAnimatorSetIn = (AnimatorSet) AnimatorInflater
                 .loadAnimator(getContext(), R.animator.card_flip_left_in);
 
-        animatorSetOut.setTarget(targetView);
-        animatorSetIn.setTarget(targetView);
+        mAnimatorSetOut.setTarget(targetView);
+        mAnimatorSetIn.setTarget(targetView);
 
-        animatorSetOut.addListener(new AnimatorListenerAdapter() {
+        mAnimatorSetOut.addListener(new AnimatorListenerAdapter() {
 
             @Override
             public void onAnimationEnd(Animator animation) {// 翻转90度之后，换图
-                animatorSetIn.start();
+                mAnimatorSetIn.start();
             }
         });
 
-        animatorSetIn.addListener(new AnimatorListenerAdapter() {
+        mAnimatorSetIn.addListener(new AnimatorListenerAdapter() {
 
             @Override
             public void onAnimationEnd(Animator animation) {
                 // TODO
             }
         });
-        animatorSetOut.start();
+        mAnimatorSetOut.start();
+
     }
 
 
@@ -689,10 +719,10 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     }
 
     public void refreshDeviceInfo(DeviceInfo deviceInfo) {
-        for (int i = 0; i < cityApplication.getData().size(); i++) {
-            DeviceInfo tempDeviceInfo = cityApplication.getData().get(i);
+        for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
+            DeviceInfo tempDeviceInfo = SensoroCityApplication.getInstance().getData().get(i);
             if (deviceInfo.getSn().equals(tempDeviceInfo.getSn())) {
-                cityApplication.getData().set(i, deviceInfo);
+                SensoroCityApplication.getInstance().getData().set(i, deviceInfo);
                 break;
             }
         }
@@ -804,19 +834,19 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
 
     private boolean isMatcher(DeviceInfo deviceInfo) {
         if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0) {
-             return true;
+            return true;
         } else {
             boolean isMatcherType = false;
             boolean isMatcherStatus = false;
             String unionType = deviceInfo.getUnionType();
             if (unionType != null) {
-                String []unionTypeArray = unionType.split("\\|");
+                String[] unionTypeArray = unionType.split("\\|");
                 List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                String []menuTypeArray = SENSOR_MENU_ARRAY[mTypeSelectedIndex].split("\\|");
+                String[] menuTypeArray = SENSOR_MENU_ARRAY[mTypeSelectedIndex].split("\\|");
                 if (mTypeSelectedIndex == 0) {
                     isMatcherType = true;
                 } else {
-                    for (int j = 0 ; j < menuTypeArray.length; j++) {
+                    for (int j = 0; j < menuTypeArray.length; j++) {
                         String menuType = menuTypeArray[j];
                         if (unionTypeList.contains(menuType)) {
                             isMatcherType = true;
@@ -857,11 +887,11 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
         mStatusTextView.setText(statusText);
         if (position == 0) {
             mDataList.clear();
-            mDataList.addAll(cityApplication.getData());
+            mDataList.addAll(SensoroCityApplication.getInstance().getData());
         } else {
             List<DeviceInfo> tempList = new ArrayList<>();
-            for (int i = 0; i < cityApplication.getData().size(); i++) {
-                DeviceInfo deviceInfo = cityApplication.getData().get(i);
+            for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
+                DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
                 int status = INDEX_STATUS_VALUES[position - 1];
                 if (deviceInfo.getStatus() == status) {
                     tempList.add(deviceInfo);
@@ -892,12 +922,12 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
         mTypeTextView.setText(typeText);
         if (position == 0) {
             mDataList.clear();
-            mDataList.addAll(cityApplication.getData());
+            mDataList.addAll(SensoroCityApplication.getInstance().getData());
 
         } else {
             List<DeviceInfo> tempList = new ArrayList<>();
-            for (int i = 0; i < cityApplication.getData().size(); i++) {
-                DeviceInfo deviceInfo = cityApplication.getData().get(i);
+            for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
+                DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
                 String unionType = deviceInfo.getUnionType();
                 if (unionType != null) {
                     if (unionType.equalsIgnoreCase(SENSOR_MENU_ARRAY[position])) {
@@ -1036,8 +1066,8 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     }
 
     public void scheduleRefresh() {
-        for (int i = 0; i < cityApplication.getData().size(); i++) {
-            DeviceInfo deviceInfo = cityApplication.getData().get(i);
+        for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
+            DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
             switch (deviceInfo.getStatus()) {
                 case SENSOR_STATUS_ALARM:
                     deviceInfo.setSort(1);
@@ -1054,7 +1084,7 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
                 default:
                     break;
             }
-            for (int j = 0 ; j < mDataList.size(); j++) {
+            for (int j = 0; j < mDataList.size(); j++) {
                 DeviceInfo currentDeviceInfo = mDataList.get(j);
                 if (currentDeviceInfo.getSn().equals(deviceInfo.getSn())) {
                     mDataList.set(j, deviceInfo);
@@ -1073,12 +1103,15 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
         if (isVisible() && this.isResumed()) {
             requestDeviceTypeCountData(false);
         }
-
+        isNeesRefresh = false;
     }
 
     @Override
     public void run() {
         mHandler.postDelayed(this, 3000);
-        scheduleRefresh();
+        if (isNeesRefresh) {
+            Log.e("", "run: 执行刷新！！！！！！");
+            scheduleRefresh();
+        }
     }
 }

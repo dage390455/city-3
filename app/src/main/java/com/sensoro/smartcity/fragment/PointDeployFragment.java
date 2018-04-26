@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.fragment;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -49,7 +48,6 @@ import com.google.zxing.client.android.BeepManager;
 import com.google.zxing.client.android.CaptureActivityHandler;
 import com.google.zxing.client.android.DecodeFormatManager;
 import com.google.zxing.client.android.DecodeHintManager;
-import com.google.zxing.client.android.FinishListener;
 import com.google.zxing.client.android.InactivityTimer;
 import com.google.zxing.client.android.Intents;
 import com.google.zxing.client.android.PreferencesActivity;
@@ -91,7 +89,7 @@ import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_DEPLOY;
  * Created by sensoro on 17/7/24.
  */
 
-public class PointDeployFragment extends Fragment implements View.OnClickListener , SurfaceHolder.Callback{
+public class PointDeployFragment extends Fragment implements View.OnClickListener, SurfaceHolder.Callback {
     private static final String TAG = PointDeployFragment.class.getSimpleName();
 
     private static final long BULK_MODE_SCAN_DELAY_MS = 1000L;
@@ -102,6 +100,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
                     ResultMetadataType.SUGGESTED_PRICE,
                     ResultMetadataType.ERROR_CORRECTION_LEVEL,
                     ResultMetadataType.POSSIBLE_COUNTRY);
+    private static final int REQUEST_TAKE_PHOTO_PERMISSION = 0x102;
     private CameraManager cameraManager;
     private CaptureActivityHandler handler;
     private Result savedResultToShow;
@@ -122,7 +121,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
     private View rootView;
     private SurfaceHolder surfaceHolder;
     private SurfaceView surfaceView;
-
+//    protected boolean isCreate = false;
 
     public PointDeployFragment() {
     }
@@ -172,7 +171,8 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         surfaceView = (SurfaceView) rootView.findViewById(R.id.preview_view);
         statusView = (TextView) rootView.findViewById(R.id.status_view);
         ImageView mQrLineView = (ImageView) rootView.findViewById(R.id.capture_scan_line);
-        TranslateAnimation mAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0f, TranslateAnimation.ABSOLUTE, 0f,
+        TranslateAnimation mAnimation = new TranslateAnimation(TranslateAnimation.ABSOLUTE, 0f, TranslateAnimation
+                .ABSOLUTE, 0f,
                 TranslateAnimation.RELATIVE_TO_PARENT, 0f, TranslateAnimation.RELATIVE_TO_PARENT, 0.9f);
         mAnimation.setDuration(1500);
         mAnimation.setRepeatCount(-1);
@@ -206,6 +206,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         StatService.onPageStart(getActivity(), "PointDeloyFragment");
         // historyManager must be initialized here to update the history preference
         System.out.println("PointDeploy.OnResume===>");
+
     }
 
 
@@ -216,8 +217,9 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
 //            isShow = false;
 //            pauseCamera();
 //        }
-
-        rootView.setVisibility(View.GONE);
+        if (rootView != null){
+            rootView.setVisibility(View.GONE);
+        }
 //        cameraManager.closeDriver();
     }
 
@@ -267,18 +269,22 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         Point theScreenResolution = new Point();
         display.getSize(theScreenResolution);
         if (theScreenResolution != null) {
-            int width = CameraManager.findDesiredDimensionInRange(theScreenResolution.x, CameraManager.MIN_FRAME_WIDTH, CameraManager.MAX_FRAME_WIDTH);
-            int height = CameraManager.findDesiredDimensionInRange(theScreenResolution.y, CameraManager.MIN_FRAME_HEIGHT, CameraManager.MAX_FRAME_HEIGHT);
+            int width = CameraManager.findDesiredDimensionInRange(theScreenResolution.x, CameraManager
+                    .MIN_FRAME_WIDTH, CameraManager.MAX_FRAME_WIDTH);
+            int height = CameraManager.findDesiredDimensionInRange(theScreenResolution.y, CameraManager
+                    .MIN_FRAME_HEIGHT, CameraManager.MAX_FRAME_HEIGHT);
 
             int leftOffset = (theScreenResolution.x - width) / 2;
             int topOffset = (theScreenResolution.y - height) / 2;
             Rect framingRect = new Rect(leftOffset, topOffset, leftOffset + width, topOffset + height);
 
-            RelativeLayout.LayoutParams topMaskLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, framingRect.top);
+            RelativeLayout.LayoutParams topMaskLayoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams
+                    .MATCH_PARENT, framingRect.top);
             topMaskLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_TOP);
             ImageView topMask = (ImageView) rootView.findViewById(R.id.top_mask);
             topMask.setLayoutParams(topMaskLayoutParams);
-            RelativeLayout.LayoutParams captureLayoutParams = new RelativeLayout.LayoutParams(framingRect.width(), framingRect.height());
+            RelativeLayout.LayoutParams captureLayoutParams = new RelativeLayout.LayoutParams(framingRect.width(),
+                    framingRect.height());
             captureLayoutParams.addRule(RelativeLayout.BELOW, R.id.top_mask);
             captureLayoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
             RelativeLayout captureLayout = (RelativeLayout) rootView.findViewById(R.id.capture_crop_layout);
@@ -366,6 +372,22 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         super.onDestroy();
     }
 
+//    @Override
+//    public void setUserVisibleHint(boolean isVisibleToUser) {
+//        super.setUserVisibleHint(isVisibleToUser);
+//        if (isVisibleToUser && isCreate) {
+//            //相当于Fragment的onResume
+//            //在这里处理加载数据等操作
+//
+//        } else {
+//            pauseCamera();
+//            hiddenRootView();
+//            StatService.onPageEnd(getActivity(), "PointDeloyFragment");
+//            System.out.println("PointDeploy.OnPause===>");
+//            //相当于Fragment的onPause
+//        }
+//
+//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -379,6 +401,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        ((MainActivity) getActivity()).onCheckPermission(requestCode);
     }
 
     @Override
@@ -400,7 +423,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
                 startActivityForResult(intent, REQUEST_CODE_DEPLOY);
                 break;
             case R.id.deploy_iv_menu_list:
-                ((MainActivity)getActivity()).getMenuDrawer().openMenu();
+                ((MainActivity) getActivity()).getMenuDrawer().openMenu();
                 break;
             default:
                 break;
@@ -477,7 +500,8 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
             restartPreviewAfterDelay(BULK_MODE_SCAN_DELAY_MS);
         }
         /** 自动打开网页 **/
-        if (resultHandler.getDefaultButtonID() != null && prefs.getBoolean(PreferencesActivity.KEY_AUTO_OPEN_WEB, false)) {
+        if (resultHandler.getDefaultButtonID() != null && prefs.getBoolean(PreferencesActivity.KEY_AUTO_OPEN_WEB,
+                false)) {
             resultHandler.handleButtonPress(resultHandler.getDefaultButtonID());
             return;
         }
@@ -488,8 +512,8 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
      * process result
      */
     private void processResultCustome(String result) {
-        int currentIndex = ((MainActivity)getActivity()).getSensoroPager().getCurrentItem();
-        System.out.println("currentIndex==>"+ currentIndex);
+        int currentIndex = ((MainActivity) getActivity()).getSensoroPager().getCurrentItem();
+        System.out.println("currentIndex==>" + currentIndex);
         if (currentIndex != 3) {
             return;
         }
@@ -497,7 +521,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
             Toast.makeText(getContext(), R.string.scan_failed, Toast.LENGTH_SHORT).show();
             return;
         }
-        System.out.println("this.isResumed()==>"+ this.isResumed());
+        System.out.println("this.isResumed()==>" + this.isResumed());
         if (!this.isVisible() && !this.isResumed()) {
             return;
         }
@@ -505,8 +529,8 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         if (scanSerialNumber == null) {
             Toast.makeText(getContext(), R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
         } else {
-            SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getActivity().getApplication();
-            sensoroCityApplication.smartCityServer.getDeviceDetailInfoList(scanSerialNumber, null, 1, new Response.Listener<DeviceInfoListRsp>() {
+            SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(scanSerialNumber, null, 1, new Response
+                    .Listener<DeviceInfoListRsp>() {
                 @Override
                 public void onResponse(DeviceInfoListRsp response) {
                     refresh(response);
@@ -521,6 +545,8 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
                             Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                         } catch (JSONException e) {
                             e.printStackTrace();
+                        }catch (Exception e){
+
                         }
                     } else {
                         Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
@@ -534,7 +560,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
     private void refresh(DeviceInfoListRsp response) {
         try {
             Intent intent = new Intent();
-            if (response.getData().size() > 0 ) {
+            if (response.getData().size() > 0) {
                 intent.setClass(getContext(), DeployActivity.class);
                 intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
                 intent.putExtra("uid", this.getActivity().getIntent().getStringExtra("uid"));
@@ -647,25 +673,51 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
             decodeOrStoreSavedBitmap(null, null);
 
         } catch (IOException ioe) {
-            Log.w(TAG, ioe);
-            displayFrameworkBugMessageAndExit();
+            Log.e(TAG, ioe.getMessage());
+//            displayFrameworkBugMessageAndExit();
         } catch (RuntimeException e) {
             // Barcode Scanner has seen crashes in the wild of this variety:
             // java.?lang.?RuntimeException: Fail to connect to camera service
-            Log.w(TAG, "Unexpected error initializing camera", e);
-            displayFrameworkBugMessageAndExit();
+            Log.e(TAG, "Unexpected error initializing camera", e);
+//            displayFrameworkBugMessageAndExit();
         }
     }
 
     private void displayFrameworkBugMessageAndExit() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-        builder.setTitle(getString(R.string.app_name));
-        builder.setMessage(getString(R.string.msg_camera_framework_bug));
-        builder.setPositiveButton(R.string.button_ok, new FinishListener(this.getActivity()));
-        builder.setOnCancelListener(new FinishListener(this.getActivity()));
-        builder.show();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
+//        builder.setTitle(getString(R.string.app_name));
+//        builder.setMessage(getString(R.string.msg_camera_framework_bug));
+//        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+////                ((MainActivity)getActivity()).reconnectSocketIO();
+//            }
+//        });
+//        builder.setOnCancelListener(new FinishListener(this.getActivity()));
+//        builder.show();
+        ((MainActivity) getActivity()).showRequestPermissionDialot();
     }
 
+    //    private void showRequestPermissionDialot() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle(getString(R.string.app_name));
+//        builder.setMessage(getString(R.string.msg_camera_framework_bug));
+//        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                //TODO 设置界面
+//                ((MainActivity)getActivity()).startAppSetting();
+//            }
+//        }).setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                ((MainActivity)getActivity()).reconnectSocketIO();
+//
+//            }
+//        });
+////        builder.setOnCancelListener(`new FinishListener(this));
+//        builder.show();
+//    }
     public void restartPreviewAfterDelay(long delayMS) {
         if (handler != null) {
             handler.sendEmptyMessageDelayed(R.id.restart_preview, delayMS);

@@ -47,6 +47,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class DeploySettingTagActivity extends BaseActivity implements Constants, TextView.OnEditorActionListener, TextWatcher, RecycleViewItemClickListener {
 
+
     @BindView(R.id.deploy_setting_tag_back)
     ImageView backImageView;
     @BindView(R.id.deploy_setting_tag_finish)
@@ -70,7 +71,6 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
     private List<String> mTagList = new ArrayList<>();
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private RelationAdapter mRelationAdapter;
-    private SensoroCityApplication cityApplication;
     private int add_count = 0;
 
     @Override
@@ -96,10 +96,11 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
 
     private void init() {
         try {
-            cityApplication = (SensoroCityApplication) getApplication();
             mPref = getSharedPreferences(PREFERENCE_DEPLOY_TAG_HISTORY, Activity.MODE_PRIVATE);
             mEditor = mPref.edit();
-            mHistoryKeywords = new ArrayList<String>();
+            initRelation();
+            initSearchHistory();
+            initInputLayout();
             mKeywordEt.setOnEditorActionListener(this);
             mKeywordEt.setOnKeyListener(new View.OnKeyListener() {
                 @Override
@@ -121,9 +122,6 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
             });
             mKeywordEt.addTextChangedListener(this);
             mKeywordEt.requestFocus();
-            initRelation();
-            initSearchHistory();
-            initInputLayout();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -222,7 +220,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
 
     public void filterDeviceInfoByTag(String filter) {
         List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
-        originDeviceInfoList.addAll(cityApplication.getData());
+        originDeviceInfoList.addAll(SensoroCityApplication.getInstance().getData());
         ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
             if (deviceInfo.getTags() != null) {
@@ -259,7 +257,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         if (add_count > 1) {
             mKeywordEt.getText().clear();
             mKeywordEt.clearFocus();
-            Toast.makeText(cityApplication, "标签不能重复", Toast.LENGTH_SHORT).show();
+            Toast.makeText(DeploySettingTagActivity.this, "标签不能重复", Toast.LENGTH_SHORT).show();
         }
         if (!TextUtils.isEmpty(text)) {
             if (mHistoryKeywords.contains(text)) {

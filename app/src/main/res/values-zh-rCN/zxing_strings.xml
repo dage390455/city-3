@@ -58,7 +58,7 @@
     <string name="menu_settings">设置</string>
     <string name="menu_share">创建二维码</string>
     <string name="msg_bulk_mode_scanned">批量扫描模式：条码已扫描并保存</string>
-    <string name="msg_camera_framework_bug">此程序没有获取到相机权限，请前往设定中开启相机权限，然后再次打开程序。</string>
+    <string name="msg_camera_framework_bug">此程序没有获取到相机权限，即将前往设定中开启相机权限，然后再次打开点位部署。</string>
     <string name="msg_default_format">格式</string>
     <string name="msg_default_meta">元数据</string>
     <string name="msg_default_mms_subject">Hi</string>

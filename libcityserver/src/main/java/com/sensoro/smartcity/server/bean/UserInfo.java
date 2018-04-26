@@ -17,6 +17,16 @@ public class UserInfo implements Serializable{
     private String appId;
     private String appKey;
     private String appSecret;
+
+    public String getIsSpecific() {
+        return isSpecific;
+    }
+
+    public void setIsSpecific(String isSpecific) {
+        this.isSpecific = isSpecific;
+    }
+
+    private String isSpecific;
     private String roles;
     private String sessionID;
     private String controllerUid;
