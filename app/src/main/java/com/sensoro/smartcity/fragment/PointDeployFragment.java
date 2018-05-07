@@ -217,7 +217,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
 //            isShow = false;
 //            pauseCamera();
 //        }
-        if (rootView != null){
+        if (rootView != null) {
             rootView.setVisibility(View.GONE);
         }
 //        cameraManager.closeDriver();
@@ -372,22 +372,6 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         super.onDestroy();
     }
 
-//    @Override
-//    public void setUserVisibleHint(boolean isVisibleToUser) {
-//        super.setUserVisibleHint(isVisibleToUser);
-//        if (isVisibleToUser && isCreate) {
-//            //相当于Fragment的onResume
-//            //在这里处理加载数据等操作
-//
-//        } else {
-//            pauseCamera();
-//            hiddenRootView();
-//            StatService.onPageEnd(getActivity(), "PointDeloyFragment");
-//            System.out.println("PointDeploy.OnPause===>");
-//            //相当于Fragment的onPause
-//        }
-//
-//    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -399,10 +383,6 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         super.onStart();
     }
 
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        ((MainActivity) getActivity()).onCheckPermission(requestCode);
-    }
 
     @Override
     public void onClick(View v) {
@@ -529,30 +509,32 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         if (scanSerialNumber == null) {
             Toast.makeText(getContext(), R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
         } else {
-            SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(scanSerialNumber, null, 1, new Response
-                    .Listener<DeviceInfoListRsp>() {
-                @Override
-                public void onResponse(DeviceInfoListRsp response) {
-                    refresh(response);
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    if (volleyError.networkResponse != null) {
-                        String reason = new String(volleyError.networkResponse.data);
-                        try {
-                            JSONObject jsonObject = new JSONObject(reason);
-                            Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }catch (Exception e){
-
+            SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(scanSerialNumber, null, 1,
+                    new Response
+                            .Listener<DeviceInfoListRsp>() {
+                        @Override
+                        public void onResponse(DeviceInfoListRsp response) {
+                            refresh(response);
                         }
-                    } else {
-                        Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            if (volleyError.networkResponse != null) {
+                                String reason = new String(volleyError.networkResponse.data);
+                                try {
+                                    JSONObject jsonObject = new JSONObject(reason);
+                                    Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
+                                            .show();
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                } catch (Exception e) {
+
+                                }
+                            } else {
+                                Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
 
         }
     }
@@ -683,41 +665,7 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         }
     }
 
-    private void displayFrameworkBugMessageAndExit() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(this.getContext());
-//        builder.setTitle(getString(R.string.app_name));
-//        builder.setMessage(getString(R.string.msg_camera_framework_bug));
-//        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-////                ((MainActivity)getActivity()).reconnectSocketIO();
-//            }
-//        });
-//        builder.setOnCancelListener(new FinishListener(this.getActivity()));
-//        builder.show();
-        ((MainActivity) getActivity()).showRequestPermissionDialot();
-    }
 
-    //    private void showRequestPermissionDialot() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle(getString(R.string.app_name));
-//        builder.setMessage(getString(R.string.msg_camera_framework_bug));
-//        builder.setPositiveButton(R.string.button_ok, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                //TODO 设置界面
-//                ((MainActivity)getActivity()).startAppSetting();
-//            }
-//        }).setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                ((MainActivity)getActivity()).reconnectSocketIO();
-//
-//            }
-//        });
-////        builder.setOnCancelListener(`new FinishListener(this));
-//        builder.show();
-//    }
     public void restartPreviewAfterDelay(long delayMS) {
         if (handler != null) {
             handler.sendEmptyMessageDelayed(R.id.restart_preview, delayMS);

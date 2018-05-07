@@ -27,7 +27,7 @@ import com.amap.api.location.AMapLocationListener;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
-import com.amap.api.maps.MapView;
+import com.amap.api.maps.TextureMapView;
 import com.amap.api.maps.model.BitmapDescriptor;
 import com.amap.api.maps.model.BitmapDescriptorFactory;
 import com.amap.api.maps.model.CameraPosition;
@@ -77,7 +77,9 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * Created by sensoro on 17/8/3.
  */
 
-public class DeployActivity extends BaseActivity implements Constants, AMapLocationListener, AMap.OnMapClickListener, AMap.OnCameraChangeListener, GeocodeSearch.OnGeocodeSearchListener, AMap.InfoWindowAdapter, AMap.OnMapLoadedListener, AMap.OnMarkerClickListener, AMap.OnMapTouchListener {
+public class DeployActivity extends BaseActivity implements Constants, AMapLocationListener, AMap.OnMapClickListener,
+        AMap.OnCameraChangeListener, GeocodeSearch.OnGeocodeSearchListener, AMap.InfoWindowAdapter, AMap
+                .OnMapLoadedListener, AMap.OnMarkerClickListener, AMap.OnMapTouchListener {
 
 
     @BindView(R.id.deploy_name_address_et)
@@ -93,7 +95,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     @BindView(R.id.deploy_device_signal)
     TextView signalButton;
     @BindView(R.id.deploy_map)
-    MapView mMapView;
+    TextureMapView mMapView;
     @BindView(R.id.deploy_tag_layout)
     LinearLayout tagLayout;
     private AMap aMap;
@@ -117,16 +119,33 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
         setContentView(R.layout.activity_deploy);
         ButterKnife.bind(this);
         mMapView.onCreate(savedInstanceState);
-        mMapView.setVisibility(View.GONE);
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                mMapView.setVisibility(View.VISIBLE);
-            }
-        }, 1000);
         init();
         this.getWindow().getDecorView().postInvalidate();
         StatusBarCompat.setStatusBarColor(this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
+        if (mLocationClient != null) {
+            mLocationClient.stopLocation();
+            mLocationClient.onDestroy();
+            mLocationClient = null;
+        }
+        if (uploadButton != null) {
+            uploadButton.setEnabled(true);
+        }
+        super.onDestroy();
+        mMapView.onDestroy();
+    }
+
+    @Override
+    public void onLowMemory() {
+        super.onLowMemory();
+        mMapView.onLowMemory();
     }
 
     @Override
@@ -147,6 +166,9 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
         super.onResume();
         mMapView.onResume();
         StatService.onResume(this);
+        if (uploadButton != null) {
+            uploadButton.setEnabled(true);
+        }
     }
 
     /**
@@ -174,22 +196,27 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.loading));
             DeviceInfo deviceInfo = (DeviceInfo) getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
-            if (deviceInfo != null ) {
+            if (deviceInfo != null) {
                 String sn = deviceInfo.getSn();
                 String styleName = "custom_config.data";
                 titleTextView.setText(sn);
                 nameAddressEditText.setText(deviceInfo.getName());
                 if (deviceInfo.getAlarms() != null) {
                     AlarmInfo alarmInfo = deviceInfo.getAlarms();
-                    if (alarmInfo.getNotification().getContact() != null) {
-                        contactEditText.setText(alarmInfo.getNotification().getContact() + ":" + alarmInfo.getNotification().getContent());
+                    String contact = alarmInfo.getNotification().getContact();
+                    if (contact != null) {
+                        this.contact = contact;
+                        String content = alarmInfo
+                                .getNotification().getContent();
+                        this.content = content;
+                        contactEditText.setText(contact + ":" + content);
                     }
                 }
 
                 String tags[] = deviceInfo.getTags();
                 if (tags != null) {
                     for (int i = 0; i < tags.length; i++) {
-                        String tag = tags [i];
+                        String tag = tags[i];
                         if (!TextUtils.isEmpty(tag)) {
                             tagList.add(tag);
                         }
@@ -232,6 +259,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
 
                 geocoderSearch = new GeocodeSearch(this);
                 geocoderSearch.setOnGeocodeSearchListener(this);
+                uploadButton.setEnabled(true);
                 setMapCustomStyleFile();
                 locate();
             } else {
@@ -377,7 +405,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
             for (int i = 0; i < tagList.size(); i++) {
                 String tag = tagList.get(i);
                 if (!TextUtils.isEmpty(tag)) {
-                    if (i == tagList.size() -1) {
+                    if (i == tagList.size() - 1) {
                         stringBuilder.append(tag);
                     } else {
                         stringBuilder.append(tag + ",");
@@ -390,51 +418,71 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     }
 
     private void requestUpload() {
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
         String sn = titleTextView.getText().toString();
         final String name = nameAddressEditText.getText().toString();
         String tags = tagListToString();
         String name_default = getString(R.string.tips_hint_name_address);
         if (TextUtils.isEmpty(name) || name.equals(name_default)) {
-            SensoroToast sensoroToast = SensoroToast.makeText(sensoroCityApplication, getString(R.string.tips_input_name), Toast.LENGTH_SHORT);
-            sensoroToast.setGravity(Gravity.CENTER, 0, 0);
+            SensoroToast sensoroToast = SensoroToast.makeText(this, getString(R.string
+                    .tips_input_name), Toast.LENGTH_SHORT);
+            sensoroToast.setGravity(Gravity.CENTER, 0, -10);
             sensoroToast.show();
+            if (uploadButton != null) {
+                uploadButton.setEnabled(true);
+            }
         } else if (latLng == null) {
-            SensoroToast.makeText(sensoroCityApplication, getString(R.string.tips_hint_location), Toast.LENGTH_SHORT).show();
+            SensoroToast.makeText(this, getString(R.string.tips_hint_location), Toast.LENGTH_SHORT).setGravity
+                    (Gravity.CENTER, 0, -10)
+                    .show();
+            if (uploadButton != null) {
+                uploadButton.setEnabled(true);
+            }
+        } else if (TextUtils.isEmpty(contact) || name.equals(content)) {
+            SensoroToast.makeText(this, "联系人姓名或电话不能为空！", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                    .show();
+            if (uploadButton != null) {
+                uploadButton.setEnabled(true);
+            }
         } else {
             final double lon = latLng.longitude;
             final double lan = latLng.latitude;
-            sensoroCityApplication.smartCityServer.doDevicePointDeploy(sn, lon, lan, tags, name, contact, content, new Response.Listener<DeviceDeployRsp>() {
-                @Override
-                public void onResponse(DeviceDeployRsp response) {
-                    int errCode = response.getErrcode();
-                    int resultCode = 1;
-                    if (errCode != ResponseBase.CODE_SUCCESS) {
-                        resultCode = errCode;
-                    }
-                    Intent intent = new Intent(DeployActivity.this, DeployResultActivity.class);
-                    intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
-                    intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                    intent.putExtra(EXTRA_DEVICE_INFO, response.getData());
-                    intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
-                    intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
-                    intent.putExtra(EXTRA_SETTING_CONTACT, contact);
-                    intent.putExtra(EXTRA_SETTING_CONTENT, content);
-                    startActivity(intent);
-                    finish();
-                }
-            }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    if (volleyError.networkResponse != null) {
-                        byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(DeployActivity.this, new String(data), Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                    }
+            SensoroCityApplication.getInstance().smartCityServer.doDevicePointDeploy(sn, lon, lan, tags, name,
+                    contact, content,
+                    new Response.Listener<DeviceDeployRsp>() {
+                        @Override
+                        public void onResponse(DeviceDeployRsp response) {
+                            int errCode = response.getErrcode();
+                            int resultCode = 1;
+                            if (errCode != ResponseBase.CODE_SUCCESS) {
+                                resultCode = errCode;
+                            }
+                            Intent intent = new Intent(DeployActivity.this, DeployResultActivity.class);
+                            intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                            intent.putExtra(EXTRA_DEVICE_INFO, response.getData());
+                            intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
+                            intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
+                            intent.putExtra(EXTRA_SETTING_CONTACT, contact);
+                            intent.putExtra(EXTRA_SETTING_CONTENT, content);
+                            startActivity(intent);
+                            finish();
+                        }
+                    }, new Response.ErrorListener() {
+                        @Override
+                        public void onErrorResponse(VolleyError volleyError) {
+                            if (volleyError.networkResponse != null) {
+                                byte[] data = volleyError.networkResponse.data;
+                                Toast.makeText(DeployActivity.this, new String(data), Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                        .show();
+                            }
+                            if (uploadButton != null) {
+                                uploadButton.setEnabled(true);
+                            }
 
-                }
-            });
+                        }
+                    });
         }
 
     }
@@ -487,41 +535,44 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     @OnClick(R.id.deploy_device_signal)
     public void doSignal() {
         mProgressDialog.show();
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getDeviceDetailInfoList(titleTextView.getText().toString(), null, 1, new Response.Listener<DeviceInfoListRsp>() {
-            @Override
-            public void onResponse(DeviceInfoListRsp response) {
-                mProgressDialog.dismiss();
-                if (response.getData().size() > 0) {
-                    DeviceInfo deviceInfo = response.getData().get(0);
-                    String signal = deviceInfo.getSignal();
-                    refreshSignal(deviceInfo.getUpdatedTime(), signal);
-                }
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                mProgressDialog.dismiss();
-                if (volleyError.networkResponse != null) {
-                    String reason = new String(volleyError.networkResponse.data);
-                    try {
-                        JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(DeployActivity.this, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }catch (Exception e){
-
+        String sns = titleTextView.getText().toString();
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(sns, null, 1,
+                new Response.Listener<DeviceInfoListRsp>() {
+                    @Override
+                    public void onResponse(DeviceInfoListRsp response) {
+                        mProgressDialog.dismiss();
+                        if (response.getData().size() > 0) {
+                            DeviceInfo deviceInfo = response.getData().get(0);
+                            String signal = deviceInfo.getSignal();
+                            refreshSignal(deviceInfo.getUpdatedTime(), signal);
+                        }
                     }
-                } else {
-                    Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError volleyError) {
+                        mProgressDialog.dismiss();
+                        if (volleyError.networkResponse != null) {
+                            String reason = new String(volleyError.networkResponse.data);
+                            try {
+                                JSONObject jsonObject = new JSONObject(reason);
+                                Toast.makeText(DeployActivity.this, jsonObject.getString("errmsg"), Toast
+                                        .LENGTH_SHORT).show();
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            } catch (Exception e) {
+
+                            }
+                        } else {
+                            Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
 
     }
 
     @OnClick(R.id.deploy_upload_btn)
     public void deploy() {
+        uploadButton.setEnabled(false);
         requestUpload();
     }
 
@@ -580,7 +631,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
         latLng = cameraPosition.target;
         smoothMoveMarker.setPosition(latLng);
         LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
-        System.out.println("====>onCameraChangeFinish=>"+ lp.getLatitude() + "&" + lp.getLongitude());
+        System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
         query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
     }

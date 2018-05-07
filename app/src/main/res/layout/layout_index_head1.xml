@@ -9,10 +9,8 @@
         android:orientation="vertical"
         android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp">
+        android:layout_height="wrap_content">
         <TextView
-            android:text=""
             android:id="@+id/index_head_alarm_num"
             android:textSize="@dimen/x180"
             android:textStyle="bold"

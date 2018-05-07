@@ -56,13 +56,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/item_list_value1"
+                    android:id="@+id/item_list_value2"
                     android:textSize="@dimen/city_super_size"
                     android:textColor="@color/sensoro_alarm"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
-                    android:id="@+id/item_list_unit1"
+                    android:id="@+id/item_list_unit2"
                     android:textColor="@color/sensoro_alarm"
                     android:textSize="@dimen/city_normal_size"
                     android:layout_marginLeft="@dimen/x6"
@@ -77,13 +77,13 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content">
                 <TextView
-                    android:id="@+id/item_list_value2"
+                    android:id="@+id/item_list_value1"
                     android:textColor="@color/sensoro_alarm"
                     android:textSize="@dimen/city_super_size"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content" />
                 <TextView
-                    android:id="@+id/item_list_unit2"
+                    android:id="@+id/item_list_unit1"
                     android:textColor="@color/sensoro_alarm"
                     android:textSize="@dimen/city_normal_size"
                     android:layout_marginLeft="@dimen/x6"

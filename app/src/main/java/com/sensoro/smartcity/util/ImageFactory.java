@@ -98,10 +98,12 @@ public class ImageFactory {
         ByteArrayOutputStream os = new ByteArrayOutputStream();
         image.compress(Bitmap.CompressFormat.JPEG, 100, os);
         int options = 100;
-        while (os.toByteArray().length / 1024 /1024> 128) {//判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
+        int i = os.toByteArray().length / 1024;
+        while (i > 128) {//判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
             os.reset();//重置baos即清空baos
             options -= 10;
-            image.compress(Bitmap.CompressFormat.JPEG, options, os);//这里压缩50%，把压缩后的数据存放到baos中
+            image.compress(Bitmap.CompressFormat.JPEG, options, os);
+            i = os.toByteArray().length / 1024;//这里压缩50%，把压缩后的数据存放到baos中
         }
         ByteArrayInputStream is = new ByteArrayInputStream(os.toByteArray());
 
@@ -110,7 +112,6 @@ public class ImageFactory {
         newOpts.inJustDecodeBounds = true;
         newOpts.inPreferredConfig = Bitmap.Config.RGB_565;
         Bitmap bitmap = BitmapFactory.decodeStream(is, null, newOpts);
-        newOpts.inJustDecodeBounds = false;
         int w = newOpts.outWidth;
         int h = newOpts.outHeight;
         float hh = pixelH;// 设置高度为240f时，可以明显看到图片缩小了
@@ -123,16 +124,17 @@ public class ImageFactory {
             be = (int) (newOpts.outHeight / hh);
         }
         if (be <= 0) be = 1;
-        Log.e("--", "ratio: be = "+be );
+        Log.e("--", "ratio: be = " + be);
         newOpts.inSampleSize = be;//设置缩放比例
         //重新读入图片，注意此时已经把options.inJustDecodeBounds 设回false了
         is = new ByteArrayInputStream(os.toByteArray());
+        newOpts.inJustDecodeBounds = false;
         bitmap = BitmapFactory.decodeStream(is, null, newOpts);
         try {
-            if (os!=null){
+            if (os != null) {
                 os.close();
             }
-            if (is!=null){
+            if (is != null) {
                 is.close();
             }
         } catch (IOException e) {
@@ -169,6 +171,32 @@ public class ImageFactory {
 //                , newWidth + deltaWidth > width ? width - deltaWidth : newWidth
 //                , newHeight + deltaHeight > height ? height - deltaHeight : newHeight
 //                , m, false);
+    }
+
+    public static byte[] ratio(Bitmap image) {
+        ByteArrayOutputStream os = null;
+        try {
+            os = new ByteArrayOutputStream();
+            image.compress(Bitmap.CompressFormat.JPEG, 100, os);
+            int options = 100;
+            while (os.toByteArray().length / 1024 > 128) {//判断如果图片大于1M,进行压缩避免在生成图片（BitmapFactory.decodeStream）时溢出
+                os.reset();//重置baos即清空baos
+                options -= 10;
+                //这里压缩50%，把压缩后的数据存放到baos中
+                image.compress(Bitmap.CompressFormat.JPEG, options, os);
+            }
+
+            return os.toByteArray();
+        } catch (Exception e) {
+            return null;
+        } finally {
+            try {
+                os.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     /**

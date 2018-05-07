@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.util;
 
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.graphics.BitmapFactory;
 import android.util.Log;
 
@@ -23,12 +22,12 @@ public class Util {
 	
 	public static byte[] bmpToByteArray(final Bitmap bmp, final boolean needRecycle) {
 		ByteArrayOutputStream output = new ByteArrayOutputStream();
-		bmp.compress(CompressFormat.PNG, 100, output);
+		bmp.compress(Bitmap.CompressFormat.JPEG, 100, output);
+		byte[] result = output.toByteArray();
+		int allocationByteCount = bmp.getAllocationByteCount();
 		if (needRecycle) {
 			bmp.recycle();
 		}
-		
-		byte[] result = output.toByteArray();
 		try {
 			output.close();
 		} catch (Exception e) {

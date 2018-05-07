@@ -575,6 +575,7 @@ public class WidgetUtil {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("no2")) {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("pm2_5") || sensorStruct.getSensorType()
                 .equalsIgnoreCase("pm10")) {
+
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("temperature") || sensorStruct.getSensorType()
                 .equalsIgnoreCase("humidity")) {
         } else if (sensorStruct.getSensorType().equalsIgnoreCase("smoke")) {

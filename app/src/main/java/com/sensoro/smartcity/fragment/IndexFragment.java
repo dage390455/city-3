@@ -1,9 +1,5 @@
 package com.sensoro.smartcity.fragment;
 
-import android.animation.Animator;
-import android.animation.AnimatorInflater;
-import android.animation.AnimatorListenerAdapter;
-import android.animation.AnimatorSet;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
@@ -69,7 +65,7 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
  * Created by sensoro on 17/11/6.
  */
 
-public class IndexFragment extends Fragment implements Runnable, Constants, View.OnClickListener,
+public class IndexFragment extends Fragment implements Constants, View.OnClickListener,
         RecycleViewItemClickListener, ViewPager.OnPageChangeListener, AppBarLayout.OnOffsetChangedListener {
 
     private View rootView;
@@ -119,10 +115,10 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     private int soundId = 0;
     private int page = 1;
     private volatile boolean isAlarmPlay = false;
-    private volatile boolean isNeesRefresh = false;
-    private AnimatorSet mAnimatorSetOut;
-    private AnimatorSet mAnimatorSetIn;
-    private Animation mInAnimation;
+    private volatile boolean isNeesRefresh = true;
+//    private AnimatorSet mAnimatorSetOut;
+//    private AnimatorSet mAnimatorSetIn;
+//    private Animation mInAnimation;
 
     public static IndexFragment newInstance(Character input) {
         IndexFragment indexFragment = new IndexFragment();
@@ -165,7 +161,6 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
@@ -178,18 +173,11 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
         if (mListAdapter != null) {
             mListAdapter.getData().clear();
         }
-        if (mAnimatorSetOut != null) {
-            mAnimatorSetOut.cancel();
-            mAnimatorSetOut = null;
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
         }
-        if (mAnimatorSetIn != null) {
-            mAnimatorSetIn.cancel();
-            mAnimatorSetIn = null;
-        }
-        if (mInAnimation != null) {
-            mInAnimation.cancel();
-            mInAnimation = null;
-        }
+        super.onDestroyView();
     }
 
     @Override
@@ -213,7 +201,7 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
             soundId = soundPool.load(this.getContext(), R.raw.alarm, 1);
             mHandler = new Handler();
-            mHandler.postDelayed(this, 3000);
+            mHandler.postDelayed(mTask, 3000);
             gson = gsonBuilder.create();
             mToolbar = (Toolbar) rootView.findViewById(R.id.toolbar);
             collapsingToolbarLayout = (CollapsingToolbarLayout) rootView.findViewById(R.id.toolbar_layout);
@@ -411,7 +399,7 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     }
 
     public void showGridLayout() {
-        mInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.layout_in_anim);
+        Animation mInAnimation = AnimationUtils.loadAnimation(getActivity(), R.anim.layout_in_anim);
         mInAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -443,10 +431,12 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
                 int lostCount = response.getData().getOffline();
                 int inactiveCount = response.getData().getInactive();
                 refreshTop(isShowAnimation, alarmCount, lostCount, inactiveCount);
+                isNeesRefresh = false;
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                isNeesRefresh = false;
                 if (volleyError.networkResponse != null) {
 //                    byte[] data = volleyError.networkResponse.data;
 //                    Toast.makeText(cityApplication, new String(data), Toast.LENGTH_SHORT).show();
@@ -456,16 +446,14 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
     }
 
     private void refreshTop(boolean isShowAnimation, int alarmCount, int lostCount, int inactiveCount) {
-
         mHeadAlarmNumTextView.setText(String.valueOf(alarmCount));
         mHeadLostNumTextView.setText(String.valueOf(lostCount));
         mHeadInactiveNumTextView.setText(String.valueOf(inactiveCount));
-        if (isShowAnimation) {
-            playFlipAnimation(mHeadAlarmNumTextView);
-            playFlipAnimation(mHeadLostNumTextView);
-            playFlipAnimation(mHeadInactiveNumTextView);
-        }
-
+//        if (isShowAnimation) {
+//            playFlipAnimation(mHeadAlarmNumTextView);
+//            playFlipAnimation(mHeadLostNumTextView);
+//            playFlipAnimation(mHeadInactiveNumTextView);
+//        }
         if (alarmCount > 0) {
             alarmLayout.setVisibility(View.VISIBLE);
             mHeadAlarmNumTextView.setVisibility(VISIBLE);
@@ -509,6 +497,7 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
                                 .Listener<DeviceInfoListRsp>() {
                             @Override
                             public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+                                mProgressDialog.dismiss();
                                 try {
                                     SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
                                     refreshCacheData();
@@ -517,16 +506,16 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
                                 } finally {
                                     mListRecyclerView.refreshComplete();
                                     mGridRecyclerView.refreshComplete();
-                                    mProgressDialog.dismiss();
+
                                 }
 
                             }
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
+                                mProgressDialog.dismiss();
                                 mListRecyclerView.refreshComplete();
                                 mGridRecyclerView.refreshComplete();
-                                mProgressDialog.dismiss();
                                 if (volleyError.networkResponse != null) {
                                     byte[] data = volleyError.networkResponse.data;
                                     Toast.makeText(getActivity(), new String(data), Toast.LENGTH_SHORT).show();
@@ -540,9 +529,12 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
                                 .Listener<DeviceInfoListRsp>() {
                             @Override
                             public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+                                mProgressDialog.dismiss();
                                 try {
                                     if (deviceBriefInfoRsp.getData().size() == 0) {
+                                        Toast.makeText(getContext(), "没有更多数据了！", Toast.LENGTH_SHORT).show();
                                         page--;
+                                        return;
                                     } else {
                                         SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
                                         refreshCacheData();
@@ -553,7 +545,6 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
                                 } finally {
                                     mListRecyclerView.loadMoreComplete();
                                     mGridRecyclerView.loadMoreComplete();
-                                    mProgressDialog.dismiss();
                                 }
                             }
                         }, new Response.ErrorListener() {
@@ -659,6 +650,9 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
             }
             if (isMatcher(deviceInfo)) {
                 mDataList.add(deviceInfo);
+            }else {
+                Toast.makeText(getContext(), "没有更多数据了！", Toast.LENGTH_SHORT).show();
+                return;
             }
         }
         refreshData();
@@ -680,34 +674,34 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
         }
     }
 
-    private void playFlipAnimation(View targetView) {
-        mAnimatorSetOut = (AnimatorSet) AnimatorInflater
-                .loadAnimator(getContext(), R.animator.card_flip_left_out);
+//    private void playFlipAnimation(View targetView) {
+//        AnimatorSet mAnimatorSetOut = (AnimatorSet) AnimatorInflater
+//                .loadAnimator(getContext(), R.animator.card_flip_left_out);
+//
+//        final AnimatorSet mAnimatorSetIn = (AnimatorSet) AnimatorInflater
+//                .loadAnimator(getContext(), R.animator.card_flip_left_in);
+//
+//        mAnimatorSetOut.setTarget(targetView);
+//        mAnimatorSetIn.setTarget(targetView);
+//
+//        mAnimatorSetOut.addListener(new AnimatorListenerAdapter() {
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {// 翻转90度之后，换图
+//                mAnimatorSetIn.start();
+//            }
+//        });
+//
+//        mAnimatorSetIn.addListener(new AnimatorListenerAdapter() {
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                // TODO
+//            }
+//        });
+//        mAnimatorSetOut.start();
 
-        mAnimatorSetIn = (AnimatorSet) AnimatorInflater
-                .loadAnimator(getContext(), R.animator.card_flip_left_in);
-
-        mAnimatorSetOut.setTarget(targetView);
-        mAnimatorSetIn.setTarget(targetView);
-
-        mAnimatorSetOut.addListener(new AnimatorListenerAdapter() {
-
-            @Override
-            public void onAnimationEnd(Animator animation) {// 翻转90度之后，换图
-                mAnimatorSetIn.start();
-            }
-        });
-
-        mAnimatorSetIn.addListener(new AnimatorListenerAdapter() {
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                // TODO
-            }
-        });
-        mAnimatorSetOut.start();
-
-    }
+//    }
 
 
     public void refreshCityInfo(Character character) {
@@ -1095,23 +1089,27 @@ public class IndexFragment extends Fragment implements Runnable, Constants, View
                 mDataList.add(deviceInfo);
             }
         }
+        if (isVisible() && this.isResumed()) {
+            requestDeviceTypeCountData(false);
+        }
         if (isAlarmPlay) {
             playSound();
             isAlarmPlay = false;
         }
         refreshData();
-        if (isVisible() && this.isResumed()) {
-            requestDeviceTypeCountData(false);
-        }
-        isNeesRefresh = false;
     }
 
-    @Override
-    public void run() {
-        mHandler.postDelayed(this, 3000);
-        if (isNeesRefresh) {
-            Log.e("", "run: 执行刷新！！！！！！");
-            scheduleRefresh();
+    /**
+     * 推送轮训
+     */
+    private final Runnable mTask = new Runnable() {
+        @Override
+        public void run() {
+            if (isNeesRefresh) {
+                Log.e("", "run: 执行刷新！！！！！！");
+                scheduleRefresh();
+            }
+            mHandler.postDelayed(this, 2000);
         }
-    }
+    };
 }

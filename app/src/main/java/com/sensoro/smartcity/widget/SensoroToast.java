@@ -15,6 +15,7 @@ import com.sensoro.smartcity.R;
 public class SensoroToast {
 
     private Toast mToast;
+
     private SensoroToast(Context context, CharSequence text, int duration) {
         View v = LayoutInflater.from(context).inflate(R.layout.layout_toast, null);
         TextView textView = (TextView) v.findViewById(R.id.textView1);
@@ -27,14 +28,17 @@ public class SensoroToast {
     public static SensoroToast makeText(Context context, CharSequence text, int duration) {
         return new SensoroToast(context, text, duration);
     }
+
     public void show() {
         if (mToast != null) {
             mToast.show();
         }
     }
-    public void setGravity(int gravity, int xOffset, int yOffset) {
+
+    public SensoroToast setGravity(int gravity, int xOffset, int yOffset) {
         if (mToast != null) {
             mToast.setGravity(gravity, xOffset, yOffset);
         }
+        return this;
     }
 }

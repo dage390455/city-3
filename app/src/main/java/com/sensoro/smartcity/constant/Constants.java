@@ -19,6 +19,10 @@ public interface Constants {
     String PREFERENCE_DEPLOY_CONTENT_HISTORY = "city_deploy_content_history";
     String PREFERENCE_KEY_DEVICE = "key_search_history_keyword";
     String PREFERENCE_KEY_DEPLOY = "key_search_deploy";
+    //
+    String PREFERENCE_KEY_DEVICE_NAME = "key_search_device_name";
+    String PREFERENCE_KEY_DEVICE_NUM = "key_search_device_num";
+    String PREFERENCE_KEY_DEVICE_PHONE = "key_search_device_phone";
     String INPUT = "INPUT";
     int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
             R.mipmap.ic_menu_location,};
@@ -111,6 +115,9 @@ public interface Constants {
     String PREFERENCE_LOGIN = "preference_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
     String PREFERENCE_KEY_PASSWORD = "preference_key_password";
+
+    String PREFERENCE_KEY_START_TIME="preference_key_start_time";
+    String PREFERENCE_KEY_END_TIME="preference_key_end_time";
     int RESULT_CODE_MAP = 100;
     int RESULT_CODE_SEARCH_DEVICE = 101;
     int RESULT_CODE_SEARCH_ALARM = 102;
@@ -150,4 +157,7 @@ public interface Constants {
     int SETTING_CONTENT = 3;
     String ENCODE = "HmacSHA512";
     String APP_ID = "wxa65d8bad62a982e1";
+    int TYPE_DEVICE_NAME = 0x10;
+    int TYPE_DEVICE_NUMBER = 0x11;
+    int TYPE_DEVICE_PHONE_NUM = 0x12;
 }

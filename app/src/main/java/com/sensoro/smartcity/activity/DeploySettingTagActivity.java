@@ -96,7 +96,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
 
     private void init() {
         try {
-            mPref = getSharedPreferences(PREFERENCE_DEPLOY_TAG_HISTORY, Activity.MODE_PRIVATE);
+            mPref = getApplicationContext().getSharedPreferences(PREFERENCE_DEPLOY_TAG_HISTORY, Activity.MODE_PRIVATE);
             mEditor = mPref.edit();
             initRelation();
             initSearchHistory();

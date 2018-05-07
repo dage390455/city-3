@@ -220,7 +220,7 @@
                 android:background="@color/c_e7e7e7"
                 android:contentDescription="@null" />
 
-            <RelativeLayout
+            <com.sensoro.smartcity.widget.MapContainer
                 android:id="@+id/sensor_detail_map_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -259,7 +259,7 @@
                 <Button
                     android:id="@+id/sensor_detail_share_btn"
                     style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="@dimen/x160"
+                    android:layout_width="wrap_content"
                     android:layout_height="@dimen/y100"
                     android:layout_toStartOf="@+id/sensor_detail_navi_btn"
                     android:layout_marginEnd="@dimen/x50"
@@ -269,7 +269,7 @@
                     android:text="@string/detail_share"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
-            </RelativeLayout>
+            </com.sensoro.smartcity.widget.MapContainer>
             <RelativeLayout
                 android:gravity="center_horizontal"
                 android:visibility="gone"

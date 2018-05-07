@@ -204,6 +204,9 @@
             </intent-filter>
 
         </activity>
+        <activity
+            android:name=".FMMapBasic"
+            android:configChanges="orientation|keyboardHidden"/>
 
         <service
             android:name="com.igexin.download.DownloadService"
@@ -268,6 +271,9 @@
         <meta-data
             android:name="BaiduMobAd_WIFI_LOCATION"
             android:value="true"/>
+        <meta-data
+            android:name="com.fengmap.mapapi.appkey"
+            android:value="7b11a3fcdc47cdacf522976dd5ca4c61"/>
         <!--<receiver-->
         <!--android:name=".push.AppRegister"-->
         <!--android:permission="com.tencent.mm.plugin.permission.SEND" >-->

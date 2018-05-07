@@ -53,9 +53,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>
-        <RelativeLayout
+        <LinearLayout
             android:layout_marginTop="@dimen/y20"
             android:layout_width="match_parent"
+            android:orientation="horizontal"
             android:layout_height="wrap_content">
             <TextView
                 android:id="@+id/alarm_sensor_name"
@@ -64,16 +65,9 @@
                 android:textColor="@color/c_626262"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="@dimen/x80"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content" />
-            <ImageView
-                android:id="@+id/alarm_sensor_arrow"
-                android:layout_marginRight="@dimen/x30"
-                android:src="@mipmap/ic_forward"
-                android:layout_centerVertical="true"
-                android:layout_alignParentRight="true"
-                android:layout_width="@dimen/x60"
-                android:layout_height="@dimen/y60" />
             <TextView
                 android:id="@+id/alarm_sensor_confirm_status"
                 android:textColor="@color/white"
@@ -85,7 +79,16 @@
                 android:layout_marginRight="@dimen/x20"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
-        </RelativeLayout>
+            <ImageView
+                android:id="@+id/alarm_sensor_arrow"
+                android:layout_marginRight="@dimen/x30"
+                android:src="@mipmap/ic_forward"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_width="@dimen/x60"
+                android:layout_height="@dimen/y60" />
+
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">

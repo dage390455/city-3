@@ -29,8 +29,8 @@ public final class PermissionUtils {
     //界面传递过来的权限列表,用于二次申请
     private ArrayList<String> mPermissionsList = new ArrayList<>();
 
-    public PermissionUtils(Activity ac) {
-        mContext = ac;
+    public PermissionUtils(Activity activity) {
+        mContext = activity;
     }
 
 
@@ -229,8 +229,6 @@ public final class PermissionUtils {
                 .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialogInterface, int i) {
-//                        AppUtils.getAppDetailsSettings(BaseActivity.this, SETTINGS_REQUEST_CODE);
-                        //TODO 设置界面
                         Intent in = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
                         Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
                         in.setData(uri);

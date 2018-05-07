@@ -14,8 +14,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.Settings;
-import android.support.annotation.NonNull;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
@@ -69,9 +67,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
 public class MainActivity extends BaseActivity implements AdapterView.OnItemClickListener, Constants, View
         .OnClickListener {
-    private static final int MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION = 0x100;
-    private static final int MY_PERMISSIONS_REQUEST_CAMERA = 0x101;
-    public static final int REQUEST_TAKE_PHOTO_PERMISSION = 0x102;
+    public static final int REQUEST_TAKE_PHOTO_PERMISSION = 0x1a0;
     private MenuInfoAdapter mMenuInfoAdapter = null;
     private SensoroPager sensoroPager = null;
     private MenuDrawer mMenuDrawer = null;
@@ -126,7 +122,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         if (mSocket != null) {
             mSocket.disconnect();
             mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
@@ -135,6 +130,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         if (mHandler != null) {
             mHandler.removeCallbacks(mRunnable);
         }
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
+        super.onDestroy();
     }
 
     @Override
@@ -188,8 +188,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private void initWidget() {
         try {
-            requireCameraPermission();
-
             mProgressDialog = new ProgressDialog(this);
             mProgressDialog.setMessage(getString(R.string.loading));
             mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
@@ -331,109 +329,27 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         builder.create().show();
     }
 
-    private boolean requireLocationPermission() {
+    private boolean checkLocationPermission() {
 
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_COARSE_LOCATION)) {
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{
-                                Manifest.permission.ACCESS_COARSE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION);
-
-            }
             return false;
         } else {
             return true;
         }
     }
 
-    public boolean requireCameraPermission() {
+    public boolean checkCameraPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.CAMERA)
                 != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.CAMERA)) {
-
-            } else {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{
-                                Manifest.permission.CAMERA},
-                        MY_PERMISSIONS_REQUEST_CAMERA);
-            }
             return false;
         } else {
             return true;
         }
     }
 
-    private void toTakePhotoFragment() {
-        boolean isRequire = requireLocationPermission();
-        if (isRequire) {
-            pointDeployFragment.showRootView();
-            sensoroPager.setCurrentItem(3);
-        } else {
-            mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
-            mMenuInfoAdapter.notifyDataSetChanged();
-            Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
-            grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        Log.e("", "onRequestPermissionsResult: -----" + requestCode);
-        if (requestCode == MY_PERMISSIONS_REQUEST_CAMERA) {
-            requireLocationPermission();
-            Log.e("", "onRequestPermissionsResult: -----MY_PERMISSIONS_REQUEST_CAMERA");
-        }
-        if (requestCode == MY_PERMISSIONS_REQUEST_ACCESS_COARSE_LOCATION) {
-
-        }
-
-    }
-
-    //    private void takePhotoRequestPermission() {
-//        if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager
-// .PERMISSION_GRANTED) {
-//            //判断是否需要主动弹出对话框
-//            if (SpUtil.getInstance().getFlag() &&
-//                    !ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                            Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-//                //满足条件弹出自定义dialog
-//                if (dialog == null) {
-//                    dialog = MyDialog.newInstance("相机故障", "需要开启读写数据权限才可以使用拍照功能");
-//                    dialog.setOnAllowClickListener(new MyDialog.OnAllowClickListener() {
-//                        @Override
-//                        public void onClick() {
-//                            //用户点击 GO SETTING 的时候跳转到应用设置界面
-//                            startAppSetting();
-//                        }
-//                    });
-//                }
-//                dialog.show(getSupportFragmentManager(), "dialog");
-//            } else {
-//                //保存 shouldShowRequestPermissionRationale的返回值
-//                SpUtil.getInstance().putFlag(ActivityCompat.shouldShowRequestPermissionRationale(this,
-//                        Manifest.permission.WRITE_EXTERNAL_STORAGE));
-//                //直接申请权限
-//                ActivityCompat.requestPermissions(this,
-//                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
-//                        REQUEST_TAKE_PHOTO_PERMISSION);
-//            }
-//        } else {
-//            takePhoto();
-//        }
-//    }
     public void showRequestPermissionDialot() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(getString(R.string.app_name));
@@ -617,8 +533,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                         sensoroPager.setCurrentItem(position);
                         break;
                     case 3:
-                        if (requireCameraPermission()) {
-                            boolean isRequire = requireLocationPermission();
+                        if (checkCameraPermission()) {
+                            boolean isRequire = checkLocationPermission();
                             if (isRequire) {
                                 pointDeployFragment.showRootView();
                                 sensoroPager.setCurrentItem(3);
@@ -660,8 +576,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
                         sensoroPager.setCurrentItem(position);
                         break;
                     case 2:
-                        if (requireCameraPermission()) {
-                            boolean isRequire = requireLocationPermission();
+                        if (checkCameraPermission()) {
+                            boolean isRequire = checkLocationPermission();
                             if (isRequire) {
                                 pointDeployFragment.showRootView();
                                 sensoroPager.setCurrentItem(3);
@@ -707,8 +623,13 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        onCheckPermission(requestCode);
-
+        if (requestCode == REQUEST_TAKE_PHOTO_PERMISSION) {
+            if (!checkCameraPermission() || !checkLocationPermission()) {
+                Toast.makeText(this, "无权限！", Toast.LENGTH_SHORT).show();
+                startActivity(new Intent(this, LoginActivity.class));
+                finish();
+            }
+        }
         if (resultCode == RESULT_CODE_ORIGIN) {
             sensoroPager.setCurrentItem(0);
             mMenuInfoAdapter.setSelectedIndex(0);
@@ -748,7 +669,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             mMenuInfoAdapter.setSelectedIndex(1);
             mListView.setSelection(1);
             String type = data.getStringExtra(EXTRA_SENSOR_TYPE);
-            int searchIndex = data.getIntExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
+            int searchIndex = data.getIntExtra(EXTRA_ALARM_SEARCH_INDEX, -1);
             String searchText = data.getStringExtra(EXTRA_ALARM_SEARCH_TEXT);
             boolean isFromCancel = data.getBooleanExtra(EXTRA_ACTIVITY_CANCEL, false);
             if (isFromCancel) {
@@ -793,25 +714,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         mMenuInfoAdapter.showAccountSwitch(accountType);
     }
 
-    public void onCheckPermission(int requestCode) {
-        if (requestCode == REQUEST_TAKE_PHOTO_PERMISSION) {
-            if (requireCameraPermission()) {
-                boolean isRequire = requireLocationPermission();
-                if (isRequire) {
-                    pointDeployFragment.showRootView();
-                    sensoroPager.setCurrentItem(current_iteam);
-                    mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
-                    mMenuInfoAdapter.showAccountSwitch(accountType);
-                } else {
-                    mMenuInfoAdapter.setSelectedIndex(sensoroPager.getCurrentItem());
-                    mMenuInfoAdapter.showAccountSwitch(accountType);
-                    Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                showRequestPermissionDialot();
-            }
-        }
-    }
 
     @Override
     public void onClick(View v) {

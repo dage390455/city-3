@@ -17,6 +17,7 @@
 package com.google.zxing.client.android.result.supplement;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.widget.TextView;
 
 import com.google.zxing.client.android.HttpHelper;
@@ -97,7 +98,7 @@ final class BookResultInfoRetriever extends SupplementalInfoRetriever {
     Collection<String> newTexts = new ArrayList<>();
     maybeAddText(title, newTexts);
     maybeAddTextSeries(authors, newTexts);
-    maybeAddText(pages == null || pages.isEmpty() ? null : pages + "pp.", newTexts);
+    maybeAddText(TextUtils.isEmpty(pages) ? null : pages + "pp.", newTexts);
     
     String baseBookUri = "http://www.google." + LocaleManager.getBookSearchCountryTLD(context)
         + "/search?tbm=bks&source=zxing&q=";

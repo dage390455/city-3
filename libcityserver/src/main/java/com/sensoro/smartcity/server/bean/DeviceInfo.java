@@ -8,7 +8,7 @@ import java.io.Serializable;
  * Created by sensoro on 17/7/25.
  */
 
-public class DeviceInfo implements Serializable, Comparable{
+public class DeviceInfo implements Serializable, Comparable {
 
     private int id;
     private String sn;
@@ -239,7 +239,13 @@ public class DeviceInfo implements Serializable, Comparable{
         if (this.getSort() < anotherSensorInfo.getSort()) {
             return -1;
         } else if (this.getSort() == anotherSensorInfo.getSort()) {
-            return 0;
+            if (this.getUpdatedTime() < anotherSensorInfo.getUpdatedTime()) {
+                return 1;
+            } else if (this.getUpdatedTime() == anotherSensorInfo.getUpdatedTime()) {
+                return 0;
+            } else {
+                return -1;
+            }
         } else {
             return 1;
         }

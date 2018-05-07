@@ -11,6 +11,7 @@ import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
+import com.fengmap.android.FMMapSDK;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
@@ -31,12 +32,13 @@ import java.util.List;
 
 public class SensoroCityApplication extends MultiDexApplication implements SensoroPushListener, Serializable {
 
-    public SmartCityServerImpl smartCityServer;
+    public volatile SmartCityServerImpl smartCityServer;
     public final static PushHandler pushHandler = new PushHandler();
     private final List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
-
+    private volatile int noID=1;
+    public int searchType = Constants.TYPE_DEVICE_NAME;
     @Override
     public void onCreate() {
         super.onCreate();
@@ -99,6 +101,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
         api.registerApp(Constants.APP_ID);
+        FMMapSDK.init(this);
     }
 
 
@@ -114,7 +117,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
                 .setSmallIcon(R.drawable.push)//设置图标
                 .setContentIntent(pi)
                 .build();
-        nom.notify(1, notification);
+        nom.notify(noID++, notification);
 
 
     }

@@ -12,7 +12,6 @@ import android.widget.TextView;
 
 import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.TimerShaftAdapter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
@@ -204,7 +203,15 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
     }
 
     public void showConfirmPopup() {
-        mAlarmPopupView.show(SensoroCityApplication.getInstance(), deviceAlarmLogInfo, mShadowView, this);
+        mAlarmPopupView.show( deviceAlarmLogInfo, mShadowView, this);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mAlarmPopupView!=null){
+            mAlarmPopupView.onDestroyPop();
+        }
+        super.onDestroy();
     }
 
     @OnClick(R.id.alarm_detail_back)

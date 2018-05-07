@@ -72,7 +72,6 @@
                 android:layout_toLeftOf="@+id/search_alarm_cancel_tv"
                 android:background="@drawable/shape_et_search"
                 android:gravity="left|center_vertical"
-                android:hint="@string/search_alarm_tips"
                 android:drawableLeft="@mipmap/ic_menu_search_holo_light"
                 android:imeOptions="actionSearch"
                 android:maxLength="10"
@@ -122,9 +121,10 @@
             <ImageView
                 android:id="@+id/alarm_log_selected_close"
                 android:src="@mipmap/ic_close"
-                android:layout_alignParentRight="true"
+                android:scaleType="centerInside"
+                android:layout_alignParentEnd="true"
                 android:layout_alignTop="@+id/alarm_log_selected_date"
-                android:layout_marginRight="@dimen/x45"
+                android:layout_marginEnd="@dimen/x60"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
         </RelativeLayout>

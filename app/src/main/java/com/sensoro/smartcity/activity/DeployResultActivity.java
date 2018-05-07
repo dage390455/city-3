@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -101,8 +102,8 @@ public class DeployResultActivity extends BaseActivity implements Constants {
                 nameTextView.setText(getString(R.string.sensor_detail_name) + "：" + name);
                 lonTextView.setText(getString(R.string.sensor_detail_lon) + "：" + lon);
                 lanTextView.setText(getString(R.string.sensor_detail_lan) + "：" + lan);
-                contactTextView.setText(getString(R.string.name) + "：" + (contact == null ? "无" : contact));
-                contentTextView.setText(getString(R.string.phone) + "：" + (content == null? "无" : content));
+                contactTextView.setText(getString(R.string.name) + "：" + (TextUtils.isEmpty(contact) ? "无" : contact));
+                contentTextView.setText(getString(R.string.phone) + "：" + (TextUtils.isEmpty(contact)? "无" : content));
                 statusTextView.setText(getString(R.string.sensor_detail_status) + "：" + Constants.DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
                 if (deviceInfo.getLastUpdatedTime() != null) {
                     updateTextView.setVisibility(View.VISIBLE);
@@ -112,8 +113,8 @@ public class DeployResultActivity extends BaseActivity implements Constants {
                 } else {
                     updateTextView.setVisibility(View.GONE);
                 }
+                refreshSignal(deviceInfo.getUpdatedTime(), deviceInfo.getSignal());
             }
-            refreshSignal(deviceInfo.getUpdatedTime(), deviceInfo.getSignal());
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();

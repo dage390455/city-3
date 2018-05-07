@@ -50,7 +50,8 @@ import butterknife.ButterKnife;
  * Created by sensoro on 17/7/11.
  */
 
-public class SearchMerchantActivity extends BaseActivity implements View.OnClickListener, Constants, TextView.OnEditorActionListener, TextWatcher {
+public class SearchMerchantActivity extends BaseActivity implements View.OnClickListener, Constants, TextView
+        .OnEditorActionListener, TextWatcher {
 
     @BindView(R.id.search_merchant_et)
     EditText mKeywordEt;
@@ -69,7 +70,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
     private SharedPreferences mPref;
     private Editor mEditor;
     private List<String> mHistoryKeywords = new ArrayList<>();
-    private ProgressDialog progressDialog;
+    private ProgressDialog mProgressDialog;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
     @Override
@@ -77,9 +78,9 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_merchant);
         ButterKnife.bind(this);
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage(getString(R.string.loading));
-        mPref = getSharedPreferences(PREFERENCE_MERCHANT_HISTORY, Activity.MODE_PRIVATE);
+        mProgressDialog = new ProgressDialog(this);
+        mProgressDialog.setMessage(getString(R.string.loading));
+        mPref = getApplicationContext().getSharedPreferences(PREFERENCE_MERCHANT_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
@@ -132,7 +133,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
             public void onItemClick(View view, int position) {
                 mKeywordEt.setText(mHistoryKeywords.get(position));
                 mClearKeywordIv.setVisibility(View.VISIBLE);
-                progressDialog.show();
+                mProgressDialog.show();
                 mKeywordEt.clearFocus();
                 dismissInputMethodManager(view);
                 requestData(mKeywordEt.getText().toString());
@@ -189,34 +190,35 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
     }
 
     public void requestData(String text) {
-        progressDialog.show();
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getUserAccountList(text, null, null, null, "100000", new Response.Listener<UserAccountRsp>() {
-            @Override
-            public void onResponse(UserAccountRsp response) {
-                progressDialog.dismiss();
-                List<UserInfo> list = response.getData();
-                if (list.size() == 0) {
-                    tipsLinearLayout.setVisibility(View.VISIBLE);
-                } else {
-                    Intent data = new Intent();
-                    data.putExtra(EXTRA_MERCHANT_INFO, response);
-                    setResult(RESULT_CODE_SEARCH_MERCHANT, data);
-                    finish();
-                }
-            }
-        }, new Response.ErrorListener() {
+        mProgressDialog.show();
+        SensoroCityApplication.getInstance().smartCityServer.getUserAccountList(text, null, null, null, "100000", new
+                Response.Listener<UserAccountRsp>() {
+                    @Override
+                    public void onResponse(UserAccountRsp response) {
+                        mProgressDialog.dismiss();
+                        List<UserInfo> list = response.getData();
+                        if (list.size() == 0) {
+                            tipsLinearLayout.setVisibility(View.VISIBLE);
+                        } else {
+                            Intent data = new Intent();
+                            data.putExtra(EXTRA_MERCHANT_INFO, response);
+                            setResult(RESULT_CODE_SEARCH_MERCHANT, data);
+                            finish();
+                        }
+                    }
+                }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                progressDialog.dismiss();
+                mProgressDialog.dismiss();
                 if (volleyError.networkResponse != null) {
                     String reason = new String(volleyError.networkResponse.data);
                     try {
                         JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
+                                .show();
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
                 } else {
@@ -228,6 +230,10 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void onDestroy() {
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
         super.onDestroy();
 
     }
@@ -280,11 +286,12 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+            String text = mKeywordEt.getText().toString();
             save();
             mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
-            requestData(mKeywordEt.getText().toString());
+            requestData(text);
             return true;
         }
         return false;

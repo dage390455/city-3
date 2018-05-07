@@ -4,7 +4,7 @@
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
     <string name="search_tips"> SN、Name、Tag</string>
-    <string name="search_alarm_tips">SN,Name</string>
+    <string name="search_alarm_tips">Name</string>
     <string name="cancel">Cancel</string>
     <string name="recent">Recent Search</string>
     <string name="clear">Clear</string>
@@ -17,7 +17,7 @@
     <string name="merchant_switch">Merchant Switch</string>
     <string name="upload">Upload</string>
     <string name="navigation">Navigation</string>
-    <string name="detail_share">Share</string>
+    <string name="detail_share">WeChatShare</string>
     <string name="continue_deploy">Continue</string>
     <string name="password">Password</string>
     <string name="save">Save</string>
@@ -101,7 +101,7 @@
     <string name="unname">UnName</string>
     <string name="next">Next</string>
     <string name="name">Name</string>
-    <string name="name_phone">Name、Phone</string>
+    <string name="name_phone">Name</string>
     <string name="contact_name">Contact</string>
     <string name="contact_phone">Contact Phone</string>
     <string name="phone">Phone</string>

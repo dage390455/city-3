@@ -2,7 +2,7 @@
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
     <string name="search_tips">查询设备号、名称、标签</string>
-    <string name="search_alarm_tips">设备号,名称</string>
+    <string name="search_alarm_tips">设备名称</string>
     <string name="cancel">取消</string>
     <string name="recent">最近搜索</string>
     <string name="clear">清除</string>
@@ -17,7 +17,7 @@
     <string name="merchant_switch">商户切换</string>
     <string name="upload">上传</string>
     <string name="navigation">导航</string>
-    <string name="detail_share">分享</string>
+    <string name="detail_share">微信分享</string>
     <string name="continue_deploy">继续部署</string>
     <string name="password">密码</string>
     <string name="save">保存</string>
@@ -88,7 +88,7 @@
     <string name="unname">未命名</string>
     <string name="next">下一步</string>
     <string name="name">姓名</string>
-    <string name="name_phone">名称、电话</string>
+    <string name="name_phone">名称</string>
     <string name="phone">电话</string>
     <string name="contact_name">联系人姓名</string>
     <string name="contact_phone">联系人电话</string>

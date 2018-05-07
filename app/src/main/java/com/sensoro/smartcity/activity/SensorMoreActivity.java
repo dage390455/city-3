@@ -190,15 +190,20 @@ public class SensorMoreActivity extends BaseActivity {
 
     private String parseSensorTypes(String[] sensorTypes) {
         if (sensorTypes.length > 1) {
-            if (sensorTypes.toString().contains("temperature")) {
+            StringBuilder sb = new StringBuilder();
+            for (String device : sensorTypes) {
+                sb.append(device);
+            }
+            String temp = sb.toString();
+            if (temp.contains("temperature")) {
                 return "温湿度传感器";
-            } else if (sensorTypes.toString().contains("cover")) {
+            } else if (temp.contains("cover")) {
                 return "井位传感器";
-            } else if (sensorTypes.toString().contains("pm")) {
+            } else if (temp.contains("pm")) {
                 return "PM2.5/PM10传感器";
-            } else if (sensorTypes.toString().contains("pitch")) {
+            } else if (temp.contains("pitch")) {
                 return "倾角传感器";
-            } else if (sensorTypes.toString().contains("latitude")) {
+            } else if (temp.contains("latitude")) {
                 return "追踪器";
             } else {
                 return getString(R.string.unknown);
@@ -263,8 +268,7 @@ public class SensorMoreActivity extends BaseActivity {
 
     private void requestData() {
         sensor_sn = this.getIntent().getStringExtra(EXTRA_SENSOR_SN);
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getDeviceDetailInfoList(sensor_sn, null, 1, new Response
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(sensor_sn, null, 1, new Response
                 .Listener<DeviceInfoListRsp>() {
             @Override
             public void onResponse(DeviceInfoListRsp response) {
@@ -292,8 +296,8 @@ public class SensorMoreActivity extends BaseActivity {
     }
 
     private void requestDataWithRecentAlarm() {
-        SensoroCityApplication sensoroCityApplication = (SensoroCityApplication) getApplication();
-        sensoroCityApplication.smartCityServer.getDeviceAlarmTime(snTextView.getText().toString(), new Response
+        String sn = snTextView.getText().toString();
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmTime(sn, new Response
                 .Listener<DeviceAlarmTimeRsp>() {
             @Override
             public void onResponse(DeviceAlarmTimeRsp response) {

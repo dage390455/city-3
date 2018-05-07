@@ -23,6 +23,7 @@ public class SearchAlarmTagAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     private List<String> mList;
 
     RecycleViewItemClickListener itemClickListener;
+
     public SearchAlarmTagAdapter(Context context, List<String> list, RecycleViewItemClickListener itemClickListener) {
         this.mContext = context;
         this.mList = list;
@@ -41,7 +42,7 @@ public class SearchAlarmTagAdapter extends RecyclerView.Adapter<RecyclerView.Vie
         if (mList == null) {
             return;
         }
-        ((SearchHistoryViewHolder) holder).nameTextView.setText( mList.get(position));
+        ((SearchHistoryViewHolder) holder).nameTextView.setText(mList.get(position));
 
     }
 
@@ -53,10 +54,11 @@ public class SearchAlarmTagAdapter extends RecyclerView.Adapter<RecyclerView.Vie
     class SearchHistoryViewHolder extends RecyclerView.ViewHolder {
         TextView nameTextView;
         RecycleViewItemClickListener itemClickListener;
+
         public SearchHistoryViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
             super(itemView);
 
-            nameTextView = (TextView)itemView.findViewById(R.id.item_alarm_tag_name);
+            nameTextView = (TextView) itemView.findViewById(R.id.item_alarm_tag_name);
             this.itemClickListener = itemClickListener;
             itemView.setOnClickListener(onItemClickListener);
         }

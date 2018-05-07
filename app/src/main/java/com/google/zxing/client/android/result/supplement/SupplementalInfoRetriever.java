@@ -21,22 +21,23 @@ import android.os.AsyncTask;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.Spanned;
+import android.text.TextUtils;
 import android.text.method.LinkMovementMethod;
 import android.text.style.URLSpan;
 import android.util.Log;
 import android.widget.TextView;
-
-import java.io.IOException;
-import java.lang.ref.WeakReference;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.concurrent.RejectedExecutionException;
 
 import com.google.zxing.client.android.history.HistoryManager;
 import com.google.zxing.client.result.ISBNParsedResult;
 import com.google.zxing.client.result.ParsedResult;
 import com.google.zxing.client.result.ProductParsedResult;
 import com.google.zxing.client.result.URIParsedResult;
+
+import java.io.IOException;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.concurrent.RejectedExecutionException;
 
 /**
  * Superclass of implementations which can asynchronously retrieve more information
@@ -161,7 +162,7 @@ public abstract class SupplementalInfoRetriever extends AsyncTask<Object,Object,
   }
   
   static void maybeAddText(String text, Collection<String> texts) {
-    if (text != null && !text.isEmpty()) {
+    if (!TextUtils.isEmpty(text)) {
       texts.add(text);
     }
   }

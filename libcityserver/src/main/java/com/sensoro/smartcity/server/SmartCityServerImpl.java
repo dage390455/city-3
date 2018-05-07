@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -251,7 +252,7 @@ public class SmartCityServerImpl implements ISmartCityServer, Serializable {
         if (sn != null) {
             url.append("sn=" + sn + "&");
         }
-        if (beginTime != null || endTime != null) {
+        if (beginTime != null && endTime != null) {
             url.append("beginTime=" + beginTime + "&endTime=" + endTime + "&");
         }
         if (unionTypes != null) {
@@ -392,6 +393,59 @@ public class SmartCityServerImpl implements ISmartCityServer, Serializable {
         volleyManager.gsonRequest(TAG, Request.Method.POST, headers, jsonObject.toString(), url, DeviceDeployRsp
                 .class, listener, errorListener);
 
+    }
+
+    @Override
+    public void getDeviceAlarmLogListByDeviceName(Long beginTime, Long endTime, String deviceName, String unionTypes,
+                                                  int page, Response.Listener<DeviceAlarmLogRsp> listener, Response
+                                                        .ErrorListener errorListener) {
+        Map<String, String> headers = new HashMap<>();
+
+        if (sessionId != null) {
+            // add sessionId for authorization.
+            headers.put(HEADER_SESSION_ID, sessionId);
+        }
+
+
+        StringBuffer url = new StringBuffer();
+        url.append(SCOPE + DEVICE_ALARM_LOG + "?count=10&page=" + page + "&");
+        if (!TextUtils.isEmpty(deviceName)) {
+            url.append("deviceName=" + deviceName + "&");
+        }
+        if (beginTime != null && endTime != null) {
+            url.append("beginTime=" + beginTime + "&endTime=" + endTime + "&");
+        }
+        if (unionTypes != null) {
+            url.append("unionTypes=" + unionTypes);
+        }
+        volleyManager.gsonRequest(TAG, Request.Method.GET, headers, (String) null, url.toString(), DeviceAlarmLogRsp
+                .class, listener, errorListener);
+    }
+
+    @Override
+    public void getDeviceAlarmLogListByDevicePhone(Long beginTime, Long endTime, String devicePhone, String
+            unionTypes, int page, Response.Listener<DeviceAlarmLogRsp> listener, Response.ErrorListener errorListener) {
+        Map<String, String> headers = new HashMap<>();
+
+        if (sessionId != null) {
+            // add sessionId for authorization.
+            headers.put(HEADER_SESSION_ID, sessionId);
+        }
+
+
+        StringBuffer url = new StringBuffer();
+        url.append(SCOPE + DEVICE_ALARM_LOG + "?count=10&page=" + page + "&");
+        if (!TextUtils.isEmpty(devicePhone)) {
+            url.append("phone=" + devicePhone + "&");
+        }
+        if (beginTime != null && endTime != null) {
+            url.append("beginTime=" + beginTime + "&endTime=" + endTime + "&");
+        }
+        if (unionTypes != null) {
+            url.append("unionTypes=" + unionTypes);
+        }
+        volleyManager.gsonRequest(TAG, Request.Method.GET, headers, (String) null, url.toString(), DeviceAlarmLogRsp
+                .class, listener, errorListener);
     }
 
 

@@ -24,4 +24,5 @@
         <attr name="loadMoreEnabled" format="boolean" />
         <attr name="refreshFinalMoveOffset" format="dimension" />   <!--refresh header max move distance-->
     </declare-styleable>
+
 </resources>

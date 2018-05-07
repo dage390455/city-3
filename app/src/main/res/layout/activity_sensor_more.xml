@@ -96,10 +96,11 @@
                     android:background="@color/c_e7e7e7"
                     android:contentDescription="@null" />
 
-                <RelativeLayout
+                <LinearLayout
                     android:id="@+id/sensor_more_layout_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:orientation="horizontal"
                     android:background="@drawable/bg_item_selector"
                     android:paddingBottom="10dp"
                     android:paddingTop="10dp">
@@ -115,17 +116,17 @@
 
                     <TextView
                         android:id="@+id/sensor_more_tv_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginLeft="10dp"
                         android:layout_marginRight="15dp"
                         android:ellipsize="end"
-                        android:maxEms="13"
-                        android:singleLine="true"
                         android:textColor="#9b9b9b"
                         android:textSize="@dimen/x50" />
-                </RelativeLayout>
+                </LinearLayout>
 
 
                 <LinearLayout

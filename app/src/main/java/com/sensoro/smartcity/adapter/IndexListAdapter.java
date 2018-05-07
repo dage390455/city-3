@@ -3,6 +3,7 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroAlarmView;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static android.view.View.GONE;
@@ -29,12 +31,13 @@ import static android.view.View.VISIBLE;
  * Created by Jack on 2016/9/16.
  */
 
-public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Constants{
+public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Constants {
 
     private Context mContext;
     private List<DeviceInfo> mList = new ArrayList<>();
 
     RecycleViewItemClickListener itemClickListener;
+
     public IndexListAdapter(Context context, RecycleViewItemClickListener itemClickListener) {
         this.mContext = context;
         this.itemClickListener = itemClickListener;
@@ -88,16 +91,16 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.item_value2.setTextColor(mContext.getResources().getColor(color));
         holder.item_unit2.setTextColor(mContext.getResources().getColor(color));
         holder.item_date.setTextColor(mContext.getResources().getColor(color));
-        if (deviceInfo.getName() == null ) {
+        if (TextUtils.isEmpty(deviceInfo.getName())) {
             holder.item_name.setText(deviceInfo.getSn());
         } else {
-            if (deviceInfo.getName().equals("") ) {
+            if (TextUtils.isEmpty(deviceInfo.getName())) {
                 holder.item_name.setText(deviceInfo.getSn());
             } else {
                 String name = deviceInfo.getName();
-                char [] name_chars = name.toCharArray();
+                char[] name_chars = name.toCharArray();
                 StringBuffer buffer = new StringBuffer();
-                for (int i = 0 ; i < name_chars.length; i ++) {
+                for (int i = 0; i < name_chars.length; i++) {
                     char char_name = name_chars[i];
                     if (i % 9 == 0 && i != 0) {
                         buffer.append(char_name);
@@ -111,20 +114,23 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
         holder.item_date.setText(DateUtil.getFullParseDate(deviceInfo.getUpdatedTime()));
         SensorDetailInfo sensorDetailInfo = deviceInfo.getSensoroDetails();
-        if (sensorDetailInfo != null && deviceInfo.getSensorTypes().length > 0) {
-            String sensorType1 = deviceInfo.getSensorTypes()[0];
+        String[] sensorTypes = deviceInfo.getSensorTypes();
+        if (sensorDetailInfo != null && sensorTypes.length > 0) {
+            Arrays.sort(sensorTypes);
+            String sensorType1 = sensorTypes[0];
             SensorStruct sensorStruct1 = sensorDetailInfo.loadData().get(sensorType1);
 
-            if (deviceInfo.getSensorTypes().length > 1) {
+            if (sensorTypes.length > 1) {
                 holder.item_value2.setVisibility(View.VISIBLE);
                 holder.item_unit2.setVisibility(View.VISIBLE);
-                String sensorType2 = deviceInfo.getSensorTypes()[1];
+                String sensorType2 = sensorTypes[1];
                 SensorStruct sensorStruct2 = sensorDetailInfo.loadData().get(sensorType2);
                 if (sensorStruct2 == null) {
                     holder.item_value2.setText("-");
                     holder.item_unit2.setVisibility(GONE);
                 } else {
-                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType2, sensorStruct2);
+                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType2,
+                            sensorStruct2);
                 }
             } else {
                 holder.item_value2.setVisibility(GONE);
@@ -132,7 +138,8 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
             if (sensorStruct1 != null) {
                 holder.item_unit1.setVisibility(VISIBLE);
-                WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1, sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
+                WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
+                        sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
             } else {
                 if (sensorType1 != null) {
                     WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
@@ -148,12 +155,14 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     holder.item_iv_status.setVisibility(View.INVISIBLE);
                     holder.item_alarm_view.setVisibility(View.VISIBLE);
                     drawable = mContext.getResources().getDrawable(R.drawable.shape_status_alarm);
-                    drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable.getMinimumHeight());
+                    drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
+                            .getMinimumHeight());
                     break;
                 case SENSOR_STATUS_INACTIVE:
                     holder.item_alarm_view.setVisibility(View.GONE);
                     drawable = mContext.getResources().getDrawable(R.drawable.shape_status_inactive);
-                    drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable.getMinimumHeight());
+                    drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
+                            .getMinimumHeight());
                     holder.item_value1.setText(mContext.getString(R.string.status_inactive));
                     holder.item_unit1.setVisibility(GONE);
                     holder.item_value2.setVisibility(GONE);
@@ -162,7 +171,8 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 case SENSOR_STATUS_LOST:
                     holder.item_alarm_view.setVisibility(View.GONE);
                     drawable = mContext.getResources().getDrawable(R.drawable.shape_status_lost);
-                    drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable.getMinimumHeight());
+                    drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
+                            .getMinimumHeight());
                     holder.item_value1.setText(mContext.getString(R.string.status_lost));
                     holder.item_unit1.setVisibility(GONE);
                     holder.item_value2.setVisibility(GONE);
@@ -171,7 +181,8 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                 case SENSOR_STATUS_NORMAL:
                     holder.item_alarm_view.setVisibility(View.GONE);
                     drawable = mContext.getResources().getDrawable(R.drawable.shape_status_normal);
-                    drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable.getMinimumHeight());
+                    drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
+                            .getMinimumHeight());
                     break;
                 default:
                     holder.item_alarm_view.setVisibility(View.GONE);
@@ -192,14 +203,14 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     @Override
     public int getItemViewType(int position) {
-        if(position==0){
+        if (position == 0) {
             return 0;
-        }else{
+        } else {
             return 1;
         }
     }
 
-    class IndexListViewHolder extends RecyclerView.ViewHolder{
+    class IndexListViewHolder extends RecyclerView.ViewHolder {
         TextView item_name;
         ImageView item_iv_type;
         ImageView item_iv_status;
@@ -210,6 +221,7 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         TextView item_unit2;
         TextView item_date;
         RecycleViewItemClickListener itemClickListener;
+
         public IndexListViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
             super(itemView);
             this.item_name = (TextView) itemView.findViewById(R.id.item_list_tv_name);

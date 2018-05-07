@@ -78,9 +78,9 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.ImageFactory;
-import com.sensoro.smartcity.util.Util;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.BatteryMarkerView;
+import com.sensoro.smartcity.widget.MapContainer;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.XYMarkerView;
@@ -177,7 +177,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     @BindView(R.id.sensor_detail_not_deploy)
     RelativeLayout notDeployLayout;
     @BindView(R.id.sensor_detail_map_layout)
-    RelativeLayout mapLayout;
+    MapContainer mapLayout;
     @BindView(R.id.ll_battery_layout)
     LinearLayout llBatteryLayout;
     private AMap aMap;
@@ -195,9 +195,10 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     private Bundle bundle;
     private Bitmap tempUpBitmap;
     private GeocodeSearch geocoderSearch;
-    private String tempAddress = "null";
+    private String tempAddress = "未知街道";
 
     private final String TAG = getClass().getSimpleName();
+    private AMapLocationClient mLocationClient;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -215,6 +216,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         params.height = dm.widthPixels * 4 / 5;
         mMapView.setLayoutParams(params);//将设置好的布局参数应用到控件中
         mMapView.setVisibility(View.GONE);
+        mapLayout.setScrollView(scrollView);
         init();
         bundle = getIntent().getExtras();
         StatusBarCompat.setStatusBarColor(this);
@@ -276,13 +278,23 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
      */
     @Override
     public void onDestroy() {
-        super.onDestroy();
-        mMapView.onDestroy();
         mRecentInfoList.clear();
         if (tempUpBitmap != null) {
             tempUpBitmap.recycle();
             tempUpBitmap = null;
         }
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
+        if (mLocationClient != null) {
+            mLocationClient.stopLocation();
+            mLocationClient.onDestroy();
+            mLocationClient = null;
+        }
+        super.onDestroy();
+        mMapView.onDestroy();
+
     }
 
     private void init() {
@@ -399,13 +411,17 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             mProgressDialog.dismiss();
             Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
         }
+    }
 
-
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        return super.onTouchEvent(event);
     }
 
     //补全tags标签信息
     private void requestData() {
-        SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(mDeviceInfo.getSn(), null, 1,
+        String sn = mDeviceInfo.getSn();
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(sn, null, 1,
                 new Response
                         .Listener<DeviceInfoListRsp>() {
                     @Override
@@ -487,7 +503,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     public void locate() {
 
-        AMapLocationClient mLocationClient = new AMapLocationClient(this);
+        mLocationClient = new AMapLocationClient(this);
         //设置定位回调监听
         mLocationClient.setLocationListener(this);
         //初始化定位参数
@@ -578,7 +594,8 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     private void requestDeviceRecentLog() {
         long endTime = mDeviceInfo.getUpdatedTime();
         long startTime = endTime - 2 * 1000 * 60 * 60 * 24;
-        SensoroCityApplication.getInstance().smartCityServer.getDeviceHistoryList(mDeviceInfo.getSn(), startTime,
+        String sn = mDeviceInfo.getSn();
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceHistoryList(sn, startTime,
                 endTime, new
                         Response.Listener<DeviceRecentRsp>() {
                             @Override
@@ -627,6 +644,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         if (volleyError.networkResponse != null) {
+                            mProgressDialog.dismiss();
                             String reason = new String(volleyError.networkResponse.data);
                             try {
                                 JSONObject jsonObject = new JSONObject(reason);
@@ -642,7 +660,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                             Toast.makeText(SensorDetailActivity.this, R.string.tips_network_error, Toast
                                     .LENGTH_SHORT).show();
                         }
-                        mProgressDialog.dismiss();
+
                     }
                 });
     }
@@ -861,7 +879,6 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             data.setSecondCandleData(candleData2);
         }
 
-
         XYMarkerView mv = new XYMarkerView(this, iAxisValueFormatter);
         mv.setChartView(mChart); // For bounds control
         mChart.setMarker(mv); // Set the marker to the chart
@@ -941,7 +958,17 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     @OnClick(R.id.sensor_detail_share_btn)
     public void detailShare() {
-        toShareWeChat();
+        boolean wxAppInstalled = SensoroCityApplication.getInstance().api.isWXAppInstalled();
+        if (wxAppInstalled) {
+            boolean wxAppSupportAPI = SensoroCityApplication.getInstance().api.isWXAppSupportAPI();
+            if (wxAppSupportAPI) {
+                toShareWeChat();
+            } else {
+                Toast.makeText(SensorDetailActivity.this, "当前版的微信不支持分享功能", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(SensorDetailActivity.this, "当前手机未安装微信，请安装后重试", Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
@@ -960,13 +987,16 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         int status = mDeviceInfo.getStatus();
         String[] tags = mDeviceInfo.getTags();
         String tempTagStr = "";
-        if (tags != null&&tags.length>0) {
+        if (tags != null && tags.length > 0) {
             for (String tag : tags) {
                 tempTagStr += tag + ",";
             }
             tempTagStr = tempTagStr.substring(0, tempTagStr.lastIndexOf(","));
         }
         long updatedTime = mDeviceInfo.getUpdatedTime();
+        if (TextUtils.isEmpty(tempAddress)) {
+            tempAddress = "未知街道";
+        }
         final String tempData = "/pages/index?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
                 [1] +
                 "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
@@ -978,15 +1008,20 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         aMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
             @Override
             public void onMapScreenShot(Bitmap bitmap) {
-                Bitmap ratio = ImageFactory.ratio(bitmap, 500, 400);
-                msg.thumbData = Util.bmpToByteArray(ratio, true);
-                ratio.recycle();
+//                int allocationByteCount = bitmap.getAllocationByteCount();
+//                Bitmap ratio = ImageFactory.ratio(bitmap, 500, 400);
+//                int allocationByteCount1 = ratio.getAllocationByteCount();
+//                msg.thumbData = Util.bmpToByteArray(ratio, true);
+                byte[] ratio = ImageFactory.ratio(bitmap);
+                int length = ratio.length;
+                msg.thumbData = ratio;
+                bitmap.recycle();
                 SendMessageToWX.Req req = new SendMessageToWX.Req();
                 req.transaction = SystemClock.currentThreadTimeMillis() + "";
                 req.scene = SendMessageToWX.Req.WXSceneSession;
                 req.message = msg;
                 boolean b = SensoroCityApplication.getInstance().api.sendReq(req);
-                Log.e(TAG, "toShareWeChat: isSuc = " + b);
+                Log.e(TAG, "toShareWeChat: isSuc = " + b + ",bitmapLength = " + length);
             }
 
             @Override
@@ -1079,7 +1114,6 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     @Override
     public void onTouch(MotionEvent motionEvent) {
-
     }
 
     @Override

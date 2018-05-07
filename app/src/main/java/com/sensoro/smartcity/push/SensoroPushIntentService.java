@@ -26,6 +26,7 @@ public class SensoroPushIntentService extends GTIntentService {
      * 为了观察透传数据变化.
      */
     private static int cnt;
+
     public SensoroPushIntentService() {
 
     }
@@ -58,7 +59,8 @@ public class SensoroPushIntentService extends GTIntentService {
         boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskid, messageid, 90001);
         Log.d(TAG, "call sendFeedbackMessage = " + (result ? "success" : "failed"));
 
-        Log.d(TAG, "onReceiveMessageData -> " + "appid = " + appid + "\ntaskid = " + taskid + "\nmessageid = " + messageid + "\npkg = " + pkg
+        Log.d(TAG, "onReceiveMessageData -> " + "appid = " + appid + "\ntaskid = " + taskid + "\nmessageid = " +
+                messageid + "\npkg = " + pkg
                 + "\ncid = " + cid);
 
         if (payload == null) {
@@ -77,7 +79,6 @@ public class SensoroPushIntentService extends GTIntentService {
 
         Log.d(TAG, "----------------------------------------------------------------------------------------------");
     }
-
 
 
     @Override
@@ -165,7 +166,8 @@ public class SensoroPushIntentService extends GTIntentService {
         long timestamp = feedbackCmdMsg.getTimeStamp();
         String cid = feedbackCmdMsg.getClientId();
 
-        System.out.println("onReceiveCommandResult------> " + "appid = " + appid + "\ntaskid = " + taskid + "\nactionid = " + actionid + "\nresult = " + result
+        System.out.println("onReceiveCommandResult------> " + "appid = " + appid + "\ntaskid = " + taskid +
+                "\nactionid = " + actionid + "\nresult = " + result
                 + "\ncid = " + cid + "\ntimestamp = " + timestamp);
     }
 
@@ -173,8 +175,6 @@ public class SensoroPushIntentService extends GTIntentService {
         Message msg = Message.obtain();
         msg.what = what;
         msg.obj = data;
-        if (SensoroCityApplication.pushHandler != null) {
-            SensoroCityApplication.pushHandler.sendMessage(msg);
-        }
+        SensoroCityApplication.pushHandler.sendMessage(msg);
     }
 }

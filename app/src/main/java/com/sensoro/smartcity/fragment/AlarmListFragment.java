@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,14 +43,15 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 /**
  * Created by sensoro on 17/7/24.
  */
 
-public class AlarmListFragment extends Fragment implements View.OnClickListener, Constants, AdapterView.OnItemClickListener, AlarmListAdapter.AlarmItemClickListener, SensoroPopupAlarmView.OnPopupCallbackListener, AbsListView.OnScrollListener {
+public class AlarmListFragment extends Fragment implements View.OnClickListener, Constants, AdapterView
+        .OnItemClickListener, AlarmListAdapter.AlarmItemClickListener, SensoroPopupAlarmView.OnPopupCallbackListener,
+        AbsListView.OnScrollListener {
 
     private PullToRefreshListView mPtrListView;
     private ImageView mDateImageView;
@@ -88,6 +90,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
@@ -120,10 +123,17 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
+        if (mAlarmPopupView != null) {
+            mAlarmPopupView.onDestroyPop();
+        }
+        super.onDestroyView();
     }
 
     private void init() {
@@ -135,12 +145,22 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
             mPtrListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
                 @Override
                 public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                    requestData(DIRECTION_DOWN, false);
+                    CharSequence searchText = mSearchEditText.getHint();
+                    if (!TextUtils.isEmpty(searchText) && mSearchEditText.getVisibility() == View.VISIBLE) {
+                        requestSearcheData(DIRECTION_DOWN, false, searchText.toString());
+                    } else {
+                        requestData(DIRECTION_DOWN, false);
+                    }
                 }
 
                 @Override
                 public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                    requestData(DIRECTION_UP, false);
+                    CharSequence searchText = mSearchEditText.getHint();
+                    if (!TextUtils.isEmpty(searchText)&&mSearchEditText.getVisibility() == View.VISIBLE) {
+                        requestSearcheData(DIRECTION_UP, false, searchText.toString());
+                    } else {
+                        requestData(DIRECTION_UP, false);
+                    }
                 }
             });
             mPtrListView.setMode(PullToRefreshBase.Mode.BOTH);
@@ -234,7 +254,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                 }
                 mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
             }
-            Collections.sort(mDeviceAlarmLogInfoList);
+//            Collections.sort(mDeviceAlarmLogInfoList);
             mAlarmListAdapter.setData(mDeviceAlarmLogInfoList);
             mAlarmListAdapter.notifyDataSetChanged();
         } catch (Exception e) {
@@ -265,6 +285,273 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
     }
 
 
+    private void requestDataBySearchDown(Long startTime, Long endTime, final String text) {
+        switch (SensoroCityApplication.getInstance().searchType) {
+            case Constants.TYPE_DEVICE_NAME:
+                mProgressDialog.show();
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(startTime,
+                        endTime,
+                        text, null, cur_page, new
+                                Response.Listener<DeviceAlarmLogRsp>() {
+                                    @Override
+                                    public void onResponse(DeviceAlarmLogRsp response) {
+                                        mProgressDialog.dismiss();
+                                        mPtrListView.onRefreshComplete();
+                                        refresh(DIRECTION_DOWN, response, null);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                mProgressDialog.dismiss();
+                                if (error.networkResponse != null) {
+                                    String reason = new String(error.networkResponse.data);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(reason);
+                                        Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast
+                                                .LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+
+                            }
+                        });
+                break;
+            case Constants.TYPE_DEVICE_NUMBER:
+                mProgressDialog.show();
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(startTime, endTime, text,
+                        null, cur_page,
+                        new
+                                Response.Listener<DeviceAlarmLogRsp>() {
+                                    @Override
+                                    public void onResponse(DeviceAlarmLogRsp response) {
+                                        mProgressDialog.dismiss();
+                                        mPtrListView.onRefreshComplete();
+                                        refresh(DIRECTION_DOWN, response, null);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                mProgressDialog.dismiss();
+                                if (error.networkResponse != null) {
+                                    String reason = new String(error.networkResponse.data);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(reason);
+                                        Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast
+                                                .LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            }
+                        });
+                break;
+            case Constants.TYPE_DEVICE_PHONE_NUM:
+                mProgressDialog.show();
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDevicePhone(startTime,
+                        endTime,
+                        text, null, cur_page, new
+                                Response.Listener<DeviceAlarmLogRsp>() {
+                                    @Override
+                                    public void onResponse(DeviceAlarmLogRsp response) {
+                                        mProgressDialog.dismiss();
+                                        mPtrListView.onRefreshComplete();
+                                        refresh(DIRECTION_DOWN, response, null);
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                mProgressDialog.dismiss();
+                                if (error.networkResponse != null) {
+                                    String reason = new String(error.networkResponse.data);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(reason);
+                                        Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast
+                                                .LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+
+                            }
+                        });
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void requestDataBySearchUp(Long startTime, Long endTime, final String text) {
+        switch (SensoroCityApplication.getInstance().searchType) {
+            case Constants.TYPE_DEVICE_NAME:
+                mProgressDialog.show();
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(startTime,
+                        endTime,
+                        text, null, cur_page, new
+                                Response.Listener<DeviceAlarmLogRsp>() {
+                                    @Override
+                                    public void onResponse(DeviceAlarmLogRsp response) {
+                                        mProgressDialog.dismiss();
+                                        mPtrListView.onRefreshComplete();
+                                        if (response.getData().size() == 0) {
+                                            Toast.makeText(getActivity(), "没有更多数据了", Toast.LENGTH_SHORT).show();
+                                            cur_page--;
+                                        } else {
+                                            refresh(DIRECTION_UP, response, null);
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                cur_page--;
+                                mProgressDialog.dismiss();
+                                if (error.networkResponse != null) {
+                                    String reason = new String(error.networkResponse.data);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(reason);
+                                        Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast
+                                                .LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+
+                            }
+                        });
+                break;
+            case Constants.TYPE_DEVICE_NUMBER:
+                mProgressDialog.show();
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(startTime, endTime, text,
+                        null, cur_page,
+                        new
+                                Response.Listener<DeviceAlarmLogRsp>() {
+                                    @Override
+                                    public void onResponse(DeviceAlarmLogRsp response) {
+                                        mProgressDialog.dismiss();
+                                        mPtrListView.onRefreshComplete();
+                                        if (response.getData().size() == 0) {
+                                            Toast.makeText(getActivity(), "没有更多数据了", Toast.LENGTH_SHORT).show();
+                                            cur_page--;
+                                        } else {
+                                            refresh(DIRECTION_UP, response, null);
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                cur_page--;
+                                mProgressDialog.dismiss();
+                                if (error.networkResponse != null) {
+                                    String reason = new String(error.networkResponse.data);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(reason);
+                                        Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast
+                                                .LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            }
+                        });
+                break;
+            case Constants.TYPE_DEVICE_PHONE_NUM:
+                mProgressDialog.show();
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDevicePhone(startTime,
+                        endTime,
+                        text, null, cur_page, new
+                                Response.Listener<DeviceAlarmLogRsp>() {
+                                    @Override
+                                    public void onResponse(DeviceAlarmLogRsp response) {
+                                        mProgressDialog.dismiss();
+                                        mPtrListView.onRefreshComplete();
+                                        if (response.getData().size() == 0) {
+                                            Toast.makeText(getActivity(), "没有更多数据了", Toast.LENGTH_SHORT).show();
+                                            cur_page--;
+                                        } else {
+                                            refresh(DIRECTION_UP, response, null);
+                                        }
+                                    }
+                                }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                cur_page--;
+                                mProgressDialog.dismiss();
+                                if (error.networkResponse != null) {
+                                    String reason = new String(error.networkResponse.data);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(reason);
+                                        Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast
+                                                .LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+
+                            }
+                        });
+                break;
+            default:
+                break;
+        }
+
+    }
+
+    private void requestSearcheData(int direction, boolean isForce, String searchText) {
+        if (mPtrListView.getState() == PullToRefreshBase.State.RESET && !isForce || TextUtils.isEmpty(searchText)) {
+            return;
+        }
+        mProgressDialog.show();
+        Long temp_startTime = null;
+        Long temp_endTime = null;
+        if (mSelectedDateLayout.getVisibility() == View.VISIBLE) {
+            temp_startTime = startTime;
+            temp_endTime = endTime;
+        }
+        switch (direction) {
+            case DIRECTION_DOWN:
+                cur_page = 1;
+                requestDataBySearchDown(temp_startTime, temp_endTime, searchText);
+                break;
+            case DIRECTION_UP:
+                cur_page++;
+                requestDataBySearchUp(temp_startTime, temp_endTime, searchText);
+                break;
+            default:
+                break;
+        }
+    }
+
     public void requestData(int direction, boolean isForce) {
         if (mPtrListView.getState() == PullToRefreshBase.State.RESET && !isForce) {
             return;
@@ -279,66 +566,74 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
-                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(temp_startTime, temp_endTime, null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
-                    @Override
-                    public void onResponse(DeviceAlarmLogRsp response) {
-                        mProgressDialog.dismiss();
-                        mPtrListView.onRefreshComplete();
-                        refresh(DIRECTION_DOWN, response, null);
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        if (error.networkResponse != null) {
-                            String reason = new String(error.networkResponse.data);
-                            try {
-                                JSONObject jsonObject = new JSONObject(reason);
-                                Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }catch (Exception e){
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(temp_startTime,
+                        temp_endTime, null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
+                            @Override
+                            public void onResponse(DeviceAlarmLogRsp response) {
+                                mProgressDialog.dismiss();
+                                mPtrListView.onRefreshComplete();
+                                refresh(DIRECTION_DOWN, response, null);
+                            }
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                mProgressDialog.dismiss();
+                                if (error.networkResponse != null) {
+                                    String reason = new String(error.networkResponse.data);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(reason);
+                                        Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast
+                                                .LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                            .show();
+                                }
 
                             }
-                        } else {
-                            Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                        }
-                        mProgressDialog.dismiss();
-                    }
-                });
+                        });
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(temp_startTime, temp_endTime,  null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
-                    @Override
-                    public void onResponse(DeviceAlarmLogRsp response) {
-                        mProgressDialog.dismiss();
-                        mPtrListView.onRefreshComplete();
-                        if (response.getData().size() == 0) {
-                            cur_page--;
-                        } else {
-                            refresh(DIRECTION_UP, response, null);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        cur_page--;
-                        if (error.networkResponse != null) {
-                            String reason = new String(error.networkResponse.data);
-                            try {
-                                JSONObject jsonObject = new JSONObject(reason);
-                                Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            }catch (Exception e){
-
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(temp_startTime,
+                        temp_endTime, null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
+                            @Override
+                            public void onResponse(DeviceAlarmLogRsp response) {
+                                mProgressDialog.dismiss();
+                                mPtrListView.onRefreshComplete();
+                                if (response.getData().size() == 0) {
+                                    Toast.makeText(getActivity(), "没有更多数据了", Toast.LENGTH_SHORT).show();
+                                    cur_page--;
+                                } else {
+                                    refresh(DIRECTION_UP, response, null);
+                                }
                             }
-                        } else {
-                            Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                        }
-                        mProgressDialog.dismiss();
-                    }
-                });
+                        }, new Response.ErrorListener() {
+                            @Override
+                            public void onErrorResponse(VolleyError error) {
+                                cur_page--;
+                                mProgressDialog.dismiss();
+                                if (error.networkResponse != null) {
+                                    String reason = new String(error.networkResponse.data);
+                                    try {
+                                        JSONObject jsonObject = new JSONObject(reason);
+                                        Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast
+                                                .LENGTH_SHORT).show();
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    } catch (Exception e) {
+
+                                    }
+                                } else {
+                                    Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT)
+                                            .show();
+                                }
+                            }
+                        });
                 break;
             default:
                 break;
@@ -351,19 +646,22 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
         mSelectedDateLayout.setVisibility(View.VISIBLE);
         startTime = DateUtil.strToDate(startDate).getTime();
         endTime = DateUtil.strToDate(endDate).getTime();
-        mSelectedDateTextView.setText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil.getMothDayFormatDate(endTime));
-        SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(startTime, endTime, null, null, 1, new Response.Listener<DeviceAlarmLogRsp>() {
-            @Override
-            public void onResponse(DeviceAlarmLogRsp response) {
-                mProgressDialog.dismiss();
-                refresh(DIRECTION_DOWN, response, null);
-            }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                mProgressDialog.dismiss();
-            }
-        });
+        mSelectedDateTextView.setText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil.getMothDayFormatDate
+                (endTime));
+        endTime += 1000 * 60 * 60 * 24;
+        SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(startTime, endTime, null, null, 1,
+                new Response.Listener<DeviceAlarmLogRsp>() {
+                    @Override
+                    public void onResponse(DeviceAlarmLogRsp response) {
+                        mProgressDialog.dismiss();
+                        refresh(DIRECTION_DOWN, response, null);
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        mProgressDialog.dismiss();
+                    }
+                });
     }
 
     private void cancelSearch() {
@@ -375,13 +673,32 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onClick(View v) {
+        long temp_startTime = -1;
+        long temp_endTime = -1;
+        if (mSelectedDateLayout.getVisibility() == View.VISIBLE) {
+            temp_startTime = startTime;
+            temp_endTime = endTime;
+        }
         switch (v.getId()) {
             case R.id.alarm_iv_date:
                 Intent intent = new Intent(this.getActivity(), CalendarActivity.class);
+                if (mSelectedDateLayout.getVisibility() == View.VISIBLE) {
+                    intent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
+                    intent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
+                }
                 startActivityForResult(intent, REQUEST_CODE_CALENDAR);
                 break;
             case R.id.alarm_iv_search:
                 Intent searchIntent1 = new Intent(this.getActivity(), SearchAlarmActivity.class);
+
+                CharSequence hint = mSearchEditText.getHint();
+                if (!TextUtils.isEmpty(hint)) {
+                    searchIntent1.putExtra("extra_search_content", hint.toString().trim());
+                } else {
+                    searchIntent1.putExtra("extra_search_content", "");
+                }
+                searchIntent1.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
+                searchIntent1.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
                 searchIntent1.putExtra(EXTRA_FRAGMENT_INDEX, 2);
                 startActivityForResult(searchIntent1, REQUEST_CODE_SEARCH_ALARM);
                 break;
@@ -397,6 +714,14 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                 break;
             case R.id.alarm_search_et:
                 Intent searchIntent = new Intent(this.getActivity(), SearchAlarmActivity.class);
+                CharSequence hint1 = mSearchEditText.getHint();
+                if (!TextUtils.isEmpty(hint1)) {
+                    searchIntent.putExtra("extra_search_content", hint1.toString().trim());
+                } else {
+                    searchIntent.putExtra("extra_search_content", "");
+                }
+                searchIntent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
+                searchIntent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
                 searchIntent.putExtra(EXTRA_FRAGMENT_INDEX, 2);
                 startActivityForResult(searchIntent, REQUEST_CODE_SEARCH_ALARM);
                 break;
@@ -419,11 +744,12 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
     @Override
     public void onItemClick(View view, int position) {
         DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
-        mAlarmPopupView.show(SensoroCityApplication.getInstance(), deviceAlarmLogInfo, mShadowView, this);
+        mAlarmPopupView.show(deviceAlarmLogInfo, mShadowView, this);
     }
 
     @Override
     public void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+//        mAlarmListAdapter.notifyDataSetChanged();
         for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
             DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
             if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
@@ -437,6 +763,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                     }
                 }
                 mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
+                mAlarmListAdapter.setData(mDeviceAlarmLogInfoList);
 //                Collections.sort(mDeviceAlarmLogInfoList);
                 mAlarmListAdapter.notifyDataSetChanged();
                 break;

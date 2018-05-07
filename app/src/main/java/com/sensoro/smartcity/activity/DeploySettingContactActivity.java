@@ -38,7 +38,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeploySettingContactActivity extends BaseActivity implements Constants,  RecycleViewItemClickListener, TextView.OnEditorActionListener, TextWatcher {
+public class DeploySettingContactActivity extends BaseActivity implements Constants, RecycleViewItemClickListener,
+        TextView.OnEditorActionListener, TextWatcher {
 
 
     @BindView(R.id.deploy_setting_contact_back)
@@ -93,7 +94,8 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
 
     private void init() {
         try {
-            mNamePref = getSharedPreferences(PREFERENCE_DEPLOY_CONTACT_HISTORY, Activity.MODE_PRIVATE);
+            mNamePref = getApplicationContext().getApplicationContext().getSharedPreferences
+                    (PREFERENCE_DEPLOY_CONTACT_HISTORY, Activity.MODE_PRIVATE);
             mNameEditor = mNamePref.edit();
             mPhonePref = getSharedPreferences(PREFERENCE_DEPLOY_CONTENT_HISTORY, Activity.MODE_PRIVATE);
             mPhoneEditor = mPhonePref.edit();
@@ -138,15 +140,16 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
         mNameSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mNameSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mNameSearchHistoryAdapter = new SearchHistoryAdapter(this, mNameHistoryKeywords, new RecycleViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                mNameEt.setText(mNameHistoryKeywords.get(position).trim());
-                mNameEt.clearFocus();
-                mNameEt.setSelection(mNameHistoryKeywords.get(position).trim().length());
-                dismissInputMethodManager(view);
-            }
-        });
+        mNameSearchHistoryAdapter = new SearchHistoryAdapter(this, mNameHistoryKeywords, new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        mNameEt.setText(mNameHistoryKeywords.get(position).trim());
+                        mNameEt.clearFocus();
+                        mNameEt.setSelection(mNameHistoryKeywords.get(position).trim().length());
+                        dismissInputMethodManager(view);
+                    }
+                });
         mNameSearchHistoryRv.setAdapter(mNameSearchHistoryAdapter);
         mNameSearchHistoryAdapter.notifyDataSetChanged();
         mNameEt.requestFocus();
@@ -172,15 +175,16 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
         mPhoneSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mPhoneSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(this, mPhoneHistoryKeywords, new RecycleViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                mPhoneEt.setText(mPhoneHistoryKeywords.get(position).trim());
-                mPhoneEt.clearFocus();
-                mPhoneEt.setSelection(mPhoneHistoryKeywords.get(position).trim().length());
-                dismissInputMethodManager(view);
-            }
-        });
+        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(this, mPhoneHistoryKeywords, new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        mPhoneEt.setText(mPhoneHistoryKeywords.get(position).trim());
+                        mPhoneEt.clearFocus();
+                        mPhoneEt.setSelection(mPhoneHistoryKeywords.get(position).trim().length());
+                        dismissInputMethodManager(view);
+                    }
+                });
         mPhoneSearchHistoryRv.setAdapter(mPhoneSearchHistoryAdapter);
         mPhoneSearchHistoryAdapter.notifyDataSetChanged();
         mPhoneEt.setOnTouchListener(new View.OnTouchListener() {
@@ -259,7 +263,6 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
     }
 
 
-
     @OnClick(R.id.deploy_setting_contact_back)
     public void back() {
         this.finish();
@@ -269,14 +272,16 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
     public void doFinish() {
         String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
         Pattern p = Pattern.compile(regex);
-        if (!TextUtils.isEmpty(mPhoneEt.getText().toString()) && p.matcher(mPhoneEt.getText().toString()).matches()) {
+        String phoneStr = mPhoneEt.getText().toString();
+        String nameStr = mNameEt.getText().toString();
+        if (!TextUtils.isEmpty(phoneStr) && p.matcher(phoneStr).matches() && !TextUtils.isEmpty(nameStr)) {
             saveName();
             savePhone();
             mNameEt.clearFocus();
             mPhoneEt.clearFocus();
             Intent data = new Intent();
-            data.putExtra(EXTRA_SETTING_CONTACT, mNameEt.getText().toString());
-            data.putExtra(EXTRA_SETTING_CONTENT, mPhoneEt.getText().toString());
+            data.putExtra(EXTRA_SETTING_CONTACT, nameStr.trim());
+            data.putExtra(EXTRA_SETTING_CONTENT, phoneStr.trim());
             setResult(RESULT_CODE_SETTING_CONTACT, data);
             finish();
         } else {

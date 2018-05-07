@@ -57,7 +57,6 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     private List<UserInfo> mUserInfoList = new ArrayList<>();
     private RelativeLayout rlTitleAccount;
 
-
     public static MerchantFragment newInstance(String input) {
         MerchantFragment merchantFragment = new MerchantFragment();
         Bundle args = new Bundle();
@@ -109,10 +108,14 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
 
     @Override
     public void onDestroyView() {
-        super.onDestroyView();
         if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
+        super.onDestroyView();
     }
 
     private void init() {
@@ -181,15 +184,14 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     }
 
     public void refresh(UserAccountRsp userAccountRsp) {
-
+        if (mProgressDialog != null) {
+            mProgressDialog.dismiss();
+        }
         List<UserInfo> list = userAccountRsp.getData();
         mUserInfoList.clear();
         mUserInfoList.addAll(list);
         mMerchantAdapter.setSelectedIndex(-1);
         mMerchantAdapter.notifyDataSetChanged();
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
         if (list.size() == 0) {
             seperatorView.setVisibility(View.GONE);
             seperatorBottomView.setVisibility(View.GONE);
@@ -204,19 +206,26 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
                 .Listener<UserAccountControlRsp>() {
             @Override
             public void onResponse(UserAccountControlRsp response) {
+                mProgressDialog.dismiss();
                 if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    SensoroCityApplication.getInstance().smartCityServer.setSessionId(response.getData().getSessionID
-                            ());
-                    ((MainActivity) getActivity()).reconnectSocketIO(response.getData().getNickname(), response
-                            .getData().getPhone(), response.getData().getRoles(), response.getData().getIsSpecific());
+                    String sessionID = response.getData().getSessionID
+                            ();
+                    SensoroCityApplication.getInstance().smartCityServer.setSessionId(sessionID);
+                    String nickname = response.getData().getNickname();
+                    String phone = response.getData().getPhone();
+                    String roles = response.getData().getRoles();
+                    String isSpecific = response.getData().getIsSpecific();
+                    ((MainActivity) getActivity()).reconnectSocketIO(nickname, phone, roles,
+                            isSpecific);
                 } else {
 
                 }
-                mProgressDialog.dismiss();
+
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                mProgressDialog.dismiss();
                 if (error.networkResponse != null) {
                     String reason = new String(error.networkResponse.data);
                     try {
@@ -230,7 +239,7 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
                 } else {
                     Toast.makeText(getActivity(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
                 }
-                mProgressDialog.dismiss();
+
             }
         });
     }

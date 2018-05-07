@@ -16,6 +16,8 @@
 
 package com.google.zxing.client.android.history;
 
+import android.text.TextUtils;
+
 import com.google.zxing.Result;
 
 /**
@@ -39,7 +41,7 @@ public final class HistoryItem {
 
   public String getDisplayAndDetails() {
     StringBuilder displayResult = new StringBuilder();
-    if (display == null || display.isEmpty()) {
+    if (TextUtils.isEmpty(display)) {
       displayResult.append(result.getText());
     } else {
       displayResult.append(display);

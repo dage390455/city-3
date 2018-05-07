@@ -143,13 +143,13 @@
     </RelativeLayout>
     <RelativeLayout
         android:layout_width="match_parent"
+        android:layout_margin="@dimen/x30"
         android:layout_height="match_parent">
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="@dimen/y150">
+            android:layout_alignParentBottom="true">
             <Button
                 android:id="@+id/deploy_result_continue_btn"
                 android:background="@drawable/shape_button"
@@ -172,7 +172,8 @@
                 android:text="@string/back_home"
                 android:textSize="@dimen/city_btn_text_size"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>

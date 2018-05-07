@@ -66,10 +66,10 @@ public class LoginActivity extends BaseActivity implements Constants {
     View coverView;
     @BindView(R.id.login_btn)
     Button login_btn;
-    ProgressDialog mProgressDialog;
+    private ProgressDialog mProgressDialog;
     private static final int REQUEST_PERMISSION = 0;
     private static final int MY_REQUEST_PERMISSION_CODE = 0x14;
-    protected static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
+    private static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
         {
             add(Manifest.permission.INTERNET);
             add(Manifest.permission.READ_EXTERNAL_STORAGE);
@@ -101,9 +101,7 @@ public class LoginActivity extends BaseActivity implements Constants {
                 PermissionsResultObserve() {
                     @Override
                     public void onPermissionGranted() {
-                        PushManager.getInstance().initialize(LoginActivity.this.getApplicationContext(),
-                                SensoroPushService
-                                        .class);
+                        initPushSDK();
                         Log.e(TAG, "onPermissionGranted: 权限获取完毕 ");
                     }
 
@@ -140,7 +138,6 @@ public class LoginActivity extends BaseActivity implements Constants {
             } else {
                 SmartCityServerImpl.SCOPE = SmartCityServerImpl.SCOPE_MOCHA;
             }
-
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
         }
@@ -176,23 +173,21 @@ public class LoginActivity extends BaseActivity implements Constants {
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         mPermissionUtils.onRequestPermissionsResult(MY_REQUEST_PERMISSION_CODE, requestCode, permissions, grantResults,
                 FORCE_REQUIRE_PERMISSIONS);
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     private void readLoginData() {
-        SharedPreferences sp = getSharedPreferences(PREFERENCE_LOGIN, Context.MODE_PRIVATE);
+        SharedPreferences sp = getApplicationContext().getSharedPreferences(PREFERENCE_LOGIN, Context.MODE_PRIVATE);
         String name = sp.getString(PREFERENCE_KEY_NAME, null);
         String pwd = sp.getString(PREFERENCE_KEY_PASSWORD, null);
-        if (name != null) {
+        if (!TextUtils.isEmpty(name)) {
+            accountEt.setText(name);
+        }
+        if (!TextUtils.isEmpty(pwd)) {
             String aes_pwd = AESUtil.decode(pwd);
-            if (name != null) {
-                accountEt.setText(name);
-            }
-            if (pwd != null) {
-                pwdEt.setText(aes_pwd);
-            }
+            pwdEt.setText(aes_pwd);
         }
     }
 
@@ -248,7 +243,7 @@ public class LoginActivity extends BaseActivity implements Constants {
     private void switchApi() {
         final String[] urlArr = new String[]{"正式版", "Demo版"};
 
-        SharedPreferences sp = getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
+        SharedPreferences sp = getApplicationContext().getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
         String url = sp.getString(PREFERENCE_KEY_URL, null);
         if (url != null) {
             SmartCityServerImpl.SCOPE = url;
@@ -283,7 +278,6 @@ public class LoginActivity extends BaseActivity implements Constants {
 
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
-                                // TODO Auto-generated method stub
                             }
                         }).
                         create();
@@ -291,7 +285,8 @@ public class LoginActivity extends BaseActivity implements Constants {
     }
 
     public void saveScopeData(Context context, String url) {
-        SharedPreferences sp = context.getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
+        SharedPreferences sp = context.getApplicationContext().getSharedPreferences(PREFERENCE_SCOPE, Context
+                .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREFERENCE_KEY_URL, url);
         editor.commit();
@@ -299,7 +294,7 @@ public class LoginActivity extends BaseActivity implements Constants {
 
     @OnClick(R.id.login_btn)
     public void doForwardMain() {
-        SharedPreferences sp = getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
+        SharedPreferences sp = getApplicationContext().getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
         String url = sp.getString(PREFERENCE_KEY_URL, null);
         if (!TextUtils.isEmpty(url)) {
             SmartCityServerImpl.SCOPE = url;
@@ -307,16 +302,19 @@ public class LoginActivity extends BaseActivity implements Constants {
         mProgressDialog.show();
         final String account = accountEt.getText().toString();
         final String pwd = pwdEt.getText().toString();
-        if (account == null) {
+        if (TextUtils.isEmpty(account)) {
             Toast.makeText(this, R.string.tips_username_empty, Toast.LENGTH_SHORT).show();
-        } else if (pwd == null) {
+            mProgressDialog.dismiss();
+        } else if (TextUtils.isEmpty(pwd)) {
             Toast.makeText(this, R.string.tips_login_pwd_empty, Toast.LENGTH_SHORT).show();
+            mProgressDialog.dismiss();
         } else {
             String phoneId = PushManager.getInstance().getClientid(getApplicationContext());
             SensoroCityApplication.getInstance().smartCityServer.login(account, pwd, phoneId, new Response
                     .Listener<LoginRsp>() {
                 @Override
                 public void onResponse(LoginRsp response) {
+                    mProgressDialog.dismiss();
                     if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
                         String isSpecific = response.getData().getIsSpecific();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -327,17 +325,20 @@ public class LoginActivity extends BaseActivity implements Constants {
                         intent.putExtra(EXTRA_USER_ROLES, response.getData().getRoles());
                         intent.putExtra(EXTRA_IS_SPECIFIC, isSpecific);
                         intent.putExtra(EXTRA_PHONE_ID, PushManager.getInstance().getClientid(getApplicationContext()));
+                        PreferencesHelper.getInstance().saveLoginData(SensoroCityApplication.getInstance(), account,
+                                pwd);
                         startActivity(intent);
-                        PreferencesHelper.getInstance().saveLoginData(LoginActivity.this, account, pwd);
                         finish();
                     } else {
                         Toast.makeText(LoginActivity.this, R.string.tips_user_info_error, Toast.LENGTH_LONG).show();
                     }
-                    mProgressDialog.dismiss();
+//                    startActivity(new Intent(LoginActivity.this, FMMapBasic.class));
+
                 }
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
+                    mProgressDialog.dismiss();
                     if (error.networkResponse != null) {
                         String reason = new String(error.networkResponse.data);
                         try {
@@ -352,7 +353,7 @@ public class LoginActivity extends BaseActivity implements Constants {
                     } else {
                         Toast.makeText(LoginActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
                     }
-                    mProgressDialog.dismiss();
+
                 }
             });
         }
@@ -395,12 +396,20 @@ public class LoginActivity extends BaseActivity implements Constants {
     private void init() {
         mProgressDialog = new ProgressDialog(this);
         mProgressDialog.setMessage(getString(R.string.logining));
-        initPushSDK();
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mPermissionUtils.onActivityResult(requestCode, resultCode, data, MY_REQUEST_PERMISSION_CODE);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mProgressDialog != null) {
+            mProgressDialog.cancel();
+            mProgressDialog = null;
+        }
+        super.onDestroy();
     }
 }

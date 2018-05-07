@@ -32,10 +32,9 @@ import org.json.JSONObject;
  * Created by sensoro on 17/11/14.
  */
 
-public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickListener , Constants{
+public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickListener, Constants {
 
     private Context mContext;
-    private SensoroCityApplication sensoroCityApplication;
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private OnPopupCallbackListener mListener;
     private Animation showAnimation;
@@ -54,7 +53,14 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         super(context);
         this.mContext = context;
     }
-
+    public void onDestroyPop(){
+        if (showAnimation!=null){
+            showAnimation.cancel();
+        }
+        if (dismissAnimation!=null){
+            dismissAnimation.cancel();
+        }
+    }
     public SensoroPopupAlarmView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
@@ -79,7 +85,8 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         trueTextView.setOnClickListener(this);
         misTextView.setOnClickListener(this);
         testTextView.setOnClickListener(this);
-        showAnimation = AnimationUtils.loadAnimation(mContext, R.anim.alarm_fadein);   //得到一个LayoutAnimationController对象；
+        showAnimation = AnimationUtils.loadAnimation(mContext, R.anim.alarm_fadein);
+        //得到一个LayoutAnimationController对象；
         showAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -97,7 +104,8 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
             }
         });
 
-        dismissAnimation = AnimationUtils.loadAnimation(mContext, R.anim.alarm_fadeout);   //得到一个LayoutAnimationController对象；
+        dismissAnimation = AnimationUtils.loadAnimation(mContext, R.anim.alarm_fadeout);
+        //得到一个LayoutAnimationController对象；
         dismissAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -118,10 +126,10 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         });
     }
 
-    public void show(SensoroCityApplication sensoroCityApplication, DeviceAlarmLogInfo deviceAlarmLogInfo, SensoroShadowView shadowView, OnPopupCallbackListener listener) {
+    public void show(DeviceAlarmLogInfo deviceAlarmLogInfo, SensoroShadowView shadowView, OnPopupCallbackListener
+            listener) {
         this.mShadowView = shadowView;
         this.mShadowView.setVisibility(VISIBLE);
-        this.sensoroCityApplication = sensoroCityApplication;
         this.deviceAlarmLogInfo = deviceAlarmLogInfo;
         this.mListener = listener;
         this.displayStatus = DISPLAY_STATUS_CONFIRM;
@@ -144,7 +152,10 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     public void doAlarmConfirm() {
-        sensoroCityApplication.smartCityServer.doAlarmConfirm(deviceAlarmLogInfo.get_id(), displayStatus, remarkEditText.getText().toString(), new Response.Listener<DeviceAlarmItemRsp>() {
+        String id = deviceAlarmLogInfo.get_id();
+        String remark = remarkEditText.getText().toString();
+        SensoroCityApplication.getInstance().smartCityServer.doAlarmConfirm(id, displayStatus,
+                remark, new Response.Listener<DeviceAlarmItemRsp>() {
             @Override
             public void onResponse(DeviceAlarmItemRsp response) {
                 if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
@@ -166,7 +177,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                         Toast.makeText(mContext, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
                     } catch (JSONException e) {
                         e.printStackTrace();
-                    }catch (Exception e){
+                    } catch (Exception e) {
 
                     }
                 } else {
@@ -201,7 +212,8 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                 break;
             case R.id.alarm_popup_true:
                 mButton.setBackground(getResources().getDrawable(R.drawable.shape_button));
-                trueTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup_selected));
+                trueTextView.setBackground(mContext.getResources().getDrawable(R.drawable
+                        .selector_alarm_popup_selected));
                 testTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup));
                 misTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup));
                 trueTextView.setTextColor(mContext.getResources().getColor(R.color.white));
@@ -212,7 +224,8 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
             case R.id.alarm_popup_test:
                 mButton.setBackground(getResources().getDrawable(R.drawable.shape_button));
                 trueTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup));
-                testTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup_selected));
+                testTextView.setBackground(mContext.getResources().getDrawable(R.drawable
+                        .selector_alarm_popup_selected));
                 misTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup));
                 trueTextView.setTextColor(mContext.getResources().getColor(R.color.c_626262));
                 testTextView.setTextColor(mContext.getResources().getColor(R.color.white));
@@ -223,7 +236,8 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                 mButton.setBackground(getResources().getDrawable(R.drawable.shape_button));
                 trueTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup));
                 testTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup));
-                misTextView.setBackground(mContext.getResources().getDrawable(R.drawable.selector_alarm_popup_selected));
+                misTextView.setBackground(mContext.getResources().getDrawable(R.drawable
+                        .selector_alarm_popup_selected));
                 trueTextView.setTextColor(mContext.getResources().getColor(R.color.c_626262));
                 testTextView.setTextColor(mContext.getResources().getColor(R.color.c_626262));
                 misTextView.setTextColor(mContext.getResources().getColor(R.color.white));
@@ -233,6 +247,6 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     public interface OnPopupCallbackListener {
-         void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo);
+        void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo);
     }
 }
