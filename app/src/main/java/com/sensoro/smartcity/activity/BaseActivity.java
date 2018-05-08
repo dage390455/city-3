@@ -1,29 +1,22 @@
 package com.sensoro.smartcity.activity;
 
-import android.Manifest;
-import android.animation.Animator;
-import android.animation.ObjectAnimator;
-import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NotificationManagerCompat;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
-import android.view.View;
 
 import com.sensoro.smartcity.SensoroCityApplication;
 
@@ -37,22 +30,25 @@ import java.lang.reflect.Method;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    View decorView;
-    int screenWidth;//屏宽
-    private static final int REQUEST_EXTERNAL_STORAGE = 0x12;
-    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
-            Manifest.permission.WRITE_EXTERNAL_STORAGE};
-    private ValueAnimator mValueAnimator;
+//    private View decorView;
+//    int screenWidth;//屏宽
+//    private static final int REQUEST_EXTERNAL_STORAGE = 0x12;
+//    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
+//            Manifest.permission.WRITE_EXTERNAL_STORAGE};
+//    private ValueAnimator mValueAnimator;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getSupportActionBar().hide();
+        ActionBar supportActionBar = getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.hide();
+        }
 //        verifyStoragePermissions();
-        decorView = getWindow().getDecorView();
-        DisplayMetrics metrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metrics);
-        screenWidth = metrics.widthPixels;
+//        decorView = getWindow().getDecorView();
+//        DisplayMetrics metrics = new DisplayMetrics();
+//        getWindowManager().getDefaultDisplay().getMetrics(metrics);
+//        screenWidth = metrics.widthPixels;
     }
 
     protected abstract boolean isNeedSlide();
@@ -61,7 +57,7 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected void onResume() {
         NotificationManagerCompat manager = NotificationManagerCompat.from(SensoroCityApplication.getInstance());
         boolean isOpened = manager.areNotificationsEnabled();
-        if (!isNotificationEnabled(this)&&!isOpened) {
+        if (!isNotificationEnabled(this) && !isOpened) {
             showRationaleDialog();
         }
         super.onResume();
@@ -149,10 +145,10 @@ public abstract class BaseActivity extends AppCompatActivity {
 
     @Override
     protected void onDestroy() {
-        if (mValueAnimator != null) {
-            mValueAnimator.cancel();
-            mValueAnimator = null;
-        }
+//        if (mValueAnimator != null) {
+//            mValueAnimator.cancel();
+//            mValueAnimator = null;
+//        }
         super.onDestroy();
     }
 
@@ -184,17 +180,17 @@ public abstract class BaseActivity extends AppCompatActivity {
         return hasNavigationBar;
     }
 
-    public void verifyStoragePermissions() {
-        // Check if we have write permission
-        int permission = ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE);
-
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            // We don't have permission so prompt the user
-            ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE);
-        }
-    }
+//    public void verifyStoragePermissions() {
+//        // Check if we have write permission
+//        int permission = ActivityCompat.checkSelfPermission(this,
+//                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+//
+//        if (permission != PackageManager.PERMISSION_GRANTED) {
+//            // We don't have permission so prompt the user
+//            ActivityCompat.requestPermissions(this, PERMISSIONS_STORAGE,
+//                    REQUEST_EXTERNAL_STORAGE);
+//        }
+//    }
 
 
     float startX, startY, endX, endY, distanceX, distanceY;
@@ -252,49 +248,49 @@ public abstract class BaseActivity extends AppCompatActivity {
      *
      * @param distanceX 横向滑动距离
      */
-    private void backOrigin(float distanceX) {
-        ObjectAnimator.ofFloat(decorView, "X", distanceX, 0).setDuration(300).start();
-    }
+//    private void backOrigin(float distanceX) {
+//        ObjectAnimator.ofFloat(decorView, "X", distanceX, 0).setDuration(300).start();
+//    }
 
     /**
      * 划出屏幕
      *
      * @param distanceX 横向滑动距离
      */
-    private void moveOn(float distanceX) {
-        mValueAnimator = ValueAnimator.ofFloat(distanceX, screenWidth);
-        mValueAnimator.setDuration(300);
-
-
-        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-            @Override
-            public void onAnimationUpdate(ValueAnimator animation) {
-                decorView.setX((Float) animation.getAnimatedValue());
-            }
-        });
-
-        mValueAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                finish();
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
-        mValueAnimator.start();
-    }
+//    private void moveOn(float distanceX) {
+//        mValueAnimator = ValueAnimator.ofFloat(distanceX, screenWidth);
+//        mValueAnimator.setDuration(300);
+//
+//
+//        mValueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+//            @Override
+//            public void onAnimationUpdate(ValueAnimator animation) {
+//                decorView.setX((Float) animation.getAnimatedValue());
+//            }
+//        });
+//
+//        mValueAnimator.addListener(new Animator.AnimatorListener() {
+//            @Override
+//            public void onAnimationStart(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationEnd(Animator animation) {
+//                finish();
+//            }
+//
+//            @Override
+//            public void onAnimationCancel(Animator animation) {
+//
+//            }
+//
+//            @Override
+//            public void onAnimationRepeat(Animator animation) {
+//
+//            }
+//        });
+//        mValueAnimator.start();
+//    }
 
 }

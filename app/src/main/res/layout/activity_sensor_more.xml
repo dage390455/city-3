@@ -28,6 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:textColor="@color/c_626262"
+            android:text="传感器详情"
             android:textSize="@dimen/x60" />
 
     </RelativeLayout>

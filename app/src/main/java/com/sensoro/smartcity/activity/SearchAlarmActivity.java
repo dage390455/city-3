@@ -81,9 +81,9 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
     ViewPager searchViewpager;
     private SharedPreferences mPref;
     private Editor mEditor;
-    private List<String> mHistoryKeywords_deviceName = new ArrayList<>();
-    private List<String> mHistoryKeywords_deviceNumber = new ArrayList<>();
-    private List<String> mHistoryKeywords_devicePhone = new ArrayList<>();
+    private final List<String> mHistoryKeywords_deviceName = new ArrayList<>();
+    private final List<String> mHistoryKeywords_deviceNumber = new ArrayList<>();
+    private final List<String> mHistoryKeywords_devicePhone = new ArrayList<>();
     private ProgressDialog mProgressDialog;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private SearchAlarmTagAdapter mAlarmTagAdapter;
@@ -454,7 +454,8 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
         switch (SensoroCityApplication.getInstance().searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 mProgressDialog.show();
-                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(mStartTime, mEndTime,
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(mStartTime,
+                        mEndTime,
                         text, null, 1, new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
@@ -499,7 +500,8 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                 break;
             case Constants.TYPE_DEVICE_NUMBER:
                 mProgressDialog.show();
-                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(mStartTime, mEndTime, text, null, 1,
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(mStartTime, mEndTime,
+                        text, null, 1,
                         new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
@@ -544,7 +546,8 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
                 mProgressDialog.show();
-                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDevicePhone(mStartTime, mEndTime,
+                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDevicePhone(mStartTime,
+                        mEndTime,
                         text, null, 1, new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
@@ -620,7 +623,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                 finish();
                 break;
             case R.id.search_alarm_clear_iv:
-                mKeywordEt.setText("");
+                mKeywordEt.getText().clear();
                 mSearchHistoryAdapter.notifyDataSetChanged();
                 mClearKeywordIv.setVisibility(View.GONE);
                 tipsLinearLayout.setVisibility(View.GONE);
@@ -662,7 +665,10 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
             mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
-            requestData(mKeywordEt.getText().toString());
+            String text = mKeywordEt.getText().toString();
+            if (!TextUtils.isEmpty(text)){
+                requestData(text);
+            }
             return true;
         }
         return false;

@@ -1,6 +1,7 @@
 package com.sensoro.smartcity;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 
 import com.baidu.mobstat.StatService;
 import com.fengmap.android.FMErrorMsg;
@@ -22,6 +23,9 @@ import com.fengmap.android.map.marker.FMNode;
 import com.sensoro.smartcity.activity.BaseActivity;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.ViewHelper;
+import com.sensoro.smartcity.widget.TagsEditText;
+
+import java.util.Collection;
 
 /**
  * 基础地图显示
@@ -30,12 +34,13 @@ import com.sensoro.smartcity.util.ViewHelper;
  * @author hezutao@fengmap.com
  * @version 2.0.0
  */
-public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnFMMapClickListener {
+public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnFMMapClickListener, TagsEditText.TagsEditListener {
 
     private FMMap mMap;
     private FMLocationLayer mLocationLayer;
     private FMLocationMarker mLocationMarker;
     private FMImageLayer mImageLayer;
+    private TagsEditText tagsEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +52,17 @@ public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnF
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+    }
+    @Override
+    public void onWindowFocusChanged(boolean hasFocus) {
+        super.onWindowFocusChanged(hasFocus);
+        if (hasFocus) {
+            tagsEditText.showDropDown();
+        }
+    }
+    @Override
     protected boolean isNeedSlide() {
         return false;
     }
@@ -55,7 +71,13 @@ public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnF
      * 加载地图数据
      */
     private void openMapByPath() {
+
         FMMapView mapView = (FMMapView) findViewById(R.id.map_view);
+        tagsEditText = (TagsEditText) findViewById(R.id.tet);
+//        tagsEditText.setTags();
+        tagsEditText.getTags();
+        tagsEditText.setTagsListener(this);
+        tagsEditText.onSaveInstanceState();
         mMap = mapView.getFMMap();
         mMap.setOnFMMapInitListener(this);
         //加载离线数据
@@ -197,5 +219,15 @@ public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnF
                     mapCoordResult.getMapCoord(), R.drawable.ic_marker_blue);
             mImageLayer.addMarker(imageMarker);
         }
+    }
+
+    @Override
+    public void onTagsChanged(Collection<String> tags) {
+
+    }
+
+    @Override
+    public void onEditingFinished() {
+
     }
 }

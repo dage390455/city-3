@@ -1,15 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                xmlns:TagsEditText="http://schemas.android.com/apk/res-auto">
 
-
-
+    <com.sensoro.smartcity.widget.TagsEditText
+        android:id="@+id/tet"
+        TagsEditText:allowSpaceInTag="false"
+        android:gravity="center_vertical"
+        android:paddingLeft="@dimen/x30"
+        android:textSize="@dimen/city_normal_size"
+        android:imeOptions="actionDone"
+        android:maxLines="1"
+        android:singleLine="true"
+        android:inputType="text"
+        android:hint="@string/tips_hint_name_address_set"
+        android:background="@null"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
     <com.fengmap.android.map.FMMapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
 
 
 </RelativeLayout>

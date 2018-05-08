@@ -32,6 +32,7 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -106,11 +107,8 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
     private void initSearchHistory() {
         String history = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
         if (!TextUtils.isEmpty(history)) {
-            List<String> list = new ArrayList<String>();
-            for (Object o : history.split(",")) {
-                list.add((String) o);
-            }
-            mHistoryKeywords = list;
+            mHistoryKeywords.clear();
+            mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
         if (mHistoryKeywords.size() > 0) {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
@@ -195,7 +193,8 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
                     }
                 }
                 list.add(0, text);
-                mHistoryKeywords = list;
+                mHistoryKeywords.clear();
+                mHistoryKeywords.addAll(list);
                 StringBuffer stringBuffer = new StringBuffer();
                 for (int i = 0; i < list.size(); i++) {
                     if (i == (list.size() - 1)) {
@@ -207,8 +206,14 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
                 mEditor.putString(PREFERENCE_KEY_DEPLOY, stringBuffer.toString());
                 mEditor.commit();
             } else {
-                mEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
-                mEditor.commit();
+                if (TextUtils.isEmpty(oldText)) {
+                    mEditor.putString(PREFERENCE_KEY_DEPLOY, text);
+                    mEditor.commit();
+                } else {
+                    mEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
+                    mEditor.commit();
+                }
+
                 mHistoryKeywords.add(0, text);
             }
         }

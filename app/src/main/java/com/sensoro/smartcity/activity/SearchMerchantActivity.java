@@ -41,6 +41,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
@@ -69,7 +70,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
     LinearLayout tipsLinearLayout;
     private SharedPreferences mPref;
     private Editor mEditor;
-    private List<String> mHistoryKeywords = new ArrayList<>();
+    private final List<String> mHistoryKeywords = new ArrayList<>();
     private ProgressDialog mProgressDialog;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
@@ -112,11 +113,8 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
     private void initSearchHistory() {
         String history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
         if (!TextUtils.isEmpty(history)) {
-            List<String> list = new ArrayList<String>();
-            for (Object o : history.split(",")) {
-                list.add((String) o);
-            }
-            mHistoryKeywords = list;
+            mHistoryKeywords.clear();
+            mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
         if (mHistoryKeywords.size() > 0) {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
@@ -249,7 +247,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
                 finish();
                 break;
             case R.id.search_merchant_clear_iv:
-                mKeywordEt.setText("");
+                mKeywordEt.getText().clear();
                 mClearKeywordIv.setVisibility(View.GONE);
                 tipsLinearLayout.setVisibility(View.GONE);
                 mSearchHistoryAdapter.notifyDataSetChanged();

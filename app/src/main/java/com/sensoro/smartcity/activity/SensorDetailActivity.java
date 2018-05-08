@@ -191,7 +191,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     private float minValue = 0;
     private LatLng destPosition = null;
     private LatLng startPosition = null;
-    private List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
+    private final List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
     private Bundle bundle;
     private Bitmap tempUpBitmap;
     private GeocodeSearch geocoderSearch;
@@ -344,7 +344,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             snTextView.setTextColor(textColor);
             dateTextView.setTextColor(textColor);
             if (mDeviceInfo.getName() != null) {
-                nameTextView.setText(mDeviceInfo.getName().equals("") ? mDeviceInfo.getSn() : mDeviceInfo.getName());
+                nameTextView.setText(TextUtils.isEmpty(mDeviceInfo.getName()) ? mDeviceInfo.getSn() : mDeviceInfo.getName());
             } else {
                 nameTextView.setText(mDeviceInfo.getSn());
             }

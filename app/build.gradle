@@ -154,8 +154,8 @@ dependencies {
     compile 'com.jakewharton:butterknife:8.0.1'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.0.0'
-        compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
-    compile ('com.github.nkzawa:socket.io-client:0.3.0'){
+    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+    compile('com.github.nkzawa:socket.io-client:0.3.0') {
         exclude group: 'org.json', module: 'json'
     }
     compile 'de.hdodenhof:circleimageview:2.1.0'

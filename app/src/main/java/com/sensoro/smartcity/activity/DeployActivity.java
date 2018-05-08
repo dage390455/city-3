@@ -215,8 +215,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
 
                 String tags[] = deviceInfo.getTags();
                 if (tags != null) {
-                    for (int i = 0; i < tags.length; i++) {
-                        String tag = tags[i];
+                    for (String tag : tags) {
                         if (!TextUtils.isEmpty(tag)) {
                             tagList.add(tag);
                         }
@@ -438,7 +437,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
                 uploadButton.setEnabled(true);
             }
         } else if (TextUtils.isEmpty(contact) || name.equals(content)) {
-            SensoroToast.makeText(this, "联系人姓名或电话不能为空！", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+            SensoroToast.makeText(this, "预警联系人不能为空！", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                     .show();
             if (uploadButton != null) {
                 uploadButton.setEnabled(true);

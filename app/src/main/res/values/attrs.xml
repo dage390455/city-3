@@ -18,11 +18,24 @@
         <attr name="sc_month" format="string"/>
     </declare-styleable>
     <declare-styleable name="IRecyclerView">
-        <attr name="refreshHeaderLayout" format="reference" />  <!--refresh header layout res id-->
-        <attr name="loadMoreFooterLayout" format="reference" /> <!--loadmore fotter layout res id-->
-        <attr name="refreshEnabled" format="boolean" />
-        <attr name="loadMoreEnabled" format="boolean" />
-        <attr name="refreshFinalMoveOffset" format="dimension" />   <!--refresh header max move distance-->
+        <attr name="refreshHeaderLayout" format="reference"/>  <!--refresh header layout res id-->
+        <attr name="loadMoreFooterLayout" format="reference"/> <!--loadmore fotter layout res id-->
+        <attr name="refreshEnabled" format="boolean"/>
+        <attr name="loadMoreEnabled" format="boolean"/>
+        <attr name="refreshFinalMoveOffset" format="dimension"/>   <!--refresh header max move distance-->
     </declare-styleable>
-
+    //
+    <declare-styleable name="TagsEditText">
+        <attr name="allowSpaceInTag" format="boolean"/>
+        <attr name="tagsTextColor" format="color"/>
+        <attr name="tagsTextSize" format="dimension"/>
+        <attr name="tagsBackground" format="integer"/>
+        <attr name="tagsCloseImageLeft" format="integer"/>
+        <attr name="tagsCloseImageRight" format="integer"/>
+        <attr name="tagsCloseImagePadding" format="dimension"/>
+        <attr name="tagsPaddingLeft" format="dimension"/>
+        <attr name="tagsPaddingRight" format="dimension"/>
+        <attr name="tagsPaddingTop" format="dimension"/>
+        <attr name="tagsPaddingBottom" format="dimension"/>
+    </declare-styleable>
 </resources>

@@ -115,38 +115,208 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.item_date.setText(DateUtil.getFullParseDate(deviceInfo.getUpdatedTime()));
         SensorDetailInfo sensorDetailInfo = deviceInfo.getSensoroDetails();
         String[] sensorTypes = deviceInfo.getSensorTypes();
+        Arrays.sort(sensorTypes);
         if (sensorDetailInfo != null && sensorTypes.length > 0) {
             Arrays.sort(sensorTypes);
-            String sensorType1 = sensorTypes[0];
-            SensorStruct sensorStruct1 = sensorDetailInfo.loadData().get(sensorType1);
+//            String sensorType1 = sensorTypes[0];
+//            SensorStruct sensorStruct1 = sensorDetailInfo.loadData().get(sensorType1);
+//
+//            if (sensorTypes.length > 1) {
+//                holder.item_value2.setVisibility(View.VISIBLE);
+//                holder.item_unit2.setVisibility(View.VISIBLE);
+//                String sensorType2 = sensorTypes[1];
+//                SensorStruct sensorStruct2 = sensorDetailInfo.loadData().get(sensorType2);
+//                if (sensorStruct2 == null) {
+//                    holder.item_value2.setText("-");
+//                    holder.item_unit2.setVisibility(GONE);
+//                } else {
+//                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType2,
+//                            sensorStruct2);
+//                }
+//            } else {
+//                holder.item_value2.setVisibility(GONE);
+//                holder.item_unit2.setVisibility(GONE);
+//            }
+//            if (sensorStruct1 != null) {
+//                holder.item_unit1.setVisibility(VISIBLE);
+//                WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
+//                        sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
+//            } else {
+//                if (sensorType1 != null) {
+//                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
+//                }
+//                holder.item_value1.setText("-");
+//                holder.item_unit1.setVisibility(GONE);
+//            }
+            //////////
 
-            if (sensorTypes.length > 1) {
-                holder.item_value2.setVisibility(View.VISIBLE);
-                holder.item_unit2.setVisibility(View.VISIBLE);
-                String sensorType2 = sensorTypes[1];
-                SensorStruct sensorStruct2 = sensorDetailInfo.loadData().get(sensorType2);
-                if (sensorStruct2 == null) {
+            if (sensorTypes.length > 1) {            Arrays.sort(sensorTypes);
+//            String sensorType1 = sensorTypes[0];
+//            SensorStruct sensorStruct1 = sensorDetailInfo.loadData().get(sensorType1);
+//
+//            if (sensorTypes.length > 1) {
+//                holder.item_value2.setVisibility(View.VISIBLE);
+//                holder.item_unit2.setVisibility(View.VISIBLE);
+//                String sensorType2 = sensorTypes[1];
+//                SensorStruct sensorStruct2 = sensorDetailInfo.loadData().get(sensorType2);
+//                if (sensorStruct2 == null) {
+//                    holder.item_value2.setText("-");
+//                    holder.item_unit2.setVisibility(GONE);
+//                } else {
+//                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType2,
+//                            sensorStruct2);
+//                }
+//            } else {
+//                holder.item_value2.setVisibility(GONE);
+//                holder.item_unit2.setVisibility(GONE);
+//            }
+//            if (sensorStruct1 != null) {
+//                holder.item_unit1.setVisibility(VISIBLE);
+//                WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
+//                        sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
+//            } else {
+//                if (sensorType1 != null) {
+//                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
+//                }
+//                holder.item_value1.setText("-");
+//                holder.item_unit1.setVisibility(GONE);
+//            }
+                //////////
+
+                if (sensorTypes.length > 1) {
+                    //两条数据
+                    String sensorType1 = sensorTypes[0];
+                    SensorStruct sensorStruct1 = sensorDetailInfo.loadData().get(sensorType1);
+                    //第一条
+                    if (sensorStruct1 == null) {
+                        holder.item_value2.setText("-");
+                        holder.item_unit2.setVisibility(GONE);
+                    } else {
+                        WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType1,
+                                sensorStruct1);
+                        holder.item_value2.setVisibility(View.VISIBLE);
+                        holder.item_unit2.setVisibility(View.VISIBLE);
+                    }
+                    if (sensorType1 != null) {
+                        WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
+                    }
+                    //第二条
+                    String sensorType2 = sensorTypes[1];
+                    SensorStruct sensorStruct2 = sensorDetailInfo.loadData().get(sensorType2);
+                    if (sensorStruct2 == null) {
+                        holder.item_value1.setText("-");
+                        holder.item_unit1.setVisibility(GONE);
+                    } else {
+                        WidgetUtil.judgeIndexSensorType(mContext, holder.item_value1, holder.item_unit1, sensorType2,
+                                sensorStruct2);
+                    }
+                } else {
+                    String sensorType1 = sensorTypes[0];
+                    SensorStruct sensorStruct1 = sensorDetailInfo.loadData().get(sensorType1);
+                    //只有一条数据
+                    if (sensorStruct1 != null) {
+                        holder.item_unit1.setVisibility(VISIBLE);
+                        WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
+                                sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
+                    } else {
+                        if (sensorType1 != null) {
+                            WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
+                        }
+                        holder.item_value1.setText("-");
+                        holder.item_unit1.setVisibility(GONE);
+                    }
+                    holder.item_value2.setVisibility(GONE);
+                    holder.item_unit2.setVisibility(GONE);
+                }
+
+
+                holder.item_iv_status.setVisibility(View.VISIBLE);
+
+                Drawable drawable = null;
+                switch (deviceInfo.getStatus()) {
+                    case SENSOR_STATUS_ALARM:
+                        holder.item_iv_status.setVisibility(View.INVISIBLE);
+                        holder.item_alarm_view.setVisibility(View.VISIBLE);
+                        drawable = mContext.getResources().getDrawable(R.drawable.shape_status_alarm);
+                        drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
+                                .getMinimumHeight());
+                        break;
+                    case SENSOR_STATUS_INACTIVE:
+                        holder.item_alarm_view.setVisibility(View.GONE);
+                        drawable = mContext.getResources().getDrawable(R.drawable.shape_status_inactive);
+                        drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
+                                .getMinimumHeight());
+                        holder.item_value1.setText(mContext.getString(R.string.status_inactive));
+                        holder.item_unit1.setVisibility(GONE);
+                        holder.item_value2.setVisibility(GONE);
+                        holder.item_unit2.setVisibility(GONE);
+                        break;
+                    case SENSOR_STATUS_LOST:
+                        holder.item_alarm_view.setVisibility(View.GONE);
+                        drawable = mContext.getResources().getDrawable(R.drawable.shape_status_lost);
+                        drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
+                                .getMinimumHeight());
+                        holder.item_value1.setText(mContext.getString(R.string.status_lost));
+                        holder.item_unit1.setVisibility(GONE);
+                        holder.item_value2.setVisibility(GONE);
+                        holder.item_unit2.setVisibility(GONE);
+                        break;
+                    case SENSOR_STATUS_NORMAL:
+                        holder.item_alarm_view.setVisibility(View.GONE);
+                        drawable = mContext.getResources().getDrawable(R.drawable.shape_status_normal);
+                        drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
+                                .getMinimumHeight());
+                        break;
+                    default:
+                        holder.item_alarm_view.setVisibility(View.GONE);
+                        holder.item_iv_status.setVisibility(View.INVISIBLE);
+                        break;
+                }
+                holder.item_iv_status.setImageDrawable(drawable);
+
+                //两条数据
+                String sensorType1 = sensorTypes[0];
+                SensorStruct sensorStruct1 = sensorDetailInfo.loadData().get(sensorType1);
+                //第一条
+                if (sensorStruct1 == null) {
                     holder.item_value2.setText("-");
                     holder.item_unit2.setVisibility(GONE);
                 } else {
-                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType2,
+                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType1,
+                            sensorStruct1);
+                    holder.item_value2.setVisibility(View.VISIBLE);
+                    holder.item_unit2.setVisibility(View.VISIBLE);
+                }
+                //第二条
+                String sensorType2 = sensorTypes[1];
+                SensorStruct sensorStruct2 = sensorDetailInfo.loadData().get(sensorType2);
+                if (sensorStruct2 == null) {
+                    holder.item_value1.setText("-");
+                    holder.item_unit1.setVisibility(GONE);
+                } else {
+                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value1, holder.item_unit1, sensorType2,
                             sensorStruct2);
                 }
             } else {
+                String sensorType1 = sensorTypes[0];
+                SensorStruct sensorStruct1 = sensorDetailInfo.loadData().get(sensorType1);
+                //只有一条数据
+                if (sensorStruct1 != null) {
+                    holder.item_unit1.setVisibility(VISIBLE);
+                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
+                            sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
+                } else {
+                    if (sensorType1 != null) {
+                        WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
+                    }
+                    holder.item_value1.setText("-");
+                    holder.item_unit1.setVisibility(GONE);
+                }
                 holder.item_value2.setVisibility(GONE);
                 holder.item_unit2.setVisibility(GONE);
             }
-            if (sensorStruct1 != null) {
-                holder.item_unit1.setVisibility(VISIBLE);
-                WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
-                        sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
-            } else {
-                if (sensorType1 != null) {
-                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
-                }
-                holder.item_value1.setText("-");
-                holder.item_unit1.setVisibility(GONE);
-            }
+
+
             holder.item_iv_status.setVisibility(View.VISIBLE);
 
             Drawable drawable = null;

@@ -207,7 +207,7 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
 
     @OnClick(R.id.deploy_clear_iv)
     public void clear() {
-        contentEditText.setText("");
+        contentEditText.getText().clear();
     }
 
     @Override

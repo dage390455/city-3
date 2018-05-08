@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -33,8 +34,8 @@ import butterknife.OnClick;
  * Created by sensoro on 17/11/14.
  */
 
-public class AlarmDetailActivity extends BaseActivity implements Constants, SensoroPopupAlarmView.OnPopupCallbackListener, View.OnClickListener, View.OnTouchListener {
-
+public class AlarmDetailActivity extends BaseActivity implements Constants, SensoroPopupAlarmView
+        .OnPopupCallbackListener, View.OnClickListener, View.OnTouchListener {
 
 
     @BindView(R.id.alarm_detail_status_iv)
@@ -87,15 +88,15 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
     private void init() {
         try {
             confirmTextView.setOnClickListener(this);
-            confirmTextView.setOnTouchListener(this);
             deviceAlarmLogInfo = (DeviceAlarmLogInfo) getIntent().getSerializableExtra(EXTRA_ALARM_INFO);
-            if (deviceAlarmLogInfo.getDeviceName() != null) {
-                nameTextView.setText(deviceAlarmLogInfo.getDeviceName().equals("") ? deviceAlarmLogInfo.getDeviceSN() : deviceAlarmLogInfo.getDeviceName());
+            String deviceName = deviceAlarmLogInfo.getDeviceName();
+            if (deviceName != null) {
+                nameTextView.setText(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
             } else {
                 nameTextView.setText(deviceAlarmLogInfo.getDeviceSN());
             }
             dateTextView.setText(DateUtil.getFullParseDate(deviceAlarmLogInfo.getUpdatedTime()));
-            AlarmInfo.RecordInfo []recordInfoArray = deviceAlarmLogInfo.getRecords();
+            AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
             for (int i = 0; i < recordInfoArray.length; i++) {
                 AlarmInfo.RecordInfo recordInfo = recordInfoArray[i];
                 if (recordInfo.getType().equals("recovery")) {
@@ -177,10 +178,11 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
 
     public void refresh() {
 
-        String name = deviceAlarmLogInfo.getDeviceName() == null ? deviceAlarmLogInfo.getDeviceSN() : deviceAlarmLogInfo.getDeviceName();
-        nameTextView.setText(name.equals("") ? deviceAlarmLogInfo.getDeviceSN() : name);
+        String deviceName = deviceAlarmLogInfo.getDeviceName();
+        String name = (TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
+        nameTextView.setText(TextUtils.isEmpty(name) ? deviceAlarmLogInfo.getDeviceSN() : name);
         dateTextView.setText(DateUtil.getFullParseDate(deviceAlarmLogInfo.getUpdatedTime()));
-        AlarmInfo.RecordInfo []recordInfoArray = deviceAlarmLogInfo.getRecords();
+        AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
         for (int i = 0; i < recordInfoArray.length; i++) {
             AlarmInfo.RecordInfo recordInfo = recordInfoArray[i];
             if (recordInfo.getType().equals("recovery")) {
@@ -203,12 +205,12 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
     }
 
     public void showConfirmPopup() {
-        mAlarmPopupView.show( deviceAlarmLogInfo, mShadowView, this);
+        mAlarmPopupView.show(deviceAlarmLogInfo, mShadowView, this);
     }
 
     @Override
     protected void onDestroy() {
-        if (mAlarmPopupView!=null){
+        if (mAlarmPopupView != null) {
             mAlarmPopupView.onDestroyPop();
         }
         super.onDestroy();

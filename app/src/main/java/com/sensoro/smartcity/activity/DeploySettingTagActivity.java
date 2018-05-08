@@ -45,7 +45,8 @@ import butterknife.OnClick;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
-public class DeploySettingTagActivity extends BaseActivity implements Constants, TextView.OnEditorActionListener, TextWatcher, RecycleViewItemClickListener {
+public class DeploySettingTagActivity extends BaseActivity implements Constants, TextView.OnEditorActionListener,
+        TextWatcher, RecycleViewItemClickListener {
 
 
     @BindView(R.id.deploy_setting_tag_back)
@@ -105,11 +106,11 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
             mKeywordEt.setOnKeyListener(new View.OnKeyListener() {
                 @Override
                 public boolean onKey(View v, int keyCode, KeyEvent event) {
-                    if (TextUtils.isEmpty(mKeywordEt.getText())){
+                    if (TextUtils.isEmpty(mKeywordEt.getText())) {
                         if (keyCode == KeyEvent.KEYCODE_DEL
                                 && event.getAction() == KeyEvent.ACTION_DOWN) {
-                            if (mTagList.size()>0){
-                                mTagList.remove(mTagList.size()-1);
+                            if (mTagList.size() > 0) {
+                                mTagList.remove(mTagList.size() - 1);
                                 initInputLayout();
 
                             }
@@ -134,7 +135,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         inputLayout.addView(mKeywordEt);
         int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
         mTagList = getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
-        for (int i = 0; i < mTagList.size(); i ++) {
+        for (int i = 0; i < mTagList.size(); i++) {
             ClearableTextView textView = new ClearableTextView(this);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.setMargins(10, 0, 0, 0);
@@ -154,7 +155,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
             });
 //            inputLayout.remo
             int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-            textView.measure(spec,spec);
+            textView.measure(spec, spec);
             inputLayout.addView(textView, i, params);
         }
         mKeywordEt.requestFocus();
@@ -163,11 +164,8 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
     private void initSearchHistory() {
         String history = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
         if (!TextUtils.isEmpty(history)) {
-            List<String> list = new ArrayList<String>();
-            for (Object o : history.split(",")) {
-                list.add((String) o);
-            }
-            mHistoryKeywords = list;
+            mHistoryKeywords.clear();
+            mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
         if (mHistoryKeywords.size() > 0) {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
@@ -228,7 +226,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
                 if (!containsTag(tagList, filter)) {
                     deleteDeviceInfoList.add(deviceInfo);
                 }
-            }  else {
+            } else {
                 deleteDeviceInfoList.add(deviceInfo);
             }
 
@@ -238,8 +236,9 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         }
         List<String> tempList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
-            if (deviceInfo.getName() != null) {
-                tempList.add(deviceInfo.getName());
+            String name = deviceInfo.getName();
+            if (!TextUtils.isEmpty(name)) {
+                tempList.add(name);
             }
         }
         mRelationAdapter.setData(tempList);
@@ -279,34 +278,39 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
                 }
                 mEditor.putString(PREFERENCE_KEY_DEPLOY, stringBuffer.toString());
                 mEditor.commit();
-                add_count ++;
+                add_count++;
             } else {
-                mEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
-                mEditor.commit();
+                if (TextUtils.isEmpty(oldText)) {
+                    mEditor.putString(PREFERENCE_KEY_DEPLOY, text);
+                    mEditor.commit();
+                } else {
+                    mEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
+                    mEditor.commit();
+                }
                 mHistoryKeywords.add(0, text);
-                add_count ++;
+                add_count++;
             }
         }
     }
 
     public void doChoose(Boolean isFinish) {
-        if (TextUtils.isEmpty(mKeywordEt.getText().toString().trim())){
-            if (!isFinish){
+        if (TextUtils.isEmpty(mKeywordEt.getText().toString().trim())) {
+            if (!isFinish) {
                 return;
             }
-        }else {
-            if (!mTagList.contains(mKeywordEt.getText().toString()) ) {
+        } else {
+            if (!mTagList.contains(mKeywordEt.getText().toString())) {
                 mTagList.add(mKeywordEt.getText().toString());
                 initInputLayout();
-            }else {
+            } else {
                 mKeywordEt.getText().clear();
                 mKeywordEt.clearFocus();
-                Toast.makeText(this,"标签不能重复",Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "标签不能重复", Toast.LENGTH_SHORT).show();
                 return;
             }
         }
         save();
-        if (isFinish){
+        if (isFinish) {
             Intent data = new Intent();
             data.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) mTagList);
             setResult(RESULT_CODE_SETTING_TAG, data);
@@ -343,7 +347,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!s.toString().equals("")) {
+        if (!TextUtils.isEmpty(s)) {
             mSearchHistoryLayout.setVisibility(View.GONE);
             mSearchRelationLayout.setVisibility(View.VISIBLE);
             filterDeviceInfoByTag(s.toString());

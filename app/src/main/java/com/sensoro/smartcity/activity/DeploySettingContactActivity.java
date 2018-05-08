@@ -31,6 +31,7 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -103,10 +104,10 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
             initSearchPhoneHistory();
             String contact = getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
             String content = getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
-            if (contact != null) {
+            if (!TextUtils.isEmpty(contact)) {
                 mNameEt.setText(contact);
             }
-            if (content != null) {
+            if (!TextUtils.isEmpty(content)) {
                 mPhoneEt.setText(content);
             }
             mNameEt.setOnEditorActionListener(this);
@@ -126,9 +127,7 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
     private void initSearchNameHistory() {
         String history = mNamePref.getString(PREFERENCE_KEY_DEPLOY, "");
         if (!TextUtils.isEmpty(history)) {
-            for (Object o : history.split(",")) {
-                mNameHistoryKeywords.add((String) o);
-            }
+            mNameHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
         if (mNameHistoryKeywords.size() > 0) {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
@@ -166,9 +165,7 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
     private void initSearchPhoneHistory() {
         String history = mPhonePref.getString(PREFERENCE_KEY_DEPLOY, "");
         if (!TextUtils.isEmpty(history)) {
-            for (Object o : history.split(",")) {
-                mPhoneHistoryKeywords.add((String) o);
-            }
+            mNameHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -225,8 +222,13 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
                 mNameEditor.putString(PREFERENCE_KEY_DEPLOY, stringBuffer.toString());
                 mNameEditor.commit();
             } else {
-                mNameEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
-                mNameEditor.commit();
+                if (TextUtils.isEmpty(oldText)) {
+                    mNameEditor.putString(PREFERENCE_KEY_DEPLOY, text);
+                    mNameEditor.commit();
+                } else {
+                    mNameEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
+                    mNameEditor.commit();
+                }
                 mNameHistoryKeywords.add(0, text);
             }
         }
@@ -255,8 +257,13 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
                 mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY, stringBuffer.toString());
                 mPhoneEditor.commit();
             } else {
-                mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
-                mPhoneEditor.commit();
+                if (TextUtils.isEmpty(oldText)) {
+                    mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY, text);
+                    mPhoneEditor.commit();
+                } else {
+                    mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
+                    mPhoneEditor.commit();
+                }
                 mPhoneHistoryKeywords.add(0, text);
             }
         }

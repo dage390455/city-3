@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -102,10 +103,10 @@ public class SensorMoreActivity extends BaseActivity {
         try {
             if (response.getData().size() > 0) {
                 DeviceInfo deviceInfo = response.getData().get(0);
-                titleTextView.setText(sensor_sn);
+//                titleTextView.setText(sensor_sn);
                 snTextView.setText(sensor_sn);
                 String name = deviceInfo.getName();
-                if (name == null || name.equals("")) {
+                if (TextUtils.isEmpty(name)) {
                     nameTextView.setText(R.string.unname);
                 } else {
                     nameTextView.setText(deviceInfo.getName());

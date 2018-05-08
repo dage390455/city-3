@@ -111,8 +111,8 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
     private List<DeviceInfo> mDataList = new ArrayList<>();
     private Handler mHandler;
     private Gson gson;
-    private SoundPool soundPool;
-    private int soundId = 0;
+    //    private SoundPool soundPool;
+//    private int soundId = 0;
     private int page = 1;
     private volatile boolean isAlarmPlay = false;
     private volatile boolean isNeesRefresh = true;
@@ -166,6 +166,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
         }
         if (mHandler != null) {
             mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
         }
         if (mGridAdapter != null) {
             mGridAdapter.getData().clear();
@@ -198,8 +199,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
             gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
                     .registerTypeAdapter(int.class, new NumberDeserializer())
                     .registerTypeAdapter(Number.class, new NumberDeserializer());
-            soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-            soundId = soundPool.load(this.getContext(), R.raw.alarm, 1);
+
             mHandler = new Handler();
             mHandler.postDelayed(mTask, 3000);
             gson = gsonBuilder.create();
@@ -369,6 +369,8 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
 
     public void playSound() {
         String roles = ((MainActivity) getActivity()).getRoles();
+        SoundPool soundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
+        int soundId = soundPool.load(this.getContext(), R.raw.alarm, 1);
         if (roles != null && !roles.equals("admin")) {
             soundPool.play(soundId, 1, 1, 0, 0, 1);
         }
@@ -573,6 +575,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
     }
 
     public void refreshWithJsonData(String json) {
+        Log.d("push....", "refreshWithJsonData----->> " + json);
         DeviceInfo data = gson.fromJson(json, DeviceInfo.class);
         if (data != null && !this.isHidden()) {
             boolean isContains = false;
@@ -650,7 +653,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
             }
             if (isMatcher(deviceInfo)) {
                 mDataList.add(deviceInfo);
-            }else {
+            } else {
                 Toast.makeText(getContext(), "没有更多数据了！", Toast.LENGTH_SHORT).show();
                 return;
             }
@@ -1109,7 +1112,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
                 Log.e("", "run: 执行刷新！！！！！！");
                 scheduleRefresh();
             }
-            mHandler.postDelayed(this, 2000);
+            mHandler.postDelayed(this, 3000);
         }
     };
 }

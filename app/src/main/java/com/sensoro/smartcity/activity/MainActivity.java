@@ -60,6 +60,7 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
@@ -80,9 +81,8 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private TextView mPhoneTextView = null;
     private TextView mVersionTextView = null;
     private LinearLayout mExitLayout = null;
-    private Socket mSocket = null;
-    private DeviceInfoListener mInfoListener = new DeviceInfoListener();
-    ;
+    private volatile Socket mSocket = null;
+    private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
     private String mUserName = null;
     private String mPhone = null;
     private String mPhoneId = null;
@@ -151,18 +151,11 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private void init() {
         try {
             String[] titleArray = getResources().getStringArray(R.array.drawer_title_array);
-
-            for (String s : titleArray) {
-                dataNormal.add(s);
-            }
+            dataNormal.addAll(Arrays.asList(titleArray));
             String[] titleArray_no = getResources().getStringArray(R.array.drawer_title_array_nobussise);
-            for (String s : titleArray_no) {
-                dataBussise.add(s);
-            }
+            dataBussise.addAll(Arrays.asList(titleArray_no));
             String[] titleArray_supper = getResources().getStringArray(R.array.drawer_title_array_supper);
-            for (String s : titleArray_supper) {
-                dataSupper.add(s);
-            }
+            dataSupper.addAll(Arrays.asList(titleArray_supper));
             StatService.setDebugOn(true);
             StatService.start(this);
             mUserName = this.getIntent().getStringExtra(EXTRA_USER_NAME);
