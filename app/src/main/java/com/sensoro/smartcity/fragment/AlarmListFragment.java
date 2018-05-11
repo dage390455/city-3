@@ -50,7 +50,7 @@ import java.util.List;
  */
 
 public class AlarmListFragment extends Fragment implements View.OnClickListener, Constants, AdapterView
-        .OnItemClickListener, AlarmListAdapter.AlarmItemClickListener, SensoroPopupAlarmView.OnPopupCallbackListener,
+        .OnItemClickListener, SensoroPopupAlarmView.OnPopupCallbackListener,
         AbsListView.OnScrollListener {
 
     private PullToRefreshListView mPtrListView;
@@ -156,7 +156,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                 @Override
                 public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                     CharSequence searchText = mSearchEditText.getHint();
-                    if (!TextUtils.isEmpty(searchText)&&mSearchEditText.getVisibility() == View.VISIBLE) {
+                    if (!TextUtils.isEmpty(searchText) && mSearchEditText.getVisibility() == View.VISIBLE) {
                         requestSearcheData(DIRECTION_UP, false, searchText.toString());
                     } else {
                         requestData(DIRECTION_UP, false);
@@ -165,7 +165,13 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
             });
             mPtrListView.setMode(PullToRefreshBase.Mode.BOTH);
             mPtrListView.setOnScrollListener(this);
-            mAlarmListAdapter = new AlarmListAdapter(getContext(), this);
+            mAlarmListAdapter = new AlarmListAdapter(getContext(), new AlarmListAdapter.AlarmItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
+                    mAlarmPopupView.show(deviceAlarmLogInfo, mShadowView, AlarmListFragment.this);
+                }
+            });
             mPtrListView.setAdapter(mAlarmListAdapter);
             mPtrListView.setOnItemClickListener(this);
             mDateImageView = (ImageView) rootView.findViewById(R.id.alarm_iv_date);
@@ -286,7 +292,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
 
     private void requestDataBySearchDown(Long startTime, Long endTime, final String text) {
-        switch (SensoroCityApplication.getInstance().searchType) {
+        switch (SensoroCityApplication.getInstance().saveSearchType) {
             case Constants.TYPE_DEVICE_NAME:
                 mProgressDialog.show();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(startTime,
@@ -398,7 +404,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
     }
 
     private void requestDataBySearchUp(Long startTime, Long endTime, final String text) {
-        switch (SensoroCityApplication.getInstance().searchType) {
+        switch (SensoroCityApplication.getInstance().saveSearchType) {
             case Constants.TYPE_DEVICE_NAME:
                 mProgressDialog.show();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(startTime,
@@ -667,6 +673,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
     private void cancelSearch() {
         mTitleLayout.setVisibility(View.VISIBLE);
         mSearchLayout.setVisibility(View.GONE);
+//        mSearchEditText.setHint("");
         requestData(DIRECTION_DOWN, true);
     }
 
@@ -691,15 +698,16 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
             case R.id.alarm_iv_search:
                 Intent searchIntent1 = new Intent(this.getActivity(), SearchAlarmActivity.class);
 
-                CharSequence hint = mSearchEditText.getHint();
-                if (!TextUtils.isEmpty(hint)) {
-                    searchIntent1.putExtra("extra_search_content", hint.toString().trim());
-                } else {
-                    searchIntent1.putExtra("extra_search_content", "");
-                }
+//                CharSequence hint = mSearchEditText.getHint();
+//                if (!TextUtils.isEmpty(hint) && mSearchEditText.getVisibility() == View.VISIBLE) {
+//                    searchIntent1.putExtra(EXTRA_SEARCH_CONTENT, hint.toString().trim());
+//                } else {
+//                    searchIntent1.putExtra(EXTRA_SEARCH_CONTENT, "");
+//                }
                 searchIntent1.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
                 searchIntent1.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
                 searchIntent1.putExtra(EXTRA_FRAGMENT_INDEX, 2);
+//                startActivity(searchIntent1);
                 startActivityForResult(searchIntent1, REQUEST_CODE_SEARCH_ALARM);
                 break;
             case R.id.alarm_iv_menu_list:
@@ -715,14 +723,15 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
             case R.id.alarm_search_et:
                 Intent searchIntent = new Intent(this.getActivity(), SearchAlarmActivity.class);
                 CharSequence hint1 = mSearchEditText.getHint();
-                if (!TextUtils.isEmpty(hint1)) {
-                    searchIntent.putExtra("extra_search_content", hint1.toString().trim());
+                if (!TextUtils.isEmpty(hint1) && mSearchEditText.getVisibility() == View.VISIBLE) {
+                    searchIntent.putExtra(EXTRA_SEARCH_CONTENT, hint1.toString().trim());
                 } else {
-                    searchIntent.putExtra("extra_search_content", "");
+                    searchIntent.putExtra(EXTRA_SEARCH_CONTENT, "");
                 }
                 searchIntent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
                 searchIntent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
                 searchIntent.putExtra(EXTRA_FRAGMENT_INDEX, 2);
+//                startActivity(searchIntent);
                 startActivityForResult(searchIntent, REQUEST_CODE_SEARCH_ALARM);
                 break;
             case R.id.alarm_return_top:
@@ -741,11 +750,6 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
-        mAlarmPopupView.show(deviceAlarmLogInfo, mShadowView, this);
-    }
 
     @Override
     public void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo) {

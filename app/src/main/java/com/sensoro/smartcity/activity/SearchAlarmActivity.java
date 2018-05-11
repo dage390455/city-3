@@ -90,14 +90,14 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
     private SearchAlarmPagerAdapter searchAlarmPagerAdapter;
     private Long mStartTime = null;
     private Long mEndTime = null;
-
+    private int searchType =TYPE_DEVICE_NAME;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_alarm);
         ButterKnife.bind(this);
         mProgressDialog = new ProgressDialog(this);
-        mPref = getApplicationContext().getSharedPreferences(PREFERENCE_ALARM_HISTORY, Activity.MODE_PRIVATE);
+        mPref = getApplicationContext().getSharedPreferences(PREFERENCE_ALARM_SEARCH_HISTORY, Activity.MODE_PRIVATE);
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mKeywordEt.addTextChangedListener(this);
@@ -116,31 +116,69 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
 //        searchAlarmPagerAdapter = new SearchAlarmPagerAdapter(this, this.getSupportFragmentManager());
 //        searchAlarmPagerAdapter.
 //        searchViewpager.setAdapter(searchAlarmPagerAdapter);
-        searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"));
-        searchTablayout.addTab(searchTablayout.newTab().setText("设备号"));
-        searchTablayout.addTab(searchTablayout.newTab().setText("手机号"));
+        initSearchHistory();
+        initTabs();
+        StatusBarCompat.setStatusBarColor(this);
+        mEditor = mPref.edit();
+    }
+
+    private void initTabs() {
+        String extra_search_content = getIntent().getStringExtra(EXTRA_SEARCH_CONTENT);
+        if (!TextUtils.isEmpty(extra_search_content)) {
+            setText(extra_search_content);
+            searchType =SensoroCityApplication.getInstance().saveSearchType;
+        } else {
+            mKeywordEt.getText().clear();
+        }
+        switch (searchType) {
+            case Constants.TYPE_DEVICE_NAME:
+                searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), true);
+                searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), false);
+                searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), false);
+                refreshHistory(mHistoryKeywords_deviceName);
+                break;
+            case Constants.TYPE_DEVICE_NUMBER:
+                searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), false);
+                searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), true);
+                searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), false);
+                refreshHistory(mHistoryKeywords_deviceNumber);
+                break;
+            case Constants.TYPE_DEVICE_PHONE_NUM:
+                searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), false);
+                searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), false);
+                searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), true);
+                refreshHistory(mHistoryKeywords_devicePhone);
+                break;
+            default:
+                searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), true);
+                searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), false);
+                searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), false);
+                refreshHistory(mHistoryKeywords_deviceName);
+                break;
+        }
         searchTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                mKeywordEt.getText().clear();
                 switch (tab.getPosition()) {
                     case 0:
+                        searchType = Constants.TYPE_DEVICE_NAME;
                         mKeywordEt.setHint("设备名称");
-                        SensoroCityApplication.getInstance().searchType = Constants.TYPE_DEVICE_NAME;
                         refreshHistory(mHistoryKeywords_deviceName);
                         break;
                     case 1:
+                        searchType = Constants.TYPE_DEVICE_NUMBER;
                         mKeywordEt.setHint("设备号");
-                        SensoroCityApplication.getInstance().searchType = Constants.TYPE_DEVICE_NUMBER;
                         refreshHistory(mHistoryKeywords_deviceNumber);
                         break;
                     case 2:
+                        searchType = Constants.TYPE_DEVICE_PHONE_NUM;
                         mKeywordEt.setHint("手机号");
-                        SensoroCityApplication.getInstance().searchType = Constants.TYPE_DEVICE_PHONE_NUM;
                         refreshHistory(mHistoryKeywords_devicePhone);
                         break;
                     default:
+                        searchType = Constants.TYPE_DEVICE_NAME;
                         mKeywordEt.setHint("设备名称");
-                        SensoroCityApplication.getInstance().searchType = Constants.TYPE_DEVICE_NAME;
                         refreshHistory(mHistoryKeywords_deviceName);
                         break;
                 }
@@ -155,14 +193,11 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-//        String extra_search_content = getIntent().getStringExtra("extra_search_content");
-//        if (!TextUtils.isEmpty(extra_search_content)) {
-//            mKeywordEt.setText(extra_search_content);
-//        }
-        initSearchHistory(mHistoryKeywords_deviceName);
-        refreshHistory(mHistoryKeywords_deviceName);
-        StatusBarCompat.setStatusBarColor(this);
-        mEditor = mPref.edit();
+    }
+
+    private void setText(String extra_search_content) {
+        mKeywordEt.setText(extra_search_content);
+        mKeywordEt.setSelection(extra_search_content.length());
     }
 
     @Override
@@ -177,40 +212,41 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
         StatService.onPause(this);
     }
 
-    private void initSearchHistory(final List<String> searchStr) {
-        String ori = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
-        if (!TextUtils.isEmpty(ori)) {
-            searchStr.addAll(Arrays.asList(ori.split(",")));
-        }
+    private void initSearchHistory() {
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x20);
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(this, searchStr, new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(this, mHistoryKeywords_deviceName, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        switch (SensoroCityApplication.getInstance().searchType) {
+                        String text;
+                        switch (searchType) {
                             case Constants.TYPE_DEVICE_NAME:
-                                mKeywordEt.setText(mHistoryKeywords_deviceName.get(position));
+                                text = mHistoryKeywords_deviceName.get(position);
+                                setText(text);
                                 break;
                             case Constants.TYPE_DEVICE_NUMBER:
-                                mKeywordEt.setText(mHistoryKeywords_deviceNumber.get(position));
+                                text = mHistoryKeywords_deviceNumber.get(position);
+                                setText(text);
                                 break;
                             case Constants.TYPE_DEVICE_PHONE_NUM:
-                                mKeywordEt.setText(mHistoryKeywords_devicePhone.get(position));
+                                text = mHistoryKeywords_devicePhone.get(position);
+                                setText(text);
                                 break;
                             default:
+                                text = mHistoryKeywords_deviceName.get(position);
+                                setText(text);
                                 break;
                         }
                         mClearKeywordIv.setVisibility(View.VISIBLE);
                         mProgressDialog.show();
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
-                        save();
-                        String text = mKeywordEt.getText().toString();
-                        requestData(text);
+                        save(text.trim());
+                        requestData(text.trim());
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
@@ -240,9 +276,9 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
      *
      * @param searchStr
      */
-    private void refreshHistory(final List<String> searchStr) {
+    private void refreshHistory(List<String> searchStr) {
         String ori;
-        switch (SensoroCityApplication.getInstance().searchType) {
+        switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 ori = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
                 break;
@@ -262,8 +298,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
             List<String> strings = Arrays.asList(ori.split(","));
             searchStr.addAll(strings);
         }
-        mSearchHistoryAdapter.setData(searchStr);
-        mSearchHistoryAdapter.notifyDataSetChanged();
+        mSearchHistoryAdapter.setDataAndFresh(searchStr);
     }
 
     @Override
@@ -276,140 +311,107 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
-    private void save() {
-        String text = mKeywordEt.getText().toString();
-        String oldTestDeviceName;
-        String oldTestDeviceNum;
-        String oldTestDevicePhone;
+    private void save(String text) {
         if (!TextUtils.isEmpty(text)) {
-            switch (SensoroCityApplication.getInstance().searchType) {
+            switch (searchType) {
                 case Constants.TYPE_DEVICE_NAME:
-                    oldTestDeviceName = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
-
-                    if (mHistoryKeywords_deviceName.contains(text)) {
-                        List<String> list = new ArrayList<String>();
-                        for (String o : oldTestDeviceName.split(",")) {
-                            if (!o.equalsIgnoreCase(text)) {
-                                list.add(o);
-                            }
-                        }
-                        mHistoryKeywords_deviceName.clear();
-                        mHistoryKeywords_deviceName.addAll(list);
+                    if (!mHistoryKeywords_deviceName.contains(text)) {
+                        mHistoryKeywords_deviceName.add(text);
+                    }
+                    if (mHistoryKeywords_deviceName.size() > 0) {
                         StringBuffer stringBuffer = new StringBuffer();
-                        for (int i = 0; i < list.size(); i++) {
-                            if (i == (list.size() - 1)) {
-                                stringBuffer.append(list.get(i));
+                        for (int i = 0; i < mHistoryKeywords_deviceName.size(); i++) {
+                            if (i == (mHistoryKeywords_deviceName.size() - 1)) {
+                                stringBuffer.append(mHistoryKeywords_deviceName.get(i));
                             } else {
-                                stringBuffer.append(list.get(i) + ",");
+                                stringBuffer.append(mHistoryKeywords_deviceName.get(i) + ",");
                             }
                         }
                         mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());
                         mEditor.commit();
-                    } else {
-                        if (TextUtils.isEmpty(oldTestDeviceName)) {
-                            mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, text);
-                        } else {
-                            mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, text + "," + oldTestDeviceName);
-                        }
-                        mEditor.commit();
-                        mHistoryKeywords_deviceName.add(0, text);
                     }
                     break;
                 case Constants.TYPE_DEVICE_NUMBER:
-                    oldTestDeviceNum = mPref.getString(PREFERENCE_KEY_DEVICE_NUM, "");
-                    if (mHistoryKeywords_deviceNumber.contains(text)) {
-                        List<String> list = new ArrayList<String>();
-                        for (String o : oldTestDeviceNum.split(",")) {
-                            if (!o.equalsIgnoreCase(text)) {
-                                list.add(o);
-                            }
-                        }
-                        list.add(0, text);
-                        mHistoryKeywords_deviceNumber.clear();
-                        mHistoryKeywords_deviceNumber.addAll(list);
+                    if (!mHistoryKeywords_deviceNumber.contains(text)) {
+                        mHistoryKeywords_deviceNumber.add(text);
+                    }
+                    if (mHistoryKeywords_deviceNumber.size() > 0) {
                         StringBuffer stringBuffer = new StringBuffer();
-                        for (int i = 0; i < list.size(); i++) {
-                            if (i == (list.size() - 1)) {
-                                stringBuffer.append(list.get(i));
+                        for (int i = 0; i < mHistoryKeywords_deviceNumber.size(); i++) {
+                            if (i == (mHistoryKeywords_deviceNumber.size() - 1)) {
+                                stringBuffer.append(mHistoryKeywords_deviceNumber.get(i));
                             } else {
-                                stringBuffer.append(list.get(i) + ",");
+                                stringBuffer.append(mHistoryKeywords_deviceNumber.get(i) + ",");
                             }
                         }
                         mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, stringBuffer.toString());
                         mEditor.commit();
-                    } else {
-                        if (TextUtils.isEmpty(oldTestDeviceNum)) {
-                            mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, text);
-                        } else {
-                            mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, text + "," + oldTestDeviceNum);
-                        }
-                        mEditor.commit();
-                        mHistoryKeywords_deviceNumber.add(0, text);
                     }
                     break;
                 case Constants.TYPE_DEVICE_PHONE_NUM:
-                    oldTestDevicePhone = mPref.getString(PREFERENCE_KEY_DEVICE_PHONE, "");
-                    if (mHistoryKeywords_devicePhone.contains(text)) {
-                        List<String> list = new ArrayList<String>();
-                        for (String o : oldTestDevicePhone.split(",")) {
-                            if (!o.equalsIgnoreCase(text)) {
-                                list.add(o);
-                            }
-                        }
-                        list.add(0, text);
-                        mHistoryKeywords_devicePhone.clear();
-                        mHistoryKeywords_devicePhone.addAll(list);
+                    if (!mHistoryKeywords_devicePhone.contains(text)) {
+                        mHistoryKeywords_devicePhone.add(text);
+                    }
+                    if (mHistoryKeywords_devicePhone.size() > 0) {
                         StringBuffer stringBuffer = new StringBuffer();
-                        for (int i = 0; i < list.size(); i++) {
-                            if (i == (list.size() - 1)) {
-                                stringBuffer.append(list.get(i));
+                        for (int i = 0; i < mHistoryKeywords_devicePhone.size(); i++) {
+                            if (i == (mHistoryKeywords_devicePhone.size() - 1)) {
+                                stringBuffer.append(mHistoryKeywords_devicePhone.get(i));
                             } else {
-                                stringBuffer.append(list.get(i) + ",");
+                                stringBuffer.append(mHistoryKeywords_devicePhone.get(i) + ",");
                             }
                         }
                         mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, stringBuffer.toString());
                         mEditor.commit();
-                    } else {
-                        if (TextUtils.isEmpty(oldTestDevicePhone)) {
-                            mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, text);
-                        } else {
-                            mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, text + "," + oldTestDevicePhone);
-                        }
-                        mEditor.commit();
-                        mHistoryKeywords_devicePhone.add(0, text);
                     }
                     break;
                 default:
-                    oldTestDeviceName = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
-                    if (mHistoryKeywords_deviceName.contains(text)) {
-                        List<String> list = new ArrayList<String>();
-                        for (String o : oldTestDeviceName.split(",")) {
-                            if (!o.equalsIgnoreCase(text)) {
-                                list.add(o);
-                            }
-                        }
-                        list.add(0, text);
-                        mHistoryKeywords_deviceName.clear();
-                        mHistoryKeywords_deviceName.addAll(list);
+                    if (!mHistoryKeywords_deviceName.contains(text)) {
+                        mHistoryKeywords_deviceName.add(text);
+                    }
+                    if (mHistoryKeywords_deviceName.size() > 0) {
                         StringBuffer stringBuffer = new StringBuffer();
-                        for (int i = 0; i < list.size(); i++) {
-                            if (i == (list.size() - 1)) {
-                                stringBuffer.append(list.get(i));
+                        for (int i = 0; i < mHistoryKeywords_deviceName.size(); i++) {
+                            if (i == (mHistoryKeywords_deviceName.size() - 1)) {
+                                stringBuffer.append(mHistoryKeywords_deviceName.get(i));
                             } else {
-                                stringBuffer.append(list.get(i) + ",");
+                                stringBuffer.append(mHistoryKeywords_deviceName.get(i) + ",");
                             }
                         }
                         mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());
                         mEditor.commit();
-                    } else {
-                        if (TextUtils.isEmpty(oldTestDeviceName)) {
-                            mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, text);
-                        } else {
-                            mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, text + "," + oldTestDeviceName);
-                        }
-                        mEditor.commit();
-                        mHistoryKeywords_deviceName.add(0, text);
                     }
+                    //
+//                    oldTestDeviceName = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
+//                    if (mHistoryKeywords_deviceName.contains(text)) {
+//                        List<String> list = new ArrayList<String>();
+//                        for (String o : oldTestDeviceName.split(",")) {
+//                            if (!o.equalsIgnoreCase(text)) {
+//                                list.add(o);
+//                            }
+//                        }
+//                        list.add(0, text);
+//                        mHistoryKeywords_deviceName.clear();
+//                        mHistoryKeywords_deviceName.addAll(list);
+//                        StringBuffer stringBuffer = new StringBuffer();
+//                        for (int i = 0; i < list.size(); i++) {
+//                            if (i == (list.size() - 1)) {
+//                                stringBuffer.append(list.get(i));
+//                            } else {
+//                                stringBuffer.append(list.get(i) + ",");
+//                            }
+//                        }
+//                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());
+//                        mEditor.commit();
+//                    } else {
+//                        if (TextUtils.isEmpty(oldTestDeviceName)) {
+//                            mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, text);
+//                        } else {
+//                            mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, text + "," + oldTestDeviceName);
+//                        }
+//                        mEditor.commit();
+//                        mHistoryKeywords_deviceName.add(0, text);
+//                    }
                     break;
             }
         }
@@ -417,33 +419,37 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
     }
 
     private void cleanHistory() {
-        switch (SensoroCityApplication.getInstance().searchType) {
+        switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
-                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
+//                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
+                mEditor.clear();
                 mHistoryKeywords_deviceName.clear();
                 mEditor.commit();
-                mSearchHistoryAdapter.notifyDataSetChanged();
+                mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_deviceName);
                 mSearchHistoryLayout.setVisibility(View.GONE);
                 break;
             case Constants.TYPE_DEVICE_NUMBER:
-                mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, "");
+//                mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, "");
+                mEditor.clear();
                 mHistoryKeywords_deviceNumber.clear();
                 mEditor.commit();
-                mSearchHistoryAdapter.notifyDataSetChanged();
+                mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_deviceNumber);
                 mSearchHistoryLayout.setVisibility(View.GONE);
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
-                mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, "");
+//                mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, "");
+                mEditor.clear();
                 mHistoryKeywords_devicePhone.clear();
                 mEditor.commit();
-                mSearchHistoryAdapter.notifyDataSetChanged();
+                mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_devicePhone);
                 mSearchHistoryLayout.setVisibility(View.GONE);
                 break;
             default:
-                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
+//                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
+                mEditor.clear();
                 mHistoryKeywords_deviceName.clear();
                 mEditor.commit();
-                mSearchHistoryAdapter.notifyDataSetChanged();
+                mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_deviceName);
                 mSearchHistoryLayout.setVisibility(View.GONE);
                 break;
         }
@@ -451,7 +457,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
     }
 
     public void requestData(final String text) {
-        switch (SensoroCityApplication.getInstance().searchType) {
+        switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 mProgressDialog.show();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(mStartTime,
@@ -465,6 +471,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                                             tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
                                         } else {
+                                            SensoroCityApplication.getInstance().saveSearchType=searchType;
                                             Intent data = new Intent();
                                             data.putExtra(EXTRA_ALARM_INFO, response);
                                             data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
@@ -511,6 +518,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                                             tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
                                         } else {
+                                            SensoroCityApplication.getInstance().saveSearchType=searchType;
                                             Intent data = new Intent();
                                             data.putExtra(EXTRA_ALARM_INFO, response);
                                             data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
@@ -557,6 +565,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                                             tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
                                         } else {
+                                            SensoroCityApplication.getInstance().saveSearchType=searchType;
                                             Intent data = new Intent();
                                             data.putExtra(EXTRA_ALARM_INFO, response);
                                             data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
@@ -661,13 +670,13 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            save();
             mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
             String text = mKeywordEt.getText().toString();
-            if (!TextUtils.isEmpty(text)){
-                requestData(text);
+            if (!TextUtils.isEmpty(text)) {
+                save(text.trim());
+                requestData(text.trim());
             }
             return true;
         }

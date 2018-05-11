@@ -38,7 +38,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
     private volatile int noID=1;
-    public int searchType = Constants.TYPE_DEVICE_NAME;
+    public int saveSearchType = Constants.TYPE_DEVICE_NAME;
     @Override
     public void onCreate() {
         super.onCreate();

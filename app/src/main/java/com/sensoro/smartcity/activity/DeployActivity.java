@@ -290,6 +290,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
             textView.setGravity(Gravity.CENTER);
             textView.setCompoundDrawables(null, null, null, null);
             textView.setBackground(getResources().getDrawable(R.drawable.shape_textview));
+            textView.setSingleLine();
             tagLayout.addView(textView, i, params);
 
         }
@@ -437,7 +438,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
                 uploadButton.setEnabled(true);
             }
         } else if (TextUtils.isEmpty(contact) || name.equals(content)) {
-            SensoroToast.makeText(this, "预警联系人不能为空！", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+            SensoroToast.makeText(this, "请输入联系人名称和电话号码", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                     .show();
             if (uploadButton != null) {
                 uploadButton.setEnabled(true);

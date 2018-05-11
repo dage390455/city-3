@@ -281,6 +281,10 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
         Pattern p = Pattern.compile(regex);
         String phoneStr = mPhoneEt.getText().toString();
         String nameStr = mNameEt.getText().toString();
+        if (TextUtils.isEmpty(nameStr)) {
+            Toast.makeText(this, "联系人姓名不能为空！", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (!TextUtils.isEmpty(phoneStr) && p.matcher(phoneStr).matches() && !TextUtils.isEmpty(nameStr)) {
             saveName();
             savePhone();

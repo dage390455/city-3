@@ -3,7 +3,9 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:layout_margin="@dimen/y8"
-             android:descendantFocusability="beforeDescendants">
+             android:clickable="false"
+             android:focusable="false"
+             android:focusableInTouchMode="false">
 
     <LinearLayout
         android:layout_width="wrap_content"
@@ -61,8 +63,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x50"
             android:layout_marginRight="@dimen/x20"
+            android:clickable="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
             android:layout_marginTop="@dimen/y5"
-            android:inputType="textMultiLine"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/city_normal_size"/>
     </LinearLayout>
