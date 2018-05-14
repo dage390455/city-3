@@ -243,7 +243,7 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.alarm_detail_confirm_status:
-
+                showConfirmPopup();
                 break;
             default:
                 break;

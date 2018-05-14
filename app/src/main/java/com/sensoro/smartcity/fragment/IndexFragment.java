@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.media.AudioManager;
@@ -43,6 +42,7 @@ import com.sensoro.smartcity.server.bean.Character;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroXGridLayoutManager;
@@ -107,7 +107,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
     private SensoroShadowView mTypeShadowLayout;
     private SensoroShadowView mStatusShadowLayout;
     private Animation returnTopAnimation;
-    private ProgressDialog mProgressDialog;
+    private ProgressUtils mProgressUtils;
     private List<DeviceInfo> mDataList = new ArrayList<>();
     private Handler mHandler;
     private Gson gson;
@@ -174,9 +174,9 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
         if (mListAdapter != null) {
             mListAdapter.getData().clear();
         }
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         super.onDestroyView();
     }
@@ -193,8 +193,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
 
     public void init() {
         try {
-            mProgressDialog = new ProgressDialog(getContext());
-            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(getActivity()).build());
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
                     .registerTypeAdapter(int.class, new NumberDeserializer())
@@ -424,11 +423,15 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
         mGridLayout.startAnimation(mInAnimation);
     }
 
-    private void requestDeviceTypeCountData(final boolean isShowAnimation) {
+    public void requestDeviceTypeCountData(final boolean isShowAnimation) {
+        if (isShowAnimation){
+            mProgressUtils.showProgress();
+        }
         SensoroCityApplication.getInstance().smartCityServer.getDeviceTypeCount(new Response
                 .Listener<DeviceTypeCountRsp>() {
             @Override
             public void onResponse(DeviceTypeCountRsp response) {
+                mProgressUtils.dismissProgress();
                 int alarmCount = response.getData().getAlarm();
                 int lostCount = response.getData().getOffline();
                 int inactiveCount = response.getData().getInactive();
@@ -438,6 +441,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                mProgressUtils.dismissProgress();
                 isNeesRefresh = false;
                 if (volleyError.networkResponse != null) {
 //                    byte[] data = volleyError.networkResponse.data;
@@ -489,9 +493,9 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
 
     public void requestWithDirection(int direction) {
         try {
-            mProgressDialog.show();
             String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
             Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
+            mProgressUtils.showProgress();
             if (direction == DIRECTION_DOWN) {
                 page = 1;
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, null,
@@ -499,7 +503,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
                                 .Listener<DeviceInfoListRsp>() {
                             @Override
                             public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 try {
                                     SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
                                     refreshCacheData();
@@ -515,7 +519,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 mListRecyclerView.refreshComplete();
                                 mGridRecyclerView.refreshComplete();
                                 if (volleyError.networkResponse != null) {
@@ -531,7 +535,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
                                 .Listener<DeviceInfoListRsp>() {
                             @Override
                             public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 try {
                                     if (deviceBriefInfoRsp.getData().size() == 0) {
                                         Toast.makeText(getContext(), "没有更多数据了！", Toast.LENGTH_SHORT).show();
@@ -553,7 +557,7 @@ public class IndexFragment extends Fragment implements Constants, View.OnClickLi
                             @Override
                             public void onErrorResponse(VolleyError volleyError) {
                                 page--;
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 mListRecyclerView.loadMoreComplete();
                                 mGridRecyclerView.loadMoreComplete();
                                 if (volleyError.networkResponse != null) {

@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -32,6 +31,7 @@ import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -71,7 +71,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
     private SharedPreferences mPref;
     private Editor mEditor;
     private final List<String> mHistoryKeywords = new ArrayList<>();
-    private ProgressDialog mProgressDialog;
+    private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
     @Override
@@ -79,8 +79,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_merchant);
         ButterKnife.bind(this);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
         mPref = getApplicationContext().getSharedPreferences(PREFERENCE_MERCHANT_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         mClearKeywordIv.setOnClickListener(this);
@@ -131,7 +130,6 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
             public void onItemClick(View view, int position) {
                 mKeywordEt.setText(mHistoryKeywords.get(position));
                 mClearKeywordIv.setVisibility(View.VISIBLE);
-                mProgressDialog.show();
                 mKeywordEt.clearFocus();
                 dismissInputMethodManager(view);
                 requestData(mKeywordEt.getText().toString());
@@ -188,12 +186,12 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
     }
 
     public void requestData(String text) {
-        mProgressDialog.show();
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.getUserAccountList(text, null, null, null, "100000", new
                 Response.Listener<UserAccountRsp>() {
                     @Override
                     public void onResponse(UserAccountRsp response) {
-                        mProgressDialog.dismiss();
+                        mProgressUtils.dismissProgress();
                         List<UserInfo> list = response.getData();
                         if (list.size() == 0) {
                             tipsLinearLayout.setVisibility(View.VISIBLE);
@@ -207,7 +205,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                mProgressDialog.dismiss();
+                mProgressUtils.dismissProgress();
                 if (volleyError.networkResponse != null) {
                     String reason = new String(volleyError.networkResponse.data);
                     try {
@@ -228,9 +226,9 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
 
     @Override
     protected void onDestroy() {
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         super.onDestroy();
 

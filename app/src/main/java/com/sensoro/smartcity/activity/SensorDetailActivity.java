@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.activity;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -81,6 +80,7 @@ import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.BatteryMarkerView;
 import com.sensoro.smartcity.widget.MapContainer;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.XYMarkerView;
@@ -184,7 +184,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     private Gson gson;
     private BatteryAdapter mBatteryAdapter;
     private GridLayoutManager gridLayoutManager;
-    private ProgressDialog mProgressDialog;
+    private ProgressUtils mProgressUtils;
     private CameraUpdate mUpdata;
     private DeviceInfo mDeviceInfo;
     private String[] sensorTypes;
@@ -283,9 +283,9 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             tempUpBitmap.recycle();
             tempUpBitmap = null;
         }
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         if (mLocationClient != null) {
             mLocationClient.stopLocation();
@@ -299,9 +299,8 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     private void init() {
         try {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.show();
+
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
             GsonBuilder gsonBuilder = new GsonBuilder();
             gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
                     .registerTypeAdapter(int.class, new NumberDeserializer())
@@ -408,7 +407,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             WidgetUtil.judgeSensorType(getApplicationContext(), typeImageView, mDeviceInfo.getSensorTypes()[0]);
         } catch (Exception e) {
             e.printStackTrace();
-            mProgressDialog.dismiss();
+            mProgressUtils.dismissProgress();
             Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
         }
     }
@@ -421,12 +420,13 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     //补全tags标签信息
     private void requestData() {
         String sn = mDeviceInfo.getSn();
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(sn, null, 1,
                 new Response
                         .Listener<DeviceInfoListRsp>() {
                     @Override
                     public void onResponse(DeviceInfoListRsp response) {
-                        mProgressDialog.dismiss();
+                        mProgressUtils.dismissProgress();
                         if (response != null && response.getData().size() > 0) {
                             DeviceInfo deviceInfo = response.getData().get(0);
                             String[] tags = deviceInfo.getTags();
@@ -436,7 +436,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        mProgressDialog.dismiss();
+                        mProgressUtils.dismissProgress();
                         if (volleyError.networkResponse != null) {
                             String reason = new String(volleyError.networkResponse.data);
                             try {
@@ -595,12 +595,13 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         long endTime = mDeviceInfo.getUpdatedTime();
         long startTime = endTime - 2 * 1000 * 60 * 60 * 24;
         String sn = mDeviceInfo.getSn();
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.getDeviceHistoryList(sn, startTime,
                 endTime, new
                         Response.Listener<DeviceRecentRsp>() {
                             @Override
                             public void onResponse(DeviceRecentRsp response) {
-//                        mProgressDialog.dismiss();
+                        mProgressUtils.dismissProgress();
                                 String data = response.getData().toString();
                                 try {
                                     mMapView.setVisibility(View.VISIBLE);
@@ -644,7 +645,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
                         if (volleyError.networkResponse != null) {
-                            mProgressDialog.dismiss();
+                            mProgressUtils.dismissProgress();
                             String reason = new String(volleyError.networkResponse.data);
                             try {
                                 JSONObject jsonObject = new JSONObject(reason);

@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.activity;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -39,6 +38,7 @@ import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroShadowView;
@@ -120,7 +120,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     private SharedPreferences mPref;
     private Editor mEditor;
     private final List<String> mHistoryKeywords = new ArrayList<>();
-    private ProgressDialog mProgressDialog;
+    private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private RelationAdapter mRelationAdapter;
     private IndexListAdapter mListAdapter;
@@ -138,8 +138,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(this);
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.loading));
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
         mPref = getApplicationContext().getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         mClearKeywordIv.setOnClickListener(this);
@@ -432,7 +431,6 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             public void onItemClick(View view, int position) {
                 mKeywordEt.setText(mHistoryKeywords.get(position));
                 mClearKeywordIv.setVisibility(View.VISIBLE);
-                mProgressDialog.show();
                 mKeywordEt.clearFocus();
                 dismissInputMethodManager(view);
                 requestWithDirection(DIRECTION_DOWN);
@@ -680,10 +678,11 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     }
 
     public void requestWithDirection(int direction) {
-        mProgressDialog.show();
+
         String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
         Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
         String text = mKeywordEt.getText().toString();
+        mProgressUtils.showProgress();
         if (direction == DIRECTION_DOWN) {
             page = 1;
             SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new
@@ -691,7 +690,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                             .Listener<DeviceInfoListRsp>() {
                         @Override
                         public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                            mProgressDialog.dismiss();
+                            mProgressUtils.dismissProgress();
                             try {
                                 if (deviceBriefInfoRsp.getData().size() == 0) {
                                     tipsLinearLayout.setVisibility(View.VISIBLE);
@@ -714,7 +713,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-                    mProgressDialog.dismiss();
+                    mProgressUtils.dismissProgress();
                     mListRecyclerView.refreshComplete();
                     mGridRecyclerView.refreshComplete();
                     if (volleyError.networkResponse != null) {
@@ -730,7 +729,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                             .Listener<DeviceInfoListRsp>() {
                         @Override
                         public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                            mProgressDialog.dismiss();
+                            mProgressUtils.dismissProgress();
                             try {
                                 if (deviceBriefInfoRsp.getData().size() == 0) {
                                     page--;
@@ -751,7 +750,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
                     page--;
-                    mProgressDialog.dismiss();
+                    mProgressUtils.dismissProgress();
                     mListRecyclerView.loadMoreComplete();
                     mGridRecyclerView.loadMoreComplete();
                     if (volleyError.networkResponse != null) {
@@ -764,10 +763,10 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     }
 
     public void requestWithDirection(int direction, String seacherStr) {
-        mProgressDialog.show();
         String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
         Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
         String text = seacherStr;
+        mProgressUtils.showProgress();
         if (direction == DIRECTION_DOWN) {
             page = 1;
             SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new
@@ -775,7 +774,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                             .Listener<DeviceInfoListRsp>() {
                         @Override
                         public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                            mProgressDialog.dismiss();
+                            mProgressUtils.dismissProgress();
                             try {
                                 if (deviceBriefInfoRsp.getData().size() == 0) {
                                     tipsLinearLayout.setVisibility(View.VISIBLE);
@@ -798,7 +797,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                     }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
-                    mProgressDialog.dismiss();
+                    mProgressUtils.dismissProgress();
                     mListRecyclerView.refreshComplete();
                     mGridRecyclerView.refreshComplete();
                     if (volleyError.networkResponse != null) {
@@ -814,7 +813,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                             .Listener<DeviceInfoListRsp>() {
                         @Override
                         public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                            mProgressDialog.dismiss();
+                            mProgressUtils.dismissProgress();
                             try {
                                 if (deviceBriefInfoRsp.getData().size() == 0) {
                                     page--;
@@ -834,7 +833,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                 @Override
                 public void onErrorResponse(VolleyError volleyError) {
                     page--;
-                    mProgressDialog.dismiss();
+                    mProgressUtils.dismissProgress();
                     mListRecyclerView.loadMoreComplete();
                     mGridRecyclerView.loadMoreComplete();
                     if (volleyError.networkResponse != null) {
@@ -852,9 +851,9 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             returnTopAnimation.cancel();
             returnTopAnimation = null;
         }
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         super.onDestroy();
     }

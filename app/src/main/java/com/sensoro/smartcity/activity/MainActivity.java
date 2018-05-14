@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.Manifest;
 import android.app.ActivityManager;
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -50,6 +49,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroPager;
 
 import net.simonvt.menudrawer.MenuDrawer;
@@ -90,7 +90,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
     private Handler mHandler = new Handler();
     private final TaskRunnable mRunnable = new TaskRunnable();
     private long exitTime = 0;
-    private ProgressDialog mProgressDialog = null;
+    private ProgressUtils mProgressUtils;
     private String roles;
 
     private int current_iteam = 0;
@@ -130,9 +130,9 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         if (mHandler != null) {
             mHandler.removeCallbacks(mRunnable);
         }
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         super.onDestroy();
     }
@@ -150,6 +150,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private void init() {
         try {
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
             String[] titleArray = getResources().getStringArray(R.array.drawer_title_array);
             dataNormal.addAll(Arrays.asList(titleArray));
             String[] titleArray_no = getResources().getStringArray(R.array.drawer_title_array_nobussise);
@@ -181,8 +182,6 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private void initWidget() {
         try {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
             mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
             mMenuDrawer.setContentView(R.layout.content_main);
             mMenuDrawer.setDropShadowEnabled(false);
@@ -430,20 +429,26 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             }
             mMenuInfoAdapter.showAccountSwitch(accountType);
             reconnect();
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    indexFragment.requestDeviceTypeCountData(false);
+                }
+            });
+
         }
     }
 
 
     private void logout() {
-        mProgressDialog.setMessage(getString(R.string.tips_logout));
-        mProgressDialog.show();
         String phoneId = this.getIntent().getStringExtra(EXTRA_PHONE_ID);
         String uid = this.getIntent().getStringExtra(EXTRA_USER_ID);
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.logout(phoneId, uid, new Response.Listener<ResponseBase>
                 () {
             @Override
             public void onResponse(ResponseBase response) {
-                mProgressDialog.dismiss();
+                mProgressUtils.dismissProgress();
                 if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     Intent intent = new Intent(MainActivity.this, LoginActivity.class);
                     startActivity(intent);
@@ -453,7 +458,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mProgressDialog.dismiss();
+                mProgressUtils.dismissProgress();
                 if (error.networkResponse != null) {
                     String reason = new String(error.networkResponse.data);
                     Toast.makeText(MainActivity.this, reason, Toast.LENGTH_SHORT).show();

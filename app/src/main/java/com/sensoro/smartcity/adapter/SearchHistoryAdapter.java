@@ -73,7 +73,8 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
         };
     }
 
-    public void setData(List<String> list) {
+    public void setDataAndFresh(List<String> list) {
         this.mList = list;
+        notifyDataSetChanged();
     }
 }

@@ -9,6 +9,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.fengmap.android.FMMapSDK;
@@ -37,8 +38,9 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     private final List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
-    private volatile int noID=1;
-    public int searchType = Constants.TYPE_DEVICE_NAME;
+    private volatile int noID = 1;
+    public int saveSearchType = Constants.TYPE_DEVICE_NAME;
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -106,6 +108,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
 
 
     public void showNotify(String message) {
+        Log.e("", "showNotify----->" + message);
         NotificationManager nom = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         Intent intent = new Intent(this, MainActivity.class);
         PendingIntent pi = PendingIntent.getActivity(this, 0, intent,

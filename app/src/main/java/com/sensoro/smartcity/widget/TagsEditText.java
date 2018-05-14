@@ -215,17 +215,17 @@ public class TagsEditText extends AppCompatAutoCompleteTextView {
      * use this method to set tags
      */
 
-    public void setTags(String[] tags) {
+    public void setTags(List<String> tags) {
         mTagSpans.clear();
         mTags.clear();
 
-        int length = tags != null ? tags.length : 0;
+        int length = tags != null ? tags.size() : 0;
         int position = 0;
         for (int i = 0; i < length; i++) {
             Tag tag = new Tag();
             tag.setIndex(i);
             tag.setPosition(position);
-            String source = mIsSpacesAllowedInTags ? tags[i].trim() : tags[i].replaceAll(" ", "");
+            String source = mIsSpacesAllowedInTags ? tags.get(i).trim() : tags.get(i).replaceAll(" ", "");
             tag.setSource(source);
             tag.setSpan(true);
             mTags.add(tag);
@@ -466,6 +466,48 @@ public class TagsEditText extends AppCompatAutoCompleteTextView {
 
         if (str.endsWith(NEW_LINE) || (!mIsSpacesAllowedInTags && str.endsWith(mSeparator)) && !isDeleting) {
             buildTags(str);
+        }
+
+        mLastString = getText().toString();
+        mIsAfterTextWatcherEnabled = true;
+        if (isEnterClicked && mListener != null) {
+            mListener.onEditingFinished();
+        }
+    }
+
+    /**
+     *
+     * @param text
+     */
+    public void addTag(String text) {
+        mIsAfterTextWatcherEnabled = false;
+        boolean isEnterClicked = false;
+
+        final Editable editable = getText();
+//        String str = editable.toString();
+        if (text.endsWith(NEW_LINE)) {
+            isEnterClicked = true;
+        }
+
+        boolean isDeleting = mLastString.length() > text.length();
+        if (mLastString.endsWith(mSeparator)
+                && !text.endsWith(NEW_LINE)
+                && isDeleting
+                && !mTagSpans.isEmpty()) {
+            TagSpan toRemoveSpan = mTagSpans.get(mTagSpans.size() - 1);
+            Tag tag = toRemoveSpan.getTag();
+            if (tag.getPosition() + tag.getSource().length() == text.length()) {
+                removeTagSpan(editable, toRemoveSpan, false);
+                text = editable.toString();
+            }
+        }
+
+        if (getFilter() != null) {
+            performFiltering(getNewTag(text), 0);
+        }
+
+        if (text.endsWith(NEW_LINE) || (!mIsSpacesAllowedInTags && text.endsWith(mSeparator)) && !isDeleting) {
+            buildTags(text);
         }
 
         mLastString = getText().toString();

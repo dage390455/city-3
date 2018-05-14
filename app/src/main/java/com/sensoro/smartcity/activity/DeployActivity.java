@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.activity;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -54,6 +53,7 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
@@ -106,7 +106,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     private GeocodeSearch geocoderSearch;
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
-    private ProgressDialog mProgressDialog;
+    private ProgressUtils mProgressUtils;
     private List<String> tagList = new ArrayList<>();
     private String contact = null;
     private String content = null;
@@ -126,9 +126,9 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
 
     @Override
     protected void onDestroy() {
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         if (mLocationClient != null) {
             mLocationClient.stopLocation();
@@ -193,8 +193,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
 
     private void init() {
         try {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
             DeviceInfo deviceInfo = (DeviceInfo) getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
             if (deviceInfo != null) {
                 String sn = deviceInfo.getSn();
@@ -290,6 +289,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
             textView.setGravity(Gravity.CENTER);
             textView.setCompoundDrawables(null, null, null, null);
             textView.setBackground(getResources().getDrawable(R.drawable.shape_textview));
+            textView.setSingleLine();
             tagLayout.addView(textView, i, params);
 
         }
@@ -429,7 +429,15 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
             if (uploadButton != null) {
                 uploadButton.setEnabled(true);
             }
-        } else if (latLng == null) {
+        } else if (name.length() > 30) {
+            SensoroToast sensoroToast = SensoroToast.makeText(this, "名称/地址不能超过30个字符", Toast.LENGTH_SHORT);
+            sensoroToast.setGravity(Gravity.CENTER, 0, -10);
+            sensoroToast.show();
+            if (uploadButton != null) {
+                uploadButton.setEnabled(true);
+            }
+        }
+        if (latLng == null) {
             SensoroToast.makeText(this, getString(R.string.tips_hint_location), Toast.LENGTH_SHORT).setGravity
                     (Gravity.CENTER, 0, -10)
                     .show();
@@ -437,7 +445,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
                 uploadButton.setEnabled(true);
             }
         } else if (TextUtils.isEmpty(contact) || name.equals(content)) {
-            SensoroToast.makeText(this, "预警联系人不能为空！", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+            SensoroToast.makeText(this, "请输入联系人名称和电话号码", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                     .show();
             if (uploadButton != null) {
                 uploadButton.setEnabled(true);
@@ -445,11 +453,13 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
         } else {
             final double lon = latLng.longitude;
             final double lan = latLng.latitude;
+            mProgressUtils.showProgress();
             SensoroCityApplication.getInstance().smartCityServer.doDevicePointDeploy(sn, lon, lan, tags, name,
                     contact, content,
                     new Response.Listener<DeviceDeployRsp>() {
                         @Override
                         public void onResponse(DeviceDeployRsp response) {
+                            mProgressUtils.dismissProgress();
                             int errCode = response.getErrcode();
                             int resultCode = 1;
                             if (errCode != ResponseBase.CODE_SUCCESS) {
@@ -469,6 +479,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
+                            mProgressUtils.dismissProgress();
                             if (volleyError.networkResponse != null) {
                                 byte[] data = volleyError.networkResponse.data;
                                 Toast.makeText(DeployActivity.this, new String(data), Toast.LENGTH_SHORT).show();
@@ -533,13 +544,13 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
 
     @OnClick(R.id.deploy_device_signal)
     public void doSignal() {
-        mProgressDialog.show();
         String sns = titleTextView.getText().toString();
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(sns, null, 1,
                 new Response.Listener<DeviceInfoListRsp>() {
                     @Override
                     public void onResponse(DeviceInfoListRsp response) {
-                        mProgressDialog.dismiss();
+                        mProgressUtils.dismissProgress();
                         if (response.getData().size() > 0) {
                             DeviceInfo deviceInfo = response.getData().get(0);
                             String signal = deviceInfo.getSignal();
@@ -549,7 +560,7 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError volleyError) {
-                        mProgressDialog.dismiss();
+                        mProgressUtils.dismissProgress();
                         if (volleyError.networkResponse != null) {
                             String reason = new String(volleyError.networkResponse.data);
                             try {

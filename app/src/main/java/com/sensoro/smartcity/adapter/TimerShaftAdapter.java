@@ -61,7 +61,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
         if (events != null) {
             return events.length;
         } else {
-            if (!TextUtils.isEmpty(timeShaftParentBeans.get(groupPosition).getRemark())){
+            if (!TextUtils.isEmpty(timeShaftParentBeans.get(groupPosition).getRemark())) {
                 return 1;
             }
             return 0;
@@ -134,7 +134,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             String remark = recordInfo.getRemark();
             if (!TextUtils.isEmpty(remark)) {
                 final StringBuffer stringBuffer = new StringBuffer();
-                stringBuffer.append(confirm_text+"\n");
+                stringBuffer.append(confirm_text + "\n");
                 stringBuffer.append("备注 ");
                 SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer.toString());
                 ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
@@ -158,13 +158,13 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                 if (isExpanded) {
                     drawableId = R.mipmap.ic_pack_up;
                 }
-                spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end, Spanned
-                        .SPAN_EXCLUSIVE_EXCLUSIVE);
+                spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end,
+                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
                 groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
                         .shape_status_progress));
                 groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
                 groupHolder.tvTitle.setText(spannableStringBuilder);
-            }else {
+            } else {
                 groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
                         .shape_status_progress));
                 groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
@@ -299,15 +299,16 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
         } else {
             childHolder = (ChildViewHolder) convertView.getTag();
         }
-        if ("confirm".equals(timeShaftParentBeans.get(groupPosition).getType())){
+        if ("confirm".equals(timeShaftParentBeans.get(groupPosition).getType())) {
             String remark = timeShaftParentBeans.get(groupPosition).getRemark();
-            if (!TextUtils.isEmpty(remark)){
+            if (!TextUtils.isEmpty(remark)) {
                 childHolder.tvTitle.setText(remark);
             }
         }
         if (childBean != null) {
             AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(groupPosition);
             String recordType = recordInfo.getType();
+            String receiveTime = childBean.getReceiveTime();
             if ("sendVoice".equals(recordType)) {
                 String statusString = "电话接收中";
                 if (childBean.getReciveStatus() == 1) {
@@ -317,7 +318,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                 }
                 childHolder.tvTitle.setText(WidgetUtil.distinguishContacts(childBean.getSource()) + " - " + childBean
                         .getName() + "(" + childBean.getNumber() + ")于"
-                        + DateUtil.parseDateToString(childBean.getReceiveTime()) + statusString);
+                        + DateUtil.parseDateToString(receiveTime) + statusString);
             } else if ("sendSMS".equals(recordType)) {
                 String statusString = "短信接收中";
                 if (childBean.getReciveStatus() == 1) {
@@ -327,7 +328,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                 }
                 childHolder.tvTitle.setText(WidgetUtil.distinguishContacts(childBean.getSource()) + " - " + childBean
                         .getName() + "(" + childBean.getNumber() + ")于"
-                        + DateUtil.parseDateToString(childBean.getReceiveTime()) + statusString);
+                        + DateUtil.parseDateToString(receiveTime) + statusString);
             }
 
         }

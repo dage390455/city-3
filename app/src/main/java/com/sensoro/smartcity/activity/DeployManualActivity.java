@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.activity;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -22,6 +21,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import org.json.JSONException;
@@ -47,7 +47,7 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
     EditText contentEditText;
     @BindView(R.id.deploy_manual_btn)
     Button nextButton;
-    private ProgressDialog mProgressDialog;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,9 +61,9 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
 
     @Override
     protected void onDestroy() {
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         super.onDestroy();
     }
@@ -106,25 +106,23 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
         if (TextUtils.isEmpty(scanSerialNumber)) {
             Toast.makeText(DeployManualActivity.this, R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
         } else {
-            mProgressDialog = new ProgressDialog(this);
-            mProgressDialog.setMessage(getString(R.string.loading));
-            mProgressDialog.show();
+            mProgressUtils.showProgress();
             SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(scanSerialNumber.toUpperCase
                             (), null, 1,
                     new Response
                             .Listener<DeviceInfoListRsp>() {
                         @Override
                         public void onResponse(DeviceInfoListRsp response) {
-                            if (mProgressDialog != null) {
-                                mProgressDialog.dismiss();
+                            if (mProgressUtils != null) {
+                                mProgressUtils.dismissProgress();
                             }
                             refresh(response);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
-                            if (mProgressDialog != null) {
-                                mProgressDialog.dismiss();
+                            if (mProgressUtils != null) {
+                                mProgressUtils.dismissProgress();
                             }
                             if (volleyError.networkResponse != null) {
                                 String reason = new String(volleyError.networkResponse.data);

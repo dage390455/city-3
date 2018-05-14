@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -28,6 +27,7 @@ import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.sensoro.smartcity.widget.ProgressUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -53,7 +53,7 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     private ImageView mCurrentStatusImageView;
     private MerchantAdapter mMerchantAdapter;
     private String phoneId = null;
-    private ProgressDialog mProgressDialog = null;
+    private ProgressUtils mProgressUtils = null;
     private List<UserInfo> mUserInfoList = new ArrayList<>();
     private RelativeLayout rlTitleAccount;
 
@@ -111,17 +111,16 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
         if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         super.onDestroyView();
     }
 
     private void init() {
         try {
-            mProgressDialog = new ProgressDialog(this.getContext());
-            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this.getActivity()).build());
             mListView = (ListView) rootView.findViewById(R.id.merchant_list);
             mMenuListImageView = (ImageView) rootView.findViewById(R.id.merchant_iv_menu_list);
             mMenuListImageView.setOnClickListener(this);
@@ -152,20 +151,19 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     }
 
     public void requestData() {
-        if (mProgressDialog != null) {
-            mProgressDialog.show();
-        }
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.getUserAccountList(null, null, null, null, "100000", new
                 Response
                         .Listener<UserAccountRsp>() {
                     @Override
                     public void onResponse(UserAccountRsp response) {
+                        mProgressUtils.dismissProgress();
                         refresh(response);
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
-                mProgressDialog.dismiss();
+                mProgressUtils.dismissProgress();
                 if (volleyError.networkResponse != null) {
                     String reason = new String(volleyError.networkResponse.data);
                     try {
@@ -184,9 +182,6 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     }
 
     public void refresh(UserAccountRsp userAccountRsp) {
-        if (mProgressDialog != null) {
-            mProgressDialog.dismiss();
-        }
         List<UserInfo> list = userAccountRsp.getData();
         mUserInfoList.clear();
         mUserInfoList.addAll(list);
@@ -201,12 +196,12 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
     }
 
     private void doAccountSwitch(String uid) {
-        mProgressDialog.show();
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.doAccountControl(uid, phoneId, new Response
                 .Listener<UserAccountControlRsp>() {
             @Override
             public void onResponse(UserAccountControlRsp response) {
-                mProgressDialog.dismiss();
+                mProgressUtils.dismissProgress();
                 if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     String sessionID = response.getData().getSessionID
                             ();
@@ -225,7 +220,7 @@ public class MerchantFragment extends Fragment implements Constants, AdapterView
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                mProgressDialog.dismiss();
+                mProgressUtils.dismissProgress();
                 if (error.networkResponse != null) {
                     String reason = new String(error.networkResponse.data);
                     try {

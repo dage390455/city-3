@@ -36,7 +36,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 //    private static String[] PERMISSIONS_STORAGE = {Manifest.permission.READ_EXTERNAL_STORAGE,
 //            Manifest.permission.WRITE_EXTERNAL_STORAGE};
 //    private ValueAnimator mValueAnimator;
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +51,6 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected abstract boolean isNeedSlide();
-
     @Override
     protected void onResume() {
         NotificationManagerCompat manager = NotificationManagerCompat.from(SensoroCityApplication.getInstance());

@@ -18,6 +18,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
@@ -92,7 +93,7 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
             initRelation();
             initSearchHistory();
             String name = getIntent().getStringExtra(EXTRA_SETTING_NAME_ADDRESS);
-            if (name != null) {
+            if (!TextUtils.isEmpty(name)) {
                 mKeywordEt.setText(name);
                 mKeywordEt.setSelection(name.length());
             }
@@ -220,6 +221,11 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
     }
 
     private void doChoose() {
+        String text = mKeywordEt.getText().toString();
+        if (!TextUtils.isEmpty(text) && text.length() > 30) {
+            Toast.makeText(this, "最大不能超过30个字符", Toast.LENGTH_SHORT).show();
+            return;
+        }
         save();
         mKeywordEt.clearFocus();
         Intent data = new Intent();

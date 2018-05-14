@@ -162,9 +162,12 @@ public class DateUtil {
     }
 
     public static String parseDateToString(String text) {
-        String dateFormat = "yyyy-MM-dd+HH:mm:ss";
+        String dateFormat = "yyyy-MM-dd HH:mm:ss";
         try {
-            if (text == null) return " - ";
+            if (TextUtils.isEmpty(text)) {
+                return " - ";
+            }
+            text = text.replace("+", " ");
             return getFullParseDate(new SimpleDateFormat(dateFormat).parse(text).getTime());
         } catch (ParseException e) {
             return " - ";
@@ -180,7 +183,6 @@ public class DateUtil {
             return null;
         }
     }
-
 
 
     public static String getDate(long time) {

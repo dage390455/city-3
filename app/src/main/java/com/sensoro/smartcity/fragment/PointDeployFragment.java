@@ -65,6 +65,7 @@ import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.widget.ProgressUtils;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -121,7 +122,8 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
     private View rootView;
     private SurfaceHolder surfaceHolder;
     private SurfaceView surfaceView;
-//    protected boolean isCreate = false;
+    private ProgressUtils mProgressUtils;
+    //    protected boolean isCreate = false;
 
     public PointDeployFragment() {
     }
@@ -364,6 +366,9 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         if (!hasSurface) {
             surfaceHolder.removeCallback(this);
         }
+        if(mProgressUtils!=null){
+            mProgressUtils.destroyProgress();
+        }
     }
 
     @Override
@@ -509,16 +514,21 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         if (scanSerialNumber == null) {
             Toast.makeText(getContext(), R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
         } else {
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this.getActivity()).build());
+            mProgressUtils.showProgress();
             SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(scanSerialNumber, null, 1,
                     new Response
                             .Listener<DeviceInfoListRsp>() {
                         @Override
                         public void onResponse(DeviceInfoListRsp response) {
+
+                            mProgressUtils.dismissProgress();
                             refresh(response);
                         }
                     }, new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError volleyError) {
+                            mProgressUtils.dismissProgress();
                             if (volleyError.networkResponse != null) {
                                 String reason = new String(volleyError.networkResponse.data);
                                 try {

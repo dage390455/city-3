@@ -17,20 +17,21 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 
 import static android.content.Context.ACTIVITY_SERVICE;
 
 public final class PermissionUtils {
-    private final Activity mContext;
 
-    private PermissionsResultObserve mListener;
+    private volatile PermissionsResultObserve mListener;
     private volatile boolean mNeedFinish = false;
     //界面传递过来的权限列表,用于二次申请
     private ArrayList<String> mPermissionsList = new ArrayList<>();
+    private SoftReference<Activity> mContext;
 
     public PermissionUtils(Activity activity) {
-        mContext = activity;
+        mContext = new SoftReference<>(activity);
     }
 
 
@@ -39,15 +40,16 @@ public final class PermissionUtils {
      *
      * @param permissions 需要申请的权限
      * @param needFinish  如果必须的权限没有允许的话，是否需要finish当前 Activity
-     * @param callback    回调对象
      */
     public void requestPermission(final ArrayList<String> permissions, final boolean needFinish,
-                                  final int myRequestPermissionCode, final PermissionsResultObserve callback) {
+                                  final int myRequestPermissionCode) {
         if (permissions == null || permissions.size() == 0) {
             return;
         }
+        if (mListener == null) {
+            throw new NullPointerException("请先注册监听!");
+        }
         mNeedFinish = needFinish;
-        mListener = callback;
         mPermissionsList = permissions;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //获取未通过的权限列表
@@ -76,9 +78,15 @@ public final class PermissionUtils {
         if (shouldShowRequestPermissionRationale(permissions)) {// 需要再次声明
             showRationaleDialog(permissions, myRequestPermissionCode);
         } else {
-            ActivityCompat.requestPermissions(mContext, permissions,
-                    myRequestPermissionCode);
+            if (hasActivity()) {
+                ActivityCompat.requestPermissions(mContext.get(), permissions,
+                        myRequestPermissionCode);
+            }
         }
+    }
+
+    private boolean hasActivity() {
+        return mContext.get() != null;
     }
 
     /**
@@ -87,30 +95,33 @@ public final class PermissionUtils {
      * @param permissions
      */
     private void showRationaleDialog(final String[] permissions, final int myRequestPermissionCode) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("提示")
-                .setMessage("为了应用可以正常使用，请您点击确认申请权限。")
-                .setPositiveButton("确认",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ActivityCompat.requestPermissions(mContext, permissions,
-                                        myRequestPermissionCode);
-                            }
-                        })
-                .setNegativeButton("取消",
-                        new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                dialog.dismiss();
-                                if (mNeedFinish) {
-                                    Toast.makeText(mContext,"需要权限！请重新打开应用",Toast.LENGTH_SHORT).show();
-                                    mContext.finish();
+        if (hasActivity()) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext.get());
+            builder.setTitle("提示")
+                    .setMessage("为了应用可以正常使用，请您点击确认申请权限。")
+                    .setPositiveButton("确认",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    ActivityCompat.requestPermissions(mContext.get(), permissions,
+                                            myRequestPermissionCode);
                                 }
-                            }
-                        })
-                .setCancelable(false)
-                .show();
+                            })
+                    .setNegativeButton("取消",
+                            new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    dialog.dismiss();
+                                    if (mNeedFinish) {
+                                        Toast.makeText(mContext.get(), "需要权限！请重新打开应用", Toast.LENGTH_SHORT).show();
+                                        mContext.get().finish();
+                                    }
+                                }
+                            })
+                    .setCancelable(false)
+                    .show();
+        }
+
     }
 
     /**
@@ -122,7 +133,8 @@ public final class PermissionUtils {
     private ArrayList<String> checkEachSelfPermission(ArrayList<String> permissions) {
         ArrayList<String> newPermissions = new ArrayList<String>();
         for (String permission : permissions) {
-            if (ContextCompat.checkSelfPermission(mContext, permission) != PackageManager.PERMISSION_GRANTED) {
+            if (hasActivity() && ContextCompat.checkSelfPermission(mContext.get(), permission) != PackageManager
+                    .PERMISSION_GRANTED) {
                 newPermissions.add(permission);
             }
         }
@@ -137,7 +149,7 @@ public final class PermissionUtils {
      */
     private boolean shouldShowRequestPermissionRationale(String[] permissions) {
         for (String permission : permissions) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(mContext, permission)) {
+            if (hasActivity() && ActivityCompat.shouldShowRequestPermissionRationale(mContext.get(), permission)) {
                 return true;
             }
         }
@@ -163,7 +175,8 @@ public final class PermissionUtils {
                 }
             } else {
                 for (String permission : permissions) {
-                    if (ContextCompat.checkSelfPermission(mContext, permission) != PackageManager.PERMISSION_GRANTED) {
+                    if (hasActivity() && ContextCompat.checkSelfPermission(mContext.get(), permission) !=
+                            PackageManager.PERMISSION_GRANTED) {
                         deniedPermissions.add(permission);
                     }
                 }
@@ -223,36 +236,39 @@ public final class PermissionUtils {
      * 手动开启权限弹窗
      */
     private void showPermissionSettingDialog(final int myRequestPermissionCode) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-        builder.setTitle("提示")
-                .setMessage("必要的权限被拒绝")
-                .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent in = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                        Uri uri = Uri.fromParts("package", mContext.getPackageName(), null);
-                        in.setData(uri);
-                        mContext.startActivityForResult(in, myRequestPermissionCode);
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.dismiss();
-                        if (mNeedFinish) {
-                            restart(mContext);
+        if (hasActivity()) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext.get());
+            builder.setTitle("提示")
+                    .setMessage("必要的权限被拒绝")
+                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            Intent in = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                            Uri uri = Uri.fromParts("package", mContext.get().getPackageName(), null);
+                            in.setData(uri);
+                            mContext.get().startActivityForResult(in, myRequestPermissionCode);
                         }
-                    }
-                })
-                .setCancelable(false)
-                .show();
+                    })
+                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            dialogInterface.dismiss();
+                            if (mNeedFinish) {
+                                restart(mContext.get());
+                            }
+                        }
+                    })
+                    .setCancelable(false)
+                    .show();
+        }
+
     }
 
     public void onActivityResult(int requestCode, int resultCode, Intent data, int
             myRequestPermissionCode) {
         //如果需要跳转系统设置页后返回自动再次检查和执行业务 如果不需要则不需要重写onActivityResult
         if (requestCode == myRequestPermissionCode) {
-            requestPermission(mPermissionsList, mNeedFinish, myRequestPermissionCode, mListener);
+            requestPermission(mPermissionsList, mNeedFinish, myRequestPermissionCode);
         }
     }
 
@@ -306,6 +322,24 @@ public final class PermissionUtils {
         } else {// android2.1
             ActivityManager am = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
             am.restartPackage(context.getPackageName());
+        }
+    }
+
+
+    public void registerObserver(PermissionsResultObserve permissionsResultObserve) {
+        mListener = permissionsResultObserve;
+    }
+
+    public void unregisterObserver(PermissionsResultObserve permissionsResultObserve) {
+        if (permissionsResultObserve != mListener) {
+            throw new IllegalArgumentException("注册对象不一致！");
+        }
+        if (mListener != null) {
+            mListener = null;
+        }
+        if (mContext != null) {
+            mContext.clear();
+            mContext = null;
         }
     }
 

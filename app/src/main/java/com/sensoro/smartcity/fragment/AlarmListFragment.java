@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.fragment;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -35,6 +34,7 @@ import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
@@ -50,7 +50,7 @@ import java.util.List;
  */
 
 public class AlarmListFragment extends Fragment implements View.OnClickListener, Constants, AdapterView
-        .OnItemClickListener, AlarmListAdapter.AlarmItemClickListener, SensoroPopupAlarmView.OnPopupCallbackListener,
+        .OnItemClickListener, SensoroPopupAlarmView.OnPopupCallbackListener,
         AbsListView.OnScrollListener {
 
     private PullToRefreshListView mPtrListView;
@@ -70,7 +70,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
     private SensoroPopupAlarmView mAlarmPopupView;
     private AlarmListAdapter mAlarmListAdapter;
     private List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
-    private ProgressDialog mProgressDialog;
+    private ProgressUtils mProgressUtils;
     private int cur_page = 1;
     private long startTime;
     private long endTime;
@@ -126,9 +126,9 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
         if (rootView != null) {
             ((ViewGroup) rootView.getParent()).removeView(rootView);
         }
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         if (mAlarmPopupView != null) {
             mAlarmPopupView.onDestroyPop();
@@ -138,8 +138,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
     private void init() {
         try {
-            mProgressDialog = new ProgressDialog(this.getContext());
-            mProgressDialog.setMessage(getString(R.string.loading));
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(getActivity()).build());
             mPtrListView = (PullToRefreshListView) rootView.findViewById(R.id.alarm_ptr_list);
             mPtrListView.setRefreshing(false);
             mPtrListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -156,7 +155,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                 @Override
                 public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                     CharSequence searchText = mSearchEditText.getHint();
-                    if (!TextUtils.isEmpty(searchText)&&mSearchEditText.getVisibility() == View.VISIBLE) {
+                    if (!TextUtils.isEmpty(searchText) && mSearchEditText.getVisibility() == View.VISIBLE) {
                         requestSearcheData(DIRECTION_UP, false, searchText.toString());
                     } else {
                         requestData(DIRECTION_UP, false);
@@ -165,7 +164,13 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
             });
             mPtrListView.setMode(PullToRefreshBase.Mode.BOTH);
             mPtrListView.setOnScrollListener(this);
-            mAlarmListAdapter = new AlarmListAdapter(getContext(), this);
+            mAlarmListAdapter = new AlarmListAdapter(getContext(), new AlarmListAdapter.AlarmItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
+                    mAlarmPopupView.show(deviceAlarmLogInfo, mShadowView, AlarmListFragment.this);
+                }
+            });
             mPtrListView.setAdapter(mAlarmListAdapter);
             mPtrListView.setOnItemClickListener(this);
             mDateImageView = (ImageView) rootView.findViewById(R.id.alarm_iv_date);
@@ -286,23 +291,23 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
 
     private void requestDataBySearchDown(Long startTime, Long endTime, final String text) {
-        switch (SensoroCityApplication.getInstance().searchType) {
+        switch (SensoroCityApplication.getInstance().saveSearchType) {
             case Constants.TYPE_DEVICE_NAME:
-                mProgressDialog.show();
+                mProgressUtils.showProgress();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(startTime,
                         endTime,
                         text, null, cur_page, new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
                                     public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressDialog.dismiss();
+                                        mProgressUtils.dismissProgress();
                                         mPtrListView.onRefreshComplete();
                                         refresh(DIRECTION_DOWN, response, null);
                                     }
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 if (error.networkResponse != null) {
                                     String reason = new String(error.networkResponse.data);
                                     try {
@@ -323,21 +328,21 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                         });
                 break;
             case Constants.TYPE_DEVICE_NUMBER:
-                mProgressDialog.show();
+                mProgressUtils.showProgress();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(startTime, endTime, text,
                         null, cur_page,
                         new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
                                     public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressDialog.dismiss();
+                                        mProgressUtils.dismissProgress();
                                         mPtrListView.onRefreshComplete();
                                         refresh(DIRECTION_DOWN, response, null);
                                     }
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 if (error.networkResponse != null) {
                                     String reason = new String(error.networkResponse.data);
                                     try {
@@ -357,21 +362,21 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                         });
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
-                mProgressDialog.show();
+                mProgressUtils.showProgress();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDevicePhone(startTime,
                         endTime,
                         text, null, cur_page, new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
                                     public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressDialog.dismiss();
+                                        mProgressUtils.dismissProgress();
                                         mPtrListView.onRefreshComplete();
                                         refresh(DIRECTION_DOWN, response, null);
                                     }
                                 }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 if (error.networkResponse != null) {
                                     String reason = new String(error.networkResponse.data);
                                     try {
@@ -398,16 +403,16 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
     }
 
     private void requestDataBySearchUp(Long startTime, Long endTime, final String text) {
-        switch (SensoroCityApplication.getInstance().searchType) {
+        switch (SensoroCityApplication.getInstance().saveSearchType) {
             case Constants.TYPE_DEVICE_NAME:
-                mProgressDialog.show();
+                mProgressUtils.showProgress();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(startTime,
                         endTime,
                         text, null, cur_page, new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
                                     public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressDialog.dismiss();
+                                        mProgressUtils.dismissProgress();
                                         mPtrListView.onRefreshComplete();
                                         if (response.getData().size() == 0) {
                                             Toast.makeText(getActivity(), "没有更多数据了", Toast.LENGTH_SHORT).show();
@@ -420,7 +425,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 cur_page--;
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 if (error.networkResponse != null) {
                                     String reason = new String(error.networkResponse.data);
                                     try {
@@ -441,14 +446,14 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                         });
                 break;
             case Constants.TYPE_DEVICE_NUMBER:
-                mProgressDialog.show();
+                mProgressUtils.showProgress();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(startTime, endTime, text,
                         null, cur_page,
                         new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
                                     public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressDialog.dismiss();
+                                        mProgressUtils.dismissProgress();
                                         mPtrListView.onRefreshComplete();
                                         if (response.getData().size() == 0) {
                                             Toast.makeText(getActivity(), "没有更多数据了", Toast.LENGTH_SHORT).show();
@@ -461,7 +466,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 cur_page--;
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 if (error.networkResponse != null) {
                                     String reason = new String(error.networkResponse.data);
                                     try {
@@ -481,14 +486,14 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                         });
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
-                mProgressDialog.show();
+                mProgressUtils.showProgress();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDevicePhone(startTime,
                         endTime,
                         text, null, cur_page, new
                                 Response.Listener<DeviceAlarmLogRsp>() {
                                     @Override
                                     public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressDialog.dismiss();
+                                        mProgressUtils.dismissProgress();
                                         mPtrListView.onRefreshComplete();
                                         if (response.getData().size() == 0) {
                                             Toast.makeText(getActivity(), "没有更多数据了", Toast.LENGTH_SHORT).show();
@@ -501,7 +506,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 cur_page--;
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 if (error.networkResponse != null) {
                                     String reason = new String(error.networkResponse.data);
                                     try {
@@ -531,7 +536,6 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
         if (mPtrListView.getState() == PullToRefreshBase.State.RESET && !isForce || TextUtils.isEmpty(searchText)) {
             return;
         }
-        mProgressDialog.show();
         Long temp_startTime = null;
         Long temp_endTime = null;
         if (mSelectedDateLayout.getVisibility() == View.VISIBLE) {
@@ -556,7 +560,6 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
         if (mPtrListView.getState() == PullToRefreshBase.State.RESET && !isForce) {
             return;
         }
-        mProgressDialog.show();
         Long temp_startTime = null;
         Long temp_endTime = null;
         if (mSelectedDateLayout.getVisibility() == View.VISIBLE) {
@@ -566,18 +569,19 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
+                mProgressUtils.showProgress();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(temp_startTime,
                         temp_endTime, null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
                             @Override
                             public void onResponse(DeviceAlarmLogRsp response) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 mPtrListView.onRefreshComplete();
                                 refresh(DIRECTION_DOWN, response, null);
                             }
                         }, new Response.ErrorListener() {
                             @Override
                             public void onErrorResponse(VolleyError error) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 if (error.networkResponse != null) {
                                     String reason = new String(error.networkResponse.data);
                                     try {
@@ -599,11 +603,12 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                 break;
             case DIRECTION_UP:
                 cur_page++;
+                mProgressUtils.showProgress();
                 SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(temp_startTime,
                         temp_endTime, null, null, cur_page, new Response.Listener<DeviceAlarmLogRsp>() {
                             @Override
                             public void onResponse(DeviceAlarmLogRsp response) {
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 mPtrListView.onRefreshComplete();
                                 if (response.getData().size() == 0) {
                                     Toast.makeText(getActivity(), "没有更多数据了", Toast.LENGTH_SHORT).show();
@@ -616,7 +621,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
                             @Override
                             public void onErrorResponse(VolleyError error) {
                                 cur_page--;
-                                mProgressDialog.dismiss();
+                                mProgressUtils.dismissProgress();
                                 if (error.networkResponse != null) {
                                     String reason = new String(error.networkResponse.data);
                                     try {
@@ -642,24 +647,24 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
 
     public void requestData(String startDate, String endDate) {
-        mProgressDialog.show();
         mSelectedDateLayout.setVisibility(View.VISIBLE);
         startTime = DateUtil.strToDate(startDate).getTime();
         endTime = DateUtil.strToDate(endDate).getTime();
         mSelectedDateTextView.setText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil.getMothDayFormatDate
                 (endTime));
         endTime += 1000 * 60 * 60 * 24;
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(startTime, endTime, null, null, 1,
                 new Response.Listener<DeviceAlarmLogRsp>() {
                     @Override
                     public void onResponse(DeviceAlarmLogRsp response) {
-                        mProgressDialog.dismiss();
+                        mProgressUtils.dismissProgress();
                         refresh(DIRECTION_DOWN, response, null);
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        mProgressDialog.dismiss();
+                        mProgressUtils.dismissProgress();
                     }
                 });
     }
@@ -667,6 +672,7 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
     private void cancelSearch() {
         mTitleLayout.setVisibility(View.VISIBLE);
         mSearchLayout.setVisibility(View.GONE);
+//        mSearchEditText.setHint("");
         requestData(DIRECTION_DOWN, true);
     }
 
@@ -691,15 +697,16 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
             case R.id.alarm_iv_search:
                 Intent searchIntent1 = new Intent(this.getActivity(), SearchAlarmActivity.class);
 
-                CharSequence hint = mSearchEditText.getHint();
-                if (!TextUtils.isEmpty(hint)) {
-                    searchIntent1.putExtra("extra_search_content", hint.toString().trim());
-                } else {
-                    searchIntent1.putExtra("extra_search_content", "");
-                }
+//                CharSequence hint = mSearchEditText.getHint();
+//                if (!TextUtils.isEmpty(hint) && mSearchEditText.getVisibility() == View.VISIBLE) {
+//                    searchIntent1.putExtra(EXTRA_SEARCH_CONTENT, hint.toString().trim());
+//                } else {
+//                    searchIntent1.putExtra(EXTRA_SEARCH_CONTENT, "");
+//                }
                 searchIntent1.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
                 searchIntent1.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
                 searchIntent1.putExtra(EXTRA_FRAGMENT_INDEX, 2);
+//                startActivity(searchIntent1);
                 startActivityForResult(searchIntent1, REQUEST_CODE_SEARCH_ALARM);
                 break;
             case R.id.alarm_iv_menu_list:
@@ -715,14 +722,15 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
             case R.id.alarm_search_et:
                 Intent searchIntent = new Intent(this.getActivity(), SearchAlarmActivity.class);
                 CharSequence hint1 = mSearchEditText.getHint();
-                if (!TextUtils.isEmpty(hint1)) {
-                    searchIntent.putExtra("extra_search_content", hint1.toString().trim());
+                if (!TextUtils.isEmpty(hint1) && mSearchEditText.getVisibility() == View.VISIBLE) {
+                    searchIntent.putExtra(EXTRA_SEARCH_CONTENT, hint1.toString().trim());
                 } else {
-                    searchIntent.putExtra("extra_search_content", "");
+                    searchIntent.putExtra(EXTRA_SEARCH_CONTENT, "");
                 }
                 searchIntent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
                 searchIntent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
                 searchIntent.putExtra(EXTRA_FRAGMENT_INDEX, 2);
+//                startActivity(searchIntent);
                 startActivityForResult(searchIntent, REQUEST_CODE_SEARCH_ALARM);
                 break;
             case R.id.alarm_return_top:
@@ -741,11 +749,6 @@ public class AlarmListFragment extends Fragment implements View.OnClickListener,
 
     }
 
-    @Override
-    public void onItemClick(View view, int position) {
-        DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
-        mAlarmPopupView.show(deviceAlarmLogInfo, mShadowView, this);
-    }
 
     @Override
     public void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo) {

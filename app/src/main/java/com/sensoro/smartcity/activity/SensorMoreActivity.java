@@ -18,6 +18,7 @@ import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import org.json.JSONException;
@@ -70,7 +71,7 @@ public class SensorMoreActivity extends BaseActivity {
     TextView alarmSettingTextView;
     @BindView(R.id.sensor_more_tv_alarm_recent)
     TextView alarmRecentTextView;
-
+    private ProgressUtils mProgressUtils;
     private String sensor_sn;
 
     @Override
@@ -78,6 +79,7 @@ public class SensorMoreActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sensor_more);
         ButterKnife.bind(this);
+        mProgressUtils =new ProgressUtils(new ProgressUtils.Builder(this).build());
         requestData();
         StatusBarCompat.setStatusBarColor(this);
     }
@@ -269,15 +271,17 @@ public class SensorMoreActivity extends BaseActivity {
 
     private void requestData() {
         sensor_sn = this.getIntent().getStringExtra(EXTRA_SENSOR_SN);
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(sensor_sn, null, 1, new Response
                 .Listener<DeviceInfoListRsp>() {
             @Override
             public void onResponse(DeviceInfoListRsp response) {
+                mProgressUtils.dismissProgress();
                 refresh(response);
             }
         }, new Response.ErrorListener() {
             @Override
-            public void onErrorResponse(VolleyError volleyError) {
+            public void onErrorResponse(VolleyError volleyError) { mProgressUtils.dismissProgress();
                 if (volleyError.networkResponse != null) {
                     String reason = new String(volleyError.networkResponse.data);
                     try {
@@ -298,10 +302,12 @@ public class SensorMoreActivity extends BaseActivity {
 
     private void requestDataWithRecentAlarm() {
         String sn = snTextView.getText().toString();
+        mProgressUtils.showProgress();
         SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmTime(sn, new Response
                 .Listener<DeviceAlarmTimeRsp>() {
             @Override
             public void onResponse(DeviceAlarmTimeRsp response) {
+                mProgressUtils.dismissProgress();
                 long time = response.getData().getTimeStamp();
                 if (time == -1) {
                     alarmRecentTextView.setText(R.string.tips_no_alarm);
@@ -313,6 +319,7 @@ public class SensorMoreActivity extends BaseActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError volleyError) {
+                mProgressUtils.dismissProgress();
                 if (volleyError.networkResponse != null) {
                     String reason = new String(volleyError.networkResponse.data);
                     try {
@@ -332,5 +339,11 @@ public class SensorMoreActivity extends BaseActivity {
     @OnClick(R.id.sensor_more_back)
     public void back() {
         this.finish();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mProgressUtils.destroyProgress();
+        super.onDestroy();
     }
 }

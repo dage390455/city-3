@@ -3,18 +3,15 @@ package com.sensoro.smartcity.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageManager;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.support.annotation.Nullable;
-import android.support.v4.app.ActivityCompat;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.View;
@@ -38,6 +35,7 @@ import com.sensoro.smartcity.util.AESUtil;
 import com.sensoro.smartcity.util.PermissionUtils;
 import com.sensoro.smartcity.util.PermissionsResultObserve;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroImageView;
 
 import org.json.JSONException;
@@ -53,7 +51,7 @@ import butterknife.OnClick;
  * Created by sensoro on 17/7/24.
  */
 
-public class LoginActivity extends BaseActivity implements Constants {
+public class LoginActivity extends BaseActivity implements Constants, PermissionsResultObserve {
 
     private static final String TAG = "LoginActivity";
     @BindView(R.id.login_email)
@@ -66,8 +64,7 @@ public class LoginActivity extends BaseActivity implements Constants {
     View coverView;
     @BindView(R.id.login_btn)
     Button login_btn;
-    private ProgressDialog mProgressDialog;
-    private static final int REQUEST_PERMISSION = 0;
+    private ProgressUtils mProgressUtils;
     private static final int MY_REQUEST_PERMISSION_CODE = 0x14;
     private static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
         {
@@ -89,29 +86,14 @@ public class LoginActivity extends BaseActivity implements Constants {
         ButterKnife.bind(this);
         StatService.setDebugOn(true);
         StatService.start(this);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
         mPermissionUtils = new PermissionUtils(this);
-        requestPermissions();
+        mPermissionUtils.registerObserver(this);
+        mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE);
         readLoginData();
-        init();
         initSeverUrl();
     }
 
-    private void requestPermissions() {
-        mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE, new
-                PermissionsResultObserve() {
-                    @Override
-                    public void onPermissionGranted() {
-                        initPushSDK();
-                        Log.e(TAG, "onPermissionGranted: 权限获取完毕 ");
-                    }
-
-                    @Override
-                    public void onPermissionDenied() {
-                        //TODO 非必要权限
-
-                    }
-                });
-    }
 
     @Override
     protected void onResume() {
@@ -204,7 +186,7 @@ public class LoginActivity extends BaseActivity implements Constants {
 
     private void showPasswordDialog() {
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
         View view = View.inflate(this, R.layout.dialog_input, null);
         builder.setView(view);
         builder.setCancelable(true);
@@ -274,17 +256,13 @@ public class LoginActivity extends BaseActivity implements Constants {
                         Toast.makeText(LoginActivity.this, urlArr[scope_selectedIndex], Toast.LENGTH_SHORT).show();
                     }
                 }).
-                        setNegativeButton("取消", new DialogInterface.OnClickListener() {
-
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                            }
-                        }).
+                        setNegativeButton("取消", null).
                         create();
         alertDialog.show();
     }
 
-    public void saveScopeData(Context context, String url) {
+
+    private void saveScopeData(Context context, String url) {
         SharedPreferences sp = context.getApplicationContext().getSharedPreferences(PREFERENCE_SCOPE, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -299,22 +277,20 @@ public class LoginActivity extends BaseActivity implements Constants {
         if (!TextUtils.isEmpty(url)) {
             SmartCityServerImpl.SCOPE = url;
         }
-        mProgressDialog.show();
         final String account = accountEt.getText().toString();
         final String pwd = pwdEt.getText().toString();
         if (TextUtils.isEmpty(account)) {
             Toast.makeText(this, R.string.tips_username_empty, Toast.LENGTH_SHORT).show();
-            mProgressDialog.dismiss();
         } else if (TextUtils.isEmpty(pwd)) {
             Toast.makeText(this, R.string.tips_login_pwd_empty, Toast.LENGTH_SHORT).show();
-            mProgressDialog.dismiss();
         } else {
             String phoneId = PushManager.getInstance().getClientid(getApplicationContext());
+            mProgressUtils.showProgress();
             SensoroCityApplication.getInstance().smartCityServer.login(account, pwd, phoneId, new Response
                     .Listener<LoginRsp>() {
                 @Override
                 public void onResponse(LoginRsp response) {
-                    mProgressDialog.dismiss();
+                    mProgressUtils.dismissProgress();
                     if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
                         String isSpecific = response.getData().getIsSpecific();
                         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
@@ -324,7 +300,8 @@ public class LoginActivity extends BaseActivity implements Constants {
                         intent.putExtra(EXTRA_CHARACTER, response.getData().getCharacter());
                         intent.putExtra(EXTRA_USER_ROLES, response.getData().getRoles());
                         intent.putExtra(EXTRA_IS_SPECIFIC, isSpecific);
-                        intent.putExtra(EXTRA_PHONE_ID, PushManager.getInstance().getClientid(getApplicationContext()));
+                        String clientid = PushManager.getInstance().getClientid(SensoroCityApplication.getInstance());
+                        intent.putExtra(EXTRA_PHONE_ID, clientid);
                         PreferencesHelper.getInstance().saveLoginData(SensoroCityApplication.getInstance(), account,
                                 pwd);
                         startActivity(intent);
@@ -338,7 +315,7 @@ public class LoginActivity extends BaseActivity implements Constants {
             }, new Response.ErrorListener() {
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    mProgressDialog.dismiss();
+                    mProgressUtils.dismissProgress();
                     if (error.networkResponse != null) {
                         String reason = new String(error.networkResponse.data);
                         try {
@@ -359,32 +336,35 @@ public class LoginActivity extends BaseActivity implements Constants {
         }
     }
 
-    void requestPermission() {
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest
-                        .permission.READ_PHONE_STATE},
-                REQUEST_PERMISSION);
-    }
+//    void requestPermission() {
+//        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest
+//                        .permission.READ_PHONE_STATE},
+//                REQUEST_PERMISSION);
+//    }
 
-    void initPushSDK() {
+    private void initPushSDK() {
 
-        PackageManager pkgManager = getPackageManager();
-
-        // 读写 sd card 权限非常重要, android6.0默认禁止的, 建议初始化之前就弹窗让用户赋予该权限
-        boolean sdCardWritePermission =
-                pkgManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) ==
-                        PackageManager.PERMISSION_GRANTED;
-
-        // read phone state用于获取 imei 设备信息
-        boolean phoneSatePermission =
-                pkgManager.checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName()) == PackageManager
-                        .PERMISSION_GRANTED;
-
-        if (Build.VERSION.SDK_INT >= 23 && !sdCardWritePermission || !phoneSatePermission) {
-            requestPermission();
-        } else {
-            PushManager.getInstance().initialize(this.getApplicationContext(), SensoroPushService.class);
-        }
-
+//        PackageManager pkgManager = getPackageManager();
+//
+//        // 读写 sd card 权限非常重要, android6.0默认禁止的, 建议初始化之前就弹窗让用户赋予该权限
+//        boolean sdCardWritePermission =
+//                pkgManager.checkPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, getPackageName()) ==
+//                        PackageManager.PERMISSION_GRANTED;
+//
+//        // read phone state用于获取 imei 设备信息
+//        boolean phoneSatePermission =
+//                pkgManager.checkPermission(Manifest.permission.READ_PHONE_STATE, getPackageName()) == PackageManager
+//                        .PERMISSION_GRANTED;
+//
+//        if (Build.VERSION.SDK_INT >= 23 && !sdCardWritePermission || !phoneSatePermission) {
+//            requestPermission();
+//        } else {
+//            PushManager.getInstance().initialize(this.getApplicationContext(), SensoroPushService.class);
+//        }
+//        if (!PushManager.getInstance().isPushTurnedOn(this.getApplicationContext())){
+//
+//        }
+        PushManager.getInstance().initialize(this.getApplicationContext(), SensoroPushService.class);
         // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
         // IntentService, 必须在 AndroidManifest 中声明)
@@ -392,11 +372,6 @@ public class LoginActivity extends BaseActivity implements Constants {
                 .class);
     }
 
-
-    private void init() {
-        mProgressDialog = new ProgressDialog(this);
-        mProgressDialog.setMessage(getString(R.string.logining));
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -406,10 +381,19 @@ public class LoginActivity extends BaseActivity implements Constants {
 
     @Override
     protected void onDestroy() {
-        if (mProgressDialog != null) {
-            mProgressDialog.cancel();
-            mProgressDialog = null;
-        }
+        mProgressUtils.destroyProgress();
+        mPermissionUtils.unregisterObserver(this);
         super.onDestroy();
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        initPushSDK();
+        Log.e(TAG, "onPermissionGranted: 权限获取完毕 ");
+    }
+
+    @Override
+    public void onPermissionDenied() {
+        //TODO 非必要权限
     }
 }
