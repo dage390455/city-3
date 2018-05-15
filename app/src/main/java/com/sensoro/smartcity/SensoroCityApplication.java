@@ -1,24 +1,19 @@
 package com.sensoro.smartcity;
 
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.Context;
-import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.fengmap.android.FMMapSDK;
-import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.server.SmartCityServerImpl;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.util.NotificationUtils;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -38,8 +33,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     private final List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
-    private volatile int noID = 1;
     public int saveSearchType = Constants.TYPE_DEVICE_NAME;
+    private NotificationUtils mNotificationUtils;
 
     @Override
     public void onCreate() {
@@ -99,6 +94,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     }
 
     void init() {
+        mNotificationUtils = new NotificationUtils(this);
         smartCityServer = SmartCityServerImpl.getInstance(getApplicationContext());
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
@@ -107,27 +103,42 @@ public class SensoroCityApplication extends MultiDexApplication implements Senso
     }
 
 
-    public void showNotify(String message) {
-        Log.e("", "showNotify----->" + message);
-        NotificationManager nom = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-        Intent intent = new Intent(this, MainActivity.class);
-        PendingIntent pi = PendingIntent.getActivity(this, 0, intent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
-        //注意：通知一定要有图标，没有设置图标的通知，通知不显示
-        Notification notification = new Notification.Builder(this)
-                .setContentTitle("Sensoro City")
-                .setContentText(message)
-                .setSmallIcon(R.drawable.push)//设置图标
-                .setContentIntent(pi)
-                .build();
-        nom.notify(noID++, notification);
-
-
-    }
+//    public void showNotify(String message) {
+////        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.o) {
+////            String channelId = "defaultChannel";
+////            String channelName = "Channel Name";
+////            String channelDescription = "Channel Description";
+////            NotificationChannel channel = new NotificationChannel(channelId, channelName, NotificationManager
+/// .IMPORTANCE_DEFAULT);
+////            channel.setDescription(channelDescription);
+////
+////            builder = new NotificationCompat.Builder(context, channelId);
+////        } else {
+////            builder = new NotificationCompat.Builder(context);
+////        }
+//        Log.e("", "showNotify----->" + message);
+//        NotificationManager nom = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
+//        Intent intent = new Intent(this, MainActivity.class);
+//        PendingIntent pi = PendingIntent.getActivity(this, 0, intent,
+//                PendingIntent.FLAG_CANCEL_CURRENT);
+//        //注意：通知一定要有图标，没有设置图标的通知，通知不显示
+//        Notification notification = new Notification.Builder(this)
+//                .setContentTitle("Sensoro City")
+//                .setContentText(message)
+//                .setSmallIcon(R.drawable.push)//设置图标
+//                .setContentIntent(pi)
+//                .setDefaults(Notification.DEFAULT_SOUND)
+//                .setContentIntent(pi).setPriority(Notification.PRIORITY_MAX)
+//                .build();
+//        nom.notify(noID++, notification);
+//
+//
+//    }
 
     @Override
     public void onPushCallBack(String message) {
-        showNotify(message);
+        mNotificationUtils.sendNotification(message);
+//        showNotify(message);
     }
 
     public static class PushHandler extends Handler {

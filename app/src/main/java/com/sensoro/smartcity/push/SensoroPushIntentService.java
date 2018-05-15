@@ -10,6 +10,7 @@ import com.igexin.sdk.PushConsts;
 import com.igexin.sdk.PushManager;
 import com.igexin.sdk.message.FeedbackCmdMessage;
 import com.igexin.sdk.message.GTCmdMessage;
+import com.igexin.sdk.message.GTNotificationMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -103,6 +104,24 @@ public class SensoroPushIntentService extends GTIntentService {
         } else if ((action == PushConsts.THIRDPART_FEEDBACK)) {
             feedbackResult((FeedbackCmdMessage) cmdMessage);
         }
+    }
+
+    @Override
+    public void onNotificationMessageArrived(Context context, GTNotificationMessage gtNotificationMessage) {
+        Log.d(TAG, "onNotificationMessageArrived -> " + "appid = " + gtNotificationMessage.getAppid() + "\ntaskid = "
+                + gtNotificationMessage.getTaskId() + "\nmessageid = "
+                + gtNotificationMessage.getMessageId() + "\npkg = " + gtNotificationMessage.getPkgName() + "\ncid = "
+                + gtNotificationMessage.getClientId() + "\ntitle = "
+                + gtNotificationMessage.getTitle() + "\ncontent = " + gtNotificationMessage.getContent());
+    }
+
+    @Override
+    public void onNotificationMessageClicked(Context context, GTNotificationMessage gtNotificationMessage) {
+        Log.d(TAG, "onNotificationMessageClicked -> " + "appid = " + gtNotificationMessage.getAppid() + "\ntaskid = "
+                + gtNotificationMessage.getTaskId() + "\nmessageid = "
+                + gtNotificationMessage.getMessageId() + "\npkg = " + gtNotificationMessage.getPkgName() + "\ncid = "
+                + gtNotificationMessage.getClientId() + "\ntitle = "
+                + gtNotificationMessage.getTitle() + "\ncontent = " + gtNotificationMessage.getContent());
     }
 
     private void setTagResult(SetTagCmdMessage setTagCmdMsg) {

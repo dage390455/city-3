@@ -32,6 +32,7 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -64,6 +65,7 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
     private List<String> mHistoryKeywords = new ArrayList<>();
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private RelationAdapter mRelationAdapter;
+    private CharSequence tempWords = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -182,8 +184,7 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
-    private void save() {
-        String text = mKeywordEt.getText().toString();
+    private void save(String text) {
         String oldText = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
         if (!TextUtils.isEmpty(text)) {
             if (mHistoryKeywords.contains(text)) {
@@ -222,14 +223,26 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
 
     private void doChoose() {
         String text = mKeywordEt.getText().toString();
-        if (!TextUtils.isEmpty(text) && text.length() > 30) {
-            Toast.makeText(this, "最大不能超过30个字符", Toast.LENGTH_SHORT).show();
+        if (!TextUtils.isEmpty(text)) {
+            byte[] bytes = new byte[0];
+            try {
+                bytes = text.getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            if (bytes.length > 36) {
+                Toast.makeText(this, "最大不能超过12个汉字或32个字符", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+        } else {
+            Toast.makeText(this, "必须输入名称/地址", Toast.LENGTH_SHORT).show();
             return;
         }
-        save();
+        save(text);
         mKeywordEt.clearFocus();
         Intent data = new Intent();
-        data.putExtra(EXTRA_SETTING_NAME_ADDRESS, mKeywordEt.getText().toString());
+        data.putExtra(EXTRA_SETTING_NAME_ADDRESS, text);
         setResult(RESULT_CODE_SETTING_NAME_ADDRESS, data);
         finish();
     }
@@ -261,10 +274,12 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
+        tempWords = s;
         if (!TextUtils.isEmpty(s)) {
+            String text = s.toString();
             mSearchHistoryLayout.setVisibility(View.GONE);
             mSearchRelationLayout.setVisibility(View.VISIBLE);
-            filterDeviceInfoByNameAndAddress(s.toString());
+            filterDeviceInfoByNameAndAddress(text);
         } else {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
             mSearchRelationLayout.setVisibility(View.GONE);
@@ -274,6 +289,28 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
 
     @Override
     public void afterTextChanged(Editable s) {
+//        int selectionStart = mKeywordEt.getSelectionStart();
+//        int selectionEnd = mKeywordEt.getSelectionEnd();
+//        if (!TextUtils.isEmpty(tempWords)) {
+//            byte[] bytes = new byte[0];
+//            try {
+//                String tempStr = tempWords.toString();
+//                bytes = tempStr.getBytes("UTF-8");
+//            } catch (UnsupportedEncodingException e) {
+//                e.printStackTrace();
+//            }
+//            if (bytes.length > 36) {
+//                Toast.makeText(this, "最大不能超过12个汉字或32个字符", Toast.LENGTH_SHORT).show();
+////                text = text.substring(0, text.length());
+//////                etContent.setText(str);
+//////                etContent.setSelection(str.length());
+//                s.delete(selectionStart - 1, selectionEnd);
+//                int tempSelection = selectionEnd;
+//                mKeywordEt.setText(s);
+//                mKeywordEt.setSelection(tempSelection);
+//            }
+//        }
+
 
     }
 

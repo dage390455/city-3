@@ -32,6 +32,7 @@ import com.baidu.mobstat.StatService;
 import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
+import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.MenuInfoAdapter;
@@ -40,6 +41,8 @@ import com.sensoro.smartcity.fragment.AlarmListFragment;
 import com.sensoro.smartcity.fragment.IndexFragment;
 import com.sensoro.smartcity.fragment.MerchantFragment;
 import com.sensoro.smartcity.fragment.PointDeployFragment;
+import com.sensoro.smartcity.push.SensoroPushIntentService;
+import com.sensoro.smartcity.push.SensoroPushService;
 import com.sensoro.smartcity.server.SmartCityServerImpl;
 import com.sensoro.smartcity.server.bean.Character;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
@@ -150,6 +153,7 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
 
     private void init() {
         try {
+            checkPush();
             mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
             String[] titleArray = getResources().getStringArray(R.array.drawer_title_array);
             dataNormal.addAll(Arrays.asList(titleArray));
@@ -172,6 +176,20 @@ public class MainActivity extends BaseActivity implements AdapterView.OnItemClic
             Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    private void checkPush() {
+
+        boolean pushTurnedOn = PushManager.getInstance().isPushTurnedOn(this.getApplicationContext());
+        Log.e("", "checkPush: " + pushTurnedOn);
+        if (!pushTurnedOn) {
+            PushManager.getInstance().initialize(this.getApplicationContext(), SensoroPushService.class);
+            // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
+            // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
+            // IntentService, 必须在 AndroidManifest 中声明)
+            PushManager.getInstance().registerPushIntentService(this.getApplicationContext(), SensoroPushIntentService
+                    .class);
+        }
     }
 
     @Override
