@@ -15,18 +15,17 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sensoro on 17/11/14.
@@ -53,14 +52,16 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         super(context);
         this.mContext = context;
     }
-    public void onDestroyPop(){
-        if (showAnimation!=null){
+
+    public void onDestroyPop() {
+        if (showAnimation != null) {
             showAnimation.cancel();
         }
-        if (dismissAnimation!=null){
+        if (dismissAnimation != null) {
             dismissAnimation.cancel();
         }
     }
+
     public SensoroPopupAlarmView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         this.mContext = context;
@@ -154,37 +155,77 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     public void doAlarmConfirm() {
         String id = deviceAlarmLogInfo.get_id();
         String remark = remarkEditText.getText().toString();
-        SensoroCityApplication.getInstance().smartCityServer.doAlarmConfirm(id, displayStatus,
-                remark, new Response.Listener<DeviceAlarmItemRsp>() {
+//        byte[] bytes = new byte[0];
+//        try {
+//            bytes = remark.getBytes("UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        if (bytes.length > 30) {
+//            Toast.makeText(mContext, "最大不能超过32个字符", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+        if (remark.length() > 30) {
+            Toast.makeText(mContext, "最大不能超过30个字符", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        RetrofitServiceHelper.INSTANCE.doAlarmConfirm(id, displayStatus,
+                remark).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmItemRsp>() {
+
+
             @Override
-            public void onResponse(DeviceAlarmItemRsp response) {
-                if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    DeviceAlarmLogInfo deviceAlarmLogInfo = response.getData();
+            public void onCompleted() {
+                dismiss();
+            }
+
+            @Override
+            public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
                     Toast.makeText(mContext, R.string.tips_commit_success, Toast.LENGTH_SHORT).show();
                     mListener.onPopupCallback(deviceAlarmLogInfo);
-                    dismiss();
                 } else {
                     Toast.makeText(mContext, R.string.tips_commit_failed, Toast.LENGTH_SHORT).show();
                 }
             }
-        }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (error.networkResponse != null) {
-                    String reason = new String(error.networkResponse.data);
-                    try {
-                        JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(mContext, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
 
-                    }
-                } else {
-                    Toast.makeText(mContext, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                }
+            @Override
+            public void onErrorMsg(String errorMsg) {
+                dismiss();
+                Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
             }
         });
+//        NetUtils.INSTANCE.getServer().doAlarmConfirm(id, displayStatus,
+//                remark, new Response.Listener<DeviceAlarmItemRsp>() {
+//                    @Override
+//                    public void onResponse(DeviceAlarmItemRsp response) {
+//                        if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
+//                            DeviceAlarmLogInfo deviceAlarmLogInfo = response.getData();
+//                            Toast.makeText(mContext, R.string.tips_commit_success, Toast.LENGTH_SHORT).show();
+//                            mListener.onPopupCallback(deviceAlarmLogInfo);
+//                            dismiss();
+//                        } else {
+//                            Toast.makeText(mContext, R.string.tips_commit_failed, Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError error) {
+//                        if (error.networkResponse != null) {
+//                            String reason = new String(error.networkResponse.data);
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(reason);
+//                                Toast.makeText(mContext, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            } catch (Exception e) {
+//
+//                            }
+//                        } else {
+//                            Toast.makeText(mContext, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
+//                        }
+//                    }
+//                });
     }
 
 

@@ -159,7 +159,7 @@ public interface Constants {
     String ENCODE = "HmacSHA512";
     String APP_ID = "wxa65d8bad62a982e1";
     int TYPE_DEVICE_NAME = 0x10;
-    int TYPE_DEVICE_NUMBER = 0x11;
+    int TYPE_DEVICE_SN = 0x11;
     int TYPE_DEVICE_PHONE_NUM = 0x12;
 
     String EXTRA_SEARCH_CONTENT = "extra_search_content";

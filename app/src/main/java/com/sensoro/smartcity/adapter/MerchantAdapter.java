@@ -34,6 +34,7 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
     public void setSelectedIndex(int index) {
         this.selectedIndex = index;
     }
+
     @Override
     public int getCount() {
         return mList.size();
@@ -81,6 +82,8 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
         return convertView;
     }
 
+    public void setDataList(List<UserInfo> list) {
+    }
 
     class MerchantViewHolder {
 

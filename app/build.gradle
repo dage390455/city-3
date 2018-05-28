@@ -33,7 +33,7 @@ android {
     defaultConfig {
         applicationId "com.sensoro.smartcity"
         minSdkVersion 20
-        targetSdkVersion 28
+        targetSdkVersion 26
         versionCode verCode
         versionName verName + connector + buildCode
 //         Enabling multidex support.
@@ -51,6 +51,7 @@ android {
             debuggable true
         }
         release {
+            shrinkResources true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
@@ -150,7 +151,7 @@ dependencies {
     compile files('libs/AMap_Search_V5.7.0_20171229.jar')
     compile files('libs/Baidu_Mtj_3.8.2.1.jar')
     //    annotationProcessor 'com.github.jokermonn:permissions4m:1.0.2-processor'
-    compile 'com.jakewharton:butterknife:8.0.1'
+    compile 'com.jakewharton:butterknife:8.7.0'
     compile 'com.android.support:appcompat-v7:25.1.0'
     compile 'com.android.support:design:25.0.0'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
@@ -163,10 +164,11 @@ dependencies {
     //    compile 'com.squareup.okio:okio:1.5.0'
     //    compile 'com.zhy:okhttputils:2.0.0'
     testCompile 'junit:junit:4.12'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.0.1'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.7.0'
     //    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     compile files('libs/GetuiSDK2.12.3.0.jar')
+    compile project(':TagsEditText')
 }

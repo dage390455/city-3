@@ -25,8 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.baidu.mobstat.StatService;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
@@ -36,7 +34,9 @@ import com.sensoro.smartcity.adapter.IndexListAdapter;
 import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -56,6 +56,8 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.view.View.VISIBLE;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
@@ -192,12 +194,14 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         mListRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                requestWithDirection(DIRECTION_DOWN);
+                String text = mKeywordEt.getText().toString();
+                requestWithDirection(DIRECTION_DOWN,text);
             }
 
             @Override
             public void onLoadMore() {
-                requestWithDirection(DIRECTION_UP);
+                String text = mKeywordEt.getText().toString();
+                requestWithDirection(DIRECTION_UP,text);
             }
         });
         mListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -243,12 +247,14 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         mGridRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
-                requestWithDirection(DIRECTION_DOWN);
+                String text = mKeywordEt.getText().toString();
+                requestWithDirection(DIRECTION_DOWN,text);
             }
 
             @Override
             public void onLoadMore() {
-                requestWithDirection(DIRECTION_UP);
+                String text = mKeywordEt.getText().toString();
+                requestWithDirection(DIRECTION_UP,text);
             }
         });
         mGridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -433,7 +439,8 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                 mClearKeywordIv.setVisibility(View.VISIBLE);
                 mKeywordEt.clearFocus();
                 dismissInputMethodManager(view);
-                requestWithDirection(DIRECTION_DOWN);
+                String text = mKeywordEt.getText().toString();
+                requestWithDirection(DIRECTION_DOWN,text);
             }
         });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
@@ -554,7 +561,8 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         String typeText = INDEX_TYPE_ARRAY[position];
         mTypeTextView.setText(typeText);
         mTypeSelectedIndex = position;
-        requestWithDirection(DIRECTION_DOWN);
+        String text = mKeywordEt.getText().toString();
+        requestWithDirection(DIRECTION_DOWN,text);
     }
 
     private void filterByStatusWithRequest(int position) {
@@ -564,13 +572,15 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         String statusText = INDEX_STATUS_ARRAY[position];
         mStatusTextView.setText(statusText);
         mStatusSelectedIndex = position;
-        requestWithDirection(DIRECTION_DOWN);
+        String text = mKeywordEt.getText().toString();
+        requestWithDirection(DIRECTION_DOWN,text);
     }
 
     private void switchToTypeList() {
         switchType = TYPE_LIST;
         page = 1;
-        requestWithDirection(DIRECTION_DOWN);
+        String text = mKeywordEt.getText().toString();
+        requestWithDirection(DIRECTION_DOWN,text);
         mReturnTopImageView.setVisibility(View.GONE);
         mSwitchImageView.setImageResource(R.mipmap.ic_switch_grid);
         showListLayout();
@@ -579,7 +589,8 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     private void switchToTypeGrid() {
         switchType = TYPE_GRID;
         page = 1;
-        requestWithDirection(DIRECTION_DOWN);
+        String text = mKeywordEt.getText().toString();
+        requestWithDirection(DIRECTION_DOWN,text);
         mReturnTopImageView.setVisibility(View.GONE);
         mSwitchImageView.setImageResource(R.mipmap.ic_switch_list);
         showGridLayout();
@@ -677,173 +688,243 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         mSearchHistoryLayout.setVisibility(View.GONE);
     }
 
-    public void requestWithDirection(int direction) {
+    public void requestWithDirection(int direction,String searchText) {
 
         String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
         Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-        String text = mKeywordEt.getText().toString();
+//        String text = mKeywordEt.getText().toString();
         mProgressUtils.showProgress();
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new
-                    Response
-                            .Listener<DeviceInfoListRsp>() {
-                        @Override
-                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                            mProgressUtils.dismissProgress();
-                            try {
-                                if (deviceBriefInfoRsp.getData().size() == 0) {
-                                    tipsLinearLayout.setVisibility(View.VISIBLE);
-                                    mDataList.clear();
-                                    refreshData();
-                                } else {
-                                    SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
-                                    refreshCacheData();
-                                }
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn(Schedulers.io
+                    ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            } finally {
-                                mListRecyclerView.refreshComplete();
-                                mGridRecyclerView.refreshComplete();
 
-                            }
-
-                        }
-                    }, new Response.ErrorListener() {
                 @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    mProgressUtils.dismissProgress();
+                public void onCompleted() {
                     mListRecyclerView.refreshComplete();
                     mGridRecyclerView.refreshComplete();
-                    if (volleyError.networkResponse != null) {
-                        byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
+                    mProgressUtils.dismissProgress();
+                }
+
+                @Override
+                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    try {
+                        if (deviceInfoListRsp.getData().size() == 0) {
+                            tipsLinearLayout.setVisibility(View.VISIBLE);
+                            mDataList.clear();
+                            refreshData();
+                        } else {
+                            SensoroCityApplication.getInstance().setData(deviceInfoListRsp.getData());
+                            refreshCacheData();
+                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
+
+                @Override
+                public void onErrorMsg(String errorMsg) {
+                    mListRecyclerView.refreshComplete();
+                    mGridRecyclerView.refreshComplete();
+                    mProgressUtils.dismissProgress();
+                    Toast.makeText(SearchDeviceActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                }
             });
+//            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
+//                    Response
+//                            .Listener<DeviceInfoListRsp>() {
+//                        @Override
+//                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+//                            mProgressUtils.dismissProgress();
+//                            try {
+//                                if (deviceBriefInfoRsp.getData().size() == 0) {
+//                                    tipsLinearLayout.setVisibility(View.VISIBLE);
+//                                    mDataList.clear();
+//                                    refreshData();
+//                                } else {
+//                                    SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
+//                                    refreshCacheData();
+//                                }
+//
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            } finally {
+//                                mListRecyclerView.refreshComplete();
+//                                mGridRecyclerView.refreshComplete();
+//
+//                            }
+//
+//                        }
+//                    }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError volleyError) {
+//                    mProgressUtils.dismissProgress();
+//                    mListRecyclerView.refreshComplete();
+//                    mGridRecyclerView.refreshComplete();
+//                    if (volleyError.networkResponse != null) {
+//                        byte[] data = volleyError.networkResponse.data;
+//                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
         } else {
             page++;
-            SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new
-                    Response
-                            .Listener<DeviceInfoListRsp>() {
-                        @Override
-                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                            mProgressUtils.dismissProgress();
-                            try {
-                                if (deviceBriefInfoRsp.getData().size() == 0) {
-                                    page--;
-                                } else {
-                                    SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
-                                    refreshCacheData();
-                                }
-                            } catch (Exception e) {
-                                page--;
-                                e.printStackTrace();
-                            } finally {
-                                mListRecyclerView.loadMoreComplete();
-                                mGridRecyclerView.loadMoreComplete();
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn(Schedulers.io
+                    ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
-                            }
-                        }
-                    }, new Response.ErrorListener() {
+
                 @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    page--;
-                    mProgressUtils.dismissProgress();
+                public void onCompleted() {
                     mListRecyclerView.loadMoreComplete();
                     mGridRecyclerView.loadMoreComplete();
-                    if (volleyError.networkResponse != null) {
-                        byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
+                    mProgressUtils.dismissProgress();
+                }
+
+                @Override
+                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    try {
+                        if (deviceInfoListRsp.getData().size() == 0) {
+                            page--;
+                        } else {
+                            SensoroCityApplication.getInstance().addData(deviceInfoListRsp.getData());
+                            refreshCacheData();
+                        }
+                    } catch (Exception e) {
+                        page--;
+                        e.printStackTrace();
                     }
                 }
+
+                @Override
+                public void onErrorMsg(String errorMsg) {
+                    page--;
+                    mListRecyclerView.loadMoreComplete();
+                    mGridRecyclerView.loadMoreComplete();
+                    mProgressUtils.dismissProgress();
+                    Toast.makeText(SearchDeviceActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                }
             });
+//            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
+//                    Response
+//                            .Listener<DeviceInfoListRsp>() {
+//                        @Override
+//                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+//                            mProgressUtils.dismissProgress();
+//                            try {
+//                                if (deviceBriefInfoRsp.getData().size() == 0) {
+//                                    page--;
+//                                } else {
+//                                    SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
+//                                    refreshCacheData();
+//                                }
+//                            } catch (Exception e) {
+//                                page--;
+//                                e.printStackTrace();
+//                            } finally {
+//                                mListRecyclerView.loadMoreComplete();
+//                                mGridRecyclerView.loadMoreComplete();
+//
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError volleyError) {
+//                    page--;
+//                    mProgressUtils.dismissProgress();
+//                    mListRecyclerView.loadMoreComplete();
+//                    mGridRecyclerView.loadMoreComplete();
+//                    if (volleyError.networkResponse != null) {
+//                        byte[] data = volleyError.networkResponse.data;
+//                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
         }
     }
 
-    public void requestWithDirection(int direction, String seacherStr) {
-        String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
-        Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-        String text = seacherStr;
-        mProgressUtils.showProgress();
-        if (direction == DIRECTION_DOWN) {
-            page = 1;
-            SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new
-                    Response
-                            .Listener<DeviceInfoListRsp>() {
-                        @Override
-                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                            mProgressUtils.dismissProgress();
-                            try {
-                                if (deviceBriefInfoRsp.getData().size() == 0) {
-                                    tipsLinearLayout.setVisibility(View.VISIBLE);
-                                    mDataList.clear();
-                                    refreshData();
-                                } else {
-                                    SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
-                                    refreshCacheData();
-                                }
-
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            } finally {
-                                mListRecyclerView.refreshComplete();
-                                mGridRecyclerView.refreshComplete();
-
-                            }
-
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    mProgressUtils.dismissProgress();
-                    mListRecyclerView.refreshComplete();
-                    mGridRecyclerView.refreshComplete();
-                    if (volleyError.networkResponse != null) {
-                        byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        } else {
-            page++;
-            SensoroCityApplication.getInstance().smartCityServer.getDeviceBriefInfoList(page, type, status, text, new
-                    Response
-                            .Listener<DeviceInfoListRsp>() {
-                        @Override
-                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-                            mProgressUtils.dismissProgress();
-                            try {
-                                if (deviceBriefInfoRsp.getData().size() == 0) {
-                                    page--;
-                                } else {
-                                    SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
-                                    refreshCacheData();
-                                }
-                            } catch (Exception e) {
-                                page--;
-                                e.printStackTrace();
-                            } finally {
-                                mListRecyclerView.loadMoreComplete();
-                                mGridRecyclerView.loadMoreComplete();
-                            }
-                        }
-                    }, new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError volleyError) {
-                    page--;
-                    mProgressUtils.dismissProgress();
-                    mListRecyclerView.loadMoreComplete();
-                    mGridRecyclerView.loadMoreComplete();
-                    if (volleyError.networkResponse != null) {
-                        byte[] data = volleyError.networkResponse.data;
-                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        }
-    }
+//    public void requestWithDirection(int direction, String seacherStr) {
+//        String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
+//        Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
+//        String text = seacherStr;
+//        mProgressUtils.showProgress();
+//        if (direction == DIRECTION_DOWN) {
+//            page = 1;
+//            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
+//                    Response
+//                            .Listener<DeviceInfoListRsp>() {
+//                        @Override
+//                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+//                            mProgressUtils.dismissProgress();
+//                            try {
+//                                if (deviceBriefInfoRsp.getData().size() == 0) {
+//                                    tipsLinearLayout.setVisibility(View.VISIBLE);
+//                                    mDataList.clear();
+//                                    refreshData();
+//                                } else {
+//                                    SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
+//                                    refreshCacheData();
+//                                }
+//
+//                            } catch (Exception e) {
+//                                e.printStackTrace();
+//                            } finally {
+//                                mListRecyclerView.refreshComplete();
+//                                mGridRecyclerView.refreshComplete();
+//
+//                            }
+//
+//                        }
+//                    }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError volleyError) {
+//                    mProgressUtils.dismissProgress();
+//                    mListRecyclerView.refreshComplete();
+//                    mGridRecyclerView.refreshComplete();
+//                    if (volleyError.networkResponse != null) {
+//                        byte[] data = volleyError.networkResponse.data;
+//                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//        } else {
+//            page++;
+//            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
+//                    Response
+//                            .Listener<DeviceInfoListRsp>() {
+//                        @Override
+//                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
+//                            mProgressUtils.dismissProgress();
+//                            try {
+//                                if (deviceBriefInfoRsp.getData().size() == 0) {
+//                                    page--;
+//                                } else {
+//                                    SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
+//                                    refreshCacheData();
+//                                }
+//                            } catch (Exception e) {
+//                                page--;
+//                                e.printStackTrace();
+//                            } finally {
+//                                mListRecyclerView.loadMoreComplete();
+//                                mGridRecyclerView.loadMoreComplete();
+//                            }
+//                        }
+//                    }, new Response.ErrorListener() {
+//                @Override
+//                public void onErrorResponse(VolleyError volleyError) {
+//                    page--;
+//                    mProgressUtils.dismissProgress();
+//                    mListRecyclerView.loadMoreComplete();
+//                    mGridRecyclerView.loadMoreComplete();
+//                    if (volleyError.networkResponse != null) {
+//                        byte[] data = volleyError.networkResponse.data;
+//                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
+//        }
+//    }
 
     @Override
     protected void onDestroy() {
@@ -939,7 +1020,8 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
-            requestWithDirection(DIRECTION_DOWN);
+            String text = mKeywordEt.getText().toString();
+            requestWithDirection(DIRECTION_DOWN,text);
             return true;
         }
         return false;

@@ -23,9 +23,10 @@ import com.fengmap.android.map.marker.FMNode;
 import com.sensoro.smartcity.activity.BaseActivity;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.ViewHelper;
-import com.sensoro.smartcity.widget.TagsEditText;
 
 import java.util.Collection;
+
+import mabbas007.tagsedittext.TagsEditText;
 
 /**
  * 基础地图显示
@@ -34,7 +35,8 @@ import java.util.Collection;
  * @author hezutao@fengmap.com
  * @version 2.0.0
  */
-public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnFMMapClickListener, TagsEditText.TagsEditListener {
+public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnFMMapClickListener, TagsEditText
+        .TagsEditListener {
 
     private FMMap mMap;
     private FMLocationLayer mLocationLayer;
@@ -55,6 +57,7 @@ public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnF
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
     }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
@@ -62,6 +65,7 @@ public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnF
             tagsEditText.showDropDown();
         }
     }
+
     @Override
     protected boolean isNeedSlide() {
         return false;
@@ -90,7 +94,7 @@ public class FMMapBasic extends BaseActivity implements OnFMMapInitListener, OnF
         int groupId = mMap.getFocusGroupId();
         //
         int[] showFloors = mMap.getMapGroupIds();
-        int focus =0;                                   //默认焦点层
+        int focus = 0;                                   //默认焦点层
 //        mMap.setMultiDisplay(showFloors, focus, new OnFMSwitchGroupListener() {
 //            @Override
 //            public void beforeGroupChanged() {

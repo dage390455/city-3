@@ -42,23 +42,19 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -70,6 +66,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 
@@ -454,13 +452,20 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
             final double lon = latLng.longitude;
             final double lan = latLng.latitude;
             mProgressUtils.showProgress();
-            SensoroCityApplication.getInstance().smartCityServer.doDevicePointDeploy(sn, lon, lan, tags, name,
-                    contact, content,
-                    new Response.Listener<DeviceDeployRsp>() {
+            RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(sn, lon, lan, tags, name,
+                    contact, content).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(new CityObserver<DeviceDeployRsp>() {
+
+
                         @Override
-                        public void onResponse(DeviceDeployRsp response) {
+                        public void onCompleted() {
                             mProgressUtils.dismissProgress();
-                            int errCode = response.getErrcode();
+                            finish();
+                        }
+
+                        @Override
+                        public void onNext(DeviceDeployRsp deviceDeployRsp) {
+                            int errCode = deviceDeployRsp.getErrcode();
                             int resultCode = 1;
                             if (errCode != ResponseBase.CODE_SUCCESS) {
                                 resultCode = errCode;
@@ -468,31 +473,63 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
                             Intent intent = new Intent(DeployActivity.this, DeployResultActivity.class);
                             intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
                             intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                            intent.putExtra(EXTRA_DEVICE_INFO, response.getData());
+                            intent.putExtra(EXTRA_DEVICE_INFO, deviceDeployRsp.getData());
                             intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
                             intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
                             intent.putExtra(EXTRA_SETTING_CONTACT, contact);
                             intent.putExtra(EXTRA_SETTING_CONTENT, content);
                             startActivity(intent);
-                            finish();
                         }
-                    }, new Response.ErrorListener() {
+
                         @Override
-                        public void onErrorResponse(VolleyError volleyError) {
+                        public void onErrorMsg(String errorMsg) {
                             mProgressUtils.dismissProgress();
-                            if (volleyError.networkResponse != null) {
-                                byte[] data = volleyError.networkResponse.data;
-                                Toast.makeText(DeployActivity.this, new String(data), Toast.LENGTH_SHORT).show();
-                            } else {
-                                Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT)
-                                        .show();
-                            }
+                            Toast.makeText(DeployActivity.this, errorMsg, Toast.LENGTH_SHORT)
+                                    .show();
                             if (uploadButton != null) {
                                 uploadButton.setEnabled(true);
                             }
-
                         }
                     });
+//            NetUtils.INSTANCE.getServer().doDevicePointDeploy(sn, lon, lan, tags, name,
+//                    contact, content,
+//                    new Response.Listener<DeviceDeployRsp>() {
+//                        @Override
+//                        public void onResponse(DeviceDeployRsp response) {
+//                            mProgressUtils.dismissProgress();
+//                            int errCode = response.getErrcode();
+//                            int resultCode = 1;
+//                            if (errCode != ResponseBase.CODE_SUCCESS) {
+//                                resultCode = errCode;
+//                            }
+//                            Intent intent = new Intent(DeployActivity.this, DeployResultActivity.class);
+//                            intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
+//                            intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+//                            intent.putExtra(EXTRA_DEVICE_INFO, response.getData());
+//                            intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
+//                            intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
+//                            intent.putExtra(EXTRA_SETTING_CONTACT, contact);
+//                            intent.putExtra(EXTRA_SETTING_CONTENT, content);
+//                            startActivity(intent);
+//                            finish();
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError volleyError) {
+//                            mProgressUtils.dismissProgress();
+//                            if (volleyError.networkResponse != null) {
+//                                byte[] data = volleyError.networkResponse.data;
+//                                Toast.makeText(DeployActivity.this, new String(data), Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT)
+//                                        .show();
+//                            }
+//                            if (uploadButton != null) {
+//                                uploadButton.setEnabled(true);
+//                            }
+//
+//                        }
+//                    });
         }
 
     }
@@ -546,37 +583,62 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     public void doSignal() {
         String sns = titleTextView.getText().toString();
         mProgressUtils.showProgress();
-        SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(sns, null, 1,
-                new Response.Listener<DeviceInfoListRsp>() {
-                    @Override
-                    public void onResponse(DeviceInfoListRsp response) {
-                        mProgressUtils.dismissProgress();
-                        if (response.getData().size() > 0) {
-                            DeviceInfo deviceInfo = response.getData().get(0);
-                            String signal = deviceInfo.getSignal();
-                            refreshSignal(deviceInfo.getUpdatedTime(), signal);
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        mProgressUtils.dismissProgress();
-                        if (volleyError.networkResponse != null) {
-                            String reason = new String(volleyError.networkResponse.data);
-                            try {
-                                JSONObject jsonObject = new JSONObject(reason);
-                                Toast.makeText(DeployActivity.this, jsonObject.getString("errmsg"), Toast
-                                        .LENGTH_SHORT).show();
-                            } catch (JSONException e) {
-                                e.printStackTrace();
-                            } catch (Exception e) {
+        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(sns, null, 1).subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
-                            }
-                        } else {
-                            Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+
+            @Override
+            public void onCompleted() {
+                mProgressUtils.dismissProgress();
+            }
+
+            @Override
+            public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                if (deviceInfoListRsp.getData().size() > 0) {
+                    DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(0);
+                    String signal = deviceInfo.getSignal();
+                    refreshSignal(deviceInfo.getUpdatedTime(), signal);
+                }
+            }
+
+            @Override
+            public void onErrorMsg(String errorMsg) {
+                mProgressUtils.dismissProgress();
+                Toast.makeText(DeployActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+            }
+        });
+//        NetUtils.INSTANCE.getServer().getDeviceDetailInfoList(sns, null, 1,
+//                new Response.Listener<DeviceInfoListRsp>() {
+//                    @Override
+//                    public void onResponse(DeviceInfoListRsp response) {
+//                        mProgressUtils.dismissProgress();
+//                        if (response.getData().size() > 0) {
+//                            DeviceInfo deviceInfo = response.getData().get(0);
+//                            String signal = deviceInfo.getSignal();
+//                            refreshSignal(deviceInfo.getUpdatedTime(), signal);
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//                    @Override
+//                    public void onErrorResponse(VolleyError volleyError) {
+//                        mProgressUtils.dismissProgress();
+//                        if (volleyError.networkResponse != null) {
+//                            String reason = new String(volleyError.networkResponse.data);
+//                            try {
+//                                JSONObject jsonObject = new JSONObject(reason);
+//                                Toast.makeText(DeployActivity.this, jsonObject.getString("errmsg"), Toast
+//                                        .LENGTH_SHORT).show();
+//                            } catch (JSONException e) {
+//                                e.printStackTrace();
+//                            } catch (Exception e) {
+//
+//                            }
+//                        } else {
+//                            Toast.makeText(DeployActivity.this, R.string.tips_network_error, Toast.LENGTH_SHORT)
+// .show();
+//                        }
+//                    }
+//                });
 
     }
 

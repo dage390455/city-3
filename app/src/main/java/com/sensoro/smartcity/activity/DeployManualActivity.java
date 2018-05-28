@@ -14,22 +14,20 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sensoro on 17/11/7.
@@ -56,6 +54,7 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
         ButterKnife.bind(this);
         contentEditText.setOnEditorActionListener(this);
         contentEditText.addTextChangedListener(this);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
         StatusBarCompat.setStatusBarColor(this);
     }
 
@@ -107,41 +106,61 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
             Toast.makeText(DeployManualActivity.this, R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
         } else {
             mProgressUtils.showProgress();
-            SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(scanSerialNumber.toUpperCase
-                            (), null, 1,
-                    new Response
-                            .Listener<DeviceInfoListRsp>() {
-                        @Override
-                        public void onResponse(DeviceInfoListRsp response) {
-                            if (mProgressUtils != null) {
-                                mProgressUtils.dismissProgress();
-                            }
-                            refresh(response);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            if (mProgressUtils != null) {
-                                mProgressUtils.dismissProgress();
-                            }
-                            if (volleyError.networkResponse != null) {
-                                String reason = new String(volleyError.networkResponse.data);
-                                try {
-                                    JSONObject jsonObject = new JSONObject(reason);
-                                    Toast.makeText(DeployManualActivity.this, jsonObject.getString("errmsg"), Toast
-                                            .LENGTH_SHORT)
-                                            .show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (Exception e) {
+            RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1)
+                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
-                                }
-                            } else {
-                                Toast.makeText(DeployManualActivity.this, R.string.tips_network_error, Toast
-                                        .LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+
+                @Override
+                public void onCompleted() {
+                    mProgressUtils.dismissProgress();
+                }
+
+                @Override
+                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    refresh(deviceInfoListRsp);
+                }
+
+                @Override
+                public void onErrorMsg(String errorMsg) {
+                    mProgressUtils.dismissProgress();
+                    Toast.makeText(DeployManualActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                }
+            });
+//            NetUtils.INSTANCE.getServer().getDeviceDetailInfoList(scanSerialNumber.toUpperCase
+//                            (), null, 1,
+//                    new Response
+//                            .Listener<DeviceInfoListRsp>() {
+//                        @Override
+//                        public void onResponse(DeviceInfoListRsp response) {
+//                            if (mProgressUtils != null) {
+//                                mProgressUtils.dismissProgress();
+//                            }
+//                            refresh(response);
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError volleyError) {
+//                            if (mProgressUtils != null) {
+//                                mProgressUtils.dismissProgress();
+//                            }
+//                            if (volleyError.networkResponse != null) {
+//                                String reason = new String(volleyError.networkResponse.data);
+//                                try {
+//                                    JSONObject jsonObject = new JSONObject(reason);
+//                                    Toast.makeText(DeployManualActivity.this, jsonObject.getString("errmsg"), Toast
+//                                            .LENGTH_SHORT)
+//                                            .show();
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                } catch (Exception e) {
+//
+//                                }
+//                            } else {
+//                                Toast.makeText(DeployManualActivity.this, R.string.tips_network_error, Toast
+//                                        .LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
 
         }
     }
@@ -154,12 +173,10 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
                 intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
                 intent.putExtra("uid", this.getIntent().getStringExtra("uid"));
                 startActivityForResult(intent, REQUEST_CODE_DEPLOY);
-                this.finish();
             } else {
                 intent.setClass(this, DeployResultActivity.class);
                 intent.putExtra(EXTRA_SENSOR_RESULT, -1);
                 startActivityForResult(intent, REQUEST_CODE_DEPLOY);
-                this.finish();
             }
 
         } catch (Exception e) {
@@ -174,6 +191,18 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
             return false;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //数据回传
+        if (resultCode == RESULT_CODE_MAP) {
+            setResult(RESULT_CODE_MAP, data);
+            finish();
+        } else {
+            finish();
+        }
     }
 
     @Override

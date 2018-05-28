@@ -27,11 +27,11 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private AlarmItemClickListener mListener;
+    private AlarmConfirmStatusClickListener mListener;
     private List<DeviceAlarmLogInfo> mList = new ArrayList<>();
     private int selectedIndex;
 
-    public AlarmListAdapter(Context context, AlarmItemClickListener listener) {
+    public AlarmListAdapter(Context context, AlarmConfirmStatusClickListener listener) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
         this.mListener = listener;
@@ -120,7 +120,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mListener.onItemClick(v, position);
+                            mListener.onConfirmStatusClick(v, position);
                         }
                     });
 //                    holder.item_iv_status.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_alarm));
@@ -131,7 +131,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mListener.onItemClick(v, position);
+                            mListener.onConfirmStatusClick(v, position);
                         }
                     });
 //                    holder.item_confirm_status.setVisibility(View.GONE);
@@ -144,7 +144,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mListener.onItemClick(v, position);
+                            mListener.onConfirmStatusClick(v, position);
                         }
                     });
 //                    holder.item_confirm_status.setVisibility(View.GONE);
@@ -157,7 +157,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mListener.onItemClick(v, position);
+                            mListener.onConfirmStatusClick(v, position);
                         }
                     });
 //                    holder.item_confirm_status.setVisibility(View.GONE);
@@ -171,8 +171,8 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
         return convertView;
     }
 
-    public interface AlarmItemClickListener {
-        void onItemClick(View view, int position);
+    public interface AlarmConfirmStatusClickListener {
+        void onConfirmStatusClick(View view, int position);
     }
 
 

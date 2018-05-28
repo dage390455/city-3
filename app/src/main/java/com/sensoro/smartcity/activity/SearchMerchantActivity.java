@@ -22,14 +22,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -37,15 +36,14 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sensoro on 17/7/11.
@@ -187,41 +185,69 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
 
     public void requestData(String text) {
         mProgressUtils.showProgress();
-        SensoroCityApplication.getInstance().smartCityServer.getUserAccountList(text, null, null, null, "100000", new
-                Response.Listener<UserAccountRsp>() {
-                    @Override
-                    public void onResponse(UserAccountRsp response) {
-                        mProgressUtils.dismissProgress();
-                        List<UserInfo> list = response.getData();
-                        if (list.size() == 0) {
-                            tipsLinearLayout.setVisibility(View.VISIBLE);
-                        } else {
-                            Intent data = new Intent();
-                            data.putExtra(EXTRA_MERCHANT_INFO, response);
-                            setResult(RESULT_CODE_SEARCH_MERCHANT, data);
-                            finish();
-                        }
-                    }
-                }, new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError volleyError) {
-                mProgressUtils.dismissProgress();
-                if (volleyError.networkResponse != null) {
-                    String reason = new String(volleyError.networkResponse.data);
-                    try {
-                        JSONObject jsonObject = new JSONObject(reason);
-                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
-                                .show();
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    } catch (Exception e) {
+        RetrofitServiceHelper.INSTANCE.getUserAccountList(text).subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>() {
 
-                    }
+
+            @Override
+            public void onCompleted() {
+                mProgressUtils.dismissProgress();
+                finish();
+            }
+
+            @Override
+            public void onNext(UserAccountRsp userAccountRsp) {
+                List<UserInfo> list = userAccountRsp.getData();
+                if (list.size() == 0) {
+                    tipsLinearLayout.setVisibility(View.VISIBLE);
                 } else {
-                    Toast.makeText(getApplicationContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
+                    Intent data = new Intent();
+                    data.putExtra(EXTRA_MERCHANT_INFO, userAccountRsp);
+                    setResult(RESULT_CODE_SEARCH_MERCHANT, data);
                 }
             }
+
+            @Override
+            public void onErrorMsg(String errorMsg) {
+                mProgressUtils.dismissProgress();
+                Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
+            }
         });
+//        NetUtils.INSTANCE.getServer().getUserAccountList(text, null, null, null, "100000", new
+//                Response.Listener<UserAccountRsp>() {
+//                    @Override
+//                    public void onResponse(UserAccountRsp response) {
+//                        mProgressUtils.dismissProgress();
+//                        List<UserInfo> list = response.getData();
+//                        if (list.size() == 0) {
+//                            tipsLinearLayout.setVisibility(View.VISIBLE);
+//                        } else {
+//                            Intent data = new Intent();
+//                            data.putExtra(EXTRA_MERCHANT_INFO, response);
+//                            setResult(RESULT_CODE_SEARCH_MERCHANT, data);
+//                            finish();
+//                        }
+//                    }
+//                }, new Response.ErrorListener() {
+//            @Override
+//            public void onErrorResponse(VolleyError volleyError) {
+//                mProgressUtils.dismissProgress();
+//                if (volleyError.networkResponse != null) {
+//                    String reason = new String(volleyError.networkResponse.data);
+//                    try {
+//                        JSONObject jsonObject = new JSONObject(reason);
+//                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
+//                                .show();
+//                    } catch (JSONException e) {
+//                        e.printStackTrace();
+//                    } catch (Exception e) {
+//
+//                    }
+//                } else {
+//                    Toast.makeText(getApplicationContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
     }
 
     @Override

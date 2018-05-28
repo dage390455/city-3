@@ -19,7 +19,7 @@ import okhttp3.OkHttpClient;
 
 
 public class VolleyManager {
-    private volatile static VolleyManager mVolleyManager = null;
+//    private volatile static VolleyManager mVolleyManager = null;
     private RequestQueue mRequestQueue;
     private ImageLoader mImageLoader;
 
@@ -27,7 +27,7 @@ public class VolleyManager {
     /**
      * @param context
      */
-    private VolleyManager(Context context) {
+    public VolleyManager(Context context) {
 
         mRequestQueue = Volley.newRequestQueue(context, new OkHttp3Stack(new OkHttpClient()));
 
@@ -40,17 +40,17 @@ public class VolleyManager {
      *
      * @return VolleyManager instance
      */
-    public static VolleyManager getInstance(Context context) {
-        if (mVolleyManager == null) {
-            synchronized (VolleyManager.class) {
-                if (mVolleyManager == null) {
-                    mVolleyManager = new VolleyManager(context);
-                }
-            }
-        }
-
-        return mVolleyManager;
-    }
+//    public static VolleyManager getInstance(Context context) {
+//        if (mVolleyManager == null) {
+//            synchronized (VolleyManager.class) {
+//                if (mVolleyManager == null) {
+//                    mVolleyManager = new VolleyManager(context.getApplicationContext());
+//                }
+//            }
+//        }
+//
+//        return mVolleyManager;
+//    }
 
     private <T> Request<T> add(Request<T> request) {
         return mRequestQueue.add(request);//添加请求到队列

@@ -32,7 +32,7 @@ public class LocationService {
     }
 
     public void init() {
-        Log.d(TAG, "init location service");
+        Log.d(TAG, "initView location service");
         if (locationManager == null) {
             locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         }

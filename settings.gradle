@@ -1,1 +1,1 @@
-include ':app',  ':cosmocalendar', ':volleymanager', ':libcityserver','menudrawer',':libpulltorefresh:pulltorefresh', 'MPChartLib', 'xrecyclerview'
+include ':app', ':cosmocalendar', ':libcityserver', 'menudrawer', ':libpulltorefresh:pulltorefresh', 'MPChartLib', 'xrecyclerview', ':TagsEditText'

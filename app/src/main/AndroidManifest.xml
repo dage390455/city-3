@@ -72,7 +72,9 @@
         android:theme="@style/AppTheme">
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="6e1be3076c19f3cf3d148223a2873733"/>
+            android:value="feb394e9f7754ae572cc77a0bfc723e5"/>
+        <!--android:value="6e1be3076c19f3cf3d148223a2873733"/>-->
+        <!--feb394e9f7754ae572cc77a0bfc723e5-->
 
         <activity
             android:name=".activity.LoginActivity"
@@ -225,8 +227,9 @@
             android:process=":pushservice"/>
 
         <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
-        <service android:name=".push.SensoroPushIntentService"
-                 android:process=":pushservice"/>
+        <service
+            android:name=".push.SensoroPushIntentService"
+            android:process=":pushservice"/>
 
         <!-- 用户自定义服务名 -->
         <service

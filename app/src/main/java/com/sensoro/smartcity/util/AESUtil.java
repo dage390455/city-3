@@ -35,20 +35,20 @@ public class AESUtil {
              *两者之间的惟一不同是对象的初始化：
              *与算法无关的初始化
              *所有密钥生成器都具有密钥长度 和随机源 的概念。
-             *此 KeyGenerator 类中有一个 init 方法，它可采用这两个通用概念的参数。
-             *还有一个只带 keysize 参数的 init 方法，
+             *此 KeyGenerator 类中有一个 initView 方法，它可采用这两个通用概念的参数。
+             *还有一个只带 keysize 参数的 initView 方法，
              *它使用具有最高优先级的提供程序的 SecureRandom 实现作为随机源
              *（如果安装的提供程序都不提供 SecureRandom 实现，则使用系统提供的随机源）。
              *此 KeyGenerator 类还提供一个只带随机源参数的 inti 方法。
-             *因为调用上述与算法无关的 init 方法时未指定其他参数，
+             *因为调用上述与算法无关的 initView 方法时未指定其他参数，
              *所以由提供程序决定如何处理将与每个密钥相关的特定于算法的参数（如果有）。
              *特定于算法的初始化
              *在已经存在特定于算法的参数集的情况下，
-             *有两个具有 AlgorithmParameterSpec 参数的 init 方法。
+             *有两个具有 AlgorithmParameterSpec 参数的 initView 方法。
              *其中一个方法还有一个 SecureRandom 参数，
              *而另一个方法将已安装的高优先级提供程序的 SecureRandom 实现用作随机源
              *（或者作为系统提供的随机源，如果安装的提供程序都不提供 SecureRandom 实现）。
-             *如果客户端没有显式地初始化 KeyGenerator（通过调用 init 方法），
+             *如果客户端没有显式地初始化 KeyGenerator（通过调用 initView 方法），
              *每个提供程序必须提供（和记录）默认初始化。
              */
             keyGen = KeyGenerator.getInstance("AES");

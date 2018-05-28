@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
-import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 
@@ -14,7 +13,7 @@ import com.sensoro.smartcity.R;
  * Created by sensoro on 17/11/13.
  */
 
-public class ClearableTextView extends TextView {
+public class ClearableTextView extends android.support.v7.widget.AppCompatTextView {
 
     public interface OnTextClearListener {
         public void onTextClear(ClearableTextView v);

@@ -24,15 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.adapter.SearchAlarmPagerAdapter;
-import com.sensoro.smartcity.adapter.SearchAlarmTagAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -40,15 +38,14 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 /**
  * Created by sensoro on 17/7/11.
@@ -86,11 +83,12 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
     private final List<String> mHistoryKeywords_devicePhone = new ArrayList<>();
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
-    private SearchAlarmTagAdapter mAlarmTagAdapter;
-    private SearchAlarmPagerAdapter searchAlarmPagerAdapter;
+    //    private SearchAlarmTagAdapter mAlarmTagAdapter;
+//    private SearchAlarmPagerAdapter searchAlarmPagerAdapter;
     private Long mStartTime = null;
     private Long mEndTime = null;
-    private int searchType =TYPE_DEVICE_NAME;
+    private int searchType = TYPE_DEVICE_NAME;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -126,7 +124,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
         String extra_search_content = getIntent().getStringExtra(EXTRA_SEARCH_CONTENT);
         if (!TextUtils.isEmpty(extra_search_content)) {
             setText(extra_search_content);
-            searchType =SensoroCityApplication.getInstance().saveSearchType;
+            searchType = SensoroCityApplication.getInstance().saveSearchType;
         } else {
             mKeywordEt.getText().clear();
         }
@@ -137,7 +135,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                 searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), false);
                 refreshHistory(mHistoryKeywords_deviceName);
                 break;
-            case Constants.TYPE_DEVICE_NUMBER:
+            case Constants.TYPE_DEVICE_SN:
                 searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), false);
                 searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), true);
                 searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), false);
@@ -167,7 +165,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                         refreshHistory(mHistoryKeywords_deviceName);
                         break;
                     case 1:
-                        searchType = Constants.TYPE_DEVICE_NUMBER;
+                        searchType = Constants.TYPE_DEVICE_SN;
                         mKeywordEt.setHint("设备号");
                         refreshHistory(mHistoryKeywords_deviceNumber);
                         break;
@@ -228,7 +226,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                                 text = mHistoryKeywords_deviceName.get(position);
                                 setText(text);
                                 break;
-                            case Constants.TYPE_DEVICE_NUMBER:
+                            case Constants.TYPE_DEVICE_SN:
                                 text = mHistoryKeywords_deviceNumber.get(position);
                                 setText(text);
                                 break;
@@ -281,7 +279,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
             case Constants.TYPE_DEVICE_NAME:
                 ori = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
                 break;
-            case Constants.TYPE_DEVICE_NUMBER:
+            case Constants.TYPE_DEVICE_SN:
                 ori = mPref.getString(PREFERENCE_KEY_DEVICE_NUM, "");
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
@@ -330,7 +328,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                         mEditor.commit();
                     }
                     break;
-                case Constants.TYPE_DEVICE_NUMBER:
+                case Constants.TYPE_DEVICE_SN:
                     if (!mHistoryKeywords_deviceNumber.contains(text)) {
                         mHistoryKeywords_deviceNumber.add(text);
                     }
@@ -427,7 +425,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                 mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_deviceName);
                 mSearchHistoryLayout.setVisibility(View.GONE);
                 break;
-            case Constants.TYPE_DEVICE_NUMBER:
+            case Constants.TYPE_DEVICE_SN:
 //                mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, "");
                 mEditor.clear();
                 mHistoryKeywords_deviceNumber.clear();
@@ -459,144 +457,231 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 mProgressUtils.showProgress();
-                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDeviceName(mStartTime,
-                        mEndTime,
-                        text, null, 1, new
-                                Response.Listener<DeviceAlarmLogRsp>() {
-                                    @Override
-                                    public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressUtils.dismissProgress();
-                                        if (response.getData().size() == 0) {
-                                            tipsLinearLayout.setVisibility(View.VISIBLE);
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, text, null, mStartTime, mEndTime, null)
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                    @Override
+                    public void onCompleted() {
+                        mProgressUtils.dismissProgress();
+                        finish();
+                    }
+
+                    @Override
+                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        if (deviceAlarmLogRsp.getData().size() == 0) {
+                            tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
-                                        } else {
-                                            SensoroCityApplication.getInstance().saveSearchType=searchType;
-                                            Intent data = new Intent();
-                                            data.putExtra(EXTRA_ALARM_INFO, response);
-                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-                                            finish();
-                                        }
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                mProgressUtils.dismissProgress();
-                                if (error.networkResponse != null) {
-                                    String reason = new String(error.networkResponse.data);
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(reason);
-                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
-                                                .LENGTH_SHORT)
-                                                .show();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    } catch (Exception e) {
+                        } else {
+                            SensoroCityApplication.getInstance().saveSearchType = searchType;
+                            Intent data = new Intent();
+                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
+                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
+                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
+                            setResult(RESULT_CODE_SEARCH_ALARM, data);
+                        }
+                    }
 
-                                    }
-                                } else {
-                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
-                                            .LENGTH_SHORT)
-                                            .show();
-                                }
-
-                            }
-                        });
+                    @Override
+                    public void onErrorMsg(String errorMsg) {
+                        mProgressUtils.dismissProgress();
+                        Toast.makeText(SearchAlarmActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                NetUtils.INSTANCE.getServer().getDeviceAlarmLogListByDeviceName(mStartTime,
+//                        mEndTime,
+//                        text, null, 1, new
+//                                Response.Listener<DeviceAlarmLogRsp>() {
+//                                    @Override
+//                                    public void onResponse(DeviceAlarmLogRsp response) {
+//                                        mProgressUtils.dismissProgress();
+//                                        if (response.getData().size() == 0) {
+//                                            tipsLinearLayout.setVisibility(View.VISIBLE);
+////                            tagLinearLayout.setVisibility(View.GONE);
+//                                        } else {
+//                                            SensoroCityApplication.getInstance().saveSearchType = searchType;
+//                                            Intent data = new Intent();
+//                                            data.putExtra(EXTRA_ALARM_INFO, response);
+//                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
+//                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
+//                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
+//                                            finish();
+//                                        }
+//                                    }
+//                                }, new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                mProgressUtils.dismissProgress();
+//                                if (error.networkResponse != null) {
+//                                    String reason = new String(error.networkResponse.data);
+//                                    try {
+//                                        JSONObject jsonObject = new JSONObject(reason);
+//                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
+//                                                .LENGTH_SHORT)
+//                                                .show();
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    } catch (Exception e) {
+//
+//                                    }
+//                                } else {
+//                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
+//                                            .LENGTH_SHORT)
+//                                            .show();
+//                                }
+//
+//                            }
+//                        });
                 break;
-            case Constants.TYPE_DEVICE_NUMBER:
+            case Constants.TYPE_DEVICE_SN:
                 mProgressUtils.showProgress();
-                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogList(mStartTime, mEndTime,
-                        text, null, 1,
-                        new
-                                Response.Listener<DeviceAlarmLogRsp>() {
-                                    @Override
-                                    public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressUtils.dismissProgress();
-                                        if (response.getData().size() == 0) {
-                                            tipsLinearLayout.setVisibility(View.VISIBLE);
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, text, null, null, mStartTime, mEndTime, null)
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                    @Override
+                    public void onCompleted() {
+                        mProgressUtils.dismissProgress();
+                        finish();
+                    }
+
+                    @Override
+                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        if (deviceAlarmLogRsp.getData().size() == 0) {
+                            tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
-                                        } else {
-                                            SensoroCityApplication.getInstance().saveSearchType=searchType;
-                                            Intent data = new Intent();
-                                            data.putExtra(EXTRA_ALARM_INFO, response);
-                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-                                            finish();
-                                        }
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                mProgressUtils.dismissProgress();
-                                if (error.networkResponse != null) {
-                                    String reason = new String(error.networkResponse.data);
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(reason);
-                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
-                                                .LENGTH_SHORT)
-                                                .show();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    } catch (Exception e) {
+                        } else {
+                            SensoroCityApplication.getInstance().saveSearchType = searchType;
+                            Intent data = new Intent();
+                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
+                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
+                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
+                            setResult(RESULT_CODE_SEARCH_ALARM, data);
+                        }
+                    }
 
-                                    }
-                                } else {
-                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
-                                            .LENGTH_SHORT)
-                                            .show();
-                                }
-
-                            }
-                        });
+                    @Override
+                    public void onErrorMsg(String errorMsg) {
+                        mProgressUtils.dismissProgress();
+                        Toast.makeText(SearchAlarmActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                NetUtils.INSTANCE.getServer().getDeviceAlarmLogList(mStartTime, mEndTime,
+//                        text, null, 1,
+//                        new
+//                                Response.Listener<DeviceAlarmLogRsp>() {
+//                                    @Override
+//                                    public void onResponse(DeviceAlarmLogRsp response) {
+//                                        mProgressUtils.dismissProgress();
+//                                        if (response.getData().size() == 0) {
+//                                            tipsLinearLayout.setVisibility(View.VISIBLE);
+////                            tagLinearLayout.setVisibility(View.GONE);
+//                                        } else {
+//                                            SensoroCityApplication.getInstance().saveSearchType = searchType;
+//                                            Intent data = new Intent();
+//                                            data.putExtra(EXTRA_ALARM_INFO, response);
+//                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
+//                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
+//                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
+//                                            finish();
+//                                        }
+//                                    }
+//                                }, new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                mProgressUtils.dismissProgress();
+//                                if (error.networkResponse != null) {
+//                                    String reason = new String(error.networkResponse.data);
+//                                    try {
+//                                        JSONObject jsonObject = new JSONObject(reason);
+//                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
+//                                                .LENGTH_SHORT)
+//                                                .show();
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    } catch (Exception e) {
+//
+//                                    }
+//                                } else {
+//                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
+//                                            .LENGTH_SHORT)
+//                                            .show();
+//                                }
+//
+//                            }
+//                        });
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
                 mProgressUtils.showProgress();
-                SensoroCityApplication.getInstance().smartCityServer.getDeviceAlarmLogListByDevicePhone(mStartTime,
-                        mEndTime,
-                        text, null, 1, new
-                                Response.Listener<DeviceAlarmLogRsp>() {
-                                    @Override
-                                    public void onResponse(DeviceAlarmLogRsp response) {
-                                        mProgressUtils.dismissProgress();
-                                        if (response.getData().size() == 0) {
-                                            tipsLinearLayout.setVisibility(View.VISIBLE);
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, text, mStartTime, mEndTime, null)
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                    @Override
+                    public void onCompleted() {
+                        mProgressUtils.dismissProgress();
+                        finish();
+                    }
+
+                    @Override
+                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        if (deviceAlarmLogRsp.getData().size() == 0) {
+                            tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
-                                        } else {
-                                            SensoroCityApplication.getInstance().saveSearchType=searchType;
-                                            Intent data = new Intent();
-                                            data.putExtra(EXTRA_ALARM_INFO, response);
-                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-                                            finish();
-                                        }
-                                    }
-                                }, new Response.ErrorListener() {
-                            @Override
-                            public void onErrorResponse(VolleyError error) {
-                                mProgressUtils.dismissProgress();
-                                if (error.networkResponse != null) {
-                                    String reason = new String(error.networkResponse.data);
-                                    try {
-                                        JSONObject jsonObject = new JSONObject(reason);
-                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
-                                                .LENGTH_SHORT)
-                                                .show();
-                                    } catch (JSONException e) {
-                                        e.printStackTrace();
-                                    } catch (Exception e) {
+                        } else {
+                            SensoroCityApplication.getInstance().saveSearchType = searchType;
+                            Intent data = new Intent();
+                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
+                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
+                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
+                            setResult(RESULT_CODE_SEARCH_ALARM, data);
+                        }
+                    }
 
-                                    }
-                                } else {
-                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
-                                            .LENGTH_SHORT)
-                                            .show();
-                                }
-
-                            }
-                        });
+                    @Override
+                    public void onErrorMsg(String errorMsg) {
+                        mProgressUtils.dismissProgress();
+                        Toast.makeText(SearchAlarmActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                    }
+                });
+//                NetUtils.INSTANCE.getServer().getDeviceAlarmLogListByDevicePhone(mStartTime,
+//                        mEndTime,
+//                        text, null, 1, new
+//                                Response.Listener<DeviceAlarmLogRsp>() {
+//                                    @Override
+//                                    public void onResponse(DeviceAlarmLogRsp response) {
+//                                        mProgressUtils.dismissProgress();
+//                                        if (response.getData().size() == 0) {
+//                                            tipsLinearLayout.setVisibility(View.VISIBLE);
+////                            tagLinearLayout.setVisibility(View.GONE);
+//                                        } else {
+//                                            SensoroCityApplication.getInstance().saveSearchType = searchType;
+//                                            Intent data = new Intent();
+//                                            data.putExtra(EXTRA_ALARM_INFO, response);
+//                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
+//                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
+//                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
+//                                            finish();
+//                                        }
+//                                    }
+//                                }, new Response.ErrorListener() {
+//                            @Override
+//                            public void onErrorResponse(VolleyError error) {
+//                                mProgressUtils.dismissProgress();
+//                                if (error.networkResponse != null) {
+//                                    String reason = new String(error.networkResponse.data);
+//                                    try {
+//                                        JSONObject jsonObject = new JSONObject(reason);
+//                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
+//                                                .LENGTH_SHORT)
+//                                                .show();
+//                                    } catch (JSONException e) {
+//                                        e.printStackTrace();
+//                                    } catch (Exception e) {
+//
+//                                    }
+//                                } else {
+//                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
+//                                            .LENGTH_SHORT)
+//                                            .show();
+//                                }
+//
+//                            }
+//                        });
                 break;
             default:
                 break;

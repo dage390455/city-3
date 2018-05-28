@@ -33,8 +33,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
 import com.baidu.mobstat.StatService;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
@@ -58,17 +56,15 @@ import com.google.zxing.client.android.result.ResultHandler;
 import com.google.zxing.client.android.result.ResultHandlerFactory;
 import com.google.zxing.common.HybridBinarizer;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployActivity;
 import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
-
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.IOException;
 import java.security.InvalidKeyException;
@@ -80,6 +76,9 @@ import java.util.Map;
 import javax.crypto.Mac;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
+
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
@@ -258,12 +257,12 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         surfaceHolder = surfaceView.getHolder();
         if (hasSurface) {
             // The activity was paused but not stopped, so the surface still exists. Therefore
-            // surfaceCreated() won't be called, so init the camera here.
+            // surfaceCreated() won't be called, so initView the camera here.
             System.out.println("=====>hasSurface");
             initCamera(surfaceHolder);
         } else {
             System.out.println("=====>hasSurface.false");
-            // Install the callback and wait for surfaceCreated() to init the camera.
+            // Install the callback and wait for surfaceCreated() to initView the camera.
             surfaceHolder.addCallback(this);
         }
         WindowManager manager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
@@ -516,35 +515,54 @@ public class PointDeployFragment extends Fragment implements View.OnClickListene
         } else {
             mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this.getActivity()).build());
             mProgressUtils.showProgress();
-            SensoroCityApplication.getInstance().smartCityServer.getDeviceDetailInfoList(scanSerialNumber, null, 1,
-                    new Response
-                            .Listener<DeviceInfoListRsp>() {
-                        @Override
-                        public void onResponse(DeviceInfoListRsp response) {
+            RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(),null,1).subscribeOn
+                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
-                            mProgressUtils.dismissProgress();
-                            refresh(response);
-                        }
-                    }, new Response.ErrorListener() {
-                        @Override
-                        public void onErrorResponse(VolleyError volleyError) {
-                            mProgressUtils.dismissProgress();
-                            if (volleyError.networkResponse != null) {
-                                String reason = new String(volleyError.networkResponse.data);
-                                try {
-                                    JSONObject jsonObject = new JSONObject(reason);
-                                    Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
-                                            .show();
-                                } catch (JSONException e) {
-                                    e.printStackTrace();
-                                } catch (Exception e) {
+                @Override
+                public void onCompleted() {
+                    mProgressUtils.dismissProgress();
+                }
 
-                                }
-                            } else {
-                                Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+                @Override
+                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    refresh(deviceInfoListRsp);
+                }
+
+                @Override
+                public void onErrorMsg(String errorMsg) {
+                    mProgressUtils.dismissProgress();
+                    Toast.makeText(getContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                }
+            });
+//            NetUtils.INSTANCE.getServer().getDeviceDetailInfoList(scanSerialNumber, null, 1,
+//                    new Response
+//                            .Listener<DeviceInfoListRsp>() {
+//                        @Override
+//                        public void onResponse(DeviceInfoListRsp response) {
+//
+//                            mProgressUtils.dismissProgress();
+//                            refresh(response);
+//                        }
+//                    }, new Response.ErrorListener() {
+//                        @Override
+//                        public void onErrorResponse(VolleyError volleyError) {
+//                            mProgressUtils.dismissProgress();
+//                            if (volleyError.networkResponse != null) {
+//                                String reason = new String(volleyError.networkResponse.data);
+//                                try {
+//                                    JSONObject jsonObject = new JSONObject(reason);
+//                                    Toast.makeText(getContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
+//                                            .show();
+//                                } catch (JSONException e) {
+//                                    e.printStackTrace();
+//                                } catch (Exception e) {
+//
+//                                }
+//                            } else {
+//                                Toast.makeText(getContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
+//                            }
+//                        }
+//                    });
 
         }
     }

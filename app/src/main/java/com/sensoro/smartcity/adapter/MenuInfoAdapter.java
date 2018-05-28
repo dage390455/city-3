@@ -15,9 +15,9 @@ import com.sensoro.smartcity.widget.SensoroTextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.sensoro.smartcity.activity.MainActivity.BUSSISE_ACCOUNT;
-import static com.sensoro.smartcity.activity.MainActivity.NORMOL_ACCOUNT;
-import static com.sensoro.smartcity.activity.MainActivity.SUPPER_ACCOUNT;
+import static com.sensoro.smartcity.presenter.MainPresenter.BUSSISE_ACCOUNT;
+import static com.sensoro.smartcity.presenter.MainPresenter.NORMOL_ACCOUNT;
+import static com.sensoro.smartcity.presenter.MainPresenter.SUPPER_ACCOUNT;
 
 /**
  * Created by fangping on 2016/7/7.
@@ -116,7 +116,6 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
      */
     public void showAccountSwitch(int accountType) {
         this.tempAccountType = accountType;
-
         notifyDataSetChanged();
     }
 

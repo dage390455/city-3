@@ -14,6 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
@@ -22,7 +23,6 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.TagsEditText;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
@@ -33,6 +33,7 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mabbas007.tagsedittext.TagsEditText;
 
 public class DeploySettingTagActivity extends BaseActivity implements Constants,
         TagsEditText.TagsEditListener {
@@ -48,12 +49,12 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
     RecyclerView mSearchHistoryRv;
     @BindView(R.id.deploy_setting_tag_relation_rv)
     RecyclerView mSearchRelationRv;
-    @BindView(R.id.deploy_setting_tag_relation_layout)
-    LinearLayout mSearchRelationLayout;
+    //    @BindView(R.id.deploy_setting_tag_relation_layout)
+//    LinearLayout mSearchRelationLayout;
     @BindView(R.id.deploy_setting_tag_history_layout)
     LinearLayout mSearchHistoryLayout;
-    @BindView(R.id.deploy_setting_tag_input_layout)
-    LinearLayout inputLayout;
+//    @BindView(R.id.deploy_setting_tag_input_layout)
+//    LinearLayout inputLayout;
 
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
@@ -70,12 +71,12 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         ButterKnife.bind(this);
         init();
         StatusBarCompat.setStatusBarColor(this);
-        mKeywordEt.onSaveInstanceState();
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
         super.onSaveInstanceState(outState, outPersistentState);
+        mKeywordEt.onSaveInstanceState();
     }
 
     @Override
@@ -85,9 +86,15 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     protected void onPause() {
         super.onPause();
         StatService.onPause(this);
+
     }
 
     @Override
@@ -100,18 +107,17 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
 
     private void init() {
         try {
-            mSearchHistoryLayout.setVisibility(View.VISIBLE);
-            mSearchRelationLayout.setVisibility(View.GONE);
+//            mSearchHistoryLayout.setVisibility(View.VISIBLE);
+//            mSearchRelationLayout.setVisibility(View.GONE);
             mPref = getApplicationContext().getSharedPreferences(PREFERENCE_DEPLOY_TAG_HISTORY, Activity.MODE_PRIVATE);
             mEditor = mPref.edit();
             //
             mTagList = getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
+            mKeywordEt.setTagsListener(this);
             if (mTagList != null && mTagList.size() > 0) {
                 mKeywordEt.setTags(mTagList);
             }
             //
-
-            mKeywordEt.setTagsListener(this);
 
             //
 //            initRelation();
@@ -144,37 +150,6 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
 
     }
 
-//    private void initInputLayout() {
-//        inputLayout.removeAllViews();
-//        mKeywordEt.getText().clear();
-//        inputLayout.addView(mKeywordEt);
-//        int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
-//        mTagList = getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
-//        for (int i = 0; i < mTagList.size(); i++) {
-//            ClearableTextView textView = new ClearableTextView(this);
-//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-//            params.setMargins(10, 0, 0, 0);
-//            textView.setTextColor(getResources().getColor(R.color.white));
-//            textView.setText(mTagList.get(i));
-//            textView.setPadding(5, 0, 0, 0);
-//            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-//            textView.setGravity(Gravity.CENTER);
-//            textView.setCompoundDrawables(null, null, null, null);
-//            textView.setBackground(getResources().getDrawable(R.drawable.shape_textview));
-//            textView.setOnTextClearListener(new ClearableTextView.OnTextClearListener() {
-//                @Override
-//                public void onTextClear(ClearableTextView v) {
-//                    mTagList.remove(v.getText().toString());
-//                    inputLayout.removeView(v);
-//                }
-//            });
-////            inputLayout.remo
-//            int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
-//            textView.measure(spec, spec);
-//            inputLayout.addView(textView, i, params);
-//        }
-//        mKeywordEt.requestFocus();
-//    }
 
     private void initSearchHistory() {
         String history = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
@@ -195,7 +170,17 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         mSearchHistoryAdapter = new SearchHistoryAdapter(this, mHistoryKeywords, new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                mTagList.add(mHistoryKeywords.get(position).trim());
+                String test = mHistoryKeywords.get(position);
+                if (!TextUtils.isEmpty(test)) {
+                    String trim = test.trim();
+                    if (mTagList.contains(trim)) {
+                        Toast.makeText(DeploySettingTagActivity.this, "标签不能重复", Toast.LENGTH_SHORT).show();
+                        return;
+                    } else {
+                        mTagList.add(trim);
+                    }
+
+                }
                 mKeywordEt.setTags(mTagList);
             }
         });
@@ -205,56 +190,13 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
     }
 
-//    private void initRelation() {
-//        mRelationAdapter = new RelationAdapter(this, this);
-//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        mSearchRelationRv.setLayoutManager(linearLayoutManager);
-//        mSearchRelationRv.setAdapter(mRelationAdapter);
-//    }
+
 
     @Override
     protected boolean isNeedSlide() {
         return true;
     }
 
-//    private boolean containsTag(List<String> tags, String filter) {
-//        for (String tag : tags) {
-//            if (tag.contains(filter)) {
-//                return true;
-//            }
-//        }
-//        return false;
-//    }
-
-//    public void filterDeviceInfoByTag(String filter) {
-//        List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
-//        originDeviceInfoList.addAll(SensoroCityApplication.getInstance().getData());
-//        ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
-//        for (DeviceInfo deviceInfo : originDeviceInfoList) {
-//            if (deviceInfo.getTags() != null) {
-//                List<String> tagList = Arrays.asList(deviceInfo.getTags());
-//                if (!containsTag(tagList, filter)) {
-//                    deleteDeviceInfoList.add(deviceInfo);
-//                }
-//            } else {
-//                deleteDeviceInfoList.add(deviceInfo);
-//            }
-//
-//        }
-//        for (DeviceInfo deviceInfo : deleteDeviceInfoList) {
-//            originDeviceInfoList.remove(deviceInfo);
-//        }
-//        List<String> tempList = new ArrayList<>();
-//        for (DeviceInfo deviceInfo : originDeviceInfoList) {
-//            String name = deviceInfo.getName();
-//            if (!TextUtils.isEmpty(name)) {
-//                tempList.add(name);
-//            }
-//        }
-//        mRelationAdapter.setData(tempList);
-//        mRelationAdapter.notifyDataSetChanged();
-//    }
 
     public void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -365,7 +307,52 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         this.finish();
     }
 
-//    @Override
+
+    @Override
+    public void onTagsChanged(Collection<String> tags) {
+        mTagList = (List<String>) tags;
+    }
+
+    @Override
+    public void onEditingFinished() {
+        mKeywordEt.clearFocus();
+//            dismissInputMethodManager(mKeywordEt);
+//            doChoose(false);
+    }
+    /////////
+    //    private void initInputLayout() {
+//        inputLayout.removeAllViews();
+//        mKeywordEt.getText().clear();
+//        inputLayout.addView(mKeywordEt);
+//        int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
+//        mTagList = getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
+//        for (int i = 0; i < mTagList.size(); i++) {
+//            ClearableTextView textView = new ClearableTextView(this);
+//            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+//            params.setMargins(10, 0, 0, 0);
+//            textView.setTextColor(getResources().getColor(R.color.white));
+//            textView.setText(mTagList.get(i));
+//            textView.setPadding(5, 0, 0, 0);
+//            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+//            textView.setGravity(Gravity.CENTER);
+//            textView.setCompoundDrawables(null, null, null, null);
+//            textView.setBackground(getResources().getDrawable(R.drawable.shape_textview));
+//            textView.setOnTextClearListener(new ClearableTextView.OnTextClearListener() {
+//                @Override
+//                public void onTextClear(ClearableTextView v) {
+//                    mTagList.remove(v.getText().toString());
+//                    inputLayout.removeView(v);
+//                }
+//            });
+////            inputLayout.remo
+//            int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
+//            textView.measure(spec, spec);
+//            inputLayout.addView(textView, i, params);
+//        }
+//        mKeywordEt.requestFocus();
+//    }
+
+    //    @Override
 //    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
 //        if (actionId == EditorInfo.IME_ACTION_DONE) {
 //            mKeywordEt.clearFocus();
@@ -411,15 +398,51 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
 //        mRelationAdapter.notifyDataSetChanged();
 //    }
 
-    @Override
-    public void onTagsChanged(Collection<String> tags) {
-        mTagList = (List<String>) tags;
-    }
 
-    @Override
-    public void onEditingFinished() {
-        mKeywordEt.clearFocus();
-//            dismissInputMethodManager(mKeywordEt);
-//            doChoose(false);
-    }
+    //    private boolean containsTag(List<String> tags, String filter) {
+//        for (String tag : tags) {
+//            if (tag.contains(filter)) {
+//                return true;
+//            }
+//        }
+//        return false;
+//    }
+
+//    public void filterDeviceInfoByTag(String filter) {
+//        List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
+//        originDeviceInfoList.addAll(SensoroCityApplication.getInstance().getData());
+//        ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
+//        for (DeviceInfo deviceInfo : originDeviceInfoList) {
+//            if (deviceInfo.getTags() != null) {
+//                List<String> tagList = Arrays.asList(deviceInfo.getTags());
+//                if (!containsTag(tagList, filter)) {
+//                    deleteDeviceInfoList.add(deviceInfo);
+//                }
+//            } else {
+//                deleteDeviceInfoList.add(deviceInfo);
+//            }
+//
+//        }
+//        for (DeviceInfo deviceInfo : deleteDeviceInfoList) {
+//            originDeviceInfoList.remove(deviceInfo);
+//        }
+//        List<String> tempList = new ArrayList<>();
+//        for (DeviceInfo deviceInfo : originDeviceInfoList) {
+//            String name = deviceInfo.getName();
+//            if (!TextUtils.isEmpty(name)) {
+//                tempList.add(name);
+//            }
+//        }
+//        mRelationAdapter.setData(tempList);
+//        mRelationAdapter.notifyDataSetChanged();
+//    }
+
+
+    //    private void initRelation() {
+//        mRelationAdapter = new RelationAdapter(this, this);
+//        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+//        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        mSearchRelationRv.setLayoutManager(linearLayoutManager);
+//        mSearchRelationRv.setAdapter(mRelationAdapter);
+//    }
 }
