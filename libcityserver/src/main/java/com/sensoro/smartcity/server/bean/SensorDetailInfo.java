@@ -7,7 +7,7 @@ import java.util.HashMap;
  * Created by sensoro on 17/7/26.
  */
 
-public class SensorDetailInfo implements Serializable{
+public class SensorDetailInfo implements Serializable {
 
     private SensorStruct light;
     private SensorStruct humidity;
@@ -41,6 +41,16 @@ public class SensorDetailInfo implements Serializable{
     private SensorStruct artificialGas;
     private SensorStruct waterPressure;
     private SensorStruct magnetic;
+    private SensorStruct temp1;
+
+
+    public SensorStruct getTemp1() {
+        return temp1;
+    }
+
+    public void setTemp1(SensorStruct temp1) {
+        this.temp1 = temp1;
+    }
 
     private HashMap<String, SensorStruct> mMap = new HashMap<>();
 
@@ -140,6 +150,9 @@ public class SensorDetailInfo implements Serializable{
         }
         if (magnetic != null) {
             mMap.put("magnetic", magnetic);
+        }
+        if (temp1 != null) {
+            mMap.put("temp1", temp1);
         }
         return mMap;
     }

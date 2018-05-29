@@ -95,7 +95,7 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
 
     private void init() {
         try {
-            mNamePref = getApplicationContext().getApplicationContext().getSharedPreferences
+            mNamePref = getApplicationContext().getSharedPreferences
                     (PREFERENCE_DEPLOY_CONTACT_HISTORY, Activity.MODE_PRIVATE);
             mNameEditor = mNamePref.edit();
             mPhonePref = getSharedPreferences(PREFERENCE_DEPLOY_CONTENT_HISTORY, Activity.MODE_PRIVATE);

@@ -95,7 +95,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
         setContentView(R.layout.activity_search_alarm);
         ButterKnife.bind(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-        mPref = getApplicationContext().getSharedPreferences(PREFERENCE_ALARM_SEARCH_HISTORY, Activity.MODE_PRIVATE);
+        mPref = getSharedPreferences(PREFERENCE_ALARM_SEARCH_HISTORY, Activity.MODE_PRIVATE);
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mKeywordEt.addTextChangedListener(this);

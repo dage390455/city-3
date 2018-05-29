@@ -109,7 +109,7 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         try {
 //            mSearchHistoryLayout.setVisibility(View.VISIBLE);
 //            mSearchRelationLayout.setVisibility(View.GONE);
-            mPref = getApplicationContext().getSharedPreferences(PREFERENCE_DEPLOY_TAG_HISTORY, Activity.MODE_PRIVATE);
+            mPref = getSharedPreferences(PREFERENCE_DEPLOY_TAG_HISTORY, Activity.MODE_PRIVATE);
             mEditor = mPref.edit();
             //
             mTagList = getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
@@ -189,7 +189,6 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         mKeywordEt.requestFocus();
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
     }
-
 
 
     @Override

@@ -446,9 +446,8 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
             public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                 if (deviceAlarmLogRsp.getData().size() == 0) {
                     getView().toastShort("没有更多数据了");
-                } else {
-                    freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
                 }
+                freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
             }
 
             @Override

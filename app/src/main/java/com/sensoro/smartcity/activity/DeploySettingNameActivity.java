@@ -90,7 +90,7 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
 
     private void init() {
         try {
-            mPref = getApplicationContext().getSharedPreferences(PREFERENCE_DEPLOY_NAME_HISTORY, Activity.MODE_PRIVATE);
+            mPref = getSharedPreferences(PREFERENCE_DEPLOY_NAME_HISTORY, Activity.MODE_PRIVATE);
             mEditor = mPref.edit();
             initRelation();
             initSearchHistory();

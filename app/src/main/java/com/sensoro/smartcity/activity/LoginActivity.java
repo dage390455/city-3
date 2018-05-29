@@ -146,7 +146,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     private void switchApi() {
         final String[] urlArr = new String[]{"正式版", "Demo版"};
-        SharedPreferences sp = getApplicationContext().getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
+        SharedPreferences sp = getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
         try {
             boolean isDemo = sp.getBoolean(PREFERENCE_KEY_URL, false);
             RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(isDemo);

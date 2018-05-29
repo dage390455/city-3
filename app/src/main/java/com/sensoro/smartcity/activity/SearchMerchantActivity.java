@@ -78,7 +78,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
         setContentView(R.layout.activity_search_merchant);
         ButterKnife.bind(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-        mPref = getApplicationContext().getSharedPreferences(PREFERENCE_MERCHANT_HISTORY, Activity.MODE_PRIVATE);
+        mPref = getSharedPreferences(PREFERENCE_MERCHANT_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
@@ -210,7 +210,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
             @Override
             public void onErrorMsg(String errorMsg) {
                 mProgressUtils.dismissProgress();
-                Toast.makeText(getApplicationContext(), errorMsg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(SearchMerchantActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
             }
         });
 //        NetUtils.INSTANCE.getServer().getUserAccountList(text, null, null, null, "100000", new

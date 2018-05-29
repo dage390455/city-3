@@ -141,7 +141,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-        mPref = getApplicationContext().getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
+        mPref = getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);

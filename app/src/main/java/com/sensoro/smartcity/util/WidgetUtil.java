@@ -1200,6 +1200,7 @@ public class WidgetUtil {
         }
         return info;
     }
+
     /**
      * 区分联系人
      *
@@ -1221,8 +1222,10 @@ public class WidgetUtil {
         return "";
 
     }
+
     /**
      * 根据标识显示相关的状态信息和数据
+     *
      * @param sensorType
      * @param thresholds
      * @param status

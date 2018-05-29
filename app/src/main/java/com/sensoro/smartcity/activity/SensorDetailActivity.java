@@ -410,7 +410,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             initChart();
             refreshStructLayout(sensorStructList);
             requestDeviceRecentLog();
-            WidgetUtil.judgeSensorType(getApplicationContext(), typeImageView, mDeviceInfo.getSensorTypes()[0]);
+            WidgetUtil.judgeSensorType(this, typeImageView, mDeviceInfo.getSensorTypes()[0]);
         } catch (Exception e) {
             e.printStackTrace();
             mProgressUtils.dismissProgress();

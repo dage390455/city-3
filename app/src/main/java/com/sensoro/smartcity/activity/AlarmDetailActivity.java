@@ -162,7 +162,7 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
                     return true;
                 }
             });
-            WidgetUtil.judgeSensorType(getApplicationContext(), detailIvType, deviceAlarmLogInfo.getSensorType());
+            WidgetUtil.judgeSensorType(this, detailIvType, deviceAlarmLogInfo.getSensorType());
 
         } catch (Exception e) {
             e.printStackTrace();
