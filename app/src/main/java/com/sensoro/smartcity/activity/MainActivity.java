@@ -325,4 +325,14 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     public void startACForResult(Intent intent, int requestCode) {
 
     }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+
+    }
 }

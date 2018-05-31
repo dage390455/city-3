@@ -22,10 +22,12 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.ISearchMerchantActivityView;
+import com.sensoro.smartcity.presenter.SearchMerchantActivityPresenter;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.CityObserver;
@@ -34,7 +36,6 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -49,8 +50,10 @@ import rx.schedulers.Schedulers;
  * Created by sensoro on 17/7/11.
  */
 
-public class SearchMerchantActivity extends BaseActivity implements View.OnClickListener, Constants, TextView
-        .OnEditorActionListener, TextWatcher {
+public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivityView,
+        SearchMerchantActivityPresenter> implements ISearchMerchantActivityView, View.OnClickListener, Constants,
+        TextView
+                .OnEditorActionListener, TextWatcher {
 
     @BindView(R.id.search_merchant_et)
     EditText mKeywordEt;
@@ -72,9 +75,9 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_merchant);
         ButterKnife.bind(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
@@ -87,25 +90,14 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
         initSearchHistory();
-        StatusBarCompat.setStatusBarColor(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
+    protected SearchMerchantActivityPresenter createPresenter() {
+        return new SearchMerchantActivityPresenter();
     }
 
-    @Override
-    protected boolean isNeedSlide() {
-        return true;
-    }
 
     private void initSearchHistory() {
         String history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
@@ -191,12 +183,12 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
 
             @Override
             public void onCompleted() {
-                mProgressUtils.dismissProgress();
-                finish();
+
             }
 
             @Override
             public void onNext(UserAccountRsp userAccountRsp) {
+                mProgressUtils.dismissProgress();
                 List<UserInfo> list = userAccountRsp.getData();
                 if (list.size() == 0) {
                     tipsLinearLayout.setVisibility(View.VISIBLE);
@@ -204,6 +196,7 @@ public class SearchMerchantActivity extends BaseActivity implements View.OnClick
                     Intent data = new Intent();
                     data.putExtra(EXTRA_MERCHANT_INFO, userAccountRsp);
                     setResult(RESULT_CODE_SEARCH_MERCHANT, data);
+                    finish();
                 }
             }
 

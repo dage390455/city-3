@@ -25,7 +25,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobstat.StatService;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -33,7 +32,10 @@ import com.sensoro.smartcity.adapter.IndexGridAdapter;
 import com.sensoro.smartcity.adapter.IndexListAdapter;
 import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.ISearchDeviceActivityView;
+import com.sensoro.smartcity.presenter.SearchDeviceActivityPresenter;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.CityObserver;
@@ -47,7 +49,6 @@ import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.popup.SensoroPopupStatusView;
 import com.sensoro.smartcity.widget.popup.SensoroPopupTypeView;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +67,8 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
  * Created by sensoro on 17/7/11.
  */
 
-public class SearchDeviceActivity extends BaseActivity implements View.OnClickListener, Constants, TextView
+public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView, SearchDeviceActivityPresenter>
+        implements ISearchDeviceActivityView, View.OnClickListener, Constants, TextView
         .OnEditorActionListener, TextWatcher, RecycleViewItemClickListener {
     @BindView(R.id.search_device_et)
     EditText mKeywordEt;
@@ -135,9 +137,9 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
     private final List<DeviceInfo> orginList = new ArrayList<>();
     private final List<String> searchStrList = new ArrayList<>();
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
@@ -151,21 +153,14 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         mClearBtn.setOnClickListener(this);
         initSearchHistory();
         initRelation();
-        StatusBarCompat.setStatusBarColor(this);
         initIndex();
         orginList.addAll(SensoroCityApplication.getInstance().getData());
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
+    protected SearchDeviceActivityPresenter createPresenter() {
+        return new SearchDeviceActivityPresenter();
     }
 
     private void initIndex() {
@@ -195,13 +190,13 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onRefresh() {
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_DOWN,text);
+                requestWithDirection(DIRECTION_DOWN, text);
             }
 
             @Override
             public void onLoadMore() {
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_UP,text);
+                requestWithDirection(DIRECTION_UP, text);
             }
         });
         mListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -232,10 +227,6 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         });
     }
 
-    @Override
-    protected boolean isNeedSlide() {
-        return true;
-    }
 
     private void initGridView() {
         xGridLayoutManager = new SensoroXGridLayoutManager(this, 3);
@@ -248,13 +239,13 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             @Override
             public void onRefresh() {
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_DOWN,text);
+                requestWithDirection(DIRECTION_DOWN, text);
             }
 
             @Override
             public void onLoadMore() {
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_UP,text);
+                requestWithDirection(DIRECTION_UP, text);
             }
         });
         mGridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -440,7 +431,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
                 mKeywordEt.clearFocus();
                 dismissInputMethodManager(view);
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_DOWN,text);
+                requestWithDirection(DIRECTION_DOWN, text);
             }
         });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
@@ -562,7 +553,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         mTypeTextView.setText(typeText);
         mTypeSelectedIndex = position;
         String text = mKeywordEt.getText().toString();
-        requestWithDirection(DIRECTION_DOWN,text);
+        requestWithDirection(DIRECTION_DOWN, text);
     }
 
     private void filterByStatusWithRequest(int position) {
@@ -573,14 +564,14 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         mStatusTextView.setText(statusText);
         mStatusSelectedIndex = position;
         String text = mKeywordEt.getText().toString();
-        requestWithDirection(DIRECTION_DOWN,text);
+        requestWithDirection(DIRECTION_DOWN, text);
     }
 
     private void switchToTypeList() {
         switchType = TYPE_LIST;
         page = 1;
         String text = mKeywordEt.getText().toString();
-        requestWithDirection(DIRECTION_DOWN,text);
+        requestWithDirection(DIRECTION_DOWN, text);
         mReturnTopImageView.setVisibility(View.GONE);
         mSwitchImageView.setImageResource(R.mipmap.ic_switch_grid);
         showListLayout();
@@ -590,7 +581,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         switchType = TYPE_GRID;
         page = 1;
         String text = mKeywordEt.getText().toString();
-        requestWithDirection(DIRECTION_DOWN,text);
+        requestWithDirection(DIRECTION_DOWN, text);
         mReturnTopImageView.setVisibility(View.GONE);
         mSwitchImageView.setImageResource(R.mipmap.ic_switch_list);
         showGridLayout();
@@ -688,7 +679,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         mSearchHistoryLayout.setVisibility(View.GONE);
     }
 
-    public void requestWithDirection(int direction,String searchText) {
+    public void requestWithDirection(int direction, String searchText) {
 
         String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
         Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
@@ -696,8 +687,9 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
         mProgressUtils.showProgress();
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn(Schedulers.io
-                    ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
+                    (Schedulers.io
+                            ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
 
                 @Override
@@ -770,8 +762,9 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
 //            });
         } else {
             page++;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn(Schedulers.io
-                    ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
+                    (Schedulers.io
+                            ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
 
                 @Override
@@ -1021,7 +1014,7 @@ public class SearchDeviceActivity extends BaseActivity implements View.OnClickLi
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
             String text = mKeywordEt.getText().toString();
-            requestWithDirection(DIRECTION_DOWN,text);
+            requestWithDirection(DIRECTION_DOWN, text);
             return true;
         }
         return false;

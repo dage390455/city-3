@@ -22,23 +22,23 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     protected P mPrestener;
     protected View mRootView;
     protected Unbinder unbinder;
-    protected Fragment mRootFragment;
+    protected BaseFragment mRootFragment;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
             savedInstanceState) {
-        if (mRootView == null) {
-            mRootView = inflater.inflate(initRootViewId(), container, false);
-        }
         mPrestener = createPresenter();
         mPrestener.attachView((V) this);
         V view = mPrestener.getView();
-        if (view instanceof Fragment) {
-            mRootFragment = (Fragment) view;
+        if (view instanceof BaseFragment) {
+            mRootFragment = (BaseFragment) view;
         } else {
             LogUtils.loge(this, "当前View转换异常！");
             mRootFragment = this;
+        }
+        if (mRootView == null) {
+            mRootView = inflater.inflate(initRootViewId(), container, false);
         }
         unbinder = ButterKnife.bind(mPrestener.getView(), mRootView);
         LogUtils.logd("onCreateView");

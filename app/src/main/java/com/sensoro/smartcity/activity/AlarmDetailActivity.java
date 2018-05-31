@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -11,17 +10,18 @@ import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.TimerShaftAdapter;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IAlarmDetailActivityView;
+import com.sensoro.smartcity.presenter.AlarmDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,8 @@ import butterknife.OnClick;
  * Created by sensoro on 17/11/14.
  */
 
-public class AlarmDetailActivity extends BaseActivity implements Constants, SensoroPopupAlarmView
+public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, AlarmDetailActivityPresenter>
+        implements IAlarmDetailActivityView, Constants, SensoroPopupAlarmView
         .OnPopupCallbackListener, View.OnClickListener, View.OnTouchListener {
 
 
@@ -64,25 +65,18 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
     private TimerShaftAdapter timerShaftAdapter;
     private List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_alarm_detail);
         ButterKnife.bind(this);
         init();
-        StatusBarCompat.setStatusBarColor(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
+    protected AlarmDetailActivityPresenter createPresenter() {
+        return new AlarmDetailActivityPresenter();
     }
 
     private void init() {
@@ -90,11 +84,7 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
             confirmTextView.setOnClickListener(this);
             deviceAlarmLogInfo = (DeviceAlarmLogInfo) getIntent().getSerializableExtra(EXTRA_ALARM_INFO);
             String deviceName = deviceAlarmLogInfo.getDeviceName();
-            if (deviceName != null) {
-                nameTextView.setText(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-            } else {
-                nameTextView.setText(deviceAlarmLogInfo.getDeviceSN());
-            }
+            nameTextView.setText(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
             dateTextView.setText(DateUtil.getFullParseDate(deviceAlarmLogInfo.getUpdatedTime()));
             AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
             for (int i = 0; i < recordInfoArray.length; i++) {
@@ -168,11 +158,6 @@ public class AlarmDetailActivity extends BaseActivity implements Constants, Sens
             e.printStackTrace();
         }
 
-    }
-
-    @Override
-    protected boolean isNeedSlide() {
-        return true;
     }
 
 

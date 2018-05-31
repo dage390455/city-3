@@ -20,17 +20,18 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IDeploySettingNameActivityView;
+import com.sensoro.smartcity.presenter.DeploySettingNameActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -41,7 +42,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeploySettingNameActivity extends BaseActivity implements Constants, TextView.OnEditorActionListener,
+public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameActivityView,
+        DeploySettingNameActivityPresenter
+        > implements IDeploySettingNameActivityView, Constants, TextView.OnEditorActionListener,
         TextWatcher, RecycleViewItemClickListener {
 
 
@@ -67,25 +70,18 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
     private RelationAdapter mRelationAdapter;
     private CharSequence tempWords = "";
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_name);
         ButterKnife.bind(this);
         init();
-        StatusBarCompat.setStatusBarColor(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
+    protected DeploySettingNameActivityPresenter createPresenter() {
+        return new DeploySettingNameActivityPresenter();
     }
 
     private void init() {
@@ -146,10 +142,6 @@ public class DeploySettingNameActivity extends BaseActivity implements Constants
         mSearchRelationRv.setAdapter(mRelationAdapter);
     }
 
-    @Override
-    protected boolean isNeedSlide() {
-        return true;
-    }
 
     private void filterDeviceInfoByNameAndAddress(String filter) {
         List<DeviceInfo> originDeviceInfoList = new ArrayList<>();

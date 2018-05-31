@@ -207,7 +207,7 @@
 
         </activity>
         <activity
-            android:name=".FMMapBasic"
+            android:name=".temp.FMMapBasic"
             android:configChanges="orientation|keyboardHidden"/>
 
         <service

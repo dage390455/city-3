@@ -1,13 +1,10 @@
 package com.sensoro.smartcity.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
@@ -42,9 +39,11 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IDeployActivityView;
+import com.sensoro.smartcity.presenter.DeployActivityPresenter;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -54,7 +53,6 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -75,9 +73,10 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
  * Created by sensoro on 17/8/3.
  */
 
-public class DeployActivity extends BaseActivity implements Constants, AMapLocationListener, AMap.OnMapClickListener,
+public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActivityPresenter> implements
+        IDeployActivityView, Constants, AMapLocationListener, AMap.OnMapClickListener,
         AMap.OnCameraChangeListener, GeocodeSearch.OnGeocodeSearchListener, AMap.InfoWindowAdapter, AMap
-                .OnMapLoadedListener, AMap.OnMarkerClickListener, AMap.OnMapTouchListener {
+        .OnMapLoadedListener, AMap.OnMarkerClickListener, AMap.OnMapTouchListener {
 
 
     @BindView(R.id.deploy_name_address_et)
@@ -111,15 +110,14 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     private boolean isNeedSlide = true;
     private RegeocodeQuery query;
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy);
         ButterKnife.bind(this);
         mMapView.onCreate(savedInstanceState);
         init();
         this.getWindow().getDecorView().postInvalidate();
-        StatusBarCompat.setStatusBarColor(this);
     }
 
     @Override
@@ -146,15 +144,6 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
         mMapView.onLowMemory();
     }
 
-    @Override
-    public View onCreateView(String name, Context context, AttributeSet attrs) {
-        return super.onCreateView(name, context, attrs);
-    }
-
-    @Override
-    protected boolean isNeedSlide() {
-        return isNeedSlide;
-    }
 
     /**
      * 方法必须重写
@@ -163,7 +152,6 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        StatService.onResume(this);
         if (uploadButton != null) {
             uploadButton.setEnabled(true);
         }
@@ -176,7 +164,11 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        StatService.onPause(this);
+    }
+
+    @Override
+    protected DeployActivityPresenter createPresenter() {
+        return new DeployActivityPresenter();
     }
 
     /**
@@ -186,7 +178,6 @@ public class DeployActivity extends BaseActivity implements Constants, AMapLocat
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         mMapView.onSaveInstanceState(outState);
-        StatusBarCompat.setStatusBarColor(this);
     }
 
     private void init() {

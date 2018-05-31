@@ -354,4 +354,14 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     public void startACForResult(Intent intent, int requestCode) {
         mRootFragment.getActivity().startActivityForResult(intent, requestCode);
     }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+
+    }
 }

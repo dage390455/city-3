@@ -718,4 +718,14 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     public void startACForResult(Intent intent, int requestCode) {
         mRootFragment.startActivityForResult(intent, requestCode);
     }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+
+    }
 }

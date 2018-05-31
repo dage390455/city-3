@@ -64,21 +64,25 @@ public enum RetrofitServiceHelper {
     private RetrofitService retrofitService;
     private final Retrofit.Builder builder;
 
+    public Gson getGson() {
+        return gson;
+    }
+
+    private final Gson gson;
+
     RetrofitServiceHelper() {
+        final GsonBuilder gsonBuilder = new GsonBuilder();
+        gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
+                .registerTypeAdapter(int.class, new NumberDeserializer())
+                .registerTypeAdapter(Number.class, new NumberDeserializer());
+        gson = gsonBuilder.create();
         //支持RxJava
         builder = new Retrofit.Builder().baseUrl(BASE_URL).client(getNewClient())
-                .addConverterFactory(GsonConverterFactory.create(createGson()))
+                .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create());
         retrofitService = builder.build().create(RetrofitService.class);
     }
 
-    private Gson createGson() {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-        gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
-                .registerTypeAdapter(int.class, new NumberDeserializer())
-                .registerTypeAdapter(Number.class, new NumberDeserializer());
-        return gsonBuilder.create();
-    }
 
     private OkHttpClient getNewClient() {
         HttpLoggingInterceptor logging = new HttpLoggingInterceptor();

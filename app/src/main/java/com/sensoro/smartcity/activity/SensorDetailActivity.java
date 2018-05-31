@@ -13,7 +13,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
-import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,7 +48,6 @@ import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
-import com.baidu.mobstat.StatService;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
@@ -62,13 +60,13 @@ import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.BatteryAdapter;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.NumberDeserializer;
+import com.sensoro.smartcity.imainviews.ISensorDetailActivityView;
+import com.sensoro.smartcity.presenter.SensorDetailActivityPresenter;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
@@ -86,7 +84,6 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.XYMarkerView;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
@@ -117,7 +114,8 @@ import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
 @SuppressLint("NewApi")
 @RequiresApi(api = Build.VERSION_CODES.M)
-public class SensorDetailActivity extends BaseActivity implements Constants, OnChartValueSelectedListener,
+public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView, SensorDetailActivityPresenter>
+        implements ISensorDetailActivityView, Constants, OnChartValueSelectedListener,
         AMapLocationListener, View.OnScrollChangeListener, AMap.OnMapTouchListener, GeocodeSearch
                 .OnGeocodeSearchListener {
 
@@ -185,19 +183,16 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     MapContainer mapLayout;
     @BindView(R.id.ll_battery_layout)
     LinearLayout llBatteryLayout;
-    private AMap aMap;
-    private Gson gson;
-    private BatteryAdapter mBatteryAdapter;
-    private GridLayoutManager gridLayoutManager;
     private ProgressUtils mProgressUtils;
-    private CameraUpdate mUpdata;
+
+    private AMap aMap;
+    private BatteryAdapter mBatteryAdapter;
     private DeviceInfo mDeviceInfo;
     private String[] sensorTypes;
     private float minValue = 0;
     private LatLng destPosition = null;
     private LatLng startPosition = null;
     private final List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
-    private Bundle bundle;
     private Bitmap tempUpBitmap;
     private GeocodeSearch geocoderSearch;
     private String tempAddress = "未知街道";
@@ -205,14 +200,12 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     private final String TAG = getClass().getSimpleName();
     private AMapLocationClient mLocationClient;
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_sensor_detail);
         ButterKnife.bind(this);
         mMapView.onCreate(savedInstanceState);// 此方法必须重写
-        geocoderSearch = new GeocodeSearch(this);
-        geocoderSearch.setOnGeocodeSearchListener(this);
         //获取当前控件的布局对象
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
         DisplayMetrics dm = getResources().getDisplayMetrics();
@@ -222,26 +215,14 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         mMapView.setLayoutParams(params);//将设置好的布局参数应用到控件中
         mMapView.setVisibility(View.GONE);
         mapLayout.setScrollView(scrollView);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        initChart();
+        //
+        geocoderSearch = new GeocodeSearch(mActivity);
+        geocoderSearch.setOnGeocodeSearchListener(this);
         init();
-        bundle = getIntent().getExtras();
-        StatusBarCompat.setStatusBarColor(this);
     }
 
-    @Override
-    public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        bundle = intent.getExtras();
-    }
-
-    @Override
-    protected boolean isNeedSlide() {
-        return false;
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-    }
 
     @Override
     public void onLowMemory() {
@@ -256,7 +237,6 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     public void onResume() {
         super.onResume();
         mMapView.onResume();
-        StatService.onResume(this);
     }
 
     /**
@@ -266,7 +246,11 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     public void onPause() {
         super.onPause();
         mMapView.onPause();
-        StatService.onPause(this);
+    }
+
+    @Override
+    protected SensorDetailActivityPresenter createPresenter() {
+        return new SensorDetailActivityPresenter();
     }
 
     /**
@@ -304,15 +288,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     private void init() {
         try {
-
-            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-            GsonBuilder gsonBuilder = new GsonBuilder();
-            gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
-                    .registerTypeAdapter(int.class, new NumberDeserializer())
-                    .registerTypeAdapter(Number.class, new NumberDeserializer());
-
-            gson = gsonBuilder.create();
-            mDeviceInfo = (DeviceInfo) this.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+            mDeviceInfo = (DeviceInfo) mActivity.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
             //
             int textColor = getResources().getColor(R.color.sensoro_alarm);
             switch (mDeviceInfo.getStatus()) {
@@ -335,24 +311,12 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                 default:
                     break;
             }
-            mBatteryAdapter = new BatteryAdapter(this, new RecycleViewItemClickListener() {
-                @Override
-                public void onItemClick(View view, int position) {
-                    batteryMarkerView.setVisibility(View.VISIBLE);
-                    DeviceRecentInfo deviceRecentInfo = mBatteryAdapter.getData().get(position);
-                    batteryMarkerView.refreshContent(view.getX(), view.getY(), deviceRecentInfo.getBatteryAvg(),
-                            deviceRecentInfo.getDate());
-                }
-            });
+
             snTextView.setText(mDeviceInfo.getSn());
             snTextView.setTextColor(textColor);
             dateTextView.setTextColor(textColor);
-            if (mDeviceInfo.getName() != null) {
-                nameTextView.setText(TextUtils.isEmpty(mDeviceInfo.getName()) ? mDeviceInfo.getSn() : mDeviceInfo
-                        .getName());
-            } else {
-                nameTextView.setText(mDeviceInfo.getSn());
-            }
+            nameTextView.setText(TextUtils.isEmpty(mDeviceInfo.getName()) ? mDeviceInfo.getSn() : mDeviceInfo
+                    .getName());
             if (mDeviceInfo.getSensoroDetails().getBattery() != null) {
                 if (Float.parseFloat(mDeviceInfo.getSensoroDetails().getBattery().getValue().toString()) == -1) {
                     llBatteryLayout.setVisibility(View.GONE);
@@ -367,7 +331,6 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 //                batteryLayout.setVisibility(View.VISIBLE);
 //                powerLayout.setVisibility(View.GONE);
             }
-
             batteryMarkerView.setVisibility(View.GONE);
             nameTextView.setTextColor(textColor);
             rightStructLayout.setVisibility(View.GONE);
@@ -377,6 +340,16 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             rightUnitTextView.setTextColor(textColor);
             rightValueTextView.setTextColor(textColor);
             rightNameTextView.setTextColor(textColor);
+            dateTextView.setText(DateUtil.getFullParseDate(mDeviceInfo.getUpdatedTime()));
+            mBatteryAdapter = new BatteryAdapter(mActivity, new RecycleViewItemClickListener() {
+                @Override
+                public void onItemClick(View view, int position) {
+                    batteryMarkerView.setVisibility(View.VISIBLE);
+                    DeviceRecentInfo deviceRecentInfo = mBatteryAdapter.getData().get(position);
+                    batteryMarkerView.refreshContent(view.getX(), view.getY(), deviceRecentInfo.getBatteryAvg(),
+                            deviceRecentInfo.getDate());
+                }
+            });
             initMap();
             List<SensorStruct> sensorStructList = new ArrayList<>();
             String[] tempSensorTypes = mDeviceInfo.getSensorTypes();
@@ -407,61 +380,17 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                     sensorStructList.add(struct);
                 }
             }
-            initChart();
+//            initChart();
             refreshStructLayout(sensorStructList);
             requestDeviceRecentLog();
-            WidgetUtil.judgeSensorType(this, typeImageView, mDeviceInfo.getSensorTypes()[0]);
+            WidgetUtil.judgeSensorType(mActivity, typeImageView, mDeviceInfo.getSensorTypes()[0]);
         } catch (Exception e) {
             e.printStackTrace();
             mProgressUtils.dismissProgress();
-            Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
+            toastShort(R.string.tips_data_error);
         }
     }
 
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        return super.onTouchEvent(event);
-    }
-
-    //补全tags标签信息
-//    private void requestData() {
-//        String sn = mDeviceInfo.getSn();
-//        mProgressUtils.showProgress();
-//        NetUtils.INSTANCE.getServer().getDeviceDetailInfoList(sn, null, 1,
-//                new Response
-//                        .Listener<DeviceInfoListRsp>() {
-//                    @Override
-//                    public void onResponse(DeviceInfoListRsp response) {
-//                        mProgressUtils.dismissProgress();
-//                        if (response != null && response.getData().size() > 0) {
-//                            DeviceInfo deviceInfo = response.getData().get(0);
-//                            String[] tags = deviceInfo.getTags();
-//                            mDeviceInfo.setTags(tags);
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError volleyError) {
-//                        mProgressUtils.dismissProgress();
-//                        if (volleyError.networkResponse != null) {
-//                            String reason = new String(volleyError.networkResponse.data);
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(reason);
-//                                Toast.makeText(SensorDetailActivity.this, jsonObject.getString("errmsg"), Toast
-//                                        .LENGTH_SHORT)
-//                                        .show();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            } catch (Exception e) {
-//
-//                            }
-//                        } else {
-//                            Toast.makeText(SensorDetailActivity.this, R.string.tips_network_error, Toast
-//                                    .LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
-//    }
 
     private void initChart() {
 
@@ -509,7 +438,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     public void locate() {
 
-        mLocationClient = new AMapLocationClient(this);
+        mLocationClient = new AMapLocationClient(mActivity);
         //设置定位回调监听
         mLocationClient.setLocationListener(this);
         //初始化定位参数
@@ -534,7 +463,6 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     }
 
     private void refreshMap() {
-        dateTextView.setText(DateUtil.getFullParseDate(mDeviceInfo.getUpdatedTime()));
         double[] lonlat = mDeviceInfo.getLonlat();
         if (aMap != null && mDeviceInfo.getSensorTypes().length > 0) {
             UiSettings uiSettings = aMap.getUiSettings();
@@ -548,7 +476,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                 mapLayout.setVisibility(View.VISIBLE);
                 notDeployLayout.setVisibility(View.GONE);
                 //可视化区域，将指定位置指定到屏幕中心位置
-                mUpdata = CameraUpdateFactory
+                final CameraUpdate mUpdata = CameraUpdateFactory
                         .newCameraPosition(new CameraPosition(destPosition, 16, 0, 30));
                 aMap.moveCamera(mUpdata);
 
@@ -570,13 +498,13 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                         break;
                 }
                 BitmapDescriptor bitmapDescriptor = null;
-                Bitmap srcBitmap = BitmapFactory.decodeResource(this.getResources(), statusId);
+                Bitmap srcBitmap = BitmapFactory.decodeResource(mActivity.getResources(), statusId);
                 if (WidgetUtil.judgeSensorType(mDeviceInfo.getSensorTypes()) != 0) {
-                    Bitmap targetBitmap = BitmapFactory.decodeResource(this.getResources(), WidgetUtil
+                    Bitmap targetBitmap = BitmapFactory.decodeResource(mActivity.getResources(), WidgetUtil
                             .judgeSensorType(mDeviceInfo.getSensorTypes()));
                     Bitmap filterTargetBitmap = WidgetUtil.tintBitmap(targetBitmap, getResources().getColor(R.color
                             .white));
-                    bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(WidgetUtil.createBitmapDrawable(this,
+                    bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(WidgetUtil.createBitmapDrawable(mActivity,
                             mDeviceInfo.getSensorTypes()[0], srcBitmap, filterTargetBitmap).getBitmap());
                 } else {
                     bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
@@ -642,8 +570,9 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
                         while (iterator.hasNext()) {
                             String str = iterator.next();
                             JSONObject firstJsonObject = jsonObject.getJSONObject(str);
-                            DeviceRecentInfo recentInfo = gson.fromJson(firstJsonObject.toString(),
-                                    DeviceRecentInfo.class);
+                            DeviceRecentInfo recentInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson
+                                    (firstJsonObject.toString(),
+                                            DeviceRecentInfo.class);
                             recentInfo.setDate(str);
                             mRecentInfoList.add(recentInfo);
                         }
@@ -672,77 +601,9 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             @Override
             public void onErrorMsg(String errorMsg) {
                 mProgressUtils.dismissProgress();
-                Toast.makeText(SensorDetailActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                toastShort(errorMsg);
             }
         });
-//        NetUtils.INSTANCE.getServer().getDeviceHistoryList(sn, startTime,
-//                endTime, new
-//                        Response.Listener<DeviceRecentRsp>() {
-//                            @Override
-//                            public void onResponse(DeviceRecentRsp response) {
-//
-//                                String data = response.getData().toString();
-//                                try {
-//                                    mMapView.setVisibility(View.VISIBLE);
-//                                    JSONObject jsonObject = new JSONObject(data);
-//                                    sensorTypes = response.getSensorTypes();
-//                                    if (sensorTypes.length == 3) {
-//                                        List<String> tempList = Arrays.asList(sensorTypes);
-//                                        Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
-//                                        if (tempList.contains("collision")) {//collision, pitch,roll
-//                                            sensorTypes[0] = "pitch";
-//                                            sensorTypes[1] = "roll";
-//                                            sensorTypes[2] = "collision";
-//                                        } else if (tempList.contains("flame")) {//temperature,humidity,flame
-//                                            sensorTypes[0] = "temperature";
-//                                            sensorTypes[1] = "humidity";
-//                                            sensorTypes[2] = "flame";
-//                                        }
-//                                    }
-//                                    Iterator<String> iterator = jsonObject.keys();
-//                                    while (iterator.hasNext()) {
-//                                        String str = iterator.next();
-//                                        JSONObject firstJsonObject = jsonObject.getJSONObject(str);
-//                                        DeviceRecentInfo recentInfo = gson.fromJson(firstJsonObject.toString(),
-//                                                DeviceRecentInfo.class);
-//                                        recentInfo.setDate(str);
-//                                        mRecentInfoList.add(recentInfo);
-//                                    }
-//
-//                                    Collections.sort(mRecentInfoList);
-//                                    refreshBatteryLayout();
-//                                    refreshKLayout();
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                } catch (Exception e) {
-//
-//                                } finally {
-//                                    requestData();
-//                                }
-//                            }
-//                        }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError volleyError) {
-//                        if (volleyError.networkResponse != null) {
-//                            mProgressUtils.dismissProgress();
-//                            String reason = new String(volleyError.networkResponse.data);
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(reason);
-//                                Toast.makeText(SensorDetailActivity.this, jsonObject.getString("errmsg"), Toast
-//                                        .LENGTH_SHORT)
-//                                        .show();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            } catch (Exception e) {
-//
-//                            }
-//                        } else {
-//                            Toast.makeText(SensorDetailActivity.this, R.string.tips_network_error, Toast
-//                                    .LENGTH_SHORT).show();
-//                        }
-//
-//                    }
-//                });
     }
 
     private void refreshStructLayout(List<SensorStruct> sensorStructList) {
@@ -959,7 +820,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             data.setSecondCandleData(candleData2);
         }
 
-        XYMarkerView mv = new XYMarkerView(this, iAxisValueFormatter);
+        XYMarkerView mv = new XYMarkerView(mActivity, iAxisValueFormatter);
         mv.setChartView(mChart); // For bounds control
         mChart.setMarker(mv); // Set the marker to the chart
         mChart.setData(data);
@@ -995,7 +856,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
         }
         if (tempList.size() != 0) {
-            gridLayoutManager = new GridLayoutManager(this, tempList.size());
+            final GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, tempList.size());
             batteryRecyclerView.setLayoutManager(gridLayoutManager);
             batteryRecyclerView.addItemDecoration(new SpacesItemDecoration(false, 10));
             batteryRecyclerView.setAdapter(mBatteryAdapter);
@@ -1005,7 +866,7 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
         mBatteryAdapter.notifyDataSetChanged();
     }
 
-    public boolean isAppInstalled(Context context, String packageName) {
+    private boolean isAppInstalled(Context context, String packageName) {
         PackageManager packageManager = context.getPackageManager();
         //获取所有已安装程序的包信息
         List<PackageInfo> pInfo = packageManager.getInstalledPackages(0);
@@ -1024,12 +885,12 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     @OnClick(R.id.sensor_detail_navi_btn)
     public void navigation() {
         if (startPosition == null) {
-            Toast.makeText(this, R.string.tips_location_permission, Toast.LENGTH_SHORT).show();
+            toastShort(R.string.tips_location_permission);
             return;
         }
-        if (isAppInstalled(this, "com.autonavi.minimap")) {
+        if (isAppInstalled(mActivity, "com.autonavi.minimap")) {
             openGaoDeMap();
-        } else if (isAppInstalled(this, "com.baidu.BaiduMap")) {
+        } else if (isAppInstalled(mActivity, "com.baidu.BaiduMap")) {
             openBaiDuMap();
         } else {
             openOther();
@@ -1044,10 +905,10 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
             if (wxAppSupportAPI) {
                 toShareWeChat();
             } else {
-                Toast.makeText(SensorDetailActivity.this, "当前版的微信不支持分享功能", Toast.LENGTH_SHORT).show();
+                toastShort("当前版的微信不支持分享功能");
             }
         } else {
-            Toast.makeText(SensorDetailActivity.this, "当前手机未安装微信，请安装后重试", Toast.LENGTH_SHORT).show();
+            toastShort("当前手机未安装微信，请安装后重试");
         }
     }
 
@@ -1148,14 +1009,14 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
 
     @OnClick(R.id.sensor_detail_more)
     public void doMore() {
-        Intent intent = new Intent(this, SensorMoreActivity.class);
+        Intent intent = new Intent(mActivity, SensorMoreActivity.class);
         intent.putExtra(EXTRA_SENSOR_SN, mDeviceInfo.getSn());
         startActivity(intent);
     }
 
     @OnClick(R.id.sensor_detail_back)
     public void doBack() {
-        this.finish();
+        mActivity.finish();
     }
 
     @OnClick(R.id.recent_k_title_layout)
@@ -1221,8 +1082,65 @@ public class SensorDetailActivity extends BaseActivity implements Constants, OnC
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
         Log.e(TAG, "onGeocodeSearched: " + "onGeocodeSearched");
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+        mActivity.startActivity(intent);
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
 
     }
 
+    @Override
+    public void setIntentResult(int requestCode) {
 
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+
+    }
+
+    @Override
+    public void showProgressDialog() {
+        mProgressUtils.showProgress();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        mProgressUtils.dismissProgress();
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastShort(int resId) {
+        Toast.makeText(mActivity, resId, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
+
+    @Override
+    public void toastLong(int resId) {
+
+    }
+
+    @Override
+    public void initSensorStatus(int status) {
+
+    }
 }

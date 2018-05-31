@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.base;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AppOpsManager;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -40,26 +39,28 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     /**
      * 主AC
      */
-    protected Activity mActivity;
+    protected BaseActivity mActivity;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        //取消bar
-        ActionBar supportActionBar = getSupportActionBar();
-        if (supportActionBar != null) {
-            supportActionBar.hide();
-        }
         mPrestener = createPresenter();
         mPrestener.attachView((V) this);
         V view = mPrestener.getView();
-        if (view instanceof Activity) {
-            mActivity = (Activity) view;
+        if (view instanceof BaseActivity) {
+            mActivity = (BaseActivity) view;
         } else {
             LogUtils.loge(this, "当前View转换异常！");
             mActivity = this;
         }
+        //取消bar
+        ActionBar supportActionBar = mActivity.getSupportActionBar();
+        if (supportActionBar != null) {
+            supportActionBar.hide();
+        }
+        //控制顶部状态栏显示
+//        StatusBarCompat.setStatusBarColor(this);
         onCreateInit(savedInstanceState);
         StatService.setDebugOn(true);
         StatService.start(mActivity);

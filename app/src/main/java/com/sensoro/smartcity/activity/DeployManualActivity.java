@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -14,14 +13,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
+import com.sensoro.smartcity.presenter.DeployManualActivityPresenter;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +33,8 @@ import rx.schedulers.Schedulers;
  * Created by sensoro on 17/11/7.
  */
 
-public class DeployManualActivity extends BaseActivity implements Constants, TextView.OnEditorActionListener,
+public class DeployManualActivity extends BaseActivity<IDeployManualActivityView, DeployManualActivityPresenter>
+        implements IDeployManualActivityView, Constants, TextView.OnEditorActionListener,
         TextWatcher {
 
 
@@ -47,15 +48,14 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
     Button nextButton;
     private ProgressUtils mProgressUtils;
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_manual);
         ButterKnife.bind(this);
         contentEditText.setOnEditorActionListener(this);
         contentEditText.addTextChangedListener(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-        StatusBarCompat.setStatusBarColor(this);
     }
 
     @Override
@@ -67,16 +67,10 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
         super.onDestroy();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
+    protected DeployManualActivityPresenter createPresenter() {
+        return new DeployManualActivityPresenter();
     }
 
     @OnClick(R.id.deploy_manual_close)
@@ -237,8 +231,4 @@ public class DeployManualActivity extends BaseActivity implements Constants, Tex
         contentEditText.getText().clear();
     }
 
-    @Override
-    protected boolean isNeedSlide() {
-        return true;
-    }
 }

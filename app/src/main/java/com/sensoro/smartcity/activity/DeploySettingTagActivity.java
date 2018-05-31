@@ -16,14 +16,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IDeploySettingTagActivityView;
+import com.sensoro.smartcity.presenter.DeploySettingTagActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -35,7 +36,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mabbas007.tagsedittext.TagsEditText;
 
-public class DeploySettingTagActivity extends BaseActivity implements Constants,
+public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActivityView,
+        DeploySettingTagActivityPresenter> implements IDeploySettingTagActivityView, Constants,
         TagsEditText.TagsEditListener {
 
 
@@ -64,13 +66,12 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
 //    private RelationAdapter mRelationAdapter;
 //    private int add_count = 0;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_tag);
         ButterKnife.bind(this);
         init();
-        StatusBarCompat.setStatusBarColor(this);
     }
 
     @Override
@@ -79,22 +80,10 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         mKeywordEt.onSaveInstanceState();
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
-
+    protected DeploySettingTagActivityPresenter createPresenter() {
+        return new DeploySettingTagActivityPresenter();
     }
 
     @Override
@@ -188,12 +177,6 @@ public class DeploySettingTagActivity extends BaseActivity implements Constants,
         mSearchHistoryAdapter.notifyDataSetChanged();
         mKeywordEt.requestFocus();
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
-    }
-
-
-    @Override
-    protected boolean isNeedSlide() {
-        return true;
     }
 
 

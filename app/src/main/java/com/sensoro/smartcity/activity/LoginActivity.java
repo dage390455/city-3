@@ -275,4 +275,14 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     public void startACForResult(Intent intent, int requestCode) {
 
     }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+
+    }
 }

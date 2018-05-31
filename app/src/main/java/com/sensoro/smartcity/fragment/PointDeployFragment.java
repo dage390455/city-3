@@ -320,6 +320,16 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView, 
     }
 
     @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+
+    }
+
+    @Override
     public void showProgressDialog() {
         mProgressUtils.showProgress();
     }

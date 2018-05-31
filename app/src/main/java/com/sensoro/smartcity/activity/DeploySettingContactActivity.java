@@ -21,14 +21,15 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IDeploySettingContactActivityView;
+import com.sensoro.smartcity.presenter.DeploySettingContactActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,7 +40,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeploySettingContactActivity extends BaseActivity implements Constants, RecycleViewItemClickListener,
+public class DeploySettingContactActivity extends BaseActivity<IDeploySettingContactActivityView,
+        DeploySettingContactActivityPresenter> implements IDeploySettingContactActivityView, Constants,
+        RecycleViewItemClickListener,
         TextView.OnEditorActionListener, TextWatcher {
 
 
@@ -65,25 +68,18 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
     private SearchHistoryAdapter mNameSearchHistoryAdapter;
     private SearchHistoryAdapter mPhoneSearchHistoryAdapter;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_contact);
         ButterKnife.bind(this);
         init();
-        StatusBarCompat.setStatusBarColor(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
+    protected DeploySettingContactActivityPresenter createPresenter() {
+        return new DeploySettingContactActivityPresenter();
     }
 
     @Override
@@ -119,10 +115,6 @@ public class DeploySettingContactActivity extends BaseActivity implements Consta
         }
     }
 
-    @Override
-    protected boolean isNeedSlide() {
-        return true;
-    }
 
     private void initSearchNameHistory() {
         String history = mNamePref.getString(PREFERENCE_KEY_DEPLOY, "");

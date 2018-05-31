@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -10,12 +9,13 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
+import com.sensoro.smartcity.presenter.DeployResultActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -28,7 +28,8 @@ import butterknife.OnClick;
  * Created by sensoro on 17/8/4.
  */
 
-public class DeployResultActivity extends BaseActivity implements Constants {
+public class DeployResultActivity extends BaseActivity<IDeployResultActivityView, DeployResultActivityPresenter>
+        implements IDeployResultActivityView, Constants {
 
     @BindView(R.id.deploy_result_tip_tv)
     TextView tipsTextView;
@@ -55,25 +56,18 @@ public class DeployResultActivity extends BaseActivity implements Constants {
     private int resultCode = 0;
     private DeviceInfo deviceInfo = null;
 
+
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_result);
         ButterKnife.bind(this);
         init();
-        StatusBarCompat.setStatusBarColor(this);
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
+    protected DeployResultActivityPresenter createPresenter() {
+        return new DeployResultActivityPresenter();
     }
 
     private void init() {
@@ -84,7 +78,7 @@ public class DeployResultActivity extends BaseActivity implements Constants {
                 resultImageView.setImageResource(R.mipmap.ic_deploy_failed);
                 tipsTextView.setText(R.string.tips_deploy_not_exist);
             } else {
-                deviceInfo = (DeviceInfo)this.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+                deviceInfo = (DeviceInfo) this.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
                 String sn = deviceInfo.getSn().toUpperCase();
                 String name = deviceInfo.getName();
                 String lon = this.getIntent().getStringExtra(EXTRA_SENSOR_LON);
@@ -103,13 +97,15 @@ public class DeployResultActivity extends BaseActivity implements Constants {
                 lonTextView.setText(getString(R.string.sensor_detail_lon) + "：" + lon);
                 lanTextView.setText(getString(R.string.sensor_detail_lan) + "：" + lan);
                 contactTextView.setText(getString(R.string.name) + "：" + (TextUtils.isEmpty(contact) ? "无" : contact));
-                contentTextView.setText(getString(R.string.phone) + "：" + (TextUtils.isEmpty(contact)? "无" : content));
-                statusTextView.setText(getString(R.string.sensor_detail_status) + "：" + Constants.DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
+                contentTextView.setText(getString(R.string.phone) + "：" + (TextUtils.isEmpty(contact) ? "无" : content));
+                statusTextView.setText(getString(R.string.sensor_detail_status) + "：" + Constants
+                        .DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
                 if (deviceInfo.getLastUpdatedTime() != null) {
                     updateTextView.setVisibility(View.VISIBLE);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
-                    Date date = sdf.parse(deviceInfo.getLastUpdatedTime() );
-                    updateTextView.setText(getString(R.string.update_time)  + "：" + DateUtil.getFullParseDate(date.getTime()));
+                    Date date = sdf.parse(deviceInfo.getLastUpdatedTime());
+                    updateTextView.setText(getString(R.string.update_time) + "：" + DateUtil.getFullParseDate(date
+                            .getTime()));
                 } else {
                     updateTextView.setVisibility(View.GONE);
                 }
@@ -147,10 +143,6 @@ public class DeployResultActivity extends BaseActivity implements Constants {
         signalTextView.setText(signal_text);
     }
 
-    @Override
-    protected boolean isNeedSlide() {
-        return false;
-    }
 
     @OnClick(R.id.deploy_result_back)
     public void back() {

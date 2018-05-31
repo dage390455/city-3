@@ -148,6 +148,16 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
     }
 
     @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+
+    }
+
+    @Override
     public void showProgressDialog() {
         mProgressUtils.showProgress();
     }

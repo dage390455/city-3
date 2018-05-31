@@ -24,11 +24,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
+import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.ISearchAlarmActivityView;
+import com.sensoro.smartcity.presenter.SearchAlarmActivityPresenter;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
@@ -36,7 +38,6 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -51,7 +52,8 @@ import rx.schedulers.Schedulers;
  * Created by sensoro on 17/7/11.
  */
 
-public class SearchAlarmActivity extends BaseActivity implements View.OnClickListener, Constants, TextView
+public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, SearchAlarmActivityPresenter>
+        implements ISearchAlarmActivityView, View.OnClickListener, Constants, TextView
         .OnEditorActionListener, TextWatcher {
 
     @BindView(R.id.search_alarm_et)
@@ -89,9 +91,9 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
     private Long mEndTime = null;
     private int searchType = TYPE_DEVICE_NAME;
 
+
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_alarm);
         ButterKnife.bind(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
@@ -116,7 +118,6 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
 //        searchViewpager.setAdapter(searchAlarmPagerAdapter);
         initSearchHistory();
         initTabs();
-        StatusBarCompat.setStatusBarColor(this);
         mEditor = mPref.edit();
     }
 
@@ -198,16 +199,10 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
         mKeywordEt.setSelection(extra_search_content.length());
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        StatService.onResume(this);
-    }
 
     @Override
-    protected void onPause() {
-        super.onPause();
-        StatService.onPause(this);
+    protected SearchAlarmActivityPresenter createPresenter() {
+        return new SearchAlarmActivityPresenter();
     }
 
     private void initSearchHistory() {
@@ -298,10 +293,6 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
         mSearchHistoryAdapter.setDataAndFresh(searchStr);
     }
 
-    @Override
-    protected boolean isNeedSlide() {
-        return true;
-    }
 
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
@@ -461,12 +452,12 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
                     @Override
                     public void onCompleted() {
-                        mProgressUtils.dismissProgress();
-                        finish();
+
                     }
 
                     @Override
                     public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        mProgressUtils.dismissProgress();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
@@ -477,6 +468,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                             data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
                             data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
                             setResult(RESULT_CODE_SEARCH_ALARM, data);
+                            finish();
                         }
                     }
 
@@ -537,12 +529,11 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
                     @Override
                     public void onCompleted() {
-                        mProgressUtils.dismissProgress();
-                        finish();
                     }
 
                     @Override
                     public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        mProgressUtils.dismissProgress();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
@@ -553,6 +544,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                             data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
                             data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
                             setResult(RESULT_CODE_SEARCH_ALARM, data);
+                            finish();
                         }
                     }
 
@@ -613,12 +605,11 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
                     @Override
                     public void onCompleted() {
-                        mProgressUtils.dismissProgress();
-                        finish();
                     }
 
                     @Override
                     public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        mProgressUtils.dismissProgress();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             tipsLinearLayout.setVisibility(View.VISIBLE);
 //                            tagLinearLayout.setVisibility(View.GONE);
@@ -629,6 +620,7 @@ public class SearchAlarmActivity extends BaseActivity implements View.OnClickLis
                             data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
                             data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
                             setResult(RESULT_CODE_SEARCH_ALARM, data);
+                            finish();
                         }
                     }
 
