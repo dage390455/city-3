@@ -58,6 +58,8 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     RecyclerView mPhoneSearchHistoryRv;
     @BindView(R.id.deploy_setting_contact_history_layout)
     LinearLayout mSearchHistoryLayout;
+    private SearchHistoryAdapter mNameSearchHistoryAdapter;
+    private SearchHistoryAdapter mPhoneSearchHistoryAdapter;
 
     private SharedPreferences mNamePref;
     private SharedPreferences mPhonePref;
@@ -65,14 +67,12 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     private SharedPreferences.Editor mPhoneEditor;
     private List<String> mNameHistoryKeywords = new ArrayList<>();
     private List<String> mPhoneHistoryKeywords = new ArrayList<>();
-    private SearchHistoryAdapter mNameSearchHistoryAdapter;
-    private SearchHistoryAdapter mPhoneSearchHistoryAdapter;
 
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_contact);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
         init();
     }
 
@@ -80,13 +80,6 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     @Override
     protected DeploySettingContactActivityPresenter createPresenter() {
         return new DeploySettingContactActivityPresenter();
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-
     }
 
     private void init() {
@@ -126,12 +119,12 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
         } else {
             mSearchHistoryLayout.setVisibility(View.GONE);
         }
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mNameSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mNameSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mNameSearchHistoryAdapter = new SearchHistoryAdapter(this, mNameHistoryKeywords, new
+        mNameSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mNameHistoryKeywords, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -159,12 +152,12 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
         if (!TextUtils.isEmpty(history)) {
             mNameHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mPhoneSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mPhoneSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(this, mPhoneHistoryKeywords, new
+        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPhoneHistoryKeywords, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -187,7 +180,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     }
 
     private void dismissInputMethodManager(View view) {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
@@ -274,7 +267,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
         String phoneStr = mPhoneEt.getText().toString();
         String nameStr = mNameEt.getText().toString();
         if (TextUtils.isEmpty(nameStr)) {
-            Toast.makeText(this, "联系人姓名不能为空！", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "联系人姓名不能为空！", Toast.LENGTH_SHORT).show();
             return;
         }
         if (!TextUtils.isEmpty(phoneStr) && p.matcher(phoneStr).matches() && !TextUtils.isEmpty(nameStr)) {
@@ -288,7 +281,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
             setResult(RESULT_CODE_SETTING_CONTACT, data);
             finish();
         } else {
-            Toast.makeText(this, R.string.tips_phone_empty, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.tips_phone_empty, Toast.LENGTH_SHORT).show();
         }
 
     }

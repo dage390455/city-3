@@ -78,13 +78,14 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     TabLayout searchTablayout;
     @BindView(R.id.search_viewpager)
     ViewPager searchViewpager;
+    private ProgressUtils mProgressUtils;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
+
     private SharedPreferences mPref;
     private Editor mEditor;
     private final List<String> mHistoryKeywords_deviceName = new ArrayList<>();
     private final List<String> mHistoryKeywords_deviceNumber = new ArrayList<>();
     private final List<String> mHistoryKeywords_devicePhone = new ArrayList<>();
-    private ProgressUtils mProgressUtils;
-    private SearchHistoryAdapter mSearchHistoryAdapter;
     //    private SearchAlarmTagAdapter mAlarmTagAdapter;
 //    private SearchAlarmPagerAdapter searchAlarmPagerAdapter;
     private Long mStartTime = null;
@@ -95,15 +96,15 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_alarm);
-        ButterKnife.bind(this);
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-        mPref = getSharedPreferences(PREFERENCE_ALARM_SEARCH_HISTORY, Activity.MODE_PRIVATE);
+        ButterKnife.bind(mActivity);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mKeywordEt.addTextChangedListener(this);
         mKeywordEt.requestFocus();
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
+        mPref = getSharedPreferences(PREFERENCE_ALARM_SEARCH_HISTORY, Activity.MODE_PRIVATE);
         long longStartTime = getIntent().getLongExtra(PREFERENCE_KEY_START_TIME, -1);
         long longEndTime = getIntent().getLongExtra(PREFERENCE_KEY_END_TIME, -1);
         if (longStartTime != -1) {
@@ -207,11 +208,11 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
 
     private void initSearchHistory() {
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x20);
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(this, mHistoryKeywords_deviceName, new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mHistoryKeywords_deviceName, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -295,7 +296,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
 
 
     private void dismissInputMethodManager(View view) {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
@@ -475,7 +476,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                     @Override
                     public void onErrorMsg(String errorMsg) {
                         mProgressUtils.dismissProgress();
-                        Toast.makeText(SearchAlarmActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 });
 //                NetUtils.INSTANCE.getServer().getDeviceAlarmLogListByDeviceName(mStartTime,
@@ -551,7 +552,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                     @Override
                     public void onErrorMsg(String errorMsg) {
                         mProgressUtils.dismissProgress();
-                        Toast.makeText(SearchAlarmActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 });
 //                NetUtils.INSTANCE.getServer().getDeviceAlarmLogList(mStartTime, mEndTime,
@@ -627,7 +628,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                     @Override
                     public void onErrorMsg(String errorMsg) {
                         mProgressUtils.dismissProgress();
-                        Toast.makeText(SearchAlarmActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 });
 //                NetUtils.INSTANCE.getServer().getDeviceAlarmLogListByDevicePhone(mStartTime,
@@ -691,7 +692,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     }
 
     public void test() {
-        Toast.makeText(this, "ddddd", Toast.LENGTH_SHORT).show();
+        Toast.makeText(mActivity, "ddddd", Toast.LENGTH_SHORT).show();
     }
 
     @Override

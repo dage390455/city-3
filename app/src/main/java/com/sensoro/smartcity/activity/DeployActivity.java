@@ -114,10 +114,10 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
         mMapView.onCreate(savedInstanceState);
         init();
-        this.getWindow().getDecorView().postInvalidate();
+        mActivity.getWindow().getDecorView().postInvalidate();
     }
 
     @Override
@@ -182,7 +182,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     private void init() {
         try {
-            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
             DeviceInfo deviceInfo = (DeviceInfo) getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
             if (deviceInfo != null) {
                 String sn = deviceInfo.getSn();
@@ -244,14 +244,14 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
                         .draggable(true);
                 smoothMoveMarker = aMap.addMarker(markerOption);
 
-                geocoderSearch = new GeocodeSearch(this);
+                geocoderSearch = new GeocodeSearch(mActivity);
                 geocoderSearch.setOnGeocodeSearchListener(this);
                 uploadButton.setEnabled(true);
                 setMapCustomStyleFile();
                 locate();
             } else {
                 Intent intent = new Intent();
-                intent.setClass(this, DeployResultActivity.class);
+                intent.setClass(mActivity, DeployResultActivity.class);
                 intent.putExtra(EXTRA_SENSOR_RESULT, -1);
                 startActivityForResult(intent, REQUEST_CODE_DEPLOY);
                 return;
@@ -259,7 +259,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
         }
 
     }
@@ -268,7 +268,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         tagLayout.removeAllViews();
         int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
         for (int i = 0; i < tagList.size(); i++) {
-            TextView textView = new TextView(this);
+            TextView textView = new TextView(mActivity);
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
             params.setMargins(10, 0, 0, 0);
             textView.setTextColor(getResources().getColor(R.color.white));
@@ -314,7 +314,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
         params.setMargins(0, 0, 20, 0);
-        TextView textView = new TextView(this);
+        TextView textView = new TextView(mActivity);
         textView.setTextColor(getResources().getColor(R.color.c_888888));
         textView.setLayoutParams(params);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
@@ -361,7 +361,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     public void locate() {
 
-        mLocationClient = new AMapLocationClient(this);
+        mLocationClient = new AMapLocationClient(mActivity);
         //设置定位回调监听
         mLocationClient.setLocationListener(this);
         //初始化定位参数
@@ -411,7 +411,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         String tags = tagListToString();
         String name_default = getString(R.string.tips_hint_name_address);
         if (TextUtils.isEmpty(name) || name.equals(name_default)) {
-            SensoroToast sensoroToast = SensoroToast.makeText(this, getString(R.string
+            SensoroToast sensoroToast = SensoroToast.makeText(mActivity, getString(R.string
                     .tips_input_name), Toast.LENGTH_SHORT);
             sensoroToast.setGravity(Gravity.CENTER, 0, -10);
             sensoroToast.show();
@@ -419,7 +419,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
                 uploadButton.setEnabled(true);
             }
         } else if (name.length() > 30) {
-            SensoroToast sensoroToast = SensoroToast.makeText(this, "名称/地址不能超过30个字符", Toast.LENGTH_SHORT);
+            SensoroToast sensoroToast = SensoroToast.makeText(mActivity, "名称/地址不能超过30个字符", Toast.LENGTH_SHORT);
             sensoroToast.setGravity(Gravity.CENTER, 0, -10);
             sensoroToast.show();
             if (uploadButton != null) {
@@ -427,14 +427,14 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
             }
         }
         if (latLng == null) {
-            SensoroToast.makeText(this, getString(R.string.tips_hint_location), Toast.LENGTH_SHORT).setGravity
+            SensoroToast.makeText(mActivity, getString(R.string.tips_hint_location), Toast.LENGTH_SHORT).setGravity
                     (Gravity.CENTER, 0, -10)
                     .show();
             if (uploadButton != null) {
                 uploadButton.setEnabled(true);
             }
         } else if (TextUtils.isEmpty(contact) || name.equals(content)) {
-            SensoroToast.makeText(this, "请输入联系人名称和电话号码", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+            SensoroToast.makeText(mActivity, "请输入联系人名称和电话号码", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                     .show();
             if (uploadButton != null) {
                 uploadButton.setEnabled(true);
@@ -461,7 +461,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
                             if (errCode != ResponseBase.CODE_SUCCESS) {
                                 resultCode = errCode;
                             }
-                            Intent intent = new Intent(DeployActivity.this, DeployResultActivity.class);
+                            Intent intent = new Intent(mActivity, DeployResultActivity.class);
                             intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
                             intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
                             intent.putExtra(EXTRA_DEVICE_INFO, deviceDeployRsp.getData());
@@ -475,7 +475,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
                         @Override
                         public void onErrorMsg(String errorMsg) {
                             mProgressUtils.dismissProgress();
-                            Toast.makeText(DeployActivity.this, errorMsg, Toast.LENGTH_SHORT)
+                            Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT)
                                     .show();
                             if (uploadButton != null) {
                                 uploadButton.setEnabled(true);
@@ -545,7 +545,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     @OnClick(R.id.deploy_name_relative_layout)
     public void doSettingByNameAndAddress() {
-        Intent intent = new Intent(this, DeploySettingNameActivity.class);
+        Intent intent = new Intent(mActivity, DeploySettingNameActivity.class);
         intent.putExtra(EXTRA_SETTING_INDEX, SETTING_NAME_ADDRESS);
         intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, nameAddressEditText.getText().toString());
         startActivityForResult(intent, REQUEST_SETTING_NAME_ADDRESS);
@@ -553,7 +553,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     @OnClick(R.id.deploy_tag_relative_layout)
     public void doSettingByTag() {
-        Intent intent = new Intent(this, DeploySettingTagActivity.class);
+        Intent intent = new Intent(mActivity, DeploySettingTagActivity.class);
         intent.putExtra(EXTRA_SETTING_INDEX, SETTING_TAG);
         intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) tagList);
         startActivityForResult(intent, REQUEST_SETTING_TAG);
@@ -561,7 +561,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     @OnClick(R.id.deploy_contact_relative_layout)
     public void doSettingContact() {
-        Intent intent = new Intent(this, DeploySettingContactActivity.class);
+        Intent intent = new Intent(mActivity, DeploySettingContactActivity.class);
         intent.putExtra(EXTRA_SETTING_INDEX, SETTING_CONTACT);
         if (contact != null) {
             intent.putExtra(EXTRA_SETTING_CONTACT, contact);
@@ -595,7 +595,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
             @Override
             public void onErrorMsg(String errorMsg) {
                 mProgressUtils.dismissProgress();
-                Toast.makeText(DeployActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
             }
         });
 //        NetUtils.INSTANCE.getServer().getDeviceDetailInfoList(sns, null, 1,

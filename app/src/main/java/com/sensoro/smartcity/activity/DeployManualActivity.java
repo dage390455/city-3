@@ -52,10 +52,10 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_manual);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         contentEditText.setOnEditorActionListener(this);
         contentEditText.addTextChangedListener(this);
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
     }
 
     @Override
@@ -90,14 +90,14 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 //            startActivity(intent);
             requestData(s);
         } else {
-            Toast.makeText(this, "请输入正确的SN,SN为16个字符", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "请输入正确的SN,SN为16个字符", Toast.LENGTH_SHORT).show();
         }
 
     }
 
     private void requestData(String scanSerialNumber) {
         if (TextUtils.isEmpty(scanSerialNumber)) {
-            Toast.makeText(DeployManualActivity.this, R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
         } else {
             mProgressUtils.showProgress();
             RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1)
@@ -117,7 +117,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
                 @Override
                 public void onErrorMsg(String errorMsg) {
                     mProgressUtils.dismissProgress();
-                    Toast.makeText(DeployManualActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                 }
             });
 //            NetUtils.INSTANCE.getServer().getDeviceDetailInfoList(scanSerialNumber.toUpperCase
@@ -163,12 +163,12 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
         try {
             Intent intent = new Intent();
             if (response.getData().size() > 0) {
-                intent.setClass(this, DeployActivity.class);
+                intent.setClass(mActivity, DeployActivity.class);
                 intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
-                intent.putExtra("uid", this.getIntent().getStringExtra("uid"));
+                intent.putExtra("uid", mActivity.getIntent().getStringExtra("uid"));
                 startActivityForResult(intent, REQUEST_CODE_DEPLOY);
             } else {
-                intent.setClass(this, DeployResultActivity.class);
+                intent.setClass(mActivity, DeployResultActivity.class);
                 intent.putExtra(EXTRA_SENSOR_RESULT, -1);
                 startActivityForResult(intent, REQUEST_CODE_DEPLOY);
             }

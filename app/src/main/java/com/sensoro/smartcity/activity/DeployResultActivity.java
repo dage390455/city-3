@@ -53,6 +53,8 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     TextView updateTextView;
     @BindView(R.id.deploy_result_iv)
     ImageView resultImageView;
+
+
     private int resultCode = 0;
     private DeviceInfo deviceInfo = null;
 
@@ -60,7 +62,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_result);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
         init();
     }
 
@@ -73,16 +75,16 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     private void init() {
 
         try {
-            resultCode = this.getIntent().getIntExtra(EXTRA_SENSOR_RESULT, 0);
+            resultCode = mActivity.getIntent().getIntExtra(EXTRA_SENSOR_RESULT, 0);
             if (resultCode == -1) {
                 resultImageView.setImageResource(R.mipmap.ic_deploy_failed);
                 tipsTextView.setText(R.string.tips_deploy_not_exist);
             } else {
-                deviceInfo = (DeviceInfo) this.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+                deviceInfo = (DeviceInfo) mActivity.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
                 String sn = deviceInfo.getSn().toUpperCase();
                 String name = deviceInfo.getName();
-                String lon = this.getIntent().getStringExtra(EXTRA_SENSOR_LON);
-                String lan = this.getIntent().getStringExtra(EXTRA_SENSOR_LAN);
+                String lon = mActivity.getIntent().getStringExtra(EXTRA_SENSOR_LON);
+                String lan = mActivity.getIntent().getStringExtra(EXTRA_SENSOR_LAN);
                 String contact = getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
                 String content = getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
                 if (resultCode == 1) {
@@ -113,7 +115,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(this, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
         }
 
     }

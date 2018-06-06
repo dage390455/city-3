@@ -204,7 +204,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_sensor_detail);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
         mMapView.onCreate(savedInstanceState);// 此方法必须重写
         //获取当前控件的布局对象
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mMapView.getLayoutParams();

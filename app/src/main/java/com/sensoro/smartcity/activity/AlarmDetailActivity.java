@@ -61,6 +61,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     SensoroShadowView mShadowView;
     @BindView(R.id.alarm_detail_popup_view)
     SensoroPopupAlarmView mAlarmPopupView;
+
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private TimerShaftAdapter timerShaftAdapter;
     private List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
@@ -69,7 +70,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_alarm_detail);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
         init();
     }
 
@@ -133,7 +134,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
                 }
             }
 
-            timerShaftAdapter = new TimerShaftAdapter(this, mList, new TimerShaftAdapter.OnGroupItemClickListener() {
+            timerShaftAdapter = new TimerShaftAdapter(mActivity, mList, new TimerShaftAdapter.OnGroupItemClickListener() {
                 @Override
                 public void onGroupItemClick(int position, boolean isExpanded) {
                     if (!isExpanded) {
@@ -152,7 +153,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
                     return true;
                 }
             });
-            WidgetUtil.judgeSensorType(this, detailIvType, deviceAlarmLogInfo.getSensorType());
+            WidgetUtil.judgeSensorType(mActivity, detailIvType, deviceAlarmLogInfo.getSensorType());
 
         } catch (Exception e) {
             e.printStackTrace();

@@ -55,14 +55,14 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 //    LinearLayout mSearchRelationLayout;
     @BindView(R.id.deploy_setting_tag_history_layout)
     LinearLayout mSearchHistoryLayout;
-//    @BindView(R.id.deploy_setting_tag_input_layout)
+    //    @BindView(R.id.deploy_setting_tag_input_layout)
 //    LinearLayout inputLayout;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
 
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
     private List<String> mHistoryKeywords = new ArrayList<>();
     private List<String> mTagList = new ArrayList<>();
-    private SearchHistoryAdapter mSearchHistoryAdapter;
 //    private RelationAdapter mRelationAdapter;
 //    private int add_count = 0;
 
@@ -70,7 +70,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_tag);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
         init();
     }
 
@@ -151,28 +151,29 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
         } else {
             mSearchHistoryLayout.setVisibility(View.GONE);
         }
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(this, mHistoryKeywords, new RecycleViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                String test = mHistoryKeywords.get(position);
-                if (!TextUtils.isEmpty(test)) {
-                    String trim = test.trim();
-                    if (mTagList.contains(trim)) {
-                        Toast.makeText(DeploySettingTagActivity.this, "标签不能重复", Toast.LENGTH_SHORT).show();
-                        return;
-                    } else {
-                        mTagList.add(trim);
-                    }
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mHistoryKeywords, new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String test = mHistoryKeywords.get(position);
+                        if (!TextUtils.isEmpty(test)) {
+                            String trim = test.trim();
+                            if (mTagList.contains(trim)) {
+                                Toast.makeText(mActivity, "标签不能重复", Toast.LENGTH_SHORT).show();
+                                return;
+                            } else {
+                                mTagList.add(trim);
+                            }
 
-                }
-                mKeywordEt.setTags(mTagList);
-            }
-        });
+                        }
+                        mKeywordEt.setTags(mTagList);
+                    }
+                });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
         mSearchHistoryAdapter.notifyDataSetChanged();
         mKeywordEt.requestFocus();
@@ -181,7 +182,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 
 
     public void dismissInputMethodManager(View view) {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 

@@ -20,10 +20,6 @@ import com.sensoro.smartcity.activity.MainActivity;
 
 //import android.app.NotificationChannel;
 
-/**
- * Created by LaoZhao on 2017/11/19.
- */
-
 public class NotificationUtils extends ContextWrapper {
 
     private NotificationManager manager;
@@ -34,7 +30,6 @@ public class NotificationUtils extends ContextWrapper {
 
     public NotificationUtils(Context context) {
         super(context);
-
     }
 
     @RequiresApi(api = Build.VERSION_CODES.O)

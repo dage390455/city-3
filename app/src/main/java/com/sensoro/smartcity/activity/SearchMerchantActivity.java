@@ -69,20 +69,19 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     RecyclerView mSearchHistoryRv;
     @BindView(R.id.search_merchant_tips)
     LinearLayout tipsLinearLayout;
+    private ProgressUtils mProgressUtils;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
+
     private SharedPreferences mPref;
     private Editor mEditor;
     private final List<String> mHistoryKeywords = new ArrayList<>();
-    private ProgressUtils mProgressUtils;
-    private SearchHistoryAdapter mSearchHistoryAdapter;
 
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_merchant);
-        ButterKnife.bind(this);
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-        mPref = getSharedPreferences(PREFERENCE_MERCHANT_HISTORY, Activity.MODE_PRIVATE);
-        mEditor = mPref.edit();
+        ButterKnife.bind(mActivity);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mKeywordEt.addTextChangedListener(this);
@@ -100,6 +99,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
 
     private void initSearchHistory() {
+        mPref = getSharedPreferences(PREFERENCE_MERCHANT_HISTORY, Activity.MODE_PRIVATE);
+        mEditor = mPref.edit();
         String history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
@@ -110,21 +111,22 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         } else {
             mSearchHistoryLayout.setVisibility(View.GONE);
         }
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(this, mHistoryKeywords, new RecycleViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                mKeywordEt.setText(mHistoryKeywords.get(position));
-                mClearKeywordIv.setVisibility(View.VISIBLE);
-                mKeywordEt.clearFocus();
-                dismissInputMethodManager(view);
-                requestData(mKeywordEt.getText().toString());
-            }
-        });
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mHistoryKeywords, new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        mKeywordEt.setText(mHistoryKeywords.get(position));
+                        mClearKeywordIv.setVisibility(View.VISIBLE);
+                        mKeywordEt.clearFocus();
+                        dismissInputMethodManager(view);
+                        requestData(mKeywordEt.getText().toString());
+                    }
+                });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
         mSearchHistoryAdapter.notifyDataSetChanged();
         mKeywordEt.requestFocus();
@@ -132,7 +134,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     }
 
     private void dismissInputMethodManager(View view) {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
@@ -203,44 +205,9 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
             @Override
             public void onErrorMsg(String errorMsg) {
                 mProgressUtils.dismissProgress();
-                Toast.makeText(SearchMerchantActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
             }
         });
-//        NetUtils.INSTANCE.getServer().getUserAccountList(text, null, null, null, "100000", new
-//                Response.Listener<UserAccountRsp>() {
-//                    @Override
-//                    public void onResponse(UserAccountRsp response) {
-//                        mProgressUtils.dismissProgress();
-//                        List<UserInfo> list = response.getData();
-//                        if (list.size() == 0) {
-//                            tipsLinearLayout.setVisibility(View.VISIBLE);
-//                        } else {
-//                            Intent data = new Intent();
-//                            data.putExtra(EXTRA_MERCHANT_INFO, response);
-//                            setResult(RESULT_CODE_SEARCH_MERCHANT, data);
-//                            finish();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//            @Override
-//            public void onErrorResponse(VolleyError volleyError) {
-//                mProgressUtils.dismissProgress();
-//                if (volleyError.networkResponse != null) {
-//                    String reason = new String(volleyError.networkResponse.data);
-//                    try {
-//                        JSONObject jsonObject = new JSONObject(reason);
-//                        Toast.makeText(getApplicationContext(), jsonObject.getString("errmsg"), Toast.LENGTH_SHORT)
-//                                .show();
-//                    } catch (JSONException e) {
-//                        e.printStackTrace();
-//                    } catch (Exception e) {
-//
-//                    }
-//                } else {
-//                    Toast.makeText(getApplicationContext(), R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
     }
 
     @Override

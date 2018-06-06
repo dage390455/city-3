@@ -10,4 +10,5 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
     public void initData(Context context) {
 
     }
+
 }

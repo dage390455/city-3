@@ -121,14 +121,15 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     private SensoroXLinearLayoutManager xLinearLayoutManager;
     private SensoroXGridLayoutManager xGridLayoutManager;
     private Animation returnTopAnimation;
-    private SharedPreferences mPref;
-    private Editor mEditor;
-    private final List<String> mHistoryKeywords = new ArrayList<>();
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private RelationAdapter mRelationAdapter;
     private IndexListAdapter mListAdapter;
     private IndexGridAdapter mGridAdapter;
+
+    private SharedPreferences mPref;
+    private Editor mEditor;
+    private final List<String> mHistoryKeywords = new ArrayList<>();
     private int switchType = TYPE_LIST;
     private int mTypeSelectedIndex = 0;
     private int mStatusSelectedIndex = 0;
@@ -141,10 +142,8 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_device);
-        ButterKnife.bind(this);
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
-        mPref = getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
-        mEditor = mPref.edit();
+        ButterKnife.bind(mActivity);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mKeywordEt.addTextChangedListener(this);
@@ -172,7 +171,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mTypeImageView.setOnClickListener(this);
         mStatusImageView.setOnClickListener(this);
         mSwitchImageView.setOnClickListener(this);
-        returnTopAnimation = AnimationUtils.loadAnimation(this, R.anim.return_top_in_anim);
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);
         mReturnTopImageView.setVisibility(View.GONE);
         mReturnTopImageView.setOnClickListener(this);
@@ -180,8 +179,8 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     }
 
     private void initListView() {
-        xLinearLayoutManager = new SensoroXLinearLayoutManager(this);
-        mListAdapter = new IndexListAdapter(this, this);
+        xLinearLayoutManager = new SensoroXLinearLayoutManager(mActivity);
+        mListAdapter = new IndexListAdapter(mActivity, this);
         mListRecyclerView.setAdapter(mListAdapter);
         mListRecyclerView.setLayoutManager(xLinearLayoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x15);
@@ -229,8 +228,8 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
 
     private void initGridView() {
-        xGridLayoutManager = new SensoroXGridLayoutManager(this, 3);
-        mGridAdapter = new IndexGridAdapter(this, this);
+        xGridLayoutManager = new SensoroXGridLayoutManager(mActivity, 3);
+        mGridAdapter = new IndexGridAdapter(mActivity, this);
         mGridRecyclerView.setAdapter(mGridAdapter);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x15);
         mGridRecyclerView.setLayoutManager(xGridLayoutManager);
@@ -383,7 +382,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
 
     private void initRelation() {
-        mRelationAdapter = new RelationAdapter(this, new RecycleViewItemClickListener() {
+        mRelationAdapter = new RelationAdapter(mActivity, new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 String s = searchStrList.get(position);
@@ -401,13 +400,15 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                 requestWithDirection(DIRECTION_DOWN, s);
             }
         });
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mRelationRecyclerView.setLayoutManager(linearLayoutManager);
         mRelationRecyclerView.setAdapter(mRelationAdapter);
     }
 
     private void initSearchHistory() {
+        mPref = getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
+        mEditor = mPref.edit();
         String history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
@@ -418,12 +419,12 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         } else {
             mSearchHistoryLayout.setVisibility(View.GONE);
         }
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(this, mHistoryKeywords, new RecycleViewItemClickListener() {
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mHistoryKeywords, new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 mKeywordEt.setText(mHistoryKeywords.get(position));
@@ -441,7 +442,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     }
 
     public void showListLayout() {
-        Animation inAnimation = AnimationUtils.loadAnimation(this, R.anim.layout_in_anim);
+        Animation inAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.layout_in_anim);
         inAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -464,7 +465,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     }
 
     public void showGridLayout() {
-        Animation inAnimation = AnimationUtils.loadAnimation(this, R.anim.layout_in_anim);
+        Animation inAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.layout_in_anim);
         inAnimation.setAnimationListener(new Animation.AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
@@ -597,7 +598,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     }
 
     private void dismissInputMethodManager(View view) {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
@@ -720,7 +721,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                     mListRecyclerView.refreshComplete();
                     mGridRecyclerView.refreshComplete();
                     mProgressUtils.dismissProgress();
-                    Toast.makeText(SearchDeviceActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                 }
             });
 //            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
@@ -795,7 +796,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                     mListRecyclerView.loadMoreComplete();
                     mGridRecyclerView.loadMoreComplete();
                     mProgressUtils.dismissProgress();
-                    Toast.makeText(SearchDeviceActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                 }
             });
 //            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
@@ -1028,7 +1029,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 //            int size = mDataList.size();
 ////            Log.e("", "onItemClick: "+mDataList.size());
             DeviceInfo deviceInfo = mDataList.get(index);
-            Intent intent = new Intent(this, SensorDetailActivity.class);
+            Intent intent = new Intent(mActivity, SensorDetailActivity.class);
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());

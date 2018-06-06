@@ -62,19 +62,19 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     LinearLayout mSearchRelationLayout;
     @BindView(R.id.deploy_setting_history_layout)
     LinearLayout mSearchHistoryLayout;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
+    private RelationAdapter mRelationAdapter;
 
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
     private List<String> mHistoryKeywords = new ArrayList<>();
-    private SearchHistoryAdapter mSearchHistoryAdapter;
-    private RelationAdapter mRelationAdapter;
     private CharSequence tempWords = "";
 
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_name);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
         init();
     }
 
@@ -114,20 +114,21 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
         } else {
             mSearchHistoryLayout.setVisibility(View.GONE);
         }
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(this);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(this, mHistoryKeywords, new RecycleViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                mKeywordEt.setText(mHistoryKeywords.get(position).trim());
-                mKeywordEt.clearFocus();
-                mKeywordEt.setSelection(mHistoryKeywords.get(position).trim().length());
-                dismissInputMethodManager(view);
-            }
-        });
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mHistoryKeywords, new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        mKeywordEt.setText(mHistoryKeywords.get(position).trim());
+                        mKeywordEt.clearFocus();
+                        mKeywordEt.setSelection(mHistoryKeywords.get(position).trim().length());
+                        dismissInputMethodManager(view);
+                    }
+                });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
         mSearchHistoryAdapter.notifyDataSetChanged();
         mKeywordEt.requestFocus();
@@ -135,8 +136,8 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     }
 
     private void initRelation() {
-        mRelationAdapter = new RelationAdapter(this, this);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        mRelationAdapter = new RelationAdapter(mActivity, this);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         mSearchRelationRv.setLayoutManager(linearLayoutManager);
         mSearchRelationRv.setAdapter(mRelationAdapter);
@@ -172,7 +173,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     }
 
     private void dismissInputMethodManager(View view) {
-        InputMethodManager imm = (InputMethodManager) this.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
@@ -223,12 +224,12 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
                 e.printStackTrace();
             }
             if (bytes.length > 36) {
-                Toast.makeText(this, "最大不能超过12个汉字或32个字符", Toast.LENGTH_SHORT).show();
+                Toast.makeText(mActivity, "最大不能超过12个汉字或32个字符", Toast.LENGTH_SHORT).show();
                 return;
             }
 
         } else {
-            Toast.makeText(this, "必须输入名称/地址", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mActivity, "必须输入名称/地址", Toast.LENGTH_SHORT).show();
             return;
         }
         save(text);
