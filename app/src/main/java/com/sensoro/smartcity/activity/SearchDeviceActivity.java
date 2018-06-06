@@ -135,7 +135,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     private int mStatusSelectedIndex = 0;
     private int page = 1;
     private final List<DeviceInfo> mDataList = new ArrayList<>();
-    private final List<DeviceInfo> orginList = new ArrayList<>();
+    private final List<DeviceInfo> originList = new ArrayList<>();
     private final List<String> searchStrList = new ArrayList<>();
 
 
@@ -153,7 +153,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         initSearchHistory();
         initRelation();
         initIndex();
-        orginList.addAll(SensoroCityApplication.getInstance().getData());
+        originList.addAll(SensoroCityApplication.getInstance().getData());
     }
 
 
@@ -604,7 +604,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     public void filterDeviceInfo(String filter) {
         List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
-        originDeviceInfoList.addAll(orginList);
+        originDeviceInfoList.addAll(originList);
         ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
             String name = deviceInfo.getName();

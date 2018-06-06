@@ -120,41 +120,6 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
                     Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                 }
             });
-//            NetUtils.INSTANCE.getServer().getDeviceDetailInfoList(scanSerialNumber.toUpperCase
-//                            (), null, 1,
-//                    new Response
-//                            .Listener<DeviceInfoListRsp>() {
-//                        @Override
-//                        public void onResponse(DeviceInfoListRsp response) {
-//                            if (mProgressUtils != null) {
-//                                mProgressUtils.dismissProgress();
-//                            }
-//                            refresh(response);
-//                        }
-//                    }, new Response.ErrorListener() {
-//                        @Override
-//                        public void onErrorResponse(VolleyError volleyError) {
-//                            if (mProgressUtils != null) {
-//                                mProgressUtils.dismissProgress();
-//                            }
-//                            if (volleyError.networkResponse != null) {
-//                                String reason = new String(volleyError.networkResponse.data);
-//                                try {
-//                                    JSONObject jsonObject = new JSONObject(reason);
-//                                    Toast.makeText(DeployManualActivity.this, jsonObject.getString("errmsg"), Toast
-//                                            .LENGTH_SHORT)
-//                                            .show();
-//                                } catch (JSONException e) {
-//                                    e.printStackTrace();
-//                                } catch (Exception e) {
-//
-//                                }
-//                            } else {
-//                                Toast.makeText(DeployManualActivity.this, R.string.tips_network_error, Toast
-//                                        .LENGTH_SHORT).show();
-//                            }
-//                        }
-//                    });
 
         }
     }
