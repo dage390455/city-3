@@ -59,11 +59,12 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 
     private Activity mContext;
 
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
-        mSoundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+        final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                 boolean supperAccount = ((MainActivity) mContext).isSupperAccount();
@@ -72,7 +73,8 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                 }
                 requestTopData(true);
             }
-        });
+        };
+        mSoundPool.setOnLoadCompleteListener(listener);
         mSoundId = mSoundPool.load(context, R.raw.alarm, 1);
         mHandler.postDelayed(mTask, 3000);
         requestWithDirection(DIRECTION_DOWN);
@@ -444,7 +446,9 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     public void onDestroy() {
         if (mSoundPool != null) {
             mSoundPool.unload(mSoundId);
+            mSoundPool.stop(mSoundId);
             mSoundPool.release();
+            mSoundPool.setOnLoadCompleteListener(null);
             mSoundPool = null;
         }
         mHandler.removeCallbacksAndMessages(null);

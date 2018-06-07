@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,12 +17,10 @@ import com.sensoro.smartcity.imainviews.IAlarmDetailActivityView;
 import com.sensoro.smartcity.presenter.AlarmDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -35,7 +32,7 @@ import butterknife.OnClick;
  */
 
 public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, AlarmDetailActivityPresenter>
-        implements IAlarmDetailActivityView, Constants, SensoroPopupAlarmView
+        implements IAlarmDetailActivityView, SensoroPopupAlarmView
         .OnPopupCallbackListener, View.OnClickListener, View.OnTouchListener {
 
 
@@ -61,17 +58,15 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     SensoroShadowView mShadowView;
     @BindView(R.id.alarm_detail_popup_view)
     SensoroPopupAlarmView mAlarmPopupView;
-
-    private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private TimerShaftAdapter timerShaftAdapter;
-    private List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
 
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_alarm_detail);
         ButterKnife.bind(mActivity);
-        init();
+        initView();
+        mPrestener.initData(mActivity);
     }
 
 
@@ -80,61 +75,11 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
         return new AlarmDetailActivityPresenter();
     }
 
-    private void init() {
+    private void initView() {
         try {
             confirmTextView.setOnClickListener(this);
-            deviceAlarmLogInfo = (DeviceAlarmLogInfo) getIntent().getSerializableExtra(EXTRA_ALARM_INFO);
-            String deviceName = deviceAlarmLogInfo.getDeviceName();
-            nameTextView.setText(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-            dateTextView.setText(DateUtil.getFullParseDate(deviceAlarmLogInfo.getUpdatedTime()));
-            AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-            for (int i = 0; i < recordInfoArray.length; i++) {
-                AlarmInfo.RecordInfo recordInfo = recordInfoArray[i];
-                if (recordInfo.getType().equals("recovery")) {
-                    statusTextView.setTextColor(getResources().getColor(R.color.sensoro_normal));
-                    statusTextView.setText("于" + DateUtil.getFullParseDate(recordInfo.getUpdatedTime()) + "恢复正常");
-                    statusImageView.setImageDrawable(getResources().getDrawable(R.drawable.shape_status_normal));
-                    break;
-                } else {
-                    statusTextView.setTextColor(getResources().getColor(R.color.sensoro_alarm));
-                    statusTextView.setText(R.string.alarming);
-                    statusImageView.setImageDrawable(getResources().getDrawable(R.drawable.shape_status_alarm));
-                }
-            }
-            switch (deviceAlarmLogInfo.getDisplayStatus()) {
-                case DISPLAY_STATUS_CONFIRM:
-//                    confirmTextView.setVisibility(View.VISIBLE);
-                    confirmTextView.setText(R.string.confirming);
-                    displayStatusTextView.setVisibility(View.GONE);
-                    break;
-                case DISPLAY_STATUS_ALARM:
-                    confirmTextView.setText(R.string.confirming_again);
-//                    confirmTextView.setVisibility(View.GONE);
-                    displayStatusTextView.setVisibility(View.VISIBLE);
-                    displayStatusTextView.setText(R.string.true_alarm);
-                    break;
-                case DISPLAY_STATUS_MISDESCRIPTION:
-                    confirmTextView.setText(R.string.confirming_again);
-//                    confirmTextView.setVisibility(View.GONE);
-                    displayStatusTextView.setVisibility(View.VISIBLE);
-                    displayStatusTextView.setText(R.string.misdescription);
-                    break;
-                case DISPLAY_STATUS_TEST:
-                    confirmTextView.setText(R.string.confirming_again);
-//                    confirmTextView.setVisibility(View.GONE);
-                    displayStatusTextView.setVisibility(View.VISIBLE);
-                    displayStatusTextView.setText(R.string.alarm_test);
-                    break;
-                default:
-                    break;
-            }
-            if (recordInfoArray != null) {
-                for (int i = recordInfoArray.length - 1; i >= 0; i--) {
-                    mList.add(recordInfoArray[i]);
-                }
-            }
-
-            timerShaftAdapter = new TimerShaftAdapter(mActivity, mList, new TimerShaftAdapter.OnGroupItemClickListener() {
+            timerShaftAdapter = new TimerShaftAdapter(mActivity, mPrestener.getList(), new TimerShaftAdapter
+                    .OnGroupItemClickListener() {
                 @Override
                 public void onGroupItemClick(int position, boolean isExpanded) {
                     if (!isExpanded) {
@@ -145,7 +90,6 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
                 }
             });
-
             expandableListView.setAdapter(timerShaftAdapter);
             expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
                 @Override
@@ -153,8 +97,6 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
                     return true;
                 }
             });
-            WidgetUtil.judgeSensorType(mActivity, detailIvType, deviceAlarmLogInfo.getSensorType());
-
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -162,36 +104,8 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     }
 
 
-    public void refresh() {
-
-        String deviceName = deviceAlarmLogInfo.getDeviceName();
-        String name = (TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        nameTextView.setText(TextUtils.isEmpty(name) ? deviceAlarmLogInfo.getDeviceSN() : name);
-        dateTextView.setText(DateUtil.getFullParseDate(deviceAlarmLogInfo.getUpdatedTime()));
-        AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-        for (int i = 0; i < recordInfoArray.length; i++) {
-            AlarmInfo.RecordInfo recordInfo = recordInfoArray[i];
-            if (recordInfo.getType().equals("recovery")) {
-                statusTextView.setText("于" + DateUtil.getFullParseDate(recordInfo.getUpdatedTime()) + "恢复正常");
-                statusImageView.setImageDrawable(getResources().getDrawable(R.drawable.shape_status_normal));
-                break;
-            } else {
-                statusTextView.setText(R.string.alarming);
-                statusImageView.setImageDrawable(getResources().getDrawable(R.drawable.shape_status_alarm));
-            }
-        }
-        if (recordInfoArray != null) {
-            mList.clear();
-            for (int i = recordInfoArray.length - 1; i >= 0; i--) {
-                mList.add(recordInfoArray[i]);
-            }
-            timerShaftAdapter.setData(mList);
-            timerShaftAdapter.notifyDataSetChanged();
-        }
-    }
-
     public void showConfirmPopup() {
-        mAlarmPopupView.show(deviceAlarmLogInfo, mShadowView, this);
+        mAlarmPopupView.show(mPrestener.getDeviceAlarmLogInfo(), mShadowView, this);
     }
 
     @Override
@@ -204,10 +118,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @OnClick(R.id.alarm_detail_back)
     public void back() {
-        Intent data = new Intent();
-        data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogInfo);
-        setResult(RESULT_CODE_ALARM_DETAIL, data);
-        finish();
+        mPrestener.doBack();
     }
 
     @Override
@@ -221,8 +132,8 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @Override
     public void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        this.deviceAlarmLogInfo = deviceAlarmLogInfo;
-        refresh();
+        mPrestener.setDeviceAlarmLogInfo(deviceAlarmLogInfo);
+        mPrestener.refreshData();
     }
 
     @Override
@@ -246,5 +157,89 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
                 break;
         }
         return false;
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+        mActivity.setResult(requestCode, data);
+    }
+
+    @Override
+    public void setNameTextView(String name) {
+        nameTextView.setText(name);
+    }
+
+    @Override
+    public void setDateTextView(String date) {
+        dateTextView.setText(date);
+    }
+
+    @Override
+    public void setStatusInfo(String text, int colorId, int resId) {
+        statusTextView.setTextColor(getResources().getColor(colorId));
+        statusTextView.setText(text);
+        statusImageView.setImageDrawable(getResources().getDrawable(resId));
+    }
+
+    @Override
+    public void setDisplayStatus(int displayStatus) {
+        switch (displayStatus) {
+            case Constants.DISPLAY_STATUS_CONFIRM:
+//                    confirmTextView.setVisibility(View.VISIBLE);
+                confirmTextView.setText(R.string.confirming);
+                displayStatusTextView.setVisibility(View.GONE);
+                break;
+            case Constants.DISPLAY_STATUS_ALARM:
+                confirmTextView.setText(R.string.confirming_again);
+//                    confirmTextView.setVisibility(View.GONE);
+                displayStatusTextView.setVisibility(View.VISIBLE);
+                displayStatusTextView.setText(R.string.true_alarm);
+                break;
+            case Constants.DISPLAY_STATUS_MISDESCRIPTION:
+                confirmTextView.setText(R.string.confirming_again);
+//                    confirmTextView.setVisibility(View.GONE);
+                displayStatusTextView.setVisibility(View.VISIBLE);
+                displayStatusTextView.setText(R.string.misdescription);
+                break;
+            case Constants.DISPLAY_STATUS_TEST:
+                confirmTextView.setText(R.string.confirming_again);
+//                    confirmTextView.setVisibility(View.GONE);
+                displayStatusTextView.setVisibility(View.VISIBLE);
+                displayStatusTextView.setText(R.string.alarm_test);
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void updateTimerShaftAdapter(List<AlarmInfo.RecordInfo> recordInfoList) {
+        timerShaftAdapter.setData(recordInfoList);
+        timerShaftAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setSensoroIv(String sensoroType) {
+        WidgetUtil.judgeSensorType(mActivity, detailIvType, sensoroType);
     }
 }

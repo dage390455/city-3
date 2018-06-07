@@ -1262,6 +1262,7 @@ public class WidgetUtil {
                     info = "门锁关闭，恢复正常";
                     break;
                 case "temperature":
+                case "temp1":
                     info = "温度低于预警值, 恢复正常";
                     break;
                 case "humidity":
@@ -1349,6 +1350,7 @@ public class WidgetUtil {
                     info = "门锁打开，设备预警";
                     break;
                 case "temperature":
+                case "temp1":
                     info = "温度 值为 " + thresholds + "°C 达到预警值";
                     break;
                 case "humidity":
