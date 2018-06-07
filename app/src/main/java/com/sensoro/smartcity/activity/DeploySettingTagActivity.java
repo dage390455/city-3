@@ -54,8 +54,8 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_tag);
         ButterKnife.bind(mActivity);
+        initView();
         mPrestener.initData(mActivity);
-        init();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
         }
     }
 
-    private void init() {
+    private void initView() {
         try {
             mKeywordEt.setTagsListener(this);
             initSearchHistory();
@@ -104,7 +104,6 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
-        mSearchHistoryAdapter.notifyDataSetChanged();
         mKeywordEt.requestFocus();
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
     }
@@ -125,7 +124,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 
     @OnClick(R.id.deploy_setting_tag_back)
     public void back() {
-        this.finish();
+        mActivity.finish();
     }
 
 
@@ -147,8 +146,20 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
     }
 
     @Override
+    protected void onDestroy() {
+        mPrestener.onDestroy();
+        mKeywordEt.destroyDrawingCache();
+        super.onDestroy();
+    }
+
+    @Override
     public void updateTags(List<String> tags) {
         mKeywordEt.setTags(tags);
+    }
+
+    @Override
+    public void updateSearchHistory() {
+        mSearchHistoryAdapter.notifyDataSetChanged();
     }
 
     @Override

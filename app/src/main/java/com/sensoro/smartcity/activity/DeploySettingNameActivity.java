@@ -104,7 +104,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     }
 
     private void initSearchHistory() {
-        String history = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
+        String history = mPref.getString(PREFERENCE_KEY_DEPLOY_NAME, "");
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
@@ -178,7 +178,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     }
 
     private void save(String text) {
-        String oldText = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
+        String oldText = mPref.getString(PREFERENCE_KEY_DEPLOY_NAME, "");
         if (!TextUtils.isEmpty(text)) {
             if (mHistoryKeywords.contains(text)) {
                 List<String> list = new ArrayList<String>();
@@ -198,14 +198,14 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
                         stringBuffer.append(list.get(i) + ",");
                     }
                 }
-                mEditor.putString(PREFERENCE_KEY_DEPLOY, stringBuffer.toString());
+                mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuffer.toString());
                 mEditor.commit();
             } else {
                 if (TextUtils.isEmpty(oldText)) {
-                    mEditor.putString(PREFERENCE_KEY_DEPLOY, text);
+                    mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, text);
                     mEditor.commit();
                 } else {
-                    mEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
+                    mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, text + "," + oldText);
                     mEditor.commit();
                 }
 
@@ -312,6 +312,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
         String text = mRelationAdapter.getData().get(position);
         mKeywordEt.setText(text);
         mRelationAdapter.getData().clear();
+        mKeywordEt.setSelection(text.length());
         mRelationAdapter.notifyDataSetChanged();
     }
 }

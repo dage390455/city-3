@@ -19,7 +19,8 @@ public interface Constants {
     String PREFERENCE_DEPLOY_CONTACT_HISTORY = "city_deploy_contact_history";
     String PREFERENCE_DEPLOY_CONTENT_HISTORY = "city_deploy_content_history";
     String PREFERENCE_KEY_DEVICE = "key_search_history_keyword";
-    String PREFERENCE_KEY_DEPLOY = "key_search_deploy";
+    String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
+    String PREFERENCE_KEY_DEPLOY_PHONE = "preference_key_deploy_phone";
     //
     String PREFERENCE_KEY_DEVICE_NAME = "preference_key_device_name";
     String PREFERENCE_KEY_DEVICE_NUM = "preference_key_device_num";

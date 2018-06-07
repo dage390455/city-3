@@ -70,7 +70,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_login);
-        ButterKnife.bind(this);
+        ButterKnife.bind(mActivity);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);

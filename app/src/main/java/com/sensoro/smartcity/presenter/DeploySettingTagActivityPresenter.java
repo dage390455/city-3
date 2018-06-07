@@ -9,13 +9,14 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeploySettingTagActivityView;
+import com.sensoro.smartcity.iwidget.IOndestroy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySettingTagActivityView> implements
-        Constants {
+        Constants, IOndestroy {
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
 
@@ -40,10 +41,10 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
         mEditor = mPref.edit();
         //
         ArrayList<String> stringArrayListExtra = mContext.getIntent().getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
-        if (stringArrayListExtra!=null){
+        if (stringArrayListExtra != null) {
             mTagList.addAll(stringArrayListExtra);
         }
-        String history = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
+        String history = mPref.getString(PREFERENCE_KEY_DEPLOY_NAME, "");
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
@@ -52,6 +53,7 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
         if (mTagList.size() > 0) {
             getView().updateTags(mTagList);
         }
+        getView().updateSearchHistory();
         getView().setSearchHistoryLayoutVisible(mHistoryKeywords.size() > 0);
     }
 
@@ -67,7 +69,7 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
 
     public void save(List<String> tags) {
         //原数据
-        String oldText = mPref.getString(PREFERENCE_KEY_DEPLOY, "");
+        String oldText = mPref.getString(PREFERENCE_KEY_DEPLOY_NAME, "");
         List<String> oldHistoryList = new ArrayList<String>();
         if (!TextUtils.isEmpty(oldText)) {
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
@@ -87,7 +89,7 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
                 stringBuffer.append(oldHistoryList.get(i) + ",");
             }
         }
-        mEditor.putString(PREFERENCE_KEY_DEPLOY, stringBuffer.toString());
+        mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuffer.toString());
         mEditor.commit();
 
     }
@@ -105,5 +107,11 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
 
         }
         getView().updateTags(mTagList);
+    }
+
+    @Override
+    public void onDestroy() {
+        mHistoryKeywords.clear();
+        mTagList.clear();
     }
 }

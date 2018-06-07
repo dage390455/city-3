@@ -479,50 +479,6 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                         Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 });
-//                NetUtils.INSTANCE.getServer().getDeviceAlarmLogListByDeviceName(mStartTime,
-//                        mEndTime,
-//                        text, null, 1, new
-//                                Response.Listener<DeviceAlarmLogRsp>() {
-//                                    @Override
-//                                    public void onResponse(DeviceAlarmLogRsp response) {
-//                                        mProgressUtils.dismissProgress();
-//                                        if (response.getData().size() == 0) {
-//                                            tipsLinearLayout.setVisibility(View.VISIBLE);
-////                            tagLinearLayout.setVisibility(View.GONE);
-//                                        } else {
-//                                            SensoroCityApplication.getInstance().saveSearchType = searchType;
-//                                            Intent data = new Intent();
-//                                            data.putExtra(EXTRA_ALARM_INFO, response);
-//                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-//                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-//                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-//                                            finish();
-//                                        }
-//                                    }
-//                                }, new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                mProgressUtils.dismissProgress();
-//                                if (error.networkResponse != null) {
-//                                    String reason = new String(error.networkResponse.data);
-//                                    try {
-//                                        JSONObject jsonObject = new JSONObject(reason);
-//                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
-//                                                .LENGTH_SHORT)
-//                                                .show();
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    } catch (Exception e) {
-//
-//                                    }
-//                                } else {
-//                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
-//                                            .LENGTH_SHORT)
-//                                            .show();
-//                                }
-//
-//                            }
-//                        });
                 break;
             case Constants.TYPE_DEVICE_SN:
                 mProgressUtils.showProgress();
@@ -555,50 +511,6 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                         Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 });
-//                NetUtils.INSTANCE.getServer().getDeviceAlarmLogList(mStartTime, mEndTime,
-//                        text, null, 1,
-//                        new
-//                                Response.Listener<DeviceAlarmLogRsp>() {
-//                                    @Override
-//                                    public void onResponse(DeviceAlarmLogRsp response) {
-//                                        mProgressUtils.dismissProgress();
-//                                        if (response.getData().size() == 0) {
-//                                            tipsLinearLayout.setVisibility(View.VISIBLE);
-////                            tagLinearLayout.setVisibility(View.GONE);
-//                                        } else {
-//                                            SensoroCityApplication.getInstance().saveSearchType = searchType;
-//                                            Intent data = new Intent();
-//                                            data.putExtra(EXTRA_ALARM_INFO, response);
-//                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-//                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-//                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-//                                            finish();
-//                                        }
-//                                    }
-//                                }, new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                mProgressUtils.dismissProgress();
-//                                if (error.networkResponse != null) {
-//                                    String reason = new String(error.networkResponse.data);
-//                                    try {
-//                                        JSONObject jsonObject = new JSONObject(reason);
-//                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
-//                                                .LENGTH_SHORT)
-//                                                .show();
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    } catch (Exception e) {
-//
-//                                    }
-//                                } else {
-//                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
-//                                            .LENGTH_SHORT)
-//                                            .show();
-//                                }
-//
-//                            }
-//                        });
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
                 mProgressUtils.showProgress();
@@ -631,50 +543,6 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                         Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
                     }
                 });
-//                NetUtils.INSTANCE.getServer().getDeviceAlarmLogListByDevicePhone(mStartTime,
-//                        mEndTime,
-//                        text, null, 1, new
-//                                Response.Listener<DeviceAlarmLogRsp>() {
-//                                    @Override
-//                                    public void onResponse(DeviceAlarmLogRsp response) {
-//                                        mProgressUtils.dismissProgress();
-//                                        if (response.getData().size() == 0) {
-//                                            tipsLinearLayout.setVisibility(View.VISIBLE);
-////                            tagLinearLayout.setVisibility(View.GONE);
-//                                        } else {
-//                                            SensoroCityApplication.getInstance().saveSearchType = searchType;
-//                                            Intent data = new Intent();
-//                                            data.putExtra(EXTRA_ALARM_INFO, response);
-//                                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-//                                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-//                                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-//                                            finish();
-//                                        }
-//                                    }
-//                                }, new Response.ErrorListener() {
-//                            @Override
-//                            public void onErrorResponse(VolleyError error) {
-//                                mProgressUtils.dismissProgress();
-//                                if (error.networkResponse != null) {
-//                                    String reason = new String(error.networkResponse.data);
-//                                    try {
-//                                        JSONObject jsonObject = new JSONObject(reason);
-//                                        Toast.makeText(SearchAlarmActivity.this, jsonObject.getString("errmsg"), Toast
-//                                                .LENGTH_SHORT)
-//                                                .show();
-//                                    } catch (JSONException e) {
-//                                        e.printStackTrace();
-//                                    } catch (Exception e) {
-//
-//                                    }
-//                                } else {
-//                                    Toast.makeText(SearchAlarmActivity.this, R.string.tips_network_error, Toast
-//                                            .LENGTH_SHORT)
-//                                            .show();
-//                                }
-//
-//                            }
-//                        });
                 break;
             default:
                 break;

@@ -1,14 +1,11 @@
 package com.sensoro.smartcity.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -24,24 +21,18 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeploySettingContactActivityView;
 import com.sensoro.smartcity.presenter.DeploySettingContactActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.regex.Pattern;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeploySettingContactActivity extends BaseActivity<IDeploySettingContactActivityView,
-        DeploySettingContactActivityPresenter> implements IDeploySettingContactActivityView, Constants,
+        DeploySettingContactActivityPresenter> implements IDeploySettingContactActivityView,
         RecycleViewItemClickListener,
         TextView.OnEditorActionListener, TextWatcher {
 
@@ -61,18 +52,12 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     private SearchHistoryAdapter mNameSearchHistoryAdapter;
     private SearchHistoryAdapter mPhoneSearchHistoryAdapter;
 
-    private SharedPreferences mNamePref;
-    private SharedPreferences mPhonePref;
-    private SharedPreferences.Editor mNameEditor;
-    private SharedPreferences.Editor mPhoneEditor;
-    private List<String> mNameHistoryKeywords = new ArrayList<>();
-    private List<String> mPhoneHistoryKeywords = new ArrayList<>();
-
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_contact);
         ButterKnife.bind(mActivity);
+        mPrestener.initData(mActivity);
         init();
     }
 
@@ -83,59 +68,29 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     }
 
     private void init() {
-        try {
-            mNamePref = getApplicationContext().getSharedPreferences
-                    (PREFERENCE_DEPLOY_CONTACT_HISTORY, Activity.MODE_PRIVATE);
-            mNameEditor = mNamePref.edit();
-            mPhonePref = getSharedPreferences(PREFERENCE_DEPLOY_CONTENT_HISTORY, Activity.MODE_PRIVATE);
-            mPhoneEditor = mPhonePref.edit();
-            initSearchNameHistory();
-            initSearchPhoneHistory();
-            String contact = getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
-            String content = getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
-            if (!TextUtils.isEmpty(contact)) {
-                mNameEt.setText(contact);
-            }
-            if (!TextUtils.isEmpty(content)) {
-                mPhoneEt.setText(content);
-            }
-            mNameEt.setOnEditorActionListener(this);
-            mNameEt.addTextChangedListener(this);
-            mPhoneEt.setOnEditorActionListener(this);
-            mPhoneEt.addTextChangedListener(this);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-
-    private void initSearchNameHistory() {
-        String history = mNamePref.getString(PREFERENCE_KEY_DEPLOY, "");
-        if (!TextUtils.isEmpty(history)) {
-            mNameHistoryKeywords.addAll(Arrays.asList(history.split(",")));
-        }
-        if (mNameHistoryKeywords.size() > 0) {
-            mSearchHistoryLayout.setVisibility(View.VISIBLE);
-        } else {
-            mSearchHistoryLayout.setVisibility(View.GONE);
-        }
+        mNameEt.setOnEditorActionListener(this);
+        mNameEt.addTextChangedListener(this);
+        mPhoneEt.setOnEditorActionListener(this);
+        mPhoneEt.addTextChangedListener(this);
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mNameSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
+
+
+        mNameSearchHistoryRv.setLayoutManager(layoutManager);
         mNameSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mNameSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mNameHistoryKeywords, new
+        mNameSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getNameHistoryKeywords(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mNameEt.setText(mNameHistoryKeywords.get(position).trim());
+                        String name = mPrestener.getNameHistoryKeywords().get(position).trim();
+                        mNameEt.setText(name);
                         mNameEt.clearFocus();
-                        mNameEt.setSelection(mNameHistoryKeywords.get(position).trim().length());
+                        mNameEt.setSelection(name.length());
                         dismissInputMethodManager(view);
                     }
                 });
         mNameSearchHistoryRv.setAdapter(mNameSearchHistoryAdapter);
-        mNameSearchHistoryAdapter.notifyDataSetChanged();
         mNameEt.requestFocus();
         mNameEt.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -145,30 +100,24 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
                 return false;
             }
         });
-    }
 
-    private void initSearchPhoneHistory() {
-        String history = mPhonePref.getString(PREFERENCE_KEY_DEPLOY, "");
-        if (!TextUtils.isEmpty(history)) {
-            mNameHistoryKeywords.addAll(Arrays.asList(history.split(",")));
-        }
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
-        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        mPhoneSearchHistoryRv.setLayoutManager(layoutManager);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
+        //
+
+        SensoroLinearLayoutManager layoutManager1 = new SensoroLinearLayoutManager(mActivity);
+        mPhoneSearchHistoryRv.setLayoutManager(layoutManager1);
         mPhoneSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPhoneHistoryKeywords, new
+        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getPhoneHistoryKeywords(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mPhoneEt.setText(mPhoneHistoryKeywords.get(position).trim());
+                        String phone = mPrestener.getPhoneHistoryKeywords().get(position).trim();
+                        mPhoneEt.setText(phone);
                         mPhoneEt.clearFocus();
-                        mPhoneEt.setSelection(mPhoneHistoryKeywords.get(position).trim().length());
+                        mPhoneEt.setSelection(phone.length());
                         dismissInputMethodManager(view);
                     }
                 });
         mPhoneSearchHistoryRv.setAdapter(mPhoneSearchHistoryAdapter);
-        mPhoneSearchHistoryAdapter.notifyDataSetChanged();
         mPhoneEt.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View v, MotionEvent event) {
@@ -177,81 +126,13 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
                 return false;
             }
         });
+        updateAdapter();
     }
+
 
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
-    }
-
-    private void saveName() {
-        String text = mNameEt.getText().toString();
-        String oldText = mNamePref.getString(PREFERENCE_KEY_DEPLOY, "");
-        if (!TextUtils.isEmpty(text)) {
-            if (mNameHistoryKeywords.contains(text)) {
-                mNameHistoryKeywords.clear();
-                for (String o : oldText.split(",")) {
-                    if (!o.equalsIgnoreCase(text)) {
-                        mNameHistoryKeywords.add(o);
-                    }
-                }
-                mNameHistoryKeywords.add(0, text);
-                StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < mNameHistoryKeywords.size(); i++) {
-                    if (i == (mNameHistoryKeywords.size() - 1)) {
-                        stringBuffer.append(mNameHistoryKeywords.get(i));
-                    } else {
-                        stringBuffer.append(mNameHistoryKeywords.get(i) + ",");
-                    }
-                }
-                mNameEditor.putString(PREFERENCE_KEY_DEPLOY, stringBuffer.toString());
-                mNameEditor.commit();
-            } else {
-                if (TextUtils.isEmpty(oldText)) {
-                    mNameEditor.putString(PREFERENCE_KEY_DEPLOY, text);
-                    mNameEditor.commit();
-                } else {
-                    mNameEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
-                    mNameEditor.commit();
-                }
-                mNameHistoryKeywords.add(0, text);
-            }
-        }
-    }
-
-    private void savePhone() {
-        String text = mPhoneEt.getText().toString();
-        String oldText = mPhonePref.getString(PREFERENCE_KEY_DEPLOY, "");
-        if (!TextUtils.isEmpty(text)) {
-            if (mPhoneHistoryKeywords.contains(text)) {
-                mPhoneHistoryKeywords.clear();
-                for (String o : oldText.split(",")) {
-                    if (!o.equalsIgnoreCase(text)) {
-                        mPhoneHistoryKeywords.add(o);
-                    }
-                }
-                mPhoneHistoryKeywords.add(0, text);
-                StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < mPhoneHistoryKeywords.size(); i++) {
-                    if (i == (mPhoneHistoryKeywords.size() - 1)) {
-                        stringBuffer.append(mPhoneHistoryKeywords.get(i));
-                    } else {
-                        stringBuffer.append(mPhoneHistoryKeywords.get(i) + ",");
-                    }
-                }
-                mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY, stringBuffer.toString());
-                mPhoneEditor.commit();
-            } else {
-                if (TextUtils.isEmpty(oldText)) {
-                    mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY, text);
-                    mPhoneEditor.commit();
-                } else {
-                    mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY, text + "," + oldText);
-                    mPhoneEditor.commit();
-                }
-                mPhoneHistoryKeywords.add(0, text);
-            }
-        }
     }
 
 
@@ -262,28 +143,9 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
     @OnClick(R.id.deploy_setting_contact_finish)
     public void doFinish() {
-        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
-        Pattern p = Pattern.compile(regex);
         String phoneStr = mPhoneEt.getText().toString();
         String nameStr = mNameEt.getText().toString();
-        if (TextUtils.isEmpty(nameStr)) {
-            Toast.makeText(mActivity, "联系人姓名不能为空！", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (!TextUtils.isEmpty(phoneStr) && p.matcher(phoneStr).matches() && !TextUtils.isEmpty(nameStr)) {
-            saveName();
-            savePhone();
-            mNameEt.clearFocus();
-            mPhoneEt.clearFocus();
-            Intent data = new Intent();
-            data.putExtra(EXTRA_SETTING_CONTACT, nameStr.trim());
-            data.putExtra(EXTRA_SETTING_CONTENT, phoneStr.trim());
-            setResult(RESULT_CODE_SETTING_CONTACT, data);
-            finish();
-        } else {
-            Toast.makeText(mActivity, R.string.tips_phone_empty, Toast.LENGTH_SHORT).show();
-        }
-
+        mPrestener.doFinish(nameStr, phoneStr);
     }
 
     @Override
@@ -316,5 +178,62 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
     @Override
     public void onItemClick(View view, int position) {
+    }
+
+    @Override
+    public void setName(String name) {
+        mNameEt.setText(name);
+    }
+
+    @Override
+    public void setPhone(String phone) {
+        mPhoneEt.setText(phone);
+    }
+
+    @Override
+    public void setSearchHistoryLayoutVisible(boolean isVisible) {
+        mSearchHistoryLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateAdapter() {
+        mNameSearchHistoryAdapter.notifyDataSetChanged();
+        mPhoneSearchHistoryAdapter.notifyDataSetChanged();
+    }
+
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+        mActivity.setResult(requestCode, data);
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
     }
 }

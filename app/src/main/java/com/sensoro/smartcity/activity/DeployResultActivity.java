@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -11,14 +10,8 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.presenter.DeployResultActivityPresenter;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.util.DateUtil;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,7 +22,7 @@ import butterknife.OnClick;
  */
 
 public class DeployResultActivity extends BaseActivity<IDeployResultActivityView, DeployResultActivityPresenter>
-        implements IDeployResultActivityView, Constants {
+        implements IDeployResultActivityView {
 
     @BindView(R.id.deploy_result_tip_tv)
     TextView tipsTextView;
@@ -55,15 +48,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     ImageView resultImageView;
 
 
-    private int resultCode = 0;
-    private DeviceInfo deviceInfo = null;
-
-
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_result);
         ButterKnife.bind(mActivity);
-        init();
+        mPrestener.initData(mActivity);
     }
 
 
@@ -72,55 +61,9 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         return new DeployResultActivityPresenter();
     }
 
-    private void init() {
 
-        try {
-            resultCode = mActivity.getIntent().getIntExtra(EXTRA_SENSOR_RESULT, 0);
-            if (resultCode == -1) {
-                resultImageView.setImageResource(R.mipmap.ic_deploy_failed);
-                tipsTextView.setText(R.string.tips_deploy_not_exist);
-            } else {
-                deviceInfo = (DeviceInfo) mActivity.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
-                String sn = deviceInfo.getSn().toUpperCase();
-                String name = deviceInfo.getName();
-                String lon = mActivity.getIntent().getStringExtra(EXTRA_SENSOR_LON);
-                String lan = mActivity.getIntent().getStringExtra(EXTRA_SENSOR_LAN);
-                String contact = getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
-                String content = getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
-                if (resultCode == 1) {
-                    resultImageView.setImageResource(R.mipmap.ic_deploy_success);
-                    tipsTextView.setText(R.string.tips_deploy_success);
-                } else {
-                    resultImageView.setImageResource(R.mipmap.ic_deploy_failed);
-                    tipsTextView.setText(R.string.tips_deploy_failed);
-                }
-                snTextView.setText(getString(R.string.sensor_detail_sn) + "：" + sn);
-                nameTextView.setText(getString(R.string.sensor_detail_name) + "：" + name);
-                lonTextView.setText(getString(R.string.sensor_detail_lon) + "：" + lon);
-                lanTextView.setText(getString(R.string.sensor_detail_lan) + "：" + lan);
-                contactTextView.setText(getString(R.string.name) + "：" + (TextUtils.isEmpty(contact) ? "无" : contact));
-                contentTextView.setText(getString(R.string.phone) + "：" + (TextUtils.isEmpty(contact) ? "无" : content));
-                statusTextView.setText(getString(R.string.sensor_detail_status) + "：" + Constants
-                        .DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
-                if (deviceInfo.getLastUpdatedTime() != null) {
-                    updateTextView.setVisibility(View.VISIBLE);
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
-                    Date date = sdf.parse(deviceInfo.getLastUpdatedTime());
-                    updateTextView.setText(getString(R.string.update_time) + "：" + DateUtil.getFullParseDate(date
-                            .getTime()));
-                } else {
-                    updateTextView.setVisibility(View.GONE);
-                }
-                refreshSignal(deviceInfo.getUpdatedTime(), deviceInfo.getSignal());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            Toast.makeText(mActivity, R.string.tips_data_error, Toast.LENGTH_SHORT).show();
-        }
-
-    }
-
-    private void refreshSignal(long updateTime, String signal) {
+    @Override
+    public void refreshSignal(long updateTime, String signal) {
         String signal_text = null;
         long time_diff = System.currentTimeMillis() - updateTime;
         if (signal != null && (time_diff < 300000)) {
@@ -145,6 +88,57 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         signalTextView.setText(signal_text);
     }
 
+    @Override
+    public void setResultImageView(int resId) {
+        resultImageView.setImageResource(resId);
+    }
+
+    @Override
+    public void setTipsTextView(String text) {
+        tipsTextView.setText(text);
+    }
+
+    @Override
+    public void setSnTextView(String sn) {
+        snTextView.setText(sn);
+    }
+
+    @Override
+    public void setNameTextView(String name) {
+        nameTextView.setText(name);
+    }
+
+    @Override
+    public void setLonLanTextView(String lon, String lan) {
+        lonTextView.setText(lon);
+        lanTextView.setText(lan);
+    }
+
+    @Override
+    public void setContactTextView(String contact) {
+        contactTextView.setText(contact);
+    }
+
+    @Override
+    public void setContentTextView(String content) {
+        contentTextView.setText(content);
+    }
+
+    @Override
+    public void setStatusTextView(String status) {
+        statusTextView.setText(status);
+    }
+
+    @Override
+    public void setUpdateTextView(String update) {
+        updateTextView.setText(update);
+    }
+
+    @Override
+    public void setUpdateTextViewVisible(boolean isVisible) {
+        updateTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
 
     @OnClick(R.id.deploy_result_back)
     public void back() {
@@ -153,25 +147,12 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @OnClick(R.id.deploy_result_continue_btn)
     public void gotoContinue() {
-        Intent intent = new Intent();
-        if (resultCode == 1 && deviceInfo != null) {
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-            intent.putExtra(EXTRA_CONTAINS_DATA, true);
-        } else {
-            intent.putExtra(EXTRA_CONTAINS_DATA, false);
-        }
-        setResult(RESULT_CODE_DEPLOY, intent);
-        this.finish();
+        mPrestener.gotoContinue();
     }
 
     @OnClick(R.id.deploy_result_back_home)
     public void backHome() {
-        Intent intent = new Intent();
-        if (resultCode == 1 && deviceInfo != null) {
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-        }
-        setResult(RESULT_CODE_MAP, intent);
-        this.finish();
+        mPrestener.backHome();
     }
 
     @Override
@@ -183,4 +164,38 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         return super.onKeyDown(keyCode, event);
     }
 
+    @Override
+    public void toastShort(String msg) {
+        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+        mActivity.setResult(requestCode, data);
+    }
 }
