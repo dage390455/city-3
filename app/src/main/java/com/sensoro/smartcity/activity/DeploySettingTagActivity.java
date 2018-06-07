@@ -182,17 +182,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
     }
 
     @Override
-    public void toastShort(int resId) {
-
-    }
-
-    @Override
     public void toastLong(String msg) {
-
-    }
-
-    @Override
-    public void toastLong(int resId) {
 
     }
 }

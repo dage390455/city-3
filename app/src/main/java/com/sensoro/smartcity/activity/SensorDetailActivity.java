@@ -387,7 +387,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
         } catch (Exception e) {
             e.printStackTrace();
             mProgressUtils.dismissProgress();
-            toastShort(R.string.tips_data_error);
+            toastShort(mActivity.getResources().getString(R.string.tips_data_error));
         }
     }
 
@@ -885,7 +885,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
     @OnClick(R.id.sensor_detail_navi_btn)
     public void navigation() {
         if (startPosition == null) {
-            toastShort(R.string.tips_location_permission);
+            toastShort(mActivity.getResources().getString(R.string.tips_location_permission));
             return;
         }
         if (isAppInstalled(mActivity, "com.autonavi.minimap")) {
@@ -1124,18 +1124,9 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
         Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
-    @Override
-    public void toastShort(int resId) {
-        Toast.makeText(mActivity, resId, Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void toastLong(String msg) {
-
-    }
-
-    @Override
-    public void toastLong(int resId) {
 
     }
 

@@ -1,4 +1,8 @@
 package com.sensoro.smartcity.imainviews;
 
-public interface IDeployManualActivityView {
+import com.sensoro.smartcity.iwidget.IActivityIntent;
+import com.sensoro.smartcity.iwidget.IProgressDialog;
+import com.sensoro.smartcity.iwidget.IToast;
+
+public interface IDeployManualActivityView extends IToast,IActivityIntent,IProgressDialog{
 }

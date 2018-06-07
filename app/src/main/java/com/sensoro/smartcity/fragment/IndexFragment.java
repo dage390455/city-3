@@ -435,16 +435,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     }
 
     @Override
-    public void toastShort(int resId) {
-        Toast.makeText(mRootFragment.getActivity(), resId, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void toastLong(String msg) {
-    }
-
-    @Override
-    public void toastLong(int resId) {
     }
 
     @Override

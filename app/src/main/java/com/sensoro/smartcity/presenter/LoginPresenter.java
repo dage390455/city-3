@@ -91,9 +91,9 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
     public void login(final String account, final String pwd) {
         if (TextUtils.isEmpty(account)) {
-            getView().toastShort(R.string.tips_username_empty);
+            getView().toastShort(mContext.getResources().getString(R.string.tips_username_empty));
         } else if (TextUtils.isEmpty(pwd)) {
-            getView().toastShort(R.string.tips_login_pwd_empty);
+            getView().toastShort(mContext.getResources().getString(R.string.tips_login_pwd_empty));
         } else {
             final String phoneId = PushManager.getInstance().getClientid(SensoroCityApplication.getInstance());
             getView().showProgressDialog();
@@ -128,7 +128,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         intent.putExtra(EXTRA_PHONE_ID, phoneId);
                         getView().startAC(intent);
                     } else {
-                        getView().toastShort(R.string.tips_user_info_error);
+                        getView().toastShort(mContext.getResources().getString(R.string.tips_user_info_error));
                     }
                 }
 

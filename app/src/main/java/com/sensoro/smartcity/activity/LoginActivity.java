@@ -227,19 +227,8 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     }
 
     @Override
-    public void toastShort(int resId) {
-        Toast.makeText(mActivity, resId, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void toastLong(String msg) {
     }
-
-    @Override
-    public void toastLong(int resId) {
-
-    }
-
 
     @Override
     public void showAccountName(String name) {

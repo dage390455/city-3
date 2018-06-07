@@ -156,7 +156,7 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
                 getView().setIntentResult(Constants.RESULT_CODE_CALENDAR, intent);
                 getView().finishAc();
             } else {
-                getView().toastShort(R.string.tips_date_not_null);
+                getView().toastShort(mContext.getResources().getString(R.string.tips_date_not_null));
             }
         }
 //        if (startDate != null && endDate != null) {

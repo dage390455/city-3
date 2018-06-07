@@ -125,7 +125,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
             getView().updateAlarmListAdapter(tempList);
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort(R.string.tips_data_error);
+            getView().toastShort(mContext.getResources().getString(R.string.tips_data_error));
         }
 
     }

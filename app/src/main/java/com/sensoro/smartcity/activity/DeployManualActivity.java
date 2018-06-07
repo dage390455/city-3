@@ -3,14 +3,12 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
@@ -18,23 +16,18 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
 import com.sensoro.smartcity.presenter.DeployManualActivityPresenter;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.CityObserver;
-import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sensoro on 17/11/7.
  */
 
 public class DeployManualActivity extends BaseActivity<IDeployManualActivityView, DeployManualActivityPresenter>
-        implements IDeployManualActivityView, Constants, TextView.OnEditorActionListener,
+        implements IDeployManualActivityView, Constants,
         TextWatcher {
 
 
@@ -54,8 +47,8 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
         setContentView(R.layout.activity_deploy_manual);
         ButterKnife.bind(mActivity);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        contentEditText.setOnEditorActionListener(this);
         contentEditText.addTextChangedListener(this);
+        mPrestener.initData(mActivity);
     }
 
     @Override
@@ -75,73 +68,16 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 
     @OnClick(R.id.deploy_manual_close)
     public void close() {
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_CONTAINS_DATA, false);
-        setResult(RESULT_CODE_DEPLOY, intent);
-        this.finish();
+        mPrestener.clickClose();
     }
 
     @OnClick(R.id.deploy_manual_btn)
     public void next() {
-        String s = contentEditText.getText().toString();
-        if (!TextUtils.isEmpty(s) && s.length() == 16) {
-//            Intent intent = new Intent(this, DeployActivity.class);
-//            intent.putExtra(EXTRA_SENSOR_SN, contentEditText.getText().toString().toUpperCase());
-//            startActivity(intent);
-            requestData(s);
-        } else {
-            Toast.makeText(mActivity, "请输入正确的SN,SN为16个字符", Toast.LENGTH_SHORT).show();
-        }
+        String text = contentEditText.getText().toString();
+        mPrestener.clickNext(text);
 
     }
 
-    private void requestData(String scanSerialNumber) {
-        if (TextUtils.isEmpty(scanSerialNumber)) {
-            Toast.makeText(mActivity, R.string.invalid_qr_code, Toast.LENGTH_SHORT).show();
-        } else {
-            mProgressUtils.showProgress();
-            RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1)
-                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
-
-
-                @Override
-                public void onCompleted() {
-                    mProgressUtils.dismissProgress();
-                }
-
-                @Override
-                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                    refresh(deviceInfoListRsp);
-                }
-
-                @Override
-                public void onErrorMsg(String errorMsg) {
-                    mProgressUtils.dismissProgress();
-                    Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
-                }
-            });
-
-        }
-    }
-
-    private void refresh(DeviceInfoListRsp response) {
-        try {
-            Intent intent = new Intent();
-            if (response.getData().size() > 0) {
-                intent.setClass(mActivity, DeployActivity.class);
-                intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
-                intent.putExtra("uid", mActivity.getIntent().getStringExtra("uid"));
-                startActivityForResult(intent, REQUEST_CODE_DEPLOY);
-            } else {
-                intent.setClass(mActivity, DeployResultActivity.class);
-                intent.putExtra(EXTRA_SENSOR_RESULT, -1);
-                startActivityForResult(intent, REQUEST_CODE_DEPLOY);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -155,19 +91,9 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //数据回传
-        if (resultCode == RESULT_CODE_MAP) {
-            setResult(RESULT_CODE_MAP, data);
-            finish();
-        } else {
-            finish();
-        }
+        mPrestener.handleActivityResult(requestCode, resultCode, data);
     }
 
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        return false;
-    }
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -196,4 +122,48 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
         contentEditText.getText().clear();
     }
 
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+        mActivity.startActivityForResult(intent, requestCode);
+    }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+        mActivity.setResult(requestCode, data);
+    }
+
+    @Override
+    public void showProgressDialog() {
+        mProgressUtils.showProgress();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        mProgressUtils.dismissProgress();
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
 }

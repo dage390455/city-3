@@ -241,17 +241,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     }
 
     @Override
-    public void toastShort(int resId) {
-        Toast.makeText(mRootFragment.getActivity(), resId, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
     public void toastLong(String msg) {
-
-    }
-
-    @Override
-    public void toastLong(int resId) {
 
     }
 

@@ -170,7 +170,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
             }
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort(R.string.tips_data_error);
+            getView().toastShort(mContext.getResources().getString(R.string.tips_data_error));
         }
 
 

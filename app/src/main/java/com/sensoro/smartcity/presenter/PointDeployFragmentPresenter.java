@@ -401,7 +401,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
             return;
         }
         if (TextUtils.isEmpty(result)) {
-            getView().toastShort(R.string.scan_failed);
+            getView().toastShort(mContext.getResources().getString(R.string.scan_failed));
             return;
         }
 //        System.out.println("this.isResumed()==>" + this.isResumed());
@@ -410,7 +410,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
         }
         String scanSerialNumber = parseResultMac(result);
         if (scanSerialNumber == null) {
-            getView().toastShort(R.string.invalid_qr_code);
+            getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
         } else {
             scanFinish(scanSerialNumber);
         }
