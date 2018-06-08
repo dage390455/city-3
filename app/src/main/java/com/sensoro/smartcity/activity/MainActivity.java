@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -233,11 +232,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                Intent intent = new Intent();
-                intent.setAction("android.intent.action.VIEW");
-                Uri content_url = Uri.parse(url);
-                intent.setData(content_url);
-                startActivity(intent);
+                mPrestener.updateApp(url);
             }
         });
         builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {

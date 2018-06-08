@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -334,6 +335,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         }
         mHandler.removeCallbacks(mRunnable);
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    public void updateApp(String url) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(url);
+        intent.setData(content_url);
+        getView().startAC(intent);
     }
 
     private class TaskRunnable implements Runnable {

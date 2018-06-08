@@ -184,9 +184,9 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
     @BindView(R.id.ll_battery_layout)
     LinearLayout llBatteryLayout;
     private ProgressUtils mProgressUtils;
+    private BatteryAdapter mBatteryAdapter;
 
     private AMap aMap;
-    private BatteryAdapter mBatteryAdapter;
     private DeviceInfo mDeviceInfo;
     private String[] sensorTypes;
     private float minValue = 0;

@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MainActivity;
+import com.sensoro.smartcity.activity.SearchDeviceActivity;
 import com.sensoro.smartcity.activity.SensorDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -452,5 +453,19 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             mSoundPool = null;
         }
         mHandler.removeCallbacksAndMessages(null);
+    }
+
+    public void toSearchAc() {
+        Intent intent = new Intent(mContext, SearchDeviceActivity.class);
+//        Bundle value = new Bundle();
+//        value.putParcelableArrayList(mDataList);
+//        intent.putExtra("111", value);
+//        intent.putExtra(EXTRA_FRAGMENT_INDEX, 1);
+
+//                int size = mDataList.size();
+//                intent.putExtra("", value);
+//                Bundle bundle = new Bundle();
+        getView().startAC(intent);
+//        startACForResult(intent, REQUEST_CODE_SEARCH_DEVICE);
     }
 }

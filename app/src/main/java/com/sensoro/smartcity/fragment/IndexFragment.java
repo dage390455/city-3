@@ -21,7 +21,6 @@ import android.widget.Toast;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.activity.SearchDeviceActivity;
 import com.sensoro.smartcity.adapter.IndexGridAdapter;
 import com.sensoro.smartcity.adapter.IndexListAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
@@ -47,11 +46,9 @@ import static android.view.View.VISIBLE;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_FRAGMENT_INDEX;
 import static com.sensoro.smartcity.constant.Constants.INDEX_STATUS_ARRAY;
 import static com.sensoro.smartcity.constant.Constants.INDEX_TYPE_ARRAY;
 import static com.sensoro.smartcity.constant.Constants.INPUT;
-import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_SEARCH_DEVICE;
 import static com.sensoro.smartcity.constant.Constants.TYPE_GRID;
 import static com.sensoro.smartcity.constant.Constants.TYPE_LIST;
 
@@ -358,12 +355,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
                 break;
             case R.id.index_iv_search:
             case R.id.index_iv_search_reverse:
-                Intent intent = new Intent(mRootFragment.getActivity(), SearchDeviceActivity.class);
-                intent.putExtra(EXTRA_FRAGMENT_INDEX, 1);
-//                int size = mDataList.size();
-//                intent.putExtra("", value);
-//                Bundle bundle = new Bundle();
-                startACForResult(intent, REQUEST_CODE_SEARCH_DEVICE);
+                mPrestener.toSearchAc();
                 break;
             case R.id.index_iv_switch:
                 mPrestener.switchIndexGridOrList(switchType);

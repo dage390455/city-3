@@ -1,10 +1,7 @@
 package com.sensoro.smartcity.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -27,7 +24,6 @@ import android.widget.Toast;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.IndexGridAdapter;
 import com.sensoro.smartcity.adapter.IndexListAdapter;
 import com.sensoro.smartcity.adapter.RelationAdapter;
@@ -36,10 +32,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchDeviceActivityView;
 import com.sensoro.smartcity.presenter.SearchDeviceActivityPresenter;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
-import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
@@ -50,15 +43,11 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.popup.SensoroPopupStatusView;
 import com.sensoro.smartcity.widget.popup.SensoroPopupTypeView;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static android.view.View.VISIBLE;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
@@ -127,16 +116,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     private IndexListAdapter mListAdapter;
     private IndexGridAdapter mGridAdapter;
 
-    private SharedPreferences mPref;
-    private Editor mEditor;
-    private final List<String> mHistoryKeywords = new ArrayList<>();
     private int switchType = TYPE_LIST;
-    private int mTypeSelectedIndex = 0;
-    private int mStatusSelectedIndex = 0;
-    private int page = 1;
-    private final List<DeviceInfo> mDataList = new ArrayList<>();
-    private final List<DeviceInfo> originList = new ArrayList<>();
-    private final List<String> searchStrList = new ArrayList<>();
 
 
     @Override
@@ -147,13 +127,14 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mKeywordEt.addTextChangedListener(this);
-        mKeywordEt.requestFocus();
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
+        //
+        mPrestener.initData(mActivity);
         initSearchHistory();
         initRelation();
         initIndex();
-        originList.addAll(SensoroCityApplication.getInstance().getData());
+
     }
 
 
@@ -165,7 +146,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     private void initIndex() {
         initListView();
         initGridView();
-        mIndexListLayout.setVisibility(View.GONE);
+        setIndexListLayoutVisible(false);
         mTypeTextView.setOnClickListener(this);
         mStatusTextView.setOnClickListener(this);
         mTypeImageView.setOnClickListener(this);
@@ -189,13 +170,13 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             @Override
             public void onRefresh() {
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_DOWN, text);
+                mPrestener.requestWithDirection(DIRECTION_DOWN, text);
             }
 
             @Override
             public void onLoadMore() {
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_UP, text);
+                mPrestener.requestWithDirection(DIRECTION_UP, text);
             }
         });
         mListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -238,13 +219,13 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             @Override
             public void onRefresh() {
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_DOWN, text);
+                mPrestener.requestWithDirection(DIRECTION_DOWN, text);
             }
 
             @Override
             public void onLoadMore() {
                 String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_UP, text);
+                mPrestener.requestWithDirection(DIRECTION_UP, text);
             }
         });
         mGridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -276,108 +257,57 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         });
     }
 
-    public void analyseData(DeviceInfoListRsp deviceInfoListRsp) {
-        this.mDataList.clear();
-        this.mRelationLayout.setVisibility(View.GONE);
-        this.mIndexListLayout.setVisibility(VISIBLE);
-        for (int i = 0; i < deviceInfoListRsp.getData().size(); i++) {
-            DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(i);
-            switch (deviceInfo.getStatus()) {
-                case SENSOR_STATUS_ALARM:
-                    deviceInfo.setSort(1);
-                    break;
-                case SENSOR_STATUS_NORMAL:
-                    deviceInfo.setSort(2);
-                    break;
-                case SENSOR_STATUS_LOST:
-                    deviceInfo.setSort(3);
-                    break;
-                case SENSOR_STATUS_INACTIVE:
-                    deviceInfo.setSort(4);
-                    break;
-                default:
-                    break;
-            }
-            mDataList.add(deviceInfo);
-        }
-        refreshData();
-    }
-
-    public void refreshData() {
-        Collections.sort(mDataList);
+    //    public void analyseData(DeviceInfoListRsp deviceInfoListRsp) {
+//        this.mDataList.clear();
+//        this.mRelationLayout.setVisibility(View.GONE);
+//        this.mIndexListLayout.setVisibility(VISIBLE);
+//        for (int i = 0; i < deviceInfoListRsp.getData().size(); i++) {
+//            DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(i);
+//            switch (deviceInfo.getStatus()) {
+//                case SENSOR_STATUS_ALARM:
+//                    deviceInfo.setSort(1);
+//                    break;
+//                case SENSOR_STATUS_NORMAL:
+//                    deviceInfo.setSort(2);
+//                    break;
+//                case SENSOR_STATUS_LOST:
+//                    deviceInfo.setSort(3);
+//                    break;
+//                case SENSOR_STATUS_INACTIVE:
+//                    deviceInfo.setSort(4);
+//                    break;
+//                default:
+//                    break;
+//            }
+//            mDataList.add(deviceInfo);
+//        }
+//        refreshData();
+//    }
+    @Override
+    public void refreshData(List<DeviceInfo> dataList) {
+        Collections.sort(dataList);
         if (switchType == TYPE_LIST) {
-            mListAdapter.setData(mDataList);
+            mListAdapter.setData(dataList);
             mListAdapter.notifyDataSetChanged();
             mListRecyclerView.refreshComplete();
         } else {
-            mGridAdapter.setData(mDataList);
+            mGridAdapter.setData(dataList);
             mGridAdapter.notifyDataSetChanged();
             mGridRecyclerView.refreshComplete();
         }
     }
 
-    public void refreshCacheData() {
-        this.mDataList.clear();
-        this.mRelationLayout.setVisibility(View.GONE);
-        this.mIndexListLayout.setVisibility(VISIBLE);
-        for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
-            DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
-            switch (deviceInfo.getStatus()) {
-                case SENSOR_STATUS_ALARM:
-                    deviceInfo.setSort(1);
-                    break;
-                case SENSOR_STATUS_NORMAL:
-                    deviceInfo.setSort(2);
-                    break;
-                case SENSOR_STATUS_LOST:
-                    deviceInfo.setSort(3);
-                    break;
-                case SENSOR_STATUS_INACTIVE:
-                    deviceInfo.setSort(4);
-                    break;
-                default:
-                    break;
-            }
-            if (isMatcher(deviceInfo)) {
-                mDataList.add(deviceInfo);
-            }
+    @Override
+    public void updateRelationData(List<String> strList) {
+        if (strList != null) {
+            mRelationAdapter.setData(strList);
         }
-        refreshData();
+        mRelationAdapter.notifyDataSetChanged();
     }
 
-    private boolean isMatcher(DeviceInfo deviceInfo) {
-        if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0) {
-            return true;
-        } else {
-            boolean isMatcherType = false;
-            boolean isMatcherStatus = false;
-            String unionType = deviceInfo.getUnionType();
-            if (unionType != null) {
-                String[] unionTypeArray = unionType.split("\\|");
-                List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                String[] menuTypeArray = SENSOR_MENU_ARRAY[mTypeSelectedIndex].split("\\|");
-                if (mTypeSelectedIndex == 0) {
-                    isMatcherType = true;
-                } else {
-                    for (int j = 0; j < menuTypeArray.length; j++) {
-                        String menuType = menuTypeArray[j];
-                        if (unionTypeList.contains(menuType)) {
-                            isMatcherType = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (mStatusSelectedIndex != 0) {
-                int status = INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-                if (deviceInfo.getStatus() == status) {
-                    isMatcherStatus = true;
-                }
-            } else {
-                isMatcherStatus = true;
-            }
-            return isMatcherStatus && isMatcherType;
-        }
+    @Override
+    public void updateSearchHistoryData() {
+        mSearchHistoryAdapter.notifyDataSetChanged();
     }
 
 
@@ -385,19 +315,10 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mRelationAdapter = new RelationAdapter(mActivity, new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                String s = searchStrList.get(position);
-////            List<DeviceInfo> data = SensoroCityApplication.getInstance().getData();
-////            for(int i=0;i<data.size();i++){
-////                String tempStr =data.get(i).getName();
-////                if (tempStr!=null&&tempStr.equalsIgnoreCase(s)){
-////                    position=i;
-////                }
-////            }
-                save(s);
                 mClearKeywordIv.setVisibility(View.VISIBLE);
                 mKeywordEt.clearFocus();
                 dismissInputMethodManager(view);
-                requestWithDirection(DIRECTION_DOWN, s);
+                mPrestener.clickRelationItem(position);
             }
         });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
@@ -407,40 +328,30 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     }
 
     private void initSearchHistory() {
-        mPref = getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
-        mEditor = mPref.edit();
-        String history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
-        if (!TextUtils.isEmpty(history)) {
-            mHistoryKeywords.clear();
-            mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
-        }
-        if (mHistoryKeywords.size() > 0) {
-            mSearchHistoryLayout.setVisibility(View.VISIBLE);
-        } else {
-            mSearchHistoryLayout.setVisibility(View.GONE);
-        }
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mHistoryKeywords, new RecycleViewItemClickListener() {
-            @Override
-            public void onItemClick(View view, int position) {
-                mKeywordEt.setText(mHistoryKeywords.get(position));
-                mClearKeywordIv.setVisibility(View.VISIBLE);
-                mKeywordEt.clearFocus();
-                dismissInputMethodManager(view);
-                String text = mKeywordEt.getText().toString();
-                requestWithDirection(DIRECTION_DOWN, text);
-            }
-        });
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getHistoryKeywords(), new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String text = mPrestener.getHistoryKeywords().get(position);
+                        mKeywordEt.setText(text);
+                        mClearKeywordIv.setVisibility(View.VISIBLE);
+                        mKeywordEt.clearFocus();
+                        dismissInputMethodManager(view);
+                        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+                    }
+                });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
         mSearchHistoryAdapter.notifyDataSetChanged();
         mKeywordEt.requestFocus();
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
     }
 
+    @Override
     public void showListLayout() {
         Animation inAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.layout_in_anim);
         inAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -464,6 +375,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mListLayout.startAnimation(inAnimation);
     }
 
+    @Override
     public void showGridLayout() {
         Animation inAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.layout_in_anim);
         inAnimation.setAnimationListener(new Animation.AnimationListener() {
@@ -509,7 +421,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             mTypePopupView.show(mTypeShadowLayout, new SensoroPopupTypeView.OnTypePopupItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    mTypeSelectedIndex = position;
+                    mPrestener.setTypeSelectedIndex(position);
                     filterByTypeWithRequest(position);
                 }
             });
@@ -538,7 +450,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             mStatusPopupView.show(mStatusShadowLayout, new SensoroPopupStatusView.OnStatusPopupItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    mStatusSelectedIndex = position;
+                    mPrestener.setStatusSelectedIndex(position);
                     filterByStatusWithRequest(position);
                 }
             });
@@ -546,49 +458,78 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     }
 
-    private void filterByTypeWithRequest(int position) {
+    @Override
+    public void filterByTypeWithRequest(int position) {
         mTypeTextView.setTextColor(getResources().getColor(R.color.c_626262));
         mTypeImageView.setColorFilter(getResources().getColor(R.color.c_626262));
         mTypeImageView.setRotation(0);
         String typeText = INDEX_TYPE_ARRAY[position];
         mTypeTextView.setText(typeText);
-        mTypeSelectedIndex = position;
+        mPrestener.setTypeSelectedIndex(position);
         String text = mKeywordEt.getText().toString();
-        requestWithDirection(DIRECTION_DOWN, text);
+        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
     }
 
-    private void filterByStatusWithRequest(int position) {
+    @Override
+    public void recycleViewRefreshComplete() {
+        mListRecyclerView.refreshComplete();
+        mGridRecyclerView.refreshComplete();
+    }
+
+    @Override
+    public void filterByStatusWithRequest(int position) {
         mStatusTextView.setTextColor(getResources().getColor(R.color.c_626262));
         mStatusImageView.setColorFilter(getResources().getColor(R.color.c_626262));
         mStatusImageView.setRotation(0);
         String statusText = INDEX_STATUS_ARRAY[position];
         mStatusTextView.setText(statusText);
-        mStatusSelectedIndex = position;
+        mPrestener.setStatusSelectedIndex(position);
         String text = mKeywordEt.getText().toString();
-        requestWithDirection(DIRECTION_DOWN, text);
+        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
     }
 
-    private void switchToTypeList() {
+    @Override
+    public void switchToTypeList() {
         switchType = TYPE_LIST;
-        page = 1;
         String text = mKeywordEt.getText().toString();
-        requestWithDirection(DIRECTION_DOWN, text);
+        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
         mReturnTopImageView.setVisibility(View.GONE);
         mSwitchImageView.setImageResource(R.mipmap.ic_switch_grid);
         showListLayout();
     }
 
-    private void switchToTypeGrid() {
+    @Override
+    public void setSearchHistoryLayoutVisible(boolean isVisible) {
+        mSearchHistoryLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setRelationLayoutVisible(boolean isVisible) {
+        mRelationLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setIndexListLayoutVisible(boolean isVisible) {
+        mIndexListLayout.setVisibility(isVisible?VISIBLE:View.GONE);
+    }
+
+    @Override
+    public void setTipsLinearLayoutVisible(boolean isVisible) {
+        tipsLinearLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void switchToTypeGrid() {
         switchType = TYPE_GRID;
-        page = 1;
         String text = mKeywordEt.getText().toString();
-        requestWithDirection(DIRECTION_DOWN, text);
+        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
         mReturnTopImageView.setVisibility(View.GONE);
         mSwitchImageView.setImageResource(R.mipmap.ic_switch_list);
         showGridLayout();
     }
 
-    private void returnTop() {
+    @Override
+    public void returnTop() {
         if (switchType == TYPE_LIST) {
             mListRecyclerView.smoothScrollToPosition(0);
         } else {
@@ -602,323 +543,6 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
-    public void filterDeviceInfo(String filter) {
-        List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
-        originDeviceInfoList.addAll(originList);
-        ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
-        for (DeviceInfo deviceInfo : originDeviceInfoList) {
-            String name = deviceInfo.getName();
-            if (!TextUtils.isEmpty(name)) {
-                if (!(name.contains(filter.toUpperCase()))) {
-                    deleteDeviceInfoList.add(deviceInfo);
-                }
-            } else {
-                deleteDeviceInfoList.add(deviceInfo);
-            }
-
-        }
-        originDeviceInfoList.removeAll(deleteDeviceInfoList);
-        List<String> tempList = new ArrayList<>();
-        for (DeviceInfo deviceInfo : originDeviceInfoList) {
-            String name = deviceInfo.getName();
-            if (!TextUtils.isEmpty(name)) {
-                tempList.add(name);
-            }
-        }
-        searchStrList.clear();
-        searchStrList.addAll(tempList);
-        mRelationAdapter.setData(tempList);
-        mRelationAdapter.notifyDataSetChanged();
-        originDeviceInfoList.clear();
-        tempList.clear();
-        deleteDeviceInfoList.clear();
-
-
-    }
-
-    public void save(String text) {
-//        String text = mKeywordEt.getText().toString();
-        String oldText = mPref.getString(PREFERENCE_KEY_DEVICE, "");
-        if (!TextUtils.isEmpty(text)) {
-            if (mHistoryKeywords.contains(text)) {
-                List<String> list = new ArrayList<String>();
-                for (String o : oldText.split(",")) {
-                    if (!o.equalsIgnoreCase(text)) {
-                        list.add(o);
-                    }
-                }
-                list.add(0, text);
-                mHistoryKeywords.clear();
-                mHistoryKeywords.addAll(list);
-                StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < list.size(); i++) {
-                    if (i == (list.size() - 1)) {
-                        stringBuffer.append(list.get(i));
-                    } else {
-                        stringBuffer.append(list.get(i) + ",");
-                    }
-                }
-                mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
-                mEditor.commit();
-            } else {
-                if (TextUtils.isEmpty(oldText)) {
-                    mEditor.putString(PREFERENCE_KEY_DEVICE, text);
-                } else {
-                    mEditor.putString(PREFERENCE_KEY_DEVICE, text + "," + oldText);
-                }
-                mEditor.commit();
-                mHistoryKeywords.add(0, text);
-            }
-        }
-    }
-
-    public void cleanHistory() {
-        mEditor.clear();
-        mHistoryKeywords.clear();
-        mEditor.commit();
-        mSearchHistoryAdapter.notifyDataSetChanged();
-        mSearchHistoryLayout.setVisibility(View.GONE);
-    }
-
-    public void requestWithDirection(int direction, String searchText) {
-
-        String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
-        Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-//        String text = mKeywordEt.getText().toString();
-        mProgressUtils.showProgress();
-        if (direction == DIRECTION_DOWN) {
-            page = 1;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
-                    (Schedulers.io
-                            ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
-
-
-                @Override
-                public void onCompleted() {
-                    mListRecyclerView.refreshComplete();
-                    mGridRecyclerView.refreshComplete();
-                    mProgressUtils.dismissProgress();
-                }
-
-                @Override
-                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                    try {
-                        if (deviceInfoListRsp.getData().size() == 0) {
-                            tipsLinearLayout.setVisibility(View.VISIBLE);
-                            mDataList.clear();
-                            refreshData();
-                        } else {
-                            SensoroCityApplication.getInstance().setData(deviceInfoListRsp.getData());
-                            refreshCacheData();
-                        }
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onErrorMsg(String errorMsg) {
-                    mListRecyclerView.refreshComplete();
-                    mGridRecyclerView.refreshComplete();
-                    mProgressUtils.dismissProgress();
-                    Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
-                }
-            });
-//            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
-//                    Response
-//                            .Listener<DeviceInfoListRsp>() {
-//                        @Override
-//                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-//                            mProgressUtils.dismissProgress();
-//                            try {
-//                                if (deviceBriefInfoRsp.getData().size() == 0) {
-//                                    tipsLinearLayout.setVisibility(View.VISIBLE);
-//                                    mDataList.clear();
-//                                    refreshData();
-//                                } else {
-//                                    SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
-//                                    refreshCacheData();
-//                                }
-//
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            } finally {
-//                                mListRecyclerView.refreshComplete();
-//                                mGridRecyclerView.refreshComplete();
-//
-//                            }
-//
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError volleyError) {
-//                    mProgressUtils.dismissProgress();
-//                    mListRecyclerView.refreshComplete();
-//                    mGridRecyclerView.refreshComplete();
-//                    if (volleyError.networkResponse != null) {
-//                        byte[] data = volleyError.networkResponse.data;
-//                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-        } else {
-            page++;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
-                    (Schedulers.io
-                            ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
-
-
-                @Override
-                public void onCompleted() {
-                    mListRecyclerView.loadMoreComplete();
-                    mGridRecyclerView.loadMoreComplete();
-                    mProgressUtils.dismissProgress();
-                }
-
-                @Override
-                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                    try {
-                        if (deviceInfoListRsp.getData().size() == 0) {
-                            page--;
-                        } else {
-                            SensoroCityApplication.getInstance().addData(deviceInfoListRsp.getData());
-                            refreshCacheData();
-                        }
-                    } catch (Exception e) {
-                        page--;
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onErrorMsg(String errorMsg) {
-                    page--;
-                    mListRecyclerView.loadMoreComplete();
-                    mGridRecyclerView.loadMoreComplete();
-                    mProgressUtils.dismissProgress();
-                    Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
-                }
-            });
-//            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
-//                    Response
-//                            .Listener<DeviceInfoListRsp>() {
-//                        @Override
-//                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-//                            mProgressUtils.dismissProgress();
-//                            try {
-//                                if (deviceBriefInfoRsp.getData().size() == 0) {
-//                                    page--;
-//                                } else {
-//                                    SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
-//                                    refreshCacheData();
-//                                }
-//                            } catch (Exception e) {
-//                                page--;
-//                                e.printStackTrace();
-//                            } finally {
-//                                mListRecyclerView.loadMoreComplete();
-//                                mGridRecyclerView.loadMoreComplete();
-//
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError volleyError) {
-//                    page--;
-//                    mProgressUtils.dismissProgress();
-//                    mListRecyclerView.loadMoreComplete();
-//                    mGridRecyclerView.loadMoreComplete();
-//                    if (volleyError.networkResponse != null) {
-//                        byte[] data = volleyError.networkResponse.data;
-//                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-        }
-    }
-
-//    public void requestWithDirection(int direction, String seacherStr) {
-//        String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
-//        Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-//        String text = seacherStr;
-//        mProgressUtils.showProgress();
-//        if (direction == DIRECTION_DOWN) {
-//            page = 1;
-//            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
-//                    Response
-//                            .Listener<DeviceInfoListRsp>() {
-//                        @Override
-//                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-//                            mProgressUtils.dismissProgress();
-//                            try {
-//                                if (deviceBriefInfoRsp.getData().size() == 0) {
-//                                    tipsLinearLayout.setVisibility(View.VISIBLE);
-//                                    mDataList.clear();
-//                                    refreshData();
-//                                } else {
-//                                    SensoroCityApplication.getInstance().setData(deviceBriefInfoRsp.getData());
-//                                    refreshCacheData();
-//                                }
-//
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            } finally {
-//                                mListRecyclerView.refreshComplete();
-//                                mGridRecyclerView.refreshComplete();
-//
-//                            }
-//
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError volleyError) {
-//                    mProgressUtils.dismissProgress();
-//                    mListRecyclerView.refreshComplete();
-//                    mGridRecyclerView.refreshComplete();
-//                    if (volleyError.networkResponse != null) {
-//                        byte[] data = volleyError.networkResponse.data;
-//                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-//        } else {
-//            page++;
-//            NetUtils.INSTANCE.getServer().getDeviceBriefInfoList(page, type, status, text, new
-//                    Response
-//                            .Listener<DeviceInfoListRsp>() {
-//                        @Override
-//                        public void onResponse(DeviceInfoListRsp deviceBriefInfoRsp) {
-//                            mProgressUtils.dismissProgress();
-//                            try {
-//                                if (deviceBriefInfoRsp.getData().size() == 0) {
-//                                    page--;
-//                                } else {
-//                                    SensoroCityApplication.getInstance().addData(deviceBriefInfoRsp.getData());
-//                                    refreshCacheData();
-//                                }
-//                            } catch (Exception e) {
-//                                page--;
-//                                e.printStackTrace();
-//                            } finally {
-//                                mListRecyclerView.loadMoreComplete();
-//                                mGridRecyclerView.loadMoreComplete();
-//                            }
-//                        }
-//                    }, new Response.ErrorListener() {
-//                @Override
-//                public void onErrorResponse(VolleyError volleyError) {
-//                    page--;
-//                    mProgressUtils.dismissProgress();
-//                    mListRecyclerView.loadMoreComplete();
-//                    mGridRecyclerView.loadMoreComplete();
-//                    if (volleyError.networkResponse != null) {
-//                        byte[] data = volleyError.networkResponse.data;
-//                        Toast.makeText(SearchDeviceActivity.this, new String(data), Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
-//        }
-//    }
 
     @Override
     protected void onDestroy() {
@@ -937,11 +561,11 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_device_clear_btn:
-                cleanHistory();
+                mPrestener.cleanHistory();
                 break;
             case R.id.search_device_cancel_tv:
                 mKeywordEt.clearFocus();
-                finish();
+                finishAc();
                 break;
             case R.id.search_device_clear_iv:
                 mKeywordEt.getText().clear();
@@ -961,12 +585,8 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                 returnTop();
                 break;
             case R.id.index_iv_switch:
-                if (switchType == TYPE_LIST) {
-                    switchToTypeGrid();
-                } else {
-                    switchToTypeList();
-                }
-                returnTop();
+                mPrestener.switchIndexGridOrList(switchType);
+
                 break;
             default:
                 break;
@@ -993,12 +613,12 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         if (!TextUtils.isEmpty(s.toString())) {
             mSearchHistoryLayout.setVisibility(View.GONE);
             mRelationLayout.setVisibility(View.VISIBLE);
-            filterDeviceInfo(s.toString());
+            mPrestener.filterDeviceInfo(s.toString());
 
         } else {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
             mRelationLayout.setVisibility(View.GONE);
-            mIndexListLayout.setVisibility(View.GONE);
+            setIndexListLayoutVisible(false);
         }
     }
 
@@ -1010,12 +630,12 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            save(mKeywordEt.getText().toString());
+            mPrestener.save(mKeywordEt.getText().toString());
             mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
             String text = mKeywordEt.getText().toString();
-            requestWithDirection(DIRECTION_DOWN, text);
+            mPrestener.requestWithDirection(DIRECTION_DOWN, text);
             return true;
         }
         return false;
@@ -1023,38 +643,51 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     @Override
     public void onItemClick(View view, int position) {
-//            Log.e(TAG, "onItemClick: ", );
-        int index = position - 1;
-        if (position >= 0) {
-//            int size = mDataList.size();
-////            Log.e("", "onItemClick: "+mDataList.size());
-            DeviceInfo deviceInfo = mDataList.get(index);
-            Intent intent = new Intent(mActivity, SensorDetailActivity.class);
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
-            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
-            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
-            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
-            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
-            startActivity(intent);
+        mPrestener.clickItem(position);
+    }
 
-        }
-//
-//        String searchText = mRelationAdapter.getData().get(position);
-//        List<DeviceInfo> tempList = new ArrayList<>();
-//        for (DeviceInfo deviceInfo : sensoroCityApplication.getData()) {
-//            if (deviceInfo.getName() != null) {
-//                if (searchText.equals(deviceInfo.getName())) {
-//                    tempList.add(deviceInfo);
-//                    Intent data = new Intent();
-//                    data.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-//                    setResult(RESULT_CODE_SEARCH_DEVICE, data);
-//                    finish();
-//                    break;
-//                }
-//
-//            }
-//        }
+    @Override
+    public void showProgressDialog() {
+        mProgressUtils.showProgress();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        mProgressUtils.dismissProgress();
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+        mActivity.startActivity(intent);
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
 
     }
 }

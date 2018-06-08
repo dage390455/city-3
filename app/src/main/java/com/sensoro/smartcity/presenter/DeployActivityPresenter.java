@@ -78,10 +78,12 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private String content = null;
     private RegeocodeQuery query;
     private Activity mContext;
+    private Handler mHandler;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        mHandler = new Handler(Looper.getMainLooper());
     }
 
     @Override
@@ -90,6 +92,10 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             mLocationClient.stopLocation();
             mLocationClient.onDestroy();
             mLocationClient = null;
+        }
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
         }
     }
 
@@ -159,7 +165,6 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             geocoderSearch.setOnGeocodeSearchListener(this);
             getView().setUploadButtonClickable(true);
             setMapCustomStyleFile();
-            locate();
         } else {
             Intent intent = new Intent();
             intent.setClass(mContext, DeployResultActivity.class);
@@ -192,7 +197,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
     @Override
     public void onMapLoaded() {
-
+        locate();
     }
 
     @Override
@@ -272,7 +277,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
     }
 
-    public void locate() {
+    private void locate() {
 
         mLocationClient = new AMapLocationClient(mContext);
         //设置定位回调监听
@@ -509,13 +514,11 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         System.out.println(stringBuffer.toString());
         smoothMoveMarker.setTitle(stringBuffer.toString());
 
-        new Handler(Looper.getMainLooper()).post(new Runnable() {
+        mHandler.post(new Runnable() {
             @Override
             public void run() {
                 smoothMoveMarker.showInfoWindow();
             }
         });
-
-
     }
 }

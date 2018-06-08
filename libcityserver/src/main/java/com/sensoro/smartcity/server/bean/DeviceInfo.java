@@ -251,9 +251,29 @@ public class DeviceInfo implements Serializable, Comparable {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        try {
+            if (this == obj) {
+                return true;
+            }
+            if (obj instanceof DeviceInfo) {
+                DeviceInfo deviceInfo = (DeviceInfo) obj;
+                return this.sn.equalsIgnoreCase(deviceInfo.sn);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 
     @Override
     public int hashCode() {
+        try {
+            return sn.hashCode();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         return super.hashCode();
     }
 
