@@ -1,10 +1,7 @@
 package com.sensoro.smartcity.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -31,22 +28,15 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchAlarmActivityView;
 import com.sensoro.smartcity.presenter.SearchAlarmActivityPresenter;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.CityObserver;
-import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sensoro on 17/7/11.
@@ -75,55 +65,41 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     @BindView(R.id.search_alarm_tag_layout)
     LinearLayout tagLinearLayout;
     @BindView(R.id.search_tablayout)
-    TabLayout searchTablayout;
+    TabLayout searchTabLayout;
     @BindView(R.id.search_viewpager)
     ViewPager searchViewpager;
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
-    private SharedPreferences mPref;
-    private Editor mEditor;
-    private final List<String> mHistoryKeywords_deviceName = new ArrayList<>();
-    private final List<String> mHistoryKeywords_deviceNumber = new ArrayList<>();
-    private final List<String> mHistoryKeywords_devicePhone = new ArrayList<>();
-    //    private SearchAlarmTagAdapter mAlarmTagAdapter;
-//    private SearchAlarmPagerAdapter searchAlarmPagerAdapter;
-    private Long mStartTime = null;
-    private Long mEndTime = null;
     private int searchType = TYPE_DEVICE_NAME;
+    //
 
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_alarm);
         ButterKnife.bind(mActivity);
+        mPrestener.initData(mActivity);
+        initView();
+    }
+
+    private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mKeywordEt.addTextChangedListener(this);
-        mKeywordEt.requestFocus();
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
-        mPref = getSharedPreferences(PREFERENCE_ALARM_SEARCH_HISTORY, Activity.MODE_PRIVATE);
-        long longStartTime = getIntent().getLongExtra(PREFERENCE_KEY_START_TIME, -1);
-        long longEndTime = getIntent().getLongExtra(PREFERENCE_KEY_END_TIME, -1);
-        if (longStartTime != -1) {
-            mStartTime = longStartTime;
-        }
-        if (longEndTime != -1) {
-            mEndTime = longEndTime;
-        }
-//        searchTablayout.setupWithViewPager(searchViewpager);
+        //        searchTabLayout.setupWithViewPager(searchViewpager);
 //        searchAlarmPagerAdapter = new SearchAlarmPagerAdapter(this, this.getSupportFragmentManager());
 //        searchAlarmPagerAdapter.
 //        searchViewpager.setAdapter(searchAlarmPagerAdapter);
         initSearchHistory();
         initTabs();
-        mEditor = mPref.edit();
     }
 
     private void initTabs() {
-        String extra_search_content = getIntent().getStringExtra(EXTRA_SEARCH_CONTENT);
+        String extra_search_content = mActivity.getIntent().getStringExtra(EXTRA_SEARCH_CONTENT);
         if (!TextUtils.isEmpty(extra_search_content)) {
             setText(extra_search_content);
             searchType = SensoroCityApplication.getInstance().saveSearchType;
@@ -132,31 +108,27 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
         }
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
-                searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), true);
-                searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), false);
-                searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), false);
-                refreshHistory(mHistoryKeywords_deviceName);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("设备名称"), true);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("设备号"), false);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("手机号"), false);
                 break;
             case Constants.TYPE_DEVICE_SN:
-                searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), false);
-                searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), true);
-                searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), false);
-                refreshHistory(mHistoryKeywords_deviceNumber);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("设备名称"), false);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("设备号"), true);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("手机号"), false);
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
-                searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), false);
-                searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), false);
-                searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), true);
-                refreshHistory(mHistoryKeywords_devicePhone);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("设备名称"), false);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("设备号"), false);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("手机号"), true);
                 break;
             default:
-                searchTablayout.addTab(searchTablayout.newTab().setText("设备名称"), true);
-                searchTablayout.addTab(searchTablayout.newTab().setText("设备号"), false);
-                searchTablayout.addTab(searchTablayout.newTab().setText("手机号"), false);
-                refreshHistory(mHistoryKeywords_deviceName);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("设备名称"), true);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("设备号"), false);
+                searchTabLayout.addTab(searchTabLayout.newTab().setText("手机号"), false);
                 break;
         }
-        searchTablayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+        searchTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 mKeywordEt.getText().clear();
@@ -164,25 +136,21 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                     case 0:
                         searchType = Constants.TYPE_DEVICE_NAME;
                         mKeywordEt.setHint("设备名称");
-                        refreshHistory(mHistoryKeywords_deviceName);
                         break;
                     case 1:
                         searchType = Constants.TYPE_DEVICE_SN;
                         mKeywordEt.setHint("设备号");
-                        refreshHistory(mHistoryKeywords_deviceNumber);
                         break;
                     case 2:
                         searchType = Constants.TYPE_DEVICE_PHONE_NUM;
                         mKeywordEt.setHint("手机号");
-                        refreshHistory(mHistoryKeywords_devicePhone);
                         break;
                     default:
                         searchType = Constants.TYPE_DEVICE_NAME;
                         mKeywordEt.setHint("设备名称");
-                        refreshHistory(mHistoryKeywords_deviceName);
                         break;
                 }
-
+                mPrestener.refreshHistory(searchType);
             }
 
             @Override
@@ -193,11 +161,13 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+        mPrestener.refreshHistory(searchType);
     }
 
-    private void setText(String extra_search_content) {
-        mKeywordEt.setText(extra_search_content);
-        mKeywordEt.setSelection(extra_search_content.length());
+    @Override
+    public void setText(String searchContent) {
+        mKeywordEt.setText(searchContent);
+        mKeywordEt.setSelection(searchContent.length());
     }
 
 
@@ -212,34 +182,13 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mHistoryKeywords_deviceName, new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getHistoryKeywords_deviceName(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String text;
-                        switch (searchType) {
-                            case Constants.TYPE_DEVICE_NAME:
-                                text = mHistoryKeywords_deviceName.get(position);
-                                setText(text);
-                                break;
-                            case Constants.TYPE_DEVICE_SN:
-                                text = mHistoryKeywords_deviceNumber.get(position);
-                                setText(text);
-                                break;
-                            case Constants.TYPE_DEVICE_PHONE_NUM:
-                                text = mHistoryKeywords_devicePhone.get(position);
-                                setText(text);
-                                break;
-                            default:
-                                text = mHistoryKeywords_deviceName.get(position);
-                                setText(text);
-                                break;
-                        }
-                        mClearKeywordIv.setVisibility(View.VISIBLE);
+                        mPrestener.clickSearchHistoryItem(searchType, position);
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
-                        save(text.trim());
-                        requestData(text.trim());
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
@@ -264,291 +213,12 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
         mKeywordEt.requestFocus();
     }
 
-    /**
-     * 刷新数据
-     *
-     * @param searchStr
-     */
-    private void refreshHistory(List<String> searchStr) {
-        String ori;
-        switch (searchType) {
-            case Constants.TYPE_DEVICE_NAME:
-                ori = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
-                break;
-            case Constants.TYPE_DEVICE_SN:
-                ori = mPref.getString(PREFERENCE_KEY_DEVICE_NUM, "");
-                break;
-            case Constants.TYPE_DEVICE_PHONE_NUM:
-                ori = mPref.getString(PREFERENCE_KEY_DEVICE_PHONE, "");
-                break;
-            default:
-                ori = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
-                break;
-        }
-
-        searchStr.clear();
-        if (!TextUtils.isEmpty(ori)) {
-            List<String> strings = Arrays.asList(ori.split(","));
-            searchStr.addAll(strings);
-        }
-        mSearchHistoryAdapter.setDataAndFresh(searchStr);
-    }
-
 
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
-    private void save(String text) {
-        if (!TextUtils.isEmpty(text)) {
-            switch (searchType) {
-                case Constants.TYPE_DEVICE_NAME:
-                    if (!mHistoryKeywords_deviceName.contains(text)) {
-                        mHistoryKeywords_deviceName.add(text);
-                    }
-                    if (mHistoryKeywords_deviceName.size() > 0) {
-                        StringBuffer stringBuffer = new StringBuffer();
-                        for (int i = 0; i < mHistoryKeywords_deviceName.size(); i++) {
-                            if (i == (mHistoryKeywords_deviceName.size() - 1)) {
-                                stringBuffer.append(mHistoryKeywords_deviceName.get(i));
-                            } else {
-                                stringBuffer.append(mHistoryKeywords_deviceName.get(i) + ",");
-                            }
-                        }
-                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());
-                        mEditor.commit();
-                    }
-                    break;
-                case Constants.TYPE_DEVICE_SN:
-                    if (!mHistoryKeywords_deviceNumber.contains(text)) {
-                        mHistoryKeywords_deviceNumber.add(text);
-                    }
-                    if (mHistoryKeywords_deviceNumber.size() > 0) {
-                        StringBuffer stringBuffer = new StringBuffer();
-                        for (int i = 0; i < mHistoryKeywords_deviceNumber.size(); i++) {
-                            if (i == (mHistoryKeywords_deviceNumber.size() - 1)) {
-                                stringBuffer.append(mHistoryKeywords_deviceNumber.get(i));
-                            } else {
-                                stringBuffer.append(mHistoryKeywords_deviceNumber.get(i) + ",");
-                            }
-                        }
-                        mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, stringBuffer.toString());
-                        mEditor.commit();
-                    }
-                    break;
-                case Constants.TYPE_DEVICE_PHONE_NUM:
-                    if (!mHistoryKeywords_devicePhone.contains(text)) {
-                        mHistoryKeywords_devicePhone.add(text);
-                    }
-                    if (mHistoryKeywords_devicePhone.size() > 0) {
-                        StringBuffer stringBuffer = new StringBuffer();
-                        for (int i = 0; i < mHistoryKeywords_devicePhone.size(); i++) {
-                            if (i == (mHistoryKeywords_devicePhone.size() - 1)) {
-                                stringBuffer.append(mHistoryKeywords_devicePhone.get(i));
-                            } else {
-                                stringBuffer.append(mHistoryKeywords_devicePhone.get(i) + ",");
-                            }
-                        }
-                        mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, stringBuffer.toString());
-                        mEditor.commit();
-                    }
-                    break;
-                default:
-                    if (!mHistoryKeywords_deviceName.contains(text)) {
-                        mHistoryKeywords_deviceName.add(text);
-                    }
-                    if (mHistoryKeywords_deviceName.size() > 0) {
-                        StringBuffer stringBuffer = new StringBuffer();
-                        for (int i = 0; i < mHistoryKeywords_deviceName.size(); i++) {
-                            if (i == (mHistoryKeywords_deviceName.size() - 1)) {
-                                stringBuffer.append(mHistoryKeywords_deviceName.get(i));
-                            } else {
-                                stringBuffer.append(mHistoryKeywords_deviceName.get(i) + ",");
-                            }
-                        }
-                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());
-                        mEditor.commit();
-                    }
-                    //
-//                    oldTestDeviceName = mPref.getString(PREFERENCE_KEY_DEVICE_NAME, "");
-//                    if (mHistoryKeywords_deviceName.contains(text)) {
-//                        List<String> list = new ArrayList<String>();
-//                        for (String o : oldTestDeviceName.split(",")) {
-//                            if (!o.equalsIgnoreCase(text)) {
-//                                list.add(o);
-//                            }
-//                        }
-//                        list.add(0, text);
-//                        mHistoryKeywords_deviceName.clear();
-//                        mHistoryKeywords_deviceName.addAll(list);
-//                        StringBuffer stringBuffer = new StringBuffer();
-//                        for (int i = 0; i < list.size(); i++) {
-//                            if (i == (list.size() - 1)) {
-//                                stringBuffer.append(list.get(i));
-//                            } else {
-//                                stringBuffer.append(list.get(i) + ",");
-//                            }
-//                        }
-//                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());
-//                        mEditor.commit();
-//                    } else {
-//                        if (TextUtils.isEmpty(oldTestDeviceName)) {
-//                            mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, text);
-//                        } else {
-//                            mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, text + "," + oldTestDeviceName);
-//                        }
-//                        mEditor.commit();
-//                        mHistoryKeywords_deviceName.add(0, text);
-//                    }
-                    break;
-            }
-        }
-
-    }
-
-    private void cleanHistory() {
-        switch (searchType) {
-            case Constants.TYPE_DEVICE_NAME:
-//                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
-                mEditor.clear();
-                mHistoryKeywords_deviceName.clear();
-                mEditor.commit();
-                mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_deviceName);
-                mSearchHistoryLayout.setVisibility(View.GONE);
-                break;
-            case Constants.TYPE_DEVICE_SN:
-//                mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, "");
-                mEditor.clear();
-                mHistoryKeywords_deviceNumber.clear();
-                mEditor.commit();
-                mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_deviceNumber);
-                mSearchHistoryLayout.setVisibility(View.GONE);
-                break;
-            case Constants.TYPE_DEVICE_PHONE_NUM:
-//                mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, "");
-                mEditor.clear();
-                mHistoryKeywords_devicePhone.clear();
-                mEditor.commit();
-                mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_devicePhone);
-                mSearchHistoryLayout.setVisibility(View.GONE);
-                break;
-            default:
-//                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
-                mEditor.clear();
-                mHistoryKeywords_deviceName.clear();
-                mEditor.commit();
-                mSearchHistoryAdapter.setDataAndFresh(mHistoryKeywords_deviceName);
-                mSearchHistoryLayout.setVisibility(View.GONE);
-                break;
-        }
-
-    }
-
-    public void requestData(final String text) {
-        switch (searchType) {
-            case Constants.TYPE_DEVICE_NAME:
-                mProgressUtils.showProgress();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, text, null, mStartTime, mEndTime, null)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        mProgressUtils.dismissProgress();
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
-                            tipsLinearLayout.setVisibility(View.VISIBLE);
-//                            tagLinearLayout.setVisibility(View.GONE);
-                        } else {
-                            SensoroCityApplication.getInstance().saveSearchType = searchType;
-                            Intent data = new Intent();
-                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
-                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onErrorMsg(String errorMsg) {
-                        mProgressUtils.dismissProgress();
-                        Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                break;
-            case Constants.TYPE_DEVICE_SN:
-                mProgressUtils.showProgress();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, text, null, null, mStartTime, mEndTime, null)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        mProgressUtils.dismissProgress();
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
-                            tipsLinearLayout.setVisibility(View.VISIBLE);
-//                            tagLinearLayout.setVisibility(View.GONE);
-                        } else {
-                            SensoroCityApplication.getInstance().saveSearchType = searchType;
-                            Intent data = new Intent();
-                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
-                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onErrorMsg(String errorMsg) {
-                        mProgressUtils.dismissProgress();
-                        Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                break;
-            case Constants.TYPE_DEVICE_PHONE_NUM:
-                mProgressUtils.showProgress();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, text, mStartTime, mEndTime, null)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
-                    @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        mProgressUtils.dismissProgress();
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
-                            tipsLinearLayout.setVisibility(View.VISIBLE);
-//                            tagLinearLayout.setVisibility(View.GONE);
-                        } else {
-                            SensoroCityApplication.getInstance().saveSearchType = searchType;
-                            Intent data = new Intent();
-                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
-                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                            setResult(RESULT_CODE_SEARCH_ALARM, data);
-                            finish();
-                        }
-                    }
-
-                    @Override
-                    public void onErrorMsg(String errorMsg) {
-                        mProgressUtils.dismissProgress();
-                        Toast.makeText(mActivity, errorMsg, Toast.LENGTH_SHORT).show();
-                    }
-                });
-                break;
-            default:
-                break;
-        }
-
-    }
 
     @Override
     protected void onDestroy() {
@@ -559,28 +229,25 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
         super.onDestroy();
     }
 
-    public void test() {
-        Toast.makeText(mActivity, "ddddd", Toast.LENGTH_SHORT).show();
-    }
 
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_alarm_clear_btn:
-                cleanHistory();
+                mPrestener.cleanHistory(searchType);
                 break;
             case R.id.search_alarm_cancel_tv:
                 mKeywordEt.clearFocus();
 //                Intent data = new Intent();
 //                data.putExtra(EXTRA_ACTIVITY_CANCEL, true);
 //                setResult(RESULT_CODE_SEARCH_ALARM, data);
-                finish();
+                finishAc();
                 break;
             case R.id.search_alarm_clear_iv:
                 mKeywordEt.getText().clear();
                 mSearchHistoryAdapter.notifyDataSetChanged();
-                mClearKeywordIv.setVisibility(View.GONE);
-                tipsLinearLayout.setVisibility(View.GONE);
+                setClearKeywordIvVisible(false);
+                setTipsLinearLayoutVisible(false);
 //                tagLinearLayout.setVisibility(View.VISIBLE);
                 break;
             default:
@@ -615,13 +282,13 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
+            setClearKeywordIvVisible(true);
             dismissInputMethodManager(v);
             String text = mKeywordEt.getText().toString();
             if (!TextUtils.isEmpty(text)) {
-                save(text.trim());
-                requestData(text.trim());
+                mPrestener.save(searchType, text.trim());
+                mPrestener.requestData(searchType, text.trim());
             }
             return true;
         }
@@ -629,4 +296,68 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     }
 
 
+    @Override
+    public void setSearchHistoryLayoutVisible(boolean isVisible) {
+        mSearchHistoryLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setClearKeywordIvVisible(boolean isVisible) {
+        mClearKeywordIv.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setTipsLinearLayoutVisible(boolean isVisible) {
+        tipsLinearLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateSearchHistory(List<String> historyKeywords) {
+        mSearchHistoryAdapter.setDataAndFresh(historyKeywords);
+    }
+
+    @Override
+    public void startAC(Intent intent) {
+
+    }
+
+    @Override
+    public void finishAc() {
+        mActivity.finish();
+    }
+
+    @Override
+    public void startACForResult(Intent intent, int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode) {
+
+    }
+
+    @Override
+    public void setIntentResult(int requestCode, Intent data) {
+        mActivity.setResult(requestCode, data);
+    }
+
+    @Override
+    public void showProgressDialog() {
+        mProgressUtils.showProgress();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        mProgressUtils.dismissProgress();
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
 }

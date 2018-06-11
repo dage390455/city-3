@@ -123,18 +123,20 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(mActivity);
+        mPrestener.initData(mActivity);
+        initView();
+    }
+
+    private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mKeywordEt.addTextChangedListener(this);
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
-        //
-        mPrestener.initData(mActivity);
         initSearchHistory();
         initRelation();
         initIndex();
-
     }
 
 
@@ -510,7 +512,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     @Override
     public void setIndexListLayoutVisible(boolean isVisible) {
-        mIndexListLayout.setVisibility(isVisible?VISIBLE:View.GONE);
+        mIndexListLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
     @Override
