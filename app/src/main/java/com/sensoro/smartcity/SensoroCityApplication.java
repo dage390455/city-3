@@ -1,7 +1,5 @@
 package com.sensoro.smartcity;
 
-import android.content.Context;
-import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
@@ -54,11 +52,11 @@ public class SensoroCityApplication extends MultiDexApplication {
         return instance;
     }
 
-    @Override
-    protected void attachBaseContext(Context base) {
-        super.attachBaseContext(base);
-        MultiDex.install(base);
-    }
+//    @Override
+//    protected void attachBaseContext(Context base) {
+//        super.attachBaseContext(base);
+//        MultiDex.install(base);
+//    }
 
     public void addData(List<DeviceInfo> list) {
         this.mDeviceInfoList.addAll(list);
@@ -91,18 +89,7 @@ public class SensoroCityApplication extends MultiDexApplication {
         api.registerApp(Constants.APP_ID);
         FMMapSDK.init(this);
     }
-
     public void pushNotification(String message) {
         mNotificationUtils.sendNotification(message);
-    }
-
-    public void refreshDeviceInfo(DeviceInfo deviceInfo) {
-        for (int i = 0; i < mDeviceInfoList.size(); i++) {
-            DeviceInfo tempDeviceInfo = mDeviceInfoList.get(i);
-            if (deviceInfo.getSn().equals(tempDeviceInfo.getSn())) {
-                mDeviceInfoList.set(i, deviceInfo);
-                break;
-            }
-        }
     }
 }

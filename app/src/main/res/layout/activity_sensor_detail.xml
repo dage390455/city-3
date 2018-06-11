@@ -365,7 +365,7 @@
             <LinearLayout
                 android:id="@+id/ll_battery_layout"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/y1000"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <RelativeLayout
@@ -416,6 +416,7 @@
                 <RelativeLayout
                     android:id="@+id/recent_days_power_supply"
                     android:layout_marginTop="@dimen/y400"
+                    android:layout_marginBottom="@dimen/y400"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
                     <TextView

@@ -26,7 +26,6 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.BatteryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISensorDetailActivityView;
 import com.sensoro.smartcity.presenter.SensorDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
@@ -51,7 +50,7 @@ import butterknife.OnClick;
 @SuppressLint("NewApi")
 @RequiresApi(api = Build.VERSION_CODES.M)
 public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView, SensorDetailActivityPresenter>
-        implements ISensorDetailActivityView, Constants, OnChartValueSelectedListener,
+        implements ISensorDetailActivityView, OnChartValueSelectedListener,
         View.OnScrollChangeListener {
 
     @BindView(R.id.sensor_detail_back)
@@ -132,14 +131,10 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPrestener.requestDeviceRecentLog();
-    }
 
     private void initView() {
         //获取当前控件的布局对象
+        initChart();
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
         DisplayMetrics dm = getResources().getDisplayMetrics();
         params.width = dm.widthPixels;
@@ -150,7 +145,6 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
 //        mMapView.setVisibility(View.GONE);
         mapLayout.setScrollView(scrollView);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        initChart();
         mBatteryAdapter = new BatteryAdapter(mActivity, new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {

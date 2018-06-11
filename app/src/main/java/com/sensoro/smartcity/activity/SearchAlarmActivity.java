@@ -43,7 +43,7 @@ import butterknife.ButterKnife;
  */
 
 public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, SearchAlarmActivityPresenter>
-        implements ISearchAlarmActivityView, View.OnClickListener, Constants, TextView
+        implements ISearchAlarmActivityView, View.OnClickListener, TextView
         .OnEditorActionListener, TextWatcher {
 
     @BindView(R.id.search_alarm_et)
@@ -71,7 +71,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
-    private int searchType = TYPE_DEVICE_NAME;
+    private int searchType = Constants.TYPE_DEVICE_NAME;
     //
 
 
@@ -99,7 +99,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     }
 
     private void initTabs() {
-        String extra_search_content = mActivity.getIntent().getStringExtra(EXTRA_SEARCH_CONTENT);
+        String extra_search_content = mActivity.getIntent().getStringExtra(Constants.EXTRA_SEARCH_CONTENT);
         if (!TextUtils.isEmpty(extra_search_content)) {
             setText(extra_search_content);
             searchType = SensoroCityApplication.getInstance().saveSearchType;

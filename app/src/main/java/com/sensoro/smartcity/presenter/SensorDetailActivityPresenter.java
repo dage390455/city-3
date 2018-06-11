@@ -107,8 +107,8 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         geocoderSearch.setOnGeocodeSearchListener(this);
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         initMap();
-        locate();
         init();
+        requestDeviceRecentLog();
     }
 
 
@@ -309,7 +309,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         }
     }
 
-    public void requestDeviceRecentLog() {
+    private void requestDeviceRecentLog() {
         long endTime = mDeviceInfo.getUpdatedTime();
         long startTime = endTime - 2 * 1000 * 60 * 60 * 24;
         String sn = mDeviceInfo.getSn();
@@ -648,12 +648,12 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         aMap.getUiSettings().setTiltGesturesEnabled(false);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.setOnMapLoadedListener(this);
 //        aMap.getUiSettings().setScaleControlsEnabled(true);
         aMap.setMapType(MAP_TYPE_NORMAL);
 //        aMap.setOnMapTouchListener(this);
         String styleName = "custom_config.data";
         aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
-        aMap.setOnMapLoadedListener(this);
     }
 
     //
@@ -815,6 +815,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
 
     @Override
     public void onMapLoaded() {
+        locate();
         refreshMap();
     }
 }

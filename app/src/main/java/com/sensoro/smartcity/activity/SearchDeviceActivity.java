@@ -29,7 +29,6 @@ import com.sensoro.smartcity.adapter.IndexListAdapter;
 import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchDeviceActivityView;
 import com.sensoro.smartcity.presenter.SearchDeviceActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -51,13 +50,19 @@ import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
+import static com.sensoro.smartcity.constant.Constants.INDEX_STATUS_ARRAY;
+import static com.sensoro.smartcity.constant.Constants.INDEX_TYPE_ARRAY;
+import static com.sensoro.smartcity.constant.Constants.TYPE_GRID;
+import static com.sensoro.smartcity.constant.Constants.TYPE_LIST;
 
 /**
  * Created by sensoro on 17/7/11.
  */
 
 public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView, SearchDeviceActivityPresenter>
-        implements ISearchDeviceActivityView, View.OnClickListener, Constants, TextView
+        implements ISearchDeviceActivityView, View.OnClickListener, TextView
         .OnEditorActionListener, TextWatcher, RecycleViewItemClickListener {
     @BindView(R.id.search_device_et)
     EditText mKeywordEt;

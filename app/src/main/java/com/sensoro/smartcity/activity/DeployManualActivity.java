@@ -13,7 +13,6 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
 import com.sensoro.smartcity.presenter.DeployManualActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
@@ -27,7 +26,7 @@ import butterknife.OnClick;
  */
 
 public class DeployManualActivity extends BaseActivity<IDeployManualActivityView, DeployManualActivityPresenter>
-        implements IDeployManualActivityView, Constants,
+        implements IDeployManualActivityView,
         TextWatcher {
 
 
