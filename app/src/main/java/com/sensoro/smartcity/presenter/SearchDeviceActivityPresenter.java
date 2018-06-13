@@ -1,21 +1,29 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.SearchDeviceActivity;
 import com.sensoro.smartcity.activity.SensorDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchDeviceActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.util.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -62,20 +70,48 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         mPref = mContext.getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
-    }
-
-    @Override
-    public void onStart() {
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
 
         boolean hasHistory = mHistoryKeywords.size() > 0;
-        if (hasHistory) {
-            getView().updateSearchHistoryData();
-        }
         getView().setSearchHistoryLayoutVisible(hasHistory);
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PushData data) {
+        if (data != null) {
+            List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
+            //
+            for (int i = 0; i < mDataList.size(); i++) {
+                DeviceInfo deviceInfo = mDataList.get(i);
+                for (DeviceInfo in : deviceInfoList) {
+                    if (in.getSn().equals(deviceInfo.getSn())) {
+                        mDataList.set(i, in);
+                    }
+                }
+            }
+            if (isActivityTop() && getView().getSearchDataListVisible()) {
+                getView().refreshData(mDataList);
+            }
+        }
+        LogUtils.loge(this, data.toString());
+    }
+
+    private boolean isActivityTop() {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        return name.equals(SearchDeviceActivity.class.getName());
     }
 
     public void clickRelationItem(int position) {

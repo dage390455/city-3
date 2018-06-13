@@ -164,14 +164,20 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mReturnTopImageView.setAnimation(returnTopAnimation);
         mReturnTopImageView.setVisibility(View.GONE);
         mReturnTopImageView.setOnClickListener(this);
+        setIndexListLayoutVisible(false);
+        mKeywordEt.requestFocus();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        setIndexListLayoutVisible(false);
-        mKeywordEt.requestFocus();
         mPrestener.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPrestener.onStop();
     }
 
     private void initListView() {
@@ -325,6 +331,14 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mSearchHistoryAdapter.notifyDataSetChanged();
     }
 
+    @Override
+    public boolean getSearchDataListVisible() {
+        boolean isListVisible = mIndexListLayout.getVisibility() == VISIBLE;
+        boolean isSearchHistoryHide = mSearchHistoryLayout.getVisibility() == View.GONE;
+        boolean isRelationLayoutHide = mRelationLayout.getVisibility() == View.GONE;
+        return isListVisible && isSearchHistoryHide && isRelationLayoutHide;
+    }
+
 
     private void initRelation() {
         mRelationAdapter = new RelationAdapter(mActivity, new RecycleViewItemClickListener() {
@@ -361,6 +375,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
+        updateSearchHistoryData();
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
     }
 

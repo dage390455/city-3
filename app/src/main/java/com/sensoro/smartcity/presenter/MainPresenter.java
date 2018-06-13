@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -18,7 +17,6 @@ import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.fragment.AlarmListFragment;
@@ -26,6 +24,7 @@ import com.sensoro.smartcity.fragment.IndexFragment;
 import com.sensoro.smartcity.fragment.MerchantSwitchFragment;
 import com.sensoro.smartcity.fragment.PointDeployFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.iwidget.IOndestroy;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
@@ -52,7 +51,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainPresenter extends BasePresenter<IMainView> implements IOndestroy, Constants {
+public class MainPresenter extends BasePresenter<IMainView> implements IOndestroy, Constants, IOnStart {
     private Activity mActivity;
 
     private final List<String> dataSupper = new ArrayList<>();
@@ -321,12 +320,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     }
 
 
-    private boolean isMainActivityTop() {
-        ActivityManager manager = (ActivityManager) mActivity.getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return name.equals(MainActivity.class.getName());
-    }
-
     @Override
     public void onDestroy() {
         if (mSocket != null) {
@@ -344,6 +337,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         Uri content_url = Uri.parse(url);
         intent.setData(content_url);
         getView().startAC(intent);
+    }
+
+    @Override
+    public void onStart() {
     }
 
     private class TaskRunnable implements Runnable {
@@ -366,7 +363,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                     } else {
                         JSONArray jsonArray = (JSONArray) args[i];
                         final JSONObject jsonObject = jsonArray.getJSONObject(0);
-                        if (isMainActivityTop() && !isSupperAccount()) {
+                        if (!isSupperAccount()) {
                             indexFragment.handleSocketInfo(jsonObject.toString());
                         }
                     }

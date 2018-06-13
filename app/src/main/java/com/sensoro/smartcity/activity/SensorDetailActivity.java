@@ -131,6 +131,17 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
 
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPrestener.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPrestener.onStop();
+    }
 
     private void initView() {
         //获取当前控件的布局对象

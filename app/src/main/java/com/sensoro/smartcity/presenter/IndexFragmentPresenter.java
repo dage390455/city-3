@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -19,12 +20,15 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IIndexFragmentView;
 import com.sensoro.smartcity.iwidget.IOndestroy;
+import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.NumberDeserializer;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -34,7 +38,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> implements IOndestroy, Constants {
+public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> implements IOndestroy,
+        Constants {
     private final List<DeviceInfo> mDataList = new ArrayList<>();
     private final Handler mHandler = new Handler();
     private final Gson gson = new GsonBuilder().registerTypeAdapter(double.class, new NumberDeserializer())
@@ -45,6 +50,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     private volatile boolean isNeedRefresh = false;
     private int mSoundId;
     private SoundPool mSoundPool;
+    private boolean mIsVisibleToUser = true;
     //
 
     private int mTypeSelectedIndex = 0;
@@ -64,6 +70,8 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        MainActivity a = (MainActivity) mContext;
+        String roles = a.getRoles();
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
@@ -361,7 +369,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                 case SENSOR_STATUS_INACTIVE:
                     deviceInfo.setSort(4);
                     break;
-
                 default:
                     break;
             }
@@ -369,6 +376,12 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         }
         filterBySearch();
         getView().refreshData(mDataList);
+    }
+
+    private boolean isMainActivityTop() {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        return name.equals(MainActivity.class.getName());
     }
 
     /**
@@ -434,14 +447,23 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                 mDataList.add(deviceInfo);
             }
         }
-        getView().requestTopData(false);
-        getView().refreshData(mDataList);
+        //推送数据
+        PushData pushData = new PushData();
+        pushData.setAlarmStatus(isAlarmPlay);
+        pushData.setDeviceInfoList(mDataList);
+        EventBus.getDefault().post(pushData);
+        //只在主页可见出现的时候刷新
+        if (isMainActivityTop() && mIsVisibleToUser) {
+            getView().requestTopData(false);
+            getView().refreshData(mDataList);
+        }
         if (isAlarmPlay) {
             playSound();
             isAlarmPlay = false;
         }
         isNeedRefresh = false;
     }
+
 
     @Override
     public void onDestroy() {
@@ -467,5 +489,9 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 //                Bundle bundle = new Bundle();
         getView().startAC(intent);
 //        startACForResult(intent, REQUEST_CODE_SEARCH_DEVICE);
+    }
+
+    public void onHiddenChanged(boolean hidden) {
+        mIsVisibleToUser = hidden;
     }
 }

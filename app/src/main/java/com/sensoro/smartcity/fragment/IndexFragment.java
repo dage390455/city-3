@@ -8,7 +8,6 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -156,6 +155,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         //TODO 初始化刷新数据操作
         refreshCityInfo();
     }
+
 
     public void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
@@ -313,12 +313,13 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         });
     }
 
-
     @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        if (mPrestener != null) {
+            mPrestener.onHiddenChanged(getUserVisibleHint());
+        }
     }
-
 
     @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -659,9 +660,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void handleSocketInfo(String data) {
-        if (!TextUtils.isEmpty(data) && !mRootFragment.isHidden()) {
-            mPrestener.organizeJsonData(data);
-        }
+        mPrestener.organizeJsonData(data);
     }
 
     @Override

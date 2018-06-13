@@ -171,4 +171,5 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     compile files('libs/GetuiSDK2.12.3.0.jar')
     compile project(':TagsEditText')
+    compile 'org.greenrobot:eventbus:3.1.1'
 }

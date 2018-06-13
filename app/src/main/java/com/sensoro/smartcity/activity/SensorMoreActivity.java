@@ -74,6 +74,13 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
     protected void onStart() {
         super.onStart();
         mPrestener.requestData();
+        mPrestener.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPrestener.onStop();
     }
 
     @OnClick(R.id.sensor_more_back)

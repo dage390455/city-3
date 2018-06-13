@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -44,11 +45,14 @@ import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.SensorDetailActivity;
 import com.sensoro.smartcity.activity.SensorMoreActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISensorDetailActivityView;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.iwidget.IOndestroy;
+import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
@@ -59,12 +63,16 @@ import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.ImageFactory;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.XYMarkerView;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -83,7 +91,7 @@ import rx.schedulers.Schedulers;
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
 public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailActivityView> implements Constants,
-        GeocodeSearch.OnGeocodeSearchListener, IOndestroy, AMapLocationListener, AMap.OnMapLoadedListener {
+        GeocodeSearch.OnGeocodeSearchListener, IOnStart, IOndestroy, AMapLocationListener, AMap.OnMapLoadedListener {
     private Activity mContext;
     private AMap aMap;
     private DeviceInfo mDeviceInfo;
@@ -99,6 +107,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     private final String TAG = getClass().getSimpleName();
     private AMapLocationClient mLocationClient;
     private CombinedChart mChart;
+    private int textColor;
 
     @Override
     public void initData(Context context) {
@@ -106,6 +115,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        textColor = mContext.getResources().getColor(R.color.sensoro_alarm);
         initMap();
         init();
         requestDeviceRecentLog();
@@ -115,32 +125,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     private void init() {
         try {
             //
-            int textColor = mContext.getResources().getColor(R.color.sensoro_alarm);
-            switch (mDeviceInfo.getStatus()) {
-                case SENSOR_STATUS_ALARM:
-                    getView().setStatusImageView(R.drawable.shape_status_alarm);
-                    textColor = mContext.getResources().getColor(R.color.sensoro_alarm);
-                    break;
-                case SENSOR_STATUS_INACTIVE:
-                    getView().setStatusImageView(R.drawable.shape_status_inactive);
-                    textColor = mContext.getResources().getColor(R.color.sensoro_inactive);
-                    break;
-                case SENSOR_STATUS_LOST:
-                    getView().setStatusImageView(R.drawable.shape_status_lost);
-                    textColor = mContext.getResources().getColor(R.color.sensoro_lost);
-                    break;
-                case SENSOR_STATUS_NORMAL:
-                    getView().setStatusImageView(R.drawable.shape_status_normal);
-                    textColor = mContext.getResources().getColor(R.color.sensoro_normal);
-                    break;
-                default:
-                    break;
-            }
-            getView().setSnTextView(mDeviceInfo.getSn(), textColor);
-            getView().setDateTextView(DateUtil.getFullParseDate(mDeviceInfo.getUpdatedTime()), textColor);
-            getView().setNameTextView(TextUtils.isEmpty(mDeviceInfo.getName()) ? mDeviceInfo.getSn() : mDeviceInfo
-                    .getName(), textColor);
-
+            freshTopData();
             if (mDeviceInfo.getSensoroDetails().getBattery() != null) {
                 if (Float.parseFloat(mDeviceInfo.getSensoroDetails().getBattery().getValue().toString()) == -1) {
                     getView().setBatteryLayoutVisible(false);
@@ -160,45 +145,42 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
             }
             getView().setBatteryMarkerViewVisible(false);
             getView().setRightStructLayoutVisible(false);
-            getView().initValueColor(textColor);
-            List<SensorStruct> sensorStructList = new ArrayList<>();
-            String[] tempSensorTypes = mDeviceInfo.getSensorTypes();
-            if (tempSensorTypes.length == 3) {
-                List<String> tempList = Arrays.asList(tempSensorTypes);
-                Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
-                if (tempList.contains("collision")) {//collision, pitch,roll
-                    tempSensorTypes[0] = "pitch";
-                    tempSensorTypes[1] = "roll";
-                    tempSensorTypes[2] = "collision";
-                } else if (tempList.contains("flame")) {//temperature,humidity,flame
-                    tempSensorTypes[0] = "temperature";
-                    tempSensorTypes[1] = "humidity";
-                    tempSensorTypes[2] = "flame";
-                }
-            }
-            for (int j = 0; j < tempSensorTypes.length; j++) {
-                String sensorType = tempSensorTypes[j];
-                SensorStruct struct = mDeviceInfo.getSensoroDetails().loadData().get(sensorType);
-                if (struct != null) {
-                    struct.setSensorType(sensorType);
-                    sensorStructList.add(struct);
-                } else {
-                    struct = new SensorStruct();
-                    struct.setSensorType(sensorType);
-                    struct.setUnit("-");
-                    struct.setValue("-");
-                    sensorStructList.add(struct);
-                }
-            }
-//            initChart();
-            getView().setTypeImageView(mDeviceInfo.getSensorTypes()[0]);
-            getView().refreshStructLayout(sensorStructList);
+
+            freshStructData();
 //            requestDeviceRecentLog();
         } catch (Exception e) {
             e.printStackTrace();
             getView().dismissProgressDialog();
             getView().toastShort(mContext.getResources().getString(R.string.tips_data_error));
         }
+    }
+
+    private void freshTopData() {
+        switch (mDeviceInfo.getStatus()) {
+            case SENSOR_STATUS_ALARM:
+                getView().setStatusImageView(R.drawable.shape_status_alarm);
+                textColor = mContext.getResources().getColor(R.color.sensoro_alarm);
+                break;
+            case SENSOR_STATUS_INACTIVE:
+                getView().setStatusImageView(R.drawable.shape_status_inactive);
+                textColor = mContext.getResources().getColor(R.color.sensoro_inactive);
+                break;
+            case SENSOR_STATUS_LOST:
+                getView().setStatusImageView(R.drawable.shape_status_lost);
+                textColor = mContext.getResources().getColor(R.color.sensoro_lost);
+                break;
+            case SENSOR_STATUS_NORMAL:
+                getView().setStatusImageView(R.drawable.shape_status_normal);
+                textColor = mContext.getResources().getColor(R.color.sensoro_normal);
+                break;
+            default:
+                break;
+        }
+        getView().setSnTextView(mDeviceInfo.getSn(), textColor);
+        getView().setDateTextView(DateUtil.getFullParseDate(mDeviceInfo.getUpdatedTime()), textColor);
+        getView().setNameTextView(TextUtils.isEmpty(mDeviceInfo.getName()) ? mDeviceInfo.getSn() : mDeviceInfo
+                .getName(), textColor);
+        getView().initValueColor(textColor);
     }
 
     @Override
@@ -241,6 +223,68 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         mLocationClient.startLocation();
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PushData data) {
+        if (data != null) {
+            List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
+            String sn = mDeviceInfo.getSn();
+            for (DeviceInfo deviceInfo : deviceInfoList) {
+                if (sn.equals(deviceInfo.getSn())) {
+                    mDeviceInfo = deviceInfo;
+                    break;
+                }
+            }
+            if (mDeviceInfo != null && isActivityTop()) {
+                freshTopData();
+                freshStructData();
+                freshMarker();
+            }
+        }
+        LogUtils.loge(this, data.toString());
+    }
+
+    private boolean isActivityTop() {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        return name.equals(SensorDetailActivity.class.getName());
+    }
+
+    private void freshStructData() {
+        List<SensorStruct> sensorStructList = new ArrayList<>();
+        String[] tempSensorTypes = mDeviceInfo.getSensorTypes();
+        if (tempSensorTypes.length == 3) {
+            List<String> tempList = Arrays.asList(tempSensorTypes);
+            Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
+            if (tempList.contains("collision")) {//collision, pitch,roll
+                tempSensorTypes[0] = "pitch";
+                tempSensorTypes[1] = "roll";
+                tempSensorTypes[2] = "collision";
+            } else if (tempList.contains("flame")) {//temperature,humidity,flame
+                tempSensorTypes[0] = "temperature";
+                tempSensorTypes[1] = "humidity";
+                tempSensorTypes[2] = "flame";
+            }
+        }
+        for (int j = 0; j < tempSensorTypes.length; j++) {
+            String sensorType = tempSensorTypes[j];
+            SensorStruct struct = mDeviceInfo.getSensoroDetails().loadData().get(sensorType);
+            if (struct != null) {
+                struct.setSensorType(sensorType);
+                sensorStructList.add(struct);
+            } else {
+                struct = new SensorStruct();
+                struct.setSensorType(sensorType);
+                struct.setUnit("-");
+                struct.setValue("-");
+                sensorStructList.add(struct);
+            }
+        }
+//            initChart();
+        getView().setTypeImageView(mDeviceInfo.getSensorTypes()[0]);
+        getView().refreshStructLayout(sensorStructList);
+    }
+
+
     private void refreshMap() {
         double[] lonlat = mDeviceInfo.getLonlat();
         if (aMap != null && mDeviceInfo.getSensorTypes().length > 0) {
@@ -263,43 +307,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                         .newCameraPosition(new CameraPosition(destPosition, 16, 0, 30));
                 aMap.moveCamera(mUpdata);
 
-                int statusId = R.mipmap.ic_sensor_status_normal;
-                switch (mDeviceInfo.getStatus()) {
-                    case SENSOR_STATUS_ALARM://alarm
-                        statusId = R.mipmap.ic_sensor_status_alarm;
-                        break;
-                    case SENSOR_STATUS_NORMAL://normal
-                        statusId = R.mipmap.ic_sensor_status_normal;
-                        break;
-                    case SENSOR_STATUS_INACTIVE://inactive
-                        statusId = R.mipmap.ic_sensor_status_inactive;
-                        break;
-                    case SENSOR_STATUS_LOST://lost
-                        statusId = R.mipmap.ic_sensor_status_lost;
-                        break;
-                    default:
-                        break;
-                }
-                BitmapDescriptor bitmapDescriptor = null;
-                Bitmap srcBitmap = BitmapFactory.decodeResource(mContext.getResources(), statusId);
-                if (WidgetUtil.judgeSensorType(mDeviceInfo.getSensorTypes()) != 0) {
-                    Bitmap targetBitmap = BitmapFactory.decodeResource(mContext.getResources(), WidgetUtil
-                            .judgeSensorType(mDeviceInfo.getSensorTypes()));
-                    Bitmap filterTargetBitmap = WidgetUtil.tintBitmap(targetBitmap, mContext.getResources().getColor
-                            (R.color
-                                    .white));
-                    bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(WidgetUtil.createBitmapDrawable(mContext,
-                            mDeviceInfo.getSensorTypes()[0], srcBitmap, filterTargetBitmap).getBitmap());
-                } else {
-                    bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
-                }
-                tempUpBitmap = bitmapDescriptor.getBitmap();
-                MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
-                        .position(destPosition)
-                        .draggable(true);
-                Marker marker = aMap.addMarker(markerOption);
-
-                marker.showInfoWindow();
+                freshMarker();
                 RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(mDeviceInfo.getLonlat()[1], mDeviceInfo
                         .getLonlat()[0]), 200, GeocodeSearch.AMAP);
                 geocoderSearch.getFromLocationAsyn(query);
@@ -307,6 +315,47 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
             }
 
         }
+    }
+
+    private void freshMarker() {
+        int statusId = R.mipmap.ic_sensor_status_normal;
+        switch (mDeviceInfo.getStatus()) {
+            case SENSOR_STATUS_ALARM://alarm
+                statusId = R.mipmap.ic_sensor_status_alarm;
+                break;
+            case SENSOR_STATUS_NORMAL://normal
+                statusId = R.mipmap.ic_sensor_status_normal;
+                break;
+            case SENSOR_STATUS_INACTIVE://inactive
+                statusId = R.mipmap.ic_sensor_status_inactive;
+                break;
+            case SENSOR_STATUS_LOST://lost
+                statusId = R.mipmap.ic_sensor_status_lost;
+                break;
+            default:
+                break;
+        }
+        BitmapDescriptor bitmapDescriptor = null;
+        Bitmap srcBitmap = BitmapFactory.decodeResource(mContext.getResources(), statusId);
+        if (WidgetUtil.judgeSensorType(mDeviceInfo.getSensorTypes()) != 0) {
+            Bitmap targetBitmap = BitmapFactory.decodeResource(mContext.getResources(), WidgetUtil
+                    .judgeSensorType(mDeviceInfo.getSensorTypes()));
+            Bitmap filterTargetBitmap = WidgetUtil.tintBitmap(targetBitmap, mContext.getResources().getColor
+                    (R.color
+                            .white));
+            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(WidgetUtil.createBitmapDrawable(mContext,
+                    mDeviceInfo.getSensorTypes()[0], srcBitmap, filterTargetBitmap).getBitmap());
+        } else {
+            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
+        }
+        tempUpBitmap = bitmapDescriptor.getBitmap();
+        aMap.clear();
+        MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
+                .position(destPosition)
+                .draggable(true);
+        Marker marker = aMap.addMarker(markerOption);
+
+        marker.showInfoWindow();
     }
 
     private void requestDeviceRecentLog() {
@@ -817,5 +866,14 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     public void onMapLoaded() {
         locate();
         refreshMap();
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
     }
 }

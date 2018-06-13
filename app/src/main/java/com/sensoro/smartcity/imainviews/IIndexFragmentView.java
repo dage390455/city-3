@@ -42,4 +42,5 @@ public interface IIndexFragmentView extends IToast, IProgressDialog, IActivityIn
     void requestTopData(final boolean isFirstInit);
 
     void recycleViewRefreshComplete();
+
 }

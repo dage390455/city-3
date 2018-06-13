@@ -1046,7 +1046,7 @@ public class WidgetUtil {
 
     public static String getSensorTypesChinese(String[] sensorType) {
         List<String> list = Arrays.asList(sensorType);
-        if (list.contains("temperature") || list.contains("humidity")) {
+        if (list.contains("temperature") || list.contains("humidity") || list.contains("temp1")) {
             return "温湿度";
         } else if (list.contains("pm2_5") || list.contains("pm10")) {
             return "PM10/2.5";
@@ -1063,7 +1063,7 @@ public class WidgetUtil {
 
     public static String getSensorTypeChinese(String sensorType) {
         String value = "";
-        if (sensorType.equalsIgnoreCase("temperature")) {
+        if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("temp1")) {
             value = "温度";
         } else if (sensorType.equalsIgnoreCase("humidity")) {
             value = "湿度";

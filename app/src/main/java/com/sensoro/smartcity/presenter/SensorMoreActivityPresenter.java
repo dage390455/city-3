@@ -1,12 +1,16 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.SensorMoreActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.ISensorMoreActivityView;
+import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -16,6 +20,13 @@ import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -28,7 +39,7 @@ import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_INACTIVE;
 import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_LOST;
 import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_NORMAL;
 
-public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivityView> {
+public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivityView> implements IOnStart {
     private Activity mContext;
     private String sensor_sn;
 
@@ -127,27 +138,9 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 } else {
                     getView().setName(deviceInfo.getName());
                 }
-
-
-                int statusId = R.drawable.shape_marker_alarm;
-                switch (deviceInfo.getStatus()) {
-                    case SENSOR_STATUS_ALARM://alarm
-                        statusId = R.drawable.shape_marker_alarm;
-                        break;
-                    case SENSOR_STATUS_NORMAL://normal
-                        statusId = R.drawable.shape_marker_normal;
-                        break;
-                    case SENSOR_STATUS_LOST://lost
-                        statusId = R.drawable.shape_marker_lost;
-                        break;
-                    case SENSOR_STATUS_INACTIVE://inactive
-                        statusId = R.drawable.shape_marker_inactive;
-
-                        break;
-                }
-                getView().setStatusInfo(DEVICE_STATUS_ARRAY[deviceInfo.getStatus()], statusId);
-
-
+                //
+                freshStructData(deviceInfo);
+                //
                 SensorStruct batteryStruct = deviceInfo.getSensoroDetails().loadData().get("battery");
                 if (batteryStruct != null) {
                     String battery = batteryStruct.getValue().toString();
@@ -158,14 +151,9 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                     }
 
                 }
-
-
                 String content = deviceInfo.getAlarms().getNotification().getContent();
                 if (!TextUtils.isEmpty(content)) {
                     getView().setPhoneText(content);
-                }
-                if (deviceInfo.getUpdatedTime() > 0) {
-                    getView().setReportText(DateUtil.getFullDate(deviceInfo.getUpdatedTime()));
                 }
             }
         } catch (Exception e) {
@@ -174,6 +162,29 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
         }
 
 
+    }
+
+    private void freshStructData(DeviceInfo deviceInfo) {
+        int statusId = R.drawable.shape_marker_alarm;
+        switch (deviceInfo.getStatus()) {
+            case SENSOR_STATUS_ALARM://alarm
+                statusId = R.drawable.shape_marker_alarm;
+                break;
+            case SENSOR_STATUS_NORMAL://normal
+                statusId = R.drawable.shape_marker_normal;
+                break;
+            case SENSOR_STATUS_LOST://lost
+                statusId = R.drawable.shape_marker_lost;
+                break;
+            case SENSOR_STATUS_INACTIVE://inactive
+                statusId = R.drawable.shape_marker_inactive;
+
+                break;
+        }
+        getView().setStatusInfo(DEVICE_STATUS_ARRAY[deviceInfo.getStatus()], statusId);
+        if (deviceInfo.getUpdatedTime() > 0) {
+            getView().setReportText(DateUtil.getFullDate(deviceInfo.getUpdatedTime()));
+        }
     }
 
     private String parseSensorTypes(String[] sensorTypes) {
@@ -252,5 +263,38 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 return mContext.getString(R.string.unknown);
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(PushData data) {
+        if (data != null) {
+            DeviceInfo tempDeviceInfo = null;
+            List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
+            for (DeviceInfo deviceInfo : deviceInfoList) {
+                if (sensor_sn.equals(deviceInfo.getSn())) {
+                    tempDeviceInfo = deviceInfo;
+                    break;
+                }
+            }
+            if (tempDeviceInfo != null && isActivityTop()) {
+                freshStructData(tempDeviceInfo);
+            }
+        }
+        LogUtils.loge(this, data.toString());
+    }
+
+    private boolean isActivityTop() {
+        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
+        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        return name.equals(SensorMoreActivity.class.getName());
+    }
+
+    @Override
+    public void onStart() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
     }
 }
