@@ -192,29 +192,28 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
     public void cleanHistory(int searchType) {
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
-//                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
+                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
                 mHistoryKeywords_deviceName.clear();
                 getView().updateSearchHistory(mHistoryKeywords_deviceName);
                 break;
             case Constants.TYPE_DEVICE_SN:
-//                mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, "");
+                mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, "");
                 mHistoryKeywords_deviceNumber.clear();
                 getView().updateSearchHistory(mHistoryKeywords_deviceNumber);
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
-//                mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, "");
+                mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, "");
                 mHistoryKeywords_devicePhone.clear();
                 getView().updateSearchHistory(mHistoryKeywords_devicePhone);
                 break;
             default:
-//                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
+                mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
                 mHistoryKeywords_deviceName.clear();
                 getView().updateSearchHistory(mHistoryKeywords_deviceName);
                 break;
         }
-        mEditor.clear();
+//        mEditor.clear();
         mEditor.commit();
-        getView().setSearchHistoryLayoutVisible(false);
     }
 
     public void save(int searchType, String text) {

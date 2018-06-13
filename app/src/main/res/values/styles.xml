@@ -21,7 +21,7 @@
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
-    <style name="MyTheme2" parent="AppTheme">
+    <style name="LauncherTheme" parent="AppTheme">
         <item name="android:windowDisablePreview">true</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:colorBackgroundCacheHint">@null</item>

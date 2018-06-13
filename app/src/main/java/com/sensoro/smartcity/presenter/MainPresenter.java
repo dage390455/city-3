@@ -141,6 +141,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         fragmentList.add(merchantSwitchFragment);
         fragmentList.add(pointDeployFragment);
         getView().updateMainPageAdapterData();
+        getView().showAccountInfo(mUserName, mPhone);
         mHandler.postDelayed(mRunnable, 3000L);
     }
 

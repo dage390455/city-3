@@ -494,10 +494,10 @@ public class TagsEditText extends android.support.v7.widget.AppCompatAutoComplet
         }
     }
 
+
     private void buildTags(String str) {
         if (str.length() != 0) {
             updateTags(str);
-
             SpannableStringBuilder sb = new SpannableStringBuilder();
             for (final TagSpan tagSpan : mTagSpans) {
                 addTagSpan(sb, tagSpan);
@@ -553,11 +553,15 @@ public class TagsEditText extends android.support.v7.widget.AppCompatAutoComplet
             }
             //加入标签是否重复
             if (mTags.contains(tag)) {
-                Toast.makeText(getContext(), "标签不能重复！", Toast.LENGTH_SHORT).show();
+                toastShort("标签不能重复！");
             } else {
                 mTags.add(tag);
             }
         }
+    }
+
+    private void toastShort(String msg) {
+        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
     }
 
     private String getNewTag(String newString) {
@@ -843,17 +847,4 @@ public class TagsEditText extends android.support.v7.widget.AppCompatAutoComplet
         void onEditingFinished();
 
     }
-
-    public static class TagsEditListenerAdapter implements TagsEditListener {
-
-        @Override
-        public void onTagsChanged(Collection<String> tags) {
-        }
-
-        @Override
-        public void onEditingFinished() {
-        }
-
-    }
-
 }

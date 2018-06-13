@@ -67,7 +67,7 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
     @Override
     protected void onStart() {
         super.onStart();
-        mPrestener.freshDate();
+        mPrestener.onStart();
     }
 
     @Override

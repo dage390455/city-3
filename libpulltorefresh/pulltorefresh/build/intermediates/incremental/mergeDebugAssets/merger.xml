@@ -1,2 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<merger version="3"><dataSet config="main"><source path="/Users/sensoro/develop/smartcity_P/libpulltorefresh/pulltorefresh/assets"/><source path="/Users/sensoro/develop/smartcity_P/libpulltorefresh/pulltorefresh/build/generated/assets/shaders/debug"/></dataSet><dataSet config="debug"><source path="/Users/sensoro/develop/smartcity_P/libpulltorefresh/pulltorefresh/src/debug/assets"/></dataSet></merger>

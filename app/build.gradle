@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
-    def verName = "2.0.1"
+    def verName = "2.1.1"
 
     def verCode = 1
     def buildCode = 1
@@ -51,7 +51,7 @@ android {
             debuggable true
         }
         release {
-            shrinkResources true
+//            shrinkResources true
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release

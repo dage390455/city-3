@@ -66,7 +66,8 @@ public class CircleAnimationTextView extends AppCompatTextView {
     @Override
     public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         if (MeasureSpec.getMode(widthMeasureSpec) == MeasureSpec.EXACTLY) {
-            //For making all day views same height (ex. screen width 1080 and we have days with width 154/154/155/154/154/155/154)
+            //For making all day views same height (ex. screen width 1080 and we have days with width
+            // 154/154/155/154/154/155/154)
             super.onMeasure(widthMeasureSpec, CalendarUtils.getCircleWidth(getContext()) + MeasureSpec.EXACTLY);
         } else {
             super.onMeasure(widthMeasureSpec, widthMeasureSpec);
@@ -141,7 +142,7 @@ public class CircleAnimationTextView extends AppCompatTextView {
         final int diameterProgress = animationProgress * diameter / MAX_PROGRESS + offset;
 
         setBackgroundColor(Color.TRANSPARENT);
-        canvas.drawCircle(getWidth() / 2 , getWidth() / 2 + y_offset, diameterProgress / 2, circlePaint);
+        canvas.drawCircle(getWidth() / 2, getWidth() / 2 + y_offset, diameterProgress / 2, circlePaint);
     }
 
     private void drawCircleUnder(Canvas canvas) {
@@ -151,7 +152,7 @@ public class CircleAnimationTextView extends AppCompatTextView {
         int offset = 22;//fangping
         int y_offset = 12;
         final int diameter = getWidth() - DEFAULT_PADDING * 2 + offset;
-        canvas.drawCircle(getWidth() / 2, getWidth() / 2 + y_offset , diameter / 2, circleUnderPaint);
+        canvas.drawCircle(getWidth() / 2, getWidth() / 2 + y_offset, diameter / 2, circleUnderPaint);
     }
 
     private void createCirclePaint() {
@@ -196,7 +197,7 @@ public class CircleAnimationTextView extends AppCompatTextView {
         if (backgroundRectFangle == null) {
             backgroundRectFangle = getRectFangleForState();
         }
-        canvas.drawRect(backgroundRectangle,backgroundRectanglePaint);
+        canvas.drawRect(backgroundRectFangle, backgroundRectanglePaint);
     }
 
     private void createBackgroundRectanglePaint() {
@@ -226,12 +227,10 @@ public class CircleAnimationTextView extends AppCompatTextView {
                 case END_RANGE_DAY:
                     circleColor = calendarView.getSelectedDayBackgroundEndColor();
                     break;
-
                 case START_RANGE_DAY_WITHOUT_END:
                     setBackgroundColor(Color.TRANSPARENT);
                     circleColor = calendarView.getSelectedDayBackgroundStartColor();
                     break;
-
                 case SINGLE_DAY:
                     circleColor = calendarView.getSelectedDayBackgroundColor();
                     setBackgroundColor(Color.TRANSPARENT);
@@ -246,30 +245,30 @@ public class CircleAnimationTextView extends AppCompatTextView {
         switch (selectionState) {
             case SUNDAY:
             case START_RANGE_DAY:
-                return new Rect(getWidth() / 2, DEFAULT_PADDING , getWidth(), getHeight() - DEFAULT_PADDING - offset );
+                return new Rect(getWidth() / 2, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING - offset);
             case SATURDAY:
             case END_RANGE_DAY:
-                return new Rect(0, DEFAULT_PADDING  , getWidth() / 2, getHeight() - DEFAULT_PADDING - offset );
+                return new Rect(0, DEFAULT_PADDING, getWidth() / 2, getHeight() - DEFAULT_PADDING - offset);
 
             case RANGE_DAY:
-                return new Rect(0, DEFAULT_PADDING , getWidth(), getHeight() - DEFAULT_PADDING - offset);
+                return new Rect(0, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING - offset);
 
             default:
                 return null;
         }
     }
+
     //fangping
     private RectF getRectFangleForState() {
         int offset = 0;
         switch (selectionState) {
             case START_RANGE_DAY:
-                return new RectF(getWidth() / 2f, DEFAULT_PADDING , getWidth(), getHeight() - DEFAULT_PADDING - offset );
-
+                return new RectF(getWidth() / 2f, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING - offset);
             case END_RANGE_DAY:
-                return new RectF(0, DEFAULT_PADDING  , getWidth() / 2, getHeight() - DEFAULT_PADDING - offset );
+                return new RectF(0, DEFAULT_PADDING, getWidth() / 2, getHeight() - DEFAULT_PADDING - offset);
 
             case RANGE_DAY:
-                return new RectF(0, DEFAULT_PADDING , getWidth(), getHeight() - DEFAULT_PADDING - offset);
+                return new RectF(0, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING - offset);
 
             default:
                 return null;

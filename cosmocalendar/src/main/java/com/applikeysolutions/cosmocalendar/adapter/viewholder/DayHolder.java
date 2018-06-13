@@ -1,6 +1,7 @@
 package com.applikeysolutions.cosmocalendar.adapter.viewholder;
 
 import android.content.res.Resources;
+import android.util.Log;
 import android.view.View;
 
 import com.applikeysolutions.cosmocalendar.model.Day;
@@ -19,6 +20,8 @@ public class DayHolder extends BaseDayHolder {
 
     private CircleAnimationTextView ctvDay;
     private BaseSelectionManager selectionManager;
+    private boolean isStart = false;
+    private boolean isEnd = false;
 
     public DayHolder(View itemView, CalendarView calendarView) {
         super(itemView, calendarView);
@@ -54,21 +57,33 @@ public class DayHolder extends BaseDayHolder {
 
     private int getCurrentDayIconHeight(boolean isSelected) {
         if (isSelected) {
-            return CalendarUtils.getIconHeight(calendarView.getContext().getResources(), calendarView.getCurrentDaySelectedIconRes());
+            return CalendarUtils.getIconHeight(calendarView.getContext().getResources(), calendarView
+                    .getCurrentDaySelectedIconRes());
         } else {
-            return CalendarUtils.getIconHeight(calendarView.getContext().getResources(), calendarView.getCurrentDayIconRes());
+            return CalendarUtils.getIconHeight(calendarView.getContext().getResources(), calendarView
+                    .getCurrentDayIconRes());
         }
     }
 
     private int getConnectedDayIconHeight(boolean isSelected) {
         if (isSelected) {
-            return CalendarUtils.getIconHeight(calendarView.getContext().getResources(), calendarView.getConnectedDaySelectedIconRes());
+            return CalendarUtils.getIconHeight(calendarView.getContext().getResources(), calendarView
+                    .getConnectedDaySelectedIconRes());
         } else {
-            return CalendarUtils.getIconHeight(calendarView.getContext().getResources(), calendarView.getConnectedDayIconRes());
+            return CalendarUtils.getIconHeight(calendarView.getContext().getResources(), calendarView
+                    .getConnectedDayIconRes());
         }
     }
 
     private void select(Day day) {
+        Calendar calendar = day.getCalendar();
+        String s = calendar.getTime().toString();
+        if (s.contains("Jun 05")) {
+            Log.d("", day.toString());
+        }
+        if (s.contains("Jun 04")) {
+            Log.d("", day.toString());
+        }
         if (day.isFromConnectedCalendar()) {
             if (day.isDisabled()) {
                 ctvDay.setTextColor(day.getConnectedDaysDisabledTextColor());
@@ -128,10 +143,10 @@ public class DayHolder extends BaseDayHolder {
                 ctvDay.showAsEndCircle(calendarView, false);
             } else {
                 ctvDay.setSelectionStateAndAnimate(state, calendarView, day);
+
             }
         } else {
-            boolean isStart = false;
-            boolean isEnd = false;
+
             switch (state) {
                 case SINGLE_DAY:
                     if (day.isSelectionCircleDrawed()) {
@@ -178,7 +193,7 @@ public class DayHolder extends BaseDayHolder {
                         } else {
                             ctvDay.setSelectionStateAndAnimate(state, calendarView, day);
                         }
-                    } else if (isStart){
+                    } else if (isStart) {
                         if (day.isSelectionCircleDrawed()) {
                             ctvDay.showAsEndCircle(calendarView, false);
                         } else {
@@ -199,7 +214,7 @@ public class DayHolder extends BaseDayHolder {
                         } else {
                             ctvDay.setSelectionStateAndAnimate(state, calendarView, day);
                         }
-                    } else if (isStart){
+                    } else if (isStart) {
                         if (day.isSelectionCircleDrawed()) {
                             ctvDay.showAsStartCircle(calendarView, false);
                         } else {

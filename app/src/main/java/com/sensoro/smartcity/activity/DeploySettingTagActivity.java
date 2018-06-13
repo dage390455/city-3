@@ -6,6 +6,8 @@ import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
@@ -29,10 +31,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import mabbas007.tagsedittext.TagsEditText;
+import mabbas007.tagsedittext.utils.ResourceUtils;
 
 public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActivityView,
         DeploySettingTagActivityPresenter> implements IDeploySettingTagActivityView,
-        TagsEditText.TagsEditListener {
+        TagsEditText.TagsEditListener, TextView.OnEditorActionListener {
 
 
     @BindView(R.id.deploy_setting_tag_back)
@@ -80,9 +83,9 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 
     private void initView() {
         try {
+            mKeywordEt.setOnEditorActionListener(this);
             mKeywordEt.setTagsListener(this);
             initSearchHistory();
-            mKeywordEt.requestFocus();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -195,5 +198,26 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
     @Override
     public void toastLong(String msg) {
 
+    }
+
+    @Override
+    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+        if (event.getAction() == KeyEvent.ACTION_DOWN) {
+            String text = mKeywordEt.getText().toString();
+            if (!TextUtils.isEmpty(text)) {
+                String[] split = text.split(" ");
+                if (split.length > 5) {
+                    toastShort("最大标签不超过5个！");
+                    return true;
+                }
+                for (String temp : split) {
+                    if (!TextUtils.isEmpty(temp) && ResourceUtils.getByteFromWords(temp) > 24) {
+                        toastShort("标签最大不能超过8个汉字或24个字符");
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

@@ -15,6 +15,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICalendarActivityView;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.util.DateUtil;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import static com.sensoro.smartcity.constant.Constants.PREFERENCE_KEY_END_TIME;
 import static com.sensoro.smartcity.constant.Constants.PREFERENCE_KEY_START_TIME;
 import static com.sensoro.smartcity.constant.Constants.WEEK_TITLE_ARRAY;
 
-public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityView> {
+public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityView> implements IOnStart {
     private String startDate = null;
     private String endDate = null;
     private Activity mContext;
@@ -44,17 +45,9 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
 //        createCriterias();
     }
 
-    public void freshDate() {
+    @Override
+    public void onStart() {
         try {
-//            long endTime = Calendar.getInstance().getTime().getTime();
-//            long startTime = endTime - 3 * 1000 * 60 * 60 * 24;
-
-//            if (start_time != -1) {
-//                startTime = start_time;
-//            }
-//            if (end_time != -1) {
-//                endTime = end_time - 1000 * 60 * 60 * 24;
-//            }
             if (startTime == -1 || endTime == -1) {
                 getView().setStartDate("-", "", "");
                 getView().setEndDate("-", "", "");
@@ -116,13 +109,6 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
 
     public void clickDay(List<Day> dayList) {
         isMultiple = false;
-        for (Day day : dayList) {
-            String s = day.toString();
-            Calendar calendar = day.getCalendar();
-//            Date time = calendar.getTime();
-//            int dayNumber = day.getDayNumber();
-//            int dayOfWeek = day.getDayOfWeek();
-        }
         Day day = dayList.get(0);
         try {
             Calendar calendarFirst = day.getCalendar();
@@ -178,4 +164,6 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
 //
 //        }
     }
+
+
 }

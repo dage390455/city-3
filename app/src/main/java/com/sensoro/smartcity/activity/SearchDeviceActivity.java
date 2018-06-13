@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,6 +37,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroShadowView;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXGridLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -153,7 +155,6 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     private void initIndex() {
         initListView();
         initGridView();
-        setIndexListLayoutVisible(false);
         mTypeTextView.setOnClickListener(this);
         mStatusTextView.setOnClickListener(this);
         mTypeImageView.setOnClickListener(this);
@@ -163,7 +164,14 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mReturnTopImageView.setAnimation(returnTopAnimation);
         mReturnTopImageView.setVisibility(View.GONE);
         mReturnTopImageView.setOnClickListener(this);
-        switchType = TYPE_LIST;
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        setIndexListLayoutVisible(false);
+        mKeywordEt.requestFocus();
+        mPrestener.onStart();
     }
 
     private void initListView() {
@@ -353,8 +361,6 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
-        mSearchHistoryAdapter.notifyDataSetChanged();
-        mKeywordEt.requestFocus();
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
     }
 
@@ -621,7 +627,6 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             mSearchHistoryLayout.setVisibility(View.GONE);
             mRelationLayout.setVisibility(View.VISIBLE);
             mPrestener.filterDeviceInfo(s.toString());
-
         } else {
             mSearchHistoryLayout.setVisibility(View.VISIBLE);
             mRelationLayout.setVisibility(View.GONE);
@@ -637,11 +642,16 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            mPrestener.save(mKeywordEt.getText().toString());
+            String text = mKeywordEt.getText().toString();
+            if (TextUtils.isEmpty(text)) {
+                SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                        .show();
+                return true;
+            }
+            mPrestener.save(text);
             mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
-            String text = mKeywordEt.getText().toString();
             mPrestener.requestWithDirection(DIRECTION_DOWN, text);
             return true;
         }

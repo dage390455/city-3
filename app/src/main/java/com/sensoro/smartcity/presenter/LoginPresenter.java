@@ -110,7 +110,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>() {
                 @Override
                 public void onCompleted() {
-                    getView().dismissProgressDialog();
                     getView().finishAc();
                 }
 
@@ -128,6 +127,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         intent.putExtra(EXTRA_PHONE_ID, phoneId);
                         getView().startAC(intent);
                     } else {
+                        getView().dismissProgressDialog();
                         getView().toastShort(mContext.getResources().getString(R.string.tips_user_info_error));
                     }
                 }

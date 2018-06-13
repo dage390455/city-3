@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import mabbas007.tagsedittext.utils.ResourceUtils;
+
 public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySettingTagActivityView> implements
         Constants, IOndestroy {
     private SharedPreferences mPref;
@@ -58,13 +60,24 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
     }
 
     public void doChoose(Boolean isFinish, List<String> tags) {
-        save(tags);
-        if (isFinish) {
-            Intent data = new Intent();
-            data.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) mTagList);
-            getView().setIntentResult(RESULT_CODE_SETTING_TAG, data);
-            getView().finishAc();
+        if (tags.size() > 5) {
+            getView().toastShort("最多5个标签！");
+        } else {
+            for (String temp : tags) {
+                if (ResourceUtils.getByteFromWords(temp) > 24) {
+                    getView().toastShort("标签最大不能超过8个汉字或24个字符");
+                    return;
+                }
+            }
+            save(tags);
+            if (isFinish) {
+                Intent data = new Intent();
+                data.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) mTagList);
+                getView().setIntentResult(RESULT_CODE_SETTING_TAG, data);
+                getView().finishAc();
+            }
         }
+
     }
 
     public void save(List<String> tags) {
@@ -81,12 +94,18 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
                 }
             }
         }
+        ArrayList<String> tempList = new ArrayList<>();
+        for (String str : oldHistoryList) {
+            if (tempList.size() < 20) {
+                tempList.add(str);
+            }
+        }
         StringBuffer stringBuffer = new StringBuffer();
-        for (int i = 0; i < oldHistoryList.size(); i++) {
-            if (i == (oldHistoryList.size() - 1)) {
-                stringBuffer.append(oldHistoryList.get(i));
+        for (int i = 0; i < tempList.size(); i++) {
+            if (i == (tempList.size() - 1)) {
+                stringBuffer.append(tempList.get(i));
             } else {
-                stringBuffer.append(oldHistoryList.get(i) + ",");
+                stringBuffer.append(tempList.get(i) + ",");
             }
         }
         mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuffer.toString());
@@ -104,9 +123,12 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
             } else {
                 mTagList.add(trim);
             }
-
         }
-        getView().updateTags(mTagList);
+        if (mTagList.size() > 5) {
+            getView().toastShort("最大标签不超过5个！");
+        } else {
+            getView().updateTags(mTagList);
+        }
     }
 
     @Override

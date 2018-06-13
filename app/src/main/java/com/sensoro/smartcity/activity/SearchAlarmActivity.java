@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
-import android.support.v4.view.ViewPager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
@@ -66,8 +65,8 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     LinearLayout tagLinearLayout;
     @BindView(R.id.search_tablayout)
     TabLayout searchTabLayout;
-    @BindView(R.id.search_viewpager)
-    ViewPager searchViewpager;
+//    @BindView(R.id.search_viewpager)
+//    ViewPager searchViewpager;
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 

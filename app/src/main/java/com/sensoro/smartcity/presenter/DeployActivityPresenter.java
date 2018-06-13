@@ -79,11 +79,13 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private RegeocodeQuery query;
     private Activity mContext;
     private Handler mHandler;
+    private DeviceInfo deviceInfo;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         mHandler = new Handler(Looper.getMainLooper());
+        deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
     }
 
     @Override
@@ -101,45 +103,13 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
     public void initMap(AMap map) {
         this.aMap = map;
-        DeviceInfo deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         if (deviceInfo != null) {
-            String sn = deviceInfo.getSn();
-            String styleName = "custom_config.data";
-            getView().setTitleTextView(sn);
-            getView().setNameAddressEditText(deviceInfo.getName());
-            if (deviceInfo.getAlarms() != null) {
-                AlarmInfo alarmInfo = deviceInfo.getAlarms();
-                String contact = alarmInfo.getNotification().getContact();
-                if (contact != null) {
-                    this.contact = contact;
-                    String content = alarmInfo
-                            .getNotification().getContent();
-                    this.content = content;
-                    getView().setContactEditText(contact + ":" + content);
-                }
-            }
-
-            String tags[] = deviceInfo.getTags();
-            if (tags != null) {
-                for (String tag : tags) {
-                    if (!TextUtils.isEmpty(tag)) {
-                        tagList.add(tag);
-                    }
-                }
-                getView().refreshTagLayout(tagList);
-                if (tagList.size() == 0) {
-                    getView().addDefaultTextView();
-                }
-            } else {
-                getView().addDefaultTextView();
-            }
-            String signal = deviceInfo.getSignal();
-            getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
             aMap.getUiSettings().setTiltGesturesEnabled(false);
             aMap.getUiSettings().setZoomControlsEnabled(false);
             aMap.getUiSettings().setMyLocationButtonEnabled(false);
             aMap.setMyLocationEnabled(true);
             aMap.setMapCustomEnable(true);
+            String styleName = "custom_config.data";
             aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
             aMap.setOnMapClickListener(this);
             aMap.setOnCameraChangeListener(this);
@@ -155,16 +125,6 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             myLocationStyle.showMyLocation(true);
 
             aMap.setMyLocationStyle(myLocationStyle);
-            BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.ic_move_location);
-            MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
-                    .anchor(0.5f, 0.5f)
-                    .draggable(true);
-            smoothMoveMarker = aMap.addMarker(markerOption);
-
-            geocoderSearch = new GeocodeSearch(mContext);
-            geocoderSearch.setOnGeocodeSearchListener(this);
-            getView().setUploadButtonClickable(true);
-            setMapCustomStyleFile();
         } else {
             Intent intent = new Intent();
             intent.setClass(mContext, DeployResultActivity.class);
@@ -197,7 +157,50 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
     @Override
     public void onMapLoaded() {
+        String sn = deviceInfo.getSn();
+        getView().setTitleTextView(sn);
+        getView().setNameAddressEditText(deviceInfo.getName());
+        if (deviceInfo.getAlarms() != null) {
+            AlarmInfo alarmInfo = deviceInfo.getAlarms();
+            String contact = alarmInfo.getNotification().getContact();
+            if (contact != null) {
+                this.contact = contact;
+                String content = alarmInfo
+                        .getNotification().getContent();
+                this.content = content;
+                getView().setContactEditText(contact + ":" + content);
+            }
+        }
+
+        String tags[] = deviceInfo.getTags();
+        if (tags != null) {
+            for (String tag : tags) {
+                if (!TextUtils.isEmpty(tag)) {
+                    tagList.add(tag);
+                }
+            }
+            getView().refreshTagLayout(tagList);
+            if (tagList.size() == 0) {
+                getView().addDefaultTextView();
+            }
+        } else {
+            getView().addDefaultTextView();
+        }
+        String signal = deviceInfo.getSignal();
+        getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
+        //
         locate();
+        //
+        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.mipmap.ic_move_location);
+        MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
+                .anchor(0.5f, 0.5f)
+                .draggable(true);
+        smoothMoveMarker = aMap.addMarker(markerOption);
+
+        geocoderSearch = new GeocodeSearch(mContext);
+        geocoderSearch.setOnGeocodeSearchListener(this);
+        getView().setUploadButtonClickable(true);
+        setMapCustomStyleFile();
     }
 
     @Override

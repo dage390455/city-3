@@ -129,7 +129,7 @@
     <string name="tips_data_error">数据解析错误</string>
     <string name="tips_logout_failed">退出失败，请尝试手动关闭程序</string>
     <string name="tips_date_not_null">日期段中的任一日期不能为空</string>
-    <string name="tips_input_machine_sn">输入机身对应的SN号码</string>
+    <string name="tips_input_machine_sn">请输入机身对应的SN号码</string>
     <string name="tips_user_info_error">用户信息错误，请重新输入</string>
     <string name="tips_network_error">网络连接错误,请检查网络连接</string>
     <string name="tips_username_empty">请输入用户名</string>
@@ -145,8 +145,8 @@
     <string name="tips_input_tag">请输入标签</string>
     <string name="tips_hint_phone">请输入联系电话</string>
     <string name="tips_hint_contact">例：王某某：13011112222</string>
-    <string name="tips_hint_name_address">例: 大悦城20层走廊2号配电箱3号</string>
-    <string name="tips_hint_name_address_set">以位置命名,例: 大悦城20层走廊2号配电箱3号</string>
+    <string name="tips_hint_name_address">例: 大悦城20层走廊2号配电箱</string>
+    <string name="tips_hint_name_address_set">例: 大悦城20层走廊2号配电箱</string>
     <string name="tips_hint_tag">通过标签给设备进行分类</string>
     <string name="tips_hint_location">请拖动图标以确认打点位置 </string>
     <string name="tips_no_alarm">无预警</string>

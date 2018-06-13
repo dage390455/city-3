@@ -115,6 +115,11 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         mMapView.onSaveInstanceState(outState);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     private void init() {
         try {
             mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());

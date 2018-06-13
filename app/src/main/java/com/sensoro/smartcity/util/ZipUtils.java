@@ -37,7 +37,7 @@ public class ZipUtils {
 
         List<File> fileList = new ArrayList<File>();
         ZipInputStream inZip = new ZipInputStream(
-            new FileInputStream(zipFileString));
+                new FileInputStream(zipFileString));
         ZipEntry zipEntry;
         String zipName = "";
 
@@ -144,7 +144,7 @@ public class ZipUtils {
      * @throws IOException 发生 I/O 错误
      */
     public static void unZipFolder(String zipFileString, String outPathString)
-        throws IOException {
+            throws IOException {
 
         ZipInputStream inZip = new ZipInputStream(new FileInputStream(zipFileString));
         ZipEntry zipEntry;
@@ -157,7 +157,7 @@ public class ZipUtils {
                 // 压缩文件夹
                 zipName = zipName.substring(0, zipName.length() - 1);
                 File folder = new File(outPathString
-                    + File.separator + zipName);
+                        + File.separator + zipName);
                 folder.mkdirs();
             } else {
                 // 压缩文件
@@ -218,7 +218,7 @@ public class ZipUtils {
         if (file.isFile()) {
             ZipEntry zipEntry = new ZipEntry(fileString);
             FileInputStream inputStream = new FileInputStream(
-                file);
+                    file);
             zipOutputSteam.putNextEntry(zipEntry);
 
             int len;
@@ -237,7 +237,7 @@ public class ZipUtils {
             // 如果没有子文件, 则添加进去即可
             if (fileList.length <= 0) {
                 ZipEntry zipEntry = new ZipEntry(
-                    fileString + File.separator);
+                        fileString + File.separator);
                 zipOutputSteam.putNextEntry(zipEntry);
                 zipOutputSteam.closeEntry();
             }
@@ -245,7 +245,7 @@ public class ZipUtils {
             // 如果有子文件, 遍历子文件
             for (int i = 0; i < fileList.length; i++) {
                 zipFiles(folderString, fileString + File.separator
-                    + fileList[i], zipOutputSteam);
+                        + fileList[i], zipOutputSteam);
             }
 
         }
@@ -260,15 +260,15 @@ public class ZipUtils {
      * @throws IOException 发生 I/O 错误
      */
     public static void zipFolder(String srcFileString, String zipFileString)
-        throws IOException {
+            throws IOException {
         // 创建Zip包
         ZipOutputStream outZip = new ZipOutputStream(
-            new FileOutputStream(zipFileString));
+                new FileOutputStream(zipFileString));
         // 打开要输出的文件
         File file = new File(srcFileString);
         // 压缩
         zipFiles(file.getParent() + File.separator, file.getName(),
-            outZip);
+                outZip);
         // 完成,关闭
         outZip.finish();
         outZip.close();

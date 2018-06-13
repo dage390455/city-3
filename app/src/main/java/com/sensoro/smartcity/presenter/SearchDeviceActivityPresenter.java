@@ -11,6 +11,7 @@ import com.sensoro.smartcity.activity.SensorDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchDeviceActivityView;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.CityObserver;
@@ -23,9 +24,11 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceActivityView> implements Constants {
+public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceActivityView> implements Constants,
+        IOnStart {
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
+    private String history;
 
     public List<String> getHistoryKeywords() {
         return mHistoryKeywords;
@@ -58,12 +61,21 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         currentList.addAll(originHistoryList);
         mPref = mContext.getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
-        String history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
+        history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
+    }
+
+    @Override
+    public void onStart() {
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
-        getView().setSearchHistoryLayoutVisible(mHistoryKeywords.size() > 0);
+
+        boolean hasHistory = mHistoryKeywords.size() > 0;
+        if (hasHistory) {
+            getView().updateSearchHistoryData();
+        }
+        getView().setSearchHistoryLayoutVisible(hasHistory);
     }
 
     public void clickRelationItem(int position) {
@@ -71,6 +83,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         save(s);
         requestWithDirection(DIRECTION_DOWN, s);
     }
+
 
     private void refreshCacheData() {
         this.mDataList.clear();
@@ -172,37 +185,89 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
 
     public void save(String text) {
         String oldText = mPref.getString(PREFERENCE_KEY_DEVICE, "");
-        if (!TextUtils.isEmpty(text)) {
-            if (mHistoryKeywords.contains(text)) {
-                List<String> list = new ArrayList<String>();
-                for (String o : oldText.split(",")) {
-                    if (!o.equalsIgnoreCase(text)) {
-                        list.add(o);
-                    }
-                }
-                list.add(0, text);
-                mHistoryKeywords.clear();
-                mHistoryKeywords.addAll(list);
-                StringBuffer stringBuffer = new StringBuffer();
-                for (int i = 0; i < list.size(); i++) {
-                    if (i == (list.size() - 1)) {
-                        stringBuffer.append(list.get(i));
-                    } else {
-                        stringBuffer.append(list.get(i) + ",");
-                    }
-                }
-                mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
-                mEditor.commit();
-            } else {
-                if (TextUtils.isEmpty(oldText)) {
-                    mEditor.putString(PREFERENCE_KEY_DEVICE, text);
-                } else {
-                    mEditor.putString(PREFERENCE_KEY_DEVICE, text + "," + oldText);
-                }
-                mEditor.commit();
-                mHistoryKeywords.add(0, text);
+        //
+        List<String> oldHistoryList = new ArrayList<String>();
+        if (!TextUtils.isEmpty(oldText)) {
+            oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
+        }
+        if (!oldHistoryList.contains(text)) {
+            oldHistoryList.add(0, text);
+        }
+        ArrayList<String> tempList = new ArrayList<>();
+        for (String str : oldHistoryList) {
+            if (tempList.size() < 20) {
+                tempList.add(str);
             }
         }
+        mHistoryKeywords.clear();
+        mHistoryKeywords.addAll(tempList);
+        StringBuffer stringBuffer = new StringBuffer();
+        for (int i = 0; i < tempList.size(); i++) {
+            if (i == (tempList.size() - 1)) {
+                stringBuffer.append(tempList.get(i));
+            } else {
+                stringBuffer.append(tempList.get(i) + ",");
+            }
+        }
+        mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
+        mEditor.commit();
+        //
+//        if (TextUtils.isEmpty(oldText)) {
+//            mEditor.putString(PREFERENCE_KEY_DEVICE, text);
+//        } else {
+//            if (!TextUtils.isEmpty(text)) {
+//                if (mHistoryKeywords.contains(text)) {
+//                    List<String> list = new ArrayList<String>();
+//                    for (String o : oldText.split(",")) {
+//                        if (!o.equalsIgnoreCase(text)) {
+//                            list.add(o);
+//                        }
+//                    }
+//                    list.add(0, text);
+//
+//                    ArrayList<String> tempList = new ArrayList<>();
+//                    for (String str : list) {
+//                        if (tempList.size() < 20) {
+//                            tempList.add(str);
+//                        }
+//                    }
+//                    mHistoryKeywords.clear();
+//                    mHistoryKeywords.addAll(tempList);
+//                    StringBuffer stringBuffer = new StringBuffer();
+//                    for (int i = 0; i < tempList.size(); i++) {
+//                        if (i == (tempList.size() - 1)) {
+//                            stringBuffer.append(tempList.get(i));
+//                        } else {
+//                            stringBuffer.append(tempList.get(i) + ",");
+//                        }
+//                    }
+//                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
+//                    mEditor.commit();
+//                } else {
+//                    mHistoryKeywords.add(0, text);
+//                    ArrayList<String> tempList = new ArrayList<>();
+//                    for (String str : mHistoryKeywords) {
+//                        if (tempList.size() < 20) {
+//                            tempList.add(str);
+//                        }
+//                    }
+//                    mHistoryKeywords.clear();
+//                    mHistoryKeywords.addAll(tempList);
+//
+//                    StringBuffer stringBuffer = new StringBuffer();
+//                    for (int i = 0; i < tempList.size(); i++) {
+//                        if (i == (tempList.size() - 1)) {
+//                            stringBuffer.append(tempList.get(i));
+//                        } else {
+//                            stringBuffer.append(tempList.get(i) + ",");
+//                        }
+//                    }
+//                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
+//                    mEditor.commit();
+//                }
+//            }
+//        }
+
     }
 
     public void cleanHistory() {
@@ -324,4 +389,6 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         }
         getView().returnTop();
     }
+
+
 }

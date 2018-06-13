@@ -69,6 +69,11 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
         mPrestener.initData(mActivity);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPrestener.refreshData();
+    }
 
     @Override
     protected AlarmDetailActivityPresenter createPresenter() {

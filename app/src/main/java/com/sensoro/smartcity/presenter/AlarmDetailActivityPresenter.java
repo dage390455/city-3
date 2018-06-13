@@ -40,7 +40,7 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
     public void initData(Context context) {
         mContext = (Activity) context;
         deviceAlarmLogInfo = (DeviceAlarmLogInfo) mContext.getIntent().getSerializableExtra(EXTRA_ALARM_INFO);
-        refreshData();
+//        refreshData();
     }
 
     public void doBack() {

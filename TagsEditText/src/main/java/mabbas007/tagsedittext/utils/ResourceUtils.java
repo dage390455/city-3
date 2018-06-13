@@ -1,15 +1,13 @@
 package mabbas007.tagsedittext.utils;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
-import android.os.Build;
-import android.support.annotation.ColorRes;
 import android.support.annotation.DimenRes;
-import android.support.annotation.DrawableRes;
+
+import java.io.UnsupportedEncodingException;
 
 /**
  * Created by Mohammad Abbas on 5/10/2016.
- *
+ * <p>
  * Update Jun/2016 :: delete methods - color and drawable can handler with ContextCompat
  */
 public final class ResourceUtils {
@@ -24,6 +22,17 @@ public final class ResourceUtils {
 
     public static int getDimensionPixelSize(Context context, @DimenRes int resourceId) {
         return context.getResources().getDimensionPixelSize(resourceId);
+    }
+
+    public static int getByteFromWords(String words) {
+        byte[] bytes;
+        try {
+            bytes = words.getBytes("UTF-8");
+            return bytes.length;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return -1;
     }
 
 }

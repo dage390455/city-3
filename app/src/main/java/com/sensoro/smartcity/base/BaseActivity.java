@@ -17,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.baidu.mobstat.StatService;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -44,6 +45,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        setTheme(R.style.MyTheme);
         super.onCreate(savedInstanceState);
         mPrestener = createPresenter();
         mPrestener.attachView((V) this);
@@ -63,6 +65,11 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 //        StatusBarCompat.setStatusBarColor(this);
         onCreateInit(savedInstanceState);
         StatService.setDebugOn(true);
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
         StatService.start(mActivity);
     }
 
@@ -80,7 +87,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onResume() {
-        final NotificationManagerCompat manager = NotificationManagerCompat.from(SensoroCityApplication.getInstance());
+        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
         boolean isOpened = manager.areNotificationsEnabled();
         if (!isNotificationEnabled(mActivity) && !isOpened) {
             showRationaleDialog();
