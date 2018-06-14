@@ -31,6 +31,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroShadowView;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXGridLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -424,7 +425,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

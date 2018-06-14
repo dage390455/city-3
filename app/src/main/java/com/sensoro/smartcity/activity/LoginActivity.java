@@ -24,6 +24,7 @@ import com.sensoro.smartcity.util.PermissionUtils;
 import com.sensoro.smartcity.util.PermissionsResultObserve;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroImageView;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.util.ArrayList;
 
@@ -223,7 +224,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

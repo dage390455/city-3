@@ -25,7 +25,7 @@ public class SettingsManager implements AppearanceInterface, DateInterface, Cale
     public static final int DEFAULT_MONTH_COUNT = 20;
     public static final int DEFAULT_SELECTION_TYPE = SelectionType.SINGLE;
     public static final int DEFAULT_FIRST_DAY_OF_WEEK = Calendar.SUNDAY;
-    public static final int DEFAULT_ORIENTATION = LinearLayoutManager.VERTICAL;
+    public static final int DEFAULT_ORIENTATION = LinearLayoutManager.HORIZONTAL;
     public static final int DEFAULT_CONNECTED_DAY_ICON_POSITION = ConnectedDayIconPosition.BOTTOM;
 
     //Models

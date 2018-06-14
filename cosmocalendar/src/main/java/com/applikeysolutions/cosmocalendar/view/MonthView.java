@@ -68,10 +68,8 @@ public class MonthView extends FrameLayout {
         getAdapter().setMonth(month);
     }
 
-    private FrameLayout.LayoutParams generateLayoutParams() {
-        FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+    private LayoutParams generateLayoutParams() {
+        return new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
-        params.setMargins(80, 0, 80, 0);//fangping
-        return params;
     }
 }

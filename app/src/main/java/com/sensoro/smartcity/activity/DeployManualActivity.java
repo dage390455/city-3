@@ -16,6 +16,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
 import com.sensoro.smartcity.presenter.DeployManualActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -158,7 +159,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

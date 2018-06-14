@@ -6,6 +6,7 @@ public enum SelectionState {
     END_RANGE_DAY,
     RANGE_DAY,
     SINGLE_DAY,
-    SATURDAY,
-    SUNDAY,
+    CIRCLE_RANGE,
+    SATURDAY_RANGE,
+    SUNDAY_RANGE
 }

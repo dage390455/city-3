@@ -135,10 +135,6 @@ public class Day {
         return calendar.get(Calendar.DAY_OF_MONTH);
     }
 
-    public int getDayOfWeek() {
-        return calendar.get(Calendar.DAY_OF_WEEK);
-    }
-
     @Override
     public String toString() {
         return "Day{day=" + calendar.getTime() + "}";

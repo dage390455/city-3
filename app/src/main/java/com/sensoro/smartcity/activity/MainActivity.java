@@ -22,6 +22,7 @@ import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroPager;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -134,8 +135,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private void exit() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
-            Toast.makeText(mActivity, R.string.exit_main,
-                    Toast.LENGTH_SHORT).show();
+            toastShort(mActivity.getResources().getString(R.string.exit_main));
             exitTime = System.currentTimeMillis();
         } else {
             finish();
@@ -288,7 +288,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

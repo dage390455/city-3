@@ -55,6 +55,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -354,9 +355,18 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         if (TextUtils.isEmpty(name) || name.equals(name_default)) {
             getView().toastShort(mContext.getResources().getString(R.string.tips_input_name));
             getView().setUploadButtonClickable(true);
-        } else if (name.length() > 30) {
-            getView().toastShort("名称/地址不能超过30个字符");
-            getView().setUploadButtonClickable(true);
+        } else {
+            byte[] bytes = new byte[0];
+            try {
+                bytes = name.getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            if (bytes.length > 36) {
+                getView().toastShort("最大不能超过12个汉字或36个字符");
+                getView().setUploadButtonClickable(true);
+                return;
+            }
         }
         if (latLng == null) {
             getView().toastShort(mContext.getResources().getString(R.string.tips_hint_location));

@@ -17,7 +17,7 @@ public class SensoroToast {
     private Toast mToast;
 
     private SensoroToast(Context context, CharSequence text, int duration) {
-        View v = LayoutInflater.from(context).inflate(R.layout.layout_toast, null);
+        final View v = LayoutInflater.from(context).inflate(R.layout.layout_toast, null);
         TextView textView = (TextView) v.findViewById(R.id.textView1);
         textView.setText(text);
         mToast = new Toast(context);

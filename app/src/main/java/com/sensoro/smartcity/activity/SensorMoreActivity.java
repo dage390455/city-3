@@ -11,6 +11,7 @@ import com.sensoro.smartcity.imainviews.ISensorMoreActivityView;
 import com.sensoro.smartcity.presenter.SensorMoreActivityPresenter;
 import com.sensoro.smartcity.widget.AutoSplitTextView;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -106,7 +107,7 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -9,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -30,6 +31,7 @@ import com.sensoro.smartcity.presenter.SearchAlarmActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.List;
@@ -281,13 +283,16 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     @Override
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
-            mKeywordEt.clearFocus();
-            setClearKeywordIvVisible(true);
-            dismissInputMethodManager(v);
             String text = mKeywordEt.getText().toString();
             if (!TextUtils.isEmpty(text)) {
+                mKeywordEt.clearFocus();
+                setClearKeywordIvVisible(true);
+                dismissInputMethodManager(v);
                 mPrestener.save(searchType, text.trim());
                 mPrestener.requestData(searchType, text.trim());
+            }else {
+                SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                        .show();
             }
             return true;
         }
@@ -352,7 +357,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

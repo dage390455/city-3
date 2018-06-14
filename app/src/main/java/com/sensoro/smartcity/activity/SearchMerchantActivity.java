@@ -5,8 +5,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -23,6 +26,7 @@ import com.sensoro.smartcity.presenter.SearchMerchantActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import butterknife.BindView;
@@ -66,7 +70,6 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
-        mKeywordEt.requestFocus();
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
@@ -83,13 +86,13 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
                         mKeywordEt.setText(text);
                         setClearKeywordIvVisible(true);
                         mKeywordEt.clearFocus();
-                        dismissInputMethodManager(view);
                         mPrestener.requestData(text);
+                        dismissInputMethodManager(view);
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
-        mSearchHistoryAdapter.notifyDataSetChanged();
-        mKeywordEt.requestFocus();
+        updateSearchHistory();
+        showSoftInputFromWindow(mKeywordEt);
     }
 
 
@@ -104,6 +107,12 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
     }
 
+    private void showSoftInputFromWindow(EditText editText) {
+        editText.setFocusable(true);
+        editText.setFocusableInTouchMode(true);
+        editText.requestFocus();
+        mActivity.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+    }
 
     @Override
     protected void onDestroy() {
@@ -140,11 +149,16 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String text = mKeywordEt.getText().toString();
-            setClearKeywordIvVisible(true);
-            mPrestener.save(text);
-            mPrestener.requestData(text);
-            mKeywordEt.clearFocus();
-            dismissInputMethodManager(v);
+            if (TextUtils.isEmpty(text)) {
+                SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                        .show();
+            } else {
+                setClearKeywordIvVisible(true);
+                mPrestener.save(text);
+                mPrestener.requestData(text);
+                mKeywordEt.clearFocus();
+                dismissInputMethodManager(v);
+            }
             return true;
         }
         return false;
@@ -207,7 +221,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

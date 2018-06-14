@@ -335,7 +335,7 @@ public class CalendarView extends RelativeLayout implements OnDaySelectedListene
         flBottomSelectionBar = new FrameLayout(getContext());
 //        flBottomSelectionBar.setLayoutTransition(new LayoutTransition());
         flBottomSelectionBar.setId(View.generateViewId());
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.BELOW, rvMonths.getId());
         flBottomSelectionBar.setLayoutParams(params);
@@ -426,7 +426,7 @@ public class CalendarView extends RelativeLayout implements OnDaySelectedListene
         rvMonths.setNestedScrollingEnabled(false);
         ((SimpleItemAnimator) rvMonths.getItemAnimator()).setSupportsChangeAnimations(false);
 
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+        LayoutParams params = new LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT);
         params.addRule(RelativeLayout.BELOW, llDaysOfWeekTitles.getId());
         rvMonths.setLayoutParams(params);
@@ -717,31 +717,43 @@ public class CalendarView extends RelativeLayout implements OnDaySelectedListene
                 if (selectedListener != null) {
                     selectedListener.onDayRangeSelected(days);
                 }
+                Day first = days.first;
+                Day second = days.second;
 //                llRangeSelection.setVisibility(VISIBLE);
                 llRangeSelection.setVisibility(GONE);
                 TextView tvStartRangeTitle = (TextView) llRangeSelection.findViewById(R.id.tv_range_start_date);
-                tvStartRangeTitle.setText(CalendarUtils.getYearNameTitle(days.first));
+                tvStartRangeTitle.setText(CalendarUtils.getYearNameTitle(first));
                 tvStartRangeTitle.setTextColor(getSelectionBarMonthTextColor());
 
                 TextView tvEndRangeTitle = (TextView) llRangeSelection.findViewById(R.id.tv_range_end_date);
-                tvEndRangeTitle.setText(CalendarUtils.getYearNameTitle(days.second));
+                tvEndRangeTitle.setText(CalendarUtils.getYearNameTitle(second));
                 tvEndRangeTitle.setTextColor(getSelectionBarMonthTextColor());
 
                 CircleAnimationTextView catvStart = (CircleAnimationTextView) llRangeSelection.findViewById(R.id
                         .catv_start);
-                catvStart.setText(String.valueOf(days.first.getDayNumber()));
+                catvStart.setText(String.valueOf(first.getDayNumber()));
                 catvStart.setTextColor(getSelectedDayTextColor());
                 catvStart.showAsStartCircle(this, true);
 
                 CircleAnimationTextView catvEnd = (CircleAnimationTextView) llRangeSelection.findViewById(R.id
                         .catv_end);
-                catvEnd.setText(String.valueOf(days.second.getDayNumber()));
+                catvEnd.setText(String.valueOf(second.getDayNumber()));
                 catvEnd.setTextColor(getSelectedDayTextColor());
                 catvEnd.showAsEndCircle(this, true);
 
                 CircleAnimationTextView catvMiddle = (CircleAnimationTextView) llRangeSelection.findViewById(R.id
                         .catv_middle);
                 catvMiddle.showAsRange(this);
+                //
+//                Calendar firstCalendar = first.getCalendar();
+//                String s = firstCalendar.getTime().toString();
+//                if (s.contains("Jun 05")) {
+//                    Log.d("", first.toString());
+//                }
+//                if (s.contains("Jun 04")) {
+//                    Log.d("", first.toString());
+//                }
+//                if (first.getCalendar().)
             } else {
                 llRangeSelection.setVisibility(GONE);
                 if (onDaySelectObserver != null) {

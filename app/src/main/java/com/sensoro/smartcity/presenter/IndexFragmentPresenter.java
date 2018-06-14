@@ -345,7 +345,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         @Override
         public void run() {
             if (isNeedRefresh) {
-                Log.e("", "run: 执行刷新！！！！！！");
+                Log.e("", "run: 刷新数据！");
                 scheduleRefresh();
             }
             mHandler.postDelayed(this, 3000);

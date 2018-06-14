@@ -27,6 +27,7 @@ import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import java.util.List;
@@ -237,7 +238,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

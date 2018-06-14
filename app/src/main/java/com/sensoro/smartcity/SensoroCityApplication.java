@@ -7,6 +7,7 @@ import com.fengmap.android.FMMapSDK;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.NotificationUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -34,7 +35,7 @@ public class SensoroCityApplication extends MultiDexApplication {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
-                Toast.makeText(SensoroCityApplication.this, "程序出错：" + thread.getId() + "," + ex.getMessage(), Toast
+                SensoroToast.makeText(SensoroCityApplication.this, "程序出错：" + thread.getId() + "," + ex.getMessage(), Toast
                         .LENGTH_SHORT).show();
                 android.os.Process.killProcess(android.os.Process.myPid());
             }

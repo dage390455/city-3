@@ -27,13 +27,13 @@ import android.text.method.LinkMovementMethod;
 import android.text.style.ClickableSpan;
 import android.text.style.ImageSpan;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -553,16 +553,16 @@ public class TagsEditText extends android.support.v7.widget.AppCompatAutoComplet
             }
             //加入标签是否重复
             if (mTags.contains(tag)) {
-                toastShort("标签不能重复！");
+                Log.e(this.getClass().getSimpleName(), "标签重复!");
+                if (mListener != null) {
+                    mListener.onTagDuplicate();
+                }
             } else {
                 mTags.add(tag);
             }
         }
     }
 
-    private void toastShort(String msg) {
-        Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
-    }
 
     private String getNewTag(String newString) {
         StringBuilder builder = new StringBuilder();
@@ -845,6 +845,11 @@ public class TagsEditText extends android.support.v7.widget.AppCompatAutoComplet
         void onTagsChanged(Collection<String> tags);
 
         void onEditingFinished();
+
+        /**
+         * 标签重复
+         */
+        void onTagDuplicate();
 
     }
 }

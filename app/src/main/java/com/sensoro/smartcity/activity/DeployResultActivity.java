@@ -12,6 +12,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.presenter.DeployResultActivityPresenter;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -166,7 +167,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

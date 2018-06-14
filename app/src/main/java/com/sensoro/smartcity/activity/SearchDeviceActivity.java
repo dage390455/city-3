@@ -690,7 +690,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

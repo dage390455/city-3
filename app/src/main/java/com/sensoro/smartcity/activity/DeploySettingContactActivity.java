@@ -25,6 +25,7 @@ import com.sensoro.smartcity.imainviews.IDeploySettingContactActivityView;
 import com.sensoro.smartcity.presenter.DeploySettingContactActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import butterknife.BindView;
@@ -229,7 +230,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

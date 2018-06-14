@@ -231,4 +231,9 @@ public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener
     public void onEditingFinished() {
 
     }
+
+    @Override
+    public void onTagDuplicate() {
+
+    }
 }

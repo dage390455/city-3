@@ -23,6 +23,7 @@ import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.widget.SensoroShadowView;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -166,7 +167,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 //            return;
 //        }
         if (remark.length() > 30) {
-            Toast.makeText(mContext, "最大不能超过30个字符", Toast.LENGTH_SHORT).show();
+            toastShort("最大不能超过30个字符");
             return;
         }
         RetrofitServiceHelper.INSTANCE.doAlarmConfirm(id, displayStatus,
@@ -182,17 +183,17 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
             public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
                 if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                    Toast.makeText(mContext, R.string.tips_commit_success, Toast.LENGTH_SHORT).show();
+                    toastShort(mContext.getResources().getString(R.string.tips_commit_success));
                     mListener.onPopupCallback(deviceAlarmLogInfo);
                 } else {
-                    Toast.makeText(mContext, R.string.tips_commit_failed, Toast.LENGTH_SHORT).show();
+                    toastShort(mContext.getResources().getString(R.string.tips_commit_failed));
                 }
             }
 
             @Override
             public void onErrorMsg(String errorMsg) {
                 dismiss();
-                Toast.makeText(mContext, errorMsg, Toast.LENGTH_SHORT).show();
+                toastShort(errorMsg);
             }
         });
 //        NetUtils.INSTANCE.getServer().doAlarmConfirm(id, displayStatus,
@@ -228,7 +229,9 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 //                });
     }
 
-
+    private void toastShort(String msg){
+        SensoroToast.makeText(mContext,msg,Toast.LENGTH_SHORT).show();
+    }
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
@@ -248,7 +251,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                     remarkEditText.clearFocus();
                     doAlarmConfirm();
                 } else {
-                    Toast.makeText(mContext, R.string.tips_choose_status, Toast.LENGTH_SHORT).show();
+                    toastShort(mContext.getResources().getString(R.string.tips_choose_status));
                 }
                 break;
             case R.id.alarm_popup_true:

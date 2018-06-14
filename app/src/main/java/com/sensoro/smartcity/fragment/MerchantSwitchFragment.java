@@ -21,6 +21,7 @@ import com.sensoro.smartcity.presenter.MerchantSwitchFragmentPresenter;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.util.List;
 
@@ -169,7 +170,7 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

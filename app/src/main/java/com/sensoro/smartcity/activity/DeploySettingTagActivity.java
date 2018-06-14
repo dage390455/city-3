@@ -7,6 +7,7 @@ import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
@@ -22,6 +23,7 @@ import com.sensoro.smartcity.imainviews.IDeploySettingTagActivityView;
 import com.sensoro.smartcity.presenter.DeploySettingTagActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.Collection;
@@ -144,6 +146,11 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
     }
 
     @Override
+    public void onTagDuplicate() {
+        toastShort("标签不能重复！");
+    }
+
+    @Override
     public void setSearchHistoryLayoutVisible(boolean isVisible) {
         mSearchHistoryLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -192,7 +199,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10).show();
     }
 
     @Override

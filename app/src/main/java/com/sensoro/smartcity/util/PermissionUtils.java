@@ -17,6 +17,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.sensoro.smartcity.widget.SensoroToast;
+
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
 
@@ -113,7 +115,7 @@ public final class PermissionUtils {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                     if (mNeedFinish) {
-                                        Toast.makeText(mContext.get(), "需要权限！请重新打开应用", Toast.LENGTH_SHORT).show();
+                                        SensoroToast.makeText(mContext.get(), "需要权限！请重新打开应用", Toast.LENGTH_SHORT).show();
                                         mContext.get().finish();
                                     }
                                 }

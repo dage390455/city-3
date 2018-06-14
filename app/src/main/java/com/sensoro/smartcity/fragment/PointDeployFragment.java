@@ -32,6 +32,7 @@ import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IPointDeployFragmentView;
 import com.sensoro.smartcity.presenter.PointDeployFragmentPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import static com.sensoro.smartcity.constant.Constants.INPUT;
 
@@ -281,7 +282,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView, 
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

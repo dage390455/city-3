@@ -35,6 +35,7 @@ import com.sensoro.smartcity.widget.BatteryMarkerView;
 import com.sensoro.smartcity.widget.MapContainer;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.List;
@@ -402,7 +403,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
 

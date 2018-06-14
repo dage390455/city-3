@@ -11,13 +11,21 @@ import android.widget.Toast;
 import com.applikeysolutions.cosmocalendar.listeners.OnDayRangeSelectedListener;
 import com.applikeysolutions.cosmocalendar.model.Day;
 import com.applikeysolutions.cosmocalendar.selection.RangeSelectionManager;
+import com.applikeysolutions.cosmocalendar.selection.criteria.BaseCriteria;
+import com.applikeysolutions.cosmocalendar.selection.criteria.WeekDayCriteria;
+import com.applikeysolutions.cosmocalendar.selection.criteria.month.CurrentMonthCriteria;
+import com.applikeysolutions.cosmocalendar.selection.criteria.month.NextMonthCriteria;
+import com.applikeysolutions.cosmocalendar.selection.criteria.month.PreviousMonthCriteria;
 import com.applikeysolutions.cosmocalendar.utils.SelectionType;
 import com.applikeysolutions.cosmocalendar.view.CalendarView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ICalendarActivityView;
 import com.sensoro.smartcity.presenter.CalendarActivityPresenter;
+import com.sensoro.smartcity.widget.SensoroToast;
 
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import butterknife.BindView;
@@ -47,7 +55,8 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
     TextView endWeekTextView;
     @BindView(R.id.calendar_view)
     CalendarView calendarView;
-
+    private List<BaseCriteria> threeMonthsCriteriaList;
+    private WeekDayCriteria fridayCriteria;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -60,8 +69,17 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
         mPrestener.initData(mActivity);
 //        init();
 //
-//        createCriterias();
+        createCriterias();
 //        showHistory(isMultipleOr, firstDay, secondDay);
+    }
+
+    private void createCriterias() {
+        fridayCriteria = new WeekDayCriteria(Calendar.FRIDAY);
+
+        threeMonthsCriteriaList = new ArrayList<>();
+        threeMonthsCriteriaList.add(new CurrentMonthCriteria());
+        threeMonthsCriteriaList.add(new NextMonthCriteria());
+        threeMonthsCriteriaList.add(new PreviousMonthCriteria());
     }
 
     @Override
@@ -165,7 +183,7 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

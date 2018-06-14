@@ -25,6 +25,7 @@ import com.sensoro.smartcity.imainviews.IDeploySettingNameActivityView;
 import com.sensoro.smartcity.presenter.DeploySettingNameActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.List;
@@ -244,7 +245,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
 
     @Override
     public void toastShort(String msg) {
-        Toast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

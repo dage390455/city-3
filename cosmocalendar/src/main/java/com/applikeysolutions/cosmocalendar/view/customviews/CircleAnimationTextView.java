@@ -5,7 +5,6 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
-import android.graphics.RectF;
 import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.animation.Animation;
@@ -39,14 +38,12 @@ public class CircleAnimationTextView extends AppCompatTextView {
     //Start/End range half rectangle
     private Paint rectanglePaint;
     private Rect rectangle;
-    private RectF rectfangle;
 
     //Rectangle
     private Paint backgroundRectanglePaint;
     private Rect backgroundRectangle;
-    private RectF backgroundRectFangle;
 
-    public static final int DEFAULT_PADDING = 15;
+    public static final int DEFAULT_PADDING = 10;
     public static final int MAX_PROGRESS = 100;
     public static final long SELECTION_ANIMATION_DURATION = 300;
 
@@ -88,16 +85,19 @@ public class CircleAnimationTextView extends AppCompatTextView {
                     drawCircleUnder(canvas);
                     drawCircle(canvas);
                     break;
-                case SATURDAY:
-                case SUNDAY:
-                    drawRectangle(canvas);
-                    drawCircleUnder(canvas);
+                //画圆
+                case CIRCLE_RANGE:
                     drawCircle(canvas);
+                    break;
+                //左半圆
+                case SATURDAY_RANGE:
+                    break;
+                //又半圆
+                case SUNDAY_RANGE:
                     break;
                 case START_RANGE_DAY_WITHOUT_END:
                     drawCircle(canvas);
                     break;
-
                 case SINGLE_DAY:
                     //Animation not started yet
                     //progress not MAX_PROGRESS
@@ -136,23 +136,20 @@ public class CircleAnimationTextView extends AppCompatTextView {
         if (circlePaint == null || stateChanged) {
             createCirclePaint();
         }
-        int offset = 22;//fangping
-        float y_offset = 12f;
+
         final int diameter = getWidth() - DEFAULT_PADDING * 2;
-        final int diameterProgress = animationProgress * diameter / MAX_PROGRESS + offset;
+        final int diameterProgress = animationProgress * diameter / MAX_PROGRESS;
 
         setBackgroundColor(Color.TRANSPARENT);
-        canvas.drawCircle(getWidth() / 2, getWidth() / 2 + y_offset, diameterProgress / 2, circlePaint);
+        canvas.drawCircle(getWidth() / 2, getWidth() / 2, diameterProgress / 2, circlePaint);
     }
 
     private void drawCircleUnder(Canvas canvas) {
         if (circleUnderPaint == null || stateChanged) {
             createCircleUnderPaint();
         }
-        int offset = 22;//fangping
-        int y_offset = 12;
-        final int diameter = getWidth() - DEFAULT_PADDING * 2 + offset;
-        canvas.drawCircle(getWidth() / 2, getWidth() / 2 + y_offset, diameter / 2, circleUnderPaint);
+        final int diameter = getWidth() - DEFAULT_PADDING * 2;
+        canvas.drawCircle(getWidth() / 2, getWidth() / 2, diameter / 2, circleUnderPaint);
     }
 
     private void createCirclePaint() {
@@ -174,10 +171,6 @@ public class CircleAnimationTextView extends AppCompatTextView {
         if (rectangle == null) {
             rectangle = getRectangleForState();
         }
-        if (rectfangle == null) {
-            rectfangle = getRectFangleForState();
-        }
-//        canvas.drawRoundRect(rectfangle, 0, 0, rectanglePaint);
         canvas.drawRect(rectangle, rectanglePaint);
     }
 
@@ -194,10 +187,7 @@ public class CircleAnimationTextView extends AppCompatTextView {
         if (backgroundRectangle == null) {
             backgroundRectangle = getRectangleForState();
         }
-        if (backgroundRectFangle == null) {
-            backgroundRectFangle = getRectFangleForState();
-        }
-        canvas.drawRect(backgroundRectFangle, backgroundRectanglePaint);
+        canvas.drawRect(backgroundRectangle, backgroundRectanglePaint);
     }
 
     private void createBackgroundRectanglePaint() {
@@ -219,18 +209,19 @@ public class CircleAnimationTextView extends AppCompatTextView {
 
         if (selectionState != null && calendarView != null) {
             switch (selectionState) {
-                case SUNDAY:
                 case START_RANGE_DAY:
                     circleColor = calendarView.getSelectedDayBackgroundStartColor();
                     break;
-                case SATURDAY:
+
                 case END_RANGE_DAY:
                     circleColor = calendarView.getSelectedDayBackgroundEndColor();
                     break;
+
                 case START_RANGE_DAY_WITHOUT_END:
                     setBackgroundColor(Color.TRANSPARENT);
                     circleColor = calendarView.getSelectedDayBackgroundStartColor();
                     break;
+
                 case SINGLE_DAY:
                     circleColor = calendarView.getSelectedDayBackgroundColor();
                     setBackgroundColor(Color.TRANSPARENT);
@@ -241,34 +232,15 @@ public class CircleAnimationTextView extends AppCompatTextView {
     }
 
     private Rect getRectangleForState() {
-        int offset = 0; //fangping
-        switch (selectionState) {
-            case SUNDAY:
-            case START_RANGE_DAY:
-                return new Rect(getWidth() / 2, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING - offset);
-            case SATURDAY:
-            case END_RANGE_DAY:
-                return new Rect(0, DEFAULT_PADDING, getWidth() / 2, getHeight() - DEFAULT_PADDING - offset);
-
-            case RANGE_DAY:
-                return new Rect(0, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING - offset);
-
-            default:
-                return null;
-        }
-    }
-
-    //fangping
-    private RectF getRectFangleForState() {
-        int offset = 0;
         switch (selectionState) {
             case START_RANGE_DAY:
-                return new RectF(getWidth() / 2f, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING - offset);
+                return new Rect(getWidth() / 2, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING);
+
             case END_RANGE_DAY:
-                return new RectF(0, DEFAULT_PADDING, getWidth() / 2, getHeight() - DEFAULT_PADDING - offset);
+                return new Rect(0, DEFAULT_PADDING, getWidth() / 2, getHeight() - DEFAULT_PADDING);
 
             case RANGE_DAY:
-                return new RectF(0, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING - offset);
+                return new Rect(0, DEFAULT_PADDING, getWidth(), getHeight() - DEFAULT_PADDING);
 
             default:
                 return null;
