@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
             toastShort(mActivity.getResources().getString(R.string.exit_main));
             exitTime = System.currentTimeMillis();
         } else {
-            finish();
+            finishAc();
         }
     }
 
@@ -235,11 +235,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
                 mPrestener.updateApp(url);
             }
         });
-        builder.setPositiveButton("取消", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-            }
-        });
+        builder.setPositiveButton("取消", null);
         builder.create().show();
     }
 
@@ -303,7 +299,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void finishAc() {
-        this.finish();
+        mActivity.finish();
     }
 
     @Override

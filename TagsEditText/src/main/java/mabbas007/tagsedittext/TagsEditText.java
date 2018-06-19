@@ -48,7 +48,7 @@ import mabbas007.tagsedittext.utils.ResourceUtils;
  * Needs a lot of work
  * BETA
  */
-public class TagsEditText extends android.support.v7.widget.AppCompatAutoCompleteTextView {
+public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
 
     public static final String NEW_LINE = "\n";
 
@@ -394,6 +394,7 @@ public class TagsEditText extends android.support.v7.widget.AppCompatAutoComplet
         }
     }
 
+
     private void init(@Nullable AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         Context context = getContext();
         if (attrs == null) {
@@ -479,9 +480,9 @@ public class TagsEditText extends android.support.v7.widget.AppCompatAutoComplet
             }
         }
 
-        if (getFilter() != null) {
-            performFiltering(getNewTag(str), 0);
-        }
+//        if (getFilter() != null) {
+//            performFiltering(getNewTag(str), 0);
+//        }
 
         if (str.endsWith(NEW_LINE) || (!mIsSpacesAllowedInTags && str.endsWith(mSeparator)) && !isDeleting) {
             buildTags(str);

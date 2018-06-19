@@ -75,8 +75,8 @@ public class IndexGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         String[] sensorTypes = deviceInfo.getSensorTypes();
         Arrays.sort(sensorTypes);
         if (sensorDetailInfo != null && sensorTypes.length > 0) {
-//            holder.item_value2.setText("");
-//            holder.item_unit2.setText("");
+//            holder.item_value2.setEditText("");
+//            holder.item_unit2.setEditText("");
             HashMap<String, SensorStruct> stringSensorStructHashMap = sensorDetailInfo.loadData();
             if (sensorTypes.length > 1) {
                 //两条数据

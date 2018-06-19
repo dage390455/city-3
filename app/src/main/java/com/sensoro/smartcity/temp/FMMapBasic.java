@@ -59,13 +59,13 @@ public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener
         super.onSaveInstanceState(outState, outPersistentState);
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            tagsEditText.showDropDown();
-        }
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            tagsEditText.showDropDown();
+//        }
+//    }
 
 
     /**

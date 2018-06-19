@@ -328,19 +328,19 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 text = mHistoryKeywords_deviceName.get(position);
-                getView().setText(text);
+                getView().setEditText(text);
                 break;
             case Constants.TYPE_DEVICE_SN:
                 text = mHistoryKeywords_deviceNumber.get(position);
-                getView().setText(text);
+                getView().setEditText(text);
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
                 text = mHistoryKeywords_devicePhone.get(position);
-                getView().setText(text);
+                getView().setEditText(text);
                 break;
             default:
                 text = mHistoryKeywords_deviceName.get(position);
-                getView().setText(text);
+                getView().setEditText(text);
                 break;
         }
 

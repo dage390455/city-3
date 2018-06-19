@@ -258,7 +258,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override

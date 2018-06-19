@@ -11,4 +11,8 @@ public interface IDeploySettingContactActivityView extends IActivityIntent, IToa
     void setSearchHistoryLayoutVisible(boolean isVisible);
 
     void updateAdapter();
+
+    void setNameEditText(String text);
+
+    void setPhoneEditText(String text);
 }

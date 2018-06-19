@@ -169,7 +169,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                         .shape_status_progress));
                 groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
                 groupHolder.tvTitle.setText(confirm_text);
-//            groupHolder.tvTitle.setText(ToDBC(confirm_text));
+//            groupHolder.tvTitle.setEditText(ToDBC(confirm_text));
                 groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
                         .shape_status_normal));
             }
@@ -267,9 +267,9 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             groupHolder.lineView.setVisibility(View.GONE);
             groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_alarm));
 //            if (WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(),recordInfo.getThresholds(), 1) == null) {
-//                groupHolder.tvTitle.setText("未知传感器 值为 " + recordInfo.getThresholds() + " 达到预警值");
+//                groupHolder.tvTitle.setEditText("未知传感器 值为 " + recordInfo.getThresholds() + " 达到预警值");
 //            } else {
-//                groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(),recordInfo
+//                groupHolder.tvTitle.setEditText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(),recordInfo
 // .getThresholds(), 1));
 //            }
             groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo

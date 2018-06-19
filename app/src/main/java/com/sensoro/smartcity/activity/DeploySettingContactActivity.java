@@ -85,9 +85,8 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
                     @Override
                     public void onItemClick(View view, int position) {
                         String name = mPrestener.getNameHistoryKeywords().get(position).trim();
-                        mNameEt.setText(name);
+                        setNameEditText(name);
                         mNameEt.clearFocus();
-                        mNameEt.setSelection(name.length());
                         dismissInputMethodManager(view);
                     }
                 });
@@ -112,9 +111,8 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
                     @Override
                     public void onItemClick(View view, int position) {
                         String phone = mPrestener.getPhoneHistoryKeywords().get(position).trim();
-                        mPhoneEt.setText(phone);
+                        setPhoneEditText(phone);
                         mPhoneEt.clearFocus();
-                        mPhoneEt.setSelection(phone.length());
                         dismissInputMethodManager(view);
                     }
                 });
@@ -139,7 +137,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
     @OnClick(R.id.deploy_setting_contact_back)
     public void back() {
-        this.finish();
+        mActivity.finish();
     }
 
     @OnClick(R.id.deploy_setting_contact_finish)
@@ -200,6 +198,22 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     public void updateAdapter() {
         mNameSearchHistoryAdapter.notifyDataSetChanged();
         mPhoneSearchHistoryAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setNameEditText(String text) {
+        if (text != null) {
+            mNameEt.setText(text);
+            mNameEt.setSelection(text.length());
+        }
+    }
+
+    @Override
+    public void setPhoneEditText(String text) {
+        if (text != null) {
+            mPhoneEt.setText(text);
+            mPhoneEt.setSelection(text.length());
+        }
     }
 
 

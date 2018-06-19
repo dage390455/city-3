@@ -58,7 +58,6 @@ public class SensoroPushIntentService extends GTIntentService {
         // 第三方回执调用接口，actionid范围为90000-90999，可根据业务场景执行
         boolean result = PushManager.getInstance().sendFeedbackMessage(context, taskid, messageid, 90001);
         Log.d(TAG, "call sendFeedbackMessage = " + (result ? "success" : "failed"));
-
         Log.d(TAG, "onReceiveMessageData -> " + "appid = " + appid + "\ntaskid = " + taskid + "\nmessageid = " +
                 messageid + "\npkg = " + pkg
                 + "\ncid = " + cid);

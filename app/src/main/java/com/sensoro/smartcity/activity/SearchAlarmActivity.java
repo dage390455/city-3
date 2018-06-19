@@ -67,8 +67,6 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     LinearLayout tagLinearLayout;
     @BindView(R.id.search_tablayout)
     TabLayout searchTabLayout;
-//    @BindView(R.id.search_viewpager)
-//    ViewPager searchViewpager;
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
@@ -91,10 +89,6 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
         mKeywordEt.addTextChangedListener(this);
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
-        //        searchTabLayout.setupWithViewPager(searchViewpager);
-//        searchAlarmPagerAdapter = new SearchAlarmPagerAdapter(this, this.getSupportFragmentManager());
-//        searchAlarmPagerAdapter.
-//        searchViewpager.setAdapter(searchAlarmPagerAdapter);
         initSearchHistory();
         initTabs();
     }
@@ -102,7 +96,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     private void initTabs() {
         String extra_search_content = mActivity.getIntent().getStringExtra(Constants.EXTRA_SEARCH_CONTENT);
         if (!TextUtils.isEmpty(extra_search_content)) {
-            setText(extra_search_content);
+            setEditText(extra_search_content);
             searchType = SensoroCityApplication.getInstance().saveSearchType;
         } else {
             mKeywordEt.getText().clear();
@@ -166,9 +160,11 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     }
 
     @Override
-    public void setText(String searchContent) {
-        mKeywordEt.setText(searchContent);
-        mKeywordEt.setSelection(searchContent.length());
+    public void setEditText(String searchContent) {
+        if (searchContent != null) {
+            mKeywordEt.setText(searchContent);
+            mKeywordEt.setSelection(searchContent.length());
+        }
     }
 
 
@@ -290,7 +286,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                 dismissInputMethodManager(v);
                 mPrestener.save(searchType, text.trim());
                 mPrestener.requestData(searchType, text.trim());
-            }else {
+            } else {
                 SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                         .show();
             }

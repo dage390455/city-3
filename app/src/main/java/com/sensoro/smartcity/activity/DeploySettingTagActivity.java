@@ -21,6 +21,7 @@ import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeploySettingTagActivityView;
 import com.sensoro.smartcity.presenter.DeploySettingTagActivityPresenter;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
@@ -37,7 +38,7 @@ import mabbas007.tagsedittext.utils.ResourceUtils;
 
 public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActivityView,
         DeploySettingTagActivityPresenter> implements IDeploySettingTagActivityView,
-        TagsEditText.TagsEditListener, TextView.OnEditorActionListener {
+        TagsEditText.TagsEditListener {
 
 
     @BindView(R.id.deploy_setting_tag_back)
@@ -75,17 +76,39 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
         return new DeploySettingTagActivityPresenter();
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            mKeywordEt.showDropDown();
-        }
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            mKeywordEt.showDropDown();
+//        }
+//    }
 
     private void initView() {
         try {
-            mKeywordEt.setOnEditorActionListener(this);
+            mKeywordEt.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                @Override
+                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                    LogUtils.loge(this, "actionId = " + actionId);
+                    if (event.getAction() == KeyEvent.ACTION_DOWN) {
+                        String text = mKeywordEt.getText().toString();
+                        if (!TextUtils.isEmpty(text)) {
+                            String[] split = text.split(" ");
+                            if (split.length > 5) {
+                                toastShort("最大标签不超过5个！");
+                                return true;
+                            }
+                            for (String temp : split) {
+                                if (!TextUtils.isEmpty(temp) && ResourceUtils.getByteFromWords(temp) > 24) {
+                                    toastShort("标签最大不能超过8个汉字或24个字符");
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                    return false;
+                }
+            });
             mKeywordEt.setTagsListener(this);
             initSearchHistory();
         } catch (Exception e) {
@@ -207,24 +230,4 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 
     }
 
-    @Override
-    public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-        if (event.getAction() == KeyEvent.ACTION_DOWN) {
-            String text = mKeywordEt.getText().toString();
-            if (!TextUtils.isEmpty(text)) {
-                String[] split = text.split(" ");
-                if (split.length > 5) {
-                    toastShort("最大标签不超过5个！");
-                    return true;
-                }
-                for (String temp : split) {
-                    if (!TextUtils.isEmpty(temp) && ResourceUtils.getByteFromWords(temp) > 24) {
-                        toastShort("标签最大不能超过8个汉字或24个字符");
-                        return true;
-                    }
-                }
-            }
-        }
-        return false;
-    }
 }

@@ -75,7 +75,6 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
     public void next() {
         String text = contentEditText.getText().toString();
         mPrestener.clickNext(text);
-
     }
 
 
@@ -107,7 +106,6 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 
     @Override
     public void afterTextChanged(Editable s) {
-
         if (s.length() == 0) {
             clearImageView.setVisibility(View.GONE);
             nextButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));

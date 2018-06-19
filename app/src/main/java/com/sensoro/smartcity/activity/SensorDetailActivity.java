@@ -160,7 +160,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
         mBatteryAdapter = new BatteryAdapter(mActivity, new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                batteryMarkerView.setVisibility(View.VISIBLE);
+                setBatteryMarkerViewVisible(true);
                 DeviceRecentInfo deviceRecentInfo = mBatteryAdapter.getData().get(position);
                 batteryMarkerView.refreshContent(view.getX(), view.getY(), deviceRecentInfo.getBatteryAvg(),
                         deviceRecentInfo.getDate());
@@ -178,7 +178,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
             }
             if (sensorStructList.size() > 1) {
                 if (sensorStructList.get(1) != null) {
-                    rightStructLayout.setVisibility(View.VISIBLE);
+                    setRightStructLayoutVisible(true);
                     WidgetUtil.judgeSensorType(sensorStructList.get(1), rightValueTextView, rightUnitTextView);
                     rightNameTextView.setText(WidgetUtil.getSensorTypeChinese(sensorStructList.get(1).getSensorType()));
                 }
@@ -342,7 +342,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
 
     @OnClick(R.id.recent_battery_title_Layout)
     public void dismissBatteryMarkerView() {
-        batteryMarkerView.setVisibility(View.GONE);
+        setBatteryMarkerViewVisible(false);
     }
 
     @Override

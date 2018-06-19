@@ -393,13 +393,13 @@ public class WidgetUtil {
                         unitTextView.setText(sensorStruct.getUnit());
                     } else {
 //                        if (sensorStruct.getSensorType().equals("pitch")) {
-//                            unitTextView.setText(R.string.sensor_pitch);
+//                            unitTextView.setEditText(R.string.sensor_pitch);
 //                        } else if (sensorStruct.getSensorType().equals("roll")) {
-//                            unitTextView.setText(R.string.sensor_roll);
+//                            unitTextView.setEditText(R.string.sensor_roll);
 //                        } else if (sensorStruct.getSensorType().equals("yaw")) {
-//                            unitTextView.setText(R.string.sensor_yaw);
+//                            unitTextView.setEditText(R.string.sensor_yaw);
 //                        } else {
-//                            unitTextView.setText("" + sensorStruct.getUnit());
+//                            unitTextView.setEditText("" + sensorStruct.getUnit());
 //                        }
                         unitTextView.setText("" + sensorStruct.getUnit());
                         valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue()
@@ -435,7 +435,7 @@ public class WidgetUtil {
                     } else {
                         valueTextView.setText(R.string.cover_false);
                     }
-//                    unitTextView.setText(R.string.cover_unit);
+//                    unitTextView.setEditText(R.string.cover_unit);
                 } else if (sensorType.equals("level")) {
                     Boolean isOk = (Boolean) value;
                     if (isOk) {
@@ -443,7 +443,7 @@ public class WidgetUtil {
                     } else {
                         valueTextView.setText(R.string.level_false);
                     }
-//                    unitTextView.setText(R.string.level_unit);
+//                    unitTextView.setEditText(R.string.level_unit);
                 } else if (sensorType.equals("collision")) {
                     Boolean isOk = (Boolean) value;
                     if (isOk) {
@@ -467,7 +467,7 @@ public class WidgetUtil {
                     } else {
                         valueTextView.setText(R.string.smoke_false);
                     }
-//                    unitTextView.setText(R.string.sensor_smoke);
+//                    unitTextView.setEditText(R.string.sensor_smoke);
                 } else if (sensorType.equals("flame")) {
                     Boolean isOk = (Boolean) value;
                     if (isOk) {
@@ -475,7 +475,7 @@ public class WidgetUtil {
                     } else {
                         valueTextView.setText(R.string.flame_false);
                     }
-//                    unitTextView.setText(R.string.sensor_fire);
+//                    unitTextView.setEditText(R.string.sensor_fire);
                 } else if (sensorType.equals("magnetic")) {
                     Boolean isTrue = (Boolean) value;
                     if (isTrue) {
@@ -483,7 +483,7 @@ public class WidgetUtil {
                     } else {
                         valueTextView.setText(R.string.magnetic_false);
                     }
-//                    unitTextView.setText(R.string.sensor_magnetic);
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
                 } else {
                     valueTextView.setText("-");
                     unitTextView.setText("-");
@@ -496,7 +496,7 @@ public class WidgetUtil {
                     } else {
                         valueTextView.setText(R.string.drop_true);
                     }
-//                    unitTextView.setText(R.string.sensor_drop);
+//                    unitTextView.setEditText(R.string.sensor_drop);
                 } else {
                     if (valueString.equals("-")) {
                         valueTextView.setText("-");

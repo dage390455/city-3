@@ -1,0 +1,26 @@
+[
+    {
+        "outputFile": "/Users/sensoro/develop/smartcity_P/zbar/build/intermediates/incremental/mergeReleaseResources/merged.dir/values/values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 2076,
+                    "endColumn": 53,
+                    "endOffset": 2125
+                },
+                "from": {
+                    "file": "/Users/sensoro/develop/smartcity_P/qrcodecore/build/intermediates/bundles/default/res/values/values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 2076,
+                        "endColumn": 53,
+                        "endOffset": 2125
+                    }
+                }
+            }
+        ]
+    }
+]

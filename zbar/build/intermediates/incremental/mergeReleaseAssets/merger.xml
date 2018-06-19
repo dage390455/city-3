@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="main"><source path="/Users/sensoro/develop/smartcity_P/zbar/src/main/assets"/><source path="/Users/sensoro/develop/smartcity_P/zbar/build/generated/assets/shaders/release"/></dataSet><dataSet config="release"><source path="/Users/sensoro/develop/smartcity_P/zbar/src/release/assets"/></dataSet></merger>

@@ -22,7 +22,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.fragment.AlarmListFragment;
 import com.sensoro.smartcity.fragment.IndexFragment;
 import com.sensoro.smartcity.fragment.MerchantSwitchFragment;
-import com.sensoro.smartcity.fragment.PointDeployFragment;
+import com.sensoro.smartcity.fragment.PointDeployFragmentTest;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.iwidget.IOndestroy;
@@ -86,7 +86,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     private IndexFragment indexFragment = null;
     private AlarmListFragment alarmListFragment = null;
     private MerchantSwitchFragment merchantSwitchFragment = null;
-    private PointDeployFragment pointDeployFragment = null;
+    private PointDeployFragmentTest pointDeployFragment = null;
     //
     private volatile Socket mSocket = null;
     private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
@@ -134,7 +134,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         indexFragment = IndexFragment.newInstance(mCharacter);
         alarmListFragment = AlarmListFragment.newInstance("");
         merchantSwitchFragment = MerchantSwitchFragment.newInstance("");
-        pointDeployFragment = PointDeployFragment.newInstance("");
+        pointDeployFragment = PointDeployFragmentTest.newInstance("");
         fragmentList.add(indexFragment);
         fragmentList.add(alarmListFragment);
         fragmentList.add(merchantSwitchFragment);
@@ -352,19 +352,28 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         }
     }
 
-    private class DeviceInfoListener implements Emitter.Listener {
+    private final class DeviceInfoListener implements Emitter.Listener {
 
         @Override
         public void call(Object... args) {
             try {
-                for (int i = 0; i < args.length; i++) {
-                    if (args[i] instanceof JSONObject) {
-//                        JSONObject jsonObject = (JSONObject) args[i];
-                    } else {
-                        JSONArray jsonArray = (JSONArray) args[i];
-                        final JSONObject jsonObject = jsonArray.getJSONObject(0);
-                        if (!isSupperAccount()) {
-                            indexFragment.handleSocketInfo(jsonObject.toString());
+                synchronized (DeviceInfoListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+//                            JSONObject jsonObject = (JSONObject) arg;
+//                            String s = jsonObject.toString();
+//                            LogUtils.loge(this, "jsonObject = " + s);
+                        } else {
+                            if (arg instanceof JSONArray) {
+                                JSONArray jsonArray = (JSONArray) arg;
+                                final JSONObject jsonObject = jsonArray.getJSONObject(0);
+//                                String s = jsonObject.toString();
+//                                LogUtils.loge(this, "jsonArray = " + s);
+                                if (!isSupperAccount()) {
+                                    indexFragment.handleSocketInfo(jsonObject.toString());
+                                }
+                            }
+
                         }
                     }
                 }

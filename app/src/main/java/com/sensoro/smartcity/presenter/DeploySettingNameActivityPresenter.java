@@ -44,7 +44,7 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
 
         getView().setSearchHistoryLayoutVisible(mHistoryKeywords.size() > 0);
         if (!TextUtils.isEmpty(name)) {
-            getView().setKeywordEt(name);
+            getView().setEditText(name);
         }
     }
 

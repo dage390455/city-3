@@ -83,7 +83,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
                     @Override
                     public void onItemClick(View view, int position) {
                         String text = mPrestener.getmHistoryKeywords().get(position);
-                        mKeywordEt.setText(text);
+                        setEditText(text);
                         setClearKeywordIvVisible(true);
                         mKeywordEt.clearFocus();
                         mPrestener.requestData(text);
@@ -182,6 +182,14 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     @Override
     public void setClearKeywordIvVisible(boolean isVisible) {
         mClearKeywordIv.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setEditText(String text) {
+        if (text != null) {
+            mKeywordEt.setText(text);
+            mKeywordEt.setSelection(text.length());
+        }
     }
 
     @Override

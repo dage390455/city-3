@@ -30,7 +30,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler{
 		super.onCreate(savedInstanceState);
 
 //		TextView textView = new TextView(this);
-//		textView.setText("----------------------------------");
+//		textView.setEditText("----------------------------------");
 		setContentView(new View(this));
 		this.getWindow().getDecorView().setBackgroundColor(Color.TRANSPARENT);
 

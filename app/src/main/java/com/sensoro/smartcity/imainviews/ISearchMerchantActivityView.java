@@ -9,4 +9,5 @@ public interface ISearchMerchantActivityView extends IToast,IProgressDialog,IAct
     void updateSearchHistory();
     void setTipsLinearLayoutVisible(boolean isVisible);
     void setClearKeywordIvVisible(boolean isVisible);
+    void setEditText(String text);
 }

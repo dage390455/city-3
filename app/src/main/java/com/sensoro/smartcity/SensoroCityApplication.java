@@ -1,9 +1,12 @@
 package com.sensoro.smartcity;
 
+import android.app.ActivityManager;
+import android.content.Context;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 import com.fengmap.android.FMMapSDK;
+import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.NotificationUtils;
@@ -35,8 +38,9 @@ public class SensoroCityApplication extends MultiDexApplication {
         Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
             @Override
             public void uncaughtException(Thread thread, Throwable ex) {
-                SensoroToast.makeText(SensoroCityApplication.this, "程序出错：" + thread.getId() + "," + ex.getMessage(), Toast
-                        .LENGTH_SHORT).show();
+                SensoroToast.makeText(SensoroCityApplication.this, "程序出错：" + thread.getId() + "," + ex.getMessage(),
+                        Toast
+                                .LENGTH_SHORT).show();
                 android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
@@ -69,6 +73,17 @@ public class SensoroCityApplication extends MultiDexApplication {
 
     }
 
+    /**
+     * 在登录界面不推送
+     *
+     * @return
+     */
+    private boolean isNeedPush() {
+        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        return !name.equals(LoginActivity.class.getName());
+    }
+
     public List<DeviceInfo> getData() {
         return mDeviceInfoList;
     }
@@ -90,7 +105,10 @@ public class SensoroCityApplication extends MultiDexApplication {
         api.registerApp(Constants.APP_ID);
         FMMapSDK.init(this);
     }
+
     public void pushNotification(String message) {
+//        if (isNeedPush()) {
         mNotificationUtils.sendNotification(message);
+//        }
     }
 }

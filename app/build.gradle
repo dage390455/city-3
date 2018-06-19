@@ -172,4 +172,5 @@ dependencies {
     compile files('libs/GetuiSDK2.12.3.0.jar')
     compile project(':TagsEditText')
     compile 'org.greenrobot:eventbus:3.1.1'
+    compile project(':zbar')
 }

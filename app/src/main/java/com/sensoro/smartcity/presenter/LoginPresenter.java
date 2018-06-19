@@ -125,6 +125,9 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         intent.putExtra(EXTRA_USER_ROLES, loginRsp.getData().getRoles());
                         intent.putExtra(EXTRA_IS_SPECIFIC, isSpecific);
                         intent.putExtra(EXTRA_PHONE_ID, phoneId);
+                        if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
+                            PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
+                        }
                         getView().startAC(intent);
                     } else {
                         getView().dismissProgressDialog();
@@ -150,6 +153,11 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         PushManager.getInstance().registerPushIntentService(SensoroCityApplication.getInstance(),
                 SensoroPushIntentService
                         .class);
+        if (PushManager.getInstance().getClientid(SensoroCityApplication.getInstance()) == null) {
+            PushManager.getInstance().turnOffPush(SensoroCityApplication.getInstance());
+        } else {
+            PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
+        }
     }
 
     /**

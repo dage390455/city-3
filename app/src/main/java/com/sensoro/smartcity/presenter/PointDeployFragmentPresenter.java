@@ -119,90 +119,100 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
     }
 
     public void resumeCamera(SurfaceHolder holder) {
-        this.surfaceHolder = holder;
-        // historyManager must be initialized here to update the history preference
-        historyManager = new HistoryManager(mContext);
-        historyManager.trimHistory();
+        try {
+            this.surfaceHolder = holder;
+            // historyManager must be initialized here to update the history preference
+            historyManager = new HistoryManager(mContext);
+            historyManager.trimHistory();
 
-        // CameraManager must be initialized here, not in onCreate(). This is necessary because we don't
-        // want to open the camera driver and measure the screen size if we're going to show the help on
-        // first launch. That led to bugs where the scanning rectangle was the wrong size and partially
-        // off screen.
-        cameraManager = new CameraManager(mContext);
+            // CameraManager must be initialized here, not in onCreate(). This is necessary because we don't
+            // want to open the camera driver and measure the screen size if we're going to show the help on
+            // first launch. That led to bugs where the scanning rectangle was the wrong size and partially
+            // off screen.
+            cameraManager = new CameraManager(mContext);
 //        viewfinderView = (ViewfinderView) mRootView.findViewById(R.id.viewfinder_view);
 //        viewfinderView.setCameraManager(cameraManager);
-        getView().setCameraManager(cameraManager);
-        handler = null;
-        getView().resetStatusView();
+            getView().setCameraManager(cameraManager);
+            getView().resetStatusView();
 //        resetStatusView();
 
 
-        if (hasSurface) {
-            // The activity was paused but not stopped, so the surface still exists. Therefore
-            // surfaceCreated() won't be called, so initView the camera here.
-            System.out.println("=====>hasSurface");
-            initCamera();
-        } else {
-            System.out.println("=====>hasSurface.false");
-            // Install the callback and wait for surfaceCreated() to initView the camera.
-            surfaceHolder.addCallback(this);
-        }
-        getView().setCameraCapture();
-        beepManager.updatePrefs();
-        ambientLightManager.start(cameraManager);
-        inactivityTimer.onResume();
-
-        Intent intent = mContext.getIntent();
-
-        decodeFormats = null;
-        characterSet = null;
-
-        if (intent != null) {
-            String action = intent.getAction();
-            if (Intents.Scan.ACTION.equals(action)) {
-                // Scan the formats the intent requested, and return the result to the calling activity.
-                decodeFormats = DecodeFormatManager.parseDecodeFormats(intent);
-                decodeHints = DecodeHintManager.parseDecodeHints(intent);
-
-                if (intent.hasExtra(Intents.Scan.WIDTH) && intent.hasExtra(Intents.Scan.HEIGHT)) {
-                    int width = intent.getIntExtra(Intents.Scan.WIDTH, 0);
-                    int height = intent.getIntExtra(Intents.Scan.HEIGHT, 0);
-                    if (width > 0 && height > 0) {
-                        cameraManager.setManualFramingRect(width, height);
-                    }
-                }
-
-                if (intent.hasExtra(Intents.Scan.CAMERA_ID)) {
-                    int cameraId = intent.getIntExtra(Intents.Scan.CAMERA_ID, -1);
-                    if (cameraId >= 0) {
-                        cameraManager.setManualCameraId(cameraId);
-                    }
-                }
-
-                String customPromptMessage = intent.getStringExtra(Intents.Scan.PROMPT_MESSAGE);
-                if (customPromptMessage != null) {
-                    getView().setStatusInfo(customPromptMessage);
-//                    statusView.setText(customPromptMessage);
-                }
+            if (hasSurface) {
+                // The activity was paused but not stopped, so the surface still exists. Therefore
+                // surfaceCreated() won't be called, so initView the camera here.
+                System.out.println("=====>hasSurface");
+                initCamera();
+            } else {
+                System.out.println("=====>hasSurface.false");
+                // Install the callback and wait for surfaceCreated() to initView the camera.
+                surfaceHolder.addCallback(this);
             }
-            characterSet = intent.getStringExtra(Intents.Scan.CHARACTER_SET);
-            isFlashOn = false;
+            getView().setCameraCapture();
+            beepManager.updatePrefs();
+            ambientLightManager.start(cameraManager);
+            inactivityTimer.onResume();
+
+            Intent intent = mContext.getIntent();
+
+            decodeFormats = null;
+            characterSet = null;
+
+            if (intent != null) {
+                String action = intent.getAction();
+                if (Intents.Scan.ACTION.equals(action)) {
+                    // Scan the formats the intent requested, and return the result to the calling activity.
+                    decodeFormats = DecodeFormatManager.parseDecodeFormats(intent);
+                    decodeHints = DecodeHintManager.parseDecodeHints(intent);
+
+                    if (intent.hasExtra(Intents.Scan.WIDTH) && intent.hasExtra(Intents.Scan.HEIGHT)) {
+                        int width = intent.getIntExtra(Intents.Scan.WIDTH, 0);
+                        int height = intent.getIntExtra(Intents.Scan.HEIGHT, 0);
+                        if (width > 0 && height > 0) {
+                            cameraManager.setManualFramingRect(width, height);
+                        }
+                    }
+
+                    if (intent.hasExtra(Intents.Scan.CAMERA_ID)) {
+                        int cameraId = intent.getIntExtra(Intents.Scan.CAMERA_ID, -1);
+                        if (cameraId >= 0) {
+                            cameraManager.setManualCameraId(cameraId);
+                        }
+                    }
+
+                    String customPromptMessage = intent.getStringExtra(Intents.Scan.PROMPT_MESSAGE);
+                    if (customPromptMessage != null) {
+                        getView().setStatusInfo(customPromptMessage);
+//                    statusView.setEditText(customPromptMessage);
+                    }
+                }
+                characterSet = intent.getStringExtra(Intents.Scan.CHARACTER_SET);
+                isFlashOn = false;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
     }
 
     public void pauseCamera() {
-        if (handler != null) {
-            handler.quitSynchronously();
-            handler = null;
+        try {
+            if (handler != null) {
+                handler.quitSynchronously();
+                handler = null;
+            }
+            inactivityTimer.onPause();
+            ambientLightManager.stop();
+            beepManager.close();
+            cameraManager.closeDriver();
+            cameraManager = null;
+            historyManager = null;
+            if (!hasSurface) {
+                surfaceHolder.removeCallback(this);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        inactivityTimer.onPause();
-        ambientLightManager.stop();
-        beepManager.close();
-        cameraManager.closeDriver();
-        historyManager = null;
-        if (!hasSurface) {
-            surfaceHolder.removeCallback(this);
-        }
+
     }
 
     private void decodeOrStoreSavedBitmap(Bitmap bitmap, Result result) {
@@ -445,8 +455,11 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
 
     public void openLight() {
         isFlashOn = !isFlashOn;
-        cameraManager.setTorch(isFlashOn);
+        if (cameraManager != null) {
+            cameraManager.setTorch(isFlashOn);
 //        getView().setFlashLightState(isFlashOn);
+        }
+
     }
 
     public void openSNTextAc() {

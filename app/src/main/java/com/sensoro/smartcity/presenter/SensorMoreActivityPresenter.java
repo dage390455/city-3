@@ -91,7 +91,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
         try {
             if (response.getData().size() > 0) {
                 DeviceInfo deviceInfo = response.getData().get(0);
-//                titleTextView.setText(sensor_sn);
+//                titleTextView.setEditText(sensor_sn);
                 getView().setSNText(sensor_sn);
                 getView().setTypeText(parseSensorTypes(deviceInfo.getSensorTypes()));
 
@@ -106,8 +106,8 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 }
                 getView().setTagText(sb.toString());
                 getView().setLongitudeLatitude("" + deviceInfo.getLonlat()[0], "" + deviceInfo.getLonlat()[1]);
-//                lonTextView.setText("" + deviceInfo.getLonlat()[0]);
-//                lanTextView.setText("" + deviceInfo.getLonlat()[1]);
+//                lonTextView.setEditText("" + deviceInfo.getLonlat()[0]);
+//                lanTextView.setEditText("" + deviceInfo.getLonlat()[1]);
                 AlarmInfo.RuleInfo rules[] = deviceInfo.getAlarms().getRules();
                 StringBuffer sbRule = new StringBuffer();
                 for (AlarmInfo.RuleInfo ruleInfo : rules) {

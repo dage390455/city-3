@@ -65,14 +65,16 @@
             android:id="@+id/deploy_setting_tag_et"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@null"
             android:autoLink="none"
-            TagsEditText:tagsBackground="@drawable/shape_textview"
+            android:background="@null"
             android:gravity="center_vertical"
             android:hint="@string/tips_hint_name_address_set"
+            android:imeOptions="actionNext"
+            android:inputType="text"
             android:paddingLeft="@dimen/x30"
             android:textSize="@dimen/city_normal_size"
             TagsEditText:allowSpaceInTag="false"
+            TagsEditText:tagsBackground="@drawable/shape_textview"
             TagsEditText:tagsCloseImageRight="@drawable/ic_text_del"
             />
     </LinearLayout>

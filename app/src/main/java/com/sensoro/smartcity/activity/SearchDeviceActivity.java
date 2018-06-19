@@ -339,6 +339,14 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         return isListVisible && isSearchHistoryHide && isRelationLayoutHide;
     }
 
+    @Override
+    public void setEditText(String text) {
+        if (text != null) {
+            mKeywordEt.setText(text);
+            mKeywordEt.setSelection(text.length());
+        }
+    }
+
 
     private void initRelation() {
         mRelationAdapter = new RelationAdapter(mActivity, new RecycleViewItemClickListener() {
@@ -367,7 +375,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                     @Override
                     public void onItemClick(View view, int position) {
                         String text = mPrestener.getHistoryKeywords().get(position);
-                        mKeywordEt.setText(text);
+                        setEditText(text);
                         mClearKeywordIv.setVisibility(View.VISIBLE);
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
@@ -598,8 +606,8 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             case R.id.search_device_clear_iv:
                 mKeywordEt.getText().clear();
                 mClearKeywordIv.setVisibility(View.GONE);
-                tipsLinearLayout.setVisibility(View.GONE);
-                mSearchHistoryAdapter.notifyDataSetChanged();
+                setTipsLinearLayoutVisible(false);
+                updateSearchHistoryData();
                 break;
             case R.id.index_tv_type:
             case R.id.index_iv_type:
@@ -614,7 +622,6 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                 break;
             case R.id.index_iv_switch:
                 mPrestener.switchIndexGridOrList(switchType);
-
                 break;
             default:
                 break;
@@ -639,12 +646,12 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (!TextUtils.isEmpty(s.toString())) {
-            mSearchHistoryLayout.setVisibility(View.GONE);
-            mRelationLayout.setVisibility(View.VISIBLE);
+            setSearchHistoryLayoutVisible(false);
+            setRelationLayoutVisible(true);
             mPrestener.filterDeviceInfo(s.toString());
         } else {
-            mSearchHistoryLayout.setVisibility(View.VISIBLE);
-            mRelationLayout.setVisibility(View.GONE);
+            setSearchHistoryLayoutVisible(true);
+            setRelationLayoutVisible(false);
             setIndexListLayoutVisible(false);
         }
     }

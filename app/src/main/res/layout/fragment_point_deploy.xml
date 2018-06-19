@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <TextView
             android:id="@+id/status_view"
             android:layout_width="wrap_content"
@@ -16,111 +17,127 @@
             android:layout_marginTop="50dp"
             android:background="@color/transparent"
             android:text="@string/msg_default_status"
-            android:textColor="@color/status_text" />
+            android:textColor="@color/status_text"/>
+
         <SurfaceView
             android:id="@+id/preview_view"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent" />
+            android:layout_height="fill_parent"/>
+
         <com.google.zxing.client.android.ViewfinderView
             android:id="@+id/viewfinder_view"
-            android:visibility="gone"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
+            android:layout_height="fill_parent"
+            android:visibility="gone"/>
+
         <ImageView
             android:id="@+id/top_mask"
             android:layout_width="match_parent"
             android:layout_height="200dp"
             android:layout_alignParentTop="true"
             android:background="@drawable/zxing_scan_mask"
-            android:contentDescription="@string/start_use" />
+            android:contentDescription="@string/start_use"/>
+
         <TextView
-            android:textColor="@color/white"
-            android:text="对准传感器上的二维码，即可自动扫描"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_marginBottom="@dimen/y50"
             android:layout_marginTop="@dimen/y500"
-            android:layout_centerHorizontal="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="对准传感器上的二维码，即可自动扫描"
+            android:textColor="@color/white"/>
 
         <RelativeLayout
             android:id="@+id/capture_crop_layout"
             android:layout_width="200dp"
             android:layout_height="200dp"
-            android:visibility="visible"
+
             android:layout_below="@id/top_mask"
             android:layout_centerHorizontal="true"
             android:background="@drawable/scan_bg"
-            android:contentDescription="@string/start_use">
+            android:contentDescription="@string/start_use"
+            android:visibility="visible">
+
             <ImageView
                 android:id="@+id/capture_scan_line"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
                 android:layout_margin="5dp"
+
                 android:background="@drawable/scan_line"
-                android:contentDescription="@string/start_use" />
+                android:contentDescription="@string/start_use"/>
         </RelativeLayout>
+
         <RelativeLayout
             android:id="@+id/bottom_mask"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:gravity="center_horizontal"
+            android:layout_alignParentBottom="true"
             android:layout_below="@id/capture_crop_layout"
-            android:layout_alignParentBottom="true">
+            android:gravity="center_horizontal">
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/zxing_scan_mask"
-                android:contentDescription="@string/start_use" />
+                android:contentDescription="@string/start_use"/>
+
             <LinearLayout
-                android:orientation="horizontal"
-                android:weightSum="2"
-                android:layout_marginBottom="@dimen/y30"
-                android:layout_alignParentBottom="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="@dimen/y30"
+                android:orientation="horizontal"
+                android:weightSum="2">
+
                 <LinearLayout
-                    android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:gravity="center_horizontal"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/zxing_capture_iv_manual"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@mipmap/ic_manual_input" />
+                        android:background="@mipmap/ic_manual_input"/>
+
                     <TextView
                         android:id="@+id/zxing_capture_tv_manual"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/y30"
                         android:text="手动输入SN号"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_marginTop="@dimen/y30"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textSize="12sp"/>
                 </LinearLayout>
+
                 <LinearLayout
-                    android:orientation="vertical"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center_horizontal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:orientation="vertical">
+
                     <ImageView
                         android:id="@+id/zxing_capture_iv_flash"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@mipmap/ic_flashlight" />
+                        android:background="@mipmap/ic_flashlight"/>
 
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/y30"
                         android:text="打开手电筒"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:layout_marginTop="@dimen/y30"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textSize="12sp"/>
                 </LinearLayout>
             </LinearLayout>
         </RelativeLayout>
+
         <ImageView
             android:id="@+id/left_mask"
             android:layout_width="match_parent"
@@ -130,7 +147,7 @@
             android:layout_below="@id/top_mask"
             android:layout_toLeftOf="@id/capture_crop_layout"
             android:background="@drawable/zxing_scan_mask"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"/>
 
         <ImageView
             android:id="@+id/right_mask"
@@ -141,8 +158,9 @@
             android:layout_below="@id/top_mask"
             android:layout_toRightOf="@id/capture_crop_layout"
             android:background="@drawable/zxing_scan_mask"
-            android:contentDescription="@string/app_name" />
+            android:contentDescription="@string/app_name"/>
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/sensor_history_title_layout"
         android:layout_width="match_parent"
@@ -157,15 +175,15 @@
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:padding="18dp"
-            android:src="@mipmap/ic_menu_list" />
+            android:src="@mipmap/ic_menu_list"/>
 
         <TextView
             android:id="@+id/sensor_deploy_title"
-            android:textColor="@color/white"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
-            android:textSize="@dimen/x60"
-            android:text="@string/point_deploy" />
+            android:text="@string/point_deploy"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x60"/>
     </RelativeLayout>
 </RelativeLayout>

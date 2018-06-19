@@ -1,0 +1,52 @@
+apply plugin: 'com.android.library'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.0"
+    defaultConfig {
+        minSdkVersion 16
+        targetSdkVersion 25
+        consumerProguardFiles 'consumer-proguard-rules.pro'
+    }
+
+
+    def isBuildSo = false
+    if (isBuildSo) { // 构建生成 so 文件
+        sourceSets {
+            main {
+                jniLibs.srcDirs = []
+            }
+        }
+        externalNativeBuild {
+            ndkBuild {
+                path 'src/main/jni/Android.mk'
+            }
+        }
+    } else { // 生成 so 文件后，打包时直接使用生成的 so
+        sourceSets {
+            main {
+                jni.srcDirs = []
+            }
+        }
+        delete(file('.externalNativeBuild'), file('src/main/libs'), file('src/main/obj'))
+    }
+}
+
+dependencies {
+    //    if (hasProperty("publishAar")) {
+    //    } else {
+    //        api project(':qrcodecore')
+    //    }
+    compile project(':qrcodecore')
+}
+
+// ./gradlew :zbar:clean :zbar:build :zbar:bintrayUpload -PpublishAar
+if (hasProperty("publishAar")) {
+    apply from: 'https://raw.githubusercontent.com/bingoogolapple/PublishAar/master/jcenter-release.gradle'
+}
+
+tasks.whenTaskAdded {
+    if (it.name.equals('releaseAndroidJavadocs')) {
+        it.enabled = false
+    }
+}

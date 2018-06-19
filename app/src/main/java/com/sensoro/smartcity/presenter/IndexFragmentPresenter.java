@@ -70,8 +70,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        MainActivity a = (MainActivity) mContext;
-        String roles = a.getRoles();
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override

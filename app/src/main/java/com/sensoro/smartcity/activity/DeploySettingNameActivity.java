@@ -95,7 +95,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
                     @Override
                     public void onItemClick(View view, int position) {
                         String text = mPrestener.getHistoryKeywords().get(position).trim();
-                        setKeywordEt(text);
+                        setEditText(text);
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
                     }
@@ -167,11 +167,11 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
 //            if (bytes.length > 36) {
 //                Toast.makeText(this, "最大不能超过12个汉字或32个字符", Toast.LENGTH_SHORT).show();
 ////                text = text.substring(0, text.length());
-//////                etContent.setText(str);
+//////                etContent.setEditText(str);
 //////                etContent.setSelection(str.length());
 //                s.delete(selectionStart - 1, selectionEnd);
 //                int tempSelection = selectionEnd;
-//                mKeywordEt.setText(s);
+//                mKeywordEt.setEditText(s);
 //                mKeywordEt.setSelection(tempSelection);
 //            }
 //        }
@@ -182,13 +182,13 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     @Override
     public void onItemClick(View view, int position) {
         String text = mRelationAdapter.getData().get(position);
-        setKeywordEt(text);
+        setEditText(text);
         mRelationAdapter.getData().clear();
         mRelationAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void setKeywordEt(String text) {
+    public void setEditText(String text) {
         if (text != null) {
             mKeywordEt.setText(text);
             mKeywordEt.setSelection(text.length());

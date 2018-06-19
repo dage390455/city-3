@@ -7,13 +7,11 @@ import android.graphics.Point;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.view.Display;
 import android.view.MenuItem;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
@@ -56,7 +54,8 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView, 
 
     private SurfaceView surfaceView;
     private ProgressUtils mProgressUtils;
-    //    protected boolean isCreate = false;
+    private volatile boolean mIsVisibleToUser = false;
+    private Display display;
 
     public ViewfinderView getViewfinderView() {
         return viewfinderView;
@@ -79,14 +78,16 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView, 
     }
 
 
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        Window window = getActivity().getWindow();
-        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-    }
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        Window window = getActivity().getWindow();
+//        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+//    }
 
     private void initCamera() {
+        WindowManager manager = (WindowManager) mRootFragment.getActivity().getSystemService(Context.WINDOW_SERVICE);
+        display = manager.getDefaultDisplay();
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         flashImageView = (ImageView) mRootView.findViewById(R.id.zxing_capture_iv_flash);
         manualImageView = (ImageView) mRootView.findViewById(R.id.zxing_capture_iv_manual);
@@ -111,17 +112,60 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView, 
 
     }
 
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        mIsVisibleToUser = isVisibleToUser;
+        try {
+            if (mPrestener != null) {
+//            mPrestener.getUserVisible(getUserVisibleHint());
+                if (mIsVisibleToUser) {
+                    mPrestener.resumeCamera(surfaceView.getHolder());
+                    showRootView();
+                    // historyManager must be initialized here to update the history preference
+                    System.out.println("PointDeploy.OnResume===>");
+                } else {
+                    mPrestener.pauseCamera();
+                    hiddenRootView();
+                    System.out.println("PointDeploy.OnPause===>");
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     @Override
     public void onResume() {
         super.onResume();
-        mPrestener.resumeCamera(surfaceView.getHolder());
-        showRootView();
-        // historyManager must be initialized here to update the history preference
-        System.out.println("PointDeploy.OnResume===>");
+        try {
+            if (mPrestener != null && mIsVisibleToUser) {
+                mPrestener.resumeCamera(surfaceView.getHolder());
+                showRootView();
+                // historyManager must be initialized here to update the history preference
+                System.out.println("PointDeploy.OnResume===>");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        try {
+            if (mPrestener != null && mIsVisibleToUser) {
+                mPrestener.pauseCamera();
+                hiddenRootView();
+                System.out.println("PointDeploy.OnPause===>");
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
 
     public void hiddenRootView() {
 //        if (!isHidden) {
@@ -149,15 +193,6 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView, 
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mPrestener.pauseCamera();
-        hiddenRootView();
-        System.out.println("PointDeploy.OnPause===>");
     }
 
     @Override
@@ -230,8 +265,6 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView, 
 
     @Override
     public void setCameraCapture() {
-        WindowManager manager = (WindowManager) mRootFragment.getActivity().getSystemService(Context.WINDOW_SERVICE);
-        Display display = manager.getDefaultDisplay();
         Point theScreenResolution = new Point();
         display.getSize(theScreenResolution);
         if (theScreenResolution != null) {
