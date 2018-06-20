@@ -1,86 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical">
+
+    <cn.bingoogolapple.qrcode.zbar.ZBarView
+        android:id="@+id/zbar_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:qrcv_animTime="1000"
+        app:qrcv_barCodeTipText="将条码放入框内，即可自动扫描"
+        app:qrcv_barcodeRectHeight="120dp"
+        app:qrcv_borderColor="#00E4C2"
+        app:qrcv_borderSize="1dp"
+        app:qrcv_cornerColor="#00E4C2"
+        app:qrcv_cornerLength="20dp"
+        app:qrcv_cornerSize="5dp"
+        app:qrcv_customGridScanLineDrawable="@drawable/scan_line"
+        app:qrcv_isBarcode="false"
+        app:qrcv_isOnlyDecodeScanBoxArea="false"
+        app:qrcv_isShowDefaultGridScanLineDrawable="true"
+        app:qrcv_isShowDefaultScanLineDrawable="true"
+        app:qrcv_isShowTipBackground="true"
+        app:qrcv_isShowTipTextAsSingleLine="true"
+        app:qrcv_isTipTextBelowRect="false"
+        app:qrcv_maskColor="#7e000000"
+        app:qrcv_qrCodeTipText="对准传感器上的二维码，即可自动扫描"
+        app:qrcv_rectWidth="200dp"
+        app:qrcv_scanLineColor="@color/colorPrimaryDark"
+        app:qrcv_toolbarHeight="56dp"
+        app:qrcv_topOffset="@dimen/y500"
+        app:qrcv_verticalBias="-1"/>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/status_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="50dp"
-            android:background="@color/transparent"
-            android:text="@string/msg_default_status"
-            android:textColor="@color/status_text"/>
-
-        <SurfaceView
-            android:id="@+id/preview_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"/>
-
-        <com.google.zxing.client.android.ViewfinderView
-            android:id="@+id/viewfinder_view"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:visibility="gone"/>
-
-        <ImageView
-            android:id="@+id/top_mask"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/zxing_scan_mask"
-            android:contentDescription="@string/start_use"/>
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="@dimen/y50"
-            android:layout_marginTop="@dimen/y500"
-            android:text="对准传感器上的二维码，即可自动扫描"
-            android:textColor="@color/white"/>
-
         <RelativeLayout
-            android:id="@+id/capture_crop_layout"
-            android:layout_width="200dp"
-            android:layout_height="200dp"
-
-            android:layout_below="@id/top_mask"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/scan_bg"
-            android:contentDescription="@string/start_use"
-            android:visibility="visible">
-
-            <ImageView
-                android:id="@+id/capture_scan_line"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_margin="5dp"
-
-                android:background="@drawable/scan_line"
-                android:contentDescription="@string/start_use"/>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/bottom_mask"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentBottom="true"
-            android:layout_below="@id/capture_crop_layout"
+            android:layout_marginBottom="@dimen/y30"
             android:gravity="center_horizontal">
 
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@drawable/zxing_scan_mask"
                 android:contentDescription="@string/start_use"/>
 
             <LinearLayout
@@ -138,27 +104,6 @@
             </LinearLayout>
         </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/left_mask"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/bottom_mask"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@id/top_mask"
-            android:layout_toLeftOf="@id/capture_crop_layout"
-            android:background="@drawable/zxing_scan_mask"
-            android:contentDescription="@string/app_name"/>
-
-        <ImageView
-            android:id="@+id/right_mask"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_above="@id/bottom_mask"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/top_mask"
-            android:layout_toRightOf="@id/capture_crop_layout"
-            android:background="@drawable/zxing_scan_mask"
-            android:contentDescription="@string/app_name"/>
     </RelativeLayout>
 
     <RelativeLayout

@@ -27,6 +27,7 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 public interface RetrofitService {
@@ -42,6 +43,7 @@ public interface RetrofitService {
     String DEVICE_ALARM_HISTORY = "prov1/alarms/list/app";
     String DEVICE_ALARM_LOG = "alarmplay";
     String DEVICE_BRIEF_LIST = "stats/device/brief";
+    String DEVICE_BRIEF_LIST_MOKA = "stats/device/brief/app";
     String DEVICE_TYPE_COUNT = "prov1/devices/status/count";
     String APP_UPDATE = "http://api.fir" +
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
@@ -75,9 +77,10 @@ public interface RetrofitService {
     Observable<DeviceInfoListRsp> getDeviceDetailInfoList(@Query("sns") String sns, @Query("search") String search,
                                                           @Query("all") int all);
 
-    @GET(DEVICE_BRIEF_LIST)
-    Observable<DeviceInfoListRsp> getDeviceBriefInfoList(@Query("page") int page, @Query("count") int count, @Query
-            ("all") int all,
+    @GET
+    Observable<DeviceInfoListRsp> getDeviceBriefInfoList(@Url String url, @Query("page") int page, @Query("count")
+            int count, @Query
+                                                                 ("all") int all,
                                                          @Query("showIndoorDevice") int showIndoorDevice, @Query
                                                                  ("sensorTypes") String sensorTypes, @Query("status")
                                                                  Integer status, @Query("search") String search);

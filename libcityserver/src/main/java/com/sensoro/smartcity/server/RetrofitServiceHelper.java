@@ -189,7 +189,13 @@ public enum RetrofitServiceHelper {
      */
     public Observable<DeviceInfoListRsp> getDeviceBriefInfoList(int page, String sensorTypes, Integer status, String
             search) {
-        return retrofitService.getDeviceBriefInfoList(page, 20, 1, 1, sensorTypes, status, search);
+        if (BASE_URL.equals(SCOPE_MASTER)) {
+            return retrofitService.getDeviceBriefInfoList(RetrofitService.DEVICE_BRIEF_LIST, page, 20, 1, 1,
+                    sensorTypes, status, search);
+        } else {
+            return retrofitService.getDeviceBriefInfoList(RetrofitService.DEVICE_BRIEF_LIST_MOKA, page, 20, 1, 1,
+                    sensorTypes, status, search);
+        }
     }
 
     /**
