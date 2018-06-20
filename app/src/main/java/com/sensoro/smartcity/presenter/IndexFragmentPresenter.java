@@ -179,7 +179,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                         try {
                             List<DeviceInfo> data = deviceInfoListRsp.getData();
                             if (data.size() == 0) {
-                                getView().toastShort("没有更多数据了！");
+                                getView().toastShort("没有更多数据了");
                             } else {
                                 getView().refreshData(mDataList);
                             }
@@ -486,8 +486,8 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 //                int size = mDataList.size();
 //                intent.putExtra("", value);
 //                Bundle bundle = new Bundle();
-        getView().startAC(intent);
-//        startACForResult(intent, REQUEST_CODE_SEARCH_DEVICE);
+//        getView().startAC(intent);
+        getView().startACForResult(intent, RESULT_CODE_SEARCH_MERCHANT);
     }
 
     public void onHiddenChanged(boolean hidden) {

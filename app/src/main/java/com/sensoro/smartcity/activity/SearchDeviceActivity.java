@@ -727,6 +727,5 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     @Override
     public void setIntentResult(int requestCode, Intent data) {
-
     }
 }

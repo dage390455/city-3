@@ -12,13 +12,16 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MerchantAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISearchMerchantActivityView;
@@ -38,7 +41,7 @@ import butterknife.ButterKnife;
 
 public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivityView,
         SearchMerchantActivityPresenter> implements ISearchMerchantActivityView, View.OnClickListener,
-        TextView.OnEditorActionListener {
+        TextView.OnEditorActionListener, AdapterView.OnItemClickListener {
 
     @BindView(R.id.search_merchant_et)
     EditText mKeywordEt;
@@ -54,6 +57,17 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     RecyclerView mSearchHistoryRv;
     @BindView(R.id.search_merchant_tips)
     LinearLayout tipsLinearLayout;
+    @BindView(R.id.ll_merchant_item)
+    LinearLayout llMerchantItem;
+    @BindView(R.id.merchant_current_name)
+    TextView merchantCurrentName;
+    @BindView(R.id.merchant_current_phone)
+    TextView merchantCurrentPhone;
+    @BindView(R.id.merchant_current_status)
+    ImageView merchantCurrentStatus;
+    @BindView(R.id.merchant_list)
+    ListView merchantList;
+    private MerchantAdapter mMerchantAdapter;
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
@@ -91,6 +105,9 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
+        mMerchantAdapter = new MerchantAdapter(mActivity, mPrestener.getUserInfoList());
+        merchantList.setAdapter(mMerchantAdapter);
+        merchantList.setOnItemClickListener(this);
         updateSearchHistory();
         showSoftInputFromWindow(mKeywordEt);
     }
@@ -137,7 +154,9 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
                 mKeywordEt.getText().clear();
                 setClearKeywordIvVisible(false);
                 setTipsLinearLayoutVisible(false);
+                setSearchHistoryLayoutVisible(true);
                 updateSearchHistory();
+                setLlMerchantItemViewVisible(false);
                 break;
             default:
                 break;
@@ -193,6 +212,27 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     }
 
     @Override
+    public void updateMerchantInfo() {
+        mMerchantAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setCurrentStatusImageViewVisible(boolean isVisible) {
+        merchantCurrentStatus.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setLlMerchantItemViewVisible(boolean isVisible) {
+        llMerchantItem.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setCurrentNameAndPhone(String name, String phone) {
+        merchantCurrentName.setText(name);
+        merchantCurrentPhone.setText(phone);
+    }
+
+    @Override
     public void startAC(Intent intent) {
 
     }
@@ -235,5 +275,10 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     @Override
     public void toastLong(String msg) {
 
+    }
+
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        mPrestener.clickItem(position);
     }
 }

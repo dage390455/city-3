@@ -30,6 +30,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceActivityView> implements Constants,
@@ -148,7 +149,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                 mDataList.add(deviceInfo);
             }
         }
-        getView().refreshData(mDataList);
+//        getView().refreshData(mDataList);
     }
 
     private boolean isMatcher(DeviceInfo deviceInfo) {
@@ -325,7 +326,18 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
             page = 1;
             RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
                     (Schedulers.io
-                            ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+                            ()).doOnNext(new Action1<DeviceInfoListRsp>() {
+                @Override
+                public void call(DeviceInfoListRsp deviceInfoListRsp) {
+                    if (deviceInfoListRsp.getData().size() == 0) {
+                        mDataList.clear();
+                    } else {
+                        currentList.clear();
+                        currentList.addAll(deviceInfoListRsp.getData());
+                        refreshCacheData();
+                    }
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
 
                 @Override
@@ -338,14 +350,9 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                 public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
                     try {
                         if (deviceInfoListRsp.getData().size() == 0) {
-                            getView().setTipsLinearLayoutVisible(true);
-                            mDataList.clear();
-                            getView().refreshData(mDataList);
-                        } else {
-                            currentList.clear();
-                            currentList.addAll(deviceInfoListRsp.getData());
-                            refreshCacheData();
+                            getView().toastShort("没有更多数据了");
                         }
+                        getView().refreshData(mDataList);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -362,17 +369,9 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
             page++;
             RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
                     (Schedulers.io
-                            ()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
-
-
+                            ()).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
-                public void onCompleted() {
-                    getView().dismissProgressDialog();
-                    getView().recycleViewRefreshComplete();
-                }
-
-                @Override
-                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                public void call(DeviceInfoListRsp deviceInfoListRsp) {
                     try {
                         if (deviceInfoListRsp.getData().size() == 0) {
                             page--;
@@ -383,6 +382,23 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                     } catch (Exception e) {
                         page--;
                         e.printStackTrace();
+                    }
+                }
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+
+
+                @Override
+                public void onCompleted() {
+                    getView().dismissProgressDialog();
+                    getView().recycleViewRefreshComplete();
+                }
+
+                @Override
+                public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    if (deviceInfoListRsp.getData().size() == 0) {
+                        getView().toastShort("没有更多数据了");
+                    } else {
+                        getView().refreshData(mDataList);
                     }
                 }
 

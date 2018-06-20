@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.activity.SearchMerchantActivity;
@@ -24,6 +25,8 @@ import rx.schedulers.Schedulers;
 
 public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwitchFragmentView> implements Constants {
     private String phoneId = null;
+    private String username = null;
+    private String phone = null;
 
     public List<UserInfo> getUserInfoList() {
         return mUserInfoList;
@@ -39,6 +42,8 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
 
     public void refreshUserData(String username, String phone, String phoneId) {
         this.phoneId = phoneId;
+        this.username = username;
+        this.phone = phone;
         getView().setCurrentNameAndPhone(username, phone);
         getView().setCurrentStatusImageViewVisible(true);
     }
@@ -89,16 +94,16 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
             public void onNext(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     String sessionID = userAccountControlRsp.getData().getSessionID();
-//                    NetUtils.INSTANCE.setSessionId(sessionID);
                     RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
                     String nickname = userAccountControlRsp.getData().getNickname();
                     String phone = userAccountControlRsp.getData().getPhone();
                     String roles = userAccountControlRsp.getData().getRoles();
                     String isSpecific = userAccountControlRsp.getData().getIsSpecific();
+
                     ((MainActivity) mContext).changeAccount(nickname, phone, roles,
                             isSpecific);
                 } else {
-
+                    getView().toastShort(userAccountControlRsp.getErrmsg());
                 }
             }
 
@@ -116,7 +121,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
 //            mMerchantAdapter.setSelectedIndex(position);
 //            mMerchantAdapter.notifyDataSetChanged();
             getView().updateAdapterUserInfo(mUserInfoList);
-            getView().setCurrentStatusImageViewVisible(false);
+//            getView().setCurrentStatusImageViewVisible(false);
 //            mCurrentStatusImageView.setVisibility(View.GONE);
             String uid = mUserInfoList.get(position).get_id();
             doAccountSwitch(uid);
@@ -127,6 +132,13 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
 
     public void startToSearchAC() {
         Intent searchIntent = new Intent(mContext, SearchMerchantActivity.class);
+        searchIntent.putExtra("phone_id", phoneId);
+        if (!TextUtils.isEmpty(username)) {
+            searchIntent.putExtra("user_name", username);
+        }
+        if (!TextUtils.isEmpty(phone)) {
+            searchIntent.putExtra("user_phone", phone);
+        }
         getView().startACForResult(searchIntent, REQUEST_CODE_SEARCH_MERCHANT);
     }
 }

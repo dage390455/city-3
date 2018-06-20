@@ -58,12 +58,18 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPrestener.checkPush();
         mPrestener.initData(mActivity);
         mPrestener.freshAccountType();
+        mPrestener.onStart();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         mPrestener.setAppVersion();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
     }
 
     @Override
@@ -76,6 +82,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPrestener.onDestroy();
         mProgressUtils.destroyProgress();
         super.onDestroy();
+        mPrestener.onStop();
     }
 
     public boolean isSupperAccount() {

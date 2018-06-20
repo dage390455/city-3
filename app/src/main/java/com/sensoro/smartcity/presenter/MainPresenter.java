@@ -40,6 +40,9 @@ import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
@@ -341,6 +344,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
 
     @Override
     public void onStart() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void onStop() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(Intent data) {
+        //TODO 可以修改以此种方式传递，方便管理
+        LogUtils.loge(this, data.toString());
     }
 
     private class TaskRunnable implements Runnable {
@@ -402,12 +416,18 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 refreshDeviceInfo(deviceInfo);
             }
             getView().setCurrentItem(0);
-        } else if (resultCode == RESULT_CODE_SEARCH_MERCHANT) {
+        } else if (resultCode == RESULT_CODE_CHANGE_MERCHANT) {
             UserAccountRsp infoRspData = (UserAccountRsp) data.getSerializableExtra(EXTRA_MERCHANT_INFO);
             if (infoRspData != null) {
                 merchantSwitchFragment.refresh(infoRspData);
             }
             getView().setCurrentItem(2);
+        } else if (resultCode == RESULT_CODE_SEARCH_MERCHANT) {
+            String nickname = data.getStringExtra("nickname");
+            String phone = data.getStringExtra("phone");
+            String roles = data.getStringExtra("roles");
+            String isSpecific = data.getStringExtra("isSpecific");
+            changeAccount(nickname, phone, roles, isSpecific);
         } else if (resultCode == RESULT_CODE_SEARCH_ALARM) {
             String type = data.getStringExtra(EXTRA_SENSOR_TYPE);
             int searchIndex = data.getIntExtra(EXTRA_ALARM_SEARCH_INDEX, -1);
