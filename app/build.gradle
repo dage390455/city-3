@@ -81,7 +81,7 @@ android {
 
     // 多渠道打包
     productFlavors {
-        Master {}
+        SensoroCity {}
         productFlavors.all { flavor ->
             flavor.manifestPlaceholders = [AVOS_CHANNEL_VALUE: name]
         }

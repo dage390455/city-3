@@ -120,6 +120,8 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
 //            mCurrentStatusImageView.setVisibility(View.GONE);
             String uid = mUserInfoList.get(position).get_id();
             doAccountSwitch(uid);
+        } else {
+            getView().toastShort("账户已停用");
         }
     }
 

@@ -407,10 +407,11 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             }
             if (isMatcher(deviceInfo)) {
                 mDataList.add(deviceInfo);
-            } else {
-                getView().toastShort("没有更多数据了！");
-                return;
             }
+//            else {
+//                //
+////                break;
+//            }
         }
     }
 
