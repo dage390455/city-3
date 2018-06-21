@@ -96,15 +96,19 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 getView().setTypeText(parseSensorTypes(deviceInfo.getSensorTypes()));
 
                 String tags[] = deviceInfo.getTags();
-                StringBuffer sb = new StringBuffer();
-                for (int i = 0; i < tags.length; i++) {
-                    if (i > 0) {
-                        sb.append(", " + tags[i]);
-                    } else {
-                        sb.append(tags[i]);
-                    }
+//                StringBuffer sb = new StringBuffer();
+//                for (int i = 0; i < tags.length; i++) {
+//                    if (i > 0) {
+//                        sb.append("， " + tags[i]);
+//                    } else {
+//                        sb.append(tags[i]);
+//                    }
+//                }
+//                getView().setTagText(sb.toString());
+                //TODO 可以替换 tag显示方式
+                if (tags != null && tags.length > 0) {
+                    getView().setTags(tags);
                 }
-                getView().setTagText(sb.toString());
                 getView().setLongitudeLatitude("" + deviceInfo.getLonlat()[0], "" + deviceInfo.getLonlat()[1]);
 //                lonTextView.setEditText("" + deviceInfo.getLonlat()[0]);
 //                lanTextView.setEditText("" + deviceInfo.getLonlat()[1]);
@@ -204,6 +208,10 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 return "倾角传感器";
             } else if (temp.contains("latitude")) {
                 return "追踪器";
+            } else if (temp.contains("temp1")) {
+                return "温度";
+            } else if (temp.contains("CURRENT")) {
+                return "电表";
             } else {
                 return mContext.getString(R.string.unknown);
             }

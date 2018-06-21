@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.activity;
 
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import com.sensoro.smartcity.widget.SensoroToast;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import mabbas007.tagsedittext.TagsEditText;
 
 /**
  * Created by sensoro on 17/7/31.
@@ -35,6 +37,8 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
     TextView typeTextView;
     @BindView(R.id.sensor_more_tv_status)
     TextView statusTextView;
+    @BindView(R.id.sensor_more_sensoro_tag)
+    TagsEditText tagSensoroView;
     @BindView(R.id.sensor_more_tv_tag)
     TextView tagTextView;
     @BindView(R.id.sensor_more_tv_battery)
@@ -62,6 +66,7 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
         ButterKnife.bind(mActivity);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPrestener.initData(mActivity);
+        tagSensoroView.setTagClickable(false);
     }
 
 
@@ -172,6 +177,12 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
     }
 
     @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
+        super.onSaveInstanceState(outState, outPersistentState);
+        tagSensoroView.onSaveInstanceState();
+    }
+
+    @Override
     public void setBatteryInfo(String battery) {
         batteryTextView.setText(battery);
     }
@@ -184,5 +195,10 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
     @Override
     public void setReportText(String report) {
         reportTextView.setText(report);
+    }
+
+    @Override
+    public void setTags(String[] tags) {
+        tagSensoroView.setTags(tags);
     }
 }

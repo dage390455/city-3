@@ -263,6 +263,10 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                 tempSensorTypes[0] = "temperature";
                 tempSensorTypes[1] = "humidity";
                 tempSensorTypes[2] = "flame";
+            }else if (tempList.contains("altitude")){
+                tempSensorTypes[0] = "longitude";
+                tempSensorTypes[1] = "latitude";
+                tempSensorTypes[2] = "altitude";
             }
         }
         for (int j = 0; j < tempSensorTypes.length; j++) {

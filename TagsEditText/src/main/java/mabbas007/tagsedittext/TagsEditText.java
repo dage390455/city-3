@@ -110,6 +110,7 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
             }
         }
     };
+    private boolean clickable = true;
 
     public List<String> getTags() {
         return convertTagSpanToList(mTagSpans);
@@ -381,6 +382,16 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
         setTags(convertTagSpanToArray(mTagSpans));
     }
 
+    /**
+     * 添加是否可以点击
+     * ddong1031
+     * @param isClickable
+     */
+    public void setTagClickable(boolean isClickable) {
+        this.clickable = isClickable;
+//        setTags(convertTagSpanToArray(mTagSpans));
+    }
+
     public void setTagsListener(TagsEditListener listener) {
         mListener = listener;
     }
@@ -552,7 +563,7 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
                 tag.setIndex(size);
                 tag.setPosition(lastTag.getPosition() + lastTag.getSource().length() + 1);
             }
-            //加入标签是否重复
+            //加入标签是否重复 ddong1031
             if (mTags.contains(tag)) {
                 Log.e(this.getClass().getSimpleName(), "标签重复!");
                 if (mListener != null) {
@@ -581,15 +592,18 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
         int startSpan = length - (source.length() + 1);
         int endSpan = length - 1;
         sb.setSpan(tagSpan, startSpan, endSpan, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-        sb.setSpan(new ClickableSpan() {
-            @Override
-            public void onClick(View widget) {
-                Editable editable = ((EditText) widget).getText();
-                mIsAfterTextWatcherEnabled = false;
-                removeTagSpan(editable, tagSpan, true);
-                mIsAfterTextWatcherEnabled = true;
-            }
-        }, startSpan, endSpan, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        if (clickable) {
+            sb.setSpan(new ClickableSpan() {
+                @Override
+                public void onClick(View widget) {
+                    Editable editable = ((EditText) widget).getText();
+                    mIsAfterTextWatcherEnabled = false;
+                    removeTagSpan(editable, tagSpan, true);
+                    mIsAfterTextWatcherEnabled = true;
+                }
+            }, startSpan, endSpan, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+        }
+
     }
 
     private void removeTagSpan(Editable editable, TagSpan span, boolean includeSpace) {
@@ -608,8 +622,9 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
         }
         mTags.remove(tagIndex);
         mTagSpans.remove(tagIndex);
-        if (mListener == null) return;
-        mListener.onTagsChanged(convertTagSpanToList(mTagSpans));
+        if (mListener != null) {
+            mListener.onTagsChanged(convertTagSpanToList(mTagSpans));
+        }
     }
 
     private static List<String> convertTagSpanToList(List<TagSpan> tagSpans) {
@@ -649,7 +664,7 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
         if (getWidth() > 0) {
             textView.setMaxWidth(getWidth() - 50);
         }
-        //TODO 这里我进行直接修改！
+        //TODO 这里我进行直接修改！ddong1031
 //        int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
         textView.setText(text);
 //        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, mTagsTextSize);
@@ -833,7 +848,7 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
             return mTag;
         }
 
-        //为去除重复进行equals重写
+        //为去除重复进行equals重写 ddong1031
         @Override
         public boolean equals(Object obj) {
             return this.getTag().equals(((TagSpan) obj).getTag());
@@ -849,6 +864,7 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
 
         /**
          * 标签重复
+         * ddong1031
          */
         void onTagDuplicate();
 

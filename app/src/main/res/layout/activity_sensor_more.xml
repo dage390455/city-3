@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:TagsEditText="http://schemas.android.com/apk/res-auto"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:background="@color/sensor_detail_bg"
@@ -280,7 +281,28 @@
                                 android:layout_alignParentEnd="true"
                                 android:layout_gravity="end"
                                 android:textColor="#9b9b9b"
-                                android:textSize="@dimen/x50"/>
+                                android:textSize="@dimen/x50"
+                                android:visibility="gone"/>
+
+                            <mabbas007.tagsedittext.TagsEditText
+                                android:id="@+id/sensor_more_sensoro_tag"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:autoLink="none"
+                                android:background="@null"
+                                android:clickable="false"
+                                android:cursorVisible="false"
+                                android:editable="false"
+                                android:focusable="false"
+                                android:focusableInTouchMode="false"
+                                android:gravity="end"
+                                android:paddingLeft="@dimen/x30"
+                                android:textColor="#9b9b9b"
+                                android:textSize="@dimen/city_normal_size"
+                                TagsEditText:allowSpaceInTag="false"
+                                TagsEditText:tagsBackground="@drawable/shape_textview"
+                                />
                         </RelativeLayout>
 
 

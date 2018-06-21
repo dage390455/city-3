@@ -31,6 +31,8 @@ public interface ISensorMoreActivityView extends IToast, IProgressDialog {
     void setPhoneText(String phone);
 
     void setReportText(String report);
+
+    void setTags(String[] tags);
 }
 
 
