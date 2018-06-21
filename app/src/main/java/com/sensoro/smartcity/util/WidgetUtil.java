@@ -1119,7 +1119,26 @@ public class WidgetUtil {
             value = "水压";
         } else if (sensorType.equalsIgnoreCase("magnetic")) {
             value = "地磁";
+        } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {
+            value = "电流A";
+        } else if (sensorType.equalsIgnoreCase("CURRENT_B")) {
+            value = "电流B";
+        } else if (sensorType.equalsIgnoreCase("CURRENT_C")) {
+            value = "电流C";
+        } else if (sensorType.equalsIgnoreCase("ID")) {
+            value = "电表ID";
+        } else if (sensorType.equalsIgnoreCase("TOTAL_POWER")) {
+            value = "总电量";
+        } else if (sensorType.equalsIgnoreCase("VOLTAGE_A")) {
+            value = "电压A";
+        } else if (sensorType.equalsIgnoreCase("VOLTAGE_B")) {
+            value = "电压B";
+        } else if (sensorType.equalsIgnoreCase("VOLTAGE_C")) {
+            value = "电C压";
         }
+
+        //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
+
         return value;
     }
 

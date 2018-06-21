@@ -9,7 +9,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISensorMoreActivityView;
 import com.sensoro.smartcity.presenter.SensorMoreActivityPresenter;
-import com.sensoro.smartcity.widget.AutoSplitTextView;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -37,7 +36,7 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
     @BindView(R.id.sensor_more_tv_status)
     TextView statusTextView;
     @BindView(R.id.sensor_more_tv_tag)
-    AutoSplitTextView tagTextView;
+    TextView tagTextView;
     @BindView(R.id.sensor_more_tv_battery)
     TextView batteryTextView;
     @BindView(R.id.sensor_more_tv_lon)

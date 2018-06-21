@@ -273,7 +273,7 @@
                             android:layout_marginRight="15dp"
                             android:layout_weight="1">
 
-                            <com.sensoro.smartcity.widget.AutoSplitTextView
+                            <TextView
                                 android:id="@+id/sensor_more_tv_tag"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"

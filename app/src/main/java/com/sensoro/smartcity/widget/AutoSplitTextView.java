@@ -48,7 +48,7 @@ public class AutoSplitTextView extends TextView {
                 drawedWidth = 0;
                 continue;
             }
-            if (textShowWidth - drawedWidth < charWidth) {
+            if (textShowWidth - drawedWidth <= charWidth) {
                 lineCount++;
                 drawedWidth = 0;
             }

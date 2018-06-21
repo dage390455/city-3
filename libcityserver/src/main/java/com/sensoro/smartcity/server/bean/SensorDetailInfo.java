@@ -42,7 +42,81 @@ public class SensorDetailInfo implements Serializable {
     private SensorStruct waterPressure;
     private SensorStruct magnetic;
     private SensorStruct temp1;
+    //
+    private SensorStruct CURRENT_A;
+    private SensorStruct CURRENT_B;
+    private SensorStruct CURRENT_C;
+    private SensorStruct ID;
+    private SensorStruct TOTAL_POWER;
+    private SensorStruct VOLTAGE_A;
+    private SensorStruct VOLTAGE_B;
 
+    public SensorStruct getCURRENT_A() {
+        return CURRENT_A;
+    }
+
+    public void setCURRENT_A(SensorStruct CURRENT_A) {
+        this.CURRENT_A = CURRENT_A;
+    }
+
+    public SensorStruct getCURRENT_B() {
+        return CURRENT_B;
+    }
+
+    public void setCURRENT_B(SensorStruct CURRENT_B) {
+        this.CURRENT_B = CURRENT_B;
+    }
+
+    public SensorStruct getCURRENT_C() {
+        return CURRENT_C;
+    }
+
+    public void setCURRENT_C(SensorStruct CURRENT_C) {
+        this.CURRENT_C = CURRENT_C;
+    }
+
+    public SensorStruct getID() {
+        return ID;
+    }
+
+    public void setID(SensorStruct ID) {
+        this.ID = ID;
+    }
+
+    public SensorStruct getTOTAL_POWER() {
+        return TOTAL_POWER;
+    }
+
+    public void setTOTAL_POWER(SensorStruct TOTAL_POWER) {
+        this.TOTAL_POWER = TOTAL_POWER;
+    }
+
+    public SensorStruct getVOLTAGE_A() {
+        return VOLTAGE_A;
+    }
+
+    public void setVOLTAGE_A(SensorStruct VOLTAGE_A) {
+        this.VOLTAGE_A = VOLTAGE_A;
+    }
+
+    public SensorStruct getVOLTAGE_B() {
+        return VOLTAGE_B;
+    }
+
+    public void setVOLTAGE_B(SensorStruct VOLTAGE_B) {
+        this.VOLTAGE_B = VOLTAGE_B;
+    }
+
+    public SensorStruct getVOLTAGE_C() {
+        return VOLTAGE_C;
+    }
+
+    public void setVOLTAGE_C(SensorStruct VOLTAGE_C) {
+        this.VOLTAGE_C = VOLTAGE_C;
+    }
+
+    private SensorStruct VOLTAGE_C;
+    //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
 
     public SensorStruct getTemp1() {
         return temp1;
@@ -154,6 +228,33 @@ public class SensorDetailInfo implements Serializable {
         if (temp1 != null) {
             mMap.put("temp1", temp1);
         }
+        //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
+        //
+        if (CURRENT_A != null) {
+            mMap.put("CURRENT_A", CURRENT_A);
+        }
+        if (CURRENT_B != null) {
+            mMap.put("CURRENT_B", CURRENT_B);
+        }
+        if (CURRENT_C != null) {
+            mMap.put("CURRENT_C", CURRENT_C);
+        }
+        if (ID != null) {
+            mMap.put("ID", ID);
+        }
+        if (TOTAL_POWER != null) {
+            mMap.put("TOTAL_POWER", TOTAL_POWER);
+        }
+        if (VOLTAGE_A != null) {
+            mMap.put("VOLTAGE_A", VOLTAGE_A);
+        }
+        if (VOLTAGE_B != null) {
+            mMap.put("VOLTAGE_B", VOLTAGE_B);
+        }
+        if (VOLTAGE_C != null) {
+            mMap.put("VOLTAGE_C", VOLTAGE_C);
+        }
+
         return mMap;
     }
 
