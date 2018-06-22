@@ -168,7 +168,6 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             public void onNext(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     String sessionID = userAccountControlRsp.getData().getSessionID();
-//                    NetUtils.INSTANCE.setSessionId(sessionID);
                     RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
                     String nickname = userAccountControlRsp.getData().getNickname();
                     String phone = userAccountControlRsp.getData().getPhone();

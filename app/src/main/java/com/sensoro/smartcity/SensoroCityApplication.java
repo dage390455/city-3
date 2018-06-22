@@ -22,7 +22,7 @@ import java.util.List;
  * Created by sensoro on 17/7/24.
  */
 
-public class SensoroCityApplication extends MultiDexApplication {
+public class SensoroCityApplication extends MultiDexApplication implements Thread.UncaughtExceptionHandler {
 
     private final List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
     public IWXAPI api;
@@ -35,15 +35,7 @@ public class SensoroCityApplication extends MultiDexApplication {
         super.onCreate();
         instance = this;
         init();
-        Thread.setDefaultUncaughtExceptionHandler(new Thread.UncaughtExceptionHandler() {
-            @Override
-            public void uncaughtException(Thread thread, Throwable ex) {
-                SensoroToast.makeText(SensoroCityApplication.this, "程序出错：" + thread.getId() + "," + ex.getMessage(),
-                        Toast
-                                .LENGTH_SHORT).show();
-                android.os.Process.killProcess(android.os.Process.myPid());
-            }
-        });
+        Thread.setDefaultUncaughtExceptionHandler(this);
 
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
@@ -110,5 +102,13 @@ public class SensoroCityApplication extends MultiDexApplication {
 //        if (isNeedPush()) {
         mNotificationUtils.sendNotification(message);
 //        }
+    }
+
+    @Override
+    public void uncaughtException(Thread t, Throwable e) {
+        SensoroToast.makeText(SensoroCityApplication.this, "程序出错：" + t.getId() + "," + e.getMessage(),
+                Toast
+                        .LENGTH_SHORT).show();
+        android.os.Process.killProcess(android.os.Process.myPid());
     }
 }

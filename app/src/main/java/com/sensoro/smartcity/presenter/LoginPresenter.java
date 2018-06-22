@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.PackageManager;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
@@ -46,21 +44,22 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     private void initSeverUrl() {
-        try {
-            ApplicationInfo appInfo = mContext.getPackageManager()
-                    .getApplicationInfo(mContext.getPackageName(),
-                            PackageManager.GET_META_DATA);
-            String msg = appInfo.metaData.getString("InstallChannel");
-            if (msg.equalsIgnoreCase("Mocha")) {
-                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(true);
-            } else if (msg.equalsIgnoreCase("Master")) {
-                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(false);
-            } else {
-                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(true);
-            }
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
+        //去除从用户安装渠道设置登录环境
+//        try {
+//            ApplicationInfo appInfo = mContext.getPackageManager()
+//                    .getApplicationInfo(mContext.getPackageName(),
+//                            PackageManager.GET_META_DATA);
+//            String msg = appInfo.metaData.getString("InstallChannel");
+//            if (msg.equalsIgnoreCase("Mocha")) {
+//                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(true);
+//            } else if (msg.equalsIgnoreCase("Master")) {
+//                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(false);
+//            } else {
+//                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(true);
+//            }
+//        } catch (PackageManager.NameNotFoundException e) {
+//            e.printStackTrace();
+//        }
         SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_SCOPE, Context
                 .MODE_PRIVATE);
         try {
@@ -103,7 +102,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                 @Override
                 public void call(LoginRsp loginRsp) {
                     String sessionID = loginRsp.getData().getSessionID();
-//                    NetUtils.INSTANCE.setSessionId(sessionID);
                     RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
                     saveLoginData(account, pwd);
                 }
@@ -173,7 +171,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREFERENCE_KEY_NAME, username);
         editor.putString(PREFERENCE_KEY_PASSWORD, aes_pwd);
-
         editor.commit();
     }
 

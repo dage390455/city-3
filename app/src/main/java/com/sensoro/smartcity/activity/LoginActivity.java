@@ -75,6 +75,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);
+        mPrestener.initData(mActivity);
     }
 
     @Override
@@ -203,7 +204,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     @Override
     public void onPermissionGranted() {
         mPrestener.initPushSDK();
-        mPrestener.initData(mActivity);
         LogUtils.logd(this, "onPermissionGranted: 权限获取完毕 ");
     }
 

@@ -196,42 +196,12 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                 toastShort(errorMsg);
             }
         });
-//        NetUtils.INSTANCE.getServer().doAlarmConfirm(id, displayStatus,
-//                remark, new Response.Listener<DeviceAlarmItemRsp>() {
-//                    @Override
-//                    public void onResponse(DeviceAlarmItemRsp response) {
-//                        if (response.getErrcode() == ResponseBase.CODE_SUCCESS) {
-//                            DeviceAlarmLogInfo deviceAlarmLogInfo = response.getData();
-//                            Toast.makeText(mContext, R.string.tips_commit_success, Toast.LENGTH_SHORT).show();
-//                            mListener.onPopupCallback(deviceAlarmLogInfo);
-//                            dismiss();
-//                        } else {
-//                            Toast.makeText(mContext, R.string.tips_commit_failed, Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                }, new Response.ErrorListener() {
-//                    @Override
-//                    public void onErrorResponse(VolleyError error) {
-//                        if (error.networkResponse != null) {
-//                            String reason = new String(error.networkResponse.data);
-//                            try {
-//                                JSONObject jsonObject = new JSONObject(reason);
-//                                Toast.makeText(mContext, jsonObject.getString("errmsg"), Toast.LENGTH_SHORT).show();
-//                            } catch (JSONException e) {
-//                                e.printStackTrace();
-//                            } catch (Exception e) {
-//
-//                            }
-//                        } else {
-//                            Toast.makeText(mContext, R.string.tips_network_error, Toast.LENGTH_SHORT).show();
-//                        }
-//                    }
-//                });
     }
 
-    private void toastShort(String msg){
-        SensoroToast.makeText(mContext,msg,Toast.LENGTH_SHORT).show();
+    private void toastShort(String msg) {
+        SensoroToast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
     }
+
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
