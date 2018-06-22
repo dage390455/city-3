@@ -16,12 +16,12 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.SensorDetailInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.SortUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroAlarmView;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -116,12 +116,13 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         holder.item_date.setText(DateUtil.getFullParseDate(deviceInfo.getUpdatedTime()));
         SensorDetailInfo sensorDetailInfo = deviceInfo.getSensoroDetails();
         String[] sensorTypes = deviceInfo.getSensorTypes();
-        Arrays.sort(sensorTypes);
-        if (sensorDetailInfo != null && sensorTypes.length > 0) {
+        List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
+//        Arrays.sort(sensorTypes);
+        if (sensorDetailInfo != null && sortSensorTypes.size() > 0) {
             HashMap<String, SensorStruct> stringSensorStructHashMap = sensorDetailInfo.loadData();
-            if (sensorTypes.length > 1) {
+            if (sortSensorTypes.size() > 1) {
                 //两条数据
-                String sensorType1 = sensorTypes[0];
+                String sensorType1 = sortSensorTypes.get(0);
                 SensorStruct sensorStruct1 = stringSensorStructHashMap.get(sensorType1);
                 //第一条
                 if (sensorStruct1 == null) {
@@ -134,7 +135,7 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     holder.item_unit2.setVisibility(View.VISIBLE);
                 }
                 //第二条
-                String sensorType2 = sensorTypes[1];
+                String sensorType2 = sortSensorTypes.get(1);
                 SensorStruct sensorStruct2 = stringSensorStructHashMap.get(sensorType2);
                 if (sensorStruct2 == null) {
                     holder.item_value1.setText("");
@@ -147,7 +148,7 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
                     WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
                 }
             } else {
-                String sensorType1 = sensorTypes[0];
+                String sensorType1 = sortSensorTypes.get(0);
                 SensorStruct sensorStruct1 = stringSensorStructHashMap.get(sensorType1);
                 //只有一条数据
                 if (sensorStruct1 != null) {

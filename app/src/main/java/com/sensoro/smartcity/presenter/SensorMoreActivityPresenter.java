@@ -21,6 +21,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -116,6 +117,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 StringBuffer sbRule = new StringBuffer();
                 for (AlarmInfo.RuleInfo ruleInfo : rules) {
                     String sensorType = ruleInfo.getSensorTypes();
+                    sensorType = WidgetUtil.getSensorTypeChinese(sensorType);
                     float value = ruleInfo.getThresholds();
                     String conditionType = ruleInfo.getConditionType();
                     String rule = null;

@@ -124,7 +124,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     private IndexGridAdapter mGridAdapter;
 
     private int switchType = TYPE_LIST;
-
+    private boolean isShowDialog = true;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -191,11 +191,13 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             @Override
             public void onRefresh() {
                 String text = mKeywordEt.getText().toString();
+                isShowDialog = false;
                 mPrestener.requestWithDirection(DIRECTION_DOWN, text);
             }
 
             @Override
             public void onLoadMore() {
+                isShowDialog = false;
                 String text = mKeywordEt.getText().toString();
                 mPrestener.requestWithDirection(DIRECTION_UP, text);
             }
@@ -687,7 +689,10 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     @Override
     public void showProgressDialog() {
-        mProgressUtils.showProgress();
+        if (isShowDialog) {
+            mProgressUtils.showProgress();
+        }
+        isShowDialog = true;
     }
 
     @Override

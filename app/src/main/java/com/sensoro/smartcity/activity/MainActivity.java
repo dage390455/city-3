@@ -97,7 +97,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mMenuDrawer.setDropShadowEnabled(false);
         mMenuDrawer.setDrawOverlay(false);
         mMenuDrawer.setMenuView(R.layout.main_left_menu);
-        int width = getWindowManager().getDefaultDisplay().getWidth() - 200;
+        int width = getWindowManager().getDefaultDisplay().getWidth() / 3 * 2;
         mMenuDrawer.setMenuSize(width);
         mListView = (ListView) mMenuDrawer.findViewById(R.id.left_menu_list);
         mNameTextView = (TextView) findViewById(R.id.left_menu_name);

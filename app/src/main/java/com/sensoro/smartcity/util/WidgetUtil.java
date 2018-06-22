@@ -883,13 +883,14 @@ public class WidgetUtil {
         boolean isBool = false;
         Object value = sensorStruct.getValue();
 
-        if (sensorType.equalsIgnoreCase("co")) {
-        } else if (sensorType.equalsIgnoreCase("co2")) {
-        } else if (sensorType.equalsIgnoreCase("so2")) {
-        } else if (sensorType.equalsIgnoreCase("no2")) {
-        } else if (sensorType.equalsIgnoreCase("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
-        } else if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("humidity")) {
-        } else if (sensorType.equalsIgnoreCase("smoke")) {
+//        if (sensorType.equalsIgnoreCase("co")) {
+//        } else if (sensorType.equalsIgnoreCase("co2")) {
+//        } else if (sensorType.equalsIgnoreCase("so2")) {
+//        } else if (sensorType.equalsIgnoreCase("no2")) {
+//        } else if (sensorType.equalsIgnoreCase("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
+//        } else if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("humidity")) {
+//        } else
+        if (sensorType.equalsIgnoreCase("smoke")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
@@ -898,9 +899,11 @@ public class WidgetUtil {
                 valueTextView.setText(R.string.smoke_false);
             }
             unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("leak")) {
-
-        } else if (sensorType.equalsIgnoreCase("level")) {
+        }
+//        else if (sensorType.equalsIgnoreCase("leak")) {
+//
+//        }
+        else if (sensorType.equalsIgnoreCase("level")) {
             Boolean isTrue = (Boolean) value;
             isBool = true;
             if (isTrue) {
@@ -918,8 +921,10 @@ public class WidgetUtil {
                 valueTextView.setText(R.string.cover_false);
             }
             unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("ch4")) {
-        } else if (sensorType.equalsIgnoreCase("drop")) {
+        }
+//        else if (sensorType.equalsIgnoreCase("ch4")) {
+//        }
+        else if (sensorType.equalsIgnoreCase("drop")) {
             isBool = true;
             if (value.equals("0") || value.equals("0.0")) {
                 valueTextView.setText(R.string.drop_false);
@@ -927,12 +932,14 @@ public class WidgetUtil {
                 valueTextView.setText(R.string.drop_true);
             }
             unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("light")) {
-        } else if (sensorType.equalsIgnoreCase("distance")) {
-        } else if (sensorType.equalsIgnoreCase("lpg")) {
-        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
-                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
-        } else if (sensorType.equalsIgnoreCase("collision")) {
+        }
+//        else if (sensorType.equalsIgnoreCase("light")) {
+//        } else if (sensorType.equalsIgnoreCase("distance")) {
+//        } else if (sensorType.equalsIgnoreCase("lpg")) {
+//        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
+//                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
+//        }
+        else if (sensorType.equalsIgnoreCase("collision")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
@@ -1134,7 +1141,7 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("VOLTAGE_B")) {
             value = "电压B";
         } else if (sensorType.equalsIgnoreCase("VOLTAGE_C")) {
-            value = "电C压";
+            value = "电压C";
         }
 
         //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
@@ -1332,13 +1339,22 @@ public class WidgetUtil {
                 case "longitude":
                     info = "经度低于预警值, 恢复正常";
                     break;
+                //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
+                case "CURRENT_A":
+                case "CURRENT_B":
+                case "CURRENT_C":
+                case "ID":
+                case "TOTAL_POWER":
+                case "VOLTAGE_A":
+                case "VOLTAGE_B":
+                case "VOLTAGE_C":
+                    info = "电量低于预警值, 恢复正常";
+                    break;
                 default:
                     info = "未知传感器低于预警值, 恢复正常";
                     break;
             }
-        } else
-
-        {
+        } else {
             switch (sensorType) {
                 case "smoke":
                     info = "烟雾浓度高，设备预警";
@@ -1419,6 +1435,16 @@ public class WidgetUtil {
                     break;
                 case "longitude":
                     info = "经度 值为 " + thresholds + " 达到预警值";
+                    break;
+                case "CURRENT_A":
+                case "CURRENT_B":
+                case "CURRENT_C":
+                case "ID":
+                case "TOTAL_POWER":
+                case "VOLTAGE_A":
+                case "VOLTAGE_B":
+                case "VOLTAGE_C":
+                    info = "电量 值为 " + thresholds + " 达到预警值";
                     break;
                 default:
                     info = "未知传感器 值为 " + thresholds + "  达到预警值";

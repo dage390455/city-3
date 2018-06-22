@@ -10,12 +10,12 @@ import android.content.ContextWrapper;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 
 //import android.app.NotificationChannel;
@@ -26,7 +26,7 @@ public class NotificationUtils extends ContextWrapper {
     public static final String id = "channel_1";
     public static final String name = "channel_name_1";
     private volatile int noID = 1;
-    private Class<?> aClass = MainActivity.class;
+//    private Class<?> aClass = MainActivity.class;
 
     public NotificationUtils(Context context) {
         super(context);
@@ -51,15 +51,16 @@ public class NotificationUtils extends ContextWrapper {
 
     @RequiresApi(api = Build.VERSION_CODES.O)
     private Notification.Builder getChannelNotification(String content) {
-//        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        final Intent intent = new Intent(this, aClass);
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+//        final Intent intent = new Intent(this, aClass);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setComponent(new ComponentName(this, aClass));//用ComponentName得到class对象
+        intent.setComponent(new ComponentName(this, MainActivity.class));//用ComponentName得到class对象
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
         final PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
         return new Notification.Builder(getApplicationContext(), id)
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setAutoCancel(false)
                 .setContentTitle("Sensoro City")
                 .setContentText(content)
@@ -68,10 +69,10 @@ public class NotificationUtils extends ContextWrapper {
     }
 
     private NotificationCompat.Builder getNotification_25(String content) {
-//        final Intent intent = new Intent(Intent.ACTION_MAIN);
-        final Intent intent = new Intent(this, aClass);
+        final Intent intent = new Intent(Intent.ACTION_MAIN);
+//        final Intent intent = new Intent(this, aClass);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setComponent(new ComponentName(this, aClass));//用ComponentName得到class对象
+        intent.setComponent(new ComponentName(this, MainActivity.class));//用ComponentName得到class对象
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
 
@@ -88,6 +89,7 @@ public class NotificationUtils extends ContextWrapper {
         final PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
         return new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
+                .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setAutoCancel(false)
                 .setContentTitle("Sensoro City")
                 .setContentText(content)
@@ -96,11 +98,11 @@ public class NotificationUtils extends ContextWrapper {
     }
 
     public void sendNotification(String content) {
-        if (isMainACLived()) {
-            aClass = MainActivity.class;
-        } else {
-            aClass = LoginActivity.class;
-        }
+//        if (isMainACLived()) {
+//            aClass = MainActivity.class;
+//        } else {
+//            aClass = LoginActivity.class;
+//        }
         if (Build.VERSION.SDK_INT >= 26) {
             createNotificationChannel();
             Notification notification = getChannelNotification

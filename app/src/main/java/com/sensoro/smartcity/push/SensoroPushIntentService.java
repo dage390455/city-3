@@ -2,6 +2,7 @@ package com.sensoro.smartcity.push;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Message;
 import android.util.Log;
 
 import com.igexin.sdk.GTIntentService;
@@ -196,9 +197,10 @@ public class SensoroPushIntentService extends GTIntentService {
 //        SensoroCityApplication.getInstance().pushNotification(msg);
 //    }
     private void sendMessage(String data) {
-//        Message msg = Message.obtain();
-//        msg.what = what;
-//        msg.obj = data;
-        SensoroCityApplication.getInstance().pushNotification(data);
+        Message msg = Message.obtain();
+        msg.what = 0;
+        msg.obj = data;
+        SensoroCityApplication.sendMessage(msg);
+//        SensoroCityApplication.getInstance().pushNotification(data);
     }
 }

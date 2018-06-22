@@ -64,6 +64,7 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.SortUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.XYMarkerView;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
@@ -252,25 +253,9 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     private void freshStructData() {
         List<SensorStruct> sensorStructList = new ArrayList<>();
         String[] tempSensorTypes = mDeviceInfo.getSensorTypes();
-        if (tempSensorTypes.length == 3) {
-            List<String> tempList = Arrays.asList(tempSensorTypes);
-            Collections.sort(tempList, String.CASE_INSENSITIVE_ORDER);
-            if (tempList.contains("collision")) {//collision, pitch,roll
-                tempSensorTypes[0] = "pitch";
-                tempSensorTypes[1] = "roll";
-                tempSensorTypes[2] = "collision";
-            } else if (tempList.contains("flame")) {//temperature,humidity,flame
-                tempSensorTypes[0] = "temperature";
-                tempSensorTypes[1] = "humidity";
-                tempSensorTypes[2] = "flame";
-            }else if (tempList.contains("altitude")){
-                tempSensorTypes[0] = "longitude";
-                tempSensorTypes[1] = "latitude";
-                tempSensorTypes[2] = "altitude";
-            }
-        }
-        for (int j = 0; j < tempSensorTypes.length; j++) {
-            String sensorType = tempSensorTypes[j];
+        List<String> sortSensorTypes = SortUtils.sortSensorTypes(tempSensorTypes);
+        for (int j = 0; j < sortSensorTypes.size(); j++) {
+            String sensorType = sortSensorTypes.get(j);
             SensorStruct struct = mDeviceInfo.getSensoroDetails().loadData().get(sensorType);
             if (struct != null) {
                 struct.setSensorType(sensorType);

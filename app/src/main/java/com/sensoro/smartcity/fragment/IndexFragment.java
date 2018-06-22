@@ -99,6 +99,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     private int toolbarDirection = DIRECTION_DOWN;
     private int switchType;
+    private boolean isShowDialog = true;
 
     public static IndexFragment newInstance(Character input) {
         IndexFragment indexFragment = new IndexFragment();
@@ -226,11 +227,13 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         mListRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
+                isShowDialog = false;
                 reFreshDataByDirection(DIRECTION_DOWN);
             }
 
             @Override
             public void onLoadMore() {
+                isShowDialog = false;
                 reFreshDataByDirection(DIRECTION_UP);
             }
         });
@@ -275,11 +278,13 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         mGridRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
             public void onRefresh() {
+                isShowDialog = false;
                 reFreshDataByDirection(DIRECTION_DOWN);
             }
 
             @Override
             public void onLoadMore() {
+                isShowDialog = false;
                 reFreshDataByDirection(DIRECTION_UP);
             }
         });
@@ -415,7 +420,10 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void showProgressDialog() {
-        mProgressUtils.showProgress();
+        if (isShowDialog) {
+            mProgressUtils.showProgress();
+        }
+        isShowDialog = true;
     }
 
     @Override

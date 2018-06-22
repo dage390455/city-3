@@ -62,6 +62,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     private AlarmListAdapter mAlarmListAdapter;
     //
     private ProgressUtils mProgressUtils;
+    private boolean isShowDialog = true;
 
     public static AlarmListFragment newInstance(String input) {
         AlarmListFragment alarmListFragment = new AlarmListFragment();
@@ -110,11 +111,13 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
         mPtrListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isShowDialog = false;
                 requestDataByFilter(DIRECTION_DOWN, false);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isShowDialog = false;
                 requestDataByFilter(DIRECTION_UP, false);
             }
         });
@@ -228,7 +231,10 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
 
     @Override
     public void showProgressDialog() {
-        mProgressUtils.showProgress();
+        if (isShowDialog) {
+            mProgressUtils.showProgress();
+        }
+        isShowDialog = true;
     }
 
     @Override
