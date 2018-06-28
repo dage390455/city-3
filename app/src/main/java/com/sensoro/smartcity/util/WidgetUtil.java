@@ -22,6 +22,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -503,6 +504,36 @@ public class WidgetUtil {
                         unitTextView.setText(sensorStruct.getUnit());
                     } else {
                         unitTextView.setText("" + sensorStruct.getUnit());
+                        if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") ||
+                                sensorType
+                                        .equalsIgnoreCase
+                                                ("co2")) {
+                            DecimalFormat df = new DecimalFormat("###.##");
+                            valueTextView.setText(df.format(sensorStruct.getValue()));
+                            return;
+                        }
+                        if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") ||
+                                sensorType
+                                        .equalsIgnoreCase
+                                                ("humidity") || sensorType.equalsIgnoreCase("waterPressure") ||
+                                sensorType
+                                        .equalsIgnoreCase
+                                                ("co2") ||
+                                sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
+                            DecimalFormat df = new DecimalFormat("###.#");
+                            String format = df.format(sensorStruct.getValue());
+//                            String[] split = format.split("\\.");
+//                            if (split.length > 1) {
+//                                SupSubSpan supSubSpan = new SupSubSpan(split[0], split[1]);
+//                                SpannableString spannableString = new SpannableString(format);
+//                                spannableString.setSpan(supSubSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                                valueTextView.setText(spannableString);
+//                            } else {
+                            valueTextView.setText(format);
+//                            }
+                            return;
+                        }
+
                         valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
                                 .toString())));
 
@@ -977,8 +1008,28 @@ public class WidgetUtil {
             unitTextView.setText("");
         }
         if (!isBool) {
-            valueTextView.setText("" + String.format("%.1f", Double.valueOf(value.toString())));
-            unitTextView.setText(sensorStruct.getUnit());
+            unitTextView.setText("" + sensorStruct.getUnit());
+            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") || sensorType
+                    .equalsIgnoreCase
+                            ("co2")) {
+                DecimalFormat df = new DecimalFormat("###.##");
+                valueTextView.setText(df.format(sensorStruct.getValue()));
+                return;
+            }
+            if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+                    .equalsIgnoreCase
+                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType.equalsIgnoreCase
+                    ("co2") ||
+                    sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
+                DecimalFormat df = new DecimalFormat("###.#");
+                valueTextView.setText(df.format(sensorStruct.getValue()));
+                return;
+            }
+            valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
+                    .toString())));
+
+//            valueTextView.setText("" + String.format("%.1f", Double.valueOf(value.toString())));
+//            unitTextView.setText(sensorStruct.getUnit());
         }
     }
 
@@ -1123,7 +1174,7 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("artificialGas")) {
             value = "人工煤气";
         } else if (sensorType.equalsIgnoreCase("waterPressure")) {
-            value = "水压";
+            value = "消防液压";
         } else if (sensorType.equalsIgnoreCase("magnetic")) {
             value = "地磁";
         } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {

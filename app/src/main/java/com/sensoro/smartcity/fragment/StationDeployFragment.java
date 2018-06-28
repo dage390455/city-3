@@ -7,13 +7,14 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BaseFragment;
-import com.sensoro.smartcity.imainviews.IPointDeployFragmentView;
-import com.sensoro.smartcity.presenter.PointDeployFragmentPresenter;
+import com.sensoro.smartcity.imainviews.IStationDeployFragmentView;
+import com.sensoro.smartcity.presenter.StationDeployFragmentPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -26,10 +27,10 @@ import static com.sensoro.smartcity.constant.Constants.INPUT;
  * Created by sensoro on 17/7/24.
  */
 
-public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
-        PointDeployFragmentPresenter>
-        implements IPointDeployFragmentView, View.OnClickListener, QRCodeView.Delegate {
-    private static final String TAG = PointDeployFragment.class.getSimpleName();
+public class StationDeployFragment extends BaseFragment<IStationDeployFragmentView,
+        StationDeployFragmentPresenter>
+        implements IStationDeployFragmentView, View.OnClickListener, QRCodeView.Delegate {
+    private static final String TAG = StationDeployFragment.class.getSimpleName();
 
     private QRCodeView mQRCodeView;
     private ImageView mMenuImageView;
@@ -39,14 +40,15 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     private ProgressUtils mProgressUtils;
     private volatile boolean isFlashOn = false;
     private volatile boolean mIsVisibleToUser = false;
+    private TextView sensorDeployTitle;
 
 
-    public static PointDeployFragment newInstance(String input) {
-        PointDeployFragment pointDeployFragment = new PointDeployFragment();
+    public static StationDeployFragment newInstance(String input) {
+        StationDeployFragment stationDeployFragment = new StationDeployFragment();
         Bundle args = new Bundle();
         args.putString(INPUT, input);
-        pointDeployFragment.setArguments(args);
-        return pointDeployFragment;
+        stationDeployFragment.setArguments(args);
+        return stationDeployFragment;
     }
 
 
@@ -56,6 +58,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         flashImageView = (ImageView) mRootView.findViewById(R.id.zxing_capture_iv_flash);
         manualImageView = (ImageView) mRootView.findViewById(R.id.zxing_capture_iv_manual);
         mMenuImageView = (ImageView) mRootView.findViewById(R.id.deploy_iv_menu_list);
+        sensorDeployTitle = (TextView) mRootView.findViewById(R.id.sensor_deploy_title);
         mMenuImageView.setColorFilter(getResources().getColor(R.color.white));
         mMenuImageView.setOnClickListener(this);
         flashImageView.setOnClickListener(this);
@@ -126,7 +129,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
                 mQRCodeView.stopCamera();
 //                mQRCodeView.stopSpot();
                 hiddenRootView();
-                System.out.println("PointDeploy.OnPause===>");
+                System.out.println("StationDeploy.OnPause===>");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -143,7 +146,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     public void showRootView() {
         try {
             mRootView.setVisibility(View.VISIBLE);
-            if (mQRCodeView!=null){
+            if (mQRCodeView != null) {
                 mQRCodeView.showScanRect();
             }
         } catch (Exception e) {
@@ -153,19 +156,19 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 
     @Override
     protected void initData(Context activity) {
-        mPrestener.initData(activity);
         initView();
+        mPrestener.initData(activity);
     }
 
 
     @Override
     protected int initRootViewId() {
-        return R.layout.fragment_point_deploy;
+        return R.layout.fragment_station_deploy;
     }
 
     @Override
-    protected PointDeployFragmentPresenter createPresenter() {
-        return new PointDeployFragmentPresenter();
+    protected StationDeployFragmentPresenter createPresenter() {
+        return new StationDeployFragmentPresenter();
     }
 
 
@@ -200,6 +203,13 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     @Override
     public void setFlashLightState(boolean isOn) {
         flashImageView.setBackgroundResource(isOn ? R.drawable.zxing_flash_on : R.drawable.zxing_flash_off);
+    }
+
+    @Override
+    public void setTitle(String title) {
+        if (sensorDeployTitle != null) {
+            sensorDeployTitle.setText(title);
+        }
     }
 
     @Override

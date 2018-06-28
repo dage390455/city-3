@@ -25,6 +25,7 @@
     <string name="finish">完成</string>
     <string name="start_use">扫码部署</string>
     <string name="point_deploy">点位部署</string>
+    <string name="station_deploy">基站部署</string>
     <string name="deploy_name_address">名称/地址</string>
     <string name="deploy_contact">预警联系人</string>
     <string name="deploy_contact_title">设置预警联系人</string>

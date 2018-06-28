@@ -17,10 +17,12 @@ import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -104,6 +106,8 @@ public enum RetrofitServiceHelper {
                         Log.d(TAG, String.format("发送--> request %s on %s%n%s", request.url(),
                                 chain.connection(), request.headers()));
                         Response response = chain.proceed(request);
+//                        byte[] bytes = response.body().bytes();
+//                        String json = new String(bytes);
                         long t2 = System.nanoTime();
                         Log.d(TAG, String.format("接受--> response for %s in %.1fms%n%s",
                                 response.request().url(), (t2 - t1) / 1e6d, response.headers()));
@@ -269,6 +273,31 @@ public enum RetrofitServiceHelper {
         return retrofitService.doDevicePointDeploy(sn, body);
     }
 
+    public Observable<StationInfoRsp> doStationDeploy(String sn, double lon, double lat, String tags, String
+            name) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+            if (tags != null) {
+                String[] split = tags.split(",");
+                JSONArray jsonArray = new JSONArray();
+                for (String temp : split) {
+                    jsonArray.put(temp);
+                }
+                jsonObject.put("tags", jsonArray);
+            }
+            if (name != null) {
+                jsonObject.put("name", name);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doStationDeploy(sn, body);
+    }
+
     /**
      * 修改提交确认预警信息备注
      *
@@ -327,5 +356,15 @@ public enum RetrofitServiceHelper {
      */
     public Observable<DeviceInfoListRsp> getDeviceDetailInfoList(String sns, String search, int all) {
         return retrofitService.getDeviceDetailInfoList(sns, search, all);
+    }
+
+    /**
+     * 返回单个基站详情
+     *
+     * @param sn
+     * @return
+     */
+    public Observable<StationInfoRsp> getStationDetail(String sn) {
+        return retrofitService.getStationDetail(sn);
     }
 }

@@ -203,9 +203,10 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
                     case 1:
                     case 2:
                     case 3:
+                    case 4:
                         sensoroPager.setCurrentItem(position);
                         break;
-                    case 4:
+                    case 5:
                         mPrestener.logout();
                         break;
                     default:
@@ -222,6 +223,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
                         sensoroPager.setCurrentItem(3);
                         break;
                     case 3:
+                        sensoroPager.setCurrentItem(4);
+                        break;
+                    case 4:
                         mPrestener.logout();
                         break;
                     default:

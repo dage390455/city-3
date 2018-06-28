@@ -255,6 +255,7 @@
         </LinearLayout>
 
         <RelativeLayout
+            android:id="@+id/deploy_device_rl_signal"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"

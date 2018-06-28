@@ -63,6 +63,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
             add(Manifest.permission.ACCESS_COARSE_LOCATION);
             add(Manifest.permission.READ_PHONE_STATE);
             add(Manifest.permission.CAMERA);
+            add(Manifest.permission.VIBRATE);
         }
     };
     private PermissionUtils mPermissionUtils;

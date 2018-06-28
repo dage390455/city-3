@@ -11,6 +11,7 @@ import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
@@ -37,6 +38,9 @@ public interface RetrofitService {
     String LOGOUT = "sessions/current";
     String USER_ACCOUNT_LIST = "users";
     String DEVICE_INFO_LIST = "prov1/devices/details/app";
+    //
+    String STATION_INFO = "stations";
+
     String DEVICE_HISTORY_LIST = "prov1/logs/list/ltime/app";
     String DEVICE_ALARM_TIME = "details/alarm/ltime";
     String DEVICE_ALARM_HISTORY = "prov1/alarms/list/app";
@@ -120,4 +124,10 @@ public interface RetrofitService {
     Observable<ResponseBase> logout(@Header("phoneId") String phoneId, @Header("uid")
             String uid, @Query("phoneId") String phoneId_q, @Query("uid") String uid_q, @Body RequestBody requestBody);
 
+    @GET("stations/{sn}")
+    Observable<StationInfoRsp> getStationDetail(@Path("sn") String sn);
+    //
+    @Headers({"Content-type:application/json;charset=UTF-8"})
+    @POST("stations/app/{sn}")
+    Observable<StationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 }

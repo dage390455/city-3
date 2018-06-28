@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,6 +52,10 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     TextureMapView mMapView;
     @BindView(R.id.deploy_tag_layout)
     LinearLayout tagLayout;
+    @BindView(R.id.deploy_device_rl_signal)
+    RelativeLayout deployDevicerlSignal;
+    @BindView(R.id.deploy_contact_relative_layout)
+    RelativeLayout deployContactRelativeLayout;
     private ProgressUtils mProgressUtils;
 
 
@@ -181,6 +187,16 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     }
 
     @Override
+    public void setDeployDevicerlSignalVisible(boolean isVisible) {
+        deployDevicerlSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployContactRelativeLayoutVisible(boolean isVisible) {
+        deployContactRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void addDefaultTextView() {
         int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
@@ -228,6 +244,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         setUploadButtonClickable(false);
         String sn = titleTextView.getText().toString();
         final String name = nameAddressEditText.getText().toString();
+
         mPrestener.requestUpload(sn, name);
     }
 

@@ -140,6 +140,13 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         updateTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void setContactAndSignalVisible(boolean isVisible) {
+        contactTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        contentTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        signalTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
 
     @OnClick(R.id.deploy_result_back)
     public void back() {

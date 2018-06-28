@@ -33,6 +33,7 @@
     <string name="alarm_list">Alarm List</string>
     <string name="start_use">Scan Deploy</string>
     <string name="point_deploy">Point Deploy</string>
+    <string name="station_deploy">Station Deploy</string>
     <string name="deploy_name_address">Name</string>
     <string name="deploy_contact">Contact</string>
     <string name="deploy_contact_title">Setting Contact</string>

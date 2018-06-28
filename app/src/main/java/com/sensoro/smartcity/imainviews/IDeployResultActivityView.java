@@ -25,4 +25,6 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void setUpdateTextView(String update);
 
     void setUpdateTextViewVisible(boolean isVisible);
+
+    void setContactAndSignalVisible(boolean isVisible);
 }

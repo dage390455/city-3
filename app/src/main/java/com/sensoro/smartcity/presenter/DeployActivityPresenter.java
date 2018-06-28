@@ -50,6 +50,9 @@ import com.sensoro.smartcity.server.response.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.server.response.StationInfo;
+import com.sensoro.smartcity.server.response.StationInfoRsp;
+import com.sensoro.smartcity.util.LogUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -58,6 +61,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -81,12 +85,16 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private Activity mContext;
     private Handler mHandler;
     private DeviceInfo deviceInfo;
+    private boolean is_station;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         mHandler = new Handler(Looper.getMainLooper());
         deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        is_station = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
+        getView().setDeployContactRelativeLayoutVisible(!is_station);
+        getView().setDeployDevicerlSignalVisible(!is_station);
     }
 
     @Override
@@ -130,7 +138,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             Intent intent = new Intent();
             intent.setClass(mContext, DeployResultActivity.class);
             intent.putExtra(EXTRA_SENSOR_RESULT, -1);
-            getView().startACForResult(intent, REQUEST_CODE_DEPLOY);
+            getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
         }
     }
 
@@ -160,7 +168,11 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     public void onMapLoaded() {
         String sn = deviceInfo.getSn();
         getView().setTitleTextView(sn);
-        getView().setNameAddressEditText(deviceInfo.getName());
+        String name = deviceInfo.getName();
+        if (TextUtils.isEmpty(name)) {
+            name = "例：大悦城20层走廊2号配电箱";
+        }
+        getView().setNameAddressEditText(name);
         if (deviceInfo.getAlarms() != null) {
             AlarmInfo alarmInfo = deviceInfo.getAlarms();
             String contact = alarmInfo.getNotification().getContact();
@@ -188,7 +200,9 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             getView().addDefaultTextView();
         }
         String signal = deviceInfo.getSignal();
-        getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
+        if (!is_station) {
+            getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
+        }
         //
         locate();
         //
@@ -349,12 +363,13 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     }
 
     public void requestUpload(String sn, String name) {
-
+//        例：大悦城20层走廊2号配电箱
         String tags = tagListToString();
         String name_default = mContext.getString(R.string.tips_hint_name_address);
-        if (TextUtils.isEmpty(name) || name.equals(name_default)) {
+        if (TextUtils.isEmpty(name) || name.equals(name_default) || name.equals("例：大悦城20层走廊2号配电箱")) {
             getView().toastShort(mContext.getResources().getString(R.string.tips_input_name));
             getView().setUploadButtonClickable(true);
+            return;
         } else {
             byte[] bytes = new byte[0];
             try {
@@ -371,49 +386,120 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         if (latLng == null) {
             getView().toastShort(mContext.getResources().getString(R.string.tips_hint_location));
             getView().setUploadButtonClickable(true);
-        } else if (TextUtils.isEmpty(contact) || name.equals(content)) {
-            getView().toastShort("请输入联系人名称和电话号码");
-            getView().setUploadButtonClickable(true);
         } else {
             final double lon = latLng.longitude;
             final double lan = latLng.latitude;
-            getView().showProgressDialog();
-            RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(sn, lon, lan, tags, name,
-                    contact, content).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new CityObserver<DeviceDeployRsp>() {
+            if (is_station) {
+//                getView().toastShort("基站上传测试");
+                LogUtils.loge(tags);
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doStationDeploy(sn, lon, lan, tags, name).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CityObserver<StationInfoRsp>() {
 
 
-                        @Override
-                        public void onCompleted() {
-                            getView().dismissProgressDialog();
-                            getView().finishAc();
-                        }
-
-                        @Override
-                        public void onNext(DeviceDeployRsp deviceDeployRsp) {
-                            int errCode = deviceDeployRsp.getErrcode();
-                            int resultCode = 1;
-                            if (errCode != ResponseBase.CODE_SUCCESS) {
-                                resultCode = errCode;
+                            @Override
+                            public void onCompleted() {
+                                getView().dismissProgressDialog();
+                                getView().finishAc();
                             }
-                            Intent intent = new Intent(mContext, DeployResultActivity.class);
-                            intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                            intent.putExtra(EXTRA_DEVICE_INFO, deviceDeployRsp.getData());
-                            intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
-                            intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
-                            intent.putExtra(EXTRA_SETTING_CONTACT, contact);
-                            intent.putExtra(EXTRA_SETTING_CONTENT, content);
-                            getView().startAC(intent);
-                        }
 
-                        @Override
-                        public void onErrorMsg(String errorMsg) {
-                            getView().dismissProgressDialog();
-                            getView().toastShort(errorMsg);
-                            getView().setUploadButtonClickable(true);
-                        }
-                    });
+                            @Override
+                            public void onNext(StationInfoRsp stationInfoRsp) {
+                                String s = stationInfoRsp.toString();
+                                LogUtils.loge(s);
+                                int errCode = stationInfoRsp.getErrcode();
+                                int resultCode = 1;
+                                if (errCode != ResponseBase.CODE_SUCCESS) {
+                                    resultCode = errCode;
+                                }
+                                //
+                                StationInfo stationInfo = stationInfoRsp.getData();
+                                double[] lonlat = stationInfo.getLonlat();
+                                String name = stationInfo.getName();
+                                String sn = stationInfo.getSn();
+                                String[] tags = stationInfo.getTags();
+                                int normalStatus = stationInfo.getNormalStatus();
+
+                                DeviceInfo deviceInfo = new DeviceInfo();
+                                deviceInfo.setSn(sn);
+                                deviceInfo.setTags(tags);
+                                deviceInfo.setLonlat(lonlat);
+                                deviceInfo.setStatus(normalStatus);
+                                if (!TextUtils.isEmpty(name)) {
+                                    deviceInfo.setName(name);
+                                }
+                                Intent intent = new Intent(mContext, DeployResultActivity.class);
+                                intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                                intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+                                intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
+                                intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
+                                intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
+                                getView().startAC(intent);
+                            }
+
+                            @Override
+                            public void onErrorMsg(String errorMsg) {
+                                getView().dismissProgressDialog();
+                                getView().toastShort(errorMsg);
+                                getView().setUploadButtonClickable(true);
+                            }
+                        });
+            } else {
+                if (TextUtils.isEmpty(contact) || name.equals(content)) {
+                    getView().toastShort("请输入联系人名称和电话号码");
+                    getView().setUploadButtonClickable(true);
+                    return;
+                }
+                //电话规则过滤
+                String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
+                Pattern p = Pattern.compile(regex);
+                if (!p.matcher(content).matches()) {
+                    getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                    getView().setUploadButtonClickable(true);
+                    return;
+                }
+
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(sn, lon, lan, tags, name,
+                        contact, content).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CityObserver<DeviceDeployRsp>() {
+
+
+                            @Override
+                            public void onCompleted() {
+                                getView().dismissProgressDialog();
+                                getView().finishAc();
+                            }
+
+                            @Override
+                            public void onNext(DeviceDeployRsp deviceDeployRsp) {
+                                int errCode = deviceDeployRsp.getErrcode();
+                                int resultCode = 1;
+                                if (errCode != ResponseBase.CODE_SUCCESS) {
+                                    resultCode = errCode;
+                                }
+                                Intent intent = new Intent(mContext, DeployResultActivity.class);
+                                intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+                                intent.putExtra(EXTRA_DEVICE_INFO, deviceDeployRsp.getData());
+                                intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
+                                intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
+                                intent.putExtra(EXTRA_SETTING_CONTACT, contact);
+                                intent.putExtra(EXTRA_SETTING_CONTENT, content);
+                                getView().startAC(intent);
+                            }
+
+                            @Override
+                            public void onErrorMsg(String errorMsg) {
+                                getView().dismissProgressDialog();
+                                getView().toastShort(errorMsg);
+                                getView().setUploadButtonClickable(true);
+                            }
+                        });
+            }
+
         }
 
     }
@@ -490,6 +576,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     public void back() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_CONTAINS_DATA, false);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
         getView().setIntentResult(RESULT_CODE_DEPLOY, intent);
         getView().finishAc();
     }

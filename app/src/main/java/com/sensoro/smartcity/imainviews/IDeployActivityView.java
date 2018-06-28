@@ -14,4 +14,6 @@ public interface IDeployActivityView extends IToast,IProgressDialog,IActivityInt
     void addDefaultTextView();
     void refreshTagLayout(List<String> tagList);
     void refreshSignal(long updateTime, String signal);
+    void setDeployDevicerlSignalVisible(boolean isVisible);
+    void setDeployContactRelativeLayoutVisible(boolean isVisible);
 }

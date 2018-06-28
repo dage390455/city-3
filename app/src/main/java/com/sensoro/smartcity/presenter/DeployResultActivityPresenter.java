@@ -19,11 +19,13 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     private int resultCode = 0;
     private DeviceInfo deviceInfo = null;
     private Activity mContext;
+    private boolean is_station;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         resultCode = mContext.getIntent().getIntExtra(EXTRA_SENSOR_RESULT, 0);
+        is_station = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
         init();
     }
 
@@ -38,25 +40,44 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 String name = deviceInfo.getName();
                 String lon = mContext.getIntent().getStringExtra(EXTRA_SENSOR_LON);
                 String lan = mContext.getIntent().getStringExtra(EXTRA_SENSOR_LAN);
-                String contact = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
-                String content = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
+                if (!is_station) {
+                    String contact = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
+                    String content = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
+                    getView().setContactTextView(mContext.getString(R.string.name) + "：" + (TextUtils.isEmpty(contact) ?
+                            "无" : contact));
+                    getView().setContentTextView(mContext.getString(R.string.phone) + "：" + (TextUtils.isEmpty
+                            (contact) ?
+                            "无" : content));
+                    getView().refreshSignal(deviceInfo.getUpdatedTime(), deviceInfo.getSignal());
+                }
+
                 if (resultCode == 1) {
                     getView().setResultImageView(R.mipmap.ic_deploy_success);
-                    getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
+                    if (is_station) {
+                        getView().setTipsTextView("恭喜! 基站点位部署成功");
+                    } else {
+                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
+                    }
                 } else {
                     getView().setResultImageView(R.mipmap.ic_deploy_failed);
-                    getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
+                    if (is_station) {
+                        getView().setTipsTextView("恭喜! 基站点位部署成功");
+                    } else {
+                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
+                    }
                 }
                 getView().setSnTextView(mContext.getString(R.string.sensor_detail_sn) + "：" + sn);
                 getView().setNameTextView(mContext.getString(R.string.sensor_detail_name) + "：" + name);
                 getView().setLonLanTextView(mContext.getString(R.string.sensor_detail_lon) + "：" + lon, mContext
                         .getString(R.string.sensor_detail_lan) + "：" + lan);
-                getView().setContactTextView(mContext.getString(R.string.name) + "：" + (TextUtils.isEmpty(contact) ?
-                        "无" : contact));
-                getView().setContentTextView(mContext.getString(R.string.phone) + "：" + (TextUtils.isEmpty(contact) ?
-                        "无" : content));
-                getView().setStatusTextView(mContext.getString(R.string.sensor_detail_status) + "：" + Constants
-                        .DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
+                if (is_station) {
+                    getView().setStatusTextView(mContext.getString(R.string.sensor_detail_status) + "：" + Constants
+                            .STATION_STATUS_ARRAY[deviceInfo.getStatus() + 1]);
+                } else {
+                    getView().setStatusTextView(mContext.getString(R.string.sensor_detail_status) + "：" + Constants
+                            .DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
+                }
+
                 if (deviceInfo.getLastUpdatedTime() != null) {
                     getView().setUpdateTextViewVisible(true);
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
@@ -67,7 +88,6 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 } else {
                     getView().setUpdateTextViewVisible(false);
                 }
-                getView().refreshSignal(deviceInfo.getUpdatedTime(), deviceInfo.getSignal());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -84,6 +104,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         } else {
             intent.putExtra(EXTRA_CONTAINS_DATA, false);
         }
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
         getView().setIntentResult(RESULT_CODE_DEPLOY, intent);
         getView().finishAc();
     }
@@ -93,6 +114,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         if (resultCode == 1 && deviceInfo != null) {
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
         }
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
         getView().setIntentResult(RESULT_CODE_MAP, intent);
         getView().finishAc();
     }

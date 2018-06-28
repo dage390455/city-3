@@ -5,11 +5,13 @@
         <item>预警记录</item>
         <item>商户切换</item>
         <item>点位部署</item>
+        <item>基站部署</item>
     </array>
     <array name="drawer_title_array_nobussise">
         <item>主页</item>
         <item>预警记录</item>
         <item>点位部署</item>
+        <item>基站部署</item>
     </array>
     <array name="drawer_title_array_supper">
         <item>商户切换</item>

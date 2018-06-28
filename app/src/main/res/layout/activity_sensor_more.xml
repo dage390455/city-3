@@ -692,11 +692,11 @@
                         android:background="@color/c_e7e7e7"
                         android:contentDescription="@null"/>
 
-                    <RelativeLayout
-
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_item_selector"
+                        android:orientation="horizontal"
                         android:paddingBottom="10dp"
                         android:paddingTop="10dp">
 
@@ -712,18 +712,17 @@
 
                         <TextView
                             android:id="@+id/sensor_more_tv_alarm_setting"
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
                             android:layout_marginLeft="@dimen/x20"
                             android:layout_marginRight="15dp"
+                            android:layout_weight="1"
                             android:ellipsize="end"
-                            android:maxEms="15"
-                            android:singleLine="true"
+                            android:gravity="end"
                             android:textColor="#9b9b9b"
                             android:textSize="@dimen/x50"/>
 
-                    </RelativeLayout>
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 

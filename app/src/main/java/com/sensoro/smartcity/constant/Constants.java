@@ -27,11 +27,12 @@ public interface Constants {
     String PREFERENCE_KEY_DEVICE_PHONE = "preference_key_device_phone";
     String INPUT = "INPUT";
     int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
-            R.mipmap.ic_menu_location,};
+            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
     int LEFT_MENU_ICON_UNSELECT_BUSSIES[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
-            R.mipmap.ic_menu_location,};
+            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
     int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
     String[] DEVICE_STATUS_ARRAY = {"预警", "正常", "失联", "未激活"};
+    String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
     String[] INDEX_TYPE_ARRAY = {
@@ -89,6 +90,7 @@ public interface Constants {
     String EXTRA_PHONE_ID = "extra_phone_id";
     String EXTRA_IS_SPECIFIC = "extra_is_specific";
     String EXTRA_DEVICE_INFO = "extra_device_info";
+    String EXTRA_IS_STATION_DEPLOY = "extra_is_station_deploy";
     String EXTRA_SENSOR_SN = "extra_sn";
     String EXTRA_SENSOR_NAME = "extra_name";
     String EXTRA_SENSOR_TYPES = "extra_types";
@@ -136,7 +138,8 @@ public interface Constants {
     int REQUEST_CODE_SEARCH_DEVICE = 1;
     int REQUEST_CODE_SEARCH_ALARM = 2;
     int REQUEST_CODE_SEARCH_MERCHANT = 2;
-    int REQUEST_CODE_DEPLOY = 3;
+    int REQUEST_CODE_POINT_DEPLOY = 3;
+    int REQUEST_CODE_STATION_DEPLOY = 0x13;
     int REQUEST_CODE_ALARM = 4;
     int REQUEST_CODE_CALENDAR = 5;
     int REQUEST_SETTING_NAME_ADDRESS = 8;

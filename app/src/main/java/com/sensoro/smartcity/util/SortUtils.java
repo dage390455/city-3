@@ -21,7 +21,8 @@ public class SortUtils {
                 sensorTypes[0] = "temperature";
                 sensorTypes[1] = "humidity";
                 sensorTypes[2] = "flame";
-            } else if (originList.contains("altitude")) {
+            } else if (originList.contains("altitude") || originList.contains("longitude") || originList.contains
+                    ("latitude")) {
                 sensorTypes[0] = "longitude";
                 sensorTypes[1] = "latitude";
                 sensorTypes[2] = "altitude";
@@ -32,6 +33,13 @@ public class SortUtils {
                 tempSensorTypes.add("TOTAL_POWER");
             }
         } else {
+            if (sensorTypes.length == 2) {
+                if (originList.contains("longitude") || originList.contains
+                        ("latitude")) {
+                    sensorTypes[0] = "longitude";
+                    sensorTypes[1] = "latitude";
+                }
+            }
             tempSensorTypes.addAll(originList);
         }
         return tempSensorTypes;

@@ -32,7 +32,16 @@ public abstract class CityObserver<T> implements Observer<T> {
                 //TODO: parse To JSON Obj
                 try {
                     JSONObject jsonObject = new JSONObject(errorBody);
-                    onErrorMsg(jsonObject.getString("errmsg"));
+                    String log = jsonObject.toString();
+                    Log.e("HttpException", "onError = " + log);
+                    int errcode = jsonObject.getInt("errcode");
+                    if (errcode == 4010104) {
+                        onErrorMsg("4010104");
+                        return;
+                    }
+                    String errmsg = jsonObject.getString("errmsg");
+                    Log.e("HttpException", "onError = " + log + ",errcode = " + errcode);
+                    onErrorMsg(errmsg);
                 } catch (JSONException e1) {
                     e1.printStackTrace();
                     byte[] bytes = httpException.response().errorBody().bytes();

@@ -15,11 +15,13 @@ import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
-import com.sensoro.smartcity.imainviews.IPointDeployFragmentView;
+import com.sensoro.smartcity.imainviews.IStationDeployFragmentView;
 import com.sensoro.smartcity.iwidget.IOndestroy;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.CityObserver;
-import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.server.response.StationInfo;
+import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.io.IOException;
@@ -31,9 +33,9 @@ import static android.content.Context.VIBRATOR_SERVICE;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_IS_STATION_DEPLOY;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
-import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_POINT_DEPLOY;
+import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_STATION_DEPLOY;
 
-public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFragmentView> implements
+public class StationDeployFragmentPresenter extends BasePresenter<IStationDeployFragmentView> implements
         IOndestroy, MediaPlayer.OnErrorListener {
     private Activity mContext;
     private static final float BEEP_VOLUME = 0.10f;
@@ -55,51 +57,93 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
 
     public void openSNTextAc() {
         Intent intent = new Intent(mContext, DeployManualActivity.class);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
-        getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+        getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
     }
 
     private void scanFinish(String scanSerialNumber) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+        RetrofitServiceHelper.INSTANCE.getStationDetail(scanSerialNumber).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<StationInfoRsp>() {
             @Override
             public void onCompleted() {
                 getView().dismissProgressDialog();
             }
 
             @Override
-            public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                refresh(deviceInfoListRsp);
+            public void onNext(StationInfoRsp stationInfoRsp) {
+                refresh(stationInfoRsp);
             }
 
             @Override
             public void onErrorMsg(String errorMsg) {
                 getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-                getView().startScan();
+                if (errorMsg.equals("4010104")) {
+                    freshError();
+                } else {
+                    getView().toastShort(errorMsg);
+                    getView().startScan();
+                }
+
+
             }
         });
     }
 
-    private void refresh(DeviceInfoListRsp response) {
+    private void freshError() {
+        //
+        Intent intent = new Intent();
+        intent.setClass(mContext, DeployResultActivity.class);
+        intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+        getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
+    }
+
+    //    private void refresh(DeviceInfoListRsp response) {
+//        try {
+//            Intent intent = new Intent();
+//            if (response.getData().size() > 0) {
+//                intent.setClass(mContext, DeployActivity.class);
+//                intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
+//                intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+//                intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
+//                getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
+//            } else {
+//                intent.setClass(mContext, DeployResultActivity.class);
+//                intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+//
+//                getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
+    private void refresh(StationInfoRsp stationInfoRsp) {
         try {
-            Intent intent = new Intent();
-            if (response.getData().size() > 0) {
-                intent.setClass(mContext, DeployActivity.class);
-                intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
-                intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
-                intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
-                getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
-            } else {
-                intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
-                intent.setClass(mContext, DeployResultActivity.class);
-                intent.putExtra(EXTRA_SENSOR_RESULT, -1);
-                getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
+            StationInfo stationInfo = stationInfoRsp.getData();
+            double[] lonlat = stationInfo.getLonlat();
+//        double[] lonlatLabel = stationInfo.getLonlatLabel();
+            String name = stationInfo.getName();
+            String sn = stationInfo.getSn();
+            String[] tags = stationInfo.getTags();
+
+            DeviceInfo deviceInfo = new DeviceInfo();
+            deviceInfo.setSn(sn);
+            deviceInfo.setTags(tags);
+            deviceInfo.setLonlat(lonlat);
+            if (!TextUtils.isEmpty(name)) {
+                deviceInfo.setName(name);
             }
+            Intent intent = new Intent();
+            intent.setClass(mContext, DeployActivity.class);
+            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
+            intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+            intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
+            getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
         } catch (Exception e) {
             e.printStackTrace();
         }
+
     }
 
     private void vibrate() {
@@ -118,7 +162,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
         playVoice();
         int currentIndex = ((MainActivity) mContext).getSensoroPager().getCurrentItem();
         System.out.println("currentIndex==>" + currentIndex);
-        if (currentIndex != 3) {
+        if (currentIndex != 4) {
             return;
         }
         if (TextUtils.isEmpty(result)) {

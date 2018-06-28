@@ -1,12 +1,13 @@
 package com.sensoro.smartcity.server.bean;
 
 import java.io.Serializable;
+import java.util.Arrays;
 
 /**
  * Created by sensoro on 17/7/25.
  */
 
-public class UserInfo implements Serializable{
+public class UserInfo implements Serializable {
 
     private String _id;
     private String id;
@@ -170,5 +171,29 @@ public class UserInfo implements Serializable{
 
     public void setCharacter(Character character) {
         this.character = character;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "_id='" + _id + '\'' +
+                ", id='" + id + '\'' +
+                ", phone='" + phone + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", password='" + password + '\'' +
+                ", cases=" + Arrays.toString(cases) +
+                ", appId='" + appId + '\'' +
+                ", appKey='" + appKey + '\'' +
+                ", appSecret='" + appSecret + '\'' +
+                ", isSpecific='" + isSpecific + '\'' +
+                ", roles='" + roles + '\'' +
+                ", sessionID='" + sessionID + '\'' +
+                ", controllerUid='" + controllerUid + '\'' +
+                ", chirldren=" + Arrays.toString(chirldren) +
+                ", character=" + character +
+                ", createdTime=" + createdTime +
+                ", updatedTime=" + updatedTime +
+                ", isStop=" + isStop +
+                '}';
     }
 }

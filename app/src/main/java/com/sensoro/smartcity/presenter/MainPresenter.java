@@ -23,6 +23,7 @@ import com.sensoro.smartcity.fragment.AlarmListFragment;
 import com.sensoro.smartcity.fragment.IndexFragment;
 import com.sensoro.smartcity.fragment.MerchantSwitchFragment;
 import com.sensoro.smartcity.fragment.PointDeployFragment;
+import com.sensoro.smartcity.fragment.StationDeployFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.iwidget.IOndestroy;
@@ -90,6 +91,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     private AlarmListFragment alarmListFragment = null;
     private MerchantSwitchFragment merchantSwitchFragment = null;
     private PointDeployFragment pointDeployFragment = null;
+    private StationDeployFragment stationDeployFragment = null;
     //
     private volatile Socket mSocket = null;
     private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
@@ -138,10 +140,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         alarmListFragment = AlarmListFragment.newInstance("");
         merchantSwitchFragment = MerchantSwitchFragment.newInstance("");
         pointDeployFragment = PointDeployFragment.newInstance("");
+        stationDeployFragment = StationDeployFragment.newInstance("");
+
         fragmentList.add(indexFragment);
         fragmentList.add(alarmListFragment);
         fragmentList.add(merchantSwitchFragment);
         fragmentList.add(pointDeployFragment);
+        fragmentList.add(stationDeployFragment);
         getView().updateMainPageAdapterData();
         getView().showAccountInfo(mUserName, mPhone);
         mHandler.postDelayed(mRunnable, 3000L);
@@ -457,15 +462,25 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             alarmListFragment.requestDataByDate(startDate, endDate);
             getView().setCurrentItem(1);
         } else if (resultCode == RESULT_CODE_DEPLOY) {
-            pointDeployFragment.showRootView();
+            getView().freshAccountSwitch(accountType);
             boolean containsData = data.getBooleanExtra(EXTRA_CONTAINS_DATA, false);
             if (containsData) {
                 DeviceInfo deviceInfo = (DeviceInfo) data.getSerializableExtra(EXTRA_DEVICE_INFO);
                 refreshDeviceInfo(deviceInfo);
             }
-            getView().setCurrentItem(3);
+            //
+            boolean is_station = data.getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
+            if (is_station) {
+                getView().setCurrentItem(4);
+                pointDeployFragment.hiddenRootView();
+                stationDeployFragment.showRootView();
+            } else {
+                getView().setCurrentItem(3);
+                pointDeployFragment.showRootView();
+                stationDeployFragment.hiddenRootView();
+            }
         }
-        getView().freshAccountSwitch(accountType);
+
     }
 
     public void switchAccountByType(int position) {
@@ -473,6 +488,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         switch (accountType) {
             case SUPPER_ACCOUNT:
                 pointDeployFragment.hiddenRootView();
+                stationDeployFragment.hiddenRootView();
                 merchantSwitchFragment.requestData();
                 merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
                 break;
@@ -480,22 +496,31 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 switch (position) {
                     case 0:
                         pointDeployFragment.hiddenRootView();
+                        stationDeployFragment.hiddenRootView();
                         indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
                         break;
                     case 1:
                         pointDeployFragment.hiddenRootView();
+                        stationDeployFragment.hiddenRootView();
                         alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
                         break;
                     case 2:
                         pointDeployFragment.hiddenRootView();
+                        stationDeployFragment.hiddenRootView();
                         merchantSwitchFragment.requestData();
                         merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
                         break;
                     case 3:
                         pointDeployFragment.showRootView();
+                        stationDeployFragment.hiddenRootView();
+                        break;
+                    case 4:
+                        stationDeployFragment.showRootView();
+                        pointDeployFragment.hiddenRootView();
                         break;
                     default:
                         pointDeployFragment.hiddenRootView();
+                        stationDeployFragment.hiddenRootView();
                         break;
                 }
                 break;
@@ -503,17 +528,24 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 switch (position) {
                     case 0:
                         pointDeployFragment.hiddenRootView();
+                        stationDeployFragment.hiddenRootView();
                         indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
                         break;
                     case 1:
                         pointDeployFragment.hiddenRootView();
+                        stationDeployFragment.hiddenRootView();
                         alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
                         break;
                     case 2:
+                        stationDeployFragment.hiddenRootView();
                         pointDeployFragment.showRootView();
                         break;
+                    case 3:
+                        pointDeployFragment.hiddenRootView();
+                        stationDeployFragment.showRootView();
                     default:
                         pointDeployFragment.hiddenRootView();
+                        stationDeployFragment.hiddenRootView();
                         break;
                 }
                 break;
