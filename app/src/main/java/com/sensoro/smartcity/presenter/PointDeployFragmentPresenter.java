@@ -31,6 +31,7 @@ import static android.content.Context.VIBRATOR_SERVICE;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_IS_STATION_DEPLOY;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN_RESULT;
 import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_POINT_DEPLOY;
 
 public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFragmentView> implements
@@ -59,7 +60,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
         getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
     }
 
-    private void scanFinish(String scanSerialNumber) {
+    private void scanFinish(final String scanSerialNumber) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
@@ -70,7 +71,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
 
             @Override
             public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                refresh(deviceInfoListRsp);
+                refresh(scanSerialNumber, deviceInfoListRsp);
             }
 
             @Override
@@ -82,7 +83,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
         });
     }
 
-    private void refresh(DeviceInfoListRsp response) {
+    private void refresh(String scanSN, DeviceInfoListRsp response) {
         try {
             Intent intent = new Intent();
             if (response.getData().size() > 0) {
@@ -94,6 +95,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
             } else {
                 intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
                 intent.setClass(mContext, DeployResultActivity.class);
+                intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
                 intent.putExtra(EXTRA_SENSOR_RESULT, -1);
                 getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
             }

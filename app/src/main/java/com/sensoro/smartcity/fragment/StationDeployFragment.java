@@ -105,8 +105,8 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         try {
             if (mPrestener != null && mIsVisibleToUser) {
 //                mQRCodeView.startCamera();
@@ -118,12 +118,11 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 mQRCodeView.stopCamera();
@@ -214,6 +213,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 
     @Override
     public void startScan() {
+        mQRCodeView.startCamera();
         mQRCodeView.startSpotAndShowRect();
     }
 

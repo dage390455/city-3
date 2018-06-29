@@ -35,6 +35,15 @@ public class DeviceInfo implements Serializable, Comparable {
     private boolean isPushDevice;
     private SensorDetailInfo sensoroDetails;
 
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    private String address;
     public DeviceInfo() {
         isPushDevice = false;
         isNewDevice = false;

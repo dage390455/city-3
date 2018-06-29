@@ -23,6 +23,7 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void setStatusTextView(String status);
 
     void setUpdateTextView(String update);
+    void setAddressTextView(String address);
 
     void setUpdateTextViewVisible(boolean isVisible);
 

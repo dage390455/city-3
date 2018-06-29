@@ -210,7 +210,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void setCurrentPagerItem(int position) {
-        sensoroPager.setCurrentItem(position);
+        sensoroPager.setCurrentItem(position,false);
     }
 
     @Override

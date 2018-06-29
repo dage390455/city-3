@@ -33,6 +33,7 @@ import static android.content.Context.VIBRATOR_SERVICE;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_IS_STATION_DEPLOY;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN_RESULT;
 import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_STATION_DEPLOY;
 
 public class StationDeployFragmentPresenter extends BasePresenter<IStationDeployFragmentView> implements
@@ -61,7 +62,7 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
         getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
     }
 
-    private void scanFinish(String scanSerialNumber) {
+    private void scanFinish(final String scanSerialNumber) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getStationDetail(scanSerialNumber).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<StationInfoRsp>() {
@@ -79,7 +80,7 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
             public void onErrorMsg(String errorMsg) {
                 getView().dismissProgressDialog();
                 if (errorMsg.equals("4010104")) {
-                    freshError();
+                    freshError(scanSerialNumber);
                 } else {
                     getView().toastShort(errorMsg);
                     getView().startScan();
@@ -90,11 +91,12 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
         });
     }
 
-    private void freshError() {
+    private void freshError(String scanSN) {
         //
         Intent intent = new Intent();
         intent.setClass(mContext, DeployResultActivity.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+        intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
         intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
         getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
     }

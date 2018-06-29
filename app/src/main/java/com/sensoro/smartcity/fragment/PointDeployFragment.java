@@ -14,6 +14,7 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IPointDeployFragmentView;
 import com.sensoro.smartcity.presenter.PointDeployFragmentPresenter;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -82,7 +83,6 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
             if (mPrestener != null) {
 //            mPrestener.getUserVisible(getUserVisibleHint());
                 if (mIsVisibleToUser) {
-//                    mQRCodeView.startCamera();
 //        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
                     startScan();
 //                    mPrestener.resumeCamera(surfaceView.getHolder());
@@ -102,8 +102,9 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
+        LogUtils.loge(this, "用户可见: " + mIsVisibleToUser);
         try {
             if (mPrestener != null && mIsVisibleToUser) {
 //                mQRCodeView.startCamera();
@@ -115,12 +116,12 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
+    public void onStop() {
+        super.onStop();
+        LogUtils.loge(this, "用户可见: " + mIsVisibleToUser);
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 mQRCodeView.stopCamera();
@@ -131,8 +132,8 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         } catch (Exception e) {
             e.printStackTrace();
         }
-
     }
+
 
     public void hiddenRootView() {
         if (mRootView != null) {
@@ -201,6 +202,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 
     @Override
     public void startScan() {
+        mQRCodeView.startCamera();
         mQRCodeView.startSpotAndShowRect();
     }
 

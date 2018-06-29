@@ -86,6 +86,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private Handler mHandler;
     private DeviceInfo deviceInfo;
     private boolean is_station;
+    private String mAddress;
 
     @Override
     public void initData(Context context) {
@@ -426,6 +427,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                                 deviceInfo.setTags(tags);
                                 deviceInfo.setLonlat(lonlat);
                                 deviceInfo.setStatus(normalStatus);
+                                deviceInfo.setAddress(mAddress);
                                 if (!TextUtils.isEmpty(name)) {
                                     deviceInfo.setName(name);
                                 }
@@ -483,7 +485,9 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                                 Intent intent = new Intent(mContext, DeployResultActivity.class);
                                 intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
                                 intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                                intent.putExtra(EXTRA_DEVICE_INFO, deviceDeployRsp.getData());
+                                DeviceInfo data = deviceDeployRsp.getData();
+                                data.setAddress(mAddress);
+                                intent.putExtra(EXTRA_DEVICE_INFO, data);
                                 intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
                                 intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
                                 intent.putExtra(EXTRA_SETTING_CONTACT, contact);
@@ -611,8 +615,10 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         if (subthf != null) {
             stringBuffer.append(subthf);
         }
-        System.out.println(stringBuffer.toString());
-        smoothMoveMarker.setTitle(stringBuffer.toString());
+        String address = stringBuffer.toString();
+        mAddress = address;
+        System.out.println(address);
+        smoothMoveMarker.setTitle(address);
 
         mHandler.post(new Runnable() {
             @Override

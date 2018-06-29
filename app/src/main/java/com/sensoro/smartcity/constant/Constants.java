@@ -96,6 +96,7 @@ public interface Constants {
     String EXTRA_SENSOR_TYPES = "extra_types";
     String EXTRA_SENSOR_TYPE = "extra_type";
     String EXTRA_SENSOR_RESULT = "extra_result";
+    String EXTRA_SENSOR_SN_RESULT = "extra_sensor_sn_result";
     String EXTRA_SENSOR_LON = "extra_lon";
     String EXTRA_SENSOR_LAN = "extra_lan";
     String EXTRA_SENSOR_STATUS = "extra_status";

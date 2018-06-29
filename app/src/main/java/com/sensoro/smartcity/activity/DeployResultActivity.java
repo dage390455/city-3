@@ -47,6 +47,8 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     TextView updateTextView;
     @BindView(R.id.deploy_result_iv)
     ImageView resultImageView;
+    @BindView(R.id.deploy_result_address_tv)
+    TextView deployResultAddressTv;
 
 
     @Override
@@ -133,6 +135,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setUpdateTextView(String update) {
         updateTextView.setText(update);
+    }
+
+    @Override
+    public void setAddressTextView(String address) {
+        deployResultAddressTv.setText(address);
     }
 
     @Override

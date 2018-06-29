@@ -34,10 +34,19 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             if (resultCode == -1) {
                 getView().setResultImageView(R.mipmap.ic_deploy_failed);
                 getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_not_exist));
+                String sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN_RESULT);
+                if (!TextUtils.isEmpty(sn)) {
+                    getView().setSnTextView(mContext.getString(R.string.sensor_detail_sn) + "：" + sn);
+                }
+
             } else {
                 deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
                 String sn = deviceInfo.getSn().toUpperCase();
                 String name = deviceInfo.getName();
+                String address = deviceInfo.getAddress();
+                if (!TextUtils.isEmpty(address)) {
+                    getView().setAddressTextView(address);
+                }
                 String lon = mContext.getIntent().getStringExtra(EXTRA_SENSOR_LON);
                 String lan = mContext.getIntent().getStringExtra(EXTRA_SENSOR_LAN);
                 if (!is_station) {
