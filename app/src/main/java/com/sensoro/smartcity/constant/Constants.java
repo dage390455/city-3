@@ -42,7 +42,7 @@ public interface Constants {
             "井位", "水位检测", "地磁", "跑冒滴漏",
             "火焰", "光线", "液化石油气", "二氧化氮",
             "PM2.5/10", "烟感", "温湿度",
-            "水压"
+            "消防液压"
     };
     String INDEX_TYPE_VALUES[] = {
             "all",

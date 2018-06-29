@@ -2,7 +2,6 @@ package com.sensoro.smartcity.base;
 
 import android.content.Context;
 
-import java.lang.ref.Reference;
 import java.lang.ref.WeakReference;
 
 /**
@@ -11,7 +10,7 @@ import java.lang.ref.WeakReference;
  */
 
 public abstract class BasePresenter<V> {
-    private Reference<V> mViewRef;
+    private WeakReference<V> mViewRef;
 
     /**
      * 这里采用弱引用
@@ -28,8 +27,8 @@ public abstract class BasePresenter<V> {
      * @return
      */
     protected V getView() {
-        return mViewRef.get();
-
+        V v = mViewRef.get();
+        return v;
     }
 
     /**

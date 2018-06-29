@@ -28,6 +28,22 @@
         <item name="android:windowIsTranslucent">false</item>
     </style>
 
+    <style name="text_detail_integer">
+        <item name="android:textSize">@dimen/city_super_large_size</item>
+    </style>
+
+    <style name="text_detail_decimal">
+        <item name="android:textSize">@dimen/city_large_size</item>
+    </style>
+
+    <style name="text_index_integer">
+        <item name="android:textSize">@dimen/city_super_size</item>
+    </style>
+
+    <style name="text_index_decimal">
+        <item name="android:textSize">@dimen/city_normal_size</item>
+    </style>
+
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>

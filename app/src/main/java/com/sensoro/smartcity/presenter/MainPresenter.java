@@ -14,7 +14,6 @@ import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 import com.igexin.sdk.PushManager;
-import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -38,7 +37,6 @@ import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UpdateRsp;
-import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,7 +47,6 @@ import org.json.JSONObject;
 
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -58,15 +55,33 @@ import rx.schedulers.Schedulers;
 public class MainPresenter extends BasePresenter<IMainView> implements IOndestroy, Constants, IOnStart {
     private Activity mActivity;
 
-    private final List<String> dataSupper = new ArrayList<>();
-    private final List<String> dataNormal = new ArrayList<>();
-    private final List<String> dataBussise = new ArrayList<>();
     private String mUserName = null;
     private String mPhone = null;
     private String mPhoneId = null;
     private Character mCharacter = null;
     private String mIsSupperAccountStr;
     private String roles;
+
+
+    private final List<Fragment> fragmentList = new ArrayList<>();
+    //
+    private IndexFragment indexFragment = null;
+    private AlarmListFragment alarmListFragment = null;
+    private MerchantSwitchFragment merchantSwitchFragment = null;
+    private PointDeployFragment pointDeployFragment = null;
+    private StationDeployFragment stationDeployFragment = null;
+    //
+    private volatile Socket mSocket = null;
+    private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
+
+    private final Handler mHandler = new Handler();
+    private final TaskRunnable mRunnable = new TaskRunnable();
+    //
+    public static final int SUPPER_ACCOUNT = 1;
+    public static final int NORMOL_ACCOUNT = 2;
+    public static final int BUSSISE_ACCOUNT = 3;
+    private volatile int accountType = NORMOL_ACCOUNT;
+    //
 
     /**
      * 超级用户
@@ -84,26 +99,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     public List<Fragment> getFragmentList() {
         return fragmentList;
     }
-
-    private final List<Fragment> fragmentList = new ArrayList<>();
-    //
-    private IndexFragment indexFragment = null;
-    private AlarmListFragment alarmListFragment = null;
-    private MerchantSwitchFragment merchantSwitchFragment = null;
-    private PointDeployFragment pointDeployFragment = null;
-    private StationDeployFragment stationDeployFragment = null;
-    //
-    private volatile Socket mSocket = null;
-    private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
-
-    private final Handler mHandler = new Handler();
-    private final TaskRunnable mRunnable = new TaskRunnable();
-    //
-//    private int current_iteam = 0;
-    public static final int SUPPER_ACCOUNT = 1;
-    public static final int NORMOL_ACCOUNT = 2;
-    public static final int BUSSISE_ACCOUNT = 3;
-    private int accountType = NORMOL_ACCOUNT;
 
     public void checkPush() {
         boolean pushTurnedOn = PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance());
@@ -123,12 +118,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        String[] titleArray = mActivity.getResources().getStringArray(R.array.drawer_title_array);
-        dataNormal.addAll(Arrays.asList(titleArray));
-        String[] titleArray_no = mActivity.getResources().getStringArray(R.array.drawer_title_array_nobussise);
-        dataBussise.addAll(Arrays.asList(titleArray_no));
-        String[] titleArray_supper = mActivity.getResources().getStringArray(R.array.drawer_title_array_supper);
-        dataSupper.addAll(Arrays.asList(titleArray_supper));
+        //
         mUserName = mActivity.getIntent().getStringExtra(EXTRA_USER_NAME);
         mPhone = mActivity.getIntent().getStringExtra(EXTRA_PHONE);
         mPhoneId = mActivity.getIntent().getStringExtra(EXTRA_PHONE_ID);
@@ -137,11 +127,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mIsSupperAccountStr = mActivity.getIntent().getStringExtra(EXTRA_IS_SPECIFIC);
         //
         indexFragment = IndexFragment.newInstance(mCharacter);
-        alarmListFragment = AlarmListFragment.newInstance("");
-        merchantSwitchFragment = MerchantSwitchFragment.newInstance("");
-        pointDeployFragment = PointDeployFragment.newInstance("");
-        stationDeployFragment = StationDeployFragment.newInstance("");
-
+        alarmListFragment = AlarmListFragment.newInstance("alarm");
+        merchantSwitchFragment = MerchantSwitchFragment.newInstance("merchant");
+        pointDeployFragment = PointDeployFragment.newInstance("point");
+        stationDeployFragment = StationDeployFragment.newInstance("station");
+        //
         fragmentList.add(indexFragment);
         fragmentList.add(alarmListFragment);
         fragmentList.add(merchantSwitchFragment);
@@ -159,21 +149,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         this.roles = roles;
         getView().showAccountInfo(mUserName, mPhone);
         if (indexFragment != null) {
-            getView().setCurrentItem(0);
-            indexFragment.reFreshDataByDirection(Constants.DIRECTION_DOWN);
-            if ("true".equalsIgnoreCase(isSpecific)) {
+            if (isSupperAccount()) {
                 accountType = SUPPER_ACCOUNT;
-                getView().setMenuInfoAdapterData(dataSupper);
             } else {
+                indexFragment.reFreshDataByDirection(Constants.DIRECTION_DOWN);
                 if (this.roles.equalsIgnoreCase("business")) {
                     accountType = BUSSISE_ACCOUNT;
-                    getView().setMenuInfoAdapterData(dataBussise);
+
                 } else {
                     accountType = NORMOL_ACCOUNT;
-                    getView().setMenuInfoAdapterData(dataNormal);
                 }
             }
             getView().freshAccountSwitch(accountType);
+            getView().setCurrentPagerItem(0);
+            getView().setMenuSelected(0);
             reconnect();
             mHandler.post(new Runnable() {
                 @Override
@@ -181,7 +170,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                     indexFragment.requestTopData(false);
                 }
             });
-
         }
 
     }
@@ -205,11 +193,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     public void freshAccountType() {
         if (isSupperAccount()) {
             accountType = SUPPER_ACCOUNT;
-            getView().setCurrentItem(2);
-            getView().setMenuInfoAdapterData(dataSupper);
-            pointDeployFragment.hiddenRootView();
+            getView().setCurrentPagerItem(2);
+        } else {
+            getView().setCurrentPagerItem(0);
         }
         //TODO 考虑到声明周期问题 暂时延缓后续优化
+
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -217,14 +206,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                     merchantSwitchFragment.requestData();
                 } else if (roles.equalsIgnoreCase("business")) {
                     accountType = BUSSISE_ACCOUNT;
-                    getView().setMenuInfoAdapterData(dataBussise);
                 } else {
                     accountType = NORMOL_ACCOUNT;
-                    getView().setMenuInfoAdapterData(dataNormal);
                 }
-
                 merchantSwitchFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
                 getView().freshAccountSwitch(accountType);
+                getView().setMenuSelected(0);
             }
         }, 50);
     }
@@ -367,7 +354,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         @Override
         public void run() {
             requestUpdate();
-            createSocket();
+            if (!isSupperAccount()) {
+                createSocket();
+            }
         }
     }
 
@@ -405,13 +394,15 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_CODE_ORIGIN) {
-            getView().setCurrentItem(0);
+            getView().setCurrentPagerItem(0);
+            getView().setMenuSelected(0);
         } else if (resultCode == RESULT_CODE_MAP) {
             if (data.getSerializableExtra(EXTRA_DEVICE_INFO) != null) {
                 DeviceInfo deviceInfo = (DeviceInfo) data.getSerializableExtra(EXTRA_DEVICE_INFO);
                 refreshDeviceInfo(deviceInfo);
             }
-            getView().setCurrentItem(0);
+            getView().setCurrentPagerItem(0);
+            getView().setMenuSelected(0);
         } else if (resultCode == RESULT_CODE_SEARCH_DEVICE) {
             DeviceInfoListRsp infoRspData = (DeviceInfoListRsp) data.getSerializableExtra(EXTRA_SENSOR_INFO);
             if (infoRspData != null) {
@@ -420,14 +411,18 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 DeviceInfo deviceInfo = (DeviceInfo) data.getSerializableExtra(EXTRA_DEVICE_INFO);
                 refreshDeviceInfo(deviceInfo);
             }
-            getView().setCurrentItem(0);
-        } else if (resultCode == RESULT_CODE_CHANGE_MERCHANT) {
-            UserAccountRsp infoRspData = (UserAccountRsp) data.getSerializableExtra(EXTRA_MERCHANT_INFO);
-            if (infoRspData != null) {
-                merchantSwitchFragment.refresh(infoRspData);
-            }
-            getView().setCurrentItem(2);
-        } else if (resultCode == RESULT_CODE_SEARCH_MERCHANT) {
+            getView().setCurrentPagerItem(0);
+            getView().setMenuSelected(0);
+        }
+//        else if (resultCode == RESULT_CODE_CHANGE_MERCHANT) {
+//            UserAccountRsp infoRspData = (UserAccountRsp) data.getSerializableExtra(EXTRA_MERCHANT_INFO);
+//            if (infoRspData != null) {
+//                merchantSwitchFragment.refresh(infoRspData);
+//            }
+//            getView().setCurrentPagerItem(2);
+////            getView().setMenuSelected(0);
+//        }
+        else if (resultCode == RESULT_CODE_SEARCH_MERCHANT) {
             String nickname = data.getStringExtra("nickname");
             String phone = data.getStringExtra("phone");
             String roles = data.getStringExtra("roles");
@@ -448,21 +443,25 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                     alarmListFragment.refreshUIByType(type);
                 }
             }
-            getView().setCurrentItem(1);
+            getView().setCurrentPagerItem(1);
+            getView().setMenuSelected(1);
+
         } else if (resultCode == RESULT_CODE_ALARM) {
             alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
-            getView().setCurrentItem(1);
+            getView().setCurrentPagerItem(1);
+            getView().setMenuSelected(1);
         } else if (resultCode == RESULT_CODE_ALARM_DETAIL) {
             DeviceAlarmLogInfo deviceAlarmLogInfo = (DeviceAlarmLogInfo) data.getSerializableExtra(EXTRA_ALARM_INFO);
             alarmListFragment.onPopupCallback(deviceAlarmLogInfo);
-            getView().setCurrentItem(1);
+            getView().setCurrentPagerItem(1);
+            getView().setMenuSelected(1);
         } else if (resultCode == RESULT_CODE_CALENDAR) {
             String startDate = data.getStringExtra(EXTRA_ALARM_START_DATE);
             String endDate = data.getStringExtra(EXTRA_ALARM_END_DATE);
             alarmListFragment.requestDataByDate(startDate, endDate);
-            getView().setCurrentItem(1);
+            getView().setCurrentPagerItem(1);
+            getView().setMenuSelected(1);
         } else if (resultCode == RESULT_CODE_DEPLOY) {
-            getView().freshAccountSwitch(accountType);
             boolean containsData = data.getBooleanExtra(EXTRA_CONTAINS_DATA, false);
             if (containsData) {
                 DeviceInfo deviceInfo = (DeviceInfo) data.getSerializableExtra(EXTRA_DEVICE_INFO);
@@ -471,86 +470,59 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             //
             boolean is_station = data.getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
             if (is_station) {
-                getView().setCurrentItem(4);
-                pointDeployFragment.hiddenRootView();
-                stationDeployFragment.showRootView();
+                getView().setCurrentPagerItem(4);
             } else {
-                getView().setCurrentItem(3);
-                pointDeployFragment.showRootView();
-                stationDeployFragment.hiddenRootView();
+                getView().setCurrentPagerItem(3);
             }
         }
 
     }
 
-    public void switchAccountByType(int position) {
-        //账户切换
+    public void clickMenuItemByType(int position) {
+        getView().setMenuSelected(position);
         switch (accountType) {
             case SUPPER_ACCOUNT:
-                pointDeployFragment.hiddenRootView();
-                stationDeployFragment.hiddenRootView();
                 merchantSwitchFragment.requestData();
                 merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
+                getView().setCurrentPagerItem(2);
                 break;
             case NORMOL_ACCOUNT:
                 switch (position) {
                     case 0:
-                        pointDeployFragment.hiddenRootView();
-                        stationDeployFragment.hiddenRootView();
                         indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
                         break;
                     case 1:
-                        pointDeployFragment.hiddenRootView();
-                        stationDeployFragment.hiddenRootView();
                         alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
                         break;
                     case 2:
-                        pointDeployFragment.hiddenRootView();
-                        stationDeployFragment.hiddenRootView();
                         merchantSwitchFragment.requestData();
                         merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
                         break;
-                    case 3:
-                        pointDeployFragment.showRootView();
-                        stationDeployFragment.hiddenRootView();
-                        break;
-                    case 4:
-                        stationDeployFragment.showRootView();
-                        pointDeployFragment.hiddenRootView();
-                        break;
                     default:
-                        pointDeployFragment.hiddenRootView();
-                        stationDeployFragment.hiddenRootView();
                         break;
                 }
+                getView().setCurrentPagerItem(position);
                 break;
             case BUSSISE_ACCOUNT:
                 switch (position) {
                     case 0:
-                        pointDeployFragment.hiddenRootView();
-                        stationDeployFragment.hiddenRootView();
                         indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
+                        getView().setCurrentPagerItem(position);
                         break;
                     case 1:
-                        pointDeployFragment.hiddenRootView();
-                        stationDeployFragment.hiddenRootView();
                         alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
+                        getView().setCurrentPagerItem(position);
                         break;
                     case 2:
-                        stationDeployFragment.hiddenRootView();
-                        pointDeployFragment.showRootView();
+                        getView().setCurrentPagerItem(3);
                         break;
                     case 3:
-                        pointDeployFragment.hiddenRootView();
-                        stationDeployFragment.showRootView();
+                        getView().setCurrentPagerItem(4);
                     default:
-                        pointDeployFragment.hiddenRootView();
-                        stationDeployFragment.hiddenRootView();
                         break;
                 }
                 break;
         }
-        getView().changeAccount(accountType, position);
     }
 
     private void refreshDeviceInfo(DeviceInfo deviceInfo) {

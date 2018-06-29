@@ -8,10 +8,16 @@ import java.util.List;
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
     private List<Fragment> fragments;
+//    private int mSize;
+//    private long baseId = 0;
+//    private int id = 1;
+//    private FragmentManager fm;
 
     public MainPagerAdapter(android.support.v4.app.FragmentManager fm, List<Fragment> fragments) {
         super(fm);
         this.fragments = fragments;
+//        this.fm = fm;
+//        mSize = fragments == null ? 0 : fragments.size();
     }
 
     @Override
@@ -23,4 +29,45 @@ public class MainPagerAdapter extends FragmentPagerAdapter {
     public int getCount() {
         return fragments.size();
     }
+
+//    @Override
+//    public int getItemPosition(Object object) {
+//        Fragment fragment = (Fragment) object;
+//        int position = fragments.indexOf(fragment);
+//
+//        if (position >= 0) {
+//            return position;
+//        } else {
+//            return POSITION_NONE;
+//        }
+//    }
+
+//    @Override
+//    public long getItemId(int position) {
+//        return baseId + position;
+//    }
+
+//    public void setFragments(List<Fragment> fragments) {
+//        this.fragments = fragments;
+//        mSize = fragments == null ? 0 : fragments.size();
+//    }
+
+//    @Override
+//    public boolean isViewFromObject(View view, Object object) {
+//        return view == ((Fragment) object).getView();
+//    }
+
+    //
+//    @Override
+//    public void destroyItem(ViewGroup container, int position, Object object) {
+//        Fragment fragment = ((Fragment) object);
+////        fragments.remove(fragment);
+//    }
+//
+//    @Override
+//    public void notifyDataSetChanged() {
+//        super.notifyDataSetChanged();
+//        id++;
+//        baseId += getCount() + id;
+//    }
 }

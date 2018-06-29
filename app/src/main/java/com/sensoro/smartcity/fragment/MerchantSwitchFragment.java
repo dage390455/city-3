@@ -107,7 +107,10 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
     }
 
     public void refreshData(String username, String phone, String phoneId) {
-        mPrestener.refreshUserData(username, phone, phoneId);
+        if (mPrestener!=null){
+
+            mPrestener.refreshUserData(username, phone, phoneId);
+        }
     }
 
 

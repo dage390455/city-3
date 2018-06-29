@@ -27,13 +27,8 @@ import com.sensoro.smartcity.widget.SensoroToast;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
-import java.util.List;
-
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
-import static com.sensoro.smartcity.presenter.MainPresenter.BUSSISE_ACCOUNT;
-import static com.sensoro.smartcity.presenter.MainPresenter.NORMOL_ACCOUNT;
-import static com.sensoro.smartcity.presenter.MainPresenter.SUPPER_ACCOUNT;
 
 public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView, AdapterView
         .OnItemClickListener, View
@@ -105,14 +100,12 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mVersionTextView = (TextView) findViewById(R.id.app_version);
         mExitLayout = (LinearLayout) findViewById(R.id.main_left_exit);
         mExitLayout.setOnClickListener(this);
-
         mMenuInfoAdapter = new MenuInfoAdapter(mActivity);
         mListView.setAdapter(mMenuInfoAdapter);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setOnItemClickListener(this);
-
         sensoroPager = (SensoroPager) findViewById(R.id.main_container);
-        sensoroPager.setOffscreenPageLimit(5);
+        sensoroPager.setOffscreenPageLimit(6);
         mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mPrestener
                 .getFragmentList());
         sensoroPager.setAdapter(mainPagerAdapter);
@@ -157,7 +150,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mMenuDrawer.closeMenu();
-        mPrestener.switchAccountByType(position);
+        mPrestener.clickMenuItemByType(position);
     }
 
 
@@ -187,53 +180,12 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mVersionTextView.setText(versionStr);
     }
 
-
     @Override
-    public void changeAccount(int accountType, int position) {
+    public void setMenuSelected(int position) {
         mMenuInfoAdapter.setSelectedIndex(position);
-        mMenuInfoAdapter.showAccountSwitch(accountType);
-        //账户切换
-        switch (accountType) {
-            case SUPPER_ACCOUNT:
-                sensoroPager.setCurrentItem(2);
-                break;
-            case NORMOL_ACCOUNT:
-                switch (position) {
-                    case 0:
-                    case 1:
-                    case 2:
-                    case 3:
-                    case 4:
-                        sensoroPager.setCurrentItem(position);
-                        break;
-                    case 5:
-                        mPrestener.logout();
-                        break;
-                    default:
-                        break;
-                }
-                break;
-            case BUSSISE_ACCOUNT:
-                switch (position) {
-                    case 0:
-                    case 1:
-                        sensoroPager.setCurrentItem(position);
-                        break;
-                    case 2:
-                        sensoroPager.setCurrentItem(3);
-                        break;
-                    case 3:
-                        sensoroPager.setCurrentItem(4);
-                        break;
-                    case 4:
-                        mPrestener.logout();
-                        break;
-                    default:
-                        break;
-                }
-                break;
-        }
+        mListView.setSelection(position);
     }
+
 
     @Override
     public void showUpdateAppDialog(String log, final String url) {
@@ -257,20 +209,13 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void setCurrentItem(int position) {
+    public void setCurrentPagerItem(int position) {
         sensoroPager.setCurrentItem(position);
-        mMenuInfoAdapter.setSelectedIndex(position);
-        mListView.setSelection(position);
     }
 
     @Override
     public void freshAccountSwitch(int accountType) {
         mMenuInfoAdapter.showAccountSwitch(accountType);
-    }
-
-    @Override
-    public void setMenuInfoAdapterData(List<String> data) {
-        mMenuInfoAdapter.setDataList(data);
     }
 
     @Override

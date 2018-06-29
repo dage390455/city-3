@@ -173,4 +173,5 @@ dependencies {
     compile project(':TagsEditText')
     compile 'org.greenrobot:eventbus:3.1.1'
     compile project(':zbar')
+//    compile 'cn.bingoogolapple:bga-qrcode-zbar:1.2.5'
 }

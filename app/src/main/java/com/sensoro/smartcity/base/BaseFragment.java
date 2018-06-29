@@ -28,6 +28,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
             savedInstanceState) {
+
         mPrestener = createPresenter();
         mPrestener.attachView((V) this);
         V view = mPrestener.getView();

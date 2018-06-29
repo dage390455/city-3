@@ -12,9 +12,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.widget.SensoroTextView;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import static com.sensoro.smartcity.presenter.MainPresenter.BUSSISE_ACCOUNT;
 import static com.sensoro.smartcity.presenter.MainPresenter.NORMOL_ACCOUNT;
 import static com.sensoro.smartcity.presenter.MainPresenter.SUPPER_ACCOUNT;
@@ -30,41 +27,34 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
 
     private int selectedIndex;
     private int tempAccountType = NORMOL_ACCOUNT;
-    private List<String> mData;
+    private String[] currentData;
+    private final String[] titleNormalArray;
+    private final String[] titleBussArray;
+    private final String[] titleSupperArray;
 
-    //    private int count;
     public MenuInfoAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        mData = new ArrayList<>();
-        String mMenuInfoArray[] = context.getResources().getStringArray(R.array.drawer_title_array);
-        for (String str : mMenuInfoArray) {
-            mData.add(str);
-        }
-    }
-
-    public void setDataList(List<String> data) {
-        mData = data;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        return super.getItemViewType(position);
-
+        //
+        titleNormalArray = context.getResources().getStringArray(R.array.drawer_title_array);
+        titleBussArray = context.getResources().getStringArray(R.array.drawer_title_array_nobussise);
+        titleSupperArray = context.getResources().getStringArray(R.array.drawer_title_array_supper);
+        currentData = titleNormalArray;
     }
 
     public void setSelectedIndex(int index) {
         this.selectedIndex = index;
+        notifyDataSetChanged();
     }
 
     @Override
     public int getCount() {
-        return mData.size();
+        return currentData.length;
     }
 
     @Override
     public Object getItem(int i) {
-        return mData.get(i);
+        return currentData[i];
     }
 
     @Override
@@ -86,8 +76,8 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
             holder = (MenuInfoViewHolder) convertView.getTag();
         }
 
-        holder.item_name.setOriginalText(mData.get(position));
-        holder.item_name.setText(mData.get(position));
+        holder.item_name.setOriginalText(currentData[position]);
+        holder.item_name.setText(currentData[position]);
         holder.item_name.setLetterSpacing(3);
         holder.item_name.setTextColor(mContext.getResources().getColor(R.color.c_626262));
         if (tempAccountType == BUSSISE_ACCOUNT) {
@@ -115,6 +105,20 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
      * @param accountType
      */
     public void showAccountSwitch(int accountType) {
+        switch (accountType) {
+            case SUPPER_ACCOUNT:
+                currentData = titleSupperArray;
+                break;
+            case NORMOL_ACCOUNT:
+                currentData = titleNormalArray;
+                break;
+            case BUSSISE_ACCOUNT:
+                currentData = titleBussArray;
+                break;
+            default:
+                currentData = titleNormalArray;
+                break;
+        }
         this.tempAccountType = accountType;
         notifyDataSetChanged();
     }

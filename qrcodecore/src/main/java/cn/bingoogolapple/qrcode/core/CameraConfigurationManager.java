@@ -61,6 +61,7 @@ final class CameraConfigurationManager {
     void setDesiredCameraParameters(Camera camera) {
         Camera.Parameters parameters = camera.getParameters();
         parameters.setPreviewSize(mPreviewResolution.x, mPreviewResolution.y);
+        //TODO 测试
         setZoom(parameters);
 
         camera.setDisplayOrientation(getDisplayOrientation());
@@ -80,7 +81,8 @@ final class CameraConfigurationManager {
         String flashMode;
         /** 是否支持闪光灯 */
         if (newSetting) {
-            flashMode = findSettableValue(parameters.getSupportedFlashModes(), Camera.Parameters.FLASH_MODE_TORCH, Camera.Parameters.FLASH_MODE_ON);
+            flashMode = findSettableValue(parameters.getSupportedFlashModes(), Camera.Parameters.FLASH_MODE_TORCH,
+                    Camera.Parameters.FLASH_MODE_ON);
         } else {
             flashMode = findSettableValue(parameters.getSupportedFlashModes(), Camera.Parameters.FLASH_MODE_OFF);
         }

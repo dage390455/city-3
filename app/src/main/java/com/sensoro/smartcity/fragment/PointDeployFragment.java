@@ -143,9 +143,6 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     public void showRootView() {
         try {
             mRootView.setVisibility(View.VISIBLE);
-            if (mQRCodeView!=null){
-                mQRCodeView.showScanRect();
-            }
         } catch (Exception e) {
             e.printStackTrace();
         }

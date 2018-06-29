@@ -11,7 +11,10 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.text.SpannableString;
+import android.text.Spanned;
 import android.text.TextUtils;
+import android.text.style.TextAppearanceSpan;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -503,13 +506,14 @@ public class WidgetUtil {
                         valueTextView.setText("-");
                         unitTextView.setText(sensorStruct.getUnit());
                     } else {
+                        //
                         unitTextView.setText("" + sensorStruct.getUnit());
                         if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") ||
                                 sensorType
                                         .equalsIgnoreCase
                                                 ("co2")) {
                             DecimalFormat df = new DecimalFormat("###.##");
-                            valueTextView.setText(df.format(sensorStruct.getValue()));
+                            setDetailTextStyle(df.format(sensorStruct.getValue()), valueTextView);
                             return;
                         }
                         if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") ||
@@ -522,18 +526,9 @@ public class WidgetUtil {
                                 sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
                             DecimalFormat df = new DecimalFormat("###.#");
                             String format = df.format(sensorStruct.getValue());
-//                            String[] split = format.split("\\.");
-//                            if (split.length > 1) {
-//                                SupSubSpan supSubSpan = new SupSubSpan(split[0], split[1]);
-//                                SpannableString spannableString = new SpannableString(format);
-//                                spannableString.setSpan(supSubSpan, 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                                valueTextView.setText(spannableString);
-//                            } else {
-                            valueTextView.setText(format);
-//                            }
+                            setDetailTextStyle(format, valueTextView);
                             return;
                         }
-
                         valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
                                 .toString())));
 
@@ -547,6 +542,39 @@ public class WidgetUtil {
 
     }
 
+    private static void setDetailTextStyle(String text, TextView textView) {
+        if (!TextUtils.isEmpty(text)) {
+            if (text.contains(".")) {
+                SpannableString styledText = new SpannableString(text);
+                styledText.setSpan(new TextAppearanceSpan(textView.getContext(), R.style.text_detail_integer), 0,
+                        text.lastIndexOf("."), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                styledText.setSpan(new TextAppearanceSpan(textView.getContext(), R.style.text_detail_decimal), text
+                        .lastIndexOf("."), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                textView.setText(styledText, TextView.BufferType.SPANNABLE);
+            } else {
+                textView.setText(text);
+            }
+        }
+
+    }
+
+    private static void setIndexTextStyle(String text, TextView textView) {
+        if (!TextUtils.isEmpty(text)) {
+            if (text.contains(".")) {
+                SpannableString styledText = new SpannableString(text);
+                styledText.setSpan(new TextAppearanceSpan(textView.getContext(), R.style.text_index_integer), 0,
+                        text.lastIndexOf("."), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                styledText.setSpan(new TextAppearanceSpan(textView.getContext(), R.style.text_index_decimal), text
+                        .lastIndexOf("."), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+                textView.setText(styledText, TextView.BufferType.SPANNABLE);
+            } else {
+                textView.setText(text);
+            }
+        }
+
+    }
 
     public static int judgeSensorType(String[] sensorTypes) {
         if (sensorTypes.length > 0) {
@@ -904,8 +932,27 @@ public class WidgetUtil {
         }
         srcImageView.setLayoutParams(layoutParams);
         if (!isBool && !(value instanceof Boolean)) {
-            valueTextView.setText("" + String.format("%.0f", Double.valueOf(value.toString())));
-            unitTextView.setText(unit);
+            //
+            unitTextView.setText("" + unit);
+            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") || sensorType
+                    .equalsIgnoreCase
+                            ("co2")) {
+                DecimalFormat df = new DecimalFormat("###.##");
+                setIndexTextStyle(df.format(value), valueTextView);
+                return;
+            }
+            if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+                    .equalsIgnoreCase
+                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType.equalsIgnoreCase
+                    ("co2") ||
+                    sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
+                DecimalFormat df = new DecimalFormat("###.#");
+                setIndexTextStyle(df.format(value), valueTextView);
+                return;
+            }
+            valueTextView.setText("" + String.format("%.0f", Double.valueOf(value
+                    .toString())));
+            //
         }
     }
 
@@ -1013,7 +1060,8 @@ public class WidgetUtil {
                     .equalsIgnoreCase
                             ("co2")) {
                 DecimalFormat df = new DecimalFormat("###.##");
-                valueTextView.setText(df.format(sensorStruct.getValue()));
+                setIndexTextStyle(df.format(sensorStruct.getValue()), valueTextView);
+//                valueTextView.setText();
                 return;
             }
             if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
@@ -1022,7 +1070,8 @@ public class WidgetUtil {
                     ("co2") ||
                     sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
                 DecimalFormat df = new DecimalFormat("###.#");
-                valueTextView.setText(df.format(sensorStruct.getValue()));
+                setIndexTextStyle(df.format(sensorStruct.getValue()), valueTextView);
+//                valueTextView.setText(df.format(sensorStruct.getValue()));
                 return;
             }
             valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
