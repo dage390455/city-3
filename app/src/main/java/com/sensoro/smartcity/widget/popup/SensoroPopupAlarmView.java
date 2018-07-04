@@ -17,16 +17,8 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 /**
  * Created by sensoro on 17/11/14.
@@ -35,7 +27,6 @@ import rx.schedulers.Schedulers;
 public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickListener, Constants {
 
     private Context mContext;
-    private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private OnPopupCallbackListener mListener;
     private Animation showAnimation;
     private Animation dismissAnimation;
@@ -48,7 +39,6 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     private EditText remarkEditText;
     private Button mButton;
     private int displayStatus = DISPLAY_STATUS_CONFIRM;
-    private boolean isReConfirm = false;
 
     public SensoroPopupAlarmView(Context context) {
         super(context);
@@ -75,7 +65,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         this.mContext = context;
     }
 
-    public void init() {
+    private void init() {
         mView = LayoutInflater.from(mContext).inflate(R.layout.layout_alarm_popup, this);
         trueTextView = (TextView) mView.findViewById(R.id.alarm_popup_true);
         misTextView = (TextView) mView.findViewById(R.id.alarm_popup_mis);
@@ -129,16 +119,12 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         });
     }
 
-    public void show(DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isReConfirm, SensoroShadowView shadowView,
-                     OnPopupCallbackListener
-                             listener) {
+    public void show(SensoroShadowView shadowView) {
         this.mShadowView = shadowView;
         this.mShadowView.setVisibility(VISIBLE);
-        this.deviceAlarmLogInfo = deviceAlarmLogInfo;
-        this.mListener = listener;
+
         this.displayStatus = DISPLAY_STATUS_CONFIRM;
         this.remarkEditText.setText("");
-        this.isReConfirm = isReConfirm;
         mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
         setVisibility(View.VISIBLE);
         this.startAnimation(showAnimation);
@@ -150,56 +136,21 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         misTextView.setTextColor(mContext.getResources().getColor(R.color.c_626262));
     }
 
+    public void setOnPopupCallbackListener(OnPopupCallbackListener listener) {
+        this.mListener = listener;
+    }
+
     public void dismiss() {
         if (this.getVisibility() == VISIBLE) {
             this.startAnimation(dismissAnimation);
         }
     }
 
-    public void doAlarmConfirm() {
-        String id = deviceAlarmLogInfo.get_id();
+    private void doAlarmConfirm() {
         String remark = remarkEditText.getText().toString();
-//        byte[] bytes = new byte[0];
-//        try {
-//            bytes = remark.getBytes("UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        if (bytes.length > 30) {
-//            Toast.makeText(mContext, "最大不能超过32个字符", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
-        if (remark.length() > 30) {
-            toastShort("最大不能超过30个字符");
-            return;
+        if (mListener != null) {
+            mListener.onPopupCallback(displayStatus, remark);
         }
-        RetrofitServiceHelper.INSTANCE.doAlarmConfirm(id, displayStatus,
-                remark, isReConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe
-                (new CityObserver<DeviceAlarmItemRsp>() {
-
-
-                    @Override
-                    public void onCompleted() {
-                        dismiss();
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                            toastShort(mContext.getResources().getString(R.string.tips_commit_success));
-                            mListener.onPopupCallback(deviceAlarmLogInfo);
-                        } else {
-                            toastShort(mContext.getResources().getString(R.string.tips_commit_failed));
-                        }
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        dismiss();
-                        toastShort(errorMsg);
-                    }
-                });
     }
 
     private void toastShort(String msg) {
@@ -265,6 +216,6 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     public interface OnPopupCallbackListener {
-        void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo);
+        void onPopupCallback(int status, String remark);
     }
 }

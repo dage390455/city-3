@@ -42,7 +42,7 @@ import static com.sensoro.smartcity.constant.Constants.INPUT;
 
 public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, AlarmListFragmentPresenter> implements
         IAlarmListFragmentView, View.OnClickListener, AdapterView
-        .OnItemClickListener, SensoroPopupAlarmView.OnPopupCallbackListener,
+        .OnItemClickListener,
         AbsListView.OnScrollListener, AlarmListAdapter.AlarmConfirmStatusClickListener {
 
     private PullToRefreshListView mPtrListView;
@@ -145,6 +145,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
         mCloseImageView = (ImageView) mRootView.findViewById(R.id.alarm_log_selected_close);
         mCloseImageView.setOnClickListener(this);
         mAlarmPopupView = (SensoroPopupAlarmView) mRootView.findViewById(R.id.alarm_popup_view);
+        mAlarmPopupView.setOnPopupCallbackListener(mPrestener);
         mShadowView = (SensoroShadowView) mRootView.findViewById(R.id.alarm_popup_shadow);
     }
 
@@ -209,12 +210,6 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
 
 
     @Override
-    public void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        //提交完成
-        mPrestener.popClickComplete(deviceAlarmLogInfo);
-    }
-
-    @Override
     public void onScrollStateChanged(AbsListView view, int scrollState) {
 
     }
@@ -259,8 +254,13 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     }
 
     @Override
-    public void showAlarmPopupView(DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isReConfirm) {
-        mAlarmPopupView.show(deviceAlarmLogInfo, isReConfirm, mShadowView, AlarmListFragment.this);
+    public void showAlarmPopupView() {
+        mAlarmPopupView.show(mShadowView);
+    }
+
+    @Override
+    public void dismissAlarmPopupView() {
+        mAlarmPopupView.dismiss();
     }
 
     @Override
@@ -360,5 +360,9 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     @Override
     public void setIntentResult(int requestCode, Intent data) {
 
+    }
+
+    public void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        mPrestener.freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
     }
 }

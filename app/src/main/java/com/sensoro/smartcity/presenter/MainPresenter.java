@@ -452,7 +452,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             getView().setMenuSelected(1);
         } else if (resultCode == RESULT_CODE_ALARM_DETAIL) {
             DeviceAlarmLogInfo deviceAlarmLogInfo = (DeviceAlarmLogInfo) data.getSerializableExtra(EXTRA_ALARM_INFO);
-            alarmListFragment.onPopupCallback(deviceAlarmLogInfo);
+            alarmListFragment.freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
             getView().setCurrentPagerItem(1);
             getView().setMenuSelected(1);
         } else if (resultCode == RESULT_CODE_CALENDAR) {

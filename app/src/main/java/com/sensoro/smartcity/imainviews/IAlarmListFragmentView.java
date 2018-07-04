@@ -12,7 +12,8 @@ import java.util.List;
 public interface IAlarmListFragmentView extends IProgressDialog, IToast, IActivityIntent {
     void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
 
-    void showAlarmPopupView(DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isReconfirm);
+    void showAlarmPopupView();
+    void dismissAlarmPopupView();
 
     boolean isSelectedDateLayoutVisible();
 

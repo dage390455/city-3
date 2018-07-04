@@ -14,12 +14,15 @@ import com.sensoro.smartcity.activity.SearchAlarmActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmListFragmentView;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
+import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -28,13 +31,15 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragmentView> implements Constants {
+public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragmentView> implements Constants,
+        SensoroPopupAlarmView.OnPopupCallbackListener {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private volatile int cur_page = 1;
     private long startTime;
     private long endTime;
     private Activity mContext;
     private boolean isReConfirm = false;
+    private DeviceAlarmLogInfo mCurrentDeviceAlarmLogInfo;
 
     @Override
     public void initData(Context context) {
@@ -469,11 +474,11 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
 
     public void clickItemByConfirmStatus(int position, boolean isReConfirm) {
         this.isReConfirm = isReConfirm;
-        DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
-        getView().showAlarmPopupView(deviceAlarmLogInfo, isReConfirm);
+        mCurrentDeviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
+        getView().showAlarmPopupView();
     }
 
-    public void popClickComplete(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+    public void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
         for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
             DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
             if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
@@ -553,5 +558,53 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
             intent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
         }
         getView().startACForResult(intent, REQUEST_CODE_CALENDAR);
+    }
+
+    @Override
+    public void onPopupCallback(int status, String remark) {
+//        byte[] bytes = new byte[0];
+//        try {
+//            bytes = remark.getBytes("UTF-8");
+//        } catch (UnsupportedEncodingException e) {
+//            e.printStackTrace();
+//        }
+//        if (bytes.length > 30) {
+//            Toast.makeText(mContext, "最大不能超过32个字符", Toast.LENGTH_SHORT).show();
+//            return;
+//        }
+        if (remark.length() > 30) {
+            getView().toastShort("最大不能超过30个字符");
+            return;
+        }
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.doAlarmConfirm(mCurrentDeviceAlarmLogInfo.get_id(), status,
+                remark, isReConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe
+                (new CityObserver<DeviceAlarmItemRsp>() {
+
+
+                    @Override
+                    public void onCompleted() {
+                    }
+
+                    @Override
+                    public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                        getView().dismissProgressDialog();
+                        getView().dismissAlarmPopupView();
+                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                            getView().toastShort(mContext.getResources().getString(R.string.tips_commit_success));
+                            freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
+                        } else {
+                            getView().toastShort(mContext.getResources().getString(R.string.tips_commit_failed));
+                        }
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().dismissAlarmPopupView();
+                        getView().toastShort(errorMsg);
+                    }
+                });
     }
 }

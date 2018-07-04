@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ExpandableListView;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.TimerShaftAdapter;
@@ -16,9 +17,10 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmDetailActivityView;
 import com.sensoro.smartcity.presenter.AlarmDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import java.util.List;
@@ -32,8 +34,7 @@ import butterknife.OnClick;
  */
 
 public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, AlarmDetailActivityPresenter>
-        implements IAlarmDetailActivityView, SensoroPopupAlarmView
-        .OnPopupCallbackListener, View.OnClickListener, View.OnTouchListener {
+        implements IAlarmDetailActivityView, View.OnClickListener, View.OnTouchListener {
 
 
     @BindView(R.id.alarm_detail_status_iv)
@@ -59,7 +60,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     @BindView(R.id.alarm_detail_popup_view)
     SensoroPopupAlarmView mAlarmPopupView;
     private TimerShaftAdapter timerShaftAdapter;
-
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -82,6 +83,8 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     private void initView() {
         try {
+            mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+            mAlarmPopupView.setOnPopupCallbackListener(mPrestener);
             confirmTextView.setOnClickListener(this);
             timerShaftAdapter = new TimerShaftAdapter(mActivity, mPrestener.getList(), new TimerShaftAdapter
                     .OnGroupItemClickListener() {
@@ -110,13 +113,22 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @Override
     public void showConfirmPopup(boolean isReConfirm) {
-        mAlarmPopupView.show(mPrestener.getDeviceAlarmLogInfo(), isReConfirm, mShadowView, this);
+        mAlarmPopupView.show(mShadowView);
+    }
+
+    @Override
+    public void dismissConfirmPopup() {
+        mAlarmPopupView.dismiss();
     }
 
     @Override
     protected void onDestroy() {
         if (mAlarmPopupView != null) {
             mAlarmPopupView.onDestroyPop();
+        }
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
         }
         super.onDestroy();
     }
@@ -133,12 +145,6 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
             return false;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    public void onPopupCallback(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        mPrestener.setDeviceAlarmLogInfo(deviceAlarmLogInfo);
-        mPrestener.refreshData();
     }
 
     @Override
@@ -246,5 +252,25 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     @Override
     public void setSensoroIv(String sensoroType) {
         WidgetUtil.judgeSensorType(mActivity, detailIvType, sensoroType);
+    }
+
+    @Override
+    public void showProgressDialog() {
+        mProgressUtils.showProgress();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        mProgressUtils.dismissProgress();
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
     }
 }
