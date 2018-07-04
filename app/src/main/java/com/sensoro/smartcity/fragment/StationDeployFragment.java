@@ -19,7 +19,6 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
 import cn.bingoogolapple.qrcode.core.QRCodeView;
-import cn.bingoogolapple.qrcode.zbar.ZBarView;
 
 import static com.sensoro.smartcity.constant.Constants.INPUT;
 
@@ -63,7 +62,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
         mMenuImageView.setOnClickListener(this);
         flashImageView.setOnClickListener(this);
         manualImageView.setOnClickListener(this);
-        mQRCodeView = (ZBarView) mRootView.findViewById(R.id.zbar_view);
+        mQRCodeView = mRootView.findViewById(R.id.scan_view);
         mQRCodeView.setDelegate(this);
     }
 

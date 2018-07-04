@@ -44,6 +44,7 @@ public class DeviceInfo implements Serializable, Comparable {
     }
 
     private String address;
+
     public DeviceInfo() {
         isPushDevice = false;
         isNewDevice = false;

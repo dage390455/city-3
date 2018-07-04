@@ -105,6 +105,7 @@ public interface Constants {
     String EXTRA_SENSOR_TIME = "extra_sensor_time";
     String EXTRA_SENSOR_LOCATION = "extra_sensor_location";
     String EXTRA_ALARM_INFO = "extra_alarm_info";
+    String EXTRA_ALARM_IS_RE_CONFIRM = "extra_alarm_is_re_confirm";
     String EXTRA_ALARM_SEARCH_INDEX = "extra_alarm_search_index";
     String EXTRA_ALARM_SEARCH_TEXT = "extra_alarm_search_text";
     String EXTRA_FRAGMENT_INDEX = "extra_fragment_index";

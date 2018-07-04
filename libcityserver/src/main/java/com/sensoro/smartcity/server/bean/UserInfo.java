@@ -11,7 +11,7 @@ public class UserInfo implements Serializable {
 
     private String _id;
     private String id;
-    private String phone;
+    private String contacts;
     private String nickname;
     private String password;
     private String cases[];
@@ -117,12 +117,12 @@ public class UserInfo implements Serializable {
         this.updatedTime = updatedTime;
     }
 
-    public String getPhone() {
-        return phone;
+    public String getContacts() {
+        return contacts;
     }
 
-    public void setPhone(String phone) {
-        this.phone = phone;
+    public void setContacts(String contacts) {
+        this.contacts = contacts;
     }
 
     public String getSessionID() {
@@ -178,7 +178,7 @@ public class UserInfo implements Serializable {
         return "UserInfo{" +
                 "_id='" + _id + '\'' +
                 ", id='" + id + '\'' +
-                ", phone='" + phone + '\'' +
+                ", contacts='" + contacts + '\'' +
                 ", nickname='" + nickname + '\'' +
                 ", password='" + password + '\'' +
                 ", cases=" + Arrays.toString(cases) +

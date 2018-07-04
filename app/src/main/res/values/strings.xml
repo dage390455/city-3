@@ -105,7 +105,7 @@
     <string name="name_phone">Name</string>
     <string name="contact_name">Contact</string>
     <string name="contact_phone">Contact Phone</string>
-    <string name="phone">Phone</string>
+    <string name="contacts">Phone</string>
     <string name="update_time">Recent Upload Time</string>
     <string name="back_home">Back Home</string>
     <string name="status_alarm">Alarm</string>

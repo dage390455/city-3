@@ -11,7 +11,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchAlarmActivityView;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 
 import java.util.ArrayList;
@@ -113,7 +113,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode,String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -145,7 +145,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode,String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -177,7 +177,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode,String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }

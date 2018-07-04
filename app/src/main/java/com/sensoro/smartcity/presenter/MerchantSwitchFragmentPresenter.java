@@ -12,7 +12,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchFragmentView;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.UserInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
@@ -65,7 +65,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
             }
 
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode,String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
@@ -96,7 +96,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
                     String sessionID = userAccountControlRsp.getData().getSessionID();
                     RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
                     String nickname = userAccountControlRsp.getData().getNickname();
-                    String phone = userAccountControlRsp.getData().getPhone();
+                    String phone = userAccountControlRsp.getData().getContacts();
                     String roles = userAccountControlRsp.getData().getRoles();
                     String isSpecific = userAccountControlRsp.getData().getIsSpecific();
 
@@ -108,7 +108,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
             }
 
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode,String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }

@@ -71,7 +71,7 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
             holder.item_name.setTextColor(mContext.getResources().getColor(R.color.slide_menu_item_bg));
         }
         holder.item_name.setText(userInfo.getNickname());
-        holder.item_phone.setText(userInfo.getPhone());
+        holder.item_phone.setText(userInfo.getContacts());
 
         if (selectedIndex == position) {
             holder.item_status.setVisibility(View.VISIBLE);

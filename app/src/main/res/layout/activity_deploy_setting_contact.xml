@@ -104,7 +104,7 @@
                 android:layout_marginLeft="@dimen/x30"
                 android:textColor="@color/c_888888"
                 android:textSize="@dimen/x45"
-                android:text="@string/phone"
+                android:text="@string/contacts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" />
             <EditText

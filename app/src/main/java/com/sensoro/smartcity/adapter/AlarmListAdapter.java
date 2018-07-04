@@ -49,6 +49,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
     public void setSelectedIndex(int index) {
         this.selectedIndex = index;
     }
+
     @Override
     public int getCount() {
         return mList.size();
@@ -84,30 +85,34 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
         }
         DeviceAlarmLogInfo alarmLogInfo = mList.get(position);
         if (alarmLogInfo != null) {
-            String default_name = alarmLogInfo.getDeviceSN() == null ? mContext.getResources().getString(R.string.unname) : alarmLogInfo.getDeviceSN();
+            String default_name = alarmLogInfo.getDeviceSN() == null ? mContext.getResources().getString(R.string
+                    .unname) : alarmLogInfo.getDeviceSN();
             if (alarmLogInfo.getDeviceName() == null) {
                 holder.item_name.setText(default_name);
             } else {
-                holder.item_name.setText(alarmLogInfo.getDeviceName().equals("") ? default_name : alarmLogInfo.getDeviceName());
+                holder.item_name.setText(alarmLogInfo.getDeviceName().equals("") ? default_name : alarmLogInfo
+                        .getDeviceName());
             }
             holder.item_date.setText(DateUtil.getFullParseDate(alarmLogInfo.getUpdatedTime()));
             WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, alarmLogInfo.getSensorType());
-            AlarmInfo.RecordInfo []recordInfoArray = alarmLogInfo.getRecords();
+            AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
             for (int i = 0; i < recordInfoArray.length; i++) {
                 AlarmInfo.RecordInfo recordInfo = recordInfoArray[i];
-                AlarmInfo.RecordInfo.Event [] event = recordInfo.getPhoneList();
+                AlarmInfo.RecordInfo.Event[] event = recordInfo.getPhoneList();
 //
                 if (recordInfo.getType().equals("recovery")) {
                     holder.item_iv_status.setVisibility(View.VISIBLE);
                     holder.item_alarm_view.setVisibility(View.GONE);
                     holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_normal));
                     holder.item_status.setText("于" + DateUtil.getFullParseDate(recordInfo.getUpdatedTime()) + "恢复正常");
-                    holder.item_iv_status.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_normal));
+                    holder.item_iv_status.setImageDrawable(mContext.getResources().getDrawable(R.drawable
+                            .shape_status_normal));
                     break;
                 } else {
                     holder.item_alarm_view.setVisibility(View.VISIBLE);
                     holder.item_iv_status.setVisibility(View.GONE);
-                    holder.item_iv_status.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_alarm));
+                    holder.item_iv_status.setImageDrawable(mContext.getResources().getDrawable(R.drawable
+                            .shape_status_alarm));
                     holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                     holder.item_status.setText(R.string.alarming);
                 }
@@ -120,10 +125,11 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mListener.onConfirmStatusClick(v, position);
+                            mListener.onConfirmStatusClick(v, position, false);
                         }
                     });
-//                    holder.item_iv_status.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_alarm));
+//                    holder.item_iv_status.setImageDrawable(mContext.getResources().getDrawable(R.drawable
+// .shape_status_alarm));
 //                    holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                     break;
                 case DISPLAY_STATUS_ALARM:
@@ -131,7 +137,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mListener.onConfirmStatusClick(v, position);
+                            mListener.onConfirmStatusClick(v, position, true);
                         }
                     });
 //                    holder.item_confirm_status.setVisibility(View.GONE);
@@ -144,7 +150,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mListener.onConfirmStatusClick(v, position);
+                            mListener.onConfirmStatusClick(v, position, true);
                         }
                     });
 //                    holder.item_confirm_status.setVisibility(View.GONE);
@@ -157,7 +163,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            mListener.onConfirmStatusClick(v, position);
+                            mListener.onConfirmStatusClick(v, position, true);
                         }
                     });
 //                    holder.item_confirm_status.setVisibility(View.GONE);
@@ -172,7 +178,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
     }
 
     public interface AlarmConfirmStatusClickListener {
-        void onConfirmStatusClick(View view, int position);
+        void onConfirmStatusClick(View view, int position, boolean isReConfirm);
     }
 
 

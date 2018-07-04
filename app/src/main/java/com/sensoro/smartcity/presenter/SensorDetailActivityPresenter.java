@@ -57,7 +57,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -422,7 +422,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
             }
 
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode,String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }

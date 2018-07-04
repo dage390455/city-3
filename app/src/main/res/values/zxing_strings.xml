@@ -81,7 +81,7 @@
     <string name="msg_sbc_results">Results</string>
     <string name="msg_sbc_searching_book">Searching book\u2026</string>
     <string name="msg_sbc_snippet_unavailable">Snippet not available</string>
-    <string name="msg_share_explanation">You can share data by displaying a barcode on your screen and scanning it with another phone.</string>
+    <string name="msg_share_explanation">You can share data by displaying a barcode on your screen and scanning it with another contacts.</string>
     <string name="msg_share_text">Or type some text and press Enter</string>
     <string name="msg_sure">Are you sure?</string>
     <string name="msg_unmount_usb">Sorry, the SD card is not accessible.</string>
@@ -133,7 +133,7 @@
     <string name="result_isbn">Found book</string>
     <string name="result_product">Found product</string>
     <string name="result_sms">Found SMS address</string>
-    <string name="result_tel">Found phone number</string>
+    <string name="result_tel">Found contacts number</string>
     <string name="result_text">Found plain text</string>
     <string name="result_uri">Found URL</string>
     <string name="result_wifi">Found WLAN Configuration</string>

@@ -5,8 +5,8 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
-    <cn.bingoogolapple.qrcode.zbar.ZBarView
-        android:id="@+id/zbar_view"
+    <cn.bingoogolapple.qrcode.zxing.ZXingView
+        android:id="@+id/scan_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:qrcv_animTime="1000"

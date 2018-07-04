@@ -259,8 +259,8 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     }
 
     @Override
-    public void showAlarmPopupView(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        mAlarmPopupView.show(deviceAlarmLogInfo, mShadowView, AlarmListFragment.this);
+    public void showAlarmPopupView(DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isReConfirm) {
+        mAlarmPopupView.show(deviceAlarmLogInfo, isReConfirm, mShadowView, AlarmListFragment.this);
     }
 
     @Override
@@ -333,8 +333,8 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     }
 
     @Override
-    public void onConfirmStatusClick(View view, int position) {
-        mPrestener.clickItemByConfirmStatus(position);
+    public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
+        mPrestener.clickItemByConfirmStatus(position, isReConfirm);
     }
 
     @Override

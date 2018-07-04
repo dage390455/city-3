@@ -108,9 +108,9 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     }
 
-
-    public void showConfirmPopup() {
-        mAlarmPopupView.show(mPrestener.getDeviceAlarmLogInfo(), mShadowView, this);
+    @Override
+    public void showConfirmPopup(boolean isReConfirm) {
+        mAlarmPopupView.show(mPrestener.getDeviceAlarmLogInfo(), isReConfirm, mShadowView, this);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.alarm_detail_confirm_status:
-                showConfirmPopup();
+                mPrestener.showConfirmPopup();
                 break;
             default:
                 break;
@@ -156,7 +156,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     public boolean onTouch(View v, MotionEvent event) {
         switch (v.getId()) {
             case R.id.alarm_detail_confirm_status:
-                showConfirmPopup();
+                mPrestener.showConfirmPopup();
                 break;
             default:
                 break;

@@ -43,4 +43,6 @@ public interface IIndexFragmentView extends IToast, IProgressDialog, IActivityIn
 
     void recycleViewRefreshComplete();
 
+    void playFlipAnimation();
+
 }

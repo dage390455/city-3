@@ -16,7 +16,7 @@ import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
@@ -118,7 +118,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         Intent intent = new Intent(mContext, MainActivity.class);
                         intent.putExtra(EXTRA_USER_ID, loginRsp.getData().get_id());
                         intent.putExtra(EXTRA_USER_NAME, loginRsp.getData().getNickname());
-                        intent.putExtra(EXTRA_PHONE, loginRsp.getData().getPhone());
+                        intent.putExtra(EXTRA_PHONE, loginRsp.getData().getContacts());
                         intent.putExtra(EXTRA_CHARACTER, loginRsp.getData().getCharacter());
                         intent.putExtra(EXTRA_USER_ROLES, loginRsp.getData().getRoles());
                         intent.putExtra(EXTRA_IS_SPECIFIC, isSpecific);
@@ -135,7 +135,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
 
                 @Override
-                public void onErrorMsg(String errorMsg) {
+                public void onErrorMsg(int errorCode,String errorMsg) {
                     getView().dismissProgressDialog();
                     getView().toastShort(errorMsg);
                 }

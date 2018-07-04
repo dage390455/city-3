@@ -10,9 +10,6 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
-import com.github.nkzawa.emitter.Emitter;
-import com.github.nkzawa.socketio.client.IO;
-import com.github.nkzawa.socketio.client.Socket;
 import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
@@ -32,7 +29,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.Character;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -49,6 +46,9 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.socket.client.IO;
+import io.socket.client.Socket;
+import io.socket.emitter.Emitter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
@@ -242,7 +242,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             }
 
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 LogUtils.loge(this, "app升级" + errorMsg);
             }
         });
@@ -292,7 +292,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         RetrofitServiceHelper.INSTANCE.logout(phoneId, uid).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribe(new CityObserver<ResponseBase>() {
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
@@ -375,8 +375,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                             if (arg instanceof JSONArray) {
                                 JSONArray jsonArray = (JSONArray) arg;
                                 final JSONObject jsonObject = jsonArray.getJSONObject(0);
-//                                String s = jsonObject.toString();
-//                                LogUtils.loge(this, "jsonArray = " + s);
+                                String s = jsonObject.toString();
+                                LogUtils.loge(this, "jsonArray = " + s);
                                 if (!isSupperAccount()) {
                                     indexFragment.handleSocketInfo(jsonObject.toString());
                                 }

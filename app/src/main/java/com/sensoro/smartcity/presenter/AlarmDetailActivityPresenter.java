@@ -19,7 +19,7 @@ import java.util.List;
 public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActivityView> implements Constants {
     private final List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
-
+    private boolean isReConfirm = false;
 
     public DeviceAlarmLogInfo getDeviceAlarmLogInfo() {
         return deviceAlarmLogInfo;
@@ -40,6 +40,7 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
     public void initData(Context context) {
         mContext = (Activity) context;
         deviceAlarmLogInfo = (DeviceAlarmLogInfo) mContext.getIntent().getSerializableExtra(EXTRA_ALARM_INFO);
+        isReConfirm = mContext.getIntent().getBooleanExtra(EXTRA_ALARM_IS_RE_CONFIRM, false);
 //        refreshData();
     }
 
@@ -76,5 +77,9 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
             }
         }
         getView().updateTimerShaftAdapter(mList);
+    }
+
+    public void showConfirmPopup() {
+        getView().showConfirmPopup(isReConfirm);
     }
 }

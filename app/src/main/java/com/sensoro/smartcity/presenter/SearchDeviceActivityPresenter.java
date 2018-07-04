@@ -17,7 +17,7 @@ import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -359,7 +359,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                 }
 
                 @Override
-                public void onErrorMsg(String errorMsg) {
+                public void onErrorMsg(int errorCode,String errorMsg) {
                     getView().dismissProgressDialog();
                     getView().recycleViewRefreshComplete();
                     getView().toastShort(errorMsg);
@@ -403,7 +403,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                 }
 
                 @Override
-                public void onErrorMsg(String errorMsg) {
+                public void onErrorMsg(int errorCode,String errorMsg) {
                     page--;
                     getView().dismissProgressDialog();
                     getView().recycleViewRefreshComplete();

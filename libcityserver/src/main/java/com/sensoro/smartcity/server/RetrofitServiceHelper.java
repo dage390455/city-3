@@ -3,7 +3,6 @@ package com.sensoro.smartcity.server;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -41,15 +40,16 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 
-import static com.sensoro.smartcity.server.RetrofitService.HEADER_SESSION_ID;
-import static com.sensoro.smartcity.server.RetrofitService.HEADER_USER_AGENT;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MASTER;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MOCHA;
 
 public enum RetrofitServiceHelper {
     INSTANCE;
-    private static final String TAG = "retrofitservicehelper";
     private static final long DEFAULT_TIMEOUT = 8 * 1000;
+    private final String HEADER_SESSION_ID = "x-session-id";
+    private final String HEADER_USER_AGENT = "User-Agent";
+    private final String HEADER_CONTENT_TYPE = "Content-Type";
+    private final String HEADER_ACCEPT = "Accept";
 
 
     public String getSessionId() {
@@ -87,37 +87,62 @@ public enum RetrofitServiceHelper {
 
 
     private OkHttpClient getNewClient() {
-        HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
+        final HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
+            @Override
+            public void log(String s) {
+                LogUtils.loge(this, "retrofit------------>" + s);
+            }
+        });
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
-        return new OkHttpClient.Builder()
-                .addInterceptor(new Interceptor() {
-                    @Override
-                    public Response intercept(@NonNull Chain chain) throws IOException {
-                        Request original = chain.request();
-                        Request.Builder buider = original.newBuilder()
-                                .header(HEADER_USER_AGENT, "Android/" +
-                                        Build.VERSION.RELEASE)
-                                .method(original.method(), original.body());
-                        if (!TextUtils.isEmpty(sessionId)) {
-                            buider.header(HEADER_SESSION_ID, sessionId);
+        final Interceptor interceptor = new Interceptor() {
+            @Override
+            public Response intercept(@NonNull Chain chain) throws IOException {
+                Request original = chain.request();
+                Request.Builder builder = original.newBuilder();
+                //header
+                builder.headers(original.headers())
+                        .addHeader(HEADER_USER_AGENT, "Android/" +
+                                Build.VERSION.RELEASE)
+                        .addHeader(HEADER_ACCEPT, "application/json")
+                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
+                if (!TextUtils.isEmpty(sessionId)) {
+                    builder.addHeader(HEADER_SESSION_ID, sessionId);
+                }
+                //
+                builder.method(original.method(), original.body());
+                Request request = builder.build();
+                //
+                Response response = chain.proceed(request);
+                //重定向
+//                boolean redirect = response.isRedirect();
+                int code = response.code();
+                try {
+//                    if (redirect && (code == 308 || code == 307)) {
+                    //仅针对308和307重定向问题
+                    if (code == 308 || code == 307) {
+                        String location = response.header("Location");
+                        if (location.startsWith("/")) {
+                            location = location.substring(1);
                         }
-                        Request request = buider.build();
-                        long t1 = System.nanoTime();
-                        Log.d(TAG, String.format("发送--> request %s on %s%n%s", request.url(),
-                                chain.connection(), request.headers()));
-                        Response response = chain.proceed(request);
-//                        byte[] bytes = response.body().bytes();
-//                        String json = new String(bytes);
-                        long t2 = System.nanoTime();
-                        Log.d(TAG, String.format("接受--> response for %s in %.1fms%n%s",
-                                response.request().url(), (t2 - t1) / 1e6d, response.headers()));
-                        return response;
+                        Request newRequest = request.newBuilder().url(BASE_URL + location)
+                                .build();
+                        response = chain.proceed(newRequest);
                     }
-                })
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                return response;
+            }
+        };
+        final OkHttpClient okHttpClient = new OkHttpClient();
+        OkHttpClient.Builder builder = okHttpClient.newBuilder();
+        return builder
+                .addInterceptor(interceptor)
                 .addInterceptor(logging)
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
     }
+
 
     public void setDemoTypeBaseUrl(boolean isDemo) {
         BASE_URL = isDemo ? SCOPE_MOCHA : SCOPE_MASTER;
@@ -231,6 +256,7 @@ public enum RetrofitServiceHelper {
         } catch (JSONException e) {
             e.printStackTrace();
         }
+//        application/json;charset=UTF-8
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.doAccountControl(uid, body);
     }
@@ -255,7 +281,16 @@ public enum RetrofitServiceHelper {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
             if (tags != null) {
-                jsonObject.put("tags", tags);
+                if (BASE_URL.equals(SCOPE_MASTER)) {
+                    jsonObject.put("tags", tags);
+                } else {
+                    String[] split = tags.split(",");
+                    JSONArray jsonArray = new JSONArray();
+                    for (String temp : split) {
+                        jsonArray.put(temp);
+                    }
+                    jsonObject.put("tags", jsonArray);
+                }
             }
             if (name != null) {
                 jsonObject.put("name", name);
@@ -306,13 +341,17 @@ public enum RetrofitServiceHelper {
      * @param remark
      * @return
      */
-    public Observable<DeviceAlarmItemRsp> doAlarmConfirm(String id, int status, String remark) {
+    public Observable<DeviceAlarmItemRsp> doAlarmConfirm(String id, int status, String remark, boolean isReconfirm) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("displayStatus", status);
             jsonObject.put("remark", remark);
             jsonObject.put("source", "app");
-            jsonObject.put("type", "confirm");
+            if (isReconfirm) {
+                jsonObject.put("type", "reconfirm");
+            } else {
+                jsonObject.put("type", "confirm");
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }

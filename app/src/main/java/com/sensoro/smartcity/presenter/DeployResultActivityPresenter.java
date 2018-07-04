@@ -54,7 +54,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     String content = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
                     getView().setContactTextView(mContext.getString(R.string.name) + "：" + (TextUtils.isEmpty(contact) ?
                             "无" : contact));
-                    getView().setContentTextView(mContext.getString(R.string.phone) + "：" + (TextUtils.isEmpty
+                    getView().setContentTextView(mContext.getString(R.string.contacts) + "：" + (TextUtils.isEmpty
                             (contact) ?
                             "无" : content));
                     getView().refreshSignal(deviceInfo.getUpdatedTime(), deviceInfo.getSignal());

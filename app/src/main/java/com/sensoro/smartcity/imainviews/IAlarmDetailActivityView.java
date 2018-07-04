@@ -12,4 +12,5 @@ public interface IAlarmDetailActivityView extends IActivityIntent{
     void setDisplayStatus(int displayStatus);
     void updateTimerShaftAdapter(List<AlarmInfo.RecordInfo> recordInfoList);
     void setSensoroIv(String sensoroType);
+    void showConfirmPopup(boolean isReConfirm);
 }

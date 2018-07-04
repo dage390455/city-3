@@ -46,7 +46,7 @@ import com.sensoro.smartcity.iwidget.IOndestroy;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -442,7 +442,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                             }
 
                             @Override
-                            public void onErrorMsg(String errorMsg) {
+                            public void onErrorMsg(int errorCode,String errorMsg) {
                                 getView().dismissProgressDialog();
                                 getView().toastShort(errorMsg);
                                 getView().setUploadButtonClickable(true);
@@ -496,7 +496,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                             }
 
                             @Override
-                            public void onErrorMsg(String errorMsg) {
+                            public void onErrorMsg(int errorCode,String errorMsg) {
                                 getView().dismissProgressDialog();
                                 getView().toastShort(errorMsg);
                                 getView().setUploadButtonClickable(true);
@@ -569,7 +569,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             }
 
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode,String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }

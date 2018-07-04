@@ -13,7 +13,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
@@ -70,9 +70,9 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
-                        if (errorMsg.equals("4010104")) {
+                        if (errorCode == 4013102) {
                             freshError();
                         } else {
                             getView().toastShort(errorMsg);
@@ -98,7 +98,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }

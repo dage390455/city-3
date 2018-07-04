@@ -1,8 +1,13 @@
 package com.sensoro.smartcity.fragment;
 
+import android.animation.Animator;
+import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
+import android.animation.AnimatorSet;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -12,10 +17,14 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.TranslateAnimation;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextSwitcher;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
@@ -78,9 +87,9 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     private TextView mTypeTextView;
     private TextView mStatusTextView;
     private TextView mTitleTextView;
-    private TextView mHeadAlarmNumTextView;
-    private TextView mHeadLostNumTextView;
-    private TextView mHeadInactiveNumTextView;
+    private TextSwitcher mHeadAlarmNumTextView;
+    private TextSwitcher mHeadLostNumTextView;
+    private TextSwitcher mHeadInactiveNumTextView;
     private TextView mHeadAlarmTitleTextView;
     private TextView mHeadLostTitleTextView;
     private TextView mHeadInactiveTitleTextView;
@@ -100,7 +109,12 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     private int toolbarDirection = DIRECTION_DOWN;
     private int switchType;
     private boolean isShowDialog = true;
+    //
+    private int tempAlarmCount = 0;
+    private int tempLostCount = 0;
+    private int tempInactiveCount = 0;
 
+    //
     public static IndexFragment newInstance(Character input) {
         IndexFragment indexFragment = new IndexFragment();
         Bundle args = new Bundle();
@@ -169,9 +183,63 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         mTitleTextView = (TextView) mRootView.findViewById(R.id.index_tv_title);
         mHeadLayout = (LinearLayout) mRootView.findViewById(R.id.index_layout_head1);
         alarmLayout = (LinearLayout) mRootView.findViewById(R.id.index_head_alarm_layout);
-        mHeadAlarmNumTextView = (TextView) mRootView.findViewById(R.id.index_head_alarm_num);
-        mHeadLostNumTextView = (TextView) mRootView.findViewById(R.id.index_head_lost_num);
-        mHeadInactiveNumTextView = (TextView) mRootView.findViewById(R.id.index_head_inactive_num);
+        //
+        mHeadAlarmNumTextView = (TextSwitcher) mRootView.findViewById(R.id.index_head_alarm_num);
+        mHeadLostNumTextView = (TextSwitcher) mRootView.findViewById(R.id.index_head_lost_num);
+        mHeadInactiveNumTextView = (TextSwitcher) mRootView.findViewById(R.id.index_head_inactive_num);
+        //
+        mHeadAlarmNumTextView.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView textView = new TextView(mRootFragment.getActivity());
+                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));//字号
+                textView.setTextColor(mRootFragment.getResources().getColor(R.color.white));
+                textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                textView.setLayoutParams(params);
+                return textView;
+            }
+        });
+        mHeadAlarmNumTextView.setInAnimation(AnimationUtils.loadAnimation(mRootFragment.getActivity(), R.anim
+                .push_up_in));
+        mHeadAlarmNumTextView.setOutAnimation(AnimationUtils.loadAnimation(mRootFragment.getActivity(), R.anim
+                .push_up_out));
+        //
+        mHeadLostNumTextView.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView textView = new TextView(mRootFragment.getActivity());
+                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));//字号
+                textView.setTextColor(mRootFragment.getResources().getColor(R.color.white));
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                textView.setLayoutParams(params);
+                return textView;
+            }
+        });
+        mHeadLostNumTextView.setInAnimation(AnimationUtils.loadAnimation(mRootFragment.getActivity(), R.anim
+                .push_up_in));
+        mHeadLostNumTextView.setOutAnimation(AnimationUtils.loadAnimation(mRootFragment.getActivity(), R.anim
+                .push_up_out));
+        //
+        mHeadInactiveNumTextView.setFactory(new ViewSwitcher.ViewFactory() {
+            @Override
+            public View makeView() {
+                TextView textView = new TextView(mRootFragment.getActivity());
+                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));//字号
+                textView.setTextColor(mRootFragment.getResources().getColor(R.color.white));
+                FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                textView.setLayoutParams(params);
+                return textView;
+            }
+        });
+        mHeadInactiveNumTextView.setInAnimation(AnimationUtils.loadAnimation(mRootFragment.getActivity(), R.anim
+                .push_up_in));
+        mHeadInactiveNumTextView.setOutAnimation(AnimationUtils.loadAnimation(mRootFragment.getActivity(), R.anim
+                .push_up_out));
+        //
         mHeadAlarmTitleTextView = (TextView) mRootView.findViewById(R.id.index_head_alarm_num_title);
         mHeadLostTitleTextView = (TextView) mRootView.findViewById(R.id.index_head_lost_num_title);
         mHeadInactiveTitleTextView = (TextView) mRootView.findViewById(R.id.index_head_inactive_num_title);
@@ -442,21 +510,37 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void refreshTop(boolean isFirstInit, int alarmCount, int lostCount, int inactiveCount) {
-        mHeadAlarmNumTextView.setText(String.valueOf(alarmCount));
-        mHeadLostNumTextView.setText(String.valueOf(lostCount));
-        mHeadInactiveNumTextView.setText(String.valueOf(inactiveCount));
+        String alarmStr = String.valueOf(alarmCount);
+        String lostStr = String.valueOf(lostCount);
+        String inactiveStr = String.valueOf(inactiveCount);
+        //
         if (alarmCount > 0) {
             if (isFirstInit) {
                 mPrestener.playSound();
+                mHeadAlarmNumTextView.setCurrentText(alarmStr);
+                mHeadLostNumTextView.setCurrentText(lostStr);
+                mHeadInactiveNumTextView.setCurrentText(inactiveStr);
+            } else {
+                if (alarmCount == tempAlarmCount) {
+                    mHeadAlarmNumTextView.setCurrentText(alarmStr);
+                } else {
+                    mHeadAlarmNumTextView.setText(alarmStr);
+                }
+                if (lostCount == tempLostCount) {
+                    mHeadLostNumTextView.setCurrentText(lostStr);
+                } else {
+                    mHeadLostNumTextView.setText(lostStr);
+                }
+                if (inactiveCount == tempInactiveCount) {
+                    mHeadInactiveNumTextView.setCurrentText(inactiveStr);
+                } else {
+                    mHeadInactiveNumTextView.setText(inactiveStr);
+                }
             }
             alarmLayout.setVisibility(View.VISIBLE);
             mHeadAlarmNumTextView.setVisibility(VISIBLE);
-            mHeadLostNumTextView.setVisibility(VISIBLE);
-            mHeadInactiveNumTextView.setVisibility(VISIBLE);
-            mHeadLostTitleTextView.setVisibility(VISIBLE);
-            mHeadInactiveTitleTextView.setVisibility(VISIBLE);
             mHeadAlarmTitleTextView.setText(R.string.today_alarm);
-            mHeadAlarmNumTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));
+//            mHeadAlarmNumTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));
             mHeadAlarmTitleTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x20));
             mHeadLayout.setBackgroundColor(mRootFragment.getResources().getColor(R.color.sensoro_alarm));
             mToolbar1.setBackgroundColor(mRootFragment.getResources().getColor(R.color.sensoro_alarm));
@@ -466,12 +550,8 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         } else {
             alarmLayout.setVisibility(View.GONE);
             mHeadAlarmTitleTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));
-            mHeadAlarmNumTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x20));
-            mHeadAlarmNumTextView.setVisibility(View.INVISIBLE);
-            mHeadLostNumTextView.setVisibility(View.INVISIBLE);
-            mHeadInactiveNumTextView.setVisibility(View.INVISIBLE);
-            mHeadLostTitleTextView.setVisibility(View.INVISIBLE);
-            mHeadInactiveTitleTextView.setVisibility(View.INVISIBLE);
+//            mHeadAlarmNumTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x20));
+            mHeadAlarmNumTextView.setVisibility(View.GONE);
             mHeadAlarmTitleTextView.setText(R.string.tips_no_alarm);
             mHeadLayout.setBackgroundColor(mRootFragment.getResources().getColor(R.color.sensoro_normal));
             mToolbar1.setBackgroundColor(mRootFragment.getResources().getColor(R.color.sensoro_normal));
@@ -479,6 +559,9 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             StatusBarCompat.setStatusBarColor(mRootFragment.getActivity(), mRootFragment.getResources().getColor(R
                     .color.sensoro_normal));
         }
+        tempAlarmCount = alarmCount;
+        tempLostCount = lostCount;
+        tempInactiveCount = inactiveCount;
     }
 
     @Override
@@ -573,6 +656,62 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
                 mReturnTopImageView.setVisibility(View.GONE);
             }
         }
+    }
+
+    /***
+     * 向上动画
+     */
+    private void up(final TextView textView, final String text) {
+        textView.clearAnimation();
+        ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) textView.getLayoutParams();
+        int height = lp.height;
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, -height);
+        animation.setDuration(1500);
+        textView.startAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textView.setText(text);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+    }
+
+    /***
+     * 向下动画
+     */
+    public void down(final TextView textView, final String text) {
+        textView.clearAnimation();
+        ViewGroup.LayoutParams lp = (ViewGroup.LayoutParams) textView.getLayoutParams();
+        int height = lp.height;
+        TranslateAnimation animation = new TranslateAnimation(0, 0, 0, height);
+        animation.setDuration(1500);
+        textView.startAnimation(animation);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                textView.setText(text);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
     }
 
     @Override
@@ -696,6 +835,13 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     }
 
     @Override
+    public void playFlipAnimation() {
+        playFlipAnimation(mHeadAlarmNumTextView);
+        playFlipAnimation(mHeadLostNumTextView);
+        playFlipAnimation(mHeadInactiveNumTextView);
+    }
+
+    @Override
     public void startAC(Intent intent) {
         mRootFragment.getActivity().startActivity(intent);
     }
@@ -717,6 +863,64 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void setIntentResult(int requestCode, Intent data) {
+    }
 
+
+    private void playFlipAnimation(View targetView) {
+        AnimatorSet mAnimatorSetOut = (AnimatorSet) AnimatorInflater
+                .loadAnimator(getContext(), R.animator.card_flip_left_out);
+
+        final AnimatorSet mAnimatorSetIn = (AnimatorSet) AnimatorInflater
+                .loadAnimator(getContext(), R.animator.card_flip_left_in);
+
+        mAnimatorSetOut.setTarget(targetView);
+        mAnimatorSetIn.setTarget(targetView);
+
+        mAnimatorSetOut.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {// 翻转90度之后，换图
+                mAnimatorSetIn.start();
+            }
+        });
+
+
+        mAnimatorSetIn.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // TODO
+            }
+        });
+        mAnimatorSetOut.start();
+    }
+
+    private void playFlipAnimationUp(View targetView) {
+        AnimatorSet mAnimatorSetOut = (AnimatorSet) AnimatorInflater
+                .loadAnimator(getContext(), R.animator.push_up_out);
+
+        final AnimatorSet mAnimatorSetIn = (AnimatorSet) AnimatorInflater
+                .loadAnimator(getContext(), R.animator.push_up_in);
+
+        mAnimatorSetOut.setTarget(targetView);
+        mAnimatorSetIn.setTarget(targetView);
+
+        mAnimatorSetOut.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {// 翻转90度之后，换图
+                mAnimatorSetIn.start();
+            }
+        });
+
+
+        mAnimatorSetIn.addListener(new AnimatorListenerAdapter() {
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+                // TODO
+            }
+        });
+        mAnimatorSetOut.start();
     }
 }

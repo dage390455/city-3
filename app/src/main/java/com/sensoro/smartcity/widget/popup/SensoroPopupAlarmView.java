@@ -19,7 +19,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.widget.SensoroShadowView;
@@ -48,6 +48,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     private EditText remarkEditText;
     private Button mButton;
     private int displayStatus = DISPLAY_STATUS_CONFIRM;
+    private boolean isReConfirm = false;
 
     public SensoroPopupAlarmView(Context context) {
         super(context);
@@ -128,14 +129,16 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         });
     }
 
-    public void show(DeviceAlarmLogInfo deviceAlarmLogInfo, SensoroShadowView shadowView, OnPopupCallbackListener
-            listener) {
+    public void show(DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isReConfirm, SensoroShadowView shadowView,
+                     OnPopupCallbackListener
+                             listener) {
         this.mShadowView = shadowView;
         this.mShadowView.setVisibility(VISIBLE);
         this.deviceAlarmLogInfo = deviceAlarmLogInfo;
         this.mListener = listener;
         this.displayStatus = DISPLAY_STATUS_CONFIRM;
         this.remarkEditText.setText("");
+        this.isReConfirm = isReConfirm;
         mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
         setVisibility(View.VISIBLE);
         this.startAnimation(showAnimation);
@@ -171,31 +174,32 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
             return;
         }
         RetrofitServiceHelper.INSTANCE.doAlarmConfirm(id, displayStatus,
-                remark).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmItemRsp>() {
+                remark, isReConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe
+                (new CityObserver<DeviceAlarmItemRsp>() {
 
 
-            @Override
-            public void onCompleted() {
-                dismiss();
-            }
+                    @Override
+                    public void onCompleted() {
+                        dismiss();
+                    }
 
-            @Override
-            public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                    toastShort(mContext.getResources().getString(R.string.tips_commit_success));
-                    mListener.onPopupCallback(deviceAlarmLogInfo);
-                } else {
-                    toastShort(mContext.getResources().getString(R.string.tips_commit_failed));
-                }
-            }
+                    @Override
+                    public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                            toastShort(mContext.getResources().getString(R.string.tips_commit_success));
+                            mListener.onPopupCallback(deviceAlarmLogInfo);
+                        } else {
+                            toastShort(mContext.getResources().getString(R.string.tips_commit_failed));
+                        }
+                    }
 
-            @Override
-            public void onErrorMsg(String errorMsg) {
-                dismiss();
-                toastShort(errorMsg);
-            }
-        });
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        dismiss();
+                        toastShort(errorMsg);
+                    }
+                });
     }
 
     private void toastShort(String msg) {

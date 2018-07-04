@@ -23,7 +23,6 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.Header;
-import retrofit2.http.Headers;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -39,7 +38,8 @@ public interface RetrofitService {
     String USER_ACCOUNT_LIST = "users";
     String DEVICE_INFO_LIST = "prov1/devices/details/app";
     //
-    String STATION_INFO = "stations";
+    String STATION_INFO = "stations/";
+    String STATION_DEPLOY = "stations/app/";
 
     String DEVICE_HISTORY_LIST = "prov1/logs/list/ltime/app";
     String DEVICE_ALARM_TIME = "details/alarm/ltime";
@@ -49,10 +49,6 @@ public interface RetrofitService {
     String DEVICE_TYPE_COUNT = "prov1/devices/status/count";
     String APP_UPDATE = "http://api.fir" +
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
-
-    String HEADER_SESSION_ID = "x-session-id";
-    String HEADER_USER_AGENT = "User-Agent";
-    String TAG = "Lora";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -106,28 +102,23 @@ public interface RetrofitService {
     @GET(APP_UPDATE)
     Observable<UpdateRsp> getUpdateInfo();
 
-    @Headers({"Content-type:application/json;charset=UTF-8"})
     @PUT("alarmplay/{id}")
     Observable<DeviceAlarmItemRsp> doAlarmConfirm(@Path("id") String id, @Body RequestBody requestBody);
 
-    @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST("users/{uid}/controlling")
     Observable<UserAccountControlRsp> doAccountControl(@Path("uid") String uid, @Body RequestBody requestBody);
 
-    @Headers({"Content-type:application/json;charset=UTF-8"})
     @POST("devices/app/{sn}")
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
-
-    @Headers({"Content-type:application/json;charset=UTF-8"})
     @HTTP(method = "DELETE", path = LOGOUT, hasBody = true)
     Observable<ResponseBase> logout(@Header("phoneId") String phoneId, @Header("uid")
             String uid, @Query("phoneId") String phoneId_q, @Query("uid") String uid_q, @Body RequestBody requestBody);
 
-    @GET("stations/{sn}")
+    @GET(STATION_INFO + "{sn}")
     Observable<StationInfoRsp> getStationDetail(@Path("sn") String sn);
+
     //
-    @Headers({"Content-type:application/json;charset=UTF-8"})
-    @POST("stations/app/{sn}")
+    @POST(STATION_DEPLOY + "{sn}")
     Observable<StationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 }

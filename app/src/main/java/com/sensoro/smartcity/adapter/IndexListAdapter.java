@@ -16,6 +16,7 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.SensorDetailInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.SortUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -118,6 +119,9 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         String[] sensorTypes = deviceInfo.getSensorTypes();
         List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
 //        Arrays.sort(sensorTypes);
+        if (deviceInfo.getSn().endsWith("28C8")){
+            LogUtils.loge(this,"=========");
+        }
         if (sensorDetailInfo != null && sortSensorTypes.size() > 0) {
             HashMap<String, SensorStruct> stringSensorStructHashMap = sensorDetailInfo.loadData();
             if (sortSensorTypes.size() > 1) {

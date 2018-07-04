@@ -1,77 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="@dimen/y1000"
-    android:orientation="vertical"
-    android:id="@+id/index_layout_head1"
-    android:gravity="center">
+              android:id="@+id/index_layout_head1"
+              android:layout_width="match_parent"
+              android:layout_height="@dimen/y1000"
+              android:gravity="center"
+              android:orientation="vertical">
+
     <LinearLayout
-        android:orientation="vertical"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-        <TextView
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextSwitcher
             android:id="@+id/index_head_alarm_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
             android:textSize="@dimen/x180"
-            android:textStyle="bold"
-            android:textColor="@color/white"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textStyle="bold"/>
+
         <TextView
-            android:text="@string/today_alarm"
-            android:textSize="@dimen/x40"
             android:id="@+id/index_head_alarm_num_title"
-            android:textColor="@color/white"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:text="@string/today_alarm"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x40"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/index_head_alarm_layout"
-        android:layout_marginBottom="@dimen/y50"
-        android:orientation="horizontal"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
         <LinearLayout
-            android:orientation="vertical"
-            android:gravity="center"
-            android:layout_weight="1"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text=""
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:orientation="vertical">
+
+            <TextSwitcher
                 android:id="@+id/index_head_lost_num"
-                android:textColor="@color/white"
-                android:textSize="@dimen/x100"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="@dimen/x100"/>
+
             <TextView
-                android:text="失联"
-                android:textSize="@dimen/x40"
                 android:id="@+id/index_head_lost_num_title"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="失联"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x40"/>
         </LinearLayout>
+
         <LinearLayout
-            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-            <TextView
-                android:text=""
-                android:textSize="@dimen/x100"
+            android:orientation="vertical">
+
+            <TextSwitcher
                 android:id="@+id/index_head_inactive_num"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textColor="@color/white"
+                android:textSize="@dimen/x100"/>
+
             <TextView
-                android:text="未激活"
-                android:textSize="@dimen/x40"
                 android:id="@+id/index_head_inactive_num_title"
-                android:textColor="@color/white"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:text="未激活"
+                android:textColor="@color/white"
+                android:textSize="@dimen/x40"/>
         </LinearLayout>
     </LinearLayout>
 

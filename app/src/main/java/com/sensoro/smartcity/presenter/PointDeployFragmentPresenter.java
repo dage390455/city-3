@@ -18,7 +18,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.IPointDeployFragmentView;
 import com.sensoro.smartcity.iwidget.IOndestroy;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -75,7 +75,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
             }
 
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode,String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
                 getView().startScan();

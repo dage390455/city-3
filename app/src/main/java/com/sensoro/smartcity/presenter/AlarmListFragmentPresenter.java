@@ -17,7 +17,7 @@ import com.sensoro.smartcity.imainviews.IAlarmListFragmentView;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.util.DateUtil;
 
@@ -34,6 +34,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
     private long startTime;
     private long endTime;
     private Activity mContext;
+    private boolean isReConfirm = false;
 
     @Override
     public void initData(Context context) {
@@ -151,7 +152,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -176,7 +177,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -201,7 +202,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -239,7 +240,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
@@ -270,7 +271,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
@@ -301,7 +302,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
@@ -374,7 +375,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -405,7 +406,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
@@ -451,7 +452,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
             }
 
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
@@ -461,12 +462,15 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
     public void clickItem(int position) {
         Intent intent = new Intent(mContext, AlarmDetailActivity.class);
         intent.putExtra(EXTRA_ALARM_INFO, mDeviceAlarmLogInfoList.get(position - 1));
+        intent.putExtra(EXTRA_ALARM_IS_RE_CONFIRM, isReConfirm);
+
         getView().startACForResult(intent, REQUEST_CODE_ALARM);
     }
 
-    public void clickItemByConfirmStatus(int position) {
+    public void clickItemByConfirmStatus(int position, boolean isReConfirm) {
+        this.isReConfirm = isReConfirm;
         DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
-        getView().showAlarmPopupView(deviceAlarmLogInfo);
+        getView().showAlarmPopupView(deviceAlarmLogInfo, isReConfirm);
     }
 
     public void popClickComplete(DeviceAlarmLogInfo deviceAlarmLogInfo) {

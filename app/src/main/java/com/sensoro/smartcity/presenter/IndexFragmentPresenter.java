@@ -24,7 +24,7 @@ import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.NumberDeserializer;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.CityObserver;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 
@@ -65,7 +65,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     }
 
     private Activity mContext;
-
 
     @Override
     public void initData(Context context) {
@@ -143,7 +142,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -189,7 +188,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                     }
 
                     @Override
-                    public void onErrorMsg(String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -264,7 +263,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             }
 
             @Override
-            public void onErrorMsg(String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
             }
         });
