@@ -52,7 +52,6 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 
 
     private void initView() {
-        hiddenRootView();
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         flashImageView = (ImageView) mRootView.findViewById(R.id.zxing_capture_iv_flash);
         manualImageView = (ImageView) mRootView.findViewById(R.id.zxing_capture_iv_manual);
@@ -84,16 +83,10 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
             if (mPrestener != null) {
 //            mPrestener.getUserVisible(getUserVisibleHint());
                 if (mIsVisibleToUser) {
-//                    mQRCodeView.startCamera();
-//        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
                     startScan();
-//                    mPrestener.resumeCamera(surfaceView.getHolder());
                     showRootView();
-                    // historyManager must be initialized here to update the history preference
                 } else {
                     mQRCodeView.stopCamera();
-//                    mQRCodeView.stopSpot();
-//                    mPrestener.pauseCamera();
                     hiddenRootView();
                 }
             }
@@ -108,10 +101,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
         super.onStart();
         try {
             if (mPrestener != null && mIsVisibleToUser) {
-//                mQRCodeView.startCamera();
-//        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
                 startScan();
-//                mQRCodeView.startSpot();
                 showRootView();
             }
         } catch (Exception e) {
@@ -125,9 +115,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 mQRCodeView.stopCamera();
-//                mQRCodeView.stopSpot();
                 hiddenRootView();
-                System.out.println("StationDeploy.OnPause===>");
             }
         } catch (Exception e) {
             e.printStackTrace();

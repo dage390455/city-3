@@ -12,8 +12,8 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.widget.SensoroTextView;
 
-import static com.sensoro.smartcity.presenter.MainPresenter.BUSSISE_ACCOUNT;
-import static com.sensoro.smartcity.presenter.MainPresenter.NORMOL_ACCOUNT;
+import static com.sensoro.smartcity.presenter.MainPresenter.BUSINESS_ACCOUNT;
+import static com.sensoro.smartcity.presenter.MainPresenter.NORMAL_ACCOUNT;
 import static com.sensoro.smartcity.presenter.MainPresenter.SUPPER_ACCOUNT;
 
 /**
@@ -26,7 +26,7 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
     private LayoutInflater mInflater;
 
     private int selectedIndex;
-    private int tempAccountType = NORMOL_ACCOUNT;
+    private int tempAccountType = NORMAL_ACCOUNT;
     private String[] currentData;
     private final String[] titleNormalArray;
     private final String[] titleBussArray;
@@ -80,7 +80,7 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
         holder.item_name.setText(currentData[position]);
         holder.item_name.setLetterSpacing(3);
         holder.item_name.setTextColor(mContext.getResources().getColor(R.color.c_626262));
-        if (tempAccountType == BUSSISE_ACCOUNT) {
+        if (tempAccountType == BUSINESS_ACCOUNT) {
             holder.item_icon.setImageResource(LEFT_MENU_ICON_UNSELECT_BUSSIES[position]);
         } else if (tempAccountType == SUPPER_ACCOUNT) {
             holder.item_icon.setImageResource(LEFT_MENU_ICON_UNSELECT_SUPPER);
@@ -109,10 +109,10 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
             case SUPPER_ACCOUNT:
                 currentData = titleSupperArray;
                 break;
-            case NORMOL_ACCOUNT:
+            case NORMAL_ACCOUNT:
                 currentData = titleNormalArray;
                 break;
-            case BUSSISE_ACCOUNT:
+            case BUSINESS_ACCOUNT:
                 currentData = titleBussArray;
                 break;
             default:

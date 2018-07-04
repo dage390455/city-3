@@ -19,7 +19,6 @@ import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchFragmentView;
 import com.sensoro.smartcity.presenter.MerchantSwitchFragmentPresenter;
 import com.sensoro.smartcity.server.bean.UserInfo;
-import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -108,15 +107,10 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
 
     public void refreshData(String username, String phone, String phoneId) {
         if (mPrestener!=null){
-
             mPrestener.refreshUserData(username, phone, phoneId);
         }
     }
 
-
-    public void refresh(UserAccountRsp userAccountRsp) {
-        mPrestener.refreshUI(userAccountRsp);
-    }
 
 
     @Override

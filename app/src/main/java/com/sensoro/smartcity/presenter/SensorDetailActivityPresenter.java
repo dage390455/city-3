@@ -861,7 +861,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     public void onStart() {
         EventBus.getDefault().register(this);
     }
-
+    @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
     }

@@ -42,7 +42,6 @@ public abstract class CityObserver<T> implements Observer<T> {
                     String errinfo = jsonObject.getString("errinfo");
                     onErrorMsg(errcode, errinfo);
                 } catch (JSONException e1) {
-                    e1.printStackTrace();
                     try {
                         jsonObject = new JSONObject(errorBody);
                         String log = jsonObject.toString();

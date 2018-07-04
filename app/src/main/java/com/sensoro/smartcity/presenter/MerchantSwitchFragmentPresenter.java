@@ -72,7 +72,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
         });
     }
 
-    public void refreshUI(UserAccountRsp userAccountRsp) {
+    private void refreshUI(UserAccountRsp userAccountRsp) {
         List<UserInfo> list = userAccountRsp.getData();
         mUserInfoList.clear();
         mUserInfoList.addAll(list);

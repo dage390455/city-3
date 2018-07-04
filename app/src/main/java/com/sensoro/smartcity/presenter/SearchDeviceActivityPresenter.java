@@ -85,6 +85,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         EventBus.getDefault().register(this);
     }
 
+    @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
     }
@@ -359,7 +360,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                 }
 
                 @Override
-                public void onErrorMsg(int errorCode,String errorMsg) {
+                public void onErrorMsg(int errorCode, String errorMsg) {
                     getView().dismissProgressDialog();
                     getView().recycleViewRefreshComplete();
                     getView().toastShort(errorMsg);
@@ -403,7 +404,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                 }
 
                 @Override
-                public void onErrorMsg(int errorCode,String errorMsg) {
+                public void onErrorMsg(int errorCode, String errorMsg) {
                     page--;
                     getView().dismissProgressDialog();
                     getView().recycleViewRefreshComplete();

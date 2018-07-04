@@ -75,6 +75,11 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
         }
     }
 
+    @Override
+    public void onStop() {
+
+    }
+
     private void createCriterias() {
         WeekDayCriteria fridayCriteria = new WeekDayCriteria(Calendar.FRIDAY);
         List<BaseCriteria> threeMonthsCriteriaList = new ArrayList<>();

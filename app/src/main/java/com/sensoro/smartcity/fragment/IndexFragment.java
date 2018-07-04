@@ -52,7 +52,6 @@ import java.util.Collections;
 import java.util.List;
 
 import static android.view.View.VISIBLE;
-import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 import static com.sensoro.smartcity.constant.Constants.INDEX_STATUS_ARRAY;
@@ -309,10 +308,10 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
-                        toolbarDirection == DIRECTION_DOWN) {
-//                    mListRecyclerView.setre
-                }
+//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
+//                        toolbarDirection == DIRECTION_DOWN) {
+////                    mListRecyclerView.setre
+//                }
                 if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(VISIBLE);
@@ -360,11 +359,11 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (xGridLayoutManager.findFirstVisibleItemPosition() == 0
-                        && newState == SCROLL_STATE_IDLE
-                        && toolbarDirection == DIRECTION_DOWN) {
-//                    mGridRecyclerView.setRefresh(true);
-                }
+//                if (xGridLayoutManager.findFirstVisibleItemPosition() == 0
+//                        && newState == SCROLL_STATE_IDLE
+//                        && toolbarDirection == DIRECTION_DOWN) {
+////                    mGridRecyclerView.setRefresh(true);
+//                }
                 if (xGridLayoutManager.findFirstVisibleItemPosition() > 3) {
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(VISIBLE);
@@ -823,9 +822,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void requestTopData(boolean isFirstInit) {
-        if (mRootFragment.isVisible() && mRootFragment.isResumed()) {
-            mPrestener.requestTopData(isFirstInit);
-        }
+        mPrestener.requestTopData(isFirstInit);
     }
 
     @Override

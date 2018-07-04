@@ -21,10 +21,10 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IIndexFragmentView;
 import com.sensoro.smartcity.iwidget.IOndestroy;
 import com.sensoro.smartcity.model.PushData;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.NumberDeserializer;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 
@@ -407,10 +407,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             if (isMatcher(deviceInfo)) {
                 mDataList.add(deviceInfo);
             }
-//            else {
-//                //
-////                break;
-//            }
         }
     }
 
@@ -452,7 +448,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         EventBus.getDefault().post(pushData);
         //只在主页可见出现的时候刷新
         if (isMainActivityTop() && mIsVisibleToUser) {
-            getView().requestTopData(false);
+            requestTopData(false);
             getView().refreshData(mDataList);
         }
         if (isAlarmPlay) {

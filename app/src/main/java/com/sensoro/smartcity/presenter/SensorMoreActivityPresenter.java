@@ -81,7 +81,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
             }
 
             @Override
-            public void onErrorMsg(int errorCode,String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
@@ -304,6 +304,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
         EventBus.getDefault().register(this);
     }
 
+    @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
     }

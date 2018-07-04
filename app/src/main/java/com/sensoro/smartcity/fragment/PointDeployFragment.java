@@ -51,7 +51,6 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 
 
     private void initView() {
-        hiddenRootView();
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         flashImageView = (ImageView) mRootView.findViewById(R.id.zxing_capture_iv_flash);
         manualImageView = (ImageView) mRootView.findViewById(R.id.zxing_capture_iv_manual);
@@ -82,15 +81,10 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
             if (mPrestener != null) {
 //            mPrestener.getUserVisible(getUserVisibleHint());
                 if (mIsVisibleToUser) {
-//        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
                     startScan();
-//                    mPrestener.resumeCamera(surfaceView.getHolder());
                     showRootView();
-                    // historyManager must be initialized here to update the history preference
                 } else {
                     mQRCodeView.stopCamera();
-//                    mQRCodeView.stopSpot();
-//                    mPrestener.pauseCamera();
                     hiddenRootView();
                 }
             }
@@ -106,10 +100,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         LogUtils.loge(this, "用户可见: " + mIsVisibleToUser);
         try {
             if (mPrestener != null && mIsVisibleToUser) {
-//                mQRCodeView.startCamera();
-//        mQRCodeView.startCamera(Camera.CameraInfo.CAMERA_FACING_FRONT);
                 startScan();
-//                mQRCodeView.startSpot();
                 showRootView();
             }
         } catch (Exception e) {
@@ -124,9 +115,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 mQRCodeView.stopCamera();
-//                mQRCodeView.stopSpot();
                 hiddenRootView();
-                System.out.println("PointDeploy.OnPause===>");
             }
         } catch (Exception e) {
             e.printStackTrace();

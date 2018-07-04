@@ -21,15 +21,16 @@ import com.sensoro.smartcity.fragment.MerchantSwitchFragment;
 import com.sensoro.smartcity.fragment.PointDeployFragment;
 import com.sensoro.smartcity.fragment.StationDeployFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOndestroy;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.Character;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -52,7 +53,7 @@ import io.socket.emitter.Emitter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainPresenter extends BasePresenter<IMainView> implements IOndestroy, Constants, IOnStart {
+public class MainPresenter extends BasePresenter<IMainView> implements IOndestroy, Constants, IOnCreate {
     private Activity mActivity;
 
     private String mUserName = null;
@@ -78,9 +79,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     private final TaskRunnable mRunnable = new TaskRunnable();
     //
     public static final int SUPPER_ACCOUNT = 1;
-    public static final int NORMOL_ACCOUNT = 2;
-    public static final int BUSSISE_ACCOUNT = 3;
-    private volatile int accountType = NORMOL_ACCOUNT;
+    public static final int NORMAL_ACCOUNT = 2;
+    public static final int BUSINESS_ACCOUNT = 3;
+    private volatile int accountType = NORMAL_ACCOUNT;
     //
 
     /**
@@ -154,10 +155,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             } else {
                 indexFragment.reFreshDataByDirection(Constants.DIRECTION_DOWN);
                 if (this.roles.equalsIgnoreCase("business")) {
-                    accountType = BUSSISE_ACCOUNT;
+                    accountType = BUSINESS_ACCOUNT;
 
                 } else {
-                    accountType = NORMOL_ACCOUNT;
+                    accountType = NORMAL_ACCOUNT;
                 }
             }
             getView().freshAccountSwitch(accountType);
@@ -167,7 +168,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             mHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    indexFragment.requestTopData(false);
+                    indexFragment.requestTopData(true);
                 }
             });
         }
@@ -205,9 +206,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 if (isSupperAccount()) {
                     merchantSwitchFragment.requestData();
                 } else if (roles.equalsIgnoreCase("business")) {
-                    accountType = BUSSISE_ACCOUNT;
+                    accountType = BUSINESS_ACCOUNT;
                 } else {
-                    accountType = NORMOL_ACCOUNT;
+                    accountType = NORMAL_ACCOUNT;
                 }
                 merchantSwitchFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
                 getView().freshAccountSwitch(accountType);
@@ -324,6 +325,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         }
         mHandler.removeCallbacks(mRunnable);
         mHandler.removeCallbacksAndMessages(null);
+        EventBus.getDefault().unregister(this);
     }
 
     public void updateApp(String url) {
@@ -334,19 +336,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         getView().startAC(intent);
     }
 
-    @Override
-    public void onStart() {
-        EventBus.getDefault().register(this);
-    }
-
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onMessageEvent(Intent data) {
+    public void onMessageEvent(EventData data) {
         //TODO 可以修改以此种方式传递，方便管理
         LogUtils.loge(this, data.toString());
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 
     private class TaskRunnable implements Runnable {
@@ -393,10 +392,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_CODE_ORIGIN) {
-            getView().setCurrentPagerItem(0);
-            getView().setMenuSelected(0);
-        } else if (resultCode == RESULT_CODE_MAP) {
+        if (resultCode == RESULT_CODE_MAP) {
             if (data.getSerializableExtra(EXTRA_DEVICE_INFO) != null) {
                 DeviceInfo deviceInfo = (DeviceInfo) data.getSerializableExtra(EXTRA_DEVICE_INFO);
                 refreshDeviceInfo(deviceInfo);
@@ -413,16 +409,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             }
             getView().setCurrentPagerItem(0);
             getView().setMenuSelected(0);
-        }
-//        else if (resultCode == RESULT_CODE_CHANGE_MERCHANT) {
-//            UserAccountRsp infoRspData = (UserAccountRsp) data.getSerializableExtra(EXTRA_MERCHANT_INFO);
-//            if (infoRspData != null) {
-//                merchantSwitchFragment.refresh(infoRspData);
-//            }
-//            getView().setCurrentPagerItem(2);
-////            getView().setMenuSelected(0);
-//        }
-        else if (resultCode == RESULT_CODE_SEARCH_MERCHANT) {
+        } else if (resultCode == RESULT_CODE_SEARCH_MERCHANT) {
             String nickname = data.getStringExtra("nickname");
             String phone = data.getStringExtra("phone");
             String roles = data.getStringExtra("roles");
@@ -486,7 +473,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
                 getView().setCurrentPagerItem(2);
                 break;
-            case NORMOL_ACCOUNT:
+            case NORMAL_ACCOUNT:
                 switch (position) {
                     case 0:
                         indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
@@ -503,7 +490,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 }
                 getView().setCurrentPagerItem(position);
                 break;
-            case BUSSISE_ACCOUNT:
+            case BUSINESS_ACCOUNT:
                 switch (position) {
                     case 0:
                         indexFragment.reFreshDataByDirection(DIRECTION_DOWN);

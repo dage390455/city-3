@@ -53,7 +53,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPrestener.checkPush();
         mPrestener.initData(mActivity);
         mPrestener.freshAccountType();
-        mPrestener.onStart();
+        mPrestener.onCreate();
     }
 
     @Override
@@ -77,7 +77,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPrestener.onDestroy();
         mProgressUtils.destroyProgress();
         super.onDestroy();
-        mPrestener.onStop();
     }
 
     public boolean isSupperAccount() {
@@ -210,7 +209,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void setCurrentPagerItem(int position) {
-        sensoroPager.setCurrentItem(position,false);
+        sensoroPager.setCurrentItem(position, false);
     }
 
     @Override

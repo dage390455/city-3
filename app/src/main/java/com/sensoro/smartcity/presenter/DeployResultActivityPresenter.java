@@ -126,5 +126,6 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
         getView().setIntentResult(RESULT_CODE_MAP, intent);
         getView().finishAc();
+
     }
 }
