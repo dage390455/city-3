@@ -45,18 +45,21 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 String name = deviceInfo.getName();
                 String address = deviceInfo.getAddress();
                 if (!TextUtils.isEmpty(address)) {
-                    getView().setAddressTextView(address);
+                    getView().setAddressTextView("位置：" + address);
                 }
                 String lon = mContext.getIntent().getStringExtra(EXTRA_SENSOR_LON);
                 String lan = mContext.getIntent().getStringExtra(EXTRA_SENSOR_LAN);
                 if (!is_station) {
                     String contact = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
                     String content = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
-                    getView().setContactTextView(mContext.getString(R.string.name) + "：" + (TextUtils.isEmpty(contact) ?
-                            "无" : contact));
-                    getView().setContentTextView(mContext.getString(R.string.contacts) + "：" + (TextUtils.isEmpty
+
+//                    getView().setContactTextView(mContext.getString(R.string.name) + "：" + (TextUtils.isEmpty
+// (contact) ?
+//                            "无" : contact));
+                    getView().setContentTextView("联系人：" + (TextUtils.isEmpty(contact) ?
+                            "无" : contact) + "(" + (TextUtils.isEmpty
                             (contact) ?
-                            "无" : content));
+                            "无" : content) + ")");
                     getView().refreshSignal(deviceInfo.getUpdatedTime(), deviceInfo.getSignal());
                 }
 

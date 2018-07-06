@@ -108,6 +108,8 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
     TextureMapView mMapView;
     @BindView(R.id.sensor_chart)
     CombinedChart mChart;
+    @BindView(R.id.sensor_ll_chart)
+    LinearLayout sensorLlChart;
     @BindView(R.id.sensor_detail_scroll)
     ScrollView scrollView;
     @BindView(R.id.recent_battery_marker)
@@ -229,6 +231,11 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
     }
 
     @Override
+    public void setChartLayoutVisible(boolean isVisible) {
+        sensorLlChart.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void onLowMemory() {
         super.onLowMemory();
         mMapView.onLowMemory();
@@ -334,10 +341,14 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
 
     @OnClick(R.id.recent_k_title_layout)
     public void dismissKMarkerView() {
-        mChart.getMarker().setVisible(false);
+        try {
+            mChart.getMarker().setVisible(false);
 //        mChart.setDrawMarkers(false);
 //        mChart.setHighlightFullBarEnabled(false);
-        mChart.invalidate();
+            mChart.invalidate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @OnClick(R.id.recent_battery_title_Layout)
@@ -437,7 +448,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
 
     @Override
     public void setBatteryLayoutVisible(boolean isVisible) {
-        batteryLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        llBatteryLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

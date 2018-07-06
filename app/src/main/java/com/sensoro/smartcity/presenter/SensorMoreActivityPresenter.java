@@ -135,7 +135,8 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                     }
                 }
                 getView().setAlarmSetting(sbRule.toString());
-                getView().setInterval(deviceInfo.getInterval() + "s");
+                int interval = deviceInfo.getInterval();
+                getView().setInterval(DateUtil.secToTimeBefore(interval));
                 //
 
                 String name = deviceInfo.getName();
@@ -200,18 +201,19 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 sb.append(device);
             }
             String temp = sb.toString();
+            if (temp.contains("temp1")) {
+                return "温度贴片";
+            }
             if (temp.contains("temperature")) {
-                return "温湿度传感器";
+                return "温湿度";
             } else if (temp.contains("cover")) {
-                return "井位传感器";
+                return "井位";
             } else if (temp.contains("pm")) {
-                return "PM2.5/PM10传感器";
+                return "PM2.5/PM10";
             } else if (temp.contains("pitch")) {
-                return "倾角传感器";
+                return "倾角传";
             } else if (temp.contains("latitude")) {
                 return "追踪器";
-            } else if (temp.contains("temp1")) {
-                return "温度";
             } else if (temp.contains("CURRENT")) {
                 return "电表";
             } else {
@@ -219,46 +221,49 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
             }
         } else {
             String sensorType = sensorTypes[0];
+            if (sensorType.equals("temp1")) {
+                return "温度贴片";
+            }
             if (sensorType.equals("light") || sensorType.equals("temperature")) {
-                return "温湿度传感器";
+                return "温湿度";
             } else if (sensorType.equals("pitch") || sensorType.equals("roll") || sensorType.equals("yaw")) {
-                return "倾角传感器";
+                return "倾角";
             } else if (sensorType.equals("cover") || sensorType.equals("level")) {
-                return "井位传感器";
+                return "井位";
             } else if (sensorType.equals("pm2_5") || sensorType.equals("pm10")) {
-                return "PM2.5/PM10传感器";
+                return "PM2.5/PM10";
             } else if (sensorType.equals("ch4")) {
-                return "甲烷传感器";
+                return "甲烷";
             } else if (sensorType.equals("co")) {
-                return "一氧化碳传感器";
+                return "一氧化碳";
             } else if (sensorType.equals("co2")) {
-                return "二氧化碳传感器";
+                return "二氧化碳";
             } else if (sensorType.equals("leak")) {
-                return "跑冒滴漏传感器";
+                return "跑冒滴漏";
             } else if (sensorType.equals("smoke")) {
-                return "烟雾传感器";
+                return "烟感";
             } else if (sensorType.equals("lpg")) {
-                return "液化石油气传感器";
+                return "液化石油气";
             } else if (sensorType.equals("no2")) {
-                return "二氧化氮传感器";
+                return "二氧化氮";
             } else if (sensorType.equals("so2")) {
-                return "二氧化硫传感器";
+                return "二氧化硫";
             } else if (sensorType.equals("artificialGas")) {
                 return "人工煤气";
             } else if (sensorType.equals("waterPressure")) {
-                return "水压传感器";
+                return "消防液压";
             } else if (sensorType.equals("magnetic")) {
-                return "地磁传感器";
+                return "地磁";
             } else if (sensorType.equals("flame")) {
-                return "火焰传感器";
+                return "火焰";
             } else if (sensorType.equalsIgnoreCase("cover")) {
-                return "井盖传感器";
+                return "井盖";
             } else if (sensorType.equalsIgnoreCase("level")) {
-                return "水位传感器";
+                return "水位";
             } else if (sensorType.equalsIgnoreCase("drop")) {
-                return "滴漏传感器";
+                return "滴漏";
             } else if (sensorType.equalsIgnoreCase("smoke")) {
-                return "烟感传感器";
+                return "烟感";
             } else if (sensorType.equalsIgnoreCase("altitude")) {
                 return "追踪器";
             } else if (sensorType.equalsIgnoreCase("latitude")) {
@@ -266,9 +271,9 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
             } else if (sensorType.equalsIgnoreCase("longitude")) {
                 return "追踪器";
             } else if (sensorType.equalsIgnoreCase("alarm")) {
-                return "紧急报警器";
+                return "紧急呼叫";
             } else if (sensorType.equalsIgnoreCase("distance")) {
-                return "距离水位传感器";
+                return "距离水位";
             } else {
                 return mContext.getString(R.string.unknown);
             }

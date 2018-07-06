@@ -508,22 +508,17 @@ public class WidgetUtil {
                     } else {
                         //
                         unitTextView.setText("" + sensorStruct.getUnit());
-                        if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") ||
-                                sensorType
-                                        .equalsIgnoreCase
-                                                ("co2")) {
+                        if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
                             DecimalFormat df = new DecimalFormat("###.##");
                             setDetailTextStyle(df.format(sensorStruct.getValue()), valueTextView);
                             return;
                         }
                         if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") ||
+                                sensorType.equalsIgnoreCase("temp1") ||
                                 sensorType
                                         .equalsIgnoreCase
                                                 ("humidity") || sensorType.equalsIgnoreCase("waterPressure") ||
-                                sensorType
-                                        .equalsIgnoreCase
-                                                ("co2") ||
-                                sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
+                                sensorType.equalsIgnoreCase("no2")) {
                             DecimalFormat df = new DecimalFormat("###.#");
                             String format = df.format(sensorStruct.getValue());
                             setDetailTextStyle(format, valueTextView);
@@ -931,23 +926,24 @@ public class WidgetUtil {
             srcImageView.setVisibility(View.GONE);
         }
         srcImageView.setLayoutParams(layoutParams);
+        //
         if (!isBool && !(value instanceof Boolean)) {
             //
+
             unitTextView.setText("" + unit);
-            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") || sensorType
-                    .equalsIgnoreCase
-                            ("co2")) {
+            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
                 DecimalFormat df = new DecimalFormat("###.##");
                 setIndexTextStyle(df.format(value), valueTextView);
                 return;
             }
             if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
                     .equalsIgnoreCase
-                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType.equalsIgnoreCase
-                    ("co2") ||
-                    sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
+                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
                 DecimalFormat df = new DecimalFormat("###.#");
-                setIndexTextStyle(df.format(value), valueTextView);
+                LogUtils.loge("value = " + value);
+                String format = df.format(value);
+                setIndexTextStyle(format, valueTextView);
                 return;
             }
             valueTextView.setText("" + String.format("%.0f", Double.valueOf(value
@@ -1055,30 +1051,47 @@ public class WidgetUtil {
             unitTextView.setText("");
         }
         if (!isBool) {
+//            unitTextView.setText("" + sensorStruct.getUnit());
+//            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") || sensorType
+//                    .equalsIgnoreCase
+//                            ("co2")) {
+//                DecimalFormat df = new DecimalFormat("###.##");
+//                setIndexTextStyle(df.format(sensorStruct.getValue()), valueTextView);
+////                valueTextView.setText();
+//                return;
+//            }
+//            if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+//                    .equalsIgnoreCase
+//                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+// .equalsIgnoreCase
+//                    ("co2") ||
+//                    sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
+//                DecimalFormat df = new DecimalFormat("###.#");
+//                setIndexTextStyle(df.format(sensorStruct.getValue()), valueTextView);
+////                valueTextView.setText(df.format(sensorStruct.getValue()));
+//                return;
+//            }
+//            valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
+//                    .toString())));
+
+//            valueTextView.setText("" + String.format("%.1f", Double.valueOf(value.toString())));
+//            unitTextView.setText(sensorStruct.getUnit());
             unitTextView.setText("" + sensorStruct.getUnit());
-            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") || sensorType
-                    .equalsIgnoreCase
-                            ("co2")) {
+            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
                 DecimalFormat df = new DecimalFormat("###.##");
-                setIndexTextStyle(df.format(sensorStruct.getValue()), valueTextView);
-//                valueTextView.setText();
+                setIndexTextStyle(df.format(value), valueTextView);
                 return;
             }
             if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
                     .equalsIgnoreCase
-                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType.equalsIgnoreCase
-                    ("co2") ||
-                    sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
+                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
                 DecimalFormat df = new DecimalFormat("###.#");
-                setIndexTextStyle(df.format(sensorStruct.getValue()), valueTextView);
-//                valueTextView.setText(df.format(sensorStruct.getValue()));
+                setIndexTextStyle(df.format(value), valueTextView);
                 return;
             }
-            valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
+            valueTextView.setText("" + String.format("%.0f", Double.valueOf(value
                     .toString())));
-
-//            valueTextView.setText("" + String.format("%.1f", Double.valueOf(value.toString())));
-//            unitTextView.setText(sensorStruct.getUnit());
         }
     }
 
@@ -1151,17 +1164,16 @@ public class WidgetUtil {
         return unit;
     }
 
-    public static String getSensorTypesChinese(String[] sensorType) {
-        List<String> list = Arrays.asList(sensorType);
-        if (list.contains("temperature") || list.contains("humidity") || list.contains("temp1")) {
+    public static String getSensorTypesChinese(List<String> sensorType) {
+        if (sensorType.contains("temperature") || sensorType.contains("humidity") || sensorType.contains("temp1")) {
             return "温湿度";
-        } else if (list.contains("pm2_5") || list.contains("pm10")) {
+        } else if (sensorType.contains("pm2_5") || sensorType.contains("pm10")) {
             return "PM10/2.5";
-        } else if (list.contains("latitude") || list.contains("longitude")) {
+        } else if (sensorType.contains("latitude") || sensorType.contains("longitude")) {
             return "经纬度";
-        } else if (list.contains("level") || list.contains("cover")) {
+        } else if (sensorType.contains("level") || sensorType.contains("cover")) {
             return "井盖";
-        } else if (list.contains("pitch") || list.contains("roll") || list.contains("collision")) {
+        } else if (sensorType.contains("pitch") || sensorType.contains("roll") || sensorType.contains("collision")) {
             return "角度";
         } else {
             return "-";

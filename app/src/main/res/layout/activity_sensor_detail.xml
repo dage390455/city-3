@@ -1,54 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@color/white"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/sensor_history_title_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y200">
+
         <ImageView
             android:id="@+id/sensor_detail_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/x10"
             android:layout_centerVertical="true"
-            android:padding="15dp"
+            android:layout_marginLeft="@dimen/x10"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
-            android:src="@mipmap/ic_back" />
+            android:padding="15dp"
+            android:src="@mipmap/ic_back"/>
 
         <TextView
             android:id="@+id/sensor_detail_title"
-            android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_large_size"
-            android:text="@string/sensor_detail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" />
+            android:layout_centerInParent="true"
+            android:text="@string/sensor_detail"
+            android:textColor="@color/c_626262"
+            android:textSize="@dimen/city_large_size"/>
+
         <ImageView
             android:id="@+id/sensor_detail_more"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:padding="18dp"
+            android:layout_centerVertical="true"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
-            android:layout_centerVertical="true"
+            android:padding="18dp"
             android:src="@mipmap/ic_detail"
             />
     </RelativeLayout>
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="@dimen/y1"
         android:background="@color/c_e7e7e7"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"/>
 
     <ScrollView
         android:id="@+id/sensor_detail_scroll"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -88,7 +93,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/y15"
-                            android:background="@drawable/shape_status_alarm" />
+                            android:background="@drawable/shape_status_alarm"/>
                     </LinearLayout>
 
                     <LinearLayout
@@ -101,31 +106,31 @@
                             android:id="@+id/sensor_detail_name"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/city_normal_size" />
+                            android:textSize="@dimen/city_normal_size"/>
 
                         <TextView
                             android:id="@+id/sensor_detail_sn"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/y10"
-                            android:textSize="@dimen/city_normal_size" />
+                            android:textSize="@dimen/city_normal_size"/>
 
                         <TextView
                             android:id="@+id/sensor_detail_date"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/y60"
-                            android:textSize="@dimen/city_normal_size" />
+                            android:textSize="@dimen/city_normal_size"/>
                     </LinearLayout>
                 </LinearLayout>
             </RelativeLayout>
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_margin="@dimen/y8"
                 android:layout_height="@dimen/y1"
+                android:layout_margin="@dimen/y8"
                 android:background="@color/c_e7e7e7"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"/>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -151,14 +156,14 @@
                             android:id="@+id/struct_left_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/city_super_large_size" />
+                            android:textSize="@dimen/city_super_large_size"/>
 
                         <TextView
                             android:id="@+id/struct_left_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/x15"
-                            android:textSize="@dimen/city_large_size" />
+                            android:textSize="@dimen/city_large_size"/>
                     </LinearLayout>
 
                     <TextView
@@ -166,7 +171,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/y30"
-                        android:textSize="@dimen/x40" />
+                        android:textSize="@dimen/x40"/>
                 </LinearLayout>
 
                 <ImageView
@@ -174,7 +179,7 @@
                     android:layout_height="match_parent"
                     android:layout_margin="@dimen/y8"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null" />
+                    android:contentDescription="@null"/>
 
                 <LinearLayout
                     android:id="@+id/sensor_detail_struct_right"
@@ -195,14 +200,14 @@
                             android:id="@+id/struct_right_value"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textSize="@dimen/city_super_large_size" />
+                            android:textSize="@dimen/city_super_large_size"/>
 
                         <TextView
                             android:id="@+id/struct_right_unit"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="@dimen/x15"
-                            android:textSize="@dimen/city_large_size" />
+                            android:textSize="@dimen/city_large_size"/>
                     </LinearLayout>
 
                     <TextView
@@ -210,15 +215,16 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/y30"
-                        android:textSize="@dimen/x40" />
+                        android:textSize="@dimen/x40"/>
                 </LinearLayout>
             </LinearLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y1"
                 android:layout_margin="@dimen/y8"
                 android:background="@color/c_e7e7e7"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"/>
 
             <com.sensoro.smartcity.widget.MapContainer
                 android:id="@+id/sensor_detail_map_layout"
@@ -228,7 +234,7 @@
                 <com.amap.api.maps.TextureMapView
                     android:id="@+id/sensor_detail_map"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -240,9 +246,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/x100"
                         android:layout_marginTop="@dimen/y60"
-                        android:textSize="@dimen/city_normal_size"
-                        android:text="@string/sensor_location" />
+                        android:text="@string/sensor_location"
+                        android:textSize="@dimen/city_normal_size"/>
                 </LinearLayout>
+
                 <Button
                     android:id="@+id/sensor_detail_navi_btn"
                     style="?android:attr/borderlessButtonStyle"
@@ -251,44 +258,48 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginEnd="@dimen/x50"
                     android:layout_marginTop="@dimen/y50"
-                    android:padding="@dimen/x5"
                     android:background="@drawable/shape_button_tiny"
+                    android:padding="@dimen/x5"
                     android:text="@string/navigation"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
+
                 <Button
                     android:id="@+id/sensor_detail_share_btn"
                     style="?android:attr/borderlessButtonStyle"
                     android:layout_width="wrap_content"
                     android:layout_height="@dimen/y100"
-                    android:layout_toStartOf="@+id/sensor_detail_navi_btn"
                     android:layout_marginEnd="@dimen/x50"
                     android:layout_marginTop="@dimen/y50"
-                    android:padding="@dimen/x5"
+                    android:layout_toStartOf="@+id/sensor_detail_navi_btn"
                     android:background="@drawable/shape_button_tiny"
+                    android:padding="@dimen/x5"
                     android:text="@string/detail_share"
                     android:textColor="@color/white"
-                    android:textSize="12sp" />
+                    android:textSize="12sp"/>
             </com.sensoro.smartcity.widget.MapContainer>
+
             <RelativeLayout
-                android:gravity="center_horizontal"
-                android:visibility="gone"
                 android:id="@+id/sensor_detail_not_deploy"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:visibility="gone">
+
                 <TextView
-                    android:text="@string/no_deploy"
-                    android:textSize="15sp"
-                    android:layout_marginTop="@dimen/y200"
-                    android:layout_marginBottom="@dimen/y200"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:layout_marginBottom="@dimen/y200"
+                    android:layout_marginTop="@dimen/y200"
+                    android:text="@string/no_deploy"
+                    android:textSize="15sp"/>
             </RelativeLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y1"
                 android:background="@color/c_e7e7e7"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"/>
 
             <LinearLayout
                 android:id="@+id/recent_k_layout"
@@ -300,7 +311,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null" />
+                    android:contentDescription="@null"/>
 
                 <RelativeLayout
                     android:id="@+id/recent_k_title_layout"
@@ -309,27 +320,26 @@
                     android:orientation="horizontal">
 
                     <TextView
-                        android:textSize="@dimen/city_normal_size"
                         android:id="@+id/recent_days_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/x75"
-                        android:layout_marginTop="@dimen/y45" />
+                        android:layout_marginTop="@dimen/y45"
+                        android:textSize="@dimen/city_normal_size"/>
 
                     <TextView
                         android:id="@+id/recent_days_info1"
-                        android:textSize="@dimen/city_small_size"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_marginRight="@dimen/x75"
                         android:layout_marginTop="@dimen/y45"
                         android:drawableLeft="@drawable/shape_blue"
-                        android:drawablePadding="@dimen/x15" />
+                        android:drawablePadding="@dimen/x15"
+                        android:textSize="@dimen/city_small_size"/>
 
                     <TextView
                         android:id="@+id/recent_days_info2"
-                        android:textSize="@dimen/city_small_size"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="@dimen/x35"
@@ -337,30 +347,33 @@
                         android:layout_toLeftOf="@+id/recent_days_info1"
                         android:drawableLeft="@drawable/shape_status_normal"
                         android:drawablePadding="@dimen/x15"
-                        android:visibility="gone" />
+                        android:textSize="@dimen/city_small_size"
+                        android:visibility="gone"/>
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/sensor_ll_chart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginBottom="@dimen/y45"
-                    android:layout_marginTop="@dimen/y45">
+                    android:layout_marginTop="@dimen/y45"
+                    android:visibility="gone">
 
                     <com.github.mikephil.charting.charts.CombinedChart
                         android:id="@+id/sensor_chart"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_marginLeft="@dimen/x75"
-                        android:layout_marginRight="@dimen/x75" />
+                        android:layout_marginRight="@dimen/x75"/>
                 </LinearLayout>
             </LinearLayout>
 
             <ImageView
-                android:layout_margin="@dimen/y8"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y1"
+                android:layout_margin="@dimen/y8"
                 android:background="@color/c_e7e7e7"
-                android:contentDescription="@null" />
+                android:contentDescription="@null"/>
 
             <LinearLayout
                 android:id="@+id/ll_battery_layout"
@@ -378,10 +391,10 @@
                         android:id="@+id/recent_days_battery_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/city_normal_size"
                         android:layout_marginLeft="@dimen/x75"
                         android:layout_marginTop="@dimen/y45"
-                        android:text="@string/sensor_detail_battery" />
+                        android:text="@string/sensor_detail_battery"
+                        android:textSize="@dimen/city_normal_size"/>
 
                     <TextView
                         android:id="@+id/recent_days_battery_info1"
@@ -393,7 +406,7 @@
                         android:drawableLeft="@drawable/shape_blue"
                         android:drawablePadding="@dimen/x15"
                         android:text="@string/sensor_detail_battery"
-                        android:textSize="@dimen/city_small_size" />
+                        android:textSize="@dimen/city_small_size"/>
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -407,34 +420,37 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/x75"
-                        android:layout_marginRight="@dimen/x75" />
+                        android:layout_marginRight="@dimen/x75"/>
+
                     <com.sensoro.smartcity.widget.BatteryMarkerView
                         android:id="@+id/recent_battery_marker"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"/>
                 </RelativeLayout>
+
                 <RelativeLayout
                     android:id="@+id/recent_days_power_supply"
-                    android:layout_marginTop="@dimen/y400"
-                    android:layout_marginBottom="@dimen/y400"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/y400"
+                    android:layout_marginTop="@dimen/y400">
+
                     <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_centerInParent="true"
                         android:text="@string/power_supply"
-                        android:textSize="16sp"
                         android:textColor="@color/c_1b1b1b"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:textSize="16sp"/>
                 </RelativeLayout>
             </LinearLayout>
 
             <!--<ImageView-->
-                <!--android:layout_margin="@dimen/y8"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="@dimen/y1"-->
-                <!--android:background="@color/c_e7e7e7"-->
-                <!--android:contentDescription="@null" />-->
+            <!--android:layout_margin="@dimen/y8"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="@dimen/y1"-->
+            <!--android:background="@color/c_e7e7e7"-->
+            <!--android:contentDescription="@null" />-->
 
 
         </LinearLayout>

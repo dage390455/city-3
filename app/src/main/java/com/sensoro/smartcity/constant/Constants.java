@@ -42,7 +42,7 @@ public interface Constants {
             "井位", "水位检测", "地磁", "跑冒滴漏",
             "火焰", "光线", "液化石油气", "二氧化氮",
             "PM2.5/10", "烟感", "温湿度",
-            "消防液压"
+            "消防液压", "温度贴片"
     };
     String INDEX_TYPE_VALUES[] = {
             "all",
@@ -51,7 +51,7 @@ public interface Constants {
             "cover,level", "distance", "magnetic", "drop",
             "flame", "light", "lpg", "no2",
             "pm10,pm2_5", "smoke", "humidity,temperature",
-            "waterPressure"
+            "waterPressure", "humidity,temp1,temperature"
 
     };
     String SENSOR_MENU_ARRAY[] = {
@@ -61,7 +61,7 @@ public interface Constants {
             "cover|level", "distance", "magnetic", "drop",
             "flame", "light", "lpg", "no2",
             "pm10|pm2_5", "smoke", "humidity|temperature",
-            "waterPressure"
+            "waterPressure", "temp1"
 
     };
     Integer[] TYPE_MENU_RESOURCE = {
@@ -70,7 +70,8 @@ public interface Constants {
             R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_lock,
             R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
             R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
-            R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure
+            R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
+            .ic_sensor_temp_humi
 
     };
     String[] ALARM_TAG_ARRAY = {"一氧化碳", "二氧化碳", "甲烷", "液化石油气", "二氧化氮", "跑冒滴漏", "灯井监控",

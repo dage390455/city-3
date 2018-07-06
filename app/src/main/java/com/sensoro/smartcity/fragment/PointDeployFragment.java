@@ -190,7 +190,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 
     @Override
     public void startScan() {
-        mQRCodeView.startCamera();
+//        mQRCodeView.startCamera();
         mQRCodeView.startSpotAndShowRect();
     }
 

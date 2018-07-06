@@ -523,7 +523,11 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
                 if (alarmCount == tempAlarmCount) {
                     mHeadAlarmNumTextView.setCurrentText(alarmStr);
                 } else {
-                    mHeadAlarmNumTextView.setText(alarmStr);
+                    if (alarmLayout.getVisibility() == VISIBLE) {
+                        mHeadAlarmNumTextView.setText(alarmStr);
+                    } else {
+                        mHeadAlarmNumTextView.setCurrentText(alarmStr);
+                    }
                 }
                 if (lostCount == tempLostCount) {
                     mHeadLostNumTextView.setCurrentText(lostStr);

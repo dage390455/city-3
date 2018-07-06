@@ -6,7 +6,7 @@ import java.io.Serializable;
  * Created by sensoro on 17/7/26.
  */
 
-public class AlarmInfo implements Serializable{
+public class AlarmInfo implements Serializable {
     private NotificationInfo notification;
     private RuleInfo rules[];
     private BatteryInfo battery[];
@@ -44,7 +44,7 @@ public class AlarmInfo implements Serializable{
         this.createTime = createTime;
     }
 
-    public class BatteryInfo implements Serializable{
+    public class BatteryInfo implements Serializable {
 
         private float thresholds;
         private String conditionType;
@@ -75,7 +75,7 @@ public class AlarmInfo implements Serializable{
         }
     }
 
-    public class NotificationInfo implements Serializable{
+    public class NotificationInfo implements Serializable {
 
         private String contact;
         private String content;
@@ -105,7 +105,8 @@ public class AlarmInfo implements Serializable{
             this.types = types;
         }
     }
-    public class RuleInfo implements Serializable{
+
+    public class RuleInfo implements Serializable {
         private String sensorTypes;
         private float thresholds;
         private String conditionType;
@@ -145,7 +146,17 @@ public class AlarmInfo implements Serializable{
         private int displayStatus;
         private String name;
         private String remark;
-        private Event []phoneList;
+        private Event[] phoneList;
+
+        public long getTimeout() {
+            return timeout;
+        }
+
+        public void setTimeout(long timeout) {
+            this.timeout = timeout;
+        }
+
+        private long timeout;
 
         public String getType() {
             return type;
@@ -219,7 +230,7 @@ public class AlarmInfo implements Serializable{
             this.remark = remark;
         }
 
-        public class Event implements Serializable{
+        public class Event implements Serializable {
 
             private String name;
             private String type;
@@ -296,7 +307,7 @@ public class AlarmInfo implements Serializable{
         }
     }
 
-    public class OwnerInfo implements Serializable{
+    public class OwnerInfo implements Serializable {
         private String _id;
         private String name;
         private String id;

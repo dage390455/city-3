@@ -62,100 +62,108 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y50"
         android:gravity="center_horizontal"
         android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/deploy_result_sn_tv"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/x50"
-            android:layout_marginTop="@dimen/y50"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:id="@+id/deploy_result_name_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y20"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:id="@+id/deploy_result_address_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y20"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:id="@+id/deploy_result_lon_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y20"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/deploy_result_lan_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y20"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"
-            android:visibility="gone"/>
-
-        <TextView
-            android:id="@+id/deploy_result_contact_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y20"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"/>
-
-        <TextView
-            android:id="@+id/deploy_result_content_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y20"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"/>
-
-        <RelativeLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y20"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
+            android:orientation="vertical">
 
             <TextView
-                android:id="@+id/deploy_result_status_tv"
+                android:id="@+id/deploy_result_sn_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y50"
                 android:textColor="@color/c_626262"
                 android:textSize="16sp"/>
 
             <TextView
-                android:id="@+id/deploy_result_signal_tv"
+                android:id="@+id/deploy_result_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x260"
-                android:layout_toRightOf="@+id/deploy_result_status_tv"
-                android:textColor="@color/white"
-                android:textSize="13sp"/>
-        </RelativeLayout>
+                android:layout_marginTop="@dimen/y20"
+                android:textColor="@color/c_626262"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/deploy_result_address_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y20"
+                android:textColor="@color/c_626262"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/deploy_result_lon_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y20"
+                android:textColor="@color/c_626262"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/deploy_result_lan_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y20"
+                android:textColor="@color/c_626262"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+            <TextView
+                android:id="@+id/deploy_result_contact_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y20"
+                android:textColor="@color/c_626262"
+                android:visibility="gone"
+                android:textSize="16sp"/>
+
+            <TextView
+                android:id="@+id/deploy_result_content_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y20"
+                android:textColor="@color/c_626262"
+                android:textSize="16sp"/>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y20"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/deploy_result_status_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_626262"
+                    android:textSize="16sp"/>
+
+                <TextView
+                    android:id="@+id/deploy_result_signal_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x260"
+                    android:layout_toRightOf="@+id/deploy_result_status_tv"
+                    android:textColor="@color/white"
+                    android:textSize="13sp"/>
+            </RelativeLayout>
 
 
-        <TextView
-            android:id="@+id/deploy_result_update_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y20"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"/>
+            <TextView
+                android:id="@+id/deploy_result_update_tv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y20"
+                android:textColor="@color/c_626262"
+                android:textSize="16sp"/>
+        </LinearLayout>
+
     </LinearLayout>
 
     <RelativeLayout

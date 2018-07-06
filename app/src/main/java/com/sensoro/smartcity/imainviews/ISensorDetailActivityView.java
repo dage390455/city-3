@@ -47,4 +47,6 @@ public interface ISensorDetailActivityView extends IToast, IProgressDialog, IAct
 
     void setTypeImageView(String type);
 
+    void setChartLayoutVisible(boolean isVisible);
+
 }

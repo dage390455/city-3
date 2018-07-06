@@ -200,7 +200,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 
     @Override
     public void startScan() {
-        mQRCodeView.startCamera();
+//        mQRCodeView.startCamera();
         mQRCodeView.startSpotAndShowRect();
     }
 

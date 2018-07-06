@@ -76,6 +76,9 @@ public enum RetrofitServiceHelper {
         final GsonBuilder gsonBuilder = new GsonBuilder();
         gsonBuilder.registerTypeAdapter(double.class, new NumberDeserializer())
                 .registerTypeAdapter(int.class, new NumberDeserializer())
+                .registerTypeAdapter(float.class, new NumberDeserializer())
+                .registerTypeAdapter(long.class, new NumberDeserializer())
+                .registerTypeAdapter(short.class, new NumberDeserializer())
                 .registerTypeAdapter(Number.class, new NumberDeserializer());
         gson = gsonBuilder.create();
         //支持RxJava
@@ -138,7 +141,7 @@ public enum RetrofitServiceHelper {
         OkHttpClient.Builder builder = okHttpClient.newBuilder();
         return builder
                 .addInterceptor(interceptor)
-                .addInterceptor(logging)
+                .addNetworkInterceptor(logging)
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
     }

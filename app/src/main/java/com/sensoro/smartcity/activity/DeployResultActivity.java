@@ -149,7 +149,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void setContactAndSignalVisible(boolean isVisible) {
-        contactTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+//        contactTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         contentTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         signalTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }

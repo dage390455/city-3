@@ -123,7 +123,14 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             String source = recordInfo.getSource();
             String confirm_text = null;
             if ("auto".equals(source)) {
-                confirm_text = "48小时无人确认，系统自动确认为巡检/测试";
+                int day = 48;
+                try {
+                    long timeout = recordInfo.getTimeout();
+                    day = (int) (timeout / 3600);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                confirm_text = day + "小时无人确认，系统自动确认为巡检/测试";
             } else if ("app".equals(source)) {
                 confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过App端确认本次预警类型为:" +
                         confirmStatusArray[recordInfo.getDisplayStatus()];

@@ -54,7 +54,7 @@
                 android:id="@+id/sensor_more_basic_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y150"
+                android:layout_marginTop="@dimen/y50"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -368,7 +368,7 @@
                 android:id="@+id/sensor_more_location_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y150"
+                android:layout_marginTop="@dimen/y50"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -522,7 +522,7 @@
                 android:id="@+id/sensor_more_report_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y150"
+                android:layout_marginTop="@dimen/y50"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -629,7 +629,7 @@
                 android:id="@+id/sensor_more_alarm_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y150"
+                android:layout_marginTop="@dimen/y50"
                 android:background="@color/white"
                 android:orientation="vertical">
 
@@ -727,7 +727,7 @@
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y1"
-                android:layout_marginBottom="@dimen/y150"
+                android:layout_marginBottom="@dimen/y50"
                 android:background="@color/c_e7e7e7"
                 android:contentDescription="@null"/>
         </LinearLayout>

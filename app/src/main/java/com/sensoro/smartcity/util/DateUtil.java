@@ -302,4 +302,79 @@ public class DateUtil {
         Date strtodate = formatter.parse(strDate, pos);
         return strtodate;
     }
+
+    public static String secToTime(int sec) {
+        String HMStime;
+        int hour = sec / 3600;
+        int mint = (sec % 3600) / 60;
+        int sed = sec % 60;
+        String hourStr = String.valueOf(hour);
+        if (hour < 10) {
+            hourStr = "0" + hourStr;
+        }
+        String mintStr = String.valueOf(mint);
+        if (mint < 10) {
+            mintStr = "0" + mintStr;
+        }
+        String sedStr = String.valueOf(sed);
+        if (sed < 10) {
+            sedStr = "0" + sedStr;
+        }
+        HMStime = hourStr + ":" + mintStr + ":" + sedStr;
+        return HMStime;
+    }
+
+    public static String secToTimeBefore(int second) {
+        int h = 0;
+        int d = 0;
+        int s = 0;
+        int temp = second % 3600;
+        if (second > 3600) {
+            h = second / 3600;
+            if (temp != 0) {
+                if (temp > 60) {
+                    d = temp / 60;
+                    if (temp % 60 != 0) {
+                        s = temp % 60;
+                    }
+                } else {
+                    s = temp;
+                }
+            }
+        } else {
+            d = second / 60;
+            if (second % 60 != 0) {
+                s = second % 60;
+            }
+        }
+        //
+        if (h == 0) {
+            if (d == 0) {
+                if (s == 0) {
+                    return "";
+                } else {
+                    return s + "秒";
+                }
+            } else {
+                if (s == 0) {
+                    return d + "分钟";
+                } else {
+                    return d + "分钟" + s + "秒";
+                }
+            }
+        } else {
+            if (d == 0) {
+                return h + "小时" + s + "秒";
+            } else {
+                if (s == 0) {
+                    return h + "小时" + d + "分钟";
+                } else {
+                    return h + "小时" + d + "分钟" + s + "秒";
+                }
+            }
+        }
+//        return h + ":" + d + ":" + s + "";
+    }
+
+
 }
