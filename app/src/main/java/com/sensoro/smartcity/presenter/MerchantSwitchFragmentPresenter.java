@@ -11,6 +11,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchFragmentView;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -65,7 +66,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
             }
 
             @Override
-            public void onErrorMsg(int errorCode,String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
@@ -93,22 +94,34 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
             @Override
             public void onNext(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    String sessionID = userAccountControlRsp.getData().getSessionID();
+                    UserInfo data = userAccountControlRsp.getData();
+                    String sessionID = data.getSessionID();
                     RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
-                    String nickname = userAccountControlRsp.getData().getNickname();
-                    String phone = userAccountControlRsp.getData().getContacts();
-                    String roles = userAccountControlRsp.getData().getRoles();
-                    String isSpecific = userAccountControlRsp.getData().getIsSpecific();
-
+                    String nickname = data.getNickname();
+                    String phone = data.getContacts();
+                    String roles = data.getRoles();
+                    String isSpecific = data.getIsSpecific();
+                    //grantsInfo
+                    GrantsInfo grants = data.getGrants();
+                    boolean isStation = false;
+                    if (grants != null) {
+                        List<String> station = grants.getStation();
+                        for (String str : station) {
+                            if (str.equals("deploy")) {
+                                isStation = true;
+                                break;
+                            }
+                        }
+                    }
                     ((MainActivity) mContext).changeAccount(nickname, phone, roles,
-                            isSpecific);
+                            isSpecific, isStation);
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());
                 }
             }
 
             @Override
-            public void onErrorMsg(int errorCode,String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }

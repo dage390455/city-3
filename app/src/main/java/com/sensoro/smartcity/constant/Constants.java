@@ -30,6 +30,12 @@ public interface Constants {
             R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
     int LEFT_MENU_ICON_UNSELECT_BUSSIES[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
             R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
+    //
+    int LEFT_MENU_ICON_UNSELECT_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
+            R.mipmap.ic_menu_location};
+    int LEFT_MENU_ICON_UNSELECT_BUSSIES_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
+            R.mipmap.ic_menu_location};
+    //
     int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
     String[] DEVICE_STATUS_ARRAY = {"预警", "正常", "失联", "未激活"};
     String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
@@ -90,6 +96,7 @@ public interface Constants {
     String EXTRA_CHARACTER = "extra_character";
     String EXTRA_PHONE_ID = "extra_phone_id";
     String EXTRA_IS_SPECIFIC = "extra_is_specific";
+    String EXTRA_GRANTS_INFO = "extra_grants_info";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_IS_STATION_DEPLOY = "extra_is_station_deploy";
     String EXTRA_SENSOR_SN = "extra_sn";

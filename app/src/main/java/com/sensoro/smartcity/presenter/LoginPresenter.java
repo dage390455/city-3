@@ -17,9 +17,13 @@ import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.bean.GrantsInfo;
+import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
+
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -114,15 +118,31 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                 @Override
                 public void onNext(LoginRsp loginRsp) {
                     if (loginRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                        String isSpecific = loginRsp.getData().getIsSpecific();
+                        UserInfo data = loginRsp.getData();
+                        String isSpecific = data.getIsSpecific();
                         Intent intent = new Intent(mContext, MainActivity.class);
-                        intent.putExtra(EXTRA_USER_ID, loginRsp.getData().get_id());
-                        intent.putExtra(EXTRA_USER_NAME, loginRsp.getData().getNickname());
-                        intent.putExtra(EXTRA_PHONE, loginRsp.getData().getContacts());
-                        intent.putExtra(EXTRA_CHARACTER, loginRsp.getData().getCharacter());
-                        intent.putExtra(EXTRA_USER_ROLES, loginRsp.getData().getRoles());
+                        intent.putExtra(EXTRA_USER_ID, data.get_id());
+                        intent.putExtra(EXTRA_USER_NAME, data.getNickname());
+                        intent.putExtra(EXTRA_PHONE, data.getContacts());
+                        intent.putExtra(EXTRA_CHARACTER, data.getCharacter());
+                        intent.putExtra(EXTRA_USER_ROLES, data.getRoles());
                         intent.putExtra(EXTRA_IS_SPECIFIC, isSpecific);
                         intent.putExtra(EXTRA_PHONE_ID, phoneId);
+                        //
+                        //grants Info
+                        GrantsInfo grants = data.getGrants();
+                        boolean hasStation = false;
+                        if (grants != null) {
+                            List<String> station = grants.getStation();
+                            for (String str : station) {
+                                if (str.equals("deploy")) {
+                                    hasStation = true;
+                                    break;
+                                }
+                            }
+                        }
+
+                        intent.putExtra(EXTRA_GRANTS_INFO, hasStation);
                         if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
                             PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
                         }
@@ -135,7 +155,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
 
                 @Override
-                public void onErrorMsg(int errorCode,String errorMsg) {
+                public void onErrorMsg(int errorCode, String errorMsg) {
                     getView().dismissProgressDialog();
                     getView().toastShort(errorMsg);
                 }

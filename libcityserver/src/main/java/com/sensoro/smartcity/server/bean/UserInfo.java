@@ -19,14 +19,6 @@ public class UserInfo implements Serializable {
     private String appKey;
     private String appSecret;
 
-    public String getIsSpecific() {
-        return isSpecific;
-    }
-
-    public void setIsSpecific(String isSpecific) {
-        this.isSpecific = isSpecific;
-    }
-
     private String isSpecific;
     private String roles;
     private String sessionID;
@@ -36,6 +28,23 @@ public class UserInfo implements Serializable {
     private long createdTime;
     private long updatedTime;
     private boolean isStop;
+
+    public GrantsInfo getGrants() {
+        return grants;
+    }
+
+    public void setGrants(GrantsInfo grants) {
+        this.grants = grants;
+    }
+
+    private GrantsInfo grants;
+    public String getIsSpecific() {
+        return isSpecific;
+    }
+
+    public void setIsSpecific(String isSpecific) {
+        this.isSpecific = isSpecific;
+    }
 
     public String get_id() {
         return _id;

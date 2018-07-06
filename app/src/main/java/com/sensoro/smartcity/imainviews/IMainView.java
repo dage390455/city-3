@@ -17,7 +17,7 @@ public interface IMainView extends IToast, IProgressDialog, IActivityIntent {
 
     void freshAccountSwitch(int accountType);
 
-    void changeAccount(String useName, String phone, String roles, String isSpecific);
+    void changeAccount(String useName, String phone, String roles, String isSpecific,boolean isStation);
 
     void updateMainPageAdapterData();
 }

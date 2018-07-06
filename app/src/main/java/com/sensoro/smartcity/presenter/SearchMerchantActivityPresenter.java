@@ -10,6 +10,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMerchantActivityView;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -116,7 +117,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             }
 
             @Override
-            public void onErrorMsg(int errorCode,String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
@@ -167,12 +168,13 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             @Override
             public void onNext(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    String sessionID = userAccountControlRsp.getData().getSessionID();
+                    UserInfo dataUser = userAccountControlRsp.getData();
+                    String sessionID = dataUser.getSessionID();
                     RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
-                    String nickname = userAccountControlRsp.getData().getNickname();
-                    String phone = userAccountControlRsp.getData().getContacts();
-                    String roles = userAccountControlRsp.getData().getRoles();
-                    String isSpecific = userAccountControlRsp.getData().getIsSpecific();
+                    String nickname = dataUser.getNickname();
+                    String phone = dataUser.getContacts();
+                    String roles = dataUser.getRoles();
+                    String isSpecific = dataUser.getIsSpecific();
                     //
                     Intent data = new Intent();
                     data.putExtra("nickname", nickname);
@@ -181,6 +183,19 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                     }
                     data.putExtra("roles", roles);
                     data.putExtra("isSpecific", isSpecific);
+                    //grants Info
+                    GrantsInfo grants = dataUser.getGrants();
+                    boolean hasStation = false;
+                    if (grants != null) {
+                        List<String> station = grants.getStation();
+                        for (String str : station) {
+                            if (str.equals("deploy")) {
+                                hasStation = true;
+                                break;
+                            }
+                        }
+                    }
+                    data.putExtra(EXTRA_GRANTS_INFO, hasStation);
                     getView().setIntentResult(RESULT_CODE_SEARCH_MERCHANT, data);
 //                    EventBus.getDefault().post(data);
                     getView().finishAc();
@@ -190,7 +205,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             }
 
             @Override
-            public void onErrorMsg(int errorCode,String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }

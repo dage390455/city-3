@@ -218,8 +218,8 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void changeAccount(String useName, String phone, String roles, String isSpecific) {
-        mPrestener.changeAccount(useName, phone, roles, isSpecific);
+    public void changeAccount(String useName, String phone, String roles, String isSpecific,boolean isStation) {
+        mPrestener.changeAccount(useName, phone, roles, isSpecific,isStation);
     }
 
     @Override

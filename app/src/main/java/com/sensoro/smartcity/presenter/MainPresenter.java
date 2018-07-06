@@ -79,9 +79,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     private final TaskRunnable mRunnable = new TaskRunnable();
     //
     public static final int SUPPER_ACCOUNT = 1;
-    public static final int NORMAL_ACCOUNT = 2;
-    public static final int BUSINESS_ACCOUNT = 3;
-    private volatile int accountType = NORMAL_ACCOUNT;
+    public static final int NORMAL_ACCOUNT_HAS_STATION = 2;
+    public static final int BUSINESS_ACCOUNT_HAS_STATION = 3;
+    public static final int NORMAL_ACCOUNT_NO_STATION = 4;
+    public static final int BUSINESS_ACCOUNT_NO_STATION = 5;
+    private volatile int accountType = NORMAL_ACCOUNT_HAS_STATION;
+    private boolean hasStation = false;
     //
 
     /**
@@ -126,6 +129,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mCharacter = (Character) mActivity.getIntent().getSerializableExtra(EXTRA_CHARACTER);
         roles = mActivity.getIntent().getStringExtra(EXTRA_USER_ROLES);
         mIsSupperAccountStr = mActivity.getIntent().getStringExtra(EXTRA_IS_SPECIFIC);
+        hasStation = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_INFO, false);
         //
         indexFragment = IndexFragment.newInstance(mCharacter);
         alarmListFragment = AlarmListFragment.newInstance("alarm");
@@ -143,23 +147,34 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mHandler.postDelayed(mRunnable, 3000L);
     }
 
-    public void changeAccount(String userName, String phone, String roles, String isSpecific) {
+    public void changeAccount(String userName, String phone, String roles, String isSpecific, boolean hasStation) {
         this.mUserName = userName;
         this.mPhone = phone;
         this.mIsSupperAccountStr = isSpecific;
         this.roles = roles;
+        this.hasStation = hasStation;
         getView().showAccountInfo(mUserName, mPhone);
         if (indexFragment != null) {
             if (isSupperAccount()) {
                 accountType = SUPPER_ACCOUNT;
             } else {
                 indexFragment.reFreshDataByDirection(Constants.DIRECTION_DOWN);
-                if (this.roles.equalsIgnoreCase("business")) {
-                    accountType = BUSINESS_ACCOUNT;
-
+                if (hasStation) {
+                    //
+                    if (this.roles.equalsIgnoreCase("business")) {
+                        accountType = BUSINESS_ACCOUNT_HAS_STATION;
+                    } else {
+                        accountType = NORMAL_ACCOUNT_HAS_STATION;
+                    }
                 } else {
-                    accountType = NORMAL_ACCOUNT;
+                    //
+                    if (this.roles.equalsIgnoreCase("business")) {
+                        accountType = BUSINESS_ACCOUNT_NO_STATION;
+                    } else {
+                        accountType = NORMAL_ACCOUNT_NO_STATION;
+                    }
                 }
+
             }
             getView().freshAccountSwitch(accountType);
             getView().setCurrentPagerItem(0);
@@ -205,10 +220,22 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             public void run() {
                 if (isSupperAccount()) {
                     merchantSwitchFragment.requestData();
-                } else if (roles.equalsIgnoreCase("business")) {
-                    accountType = BUSINESS_ACCOUNT;
                 } else {
-                    accountType = NORMAL_ACCOUNT;
+                    if (hasStation) {
+                        //
+                        if (roles.equalsIgnoreCase("business")) {
+                            accountType = BUSINESS_ACCOUNT_HAS_STATION;
+                        } else {
+                            accountType = NORMAL_ACCOUNT_HAS_STATION;
+                        }
+                    } else {
+                        //
+                        if (roles.equalsIgnoreCase("business")) {
+                            accountType = BUSINESS_ACCOUNT_NO_STATION;
+                        } else {
+                            accountType = NORMAL_ACCOUNT_NO_STATION;
+                        }
+                    }
                 }
                 merchantSwitchFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
                 getView().freshAccountSwitch(accountType);
@@ -414,7 +441,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             String phone = data.getStringExtra("phone");
             String roles = data.getStringExtra("roles");
             String isSpecific = data.getStringExtra("isSpecific");
-            changeAccount(nickname, phone, roles, isSpecific);
+            hasStation = data.getBooleanExtra(EXTRA_GRANTS_INFO, false);
+            changeAccount(nickname, phone, roles, isSpecific, hasStation);
         } else if (resultCode == RESULT_CODE_SEARCH_ALARM) {
             String type = data.getStringExtra(EXTRA_SENSOR_TYPE);
             int searchIndex = data.getIntExtra(EXTRA_ALARM_SEARCH_INDEX, -1);
@@ -473,7 +501,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
                 getView().setCurrentPagerItem(2);
                 break;
-            case NORMAL_ACCOUNT:
+            case NORMAL_ACCOUNT_HAS_STATION:
                 switch (position) {
                     case 0:
                         indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
@@ -490,7 +518,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 }
                 getView().setCurrentPagerItem(position);
                 break;
-            case BUSINESS_ACCOUNT:
+            case BUSINESS_ACCOUNT_HAS_STATION:
+            case BUSINESS_ACCOUNT_NO_STATION:
                 switch (position) {
                     case 0:
                         indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
@@ -505,9 +534,33 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                         break;
                     case 3:
                         getView().setCurrentPagerItem(4);
+                        break;
                     default:
                         break;
                 }
+                break;
+            case NORMAL_ACCOUNT_NO_STATION:
+                switch (position) {
+                    case 0:
+                        indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
+                        getView().setCurrentPagerItem(position);
+                        break;
+                    case 1:
+                        alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
+                        getView().setCurrentPagerItem(position);
+                        break;
+                    case 2:
+                        merchantSwitchFragment.requestData();
+                        merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
+                        getView().setCurrentPagerItem(2);
+                        break;
+                    case 3:
+                        getView().setCurrentPagerItem(3);
+                        break;
+                    default:
+                        break;
+                }
+
                 break;
         }
     }
