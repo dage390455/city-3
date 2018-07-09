@@ -3,6 +3,9 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.smartcity.model.MenuPageInfo;
+
+import java.util.List;
 
 public interface IMainView extends IToast, IProgressDialog, IActivityIntent {
     void setAPPVersionCode(String versionStr);
@@ -15,7 +18,7 @@ public interface IMainView extends IToast, IProgressDialog, IActivityIntent {
 
     void setCurrentPagerItem(int position);
 
-    void freshAccountSwitch(int accountType);
+    void updateMenuPager(List<MenuPageInfo> menuPageInfos);
 
     void changeAccount(String useName, String phone, String roles, String isSpecific,boolean isStation);
 

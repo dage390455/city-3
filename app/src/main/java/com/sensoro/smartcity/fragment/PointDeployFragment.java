@@ -37,8 +37,8 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     private ImageView manualImageView;
 
     private ProgressUtils mProgressUtils;
-    private volatile boolean isFlashOn = false;
-    private volatile boolean mIsVisibleToUser = false;
+    private boolean isFlashOn = false;
+    private boolean mIsVisibleToUser = false;
 
 
     public static PointDeployFragment newInstance(String input) {
@@ -61,6 +61,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         manualImageView.setOnClickListener(this);
         mQRCodeView = mRootView.findViewById(R.id.scan_view);
         mQRCodeView.setDelegate(this);
+        mQRCodeView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
     }
 
 
@@ -82,10 +83,10 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 //            mPrestener.getUserVisible(getUserVisibleHint());
                 if (mIsVisibleToUser) {
                     startScan();
-                    showRootView();
+//                    showRootView();
                 } else {
                     mQRCodeView.stopCamera();
-                    hiddenRootView();
+//                    hiddenRootView();
                 }
             }
         } catch (Exception e) {
@@ -101,7 +102,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 startScan();
-                showRootView();
+//                showRootView();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -115,7 +116,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 mQRCodeView.stopCamera();
-                hiddenRootView();
+//                hiddenRootView();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -123,19 +124,19 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     }
 
 
-    public void hiddenRootView() {
-        if (mRootView != null) {
-            mRootView.setVisibility(View.GONE);
-        }
-    }
-
-    public void showRootView() {
-        try {
-            mRootView.setVisibility(View.VISIBLE);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void hiddenRootView() {
+//        if (mRootView != null) {
+//            mRootView.setVisibility(View.GONE);
+//        }
+//    }
+//
+//    public void showRootView() {
+//        try {
+//            mRootView.setVisibility(View.VISIBLE);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     protected void initData(Context activity) {

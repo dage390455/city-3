@@ -176,4 +176,11 @@
     <string name="tips_commit_success">Commit Success</string>
     <string name="tips_commit_failed">Commit Failed</string>
     <string name="tips_choose_status">Please Choose Alarm Type</string>
+    //主页信息相关
+    <string name="menu_page_index">Home</string>
+    <string name="menu_page_alarm">Alarm Log</string>
+    <string name="menu_page_merchant">Merchant Switch</string>
+    <string name="menu_page_point">Point Deployment</string>
+    <string name="menu_page_station">Station Deployment</string>
+
 </resources>

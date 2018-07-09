@@ -15,6 +15,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.fragment.AlarmListFragment;
 import com.sensoro.smartcity.fragment.IndexFragment;
 import com.sensoro.smartcity.fragment.MerchantSwitchFragment;
@@ -24,6 +25,7 @@ import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOndestroy;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
 import com.sensoro.smartcity.server.CityObserver;
@@ -78,14 +80,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     private final Handler mHandler = new Handler();
     private final TaskRunnable mRunnable = new TaskRunnable();
     //
-    public static final int SUPPER_ACCOUNT = 1;
-    public static final int NORMAL_ACCOUNT_HAS_STATION = 2;
-    public static final int BUSINESS_ACCOUNT_HAS_STATION = 3;
-    public static final int NORMAL_ACCOUNT_NO_STATION = 4;
-    public static final int BUSINESS_ACCOUNT_NO_STATION = 5;
-    private volatile int accountType = NORMAL_ACCOUNT_HAS_STATION;
     private boolean hasStation = false;
-    //
 
     /**
      * 超级用户
@@ -156,36 +151,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         getView().showAccountInfo(mUserName, mPhone);
         if (indexFragment != null) {
             if (isSupperAccount()) {
-                accountType = SUPPER_ACCOUNT;
+                merchantSwitchFragment.requestData();
             } else {
-                indexFragment.reFreshDataByDirection(Constants.DIRECTION_DOWN);
-                if (hasStation) {
-                    //
-                    if (this.roles.equalsIgnoreCase("business")) {
-                        accountType = BUSINESS_ACCOUNT_HAS_STATION;
-                    } else {
-                        accountType = NORMAL_ACCOUNT_HAS_STATION;
+                mHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
+                        indexFragment.requestTopData(true);
                     }
-                } else {
-                    //
-                    if (this.roles.equalsIgnoreCase("business")) {
-                        accountType = BUSINESS_ACCOUNT_NO_STATION;
-                    } else {
-                        accountType = NORMAL_ACCOUNT_NO_STATION;
-                    }
-                }
-
+                });
             }
-            getView().freshAccountSwitch(accountType);
+            //
+            getView().updateMenuPager(MenuPageFactory.createMenuPageList(isSupperAccount(), roles, hasStation));
             getView().setCurrentPagerItem(0);
             getView().setMenuSelected(0);
             reconnect();
-            mHandler.post(new Runnable() {
-                @Override
-                public void run() {
-                    indexFragment.requestTopData(true);
-                }
-            });
         }
 
     }
@@ -208,7 +188,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
      */
     public void freshAccountType() {
         if (isSupperAccount()) {
-            accountType = SUPPER_ACCOUNT;
             getView().setCurrentPagerItem(2);
         } else {
             getView().setCurrentPagerItem(0);
@@ -218,27 +197,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
+                getView().updateMenuPager(MenuPageFactory.createMenuPageList(isSupperAccount(), roles, hasStation));
                 if (isSupperAccount()) {
                     merchantSwitchFragment.requestData();
-                } else {
-                    if (hasStation) {
-                        //
-                        if (roles.equalsIgnoreCase("business")) {
-                            accountType = BUSINESS_ACCOUNT_HAS_STATION;
-                        } else {
-                            accountType = NORMAL_ACCOUNT_HAS_STATION;
-                        }
-                    } else {
-                        //
-                        if (roles.equalsIgnoreCase("business")) {
-                            accountType = BUSINESS_ACCOUNT_NO_STATION;
-                        } else {
-                            accountType = NORMAL_ACCOUNT_NO_STATION;
-                        }
-                    }
                 }
                 merchantSwitchFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
-                getView().freshAccountSwitch(accountType);
                 getView().setMenuSelected(0);
             }
         }, 50);
@@ -493,74 +456,33 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
 
     }
 
-    public void clickMenuItemByType(int position) {
-        getView().setMenuSelected(position);
-        switch (accountType) {
-            case SUPPER_ACCOUNT:
+    /**
+     * 通过menupage判断类型
+     *
+     * @param menuPageId
+     */
+    public void clickMenuItem(int menuPageId) {
+        switch (menuPageId) {
+            case MenuPageInfo.MENU_PAGE_INDEX:
+                indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
+                getView().setCurrentPagerItem(0);
+                break;
+            case MenuPageInfo.MENU_PAGE_ALARM:
+                alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
+                getView().setCurrentPagerItem(1);
+                break;
+            case MenuPageInfo.MENU_PAGE_MERCHANT:
                 merchantSwitchFragment.requestData();
                 merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
                 getView().setCurrentPagerItem(2);
                 break;
-            case NORMAL_ACCOUNT_HAS_STATION:
-                switch (position) {
-                    case 0:
-                        indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-                        break;
-                    case 1:
-                        alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
-                        break;
-                    case 2:
-                        merchantSwitchFragment.requestData();
-                        merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
-                        break;
-                    default:
-                        break;
-                }
-                getView().setCurrentPagerItem(position);
+            case MenuPageInfo.MENU_PAGE_POINT:
+                getView().setCurrentPagerItem(3);
                 break;
-            case BUSINESS_ACCOUNT_HAS_STATION:
-            case BUSINESS_ACCOUNT_NO_STATION:
-                switch (position) {
-                    case 0:
-                        indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-                        getView().setCurrentPagerItem(position);
-                        break;
-                    case 1:
-                        alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
-                        getView().setCurrentPagerItem(position);
-                        break;
-                    case 2:
-                        getView().setCurrentPagerItem(3);
-                        break;
-                    case 3:
-                        getView().setCurrentPagerItem(4);
-                        break;
-                    default:
-                        break;
-                }
+            case MenuPageInfo.MENU_PAGE_STATION:
+                getView().setCurrentPagerItem(4);
                 break;
-            case NORMAL_ACCOUNT_NO_STATION:
-                switch (position) {
-                    case 0:
-                        indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-                        getView().setCurrentPagerItem(position);
-                        break;
-                    case 1:
-                        alarmListFragment.requestDataByDirection(DIRECTION_DOWN, true);
-                        getView().setCurrentPagerItem(position);
-                        break;
-                    case 2:
-                        merchantSwitchFragment.requestData();
-                        merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
-                        getView().setCurrentPagerItem(2);
-                        break;
-                    case 3:
-                        getView().setCurrentPagerItem(3);
-                        break;
-                    default:
-                        break;
-                }
-
+            default:
                 break;
         }
     }

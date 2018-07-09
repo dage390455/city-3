@@ -10,13 +10,11 @@ import android.widget.RelativeLayout;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.widget.SensoroTextView;
 
-import static com.sensoro.smartcity.presenter.MainPresenter.BUSINESS_ACCOUNT_HAS_STATION;
-import static com.sensoro.smartcity.presenter.MainPresenter.BUSINESS_ACCOUNT_NO_STATION;
-import static com.sensoro.smartcity.presenter.MainPresenter.NORMAL_ACCOUNT_HAS_STATION;
-import static com.sensoro.smartcity.presenter.MainPresenter.NORMAL_ACCOUNT_NO_STATION;
-import static com.sensoro.smartcity.presenter.MainPresenter.SUPPER_ACCOUNT;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by fangping on 2016/7/7.
@@ -24,31 +22,16 @@ import static com.sensoro.smartcity.presenter.MainPresenter.SUPPER_ACCOUNT;
 
 public class MenuInfoAdapter extends BaseAdapter implements Constants {
 
-    private final String[] titleNormalArrayNoStation;
-    private final String[] titleBusinessArrayNoStation;
     private Context mContext;
     private LayoutInflater mInflater;
 
     private int selectedIndex;
-    private int tempAccountType = NORMAL_ACCOUNT_HAS_STATION;
-    private String[] currentData;
-    private final String[] titleNormalArray;
-    private final String[] titleBusinesArray;
-    private final String[] titleSupperArray;
+    //
+    private List<MenuPageInfo> menuPageInfoList = new ArrayList<>();
 
     public MenuInfoAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        //
-        titleNormalArray = context.getResources().getStringArray(R.array.drawer_title_array);
-
-        titleBusinesArray = context.getResources().getStringArray(R.array.drawer_title_array_nobussise);
-
-        titleNormalArrayNoStation = context.getResources().getStringArray(R.array.drawer_title_array_nostation);
-        titleBusinessArrayNoStation = context.getResources().getStringArray(R.array
-                .drawer_title_array_nobussise_nostation);
-        titleSupperArray = context.getResources().getStringArray(R.array.drawer_title_array_supper);
-        currentData = titleNormalArray;
     }
 
     public void setSelectedIndex(int index) {
@@ -58,17 +41,17 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
 
     @Override
     public int getCount() {
-        return currentData.length;
+        return menuPageInfoList.size();
     }
 
     @Override
-    public Object getItem(int i) {
-        return currentData[i];
+    public MenuPageInfo getItem(int i) {
+        return menuPageInfoList.get(i);
     }
 
     @Override
     public long getItemId(int i) {
-        return 0;
+        return menuPageInfoList.get(i).menuPageId;
     }
 
     @Override
@@ -85,22 +68,13 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
             holder = (MenuInfoViewHolder) convertView.getTag();
         }
 
-        holder.item_name.setOriginalText(currentData[position]);
-        holder.item_name.setText(currentData[position]);
+//        holder.item_name.setOriginalText(currentData[position]);
+        holder.item_name.setOriginalText(mContext.getResources().getString(menuPageInfoList.get(position).pageTitleId));
+//        holder.item_name.setText(currentData[position]);
+        holder.item_name.setText(menuPageInfoList.get(position).pageTitleId);
         holder.item_name.setLetterSpacing(3);
         holder.item_name.setTextColor(mContext.getResources().getColor(R.color.c_626262));
-        if (tempAccountType == BUSINESS_ACCOUNT_HAS_STATION) {
-            holder.item_icon.setImageResource(LEFT_MENU_ICON_UNSELECT_BUSSIES[position]);
-        } else if (tempAccountType == SUPPER_ACCOUNT) {
-            holder.item_icon.setImageResource(LEFT_MENU_ICON_UNSELECT_SUPPER);
-        } else if (tempAccountType == BUSINESS_ACCOUNT_NO_STATION) {
-            holder.item_icon.setImageResource(LEFT_MENU_ICON_UNSELECT_BUSSIES_NO_STATION[position]);
-        } else if (tempAccountType == NORMAL_ACCOUNT_NO_STATION) {
-            holder.item_icon.setImageResource(LEFT_MENU_ICON_UNSELECT_NO_STATION[position]);
-        } else {
-            holder.item_icon.setImageResource(LEFT_MENU_ICON_UNSELECT[position]);
-        }
-
+        holder.item_icon.setImageResource(menuPageInfoList.get(position).menuIconResId);
 
         if (selectedIndex == position) {
             holder.item_icon.setColorFilter(mContext.getResources().getColor(R.color.popup_selected_text_color));
@@ -112,34 +86,15 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
         return convertView;
     }
 
+
     /**
      * 切换账户
      *
-     * @param accountType
+     * @param menuPageInfos
      */
-    public void showAccountSwitch(int accountType) {
-        switch (accountType) {
-            case SUPPER_ACCOUNT:
-                currentData = titleSupperArray;
-                break;
-            case NORMAL_ACCOUNT_HAS_STATION:
-                currentData = titleNormalArray;
-                break;
-            case BUSINESS_ACCOUNT_HAS_STATION:
-                currentData = titleBusinesArray;
-                break;
-            case NORMAL_ACCOUNT_NO_STATION:
-                currentData = titleNormalArrayNoStation;
-                break;
-            case BUSINESS_ACCOUNT_NO_STATION:
-                currentData = titleBusinessArrayNoStation;
-                break;
-            default:
-                currentData = titleNormalArray;
-                break;
-        }
-        int length = currentData.length;
-        this.tempAccountType = accountType;
+    public void updateMenuPager(List<MenuPageInfo> menuPageInfos) {
+        this.menuPageInfoList.clear();
+        this.menuPageInfoList.addAll(menuPageInfos);
         notifyDataSetChanged();
     }
 

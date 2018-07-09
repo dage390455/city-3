@@ -154,4 +154,10 @@
     <string name="tips_commit_success">提交成功</string>
     <string name="tips_commit_failed">提交失败</string>
     <string name="tips_choose_status">请选择预警类型</string>
+    //主页信息相关
+    <string name="menu_page_index">主页</string>
+    <string name="menu_page_alarm">预警记录</string>
+    <string name="menu_page_merchant">商户切换</string>
+    <string name="menu_page_point">点位部署</string>
+    <string name="menu_page_station">基站部署</string>
 </resources>

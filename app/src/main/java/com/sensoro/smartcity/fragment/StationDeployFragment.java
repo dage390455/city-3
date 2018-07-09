@@ -37,8 +37,8 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
     private ImageView manualImageView;
 
     private ProgressUtils mProgressUtils;
-    private volatile boolean isFlashOn = false;
-    private volatile boolean mIsVisibleToUser = false;
+    private boolean isFlashOn = false;
+    private boolean mIsVisibleToUser = false;
     private TextView sensorDeployTitle;
 
 
@@ -63,6 +63,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
         manualImageView.setOnClickListener(this);
         mQRCodeView = mRootView.findViewById(R.id.scan_view);
         mQRCodeView.setDelegate(this);
+        mQRCodeView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
     }
 
 
@@ -84,10 +85,10 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 //            mPrestener.getUserVisible(getUserVisibleHint());
                 if (mIsVisibleToUser) {
                     startScan();
-                    showRootView();
+//                    showRootView();
                 } else {
                     mQRCodeView.stopCamera();
-                    hiddenRootView();
+//                    hiddenRootView();
                 }
             }
         } catch (Exception e) {
@@ -102,43 +103,42 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 startScan();
-                showRootView();
+//                showRootView();
             }
         } catch (Exception e) {
-            e.printStackTrace();
+//            e.printStackTrace();
         }
     }
 
     @Override
     public void onStop() {
-        super.onStop();
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 mQRCodeView.stopCamera();
-                hiddenRootView();
+//                hiddenRootView();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        super.onStop();
     }
 
-    public void hiddenRootView() {
-        if (mRootView != null) {
-            mRootView.setVisibility(View.GONE);
-        }
-    }
-
-    public void showRootView() {
-        try {
-            mRootView.setVisibility(View.VISIBLE);
-            if (mQRCodeView != null) {
-                mQRCodeView.showScanRect();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+//    public void hiddenRootView() {
+//        if (mRootView != null) {
+//            mRootView.setVisibility(View.GONE);
+//        }
+//    }
+//
+//    public void showRootView() {
+//        try {
+//            mRootView.setVisibility(View.VISIBLE);
+//            if (mQRCodeView != null) {
+//                mQRCodeView.showScanRect();
+//            }
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     @Override
     protected void initData(Context activity) {

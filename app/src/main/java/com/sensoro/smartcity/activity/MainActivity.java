@@ -19,6 +19,7 @@ import com.sensoro.smartcity.adapter.MainPagerAdapter;
 import com.sensoro.smartcity.adapter.MenuInfoAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMainView;
+import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroPager;
@@ -26,6 +27,8 @@ import com.sensoro.smartcity.widget.SensoroToast;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
+
+import java.util.List;
 
 import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
@@ -149,7 +152,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         mMenuDrawer.closeMenu();
-        mPrestener.clickMenuItemByType(position);
+        setMenuSelected(position);
+//        int menuPageId = mMenuInfoAdapter.getItem(position).menuPageId;
+        mPrestener.clickMenuItem((int) mMenuInfoAdapter.getItemId(position));
     }
 
 
@@ -213,13 +218,13 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void freshAccountSwitch(int accountType) {
-        mMenuInfoAdapter.showAccountSwitch(accountType);
+    public void updateMenuPager(List<MenuPageInfo> menuPageInfos) {
+        mMenuInfoAdapter.updateMenuPager(menuPageInfos);
     }
 
     @Override
-    public void changeAccount(String useName, String phone, String roles, String isSpecific,boolean isStation) {
-        mPrestener.changeAccount(useName, phone, roles, isSpecific,isStation);
+    public void changeAccount(String useName, String phone, String roles, String isSpecific, boolean isStation) {
+        mPrestener.changeAccount(useName, phone, roles, isSpecific, isStation);
     }
 
     @Override
