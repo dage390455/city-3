@@ -93,34 +93,24 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
         try {
             if (response.getData().size() > 0) {
                 DeviceInfo deviceInfo = response.getData().get(0);
-//                titleTextView.setEditText(sensor_sn);
                 getView().setSNText(sensor_sn);
-                getView().setTypeText(parseSensorTypes(deviceInfo.getSensorTypes()));
+                getView().setTypeText(WidgetUtil.parseSensorTypes(mContext, deviceInfo.getSensorTypes()));
 
                 String tags[] = deviceInfo.getTags();
-//                StringBuffer sb = new StringBuffer();
-//                for (int i = 0; i < tags.length; i++) {
-//                    if (i > 0) {
-//                        sb.append("， " + tags[i]);
-//                    } else {
-//                        sb.append(tags[i]);
-//                    }
-//                }
-//                getView().setTagText(sb.toString());
-                //TODO 可以替换 tag显示方式
                 if (tags != null && tags.length > 0) {
                     getView().setTags(tags);
                 }
-                getView().setLongitudeLatitude("" + deviceInfo.getLonlat()[0], "" + deviceInfo.getLonlat()[1]);
-//                lonTextView.setEditText("" + deviceInfo.getLonlat()[0]);
-//                lanTextView.setEditText("" + deviceInfo.getLonlat()[1]);
+                String lon = "" + deviceInfo.getLonlat()[0];
+                String lat = "" + deviceInfo.getLonlat()[1];
+                getView().setLongitudeLatitude(WidgetUtil.subZeroAndDot(lon), WidgetUtil.subZeroAndDot(lat));
                 AlarmInfo.RuleInfo rules[] = deviceInfo.getAlarms().getRules();
                 StringBuffer sbRule = new StringBuffer();
                 for (AlarmInfo.RuleInfo ruleInfo : rules) {
                     String sensorType = ruleInfo.getSensorTypes();
                     sensorType = WidgetUtil.getSensorTypeChinese(sensorType);
                     //
-                    float value = ruleInfo.getThresholds();
+                    String value = String.valueOf(ruleInfo.getThresholds());
+                    value = WidgetUtil.subZeroAndDot(value);
                     String conditionType = ruleInfo.getConditionType();
                     String rule = null;
                     if (conditionType != null) {
@@ -156,7 +146,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                     if (battery.equals("-1.0") || battery.equals("-1")) {
                         getView().setBatteryInfo("电源供电");
                     } else {
-                        getView().setBatteryInfo("" + battery.toString() + "%");
+                        getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
                     }
 
                 }
@@ -196,91 +186,6 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
         }
     }
 
-    private String parseSensorTypes(String[] sensorTypes) {
-        if (sensorTypes.length > 1) {
-            StringBuilder sb = new StringBuilder();
-            for (String device : sensorTypes) {
-                sb.append(device);
-            }
-            String temp = sb.toString();
-            if (temp.contains("temp1")) {
-                return "温度贴片";
-            }
-            if (temp.contains("temperature")) {
-                return "温湿度";
-            } else if (temp.contains("cover")) {
-                return "井位";
-            } else if (temp.contains("pm")) {
-                return "PM2.5/PM10";
-            } else if (temp.contains("pitch")) {
-                return "倾角传";
-            } else if (temp.contains("latitude")) {
-                return "追踪器";
-            } else if (temp.contains("CURRENT")) {
-                return "电表";
-            } else {
-                return mContext.getString(R.string.unknown);
-            }
-        } else {
-            String sensorType = sensorTypes[0];
-            if (sensorType.equals("temp1")) {
-                return "温度贴片";
-            }
-            if (sensorType.equals("light") || sensorType.equals("temperature")) {
-                return "温湿度";
-            } else if (sensorType.equals("pitch") || sensorType.equals("roll") || sensorType.equals("yaw")) {
-                return "倾角";
-            } else if (sensorType.equals("cover") || sensorType.equals("level")) {
-                return "井位";
-            } else if (sensorType.equals("pm2_5") || sensorType.equals("pm10")) {
-                return "PM2.5/PM10";
-            } else if (sensorType.equals("ch4")) {
-                return "甲烷";
-            } else if (sensorType.equals("co")) {
-                return "一氧化碳";
-            } else if (sensorType.equals("co2")) {
-                return "二氧化碳";
-            } else if (sensorType.equals("leak")) {
-                return "跑冒滴漏";
-            } else if (sensorType.equals("smoke")) {
-                return "烟感";
-            } else if (sensorType.equals("lpg")) {
-                return "液化石油气";
-            } else if (sensorType.equals("no2")) {
-                return "二氧化氮";
-            } else if (sensorType.equals("so2")) {
-                return "二氧化硫";
-            } else if (sensorType.equals("artificialGas")) {
-                return "人工煤气";
-            } else if (sensorType.equals("waterPressure")) {
-                return "消防液压";
-            } else if (sensorType.equals("magnetic")) {
-                return "地磁";
-            } else if (sensorType.equals("flame")) {
-                return "火焰";
-            } else if (sensorType.equalsIgnoreCase("cover")) {
-                return "井盖";
-            } else if (sensorType.equalsIgnoreCase("level")) {
-                return "水位";
-            } else if (sensorType.equalsIgnoreCase("drop")) {
-                return "滴漏";
-            } else if (sensorType.equalsIgnoreCase("smoke")) {
-                return "烟感";
-            } else if (sensorType.equalsIgnoreCase("altitude")) {
-                return "追踪器";
-            } else if (sensorType.equalsIgnoreCase("latitude")) {
-                return "追踪器";
-            } else if (sensorType.equalsIgnoreCase("longitude")) {
-                return "追踪器";
-            } else if (sensorType.equalsIgnoreCase("alarm")) {
-                return "紧急呼叫";
-            } else if (sensorType.equalsIgnoreCase("distance")) {
-                return "距离水位";
-            } else {
-                return mContext.getString(R.string.unknown);
-            }
-        }
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(PushData data) {

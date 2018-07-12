@@ -4,6 +4,7 @@ package com.sensoro.smartcity.util;
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 import javax.crypto.BadPaddingException;
@@ -24,7 +25,7 @@ public class AESUtil {
 
     static boolean isInited = false;
 
-    private static  void init() {
+    private static void init() {
         try {
             /**为指定算法生成一个 KeyGenerator 对象。
              *此类提供（对称）密钥生成器的功能。
@@ -158,9 +159,9 @@ public class AESUtil {
 
     private static byte[] getKey(String password) {
         byte[] rByte = null;
-        if (password!=null) {
+        if (password != null) {
             rByte = password.getBytes();
-        }else{
+        } else {
             rByte = new byte[24];
         }
         return rByte;
@@ -168,6 +169,7 @@ public class AESUtil {
 
     /**
      * 将二进制转换成16进制
+     *
      * @param buf
      * @return
      */
@@ -185,6 +187,7 @@ public class AESUtil {
 
     /**
      * 将16进制转换为二进制
+     *
      * @param hexStr
      * @return
      */
@@ -205,17 +208,17 @@ public class AESUtil {
     private static final String keyBytes = "abcdefgabcdefg12";
 
     /**
-     *加密
+     * 加密
      */
-    public static String encode(String content){
+    public static String encode(String content) {
         //加密之后的字节数组,转成16进制的字符串形式输出
         return parseByte2HexStr(encrypt(content, keyBytes));
     }
 
     /**
-     *解密
+     * 解密
      */
-    public static String decode(String content){
+    public static String decode(String content) {
         //解密之前,先将输入的字符串按照16进制转成二进制的字节数组,作为待解密的内容输入
         byte[] b = decrypt(parseHexStr2Byte(content), keyBytes);
         if (b == null) {
@@ -225,14 +228,42 @@ public class AESUtil {
     }
 
     //测试用例
-    public static void test1(){
+    public static void test1() {
         String content = "hello abcdefggsdfasdfasdf";
-        String pStr = encode(content );
-        System.out.println("加密前："+content);
+        String pStr = encode(content);
+        System.out.println("加密前：" + content);
         System.out.println("加密后:" + pStr);
 
         String postStr = decode(pStr);
-        System.out.println("解密后："+ postStr );
+        System.out.println("解密后：" + postStr);
     }
 
+    /**
+     * 将字符串转成MD5值
+     *
+     * @param string 需要转换的字符串
+     * @return 字符串的MD5值
+     */
+    public static String stringToMD5(String string) {
+        byte[] hash;
+
+        try {
+            hash = MessageDigest.getInstance("MD5").digest(string.getBytes("UTF-8"));
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+            return null;
+        }
+
+        StringBuilder hex = new StringBuilder(hash.length * 2);
+        for (byte b : hash) {
+            if ((b & 0xFF) < 0x10)
+                hex.append("0");
+            hex.append(Integer.toHexString(b & 0xFF));
+        }
+
+        return hex.toString();
+    }
 }

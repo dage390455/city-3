@@ -34,6 +34,7 @@ import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -144,7 +145,6 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         progressDialog = new ProgressDialog(mActivity);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setMax(100);
-        progressDialog.setCancelable(false);
     }
 
     private void intData() {
@@ -286,8 +286,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         mRemark = remarkEditText.getText().toString();
         if (mListener != null) {
             if (selImageList.size() > 0) {
-                upLoadPhotosUtils.setFileList(selImageList);
-                upLoadPhotosUtils.doUploadPhoto();
+                upLoadPhotosUtils.doUploadPhoto(selImageList);
             } else {
                 //
 //                mListener.onPopupCallback(displayStatus, mRemark);
@@ -329,62 +328,71 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     @Override
     public void onItemClick(View view, int position) {
         if (view.getId() == R.id.image_delete) {
-            selImageList.remove(position);
+            ImageItem imageItem = selImageList.get(position);
+            Iterator<ImageItem> iterator = selImageList.iterator();
+            while (iterator.hasNext()) {
+                ImageItem next = iterator.next();
+                if (next.equals(imageItem)) {
+                    iterator.remove();
+                    break;
+                }
+            }
             adapter.setImages(selImageList);
 //            updateButton();
-            return;
-        }
-        switch (position) {
-            case IMAGE_ITEM_ADD:
-                List<String> names = new ArrayList<>();
-                names.add("拍照");
-                names.add("相册");
-                showDialog(new SelectDialog.SelectDialogListener() {
-                    @Override
-                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        switch (position) {
-                            case 0: // 直接调起相机
-                                /**
-                                 * 0.4.7 目前直接调起相机不支持裁剪，如果开启裁剪后不会返回图片，请注意，后续版本会解决
-                                 *
-                                 * 但是当前直接依赖的版本已经解决，考虑到版本改动很少，所以这次没有上传到远程仓库
-                                 *
-                                 * 如果实在有所需要，请直接下载源码引用。
-                                 */
-                                //打开选择,本次允许选择的数量
-                                ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
-                                Intent intent = new Intent(mActivity, ImageGridActivity.class);
-                                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                                mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
-                                break;
-                            case 1:
-                                //打开选择,本次允许选择的数量
-                                ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
-                                Intent intent1 = new Intent(mActivity, ImageGridActivity.class);
-                                /* 如果需要进入选择的时候显示已经选中的图片，
-                                 * 详情请查看ImagePickerActivity
-                                 * */
+        } else {
+            switch (position) {
+                case IMAGE_ITEM_ADD:
+                    List<String> names = new ArrayList<>();
+                    names.add("拍照");
+                    names.add("相册");
+                    showDialog(new SelectDialog.SelectDialogListener() {
+                        @Override
+                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                            switch (position) {
+                                case 0: // 直接调起相机
+                                    /**
+                                     * 0.4.7 目前直接调起相机不支持裁剪，如果开启裁剪后不会返回图片，请注意，后续版本会解决
+                                     *
+                                     * 但是当前直接依赖的版本已经解决，考虑到版本改动很少，所以这次没有上传到远程仓库
+                                     *
+                                     * 如果实在有所需要，请直接下载源码引用。
+                                     */
+                                    //打开选择,本次允许选择的数量
+                                    ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
+                                    Intent intent = new Intent(mActivity, ImageGridActivity.class);
+                                    intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+                                    mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
+                                    break;
+                                case 1:
+                                    //打开选择,本次允许选择的数量
+                                    ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
+                                    Intent intent1 = new Intent(mActivity, ImageGridActivity.class);
+                                    /* 如果需要进入选择的时候显示已经选中的图片，
+                                     * 详情请查看ImagePickerActivity
+                                     * */
 //                                intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES,images);
-                                mActivity.startActivityForResult(intent1, REQUEST_CODE_SELECT);
-                                break;
-                            default:
-                                break;
+                                    mActivity.startActivityForResult(intent1, REQUEST_CODE_SELECT);
+                                    break;
+                                default:
+                                    break;
+                            }
+
                         }
-
-                    }
-                }, names);
+                    }, names);
 
 
-                break;
-            default:
-                //打开预览
-                Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
-                intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) adapter.getImages());
-                intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
-                intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-                mActivity.startActivityForResult(intentPreview, REQUEST_CODE_PREVIEW);
-                break;
+                    break;
+                default:
+                    //打开预览
+                    Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
+                    intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) adapter.getImages());
+                    intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
+                    intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+                    mActivity.startActivityForResult(intentPreview, REQUEST_CODE_PREVIEW);
+                    break;
+            }
         }
+
     }
 
     @Override
@@ -416,7 +424,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
         ArrayAdapter<String> adapter = (ArrayAdapter<String>) parent.getAdapter();
-        switch (view.getId()) {
+        switch (parent.getId()) {
             case R.id.spinner_result:
                 tvSpinnerResultInfo.setText(alarmResultInfo.get(position));
                 break;

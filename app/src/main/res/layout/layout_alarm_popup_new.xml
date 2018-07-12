@@ -68,7 +68,7 @@
                 android:layout_marginLeft="@dimen/x70"
                 android:layout_marginTop="@dimen/y30"
                 android:text="*检测到附近发生着火，需要立即扑救"
-                android:textColor="@color/colorAccent"/>
+                android:textColor="#F34A4A"/>
 
             <TextView
                 android:layout_width="wrap_content"

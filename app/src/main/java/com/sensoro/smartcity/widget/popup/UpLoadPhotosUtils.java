@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.content.Context;
+import android.text.TextUtils;
 
 import com.lzy.imagepicker.bean.ImageItem;
 import com.qiniu.android.http.ResponseInfo;
@@ -12,6 +13,10 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.LogUtils;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.QiNiuToken;
+import com.sensoro.smartcity.util.AESUtil;
+import com.sensoro.smartcity.util.luban.CompressionPredicate;
+import com.sensoro.smartcity.util.luban.Luban;
+import com.sensoro.smartcity.util.luban.OnCompressListener;
 
 import org.json.JSONObject;
 
@@ -21,13 +26,11 @@ import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
-import top.zibin.luban.Luban;
-import top.zibin.luban.OnCompressListener;
 
 public class UpLoadPhotosUtils {
     private final Context mContext;
     private final List<ImageItem> ImageItems = new ArrayList<>();
-    private volatile int pictureNum = 0;
+    private int pictureNum = 0;
     private final UpLoadPhotoListener upLoadPhotoListener;
 
     public UpLoadPhotosUtils(Context context, UpLoadPhotoListener upLoadPhotoListener) {
@@ -35,36 +38,36 @@ public class UpLoadPhotosUtils {
         this.upLoadPhotoListener = upLoadPhotoListener;
     }
 
-    public void setFileList(List<ImageItem> ImageItems) {
-        this.ImageItems.clear();
-        this.ImageItems.addAll(ImageItems);
-    }
-
-    public void doUploadPhoto() {
-        upLoadPhotoListener.onStart();
-        RetrofitServiceHelper.INSTANCE.getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread()).subscribe(new CityObserver<QiNiuToken>() {
+    public void doUploadPhoto(List<ImageItem> ImageItems) {
+        if (ImageItems != null && ImageItems.size() > 0) {
+            this.ImageItems.clear();
+            this.ImageItems.addAll(ImageItems);
+            upLoadPhotoListener.onStart();
+            RetrofitServiceHelper.INSTANCE.getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                    .mainThread()).subscribe(new CityObserver<QiNiuToken>() {
 
 
-            @Override
-            public void onCompleted() {
-            }
+                @Override
+                public void onCompleted() {
+                }
 
-            @Override
-            public void onNext(QiNiuToken qiNiuToken) {
-                String upToken = qiNiuToken.getUptoken();
-                doUpLoadPhoto(upToken);
-            }
+                @Override
+                public void onNext(QiNiuToken qiNiuToken) {
+                    String upToken = qiNiuToken.getUptoken();
+                    doUpLoadPhoto(upToken);
+                }
 
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                upLoadPhotoListener.onError("获取token出错：" + errorMsg);
-            }
-        });
+                @Override
+                public void onErrorMsg(int errorCode, String errorMsg) {
+                    upLoadPhotoListener.onError("获取token出错：" + errorMsg);
+                }
+            });
+        }
     }
 
     private void doUpLoadPhoto(final String token) {
         if (ImageItems.size() == 0) {
+            pictureNum = 0;
             return;
         }
         if (pictureNum == ImageItems.size()) {
@@ -72,7 +75,16 @@ public class UpLoadPhotosUtils {
             upLoadPhotoListener.onComplete();
             pictureNum = 0;
         } else {
-            Luban.with(mContext).ignoreBy(200).load(ImageItems.get(pictureNum).path).setCompressListener(new OnCompressListener
+            String currentPath = ImageItems.get(pictureNum).path;
+            Luban.with(mContext).ignoreBy(200).load(currentPath).filter(new CompressionPredicate() {
+                @Override
+                public boolean apply(String path) {
+                    return !(TextUtils.isEmpty(path) || path.toLowerCase().endsWith(".gif"));
+//                    return (!TextUtils.isEmpty(path)) && (path.toLowerCase().endsWith("jpg") || path.toLowerCase()
+//                            .endsWith("jpeg") ||
+//                            path.toLowerCase().endsWith("png") && !path.toLowerCase().endsWith(".9.png"));
+                }
+            }).setCompressListener(new OnCompressListener
                     () {
                 @Override
                 public void onStart() {
@@ -81,39 +93,25 @@ public class UpLoadPhotosUtils {
 
                 @Override
                 public void onSuccess(File file) {
-                    SensoroCityApplication.getInstance().uploadManager.put(file, null, token, new
+                    final String key = AESUtil.stringToMD5(file.getName());
+                    SensoroCityApplication.getInstance().uploadManager.put(file, key, token, new
                             UpCompletionHandler() {
                                 @Override
                                 public void complete(String s, ResponseInfo responseInfo, JSONObject jsonObject) {
                                     if (responseInfo.isOK()) {
+                                        //TODO 拼接key 传入参数
                                         LogUtils.loge(this, "responseInfo -->" + responseInfo.toString());
-//                                        RetrofitServiceHelper.INSTANCE.doUpdatePhotos(responseInfo.path).subscribeOn
-//                                                (Schedulers
-//                                                        .io()).observeOn(AndroidSchedulers.mainThread()).subscribe
-//                                                (new CityObserver<ResponseBase>() {
-//
-//                                                    @Override
-//                                                    public void onCompleted() {
-//
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onNext(ResponseBase responseBase) {
-//                                                        pictureNum++;
-//                                                        doUpLoadPhoto(token);
-//                                                    }
-//
-//                                                    @Override
-//                                                    public void onErrorMsg(int errorCode, String errorMsg) {
-//                                                        upLoadPhotoListener.onError("上传本地服务器结果失败：" + ImageItems.get
-//                                                                (pictureNum).name + "-->" + errorMsg);
-//                                                    }
-//                                                });
+                                        LogUtils.loge(this, "文件路径-->> http://7u2jeb.com1.z0.glb.clouddn.com/" + key);
                                         pictureNum++;
                                         doUpLoadPhoto(token);
                                     } else {
-                                        upLoadPhotoListener.onError("上传七牛服务器失败：" + ImageItems.get
-                                                (pictureNum).name + "-->" + responseInfo.error);
+                                        LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】张-" +
+                                                ImageItems.get
+                                                        (pictureNum).name + "-->" + responseInfo.error);
+                                        upLoadPhotoListener.onError("上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】张-" +
+                                                ImageItems.get
+                                                        (pictureNum).name + "失败");
+                                        pictureNum = 0;
                                     }
 
                                 }
@@ -128,7 +126,11 @@ public class UpLoadPhotosUtils {
 
                 @Override
                 public void onError(Throwable e) {
-                    upLoadPhotoListener.onError("压缩" + ImageItems.get(pictureNum).name + "失败--" + e.getMessage());
+                    LogUtils.loge(this, "压缩 " + "第【" + (pictureNum + 1) + "】张-" + ImageItems.get(pictureNum)
+                            .name + "失败--->>" + e.getMessage());
+                    upLoadPhotoListener.onError("压缩 " + "第【" + (pictureNum + 1) + "】张-" + ImageItems.get(pictureNum)
+                            .name + "失败");
+                    pictureNum = 0;
                 }
             }).launch();
 
@@ -145,7 +147,10 @@ public class UpLoadPhotosUtils {
 
         void onProgress(int index, double percent);
     }
-
+// responseInfo -->{ver:7.3.12,ResponseInfo:1531386163309485,status:200, reqId:ekAAAGhyR3uhk0AV, xlog:body;0s.ph;0s
+// .put.in;0s.put.disk:1;1s.put.in;1s.put.disk:1;1s.ph;PFDS:2;0s.put.out:1;PFDS:3;body;rs38_4.sel:1;rwro.ins:1/same
+// entry;rs38_4.sel:5;rwro.get:5;MQ;RS.not:;RS:11;rs.put:17;rs-upload.putFile:20;UP:22, xvia:vdn-tj-cnc-1-2,
+// host:upload.qiniup.com, path:/, ip:220.194.102.99, port:443, duration:184 s, time:1531386195, sent:180803,error:null}
 
     ///////////////
     //            Luban.with(mContext).ignoreBy(200).load(selImageList.get(0).path).setCompressListener(new
