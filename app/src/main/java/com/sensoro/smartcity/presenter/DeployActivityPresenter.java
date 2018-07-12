@@ -182,7 +182,12 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                 String content = alarmInfo
                         .getNotification().getContent();
                 this.content = content;
-                getView().setContactEditText(contact + ":" + content);
+                if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
+                    getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
+                } else {
+                    getView().setContactEditText(contact + ":" + content);
+                }
+
             }
         }
 
@@ -421,13 +426,14 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                                 String sn = stationInfo.getSn();
                                 String[] tags = stationInfo.getTags();
                                 int normalStatus = stationInfo.getNormalStatus();
-
+                                long updatedTime = stationInfo.getUpdatedTime();
                                 DeviceInfo deviceInfo = new DeviceInfo();
                                 deviceInfo.setSn(sn);
                                 deviceInfo.setTags(tags);
                                 deviceInfo.setLonlat(lonlat);
                                 deviceInfo.setStatus(normalStatus);
                                 deviceInfo.setAddress(mAddress);
+                                deviceInfo.setUpdatedTime(updatedTime);
                                 if (!TextUtils.isEmpty(name)) {
                                     deviceInfo.setName(name);
                                 }
@@ -442,7 +448,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                             }
 
                             @Override
-                            public void onErrorMsg(int errorCode,String errorMsg) {
+                            public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().dismissProgressDialog();
                                 getView().toastShort(errorMsg);
                                 getView().setUploadButtonClickable(true);
@@ -496,7 +502,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                             }
 
                             @Override
-                            public void onErrorMsg(int errorCode,String errorMsg) {
+                            public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().dismissProgressDialog();
                                 getView().toastShort(errorMsg);
                                 getView().setUploadButtonClickable(true);
@@ -569,7 +575,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             }
 
             @Override
-            public void onErrorMsg(int errorCode,String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
@@ -603,12 +609,12 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             subthf = streetNumber.getNumber();
         }
         String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-        if (subLoc != null) {
-            stringBuffer.append(subLoc);
-        }
-        if (ts != null) {
-            stringBuffer.append(ts);
-        }
+//        if (subLoc != null) {
+//            stringBuffer.append(subLoc);
+//        }
+//        if (ts != null) {
+//            stringBuffer.append(ts);
+//        }
         if (thf != null) {
             stringBuffer.append(thf);
         }
@@ -616,15 +622,21 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             stringBuffer.append(subthf);
         }
         String address = stringBuffer.toString();
+        if (TextUtils.isEmpty(address)) {
+            address = ts;
+        }
         mAddress = address;
         System.out.println(address);
-        smoothMoveMarker.setTitle(address);
-
-        mHandler.post(new Runnable() {
-            @Override
-            public void run() {
-                smoothMoveMarker.showInfoWindow();
-            }
-        });
+        if (TextUtils.isEmpty(address)) {
+            smoothMoveMarker.hideInfoWindow();
+        } else {
+            smoothMoveMarker.setTitle(address);
+            mHandler.post(new Runnable() {
+                @Override
+                public void run() {
+                    smoothMoveMarker.showInfoWindow();
+                }
+            });
+        }
     }
 }

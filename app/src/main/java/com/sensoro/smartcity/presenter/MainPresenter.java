@@ -11,6 +11,7 @@ import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
+import com.lzy.imagepicker.ImagePicker;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -451,6 +452,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 getView().setCurrentPagerItem(4);
             } else {
                 getView().setCurrentPagerItem(3);
+            }
+        } else if (resultCode == ImagePicker.RESULT_CODE_ITEMS || resultCode == ImagePicker.RESULT_CODE_BACK) {
+            if (alarmListFragment != null) {
+                alarmListFragment.handlerActivityResult(requestCode, resultCode, data);
             }
         }
 

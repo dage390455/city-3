@@ -23,6 +23,7 @@ import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,7 +33,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragmentView> implements Constants,
-        SensoroPopupAlarmView.OnPopupCallbackListener {
+        SensoroPopupAlarmViewNew.OnPopupCallbackListener {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private volatile int cur_page = 1;
     private long startTime;

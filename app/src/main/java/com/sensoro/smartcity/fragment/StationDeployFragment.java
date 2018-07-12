@@ -64,6 +64,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
         mQRCodeView = mRootView.findViewById(R.id.scan_view);
         mQRCodeView.setDelegate(this);
         mQRCodeView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
+        mQRCodeView.getCameraPreview().setAutoFocusFailureDelay(0);
     }
 
 
@@ -98,8 +99,8 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 startScan();
@@ -112,6 +113,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 
     @Override
     public void onStop() {
+        super.onStop();
         try {
             if (mPrestener != null && mIsVisibleToUser) {
                 mQRCodeView.stopCamera();
@@ -120,8 +122,14 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
         } catch (Exception e) {
             e.printStackTrace();
         }
-        super.onStop();
     }
+
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//
+//    }
+
 
 //    public void hiddenRootView() {
 //        if (mRootView != null) {
@@ -201,6 +209,8 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
     @Override
     public void startScan() {
 //        mQRCodeView.startCamera();
+//        mQRCodeView.startSpotDelay(1000);
+//        mQRCodeView.showScanRect();
         mQRCodeView.startSpotAndShowRect();
     }
 

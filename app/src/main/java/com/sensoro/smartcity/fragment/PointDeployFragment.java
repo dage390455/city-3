@@ -62,6 +62,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         mQRCodeView = mRootView.findViewById(R.id.scan_view);
         mQRCodeView.setDelegate(this);
         mQRCodeView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
+        mQRCodeView.getCameraPreview().setAutoFocusFailureDelay(0);
     }
 
 
@@ -96,8 +97,8 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     }
 
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         LogUtils.loge(this, "用户可见: " + mIsVisibleToUser);
         try {
             if (mPrestener != null && mIsVisibleToUser) {
@@ -123,6 +124,12 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         }
     }
 
+//    @Override
+//    public void onPause() {
+//        super.onPause();
+//
+//
+//    }
 
 //    public void hiddenRootView() {
 //        if (mRootView != null) {
@@ -192,6 +199,8 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     @Override
     public void startScan() {
 //        mQRCodeView.startCamera();
+//        mQRCodeView.startSpotDelay(1000);
+//        mQRCodeView.showScanRect();
         mQRCodeView.startSpotAndShowRect();
     }
 

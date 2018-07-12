@@ -8,6 +8,11 @@ import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
 import com.fengmap.android.FMMapSDK;
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.view.CropImageView;
+import com.qiniu.android.common.FixedZone;
+import com.qiniu.android.storage.Configuration;
+import com.qiniu.android.storage.UploadManager;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
@@ -17,6 +22,7 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
 import com.sensoro.smartcity.util.Repause;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.popup.GlideImageLoader;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
@@ -38,6 +44,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
     private NotificationUtils mNotificationUtils;
     private static boolean isAPPBack = true;
     private static PushHandler pushHandler;
+    public UploadManager uploadManager;
 
     @Override
     public void onCreate() {
@@ -111,8 +118,39 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
         api.registerApp(Constants.APP_ID);
         FMMapSDK.init(this);
+        //
+        initImagePicker();
+        initUploadManager();
     }
 
+    private void initUploadManager() {
+        Configuration config = new Configuration.Builder()
+                .chunkSize(512 * 1024)        // 分片上传时，每片的大小。 默认256K
+                .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
+                .connectTimeout(10)           // 链接超时。默认10秒
+                .useHttps(true)               // 是否使用https上传域名
+                .responseTimeout(60)          // 服务器响应超时。默认60秒
+                .recorder(null)           // recorder分片上传时，已上传片记录器。默认null
+//                .recorder(new re, keyGen)   // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
+                .zone(FixedZone.zone0)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
+                .build();
+// 重用uploadManager。一般地，只需要创建一个uploadManager对象
+        uploadManager = new UploadManager(config);
+    }
+
+    private void initImagePicker() {
+        ImagePicker imagePicker = ImagePicker.getInstance();
+        imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
+        imagePicker.setShowCamera(false);                      //显示拍照按钮
+        imagePicker.setCrop(true);                           //允许裁剪（单选才有效）
+        imagePicker.setSaveRectangle(true);                   //是否按矩形区域保存
+        imagePicker.setSelectLimit(9);              //选中数量限制
+        imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
+        imagePicker.setFocusWidth(800);                       //裁剪框的宽度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setFocusHeight(800);                      //裁剪框的高度。单位像素（圆形自动取宽高最小值）
+        imagePicker.setOutPutX(1000);                         //保存文件的宽度。单位像素
+        imagePicker.setOutPutY(1000);                         //保存文件的高度。单位像素
+    }
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {

@@ -31,12 +31,6 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     TextView snTextView;
     @BindView(R.id.deploy_result_name_tv)
     TextView nameTextView;
-    @BindView(R.id.deploy_result_lon_tv)
-    TextView lonTextView;
-    @BindView(R.id.deploy_result_lan_tv)
-    TextView lanTextView;
-    @BindView(R.id.deploy_result_contact_tv)
-    TextView contactTextView;
     @BindView(R.id.deploy_result_content_tv)
     TextView contentTextView;
     @BindView(R.id.deploy_result_status_tv)
@@ -111,16 +105,6 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         nameTextView.setText(name);
     }
 
-    @Override
-    public void setLonLanTextView(String lon, String lan) {
-        lonTextView.setText(lon);
-        lanTextView.setText(lan);
-    }
-
-    @Override
-    public void setContactTextView(String contact) {
-        contactTextView.setText(contact);
-    }
 
     @Override
     public void setContentTextView(String content) {

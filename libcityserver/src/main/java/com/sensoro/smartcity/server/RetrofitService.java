@@ -10,6 +10,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
+import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
@@ -23,10 +24,12 @@ import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
 import retrofit2.http.Header;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
 import retrofit2.http.Query;
+import retrofit2.http.Url;
 import rx.Observable;
 
 public interface RetrofitService {
@@ -121,4 +124,12 @@ public interface RetrofitService {
     //
     @POST(STATION_DEPLOY + "{sn}")
     Observable<StationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    @Multipart
+    @POST("上传")
+    Observable<ResponseBase> doUpdatePhotos(@Url String url);
+
+    @GET("tools/qiniu/token")
+    Observable<QiNiuToken> getQiNiuToken();
+
 }

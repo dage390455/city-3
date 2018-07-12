@@ -134,11 +134,12 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
             String name = stationInfo.getName();
             String sn = stationInfo.getSn();
             String[] tags = stationInfo.getTags();
-
+            long updatedTime = stationInfo.getUpdatedTime();
             DeviceInfo deviceInfo = new DeviceInfo();
             deviceInfo.setSn(sn);
             deviceInfo.setTags(tags);
             deviceInfo.setLonlat(lonlat);
+            deviceInfo.setUpdatedTime(updatedTime);
             if (!TextUtils.isEmpty(name)) {
                 deviceInfo.setName(name);
             }

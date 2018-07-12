@@ -15,6 +15,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
+import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
@@ -408,5 +409,19 @@ public enum RetrofitServiceHelper {
      */
     public Observable<StationInfoRsp> getStationDetail(String sn) {
         return retrofitService.getStationDetail(sn);
+    }
+
+    //上传url
+    public Observable<ResponseBase> doUpdatePhotos(String url) {
+        return retrofitService.doUpdatePhotos(url);
+    }
+
+    /**
+     * 获取七牛token
+     *
+     * @return
+     */
+    public Observable<QiNiuToken> getQiNiuToken() {
+        return retrofitService.getQiNiuToken();
     }
 }

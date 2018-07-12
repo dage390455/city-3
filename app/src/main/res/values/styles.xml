@@ -47,4 +47,19 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light"/>
+    //
+    <style name="main_menu_animstyle">
+        <item name="android:windowEnterAnimation">@anim/photo_dialog_in_anim</item>
+        <item name="android:windowExitAnimation">@anim/photo_dialog_out_anim</item>
+    </style>
+
+    <style name="transparentFrameWindowStyle" parent="android:style/Theme.Dialog">
+        <item name="android:windowBackground">@drawable/photo_choose_bg</item>
+    </style>
+    <style name="spinner_style">
+        <item name="android:background">@drawable/shape_spinner_bg</item>
+        <!--<item name="android:background">@drawable/pop_spinner_bg</item>-->
+        <!--<item name="android:paddingLeft">5dip</item>-->
+    </style>
+
 </resources>

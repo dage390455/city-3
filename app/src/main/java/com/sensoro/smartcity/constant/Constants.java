@@ -163,6 +163,7 @@ public interface Constants {
     int DISPLAY_STATUS_ALARM = 1;
     int DISPLAY_STATUS_MISDESCRIPTION = 2;
     int DISPLAY_STATUS_TEST = 3;
+    int DISPLAY_STATUS_RISKS = 4;
     int DIRECTION_DOWN = 0;
     int DIRECTION_UP = 1;
     int TYPE_LIST = 0;

@@ -127,8 +127,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
+                    android:gravity="end"
                     android:layout_marginLeft="@dimen/x350"
-                    android:layout_marginRight="@dimen/x150"
+                    android:layout_marginRight="@dimen/x120"
                     android:orientation="horizontal"/>
 
                 <ImageView
@@ -168,12 +169,13 @@
 
                 <TextView
                     android:id="@+id/deploy_contact_et"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/x350"
-                    android:gravity="left"
+                    android:gravity="end"
                     android:maxLines="1"
+                    android:layout_marginRight="@dimen/x120"
                     android:text="@string/tips_hint_contact"
                     android:textColor="@color/c_888888"
                     android:textSize="@dimen/city_tiny_large_size"/>

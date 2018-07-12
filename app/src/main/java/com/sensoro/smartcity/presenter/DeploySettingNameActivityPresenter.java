@@ -92,8 +92,8 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
             } catch (UnsupportedEncodingException e) {
                 e.printStackTrace();
             }
-            if (bytes.length > 36) {
-                getView().toastShort("最大不能超过12个汉字或36个字符");
+            if (bytes.length > 48) {
+                getView().toastShort("最大不能超过16个汉字或48个字符");
                 return;
             }
 

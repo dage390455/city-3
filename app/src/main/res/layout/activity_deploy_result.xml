@@ -55,7 +55,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/y50"
             android:textColor="@color/c_626262"
-            android:textSize="18sp"/>
+            android:textSize="24sp"/>
 
     </LinearLayout>
 
@@ -95,32 +95,6 @@
                 android:textColor="@color/c_626262"
                 android:textSize="16sp"/>
 
-            <TextView
-                android:id="@+id/deploy_result_lon_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y20"
-                android:textColor="@color/c_626262"
-                android:textSize="16sp"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/deploy_result_lan_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y20"
-                android:textColor="@color/c_626262"
-                android:textSize="16sp"
-                android:visibility="gone"/>
-
-            <TextView
-                android:id="@+id/deploy_result_contact_tv"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/y20"
-                android:textColor="@color/c_626262"
-                android:visibility="gone"
-                android:textSize="16sp"/>
 
             <TextView
                 android:id="@+id/deploy_result_content_tv"
@@ -128,7 +102,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/y20"
                 android:textColor="@color/c_626262"
-                android:textSize="16sp"/>
+                android:textSize="16sp"
+                android:visibility="gone"/>
 
             <RelativeLayout
                 android:layout_width="wrap_content"
@@ -151,7 +126,7 @@
                     android:layout_marginLeft="@dimen/x260"
                     android:layout_toRightOf="@+id/deploy_result_status_tv"
                     android:textColor="@color/white"
-                    android:textSize="13sp"/>
+                    android:textSize="12sp"/>
             </RelativeLayout>
 
 

@@ -75,7 +75,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
             }
 
             @Override
-            public void onErrorMsg(int errorCode,String errorMsg) {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
                 getView().startScan();
@@ -125,13 +125,20 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
         }
         if (TextUtils.isEmpty(result)) {
             getView().toastShort(mContext.getResources().getString(R.string.scan_failed));
+            getView().startScan();
             return;
         }
         String scanSerialNumber = parseResultMac(result);
         if (scanSerialNumber == null) {
             getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
+            getView().startScan();
         } else {
-            scanFinish(scanSerialNumber);
+            if (scanSerialNumber.length() == 16) {
+                scanFinish(scanSerialNumber);
+            } else {
+                getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
+                getView().startScan();
+            }
         }
     }
 

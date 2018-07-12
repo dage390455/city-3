@@ -28,7 +28,7 @@ import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     private RelativeLayout mSelectedDateLayout;
     private RelativeLayout mTitleLayout;
     private SensoroShadowView mShadowView;
-    private SensoroPopupAlarmView mAlarmPopupView;
+    private SensoroPopupAlarmViewNew mAlarmPopupView;
     private AlarmListAdapter mAlarmListAdapter;
     //
     private ProgressUtils mProgressUtils;
@@ -144,8 +144,9 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
         mSelectedDateTextView = (TextView) mRootView.findViewById(R.id.alarm_log_selected_date);
         mCloseImageView = (ImageView) mRootView.findViewById(R.id.alarm_log_selected_close);
         mCloseImageView.setOnClickListener(this);
-        mAlarmPopupView = (SensoroPopupAlarmView) mRootView.findViewById(R.id.alarm_popup_view);
+        mAlarmPopupView = (SensoroPopupAlarmViewNew) mRootView.findViewById(R.id.alarm_popup_view);
         mAlarmPopupView.setOnPopupCallbackListener(mPrestener);
+        mAlarmPopupView.setDialog(mRootFragment.getActivity());
         mShadowView = (SensoroShadowView) mRootView.findViewById(R.id.alarm_popup_shadow);
     }
 
@@ -155,6 +156,12 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
 //        mSearchEditText.setHint("");
         mPrestener.requestDataAll(DIRECTION_DOWN, true);
 //        requestDataByFilter(DIRECTION_DOWN, true);
+    }
+
+    public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mAlarmPopupView != null) {
+            mAlarmPopupView.handlerActivityResult(requestCode, resultCode, data);
+        }
     }
 
     /**

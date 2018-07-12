@@ -127,6 +127,7 @@
     <string name="commit">Commit</string>
     <string name="alarming">Alarming</string>
     <string name="true_alarm">Alarm</string>
+    <string name="risks_alarm">Risks</string>
     <string name="misdescription">Mis</string>
     <string name="alarm_test">Test</string>
     <string name="confirming">Confirming</string>

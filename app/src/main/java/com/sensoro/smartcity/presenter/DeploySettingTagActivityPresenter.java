@@ -64,8 +64,8 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
             getView().toastShort("最多5个标签！");
         } else {
             for (String temp : tags) {
-                if (ResourceUtils.getByteFromWords(temp) > 24) {
-                    getView().toastShort("标签最大不能超过8个汉字或24个字符");
+                if (ResourceUtils.getByteFromWords(temp) > 30) {
+                    getView().toastShort("标签最大不能超过10个汉字或30个字符");
                     return;
                 }
             }
@@ -115,20 +115,22 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
 
     public void clickHistory(int position) {
         String test = mHistoryKeywords.get(position);
-        if (!TextUtils.isEmpty(test)) {
-            String trim = test.trim();
-            if (mTagList.contains(trim)) {
-                getView().toastShort("标签不能重复");
-                return;
-            } else {
-                mTagList.add(trim);
-            }
-        }
-        if (mTagList.size() > 5) {
+
+        if (mTagList.size() >= 5) {
             getView().toastShort("最大标签不超过5个！");
         } else {
-            getView().updateTags(mTagList);
+            if (!TextUtils.isEmpty(test)) {
+                String trim = test.trim();
+                if (mTagList.contains(trim)) {
+                    getView().toastShort("标签不能重复");
+                    return;
+                } else {
+                    mTagList.add(trim);
+                }
+                getView().updateTags(mTagList);
+            }
         }
+
     }
 
     @Override

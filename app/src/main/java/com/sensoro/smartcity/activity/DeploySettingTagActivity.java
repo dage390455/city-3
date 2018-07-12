@@ -99,8 +99,8 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
                                 return true;
                             }
                             for (String temp : split) {
-                                if (!TextUtils.isEmpty(temp) && ResourceUtils.getByteFromWords(temp) > 24) {
-                                    toastShort("标签最大不能超过8个汉字或24个字符");
+                                if (!TextUtils.isEmpty(temp) && ResourceUtils.getByteFromWords(temp) > 30) {
+                                    toastShort("标签最大不能超过10个汉字或30个字符");
                                     return true;
                                 }
                             }

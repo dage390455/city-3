@@ -14,15 +14,12 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setNameTextView(String name);
 
-    void setLonLanTextView(String lon, String lan);
-
-    void setContactTextView(String contact);
-
     void setContentTextView(String content);
 
     void setStatusTextView(String status);
 
     void setUpdateTextView(String update);
+
     void setAddressTextView(String address);
 
     void setUpdateTextViewVisible(boolean isVisible);

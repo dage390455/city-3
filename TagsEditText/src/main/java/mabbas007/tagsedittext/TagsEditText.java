@@ -385,6 +385,7 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
     /**
      * 添加是否可以点击
      * ddong1031
+     *
      * @param isClickable
      */
     public void setTagClickable(boolean isClickable) {
@@ -673,14 +674,12 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
 //        textView.setPadding(mTagsPaddingLeft, mTagsPaddingTop, mTagsPaddingRight, mTagsPaddingBottom);
 //        textView.setPadding(mTagsPaddingLeft, mTagsPaddingTop, mTagsPaddingRight, mTagsPaddingBottom);
         textView.setPadding(5, 0, 0, 0);
-
         // check Android version for set background
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             textView.setBackground(mTagsBackground);
         } else {
             textView.setBackgroundDrawable(mTagsBackground);
         }
-
         textView.setCompoundDrawablesWithIntrinsicBounds(mLeftDrawable, null, mRightDrawable, null);
         textView.setCompoundDrawablePadding(mDrawablePadding);
         //
@@ -689,6 +688,7 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
 //        textView.setPadding(5, 0, 0, 0);
 //        textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
         textView.setGravity(Gravity.CENTER);
+
 //        textView.setCompoundDrawables(null, null, null, null);
 //        Drawable drawable = getResources().getDrawable(R.drawable.shape_textview);
 //        textView.setBackground(drawable);
@@ -706,9 +706,15 @@ public class TagsEditText extends android.support.v7.widget.AppCompatEditText {
 //        }
 //        textView.setCompoundDrawablesWithIntrinsicBounds(mLeftDrawable, null, mRightDrawable, null);
 //        textView.setCompoundDrawablePadding(mDrawablePadding);
-//        //
+        //TODO 对于oppo 手机 不能Measure
 //        int spec = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED);
 //        textView.measure(spec, spec);
+//        ViewGroup.LayoutParams layoutParams = textView.getLayoutParams();
+//        if (layoutParams instanceof LinearLayout.LayoutParams) {
+//            ((LinearLayout.LayoutParams) layoutParams).setMargins(0, 0, 0, 5);
+//        } else if (layoutParams instanceof RelativeLayout.LayoutParams) {
+//            ((RelativeLayout.LayoutParams) layoutParams).setMargins(0, 0, 0, 5);
+//        }
         return textView;
     }
 

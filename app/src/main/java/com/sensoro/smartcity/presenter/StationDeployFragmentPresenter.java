@@ -128,11 +128,12 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
             String name = stationInfo.getName();
             String sn = stationInfo.getSn();
             String[] tags = stationInfo.getTags();
-
+            long updatedTime = stationInfo.getUpdatedTime();
             DeviceInfo deviceInfo = new DeviceInfo();
             deviceInfo.setSn(sn);
             deviceInfo.setTags(tags);
             deviceInfo.setLonlat(lonlat);
+            deviceInfo.setUpdatedTime(updatedTime);
             if (!TextUtils.isEmpty(name)) {
                 deviceInfo.setName(name);
             }
@@ -169,13 +170,20 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
         }
         if (TextUtils.isEmpty(result)) {
             getView().toastShort(mContext.getResources().getString(R.string.scan_failed));
+            getView().startScan();
             return;
         }
         String scanSerialNumber = parseResultMac(result);
         if (scanSerialNumber == null) {
             getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
+            getView().startScan();
         } else {
-            scanFinish(scanSerialNumber);
+            if (scanSerialNumber.length() == 16) {
+                scanFinish(scanSerialNumber);
+            } else {
+                getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
+                getView().startScan();
+            }
         }
     }
 

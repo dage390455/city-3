@@ -94,6 +94,7 @@
     <string name="contact_name">联系人姓名</string>
     <string name="contact_phone">联系人电话</string>
     <string name="update_time">最近上传时间</string>
+    <string name="invalid_qr_code">无效二维码</string>
     <string name="back_home">返回主页</string>
     <string name="status_alarm">预警</string>
     <string name="status_normal">正常</string>
@@ -114,6 +115,7 @@
     <string name="commit">提交</string>
     <string name="alarming">报警中</string>
     <string name="true_alarm">真实预警</string>
+    <string name="risks_alarm">安全隐患</string>
     <string name="misdescription">误报</string>
     <string name="alarm_test">测试</string>
     <string name="confirming">确认</string>

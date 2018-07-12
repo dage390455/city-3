@@ -75,7 +75,8 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                     if (time == -1) {
                         getView().setAlarmRecentInfo(R.string.tips_no_alarm);
                     } else {
-                        getView().setAlarmRecentInfo(DateUtil.getFullParseDate(time));
+                        //修改全部为时间格式
+                        getView().setAlarmRecentInfo(DateUtil.getFullDate(time));
                     }
                 }
             }
@@ -118,6 +119,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 for (AlarmInfo.RuleInfo ruleInfo : rules) {
                     String sensorType = ruleInfo.getSensorTypes();
                     sensorType = WidgetUtil.getSensorTypeChinese(sensorType);
+                    //
                     float value = ruleInfo.getThresholds();
                     String conditionType = ruleInfo.getConditionType();
                     String rule = null;

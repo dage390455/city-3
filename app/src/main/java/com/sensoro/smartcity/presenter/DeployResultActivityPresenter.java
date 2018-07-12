@@ -12,9 +12,6 @@ import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.DateUtil;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 public class DeployResultActivityPresenter extends BasePresenter<IDeployResultActivityView> implements Constants {
     private int resultCode = 0;
     private DeviceInfo deviceInfo = null;
@@ -47,20 +44,19 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 if (!TextUtils.isEmpty(address)) {
                     getView().setAddressTextView("位置：" + address);
                 }
-                String lon = mContext.getIntent().getStringExtra(EXTRA_SENSOR_LON);
-                String lan = mContext.getIntent().getStringExtra(EXTRA_SENSOR_LAN);
+                long updatedTime = deviceInfo.getUpdatedTime();
                 if (!is_station) {
+                    getView().setContactAndSignalVisible(true);
                     String contact = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
                     String content = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
 
-//                    getView().setContactTextView(mContext.getString(R.string.name) + "：" + (TextUtils.isEmpty
-// (contact) ?
-//                            "无" : contact));
                     getView().setContentTextView("联系人：" + (TextUtils.isEmpty(contact) ?
                             "无" : contact) + "(" + (TextUtils.isEmpty
                             (contact) ?
                             "无" : content) + ")");
-                    getView().refreshSignal(deviceInfo.getUpdatedTime(), deviceInfo.getSignal());
+                    getView().refreshSignal(updatedTime, deviceInfo.getSignal());
+                } else {
+                    getView().setContactAndSignalVisible(false);
                 }
 
                 if (resultCode == 1) {
@@ -80,8 +76,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 }
                 getView().setSnTextView(mContext.getString(R.string.sensor_detail_sn) + "：" + sn);
                 getView().setNameTextView(mContext.getString(R.string.sensor_detail_name) + "：" + name);
-                getView().setLonLanTextView(mContext.getString(R.string.sensor_detail_lon) + "：" + lon, mContext
-                        .getString(R.string.sensor_detail_lan) + "：" + lan);
+//                getView().setLonLanTextView(mContext.getString(R.string.sensor_detail_lon) + "：" + lon, mContext
+//                        .getString(R.string.sensor_detail_lan) + "：" + lan);
                 if (is_station) {
                     getView().setStatusTextView(mContext.getString(R.string.sensor_detail_status) + "：" + Constants
                             .STATION_STATUS_ARRAY[deviceInfo.getStatus() + 1]);
@@ -89,17 +85,23 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     getView().setStatusTextView(mContext.getString(R.string.sensor_detail_status) + "：" + Constants
                             .DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
                 }
-
-                if (deviceInfo.getLastUpdatedTime() != null) {
-                    getView().setUpdateTextViewVisible(true);
-                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
-                    Date date = sdf.parse(deviceInfo.getLastUpdatedTime());
-                    getView().setUpdateTextView(mContext.getString(R.string.update_time) + "：" + DateUtil
-                            .getFullParseDate(date
-                                    .getTime()));
-                } else {
+//                // 修改长传时间
+//                String lastUpdatedTime = deviceInfo.getLastUpdatedTime();
+                if (updatedTime == -1) {
                     getView().setUpdateTextViewVisible(false);
+                } else {
+                    getView().setUpdateTextView(mContext.getString(R.string.update_time) + "：" + DateUtil
+                            .getFullParseDate(updatedTime));
                 }
+//                if (lastUpdatedTime != null) {
+//                    getView().setUpdateTextViewVisible(true);
+//                    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.sss'Z'");
+//                    Date date = sdf.parse(lastUpdatedTime);
+//                    getView().setUpdateTextView(mContext.getString(R.string.update_time) + "：" + DateUtil
+//                            .getFullParseDate(date.getTime()));
+//                } else {
+//                    getView().setUpdateTextViewVisible(false);
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();

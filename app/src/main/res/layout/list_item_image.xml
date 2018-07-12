@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="90dp"
+                android:layout_height="90dp"
+                android:padding="5dp">
+
+
+    <ImageView
+        android:id="@+id/iv_img"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:layout_centerInParent="true"
+        android:layout_margin="10dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/selector_image_add"/>
+
+    <ImageView
+        android:id="@+id/image_delete"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:src="@mipmap/picture_del"
+        android:visibility="gone"
+        />
+
+</RelativeLayout>
