@@ -18,19 +18,20 @@ import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageBaseActivity;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.util.Utils;
+import com.lzy.imagepicker.view.SensoroToast;
 import com.lzy.imagepicker.view.SuperCheckBox;
 
 import java.util.ArrayList;
 
 /**
  * 加载相册图片的RecyclerView适配器
- *
+ * <p>
  * 用于替换原项目的GridView，使用局部刷新解决选中照片出现闪动问题
- *
+ * <p>
  * 替换为RecyclerView后只是不再会导致全局刷新，
- *
+ * <p>
  * 但还是会出现明显的重新加载图片，可能是picasso图片加载框架的问题
- *
+ * <p>
  * Author: nanchen
  * Email: liushilin520@foxmail.com
  * Date: 2017-04-05  10:04
@@ -81,18 +82,18 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == ITEM_TYPE_CAMERA){
-            return new CameraViewHolder(mInflater.inflate(R.layout.adapter_camera_item,parent,false));
+        if (viewType == ITEM_TYPE_CAMERA) {
+            return new CameraViewHolder(mInflater.inflate(R.layout.adapter_camera_item, parent, false));
         }
-        return new ImageViewHolder(mInflater.inflate(R.layout.adapter_image_list_item,parent,false));
+        return new ImageViewHolder(mInflater.inflate(R.layout.adapter_image_list_item, parent, false));
     }
 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
-        if (holder instanceof CameraViewHolder){
-            ((CameraViewHolder)holder).bindCamera();
-        }else if (holder instanceof ImageViewHolder){
-            ((ImageViewHolder)holder).bind(position);
+        if (holder instanceof CameraViewHolder) {
+            ((CameraViewHolder) holder).bindCamera();
+        } else if (holder instanceof ImageViewHolder) {
+            ((ImageViewHolder) holder).bind(position);
         }
     }
 
@@ -121,30 +122,49 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    private class ImageViewHolder extends ViewHolder{
+    private class ImageViewHolder extends ViewHolder {
 
         View rootView;
         ImageView ivThumb;
         View mask;
         View checkView;
         SuperCheckBox cbCheck;
-
+        //替换图标方案
+        ImageView circleSelect;
 
         ImageViewHolder(View itemView) {
             super(itemView);
             rootView = itemView;
             ivThumb = (ImageView) itemView.findViewById(R.id.iv_thumb);
             mask = itemView.findViewById(R.id.mask);
-            checkView=itemView.findViewById(R.id.checkView);
+            mask.setVisibility(View.GONE);
+            checkView = itemView.findViewById(R.id.checkView);
             cbCheck = (SuperCheckBox) itemView.findViewById(R.id.cb_check);
-            itemView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize)); //让图片是个正方形
+            circleSelect = itemView.findViewById(R.id.circle_select);
+            itemView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize));
+            //让图片是个正方形
         }
 
-        void bind(final int position){
+        void bind(final int position) {
             final ImageItem imageItem = getItem(position);
             ivThumb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    //修改逻辑
+                    cbCheck.setChecked(!cbCheck.isChecked());
+                    int selectLimit = imagePicker.getSelectLimit();
+                    if (cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
+                        SensoroToast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string
+                                .ip_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
+                        cbCheck.setChecked(false);
+//                        mask.setVisibility(View.GONE);
+                        circleSelect.setVisibility(View.GONE);
+                    } else {
+                        imagePicker.addSelectedImageItem(position, imageItem, cbCheck.isChecked());
+//                        mask.setVisibility(View.VISIBLE);
+                        circleSelect.setVisibility(View.VISIBLE);
+                    }
+                    //
                     if (listener != null) listener.onImageItemClick(rootView, imageItem, position);
                 }
             });
@@ -154,12 +174,15 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
                     cbCheck.setChecked(!cbCheck.isChecked());
                     int selectLimit = imagePicker.getSelectLimit();
                     if (cbCheck.isChecked() && mSelectedImages.size() >= selectLimit) {
-                        Toast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string.ip_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
+                        SensoroToast.makeText(mActivity.getApplicationContext(), mActivity.getString(R.string
+                                .ip_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
                         cbCheck.setChecked(false);
-                        mask.setVisibility(View.GONE);
+//                        mask.setVisibility(View.GONE);
+                        circleSelect.setVisibility(View.GONE);
                     } else {
                         imagePicker.addSelectedImageItem(position, imageItem, cbCheck.isChecked());
-                        mask.setVisibility(View.VISIBLE);
+//                        mask.setVisibility(View.VISIBLE);
+                        circleSelect.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -168,21 +191,23 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
                 cbCheck.setVisibility(View.VISIBLE);
                 boolean checked = mSelectedImages.contains(imageItem);
                 if (checked) {
-                    mask.setVisibility(View.VISIBLE);
+//                    mask.setVisibility(View.VISIBLE);
                     cbCheck.setChecked(true);
                 } else {
-                    mask.setVisibility(View.GONE);
+//                    mask.setVisibility(View.GONE);
                     cbCheck.setChecked(false);
                 }
+                circleSelect.setVisibility(cbCheck.isChecked()?View.VISIBLE:View.GONE);
             } else {
                 cbCheck.setVisibility(View.GONE);
             }
-            imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize); //显示图片
+            imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize);
+            //显示图片
         }
 
     }
 
-    private class CameraViewHolder extends ViewHolder{
+    private class CameraViewHolder extends ViewHolder {
 
         View mItemView;
 
@@ -191,14 +216,16 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
             mItemView = itemView;
         }
 
-        void bindCamera(){
-            mItemView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize)); //让图片是个正方形
+        void bindCamera() {
+            mItemView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize));
+            //让图片是个正方形
             mItemView.setTag(null);
             mItemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!((ImageBaseActivity) mActivity).checkPermission(Manifest.permission.CAMERA)) {
-                        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CAMERA}, ImageGridActivity.REQUEST_PERMISSION_CAMERA);
+                        ActivityCompat.requestPermissions(mActivity, new String[]{Manifest.permission.CAMERA},
+                                ImageGridActivity.REQUEST_PERMISSION_CAMERA);
                     } else {
                         imagePicker.takePicture(mActivity, ImagePicker.REQUEST_CODE_TAKE);
                     }

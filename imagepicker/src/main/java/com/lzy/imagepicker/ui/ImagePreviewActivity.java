@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.text.format.Formatter;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +16,11 @@ import android.widget.Toast;
 
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.R;
+import com.lzy.imagepicker.adapter.ImageBottomAdapter;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.util.NavigationBarChangeListener;
 import com.lzy.imagepicker.util.Utils;
+import com.lzy.imagepicker.view.SensoroToast;
 import com.lzy.imagepicker.view.SuperCheckBox;
 
 /**
@@ -28,7 +32,8 @@ import com.lzy.imagepicker.view.SuperCheckBox;
  * 修订历史：
  * ================================================
  */
-public class ImagePreviewActivity extends ImagePreviewBaseActivity implements ImagePicker.OnImageSelectedListener, View.OnClickListener, CompoundButton.OnCheckedChangeListener {
+public class ImagePreviewActivity extends ImagePreviewBaseActivity implements ImagePicker.OnImageSelectedListener,
+        View.OnClickListener, CompoundButton.OnCheckedChangeListener {
 
     public static final String ISORIGIN = "isOrigin";
 
@@ -36,8 +41,11 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
     private SuperCheckBox mCbCheck;                //是否选中当前图片的CheckBox
     private SuperCheckBox mCbOrigin;               //原图
     private Button mBtnOk;                         //确认图片的选择
+    private Button mBtnOkBottom;                         //确认图片的选择
     private View bottomBar;
     private View marginView;
+    private RecyclerView bottomRecyclerView;
+    private ImageBottomAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +54,29 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
         isOrigin = getIntent().getBooleanExtra(ImagePreviewActivity.ISORIGIN, false);
         imagePicker.addOnImageSelectedListener(this);
         mBtnOk = (Button) findViewById(R.id.btn_ok);
-        mBtnOk.setVisibility(View.VISIBLE);
+        mBtnOkBottom = (Button) findViewById(R.id.btn_ok_bottom);
+        mBtnOkBottom.setVisibility(View.VISIBLE);
+        mBtnOk.setVisibility(View.GONE);
         mBtnOk.setOnClickListener(this);
+        mBtnOkBottom.setOnClickListener(this);
 
         bottomBar = findViewById(R.id.bottom_bar);
+        bottomRecyclerView = (RecyclerView) findViewById(R.id.bottom_recyclerView);
+        final LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        layoutManager.setSmoothScrollbarEnabled(true);
+        bottomRecyclerView.setLayoutManager(layoutManager);
+//        bottomRecyclerView.setHasFixedSize(true);
+        adapter = new ImageBottomAdapter(this, mImageItems);
+        bottomRecyclerView.setAdapter(adapter);
         bottomBar.setVisibility(View.VISIBLE);
+        adapter.setOnItemClickListener(new ImageBottomAdapter.OnRecyclerViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                adapter.setSelect(position);
+                mViewPager.setCurrentItem(position);
+            }
+        });
 
         mCbCheck = (SuperCheckBox) findViewById(R.id.cb_check);
         mCbOrigin = (SuperCheckBox) findViewById(R.id.cb_origin);
@@ -70,10 +96,12 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
             @Override
             public void onPageSelected(int position) {
                 mCurrentPosition = position;
+                adapter.setSelect(position);
                 ImageItem item = mImageItems.get(mCurrentPosition);
                 boolean isSelected = imagePicker.isSelect(item);
                 mCbCheck.setChecked(isSelected);
-                mTitleCount.setText(getString(R.string.ip_preview_image_count, mCurrentPosition + 1, mImageItems.size()));
+                mTitleCount.setText(getString(R.string.ip_preview_image_count, mCurrentPosition + 1, mImageItems.size
+                        ()));
             }
         });
         //当点击当前选中按钮的时候，需要根据当前的选中状态添加和移除图片
@@ -83,14 +111,17 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
                 ImageItem imageItem = mImageItems.get(mCurrentPosition);
                 int selectLimit = imagePicker.getSelectLimit();
                 if (mCbCheck.isChecked() && selectedImages.size() >= selectLimit) {
-                    Toast.makeText(ImagePreviewActivity.this, getString(R.string.ip_select_limit, selectLimit), Toast.LENGTH_SHORT).show();
+                    SensoroToast.makeText(ImagePreviewActivity.this, getString(R.string.ip_select_limit, selectLimit), Toast
+                            .LENGTH_SHORT).show();
                     mCbCheck.setChecked(false);
                 } else {
                     imagePicker.addSelectedImageItem(mCurrentPosition, imageItem, mCbCheck.isChecked());
                 }
+                adapter.setImages(mImageItems);
             }
         });
-        NavigationBarChangeListener.with(this).setListener(new NavigationBarChangeListener.OnSoftInputStateChangeListener() {
+        NavigationBarChangeListener.with(this).setListener(new NavigationBarChangeListener
+                .OnSoftInputStateChangeListener() {
             @Override
             public void onNavigationBarShow(int orientation, int height) {
                 marginView.setVisibility(View.VISIBLE);
@@ -123,7 +154,6 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
     }
 
 
-
     /**
      * 图片添加成功后，修改当前图片的选中数量
      * 当调用 addSelectedImageItem 或 deleteSelectedImageItem 都会触发当前回调
@@ -131,7 +161,8 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
     @Override
     public void onImageSelected(int position, ImageItem item, boolean isAdd) {
         if (imagePicker.getSelectImageCount() > 0) {
-            mBtnOk.setText(getString(R.string.ip_select_complete, imagePicker.getSelectImageCount(), imagePicker.getSelectLimit()));
+            mBtnOk.setText(getString(R.string.ip_select_complete, imagePicker.getSelectImageCount(), imagePicker
+                    .getSelectLimit()));
         } else {
             mBtnOk.setText(getString(R.string.ip_complete));
         }
@@ -148,7 +179,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
     @Override
     public void onClick(View v) {
         int id = v.getId();
-        if (id == R.id.btn_ok) {
+        if (id == R.id.btn_ok_bottom) {
             if (imagePicker.getSelectedImages().size() == 0) {
                 mCbCheck.setChecked(true);
                 ImageItem imageItem = mImageItems.get(mCurrentPosition);

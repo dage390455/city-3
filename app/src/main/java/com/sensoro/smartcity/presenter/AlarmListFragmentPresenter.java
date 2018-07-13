@@ -22,7 +22,6 @@ import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
 
 import java.util.ArrayList;
@@ -573,10 +572,10 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
 //            Toast.makeText(mContext, "最大不能超过32个字符", Toast.LENGTH_SHORT).show();
 //            return;
 //        }
-        if (remark.length() > 30) {
-            getView().toastShort("最大不能超过30个字符");
-            return;
-        }
+//        if (remark.length() > 30) {
+//            getView().toastShort("最大不能超过30个字符");
+//            return;
+//        }
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doAlarmConfirm(mCurrentDeviceAlarmLogInfo.get_id(), status,
                 remark, isReConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe

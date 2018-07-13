@@ -2,7 +2,7 @@
               xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="#000"
+              android:background="#ffffff"
               android:orientation="vertical">
 
     <include
@@ -12,7 +12,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#111111">
+        android:background="#f4f4f4">
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler"
@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_alignParentBottom="true"
-            android:background="@color/ip_color_primary">
+            android:background="#ffffff">
 
             <RelativeLayout
                 android:id="@+id/ll_dir"
@@ -48,7 +48,7 @@
                     android:includeFontPadding="false"
                     android:maxLines="1"
                     android:text="@string/ip_all_images"
-                    android:textColor="#CFCFCF"
+                    android:textColor="#5D5D5D"
                     android:textSize="16sp"/>
 
                 <ImageView
@@ -74,7 +74,7 @@
                 android:paddingRight="16dp"
                 android:text="预览(3)"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
+                android:textColor="#5D5D5D"
                 android:textSize="16sp"/>
 
         </RelativeLayout>

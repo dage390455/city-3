@@ -61,11 +61,11 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
 
     public void doChoose(Boolean isFinish, List<String> tags) {
         if (tags.size() > 5) {
-            getView().toastShort("最多5个标签！");
+            getView().toastShort("最多只能添加5个标签");
         } else {
             for (String temp : tags) {
                 if (ResourceUtils.getByteFromWords(temp) > 30) {
-                    getView().toastShort("标签最大不能超过10个汉字或30个字符");
+                    getView().toastShort("标签最长不能超过10个汉字或30个字符");
                     return;
                 }
             }
@@ -117,7 +117,7 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
         String test = mHistoryKeywords.get(position);
 
         if (mTagList.size() >= 5) {
-            getView().toastShort("最大标签不超过5个！");
+            getView().toastShort("最多只能添加5个标签");
         } else {
             if (!TextUtils.isEmpty(test)) {
                 String trim = test.trim();

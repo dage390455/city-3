@@ -1568,6 +1568,7 @@ public class WidgetUtil {
 
     /**
      * 设备更多信息转换
+     *
      * @param context
      * @param sensorTypes
      * @return
@@ -1670,5 +1671,34 @@ public class WidgetUtil {
             s = s.replaceAll("[.]$", "");//如最后一位是.则去掉
         }
         return s;
+    }
+
+    public static String getBooleanAlarm(String sensorType) {
+        switch (sensorType) {
+            case "alarm":
+                return "发生报警 时报警";
+            case "flame":
+                return "监测到火焰 时报警";
+            case "collision":
+                return "发生撞击 时报警";
+            case "drop":
+                return "发生滴漏 时报警";
+            case "level":
+                return "溢出 时报警";
+            case "magnetic":
+                return "车辆经过 时报警";
+            case "smoke":
+                return "烟雾浓度高 时报警";
+            case "jinggai":
+            case "cover":
+            case "door":
+                return "打开 时报警";
+            case "connection":
+                return "断开 时报警";
+            case "installed":
+                return "被拆卸 时报警";
+            default:
+                return null;
+        }
     }
 }

@@ -103,30 +103,47 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 String lon = "" + deviceInfo.getLonlat()[0];
                 String lat = "" + deviceInfo.getLonlat()[1];
                 getView().setLongitudeLatitude(WidgetUtil.subZeroAndDot(lon), WidgetUtil.subZeroAndDot(lat));
+                //
+//                deviceInfo.getSensorTypes();
                 AlarmInfo.RuleInfo rules[] = deviceInfo.getAlarms().getRules();
+                String alarm = null;
                 StringBuffer sbRule = new StringBuffer();
                 for (AlarmInfo.RuleInfo ruleInfo : rules) {
                     String sensorType = ruleInfo.getSensorTypes();
-                    sensorType = WidgetUtil.getSensorTypeChinese(sensorType);
-                    //
-                    String value = String.valueOf(ruleInfo.getThresholds());
-                    value = WidgetUtil.subZeroAndDot(value);
-                    String conditionType = ruleInfo.getConditionType();
-                    String rule = null;
-                    if (conditionType != null) {
-                        if (conditionType.equals("gt")) {
-                            rule = sensorType + ">" + value;
-                        } else if (conditionType.equals("lt")) {
-                            rule = sensorType + "<" + value;
-                        } else if (conditionType.equals("gte")) {
-                            rule = sensorType + ">=" + value;
-                        } else if (conditionType.equals("lte")) {
-                            rule = sensorType + "<=" + value;
+                    alarm = WidgetUtil.getBooleanAlarm(sensorType);
+                    if (!TextUtils.isEmpty(alarm)) {
+                        sbRule.append(alarm);
+                        break;
+                    }
+
+                }
+                if (TextUtils.isEmpty(alarm)) {
+                    for (AlarmInfo.RuleInfo ruleInfo : rules) {
+                        String sensorType = ruleInfo.getSensorTypes();
+                        sensorType = WidgetUtil.getSensorTypeChinese(sensorType);
+                        String value = String.valueOf(ruleInfo.getThresholds());
+                        value = WidgetUtil.subZeroAndDot(value);
+                        String conditionType = ruleInfo.getConditionType();
+                        String rule = null;
+                        if (conditionType != null) {
+                            if (conditionType.equals("gt")) {
+                                rule = sensorType + ">" + value;
+                            } else if (conditionType.equals("lt")) {
+                                rule = sensorType + "<" + value;
+                            } else if (conditionType.equals("gte")) {
+                                rule = sensorType + ">=" + value;
+                            } else if (conditionType.equals("lte")) {
+                                rule = sensorType + "<=" + value;
+                            }
+                            sbRule.append(" " + rule);
                         }
-                        sbRule.append(" " + rule);
+
                     }
                 }
+                //
+
                 getView().setAlarmSetting(sbRule.toString());
+                //
                 int interval = deviceInfo.getInterval();
                 getView().setInterval(DateUtil.secToTimeBefore(interval));
                 //

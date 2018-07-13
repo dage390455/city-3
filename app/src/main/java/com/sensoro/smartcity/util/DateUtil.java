@@ -328,8 +328,13 @@ public class DateUtil {
             }
         }
         //
-        return getStrTime(h, d, s);
-//        return h + ":" + d + ":" + s + "";
+        if (h >= 24) {
+            int day = h / 24;
+            h = day % 24;
+            return day + "天" + getStrTime(h, d, s);
+        } else {
+            return getStrTime(h, d, s);
+        }
     }
 
     @NonNull

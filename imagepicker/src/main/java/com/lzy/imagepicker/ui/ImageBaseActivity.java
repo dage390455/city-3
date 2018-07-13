@@ -13,6 +13,7 @@ import android.widget.Toast;
 
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.R;
+import com.lzy.imagepicker.view.SensoroToast;
 import com.lzy.imagepicker.view.SystemBarTintManager;
 
 /**
@@ -57,7 +58,7 @@ public class ImageBaseActivity extends AppCompatActivity {
     }
 
     public void showToast(String toastText) {
-        Toast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
+        SensoroToast.makeText(getApplicationContext(), toastText, Toast.LENGTH_SHORT).show();
     }
 
     @Override

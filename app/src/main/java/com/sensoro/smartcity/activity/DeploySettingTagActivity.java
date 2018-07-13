@@ -95,12 +95,12 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
                         if (!TextUtils.isEmpty(text)) {
                             String[] split = text.split(" ");
                             if (split.length > 5) {
-                                toastShort("最大标签不超过5个！");
+                                toastShort("最多只能添加5个标签");
                                 return true;
                             }
                             for (String temp : split) {
                                 if (!TextUtils.isEmpty(temp) && ResourceUtils.getByteFromWords(temp) > 30) {
-                                    toastShort("标签最大不能超过10个汉字或30个字符");
+                                    toastShort("标签最长不能超过10个汉字或30个字符");
                                     return true;
                                 }
                             }

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="48dp"
-    android:background="@color/ip_color_primary"
+    android:background="#ffffff"
     android:clickable="true">
 
     <ImageView
@@ -11,12 +11,12 @@
         android:layout_width="48dp"
         android:layout_height="match_parent"
         android:layout_centerVertical="true"
-        android:background="@drawable/selector_back_press"
         android:padding="12dp"
-        app:srcCompat="@drawable/ic_arrow_back" />
+        app:srcCompat="@mipmap/ic_back" />
 
     <View
         android:layout_width="2px"
+        android:visibility="invisible"
         android:layout_height="match_parent"
         android:layout_marginBottom="12dp"
         android:layout_marginTop="12dp"
@@ -33,7 +33,7 @@
         android:text="图片"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textSize="18sp"
-        android:textColor="#ffffff" />
+        android:textColor="#626262" />
 
     <Button
         android:id="@+id/btn_ok"
@@ -49,7 +49,7 @@
         android:paddingRight="16.0dp"
         android:paddingLeft="16.0dp"
         android:text="完成(0/3)"
-        android:textColor="#ffffff"
+        android:textColor="#fff"
         android:textSize="14sp" />
 
     <android.support.v7.widget.AppCompatImageView

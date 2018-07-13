@@ -96,7 +96,7 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
 //            return;
 //        }
         if (remark.length() > 30) {
-            getView().toastShort("最大不能超过30个字符");
+            getView().toastShort("最长不能超过30个字符");
             return;
         }
         getView().showProgressDialog();
