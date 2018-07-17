@@ -17,8 +17,8 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.IPointDeployFragmentView;
 import com.sensoro.smartcity.iwidget.IOndestroy;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -31,6 +31,7 @@ import static android.content.Context.VIBRATOR_SERVICE;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_IS_STATION_DEPLOY;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT_ERROR;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN_RESULT;
 import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_POINT_DEPLOY;
 
@@ -77,10 +78,30 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-                getView().startScan();
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    getView().toastShort(errorMsg);
+                    getView().startScan();
+                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                    freshError(scanSerialNumber, null);
+                } else {
+                    freshError(scanSerialNumber, errorMsg);
+                }
             }
         });
+    }
+
+    private void freshError(String scanSN, String errorInfo) {
+        //
+        Intent intent = new Intent();
+        intent.setClass(mContext, DeployResultActivity.class);
+        intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+        intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
+        if (!TextUtils.isEmpty(errorInfo)) {
+            intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
+        }
+
+        getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
     }
 
     private void refresh(String scanSN, DeviceInfoListRsp response) {
@@ -93,11 +114,7 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
                 intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
                 getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
             } else {
-                intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
-                intent.setClass(mContext, DeployResultActivity.class);
-                intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
-                intent.putExtra(EXTRA_SENSOR_RESULT, -1);
-                getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
+                freshError(scanSN, null);
             }
         } catch (Exception e) {
             e.printStackTrace();

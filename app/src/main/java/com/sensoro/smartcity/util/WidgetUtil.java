@@ -16,9 +16,7 @@ import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.TextAppearanceSpan;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -178,246 +176,6 @@ public class WidgetUtil {
         return outBitmap;
     }
 
-    public static void judgeSensorTypeWithEnUnit(Context context, SensorStruct sensorStruct, TextView valueTextView,
-                                                 TextView unitTextView) {
-        if (sensorStruct != null) {
-            LinearLayout.LayoutParams unitParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT);
-            int unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
-            int unit_leftMargin = context.getResources().getDimensionPixelSize(R.dimen.x30);
-            int unit_topMargin = 0;
-            Object value = sensorStruct.getValue();
-            String sensorType = sensorStruct.getSensorType();
-            if (value instanceof Boolean) {
-                if (sensorType.equals("jinggai")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.jinggai_true);
-                    } else {
-                        valueTextView.setText(R.string.jinggai_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("cover")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.cover_true);
-                    } else {
-                        valueTextView.setText(R.string.cover_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("level")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.level_true);
-                    } else {
-                        valueTextView.setText(R.string.level_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("collision")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.collision_true);
-                    } else {
-                        valueTextView.setText(R.string.collision_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("alarm")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.alarm_true);
-                    } else {
-                        valueTextView.setText(R.string.alarm_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("smoke")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.smoke_true);
-                    } else {
-                        valueTextView.setText(R.string.smoke_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("flame")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.flame_true);
-                    } else {
-                        valueTextView.setText(R.string.flame_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("magnetic")) {
-                    Boolean isTrue = (Boolean) value;
-                    if (isTrue) {
-                        valueTextView.setText(R.string.magnetic_true);
-                    } else {
-                        valueTextView.setText(R.string.magnetic_false);
-                    }
-                    unitTextView.setText(R.string.sensor_magnetic);
-                } else {
-                    valueTextView.setText("-");
-                    unitTextView.setText("-");
-                }
-            } else {
-                if (sensorStruct.getSensorType().equals("pitch") || sensorStruct.getSensorType().equals("roll") ||
-                        sensorStruct.getSensorType().equals("yaw") || sensorStruct.getSensorType().equals
-                        ("collision")) {
-//                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y150);
-                    unit_topMargin = -80;
-                } else if (sensorStruct.getSensorType().equals("temperature")) {
-                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y15);
-                } else if (sensorStruct.getSensorType().equals("humidity")) {
-                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y15);
-                } else if (sensorType.equals("co") || sensorType.equals("co2") || sensorType.equals("ch4")) {
-                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y20);
-                } else if (sensorType.equals("no2") || sensorType.equals("so2") || sensorType.equalsIgnoreCase
-                        ("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
-                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
-                } else if (sensorType.equals("distance")) {
-                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
-                } else if (sensorType.equals("light")) {
-                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
-
-                }
-                String valueString = sensorStruct.getValue().toString();
-                if (sensorType.equals("drop")) {
-                    if (valueString.equals("0") || valueString.equals("0.0")) {
-                        valueTextView.setText(R.string.drop_false);
-                    } else {
-                        valueTextView.setText(R.string.drop_true);
-                    }
-                    unitTextView.setText("");
-                } else {
-                    if (valueString.equals("-")) {
-                        valueTextView.setText("--");
-                        unitTextView.setText(sensorStruct.getUnit());
-                    } else {
-                        unitTextView.setText("" + sensorStruct.getUnit());
-                        valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue()
-                                .toString())));
-
-                    }
-                }
-                unitParams.setMargins(unit_leftMargin, unit_topMargin, 0, unit_bottomMargin);
-                unitTextView.setLayoutParams(unitParams);
-            }
-
-        } else {
-            valueTextView.setText("-");
-            unitTextView.setText("-");
-        }
-
-    }
-
-    public static void judgeSensorTypeWithEnUnit(SensorStruct sensorStruct, TextView valueTextView, TextView
-            unitTextView) {
-        if (sensorStruct != null) {
-            Object value = sensorStruct.getValue();
-            String sensorType = sensorStruct.getSensorType();
-            if (value instanceof Boolean) {
-                if (sensorType.equals("jinggai")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.jinggai_true);
-                    } else {
-                        valueTextView.setText(R.string.jinggai_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("cover")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.cover_true);
-                    } else {
-                        valueTextView.setText(R.string.cover_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("level")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.level_true);
-                    } else {
-                        valueTextView.setText(R.string.level_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("collision")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.collision_true);
-                    } else {
-                        valueTextView.setText(R.string.collision_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("alarm")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.alarm_true);
-                    } else {
-                        valueTextView.setText(R.string.alarm_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("smoke")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.smoke_true);
-                    } else {
-                        valueTextView.setText(R.string.smoke_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("flame")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.flame_true);
-                    } else {
-                        valueTextView.setText(R.string.flame_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("magnetic")) {
-                    Boolean isTrue = (Boolean) value;
-                    if (isTrue) {
-                        valueTextView.setText(R.string.magnetic_true);
-                    } else {
-                        valueTextView.setText(R.string.magnetic_false);
-                    }
-                    unitTextView.setText(R.string.sensor_magnetic);
-                } else {
-                    valueTextView.setText("-");
-                    unitTextView.setText("-");
-                }
-            } else {
-                String valueString = sensorStruct.getValue().toString();
-                if (sensorType.equals("drop")) {
-                    if (valueString.equals("0") || valueString.equals("0.0")) {
-                        valueTextView.setText(R.string.drop_false);
-                    } else {
-                        valueTextView.setText(R.string.drop_true);
-                    }
-                    unitTextView.setText("");
-                } else {
-                    if (valueString.equals("-")) {
-                        valueTextView.setText("--");
-                        unitTextView.setText(sensorStruct.getUnit());
-                    } else {
-//                        if (sensorStruct.getSensorType().equals("pitch")) {
-//                            unitTextView.setEditText(R.string.sensor_pitch);
-//                        } else if (sensorStruct.getSensorType().equals("roll")) {
-//                            unitTextView.setEditText(R.string.sensor_roll);
-//                        } else if (sensorStruct.getSensorType().equals("yaw")) {
-//                            unitTextView.setEditText(R.string.sensor_yaw);
-//                        } else {
-//                            unitTextView.setEditText("" + sensorStruct.getUnit());
-//                        }
-                        unitTextView.setText("" + sensorStruct.getUnit());
-                        valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue()
-                                .toString())));
-
-                    }
-                }
-            }
-        } else {
-            valueTextView.setText("-");
-            unitTextView.setText("-");
-        }
-
-    }
 
     public static void judgeSensorType(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {
         if (sensorStruct != null) {
@@ -495,12 +253,15 @@ public class WidgetUtil {
             } else {
                 String valueString = sensorStruct.getValue().toString();
                 if (sensorType.equals("drop")) {
-                    if (valueString.equals("0") || valueString.equals("0.0")) {
-                        valueTextView.setText(R.string.drop_false);
-                    } else {
-                        valueTextView.setText(R.string.drop_true);
+                    if (value instanceof Double){
+                       double d = (double) value;
+                       if (d==0){
+                           valueTextView.setText(R.string.drop_false);
+                       }else {
+                           valueTextView.setText(R.string.drop_true);
+                       }
                     }
-//                    unitTextView.setEditText(R.string.sensor_drop);
+                    unitTextView.setText("");
                 } else {
                     if (valueString.equals("-")) {
                         valueTextView.setText("-");
@@ -620,93 +381,6 @@ public class WidgetUtil {
         }
     }
 
-    public static void judgeSensor(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {
-        boolean isBool = false;
-        Object value = sensorStruct.getValue();
-        if (sensorStruct.getSensorType().equalsIgnoreCase("co")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("co2")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("so2")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("no2")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("pm2_5") || sensorStruct.getSensorType()
-                .equalsIgnoreCase("pm10")) {
-
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("temperature") || sensorStruct.getSensorType()
-                .equalsIgnoreCase("humidity")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("smoke")) {
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.smoke_true);
-            } else {
-                valueTextView.setText(R.string.smoke_false);
-            }
-            unitTextView.setText("");
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("leak")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("cover") || sensorStruct.getSensorType()
-                .equalsIgnoreCase("level") || sensorStruct.getSensorType().equalsIgnoreCase("jinggai")) {
-            Boolean isTrue = (Boolean) value;
-            isBool = true;
-            if (isTrue) {
-                valueTextView.setText(R.string.cover_true);
-            } else {
-                valueTextView.setText(R.string.cover_false);
-            }
-            unitTextView.setText("");
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("ch4")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("drop")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("light")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("distance")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("lpg")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("roll") || sensorStruct.getSensorType()
-                .equalsIgnoreCase("yaw") || sensorStruct.getSensorType().equalsIgnoreCase("pitch") || sensorStruct
-                .getSensorType().equalsIgnoreCase("angle")) {
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("collision")) {
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.collision_true);
-            } else {
-                valueTextView.setText(R.string.collision_false);
-            }
-            unitTextView.setText("");
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("alarm")) {//alarm
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
-            } else {
-                valueTextView.setText(R.string.alarm_false);
-            }
-            unitTextView.setText("");
-        } else if (sensorStruct.getSensorType().equalsIgnoreCase("flame")) { //
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.flame_true);
-            } else {
-                valueTextView.setText(R.string.flame_false);
-            }
-            unitTextView.setText("");
-        } else if (sensorStruct.getSensorType().equals("magnetic")) {
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.magnetic_true);
-            } else {
-                valueTextView.setText(R.string.magnetic_false);
-            }
-            unitTextView.setText("");
-        } else if (sensorStruct.getSensorType().equals("waterPressure")) {
-        } else if (sensorStruct.getSensorType().equals("artificialGas")) {
-        } else if (sensorStruct.getSensorType().equals("latitude") || sensorStruct.getSensorType().equals
-                ("longitude") || sensorStruct.getSensorType().equals("altitude")) {
-        }
-
-        if (!isBool) {
-            valueTextView.setText("" + String.format("%.0f", Double.valueOf(value.toString())));
-            unitTextView.setText(sensorStruct.getUnit());
-        }
-    }
 
     public static void judgeSensorType(Context context, ImageView srcImageView, String sensorType) {
         int x_ = context.getResources().getDimensionPixelSize(R.dimen.x300);
@@ -769,7 +443,7 @@ public class WidgetUtil {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_flame);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equals("magnetic")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lock);
+            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_magnetic);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equals("waterPressure")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_water_pressure);
@@ -850,7 +524,17 @@ public class WidgetUtil {
             unitTextView.setText("");
         } else if (sensorType.equalsIgnoreCase("drop")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_drop);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+            isBool = true;
+            if (value instanceof Double) {
+                double d = (double) value;
+                if (d == 0) {
+                    valueTextView.setText(R.string.drop_false);
+                } else {
+                    valueTextView.setText(R.string.drop_true);
+                }
+                layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+                unitTextView.setText("");
+            }
         } else if (sensorType.equalsIgnoreCase("light")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_light);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
@@ -866,7 +550,7 @@ public class WidgetUtil {
                 valueTextView.setText(R.string.magnetic_false);
             }
             unitTextView.setText("");
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lock);
+            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_magnetic);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equalsIgnoreCase("lpg")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lpg);
@@ -1000,10 +684,13 @@ public class WidgetUtil {
 //        }
         else if (sensorType.equalsIgnoreCase("drop")) {
             isBool = true;
-            if (value.equals("0") || value.equals("0.0")) {
-                valueTextView.setText(R.string.drop_false);
-            } else {
-                valueTextView.setText(R.string.drop_true);
+            if (value instanceof Double) {
+                double d = (double) value;
+                if (d == 0) {
+                    valueTextView.setText(R.string.drop_false);
+                } else {
+                    valueTextView.setText(R.string.drop_true);
+                }
             }
             unitTextView.setText("");
         }
@@ -1095,74 +782,6 @@ public class WidgetUtil {
         }
     }
 
-
-    public static String getDefaultUnitWithEn(Context context, String sensorType) {
-        String unit = "";
-        if (sensorType.equals("temperature")) {
-            unit = "°C";
-        } else if (sensorType.equals("humidity")) {
-            unit = "%";
-        } else if (sensorType.equals("co") || sensorType.equals("co2") || sensorType.equals("ch4")) {
-            unit = "ppm";
-        } else if (sensorType.equals("no2") || sensorType.equals("so2")) {
-            unit = "ug/m3";
-        } else if (sensorType.equals("yaw")) {
-            unit = "";
-        } else if (sensorType.equals("roll")) {
-            unit = "";
-        } else if (sensorType.equals("pitch")) {
-            unit = "";
-        } else if (sensorType.equals("collision")) {
-            unit = "";
-        } else if (sensorType.equals("distance")) {
-            unit = "cm";
-        } else if (sensorType.equals("light")) {
-            unit = "Lux";
-        } else if (sensorType.equals("cover")) {
-            unit = "";
-        } else if (sensorType.equals("level")) {
-            unit = "";
-        } else if (sensorType.equals("drop")) {
-            unit = "";
-        } else if (sensorType.equals("smoke")) {
-            unit = "";
-        }
-        return unit;
-    }
-
-    public static String getDefaultUnit(Context context, String sensorType) {
-        String unit = "";
-        if (sensorType.equals("temperature")) {
-            unit = "°C";
-        } else if (sensorType.equals("humidity")) {
-            unit = "%";
-        } else if (sensorType.equals("co") || sensorType.equals("co2") || sensorType.equals("ch4")) {
-            unit = "ppm";
-        } else if (sensorType.equals("no2") || sensorType.equals("so2")) {
-            unit = "ug/m3";
-        } else if (sensorType.equals("yaw")) {
-            unit = context.getString(R.string.sensor_yaw);
-        } else if (sensorType.equals("roll")) {
-            unit = context.getString(R.string.sensor_roll);
-        } else if (sensorType.equals("pitch")) {
-            unit = context.getString(R.string.sensor_pitch);
-        } else if (sensorType.equals("collision")) {
-            unit = context.getString(R.string.sensor_collision);
-        } else if (sensorType.equals("distance")) {
-            unit = "cm";
-        } else if (sensorType.equals("light")) {
-            unit = "Lux";
-        } else if (sensorType.equals("cover")) {
-            unit = context.getString(R.string.sensor_cover);
-        } else if (sensorType.equals("level")) {
-            unit = context.getString(R.string.sensor_level);
-        } else if (sensorType.equals("drop")) {
-            unit = context.getString(R.string.sensor_drop);
-        } else if (sensorType.equals("smoke")) {
-            unit = context.getString(R.string.sensor_smoke);
-        }
-        return unit;
-    }
 
     public static String getSensorTypesChinese(List<String> sensorType) {
         if (sensorType.contains("temperature") || sensorType.contains("humidity") || sensorType.contains("temp1")) {
@@ -1261,83 +880,6 @@ public class WidgetUtil {
         return value;
     }
 
-    public static String getAlarmDetailInfo(String sensorType, int status) {
-        String info = null;
-        if (status == 0) {
-            switch (sensorType) {
-                case "smoke":
-                    info = "无烟，恢复正常";
-                    break;
-                case "cover":
-                    info = "井盖闭合，恢复正常";
-                    break;
-                case "jinggai":
-                    info = "井盖闭合，恢复正常";
-                    break;
-                case "level":
-                    info = "水位未溢出, 恢复正常";
-                    break;
-                case "alarm":
-                    info = "紧急呼叫解除，恢复正常";
-                    break;
-                case "flame":
-                    info = "未检测到火焰，恢复正常";
-                    break;
-                case "collision":
-                    info = "碰撞解除，恢复正常";
-                    break;
-                case "drop":
-                    info = "未检测到滴漏，恢复正常";
-                    break;
-                case "leak":
-                    info = "未检测到滴漏，恢复正常";
-                    break;
-                case "door":
-                    info = "门锁关闭，恢复正常";
-                    break;
-                default:
-                    info = "低于预警值，恢复正常";
-                    break;
-            }
-        } else {
-            switch (sensorType) {
-                case "smoke":
-                    info = "烟雾浓度高，设备预警";
-                    break;
-                case "cover":
-                    info = "井盖打开，设备预警";
-                    break;
-                case "jinggai":
-                    info = "井盖打开，设备预警";
-                    break;
-                case "level":
-                    info = "水位溢出, 设备预警";
-                    break;
-                case "alarm":
-                    info = "触发紧急呼叫，设备预警";
-                    break;
-                case "flame":
-                    info = "检测到火焰，设备预警";
-                    break;
-                case "collision":
-                    info = "碰撞解除，恢复正常";
-                    break;
-                case "drop":
-                    info = "发生滴漏，设备预警";
-                    break;
-                case "leak":
-                    info = "发生滴漏，设备预警";
-                    break;
-                case "door":
-                    info = "门锁打开，设备预警";
-                    break;
-                default:
-                    info = null;
-                    break;
-            }
-        }
-        return info;
-    }
 
     /**
      * 区分联系人
@@ -1676,29 +1218,518 @@ public class WidgetUtil {
     public static String getBooleanAlarm(String sensorType) {
         switch (sensorType) {
             case "alarm":
-                return "发生报警 时报警";
+                return "发生报警时报警";
             case "flame":
-                return "监测到火焰 时报警";
+                return "监测到火焰时报警";
             case "collision":
-                return "发生撞击 时报警";
+                return "发生撞击时报警";
             case "drop":
-                return "发生滴漏 时报警";
+                return "发生滴漏时报警";
             case "level":
-                return "溢出 时报警";
+                return "溢出时报警";
             case "magnetic":
-                return "车辆经过 时报警";
+                return "车辆经过时报警";
             case "smoke":
-                return "烟雾浓度高 时报警";
+                return "烟雾浓度高时报警";
             case "jinggai":
             case "cover":
             case "door":
-                return "打开 时报警";
+                return "打开时报警";
             case "connection":
-                return "断开 时报警";
+                return "断开时报警";
             case "installed":
                 return "被拆卸 时报警";
             default:
                 return null;
         }
     }
+    //TODO dont del
+    ///////////////////////
+    //    public static void judgeSensor(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {
+//        boolean isBool = false;
+//        Object value = sensorStruct.getValue();
+//        if (sensorStruct.getSensorType().equalsIgnoreCase("co")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("co2")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("so2")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("no2")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("pm2_5") || sensorStruct.getSensorType()
+//                .equalsIgnoreCase("pm10")) {
+//
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("temperature") || sensorStruct.getSensorType()
+//                .equalsIgnoreCase("humidity")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("smoke")) {
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.smoke_true);
+//            } else {
+//                valueTextView.setText(R.string.smoke_false);
+//            }
+//            unitTextView.setText("");
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("leak")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("cover") || sensorStruct.getSensorType()
+//                .equalsIgnoreCase("level") || sensorStruct.getSensorType().equalsIgnoreCase("jinggai")) {
+//            Boolean isTrue = (Boolean) value;
+//            isBool = true;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.cover_true);
+//            } else {
+//                valueTextView.setText(R.string.cover_false);
+//            }
+//            unitTextView.setText("");
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("ch4")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("drop")) {
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.drop_true);
+//            } else {
+//                valueTextView.setText(R.string.drop_false);
+//            }
+//            unitTextView.setText("");
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("light")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("distance")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("lpg")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("roll") || sensorStruct.getSensorType()
+//                .equalsIgnoreCase("yaw") || sensorStruct.getSensorType().equalsIgnoreCase("pitch") || sensorStruct
+//                .getSensorType().equalsIgnoreCase("angle")) {
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("collision")) {
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.collision_true);
+//            } else {
+//                valueTextView.setText(R.string.collision_false);
+//            }
+//            unitTextView.setText("");
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("alarm")) {//alarm
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.alarm_true);
+//            } else {
+//                valueTextView.setText(R.string.alarm_false);
+//            }
+//            unitTextView.setText("");
+//        } else if (sensorStruct.getSensorType().equalsIgnoreCase("flame")) { //
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.flame_true);
+//            } else {
+//                valueTextView.setText(R.string.flame_false);
+//            }
+//            unitTextView.setText("");
+//        } else if (sensorStruct.getSensorType().equals("magnetic")) {
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.magnetic_true);
+//            } else {
+//                valueTextView.setText(R.string.magnetic_false);
+//            }
+//            unitTextView.setText("");
+//        } else if (sensorStruct.getSensorType().equals("waterPressure")) {
+//        } else if (sensorStruct.getSensorType().equals("artificialGas")) {
+//        } else if (sensorStruct.getSensorType().equals("latitude") || sensorStruct.getSensorType().equals
+//                ("longitude") || sensorStruct.getSensorType().equals("altitude")) {
+//        }
+//
+//        if (!isBool) {
+//            valueTextView.setText("" + String.format("%.0f", Double.valueOf(value.toString())));
+//            unitTextView.setText(sensorStruct.getUnit());
+//        }
+//    }
+
+
+//    public static String getAlarmDetailInfo(String sensorType, int status) {
+//        String info = null;
+//        if (status == 0) {
+//            switch (sensorType) {
+//                case "smoke":
+//                    info = "无烟，恢复正常";
+//                    break;
+//                case "cover":
+//                    info = "井盖闭合，恢复正常";
+//                    break;
+//                case "jinggai":
+//                    info = "井盖闭合，恢复正常";
+//                    break;
+//                case "level":
+//                    info = "水位未溢出, 恢复正常";
+//                    break;
+//                case "alarm":
+//                    info = "紧急呼叫解除，恢复正常";
+//                    break;
+//                case "flame":
+//                    info = "未检测到火焰，恢复正常";
+//                    break;
+//                case "collision":
+//                    info = "碰撞解除，恢复正常";
+//                    break;
+//                case "drop":
+//                    info = "未检测到滴漏，恢复正常";
+//                    break;
+//                case "leak":
+//                    info = "未检测到滴漏，恢复正常";
+//                    break;
+//                case "door":
+//                    info = "门锁关闭，恢复正常";
+//                    break;
+//                default:
+//                    info = "低于预警值，恢复正常";
+//                    break;
+//            }
+//        } else {
+//            switch (sensorType) {
+//                case "smoke":
+//                    info = "烟雾浓度高，设备预警";
+//                    break;
+//                case "cover":
+//                    info = "井盖打开，设备预警";
+//                    break;
+//                case "jinggai":
+//                    info = "井盖打开，设备预警";
+//                    break;
+//                case "level":
+//                    info = "水位溢出, 设备预警";
+//                    break;
+//                case "alarm":
+//                    info = "触发紧急呼叫，设备预警";
+//                    break;
+//                case "flame":
+//                    info = "检测到火焰，设备预警";
+//                    break;
+//                case "collision":
+//                    info = "碰撞解除，恢复正常";
+//                    break;
+//                case "drop":
+//                    info = "发生滴漏，设备预警";
+//                    break;
+//                case "leak":
+//                    info = "发生滴漏，设备预警";
+//                    break;
+//                case "door":
+//                    info = "门锁打开，设备预警";
+//                    break;
+//                default:
+//                    info = null;
+//                    break;
+//            }
+//        }
+//        return info;
+//    }
+
+
+//    public static String getDefaultUnit(Context context, String sensorType) {
+//        String unit = "";
+//        if (sensorType.equals("temperature")) {
+//            unit = "°C";
+//        } else if (sensorType.equals("humidity")) {
+//            unit = "%";
+//        } else if (sensorType.equals("co") || sensorType.equals("co2") || sensorType.equals("ch4")) {
+//            unit = "ppm";
+//        } else if (sensorType.equals("no2") || sensorType.equals("so2")) {
+//            unit = "ug/m3";
+//        } else if (sensorType.equals("yaw")) {
+//            unit = context.getString(R.string.sensor_yaw);
+//        } else if (sensorType.equals("roll")) {
+//            unit = context.getString(R.string.sensor_roll);
+//        } else if (sensorType.equals("pitch")) {
+//            unit = context.getString(R.string.sensor_pitch);
+//        } else if (sensorType.equals("collision")) {
+//            unit = context.getString(R.string.sensor_collision);
+//        } else if (sensorType.equals("distance")) {
+//            unit = "cm";
+//        } else if (sensorType.equals("light")) {
+//            unit = "Lux";
+//        } else if (sensorType.equals("cover")) {
+//            unit = context.getString(R.string.sensor_cover);
+//        } else if (sensorType.equals("level")) {
+//            unit = context.getString(R.string.sensor_level);
+//        } else if (sensorType.equals("drop")) {
+//            unit = context.getString(R.string.sensor_drop);
+//        } else if (sensorType.equals("smoke")) {
+//            unit = context.getString(R.string.sensor_smoke);
+//        }
+//        return unit;
+//    }
+
+    //
+//    public static String getDefaultUnitWithEn(Context context, String sensorType) {
+//        String unit = "";
+//        if (sensorType.equals("temperature")) {
+//            unit = "°C";
+//        } else if (sensorType.equals("humidity")) {
+//            unit = "%";
+//        } else if (sensorType.equals("co") || sensorType.equals("co2") || sensorType.equals("ch4")) {
+//            unit = "ppm";
+//        } else if (sensorType.equals("no2") || sensorType.equals("so2")) {
+//            unit = "ug/m3";
+//        } else if (sensorType.equals("yaw")) {
+//            unit = "";
+//        } else if (sensorType.equals("roll")) {
+//            unit = "";
+//        } else if (sensorType.equals("pitch")) {
+//            unit = "";
+//        } else if (sensorType.equals("collision")) {
+//            unit = "";
+//        } else if (sensorType.equals("distance")) {
+//            unit = "cm";
+//        } else if (sensorType.equals("light")) {
+//            unit = "Lux";
+//        } else if (sensorType.equals("cover")) {
+//            unit = "";
+//        } else if (sensorType.equals("level")) {
+//            unit = "";
+//        } else if (sensorType.equals("drop")) {
+//            unit = "";
+//        } else if (sensorType.equals("smoke")) {
+//            unit = "";
+//        }
+//        return unit;
+//    }
+
+
+    //    public static void judgeSensorTypeWithEnUnit(Context context, SensorStruct sensorStruct, TextView
+    // valueTextView,
+//                                                 TextView unitTextView) {
+//        if (sensorStruct != null) {
+//            LinearLayout.LayoutParams unitParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+//                    ViewGroup.LayoutParams.WRAP_CONTENT);
+//            int unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
+//            int unit_leftMargin = context.getResources().getDimensionPixelSize(R.dimen.x30);
+//            int unit_topMargin = 0;
+//            Object value = sensorStruct.getValue();
+//            String sensorType = sensorStruct.getSensorType();
+//            if (value instanceof Boolean) {
+//                if (sensorType.equals("jinggai")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.jinggai_true);
+//                    } else {
+//                        valueTextView.setText(R.string.jinggai_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("cover")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.cover_true);
+//                    } else {
+//                        valueTextView.setText(R.string.cover_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("level")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.level_true);
+//                    } else {
+//                        valueTextView.setText(R.string.level_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("collision")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.collision_true);
+//                    } else {
+//                        valueTextView.setText(R.string.collision_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("alarm")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.alarm_true);
+//                    } else {
+//                        valueTextView.setText(R.string.alarm_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("smoke")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.smoke_true);
+//                    } else {
+//                        valueTextView.setText(R.string.smoke_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("flame")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.flame_true);
+//                    } else {
+//                        valueTextView.setText(R.string.flame_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("magnetic")) {
+//                    Boolean isTrue = (Boolean) value;
+//                    if (isTrue) {
+//                        valueTextView.setText(R.string.magnetic_true);
+//                    } else {
+//                        valueTextView.setText(R.string.magnetic_false);
+//                    }
+//                    unitTextView.setText(R.string.sensor_magnetic);
+//                } else {
+//                    valueTextView.setText("-");
+//                    unitTextView.setText("-");
+//                }
+//            } else {
+//                if (sensorStruct.getSensorType().equals("pitch") || sensorStruct.getSensorType().equals("roll") ||
+//                        sensorStruct.getSensorType().equals("yaw") || sensorStruct.getSensorType().equals
+//                        ("collision")) {
+////                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y150);
+//                    unit_topMargin = -80;
+//                } else if (sensorStruct.getSensorType().equals("temperature")) {
+//                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y15);
+//                } else if (sensorStruct.getSensorType().equals("humidity")) {
+//                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y15);
+//                } else if (sensorType.equals("co") || sensorType.equals("co2") || sensorType.equals("ch4")) {
+//                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y20);
+//                } else if (sensorType.equals("no2") || sensorType.equals("so2") || sensorType.equalsIgnoreCase
+//                        ("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
+//                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
+//                } else if (sensorType.equals("distance")) {
+//                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
+//                } else if (sensorType.equals("light")) {
+//                    unit_bottomMargin = context.getResources().getDimensionPixelSize(R.dimen.y10);
+//
+//                }
+//                String valueString = sensorStruct.getValue().toString();
+//                if (sensorType.equals("drop")) {
+//                    if (valueString.equals("0") || valueString.equals("0.0")) {
+//                        valueTextView.setText(R.string.drop_false);
+//                    } else {
+//                        valueTextView.setText(R.string.drop_true);
+//                    }
+//                    unitTextView.setText("");
+//                } else {
+//                    if (valueString.equals("-")) {
+//                        valueTextView.setText("--");
+//                        unitTextView.setText(sensorStruct.getUnit());
+//                    } else {
+//                        unitTextView.setText("" + sensorStruct.getUnit());
+//                        valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue()
+//                                .toString())));
+//
+//                    }
+//                }
+//                unitParams.setMargins(unit_leftMargin, unit_topMargin, 0, unit_bottomMargin);
+//                unitTextView.setLayoutParams(unitParams);
+//            }
+//
+//        } else {
+//            valueTextView.setText("-");
+//            unitTextView.setText("-");
+//        }
+//
+//    }
+
+//    public static void judgeSensorTypeWithEnUnit(SensorStruct sensorStruct, TextView valueTextView, TextView
+//            unitTextView) {
+//        if (sensorStruct != null) {
+//            Object value = sensorStruct.getValue();
+//            String sensorType = sensorStruct.getSensorType();
+//            if (value instanceof Boolean) {
+//                if (sensorType.equals("jinggai")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.jinggai_true);
+//                    } else {
+//                        valueTextView.setText(R.string.jinggai_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("cover")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.cover_true);
+//                    } else {
+//                        valueTextView.setText(R.string.cover_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("level")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.level_true);
+//                    } else {
+//                        valueTextView.setText(R.string.level_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("collision")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.collision_true);
+//                    } else {
+//                        valueTextView.setText(R.string.collision_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("alarm")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.alarm_true);
+//                    } else {
+//                        valueTextView.setText(R.string.alarm_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("smoke")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.smoke_true);
+//                    } else {
+//                        valueTextView.setText(R.string.smoke_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("flame")) {
+//                    Boolean isOk = (Boolean) value;
+//                    if (isOk) {
+//                        valueTextView.setText(R.string.flame_true);
+//                    } else {
+//                        valueTextView.setText(R.string.flame_false);
+//                    }
+//                    unitTextView.setText("");
+//                } else if (sensorType.equals("magnetic")) {
+//                    Boolean isTrue = (Boolean) value;
+//                    if (isTrue) {
+//                        valueTextView.setText(R.string.magnetic_true);
+//                    } else {
+//                        valueTextView.setText(R.string.magnetic_false);
+//                    }
+//                    unitTextView.setText(R.string.sensor_magnetic);
+//                } else {
+//                    valueTextView.setText("-");
+//                    unitTextView.setText("-");
+//                }
+//            } else {
+//                String valueString = sensorStruct.getValue().toString();
+//                if (sensorType.equals("drop")) {
+//                    if (valueString.equals("0") || valueString.equals("0.0")) {
+//                        valueTextView.setText(R.string.drop_false);
+//                    } else {
+//                        valueTextView.setText(R.string.drop_true);
+//                    }
+//                    unitTextView.setText("");
+//                } else {
+//                    if (valueString.equals("-")) {
+//                        valueTextView.setText("--");
+//                        unitTextView.setText(sensorStruct.getUnit());
+//                    } else {
+////                        if (sensorStruct.getSensorType().equals("pitch")) {
+////                            unitTextView.setEditText(R.string.sensor_pitch);
+////                        } else if (sensorStruct.getSensorType().equals("roll")) {
+////                            unitTextView.setEditText(R.string.sensor_roll);
+////                        } else if (sensorStruct.getSensorType().equals("yaw")) {
+////                            unitTextView.setEditText(R.string.sensor_yaw);
+////                        } else {
+////                            unitTextView.setEditText("" + sensorStruct.getUnit());
+////                        }
+//                        unitTextView.setText("" + sensorStruct.getUnit());
+//                        valueTextView.setText("" + String.format("%.1f", Double.valueOf(sensorStruct.getValue()
+//                                .toString())));
+//
+//                    }
+//                }
+//            }
+//        } else {
+//            valueTextView.setText("-");
+//            unitTextView.setText("-");
+//        }
+//
+//    }
 }

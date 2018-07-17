@@ -114,30 +114,32 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     public void initMap(AMap map) {
         this.aMap = map;
         if (deviceInfo != null) {
+            setMapCustomStyleFile();
             aMap.getUiSettings().setTiltGesturesEnabled(false);
             aMap.getUiSettings().setZoomControlsEnabled(false);
             aMap.getUiSettings().setMyLocationButtonEnabled(false);
             aMap.setMyLocationEnabled(true);
             aMap.setMapCustomEnable(true);
-            String styleName = "custom_config.data";
-            aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
+//            String styleName = "custom_config.data";
+//            aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
             aMap.setOnMapClickListener(this);
             aMap.setOnCameraChangeListener(this);
             aMap.setOnMapLoadedListener(this);
             aMap.setOnMarkerClickListener(this);
             aMap.setInfoWindowAdapter(this);
             aMap.setOnMapTouchListener(this);
+            aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
             myLocationStyle = new MyLocationStyle();
             myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
             myLocationStyle.strokeWidth(0);
             myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
             myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.mipmap.ic_direction));
             myLocationStyle.showMyLocation(true);
-
             aMap.setMyLocationStyle(myLocationStyle);
         } else {
             Intent intent = new Intent();
             intent.setClass(mContext, DeployResultActivity.class);
+            intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
             intent.putExtra(EXTRA_SENSOR_RESULT, -1);
             getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
         }
@@ -221,7 +223,6 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         getView().setUploadButtonClickable(true);
-        setMapCustomStyleFile();
     }
 
     @Override
@@ -368,7 +369,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         }
     }
 
-    public void requestUpload(String sn, String name) {
+    public void requestUpload(final String sn, String name) {
 //        例：大悦城20层走廊2号配电箱
         String tags = tagListToString();
         String name_default = mContext.getString(R.string.tips_hint_name_address);
@@ -396,7 +397,6 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             final double lon = latLng.longitude;
             final double lan = latLng.latitude;
             if (is_station) {
-//                getView().toastShort("基站上传测试");
                 LogUtils.loge(tags);
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.doStationDeploy(sn, lon, lan, tags, name).subscribeOn(Schedulers.io())
@@ -412,46 +412,21 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
                             @Override
                             public void onNext(StationInfoRsp stationInfoRsp) {
-                                String s = stationInfoRsp.toString();
-                                LogUtils.loge(s);
-                                int errCode = stationInfoRsp.getErrcode();
-                                int resultCode = 1;
-                                if (errCode != ResponseBase.CODE_SUCCESS) {
-                                    resultCode = errCode;
-                                }
-                                //
-                                StationInfo stationInfo = stationInfoRsp.getData();
-                                double[] lonlat = stationInfo.getLonlat();
-                                String name = stationInfo.getName();
-                                String sn = stationInfo.getSn();
-                                String[] tags = stationInfo.getTags();
-                                int normalStatus = stationInfo.getNormalStatus();
-                                long updatedTime = stationInfo.getUpdatedTime();
-                                DeviceInfo deviceInfo = new DeviceInfo();
-                                deviceInfo.setSn(sn);
-                                deviceInfo.setTags(tags);
-                                deviceInfo.setLonlat(lonlat);
-                                deviceInfo.setStatus(normalStatus);
-                                deviceInfo.setAddress(mAddress);
-                                deviceInfo.setUpdatedTime(updatedTime);
-                                if (!TextUtils.isEmpty(name)) {
-                                    deviceInfo.setName(name);
-                                }
-                                Intent intent = new Intent(mContext, DeployResultActivity.class);
-                                intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                                intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
-                                intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-                                intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
-                                intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
-                                getView().startAC(intent);
+                                freshStation(stationInfoRsp);
                             }
+
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().dismissProgressDialog();
-                                getView().toastShort(errorMsg);
                                 getView().setUploadButtonClickable(true);
+                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    getView().toastShort(errorMsg);
+                                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                                    freshError(sn, null);
+                                } else {
+                                    freshError(sn, errorMsg);
+                                }
                             }
                         });
             } else {
@@ -461,7 +436,8 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                     return;
                 }
                 //电话规则过滤
-                String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
+//                String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
+                String regex = "^(\\+86){0,1}1[3|4|5|6|7|8|9](\\d){9}$";
                 Pattern p = Pattern.compile(regex);
                 if (!p.matcher(content).matches()) {
                     getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
@@ -483,35 +459,91 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
                             @Override
                             public void onNext(DeviceDeployRsp deviceDeployRsp) {
-                                int errCode = deviceDeployRsp.getErrcode();
-                                int resultCode = 1;
-                                if (errCode != ResponseBase.CODE_SUCCESS) {
-                                    resultCode = errCode;
-                                }
-                                Intent intent = new Intent(mContext, DeployResultActivity.class);
-                                intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-                                DeviceInfo data = deviceDeployRsp.getData();
-                                data.setAddress(mAddress);
-                                intent.putExtra(EXTRA_DEVICE_INFO, data);
-                                intent.putExtra(EXTRA_SENSOR_LON, String.valueOf(lon));
-                                intent.putExtra(EXTRA_SENSOR_LAN, String.valueOf(lan));
-                                intent.putExtra(EXTRA_SETTING_CONTACT, contact);
-                                intent.putExtra(EXTRA_SETTING_CONTENT, content);
-                                getView().startAC(intent);
+                                freshPoint(deviceDeployRsp);
                             }
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().dismissProgressDialog();
-                                getView().toastShort(errorMsg);
                                 getView().setUploadButtonClickable(true);
+                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    getView().toastShort(errorMsg);
+                                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                                    freshError(sn, null);
+                                } else {
+                                    freshError(sn, errorMsg);
+                                }
                             }
                         });
             }
 
         }
 
+    }
+
+    private void freshError(String scanSN, String errorInfo) {
+        //
+        Intent intent = new Intent();
+        intent.setClass(mContext, DeployResultActivity.class);
+        intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+        intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
+        if (!TextUtils.isEmpty(errorInfo)) {
+            intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
+        }
+        getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
+    }
+
+    private void freshPoint(DeviceDeployRsp deviceDeployRsp) {
+        int errCode = deviceDeployRsp.getErrcode();
+        int resultCode = 1;
+        if (errCode != ResponseBase.CODE_SUCCESS) {
+            resultCode = errCode;
+        }
+        Intent intent = new Intent(mContext, DeployResultActivity.class);
+        intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
+        intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        DeviceInfo data = deviceDeployRsp.getData();
+        data.setAddress(mAddress);
+        intent.putExtra(EXTRA_DEVICE_INFO, data);
+        intent.putExtra(EXTRA_SETTING_CONTACT, contact);
+        intent.putExtra(EXTRA_SETTING_CONTENT, content);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
+        getView().startAC(intent);
+    }
+
+    private void freshStation(StationInfoRsp stationInfoRsp) {
+        String s = stationInfoRsp.toString();
+        LogUtils.loge(s);
+        int errCode = stationInfoRsp.getErrcode();
+        int resultCode = 1;
+        if (errCode != ResponseBase.CODE_SUCCESS) {
+            resultCode = errCode;
+        }
+        //
+        StationInfo stationInfo = stationInfoRsp.getData();
+        double[] lonlat = stationInfo.getLonlat();
+        String name = stationInfo.getName();
+        String sn = stationInfo.getSn();
+        String[] tags = stationInfo.getTags();
+        int normalStatus = stationInfo.getNormalStatus();
+        long updatedTime = stationInfo.getUpdatedTime();
+        DeviceInfo deviceInfo = new DeviceInfo();
+        deviceInfo.setSn(sn);
+        deviceInfo.setTags(tags);
+        deviceInfo.setLonlat(lonlat);
+        deviceInfo.setStatus(normalStatus);
+        deviceInfo.setAddress(mAddress);
+        deviceInfo.setUpdatedTime(updatedTime);
+        if (!TextUtils.isEmpty(name)) {
+            deviceInfo.setName(name);
+        }
+        Intent intent = new Intent(mContext, DeployResultActivity.class);
+        intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
+        intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+        intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
+        getView().startAC(intent);
     }
 
     public void handActivityResult(int requestCode, int resultCode, Intent data) {
@@ -527,6 +559,11 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             contact = data.getStringExtra(EXTRA_SETTING_CONTACT);
             content = data.getStringExtra(EXTRA_SETTING_CONTENT);
             getView().setContactEditText(contact + ":" + content);
+        } else if (resultCode == RESULT_CODE_MAP) {
+            getView().setIntentResult(RESULT_CODE_MAP, data);
+            getView().finishAc();
+        } else if (resultCode == RESULT_CODE_DEPLOY) {
+            getView().finishAc();
         }
     }
 

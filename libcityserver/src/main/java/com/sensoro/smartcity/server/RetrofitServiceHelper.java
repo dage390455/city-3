@@ -27,6 +27,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -411,9 +412,39 @@ public enum RetrofitServiceHelper {
         return retrofitService.getStationDetail(sn);
     }
 
-    //上传url
-    public Observable<ResponseBase> doUpdatePhotos(String url) {
-        return retrofitService.doUpdatePhotos(url);
+
+    /**
+     * 修改提交确认预警信息备注(图片)
+     *
+     * @param id
+     * @param remark
+     * @return
+     */
+    public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, int statusResult, int statusType, int
+            statusPlace, String remark, boolean isReconfirm, List<String> imagesUrl) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("displayStatus", statusResult);
+            jsonObject.put("displayStatus", statusType);
+            jsonObject.put("displayStatus", statusPlace);
+            jsonObject.put("remark", remark);
+            jsonObject.put("source", "app");
+            if (isReconfirm) {
+                jsonObject.put("type", "reconfirm");
+            } else {
+                jsonObject.put("type", "confirm");
+            }
+            //
+            JSONArray jsonArray = new JSONArray();
+            for (String url : imagesUrl) {
+                jsonArray.put(url);
+            }
+            jsonObject.put("images", jsonArray);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.doUpdatePhotosUrl(id, body);
     }
 
     /**

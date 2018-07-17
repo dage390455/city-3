@@ -80,6 +80,15 @@
                 android:textSize="16sp"/>
 
             <TextView
+                android:id="@+id/deploy_result_error"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y50"
+                android:textColor="@color/c_626262"
+                android:textSize="16sp"
+                android:visibility="gone"/>
+
+            <TextView
                 android:id="@+id/deploy_result_name_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

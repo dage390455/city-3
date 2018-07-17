@@ -50,7 +50,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
         }
     }
 
-    private void requestData(String scanSerialNumber) {
+    private void requestData(final String scanSerialNumber) {
 
         if (TextUtils.isEmpty(scanSerialNumber)) {
             getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
@@ -66,19 +66,19 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
 
                     @Override
                     public void onNext(StationInfoRsp stationInfoRsp) {
-                        refresh(stationInfoRsp);
+                        refreshStation(stationInfoRsp);
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
-                        if (errorCode == 4013102) {
-                            freshError();
-                        } else {
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                             getView().toastShort(errorMsg);
+                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+                            freshError(scanSerialNumber, null);
+                        } else {
+                            freshError(scanSerialNumber, errorMsg);
                         }
-
-
                     }
                 });
             } else {
@@ -94,13 +94,18 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
 
                     @Override
                     public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                        refresh(deviceInfoListRsp);
+                        refreshDevice(scanSerialNumber, deviceInfoListRsp);
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
+//                        getView().toastShort(errorMsg);
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                            getView().toastShort(errorMsg);
+                        } else {
+                            freshError(scanSerialNumber, errorMsg);
+                        }
                     }
                 });
             }
@@ -112,12 +117,16 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
     /**
      * 错误的基站信息
      */
-    private void freshError() {
+    private void freshError(String scanSN, String errorInfo) {
         //
         Intent intent = new Intent();
         intent.setClass(mContext, DeployResultActivity.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, -1);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+        intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
+        if (!TextUtils.isEmpty(errorInfo)) {
+            intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
+        }
         getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
     }
 
@@ -126,7 +135,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
      *
      * @param stationInfoRsp
      */
-    private void refresh(StationInfoRsp stationInfoRsp) {
+    private void refreshStation(StationInfoRsp stationInfoRsp) {
         try {
             StationInfo stationInfo = stationInfoRsp.getData();
             double[] lonlat = stationInfo.getLonlat();
@@ -160,7 +169,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
      *
      * @param response
      */
-    private void refresh(DeviceInfoListRsp response) {
+    private void refreshDevice(String sn, DeviceInfoListRsp response) {
         try {
             Intent intent = new Intent();
             if (response.getData().size() > 0) {
@@ -171,10 +180,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                 intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
                 getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
             } else {
-                intent.setClass(mContext, DeployResultActivity.class);
-                intent.putExtra(EXTRA_SENSOR_RESULT, -1);
-                intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
-                getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
+                freshError(sn, null);
             }
 
         } catch (Exception e) {

@@ -33,6 +33,7 @@ import static android.content.Context.VIBRATOR_SERVICE;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_IS_STATION_DEPLOY;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT_ERROR;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN_RESULT;
 import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_STATION_DEPLOY;
 
@@ -79,25 +80,29 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
-                if (errorCode == 4013102) {
-                    freshError(scanSerialNumber);
-                } else {
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
                     getView().toastShort(errorMsg);
                     getView().startScan();
+                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                    freshError(scanSerialNumber, null);
+                } else {
+                    freshError(scanSerialNumber, errorMsg);
                 }
-
-
             }
         });
     }
 
-    private void freshError(String scanSN) {
+    private void freshError(String scanSN, String errorInfo) {
         //
         Intent intent = new Intent();
         intent.setClass(mContext, DeployResultActivity.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, -1);
         intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
         intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+        if (!TextUtils.isEmpty(errorInfo)) {
+            intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
+        }
+
         getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
     }
 

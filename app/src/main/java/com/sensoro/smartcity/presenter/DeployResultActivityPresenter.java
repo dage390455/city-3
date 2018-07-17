@@ -17,12 +17,16 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     private DeviceInfo deviceInfo = null;
     private Activity mContext;
     private boolean is_station;
+    private String errorInfo;
+    private String sn;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         resultCode = mContext.getIntent().getIntExtra(EXTRA_SENSOR_RESULT, 0);
         is_station = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
+        errorInfo = mContext.getIntent().getStringExtra(EXTRA_SENSOR_RESULT_ERROR);
+        sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN_RESULT);
         init();
     }
 
@@ -30,11 +34,28 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         try {
             if (resultCode == -1) {
                 getView().setResultImageView(R.mipmap.ic_deploy_failed);
-                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_not_exist));
-                String sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN_RESULT);
+                //
                 if (!TextUtils.isEmpty(sn)) {
                     getView().setSnTextView(mContext.getString(R.string.sensor_detail_sn) + "：" + sn);
                 }
+                if (is_station) {
+                    if (!TextUtils.isEmpty(errorInfo)) {
+                        getView().setTipsTextView(mContext.getResources().getString(R.string
+                                .tips_deploy_station_failed));
+                        getView().setDeployResultErrorInfo("错误：" + errorInfo);
+                    } else {
+                        getView().setTipsTextView(mContext.getResources().getString(R.string
+                                .tips_deploy_station_not_exist));
+                    }
+                } else {
+                    if (!TextUtils.isEmpty(errorInfo)) {
+                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
+                        getView().setDeployResultErrorInfo("错误：" + errorInfo);
+                    } else {
+                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_not_exist));
+                    }
+                }
+
 
             } else {
                 deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
@@ -62,14 +83,16 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 if (resultCode == 1) {
                     getView().setResultImageView(R.mipmap.ic_deploy_success);
                     if (is_station) {
-                        getView().setTipsTextView("恭喜! 基站点位部署成功");
+                        getView().setTipsTextView(mContext.getResources().getString(R.string
+                                .tips_deploy_station_success));
                     } else {
                         getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
                     }
                 } else {
                     getView().setResultImageView(R.mipmap.ic_deploy_failed);
                     if (is_station) {
-                        getView().setTipsTextView("恭喜! 基站点位部署成功");
+                        getView().setTipsTextView(mContext.getResources().getString(R.string
+                                .tips_deploy_station_failed));
                     } else {
                         getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
                     }

@@ -73,7 +73,7 @@ public interface Constants {
     Integer[] TYPE_MENU_RESOURCE = {
             R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
             R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,
-            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_lock,
+            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_magnetic,
             R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
             R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
             R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
@@ -104,6 +104,7 @@ public interface Constants {
     String EXTRA_SENSOR_TYPES = "extra_types";
     String EXTRA_SENSOR_TYPE = "extra_type";
     String EXTRA_SENSOR_RESULT = "extra_result";
+    String EXTRA_SENSOR_RESULT_ERROR = "extra_sensor_result_error";
     String EXTRA_SENSOR_SN_RESULT = "extra_sensor_sn_result";
     String EXTRA_SENSOR_LON = "extra_lon";
     String EXTRA_SENSOR_LAN = "extra_lan";

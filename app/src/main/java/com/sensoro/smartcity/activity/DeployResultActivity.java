@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -27,6 +26,8 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @BindView(R.id.deploy_result_tip_tv)
     TextView tipsTextView;
+    @BindView(R.id.deploy_result_error)
+    TextView deployResultError;
     @BindView(R.id.deploy_result_sn_tv)
     TextView snTextView;
     @BindView(R.id.deploy_result_name_tv)
@@ -127,6 +128,12 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
+    public void setDeployResultErrorInfo(String errorInfo) {
+        deployResultError.setVisibility(View.VISIBLE);
+        deployResultError.setText(errorInfo);
+    }
+
+    @Override
     public void setUpdateTextViewVisible(boolean isVisible) {
         updateTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -154,14 +161,14 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         mPrestener.backHome();
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            gotoContinue();
-            return false;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        if (keyCode == KeyEvent.KEYCODE_BACK) {
+//            gotoContinue();
+//            return false;
+//        }
+//        return super.onKeyDown(keyCode, event);
+//    }
 
     @Override
     public void toastShort(String msg) {

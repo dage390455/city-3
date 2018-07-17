@@ -498,6 +498,8 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
             case "alarm":
             case "smoke":
             case "drop":
+            case "magnetic":
+            case "collision":
                 return false;
             default:
                 return true;
@@ -707,6 +709,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
         aMap.setOnMapLoadedListener(this);
+        aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 //        aMap.getUiSettings().setScaleControlsEnabled(true);
         aMap.setMapType(MAP_TYPE_NORMAL);
 //        aMap.setOnMapTouchListener(this);

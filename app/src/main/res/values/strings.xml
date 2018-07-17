@@ -164,8 +164,11 @@
     <string name="tips_hint_location">Please Pointer Location </string>
     <string name="tips_hint_tag">Please Enter Tag</string>
     <string name="tips_deploy_success">Congratulation! Sensor Point Deploy Success</string>
+    <string name="tips_deploy_station_success">Congratulation! Station Deploy Success</string>
     <string name="tips_deploy_failed">Congratulation! Sensor Point Deploy Failed</string>
+    <string name="tips_deploy_station_failed">Congratulation! Station Deploy Failed</string>
     <string name="tips_deploy_not_exist">The Device is not exist in your account</string>
+    <string name="tips_deploy_station_not_exist">The Station is not exist in your account</string>
     <string name="tips_username_empty">Please Enter UserName</string>
     <string name="tips_phone_empty">Please Enter Phone</string>
     <string name="tips_login_pwd_empty">Please Enter user password</string>

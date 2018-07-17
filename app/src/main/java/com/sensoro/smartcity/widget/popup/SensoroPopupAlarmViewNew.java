@@ -30,6 +30,7 @@ import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -57,6 +58,11 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     private final List<String> alarmPlace = new ArrayList<String>();
     private final List<String> alarmResult = new ArrayList<String>();
     private final List<String> alarmResultInfo = new ArrayList<String>();
+    //
+    private int selectType;
+    private int selectPlace;
+    private int selectResult;
+    //
     private Spinner spinnerType;
     private Spinner spinnerPlace;
     private Spinner spinnerResult;
@@ -261,6 +267,9 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         spinnerType.setSelection(0, false);
         spinnerPlace.setSelection(0, false);
         //
+        selectResult = 0;
+        selectType = 0;
+        selectPlace = 0;
         this.remarkEditText.setText("");
 //        mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
         mButton.setBackground(getResources().getDrawable(R.drawable.shape_button));
@@ -403,9 +412,14 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     }
 
     @Override
-    public void onComplete() {
+    public void onComplete(List<String> imagesUrl) {
+        String s = "";
+        for (String temp : imagesUrl) {
+            s += temp + "\n";
+        }
         dismissProgressDialog();
         toastShort("上传成功---");
+        LogUtils.loge(this, "上传成功---" + s);
         //TODO 上传结果
 //        mListener.onPopupCallback(displayStatus, remark);
     }
@@ -427,10 +441,13 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         switch (parent.getId()) {
             case R.id.spinner_result:
                 tvSpinnerResultInfo.setText(alarmResultInfo.get(position));
+                selectResult = position;
                 break;
             case R.id.spinner_type:
+                selectType = position;
                 break;
             case R.id.spinner_place:
+                selectPlace = position;
                 break;
             default:
                 break;
@@ -444,6 +461,10 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     }
 
     public interface OnPopupCallbackListener {
+        void onPopupCallback(int status, String remark);
+    }
+
+    public interface OnPopupCallbackListenerd {
         void onPopupCallback(int status, String remark);
     }
 

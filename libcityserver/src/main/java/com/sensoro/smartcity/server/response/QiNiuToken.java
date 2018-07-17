@@ -11,7 +11,7 @@ public class QiNiuToken extends ResponseBase implements Serializable {
      */
 
     private String uptoken;
-
+    private String domain;
 
     public String getUptoken() {
         return uptoken;
@@ -19,5 +19,13 @@ public class QiNiuToken extends ResponseBase implements Serializable {
 
     public void setUptoken(String uptoken) {
         this.uptoken = uptoken;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
     }
 }

@@ -30,8 +30,10 @@ import rx.schedulers.Schedulers;
 public class UpLoadPhotosUtils {
     private final Context mContext;
     private final List<ImageItem> ImageItems = new ArrayList<>();
+    private final List<String> ImagesUrl = new ArrayList<>();
     private int pictureNum = 0;
     private final UpLoadPhotoListener upLoadPhotoListener;
+    private String baseUrl;
 
     public UpLoadPhotosUtils(Context context, UpLoadPhotoListener upLoadPhotoListener) {
         mContext = context;
@@ -40,29 +42,37 @@ public class UpLoadPhotosUtils {
 
     public void doUploadPhoto(List<ImageItem> ImageItems) {
         if (ImageItems != null && ImageItems.size() > 0) {
+            baseUrl = "";
+            this.ImagesUrl.clear();
             this.ImageItems.clear();
             this.ImageItems.addAll(ImageItems);
             upLoadPhotoListener.onStart();
-            RetrofitServiceHelper.INSTANCE.getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                    .mainThread()).subscribe(new CityObserver<QiNiuToken>() {
-
-
-                @Override
-                public void onCompleted() {
-                }
-
-                @Override
-                public void onNext(QiNiuToken qiNiuToken) {
-                    String upToken = qiNiuToken.getUptoken();
-                    doUpLoadPhoto(upToken);
-                }
-
-                @Override
-                public void onErrorMsg(int errorCode, String errorMsg) {
-                    upLoadPhotoListener.onError("获取token出错：" + errorMsg);
-                }
-            });
+            getToken();
         }
+    }
+
+    private void getToken() {
+        RetrofitServiceHelper.INSTANCE.getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+                .mainThread()).subscribe(new CityObserver<QiNiuToken>() {
+
+
+            @Override
+            public void onCompleted() {
+            }
+
+            @Override
+            public void onNext(QiNiuToken qiNiuToken) {
+                String upToken = qiNiuToken.getUptoken();
+                String domain = qiNiuToken.getDomain();
+                baseUrl = domain;
+                doUpLoadPhoto(upToken);
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                upLoadPhotoListener.onError("获取token出错：" + errorMsg);
+            }
+        });
     }
 
     private void doUpLoadPhoto(final String token) {
@@ -72,7 +82,7 @@ public class UpLoadPhotosUtils {
         }
         if (pictureNum == ImageItems.size()) {
             //完成
-            upLoadPhotoListener.onComplete();
+            upLoadPhotoListener.onComplete(ImagesUrl);
             pictureNum = 0;
         } else {
             String currentPath = ImageItems.get(pictureNum).path;
@@ -99,12 +109,14 @@ public class UpLoadPhotosUtils {
                                 @Override
                                 public void complete(String s, ResponseInfo responseInfo, JSONObject jsonObject) {
                                     if (responseInfo.isOK()) {
+                                        ImagesUrl.add(baseUrl + key);
                                         //TODO 拼接key 传入参数
-                                        LogUtils.loge(this, "responseInfo -->" + responseInfo.toString());
-                                        LogUtils.loge(this, "文件路径-->> http://7u2jeb.com1.z0.glb.clouddn.com/" + key);
+//                                        LogUtils.loge(this, "responseInfo -->" + responseInfo.toString());
+                                        LogUtils.loge(this, "文件路径-->> " + baseUrl + key);
                                         pictureNum++;
                                         doUpLoadPhoto(token);
                                     } else {
+                                        //TODO 可以添加重试获取token机制
                                         LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】张-" +
                                                 ImageItems.get
                                                         (pictureNum).name + "-->" + responseInfo.error);
@@ -141,7 +153,7 @@ public class UpLoadPhotosUtils {
     public interface UpLoadPhotoListener {
         void onStart();
 
-        void onComplete();
+        void onComplete(List<String> imagesUrl);
 
         void onError(String errMsg);
 
