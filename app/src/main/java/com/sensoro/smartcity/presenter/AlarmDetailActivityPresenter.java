@@ -16,7 +16,7 @@ import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActivityView> implements Constants,
-        SensoroPopupAlarmView.OnPopupCallbackListener {
+        SensoroPopupAlarmViewNew.OnPopupCallbackListener {
     private final List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private boolean isReConfirm = false;
@@ -83,51 +83,93 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
         getView().showConfirmPopup(isReConfirm);
     }
 
-    @Override
-    public void onPopupCallback(int status, String remark) {
-        //        byte[] bytes = new byte[0];
-//        try {
-//            bytes = remark.getBytes("UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            e.printStackTrace();
-//        }
-//        if (bytes.length > 30) {
-//            Toast.makeText(mContext, "最大不能超过32个字符", Toast.LENGTH_SHORT).show();
+//    @Override
+//    public void onPopupCallback(int status, String remark) {
+//        //        byte[] bytes = new byte[0];
+////        try {
+////            bytes = remark.getBytes("UTF-8");
+////        } catch (UnsupportedEncodingException e) {
+////            e.printStackTrace();
+////        }
+////        if (bytes.length > 30) {
+////            Toast.makeText(mContext, "最大不能超过32个字符", Toast.LENGTH_SHORT).show();
+////            return;
+////        }
+//        if (remark.length() > 30) {
+//            getView().toastShort("最长不能超过30个字符");
 //            return;
 //        }
+//        getView().showProgressDialog();
+//        RetrofitServiceHelper.INSTANCE.doAlarmConfirm(deviceAlarmLogInfo.get_id(), status,
+//                remark, isReConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe
+//                (new CityObserver<DeviceAlarmItemRsp>() {
+//
+//
+//                    @Override
+//                    public void onCompleted() {
+//                    }
+//
+//                    @Override
+//                    public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+//                        getView().dismissProgressDialog();
+//                        getView().dismissConfirmPopup();
+//                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+//                            getView().toastShort(mContext.getResources().getString(R.string.tips_commit_success));
+//                            deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+//                            refreshData();
+//                        } else {
+//                            getView().toastShort(mContext.getResources().getString(R.string.tips_commit_failed));
+//                        }
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().dismissConfirmPopup();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
+//    }
+
+    @Override
+    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark) {
         if (remark.length() > 30) {
             getView().toastShort("最长不能超过30个字符");
             return;
         }
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doAlarmConfirm(deviceAlarmLogInfo.get_id(), status,
-                remark, isReConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe
-                (new CityObserver<DeviceAlarmItemRsp>() {
+        RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(deviceAlarmLogInfo.get_id(), statusResult, statusType,
+                statusPlace,
+                remark, isReConfirm, images).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe
+                        (new CityObserver<DeviceAlarmItemRsp>() {
 
 
-                    @Override
-                    public void onCompleted() {
-                    }
+                            @Override
+                            public void onCompleted() {
+                            }
 
-                    @Override
-                    public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                        getView().dismissProgressDialog();
-                        getView().dismissConfirmPopup();
-                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                            getView().toastShort(mContext.getResources().getString(R.string.tips_commit_success));
-                            deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                            refreshData();
-                        } else {
-                            getView().toastShort(mContext.getResources().getString(R.string.tips_commit_failed));
-                        }
-                    }
+                            @Override
+                            public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                                getView().dismissProgressDialog();
+                                getView().dismissConfirmPopup();
+                                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                                    getView().toastShort(mContext.getResources().getString(R.string
+                                            .tips_commit_success));
+                                    deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                                    refreshData();
+                                } else {
+                                    getView().toastShort(mContext.getResources().getString(R.string
+                                            .tips_commit_failed));
+                                }
+                            }
 
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().dismissConfirmPopup();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().dismissProgressDialog();
+                                getView().dismissConfirmPopup();
+                                getView().toastShort(errorMsg);
+                            }
+                        });
     }
 }

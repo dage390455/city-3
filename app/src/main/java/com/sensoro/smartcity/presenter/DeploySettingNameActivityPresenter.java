@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -43,8 +44,11 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
         }
 
         getView().setSearchHistoryLayoutVisible(mHistoryKeywords.size() > 0);
-        if (!TextUtils.isEmpty(name)) {
+        if (!TextUtils.isEmpty(name) && !name.equals(mContext.getResources().getString(R.string
+                .tips_hint_name_address_set))) {
             getView().setEditText(name);
+        } else {
+            getView().setEditText("");
         }
     }
 

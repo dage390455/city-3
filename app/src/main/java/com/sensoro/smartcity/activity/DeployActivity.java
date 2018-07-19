@@ -142,21 +142,25 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     public void refreshTagLayout(List<String> tagList) {
         tagLayout.removeAllViews();
         int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
-        for (int i = 0; i < tagList.size(); i++) {
-            TextView textView = new TextView(mActivity);
-            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
-            params.setMargins(10, 0, 0, 0);
-            textView.setTextColor(getResources().getColor(R.color.white));
-            textView.setText(tagList.get(i));
-            textView.setPadding(5, 0, 0, 0);
-            textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-            textView.setGravity(Gravity.CENTER);
-            textView.setCompoundDrawables(null, null, null, null);
-            textView.setBackground(getResources().getDrawable(R.drawable.shape_textview));
-            textView.setSingleLine();
-            tagLayout.addView(textView, i, params);
-
+        if (tagList != null && tagList.size() > 0) {
+            for (int i = 0; i < tagList.size(); i++) {
+                TextView textView = new TextView(mActivity);
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+                params.setMargins(10, 0, 0, 0);
+                textView.setTextColor(getResources().getColor(R.color.white));
+                textView.setText(tagList.get(i));
+                textView.setPadding(5, 0, 0, 0);
+                textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
+                textView.setGravity(Gravity.CENTER);
+                textView.setCompoundDrawables(null, null, null, null);
+                textView.setBackground(getResources().getDrawable(R.drawable.shape_textview));
+                textView.setSingleLine();
+                tagLayout.addView(textView, i, params);
+            }
+        } else {
+            addDefaultTextView();
         }
+
     }
 
     @Override
@@ -198,14 +202,15 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     @Override
     public void addDefaultTextView() {
-        int textSize = getResources().getDimensionPixelSize(R.dimen.tag_default_size);
+        int textSize = getResources().getDimensionPixelSize(R.dimen.city_tiny_large_size);
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
         params.setMargins(0, 0, 20, 0);
         TextView textView = new TextView(mActivity);
         textView.setTextColor(getResources().getColor(R.color.c_888888));
         textView.setLayoutParams(params);
         textView.setTextSize(TypedValue.COMPLEX_UNIT_PX, textSize);
-        textView.setText(R.string.tips_hint_tag);
+//        textView.setText(R.string.tips_hint_tag);
+        textView.setHint(R.string.tips_input_tag);
         tagLayout.addView(textView);
     }
 

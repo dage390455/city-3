@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
@@ -175,8 +176,6 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
 //                mKeywordEt.setSelection(tempSelection);
 //            }
 //        }
-
-
     }
 
     @Override
@@ -189,7 +188,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
 
     @Override
     public void setEditText(String text) {
-        if (text != null) {
+        if (!TextUtils.isEmpty(text)) {
             mKeywordEt.setText(text);
             mKeywordEt.setSelection(text.length());
         }

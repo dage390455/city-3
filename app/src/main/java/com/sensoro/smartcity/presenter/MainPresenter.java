@@ -8,7 +8,6 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
@@ -63,7 +62,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     private String mPhone = null;
     private String mPhoneId = null;
     private Character mCharacter = null;
-    private String mIsSupperAccountStr;
+    private volatile boolean mIsSupperAccount;
     private String roles;
 
 
@@ -89,7 +88,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
      * @return
      */
     public boolean isSupperAccount() {
-        return !TextUtils.isEmpty(mIsSupperAccountStr) && "true".equalsIgnoreCase(mIsSupperAccountStr);
+        return mIsSupperAccount;
     }
 
     public String getRoles() {
@@ -124,7 +123,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mPhoneId = mActivity.getIntent().getStringExtra(EXTRA_PHONE_ID);
         mCharacter = (Character) mActivity.getIntent().getSerializableExtra(EXTRA_CHARACTER);
         roles = mActivity.getIntent().getStringExtra(EXTRA_USER_ROLES);
-        mIsSupperAccountStr = mActivity.getIntent().getStringExtra(EXTRA_IS_SPECIFIC);
+        mIsSupperAccount = mActivity.getIntent().getBooleanExtra(EXTRA_IS_SPECIFIC, false);
         hasStation = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_INFO, false);
         //
         indexFragment = IndexFragment.newInstance(mCharacter);
@@ -143,15 +142,15 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mHandler.postDelayed(mRunnable, 3000L);
     }
 
-    public void changeAccount(String userName, String phone, String roles, String isSpecific, boolean hasStation) {
+    public void changeAccount(String userName, String phone, String roles, boolean isSpecific, boolean hasStation) {
         this.mUserName = userName;
         this.mPhone = phone;
-        this.mIsSupperAccountStr = isSpecific;
+        this.mIsSupperAccount = isSpecific;
         this.roles = roles;
         this.hasStation = hasStation;
         getView().showAccountInfo(mUserName, mPhone);
         if (indexFragment != null) {
-            if (isSupperAccount()) {
+            if (mIsSupperAccount) {
                 merchantSwitchFragment.requestData();
             } else {
                 mHandler.post(new Runnable() {
@@ -163,7 +162,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 });
             }
             //
-            getView().updateMenuPager(MenuPageFactory.createMenuPageList(isSupperAccount(), roles, hasStation));
+            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation));
             getView().setCurrentPagerItem(0);
             getView().setMenuSelected(0);
             reconnect();
@@ -188,7 +187,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
      * 简单判断账户类型
      */
     public void freshAccountType() {
-        if (isSupperAccount()) {
+        if (mIsSupperAccount) {
             getView().setCurrentPagerItem(2);
         } else {
             getView().setCurrentPagerItem(0);
@@ -198,8 +197,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getView().updateMenuPager(MenuPageFactory.createMenuPageList(isSupperAccount(), roles, hasStation));
-                if (isSupperAccount()) {
+                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation));
+                if (mIsSupperAccount) {
                     merchantSwitchFragment.requestData();
                 }
                 merchantSwitchFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
@@ -344,7 +343,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         @Override
         public void run() {
             requestUpdate();
-            if (!isSupperAccount()) {
+            if (!mIsSupperAccount) {
                 createSocket();
             }
         }
@@ -367,7 +366,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                                 final JSONObject jsonObject = jsonArray.getJSONObject(0);
                                 String s = jsonObject.toString();
                                 LogUtils.loge(this, "jsonArray = " + s);
-                                if (!isSupperAccount()) {
+                                if (!mIsSupperAccount) {
                                     indexFragment.handleSocketInfo(jsonObject.toString());
                                 }
                             }
@@ -404,7 +403,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
             String nickname = data.getStringExtra("nickname");
             String phone = data.getStringExtra("phone");
             String roles = data.getStringExtra("roles");
-            String isSpecific = data.getStringExtra("isSpecific");
+            boolean isSpecific = data.getBooleanExtra("isSpecific", false);
             hasStation = data.getBooleanExtra(EXTRA_GRANTS_INFO, false);
             changeAccount(nickname, phone, roles, isSpecific, hasStation);
         } else if (resultCode == RESULT_CODE_SEARCH_ALARM) {
@@ -486,6 +485,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 break;
             case MenuPageInfo.MENU_PAGE_STATION:
                 getView().setCurrentPagerItem(4);
+                break;
+            case MenuPageInfo.MENU_PAGE_CONTRACT:
+                //TODO 合同管理
                 break;
             default:
                 break;

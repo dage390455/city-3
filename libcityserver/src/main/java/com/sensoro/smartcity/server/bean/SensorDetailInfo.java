@@ -16,6 +16,7 @@ public class SensorDetailInfo implements Serializable {
     private SensorStruct interval;
     private SensorStruct water;
     private SensorStruct smoke;
+    private SensorStruct installed;
     private SensorStruct roll;
     private SensorStruct pm2_5;
     private SensorStruct pm10;
@@ -149,6 +150,9 @@ public class SensorDetailInfo implements Serializable {
         }
         if (smoke != null) {
             mMap.put("smoke", smoke);
+        }
+        if (installed != null) {
+            mMap.put("installed", installed);
         }
         if (roll != null) {
             mMap.put("roll", roll);
@@ -514,5 +518,13 @@ public class SensorDetailInfo implements Serializable {
 
     public void setMagnetic(SensorStruct magnetic) {
         this.magnetic = magnetic;
+    }
+
+    public SensorStruct getInstalled() {
+        return installed;
+    }
+
+    public void setInstalled(SensorStruct installed) {
+        this.installed = installed;
     }
 }

@@ -82,8 +82,8 @@
                     android:layout_toLeftOf="@+id/iv_deploy_name_address_back"
                     android:layout_toRightOf="@+id/deploy_name_address_tv"
                     android:gravity="right"
+                    android:hint="@string/tips_hint_name_address"
                     android:singleLine="true"
-                    android:text="@string/tips_hint_name_address"
                     android:textColor="@color/c_888888"
                     android:textSize="@dimen/city_tiny_large_size"/>
 
@@ -127,9 +127,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
-                    android:gravity="end"
                     android:layout_marginLeft="@dimen/x350"
                     android:layout_marginRight="@dimen/x120"
+                    android:gravity="end"
                     android:orientation="horizontal"/>
 
                 <ImageView
@@ -173,10 +173,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="@dimen/x350"
-                    android:gravity="end"
-                    android:maxLines="1"
                     android:layout_marginRight="@dimen/x120"
-                    android:text="@string/tips_hint_contact"
+                    android:gravity="end"
+                    android:hint="@string/tips_hint_contact"
+                    android:maxLines="1"
                     android:textColor="@color/c_888888"
                     android:textSize="@dimen/city_tiny_large_size"/>
 

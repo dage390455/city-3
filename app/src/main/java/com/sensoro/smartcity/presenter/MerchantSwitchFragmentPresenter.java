@@ -9,6 +9,7 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.activity.SearchMerchantActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchFragmentView;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
@@ -99,22 +100,15 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
                     RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
                     String nickname = data.getNickname();
                     String phone = data.getContacts();
+                    //
                     String roles = data.getRoles();
+                    //
                     String isSpecific = data.getIsSpecific();
                     //grantsInfo
                     GrantsInfo grants = data.getGrants();
-                    boolean isStation = false;
-                    if (grants != null) {
-                        List<String> station = grants.getStation();
-                        for (String str : station) {
-                            if (str.equals("deploy")) {
-                                isStation = true;
-                                break;
-                            }
-                        }
-                    }
                     ((MainActivity) mContext).changeAccount(nickname, phone, roles,
-                            isSpecific, isStation);
+                            MenuPageFactory.getIsSupperAccount(isSpecific), MenuPageFactory.getHasStationDeploy
+                                    (grants));
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());
                 }

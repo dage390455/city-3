@@ -59,6 +59,9 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     private final List<String> alarmResult = new ArrayList<String>();
     private final List<String> alarmResultInfo = new ArrayList<String>();
     //
+//    private final int[] resultArr = {-1, 1, 2, 3, 4,0};
+    private final int[] typeArr = {-1, 1, 2, 3, 4, 5, 6, 7, 8, 0};
+    private final int[] placeArr = {-1, 1, 2, 3, 4, 5, 6, 0};
     private int selectType;
     private int selectPlace;
     private int selectResult;
@@ -154,16 +157,19 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     }
 
     private void intData() {
+        alarmResult.add("请选择结果类型");
         alarmResult.add("真实预警");
-        alarmResult.add("安全隐患");
         alarmResult.add("误报");
         alarmResult.add("巡检测试");
+        alarmResult.add("安全隐患");
         //
+        alarmResultInfo.add("");
         alarmResultInfo.add("*监测点或附近发生着火，需要立即进行扑救");
-        alarmResultInfo.add("*未发生着火，但现场确实存在隐患");
         alarmResultInfo.add("*无任何火情和烟雾");
         alarmResultInfo.add("*相关人员主动测试出发的预警");
+        alarmResultInfo.add("*未发生着火，但现场确实存在隐患");
         //
+        alarmType.add("请选择成因类型");
         alarmType.add("用电异常");
         alarmType.add("生产作业");
         alarmType.add("吸烟");
@@ -174,6 +180,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         alarmType.add("易燃物自爆");
         alarmType.add("其他");
         //
+        alarmPlace.add("请选择预警场所");
         alarmPlace.add("老旧小区");
         alarmPlace.add("工厂");
         alarmPlace.add("居民作坊");
@@ -268,8 +275,8 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         spinnerPlace.setSelection(0, false);
         //
         selectResult = 0;
-        selectType = 0;
-        selectPlace = 0;
+        selectType = -1;
+        selectPlace = -1;
         this.remarkEditText.setText("");
 //        mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
         mButton.setBackground(getResources().getDrawable(R.drawable.shape_button));
@@ -293,12 +300,24 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
 
     private void doAlarmConfirm() {
         mRemark = remarkEditText.getText().toString();
+        if (selectResult == 0) {
+            toastShort("请选择预警结果类型");
+            return;
+        }
+        if (selectType == -1) {
+            toastShort("请选择预警成因类型");
+            return;
+        }
+        if (selectPlace == -1) {
+            toastShort("请选择预警场所");
+            return;
+        }
         if (mListener != null) {
             if (selImageList.size() > 0) {
                 upLoadPhotosUtils.doUploadPhoto(selImageList);
             } else {
                 //
-//                mListener.onPopupCallback(displayStatus, mRemark);
+                mListener.onPopupCallback(selectResult, selectType, selectPlace, null, mRemark);
             }
 //
         }
@@ -418,10 +437,10 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
             s += temp + "\n";
         }
         dismissProgressDialog();
-        toastShort("上传成功---");
+//        toastShort("上传成功---");
         LogUtils.loge(this, "上传成功---" + s);
         //TODO 上传结果
-//        mListener.onPopupCallback(displayStatus, remark);
+        mListener.onPopupCallback(selectResult, selectType, selectPlace, imagesUrl, mRemark);
     }
 
     @Override
@@ -437,17 +456,18 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        ArrayAdapter<String> adapter = (ArrayAdapter<String>) parent.getAdapter();
+//        ArrayAdapter<String> adapter = (ArrayAdapter<String>) parent.getAdapter();
         switch (parent.getId()) {
             case R.id.spinner_result:
                 tvSpinnerResultInfo.setText(alarmResultInfo.get(position));
+//                selectResult = resultArr[position];
                 selectResult = position;
                 break;
             case R.id.spinner_type:
-                selectType = position;
+                selectType = typeArr[position];
                 break;
             case R.id.spinner_place:
-                selectPlace = position;
+                selectPlace = placeArr[position];
                 break;
             default:
                 break;
@@ -461,11 +481,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     }
 
     public interface OnPopupCallbackListener {
-        void onPopupCallback(int status, String remark);
-    }
-
-    public interface OnPopupCallbackListenerd {
-        void onPopupCallback(int status, String remark);
+        void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark);
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {

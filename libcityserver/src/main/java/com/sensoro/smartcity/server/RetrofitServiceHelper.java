@@ -425,9 +425,11 @@ public enum RetrofitServiceHelper {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("displayStatus", statusResult);
-            jsonObject.put("displayStatus", statusType);
-            jsonObject.put("displayStatus", statusPlace);
-            jsonObject.put("remark", remark);
+            jsonObject.put("reason", statusType);
+            jsonObject.put("place", statusPlace);
+            if (!TextUtils.isEmpty(remark)){
+                jsonObject.put("remark", remark);
+            }
             jsonObject.put("source", "app");
             if (isReconfirm) {
                 jsonObject.put("type", "reconfirm");
@@ -435,11 +437,13 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("type", "confirm");
             }
             //
-            JSONArray jsonArray = new JSONArray();
-            for (String url : imagesUrl) {
-                jsonArray.put(url);
+            if (imagesUrl != null) {
+                JSONArray jsonArray = new JSONArray();
+                for (String url : imagesUrl) {
+                    jsonArray.put(url);
+                }
+                jsonObject.put("images", jsonArray);
             }
-            jsonObject.put("images", jsonArray);
         } catch (JSONException e) {
             e.printStackTrace();
         }

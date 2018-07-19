@@ -12,18 +12,17 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
-
-import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -126,23 +125,11 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         intent.putExtra(EXTRA_PHONE, data.getContacts());
                         intent.putExtra(EXTRA_CHARACTER, data.getCharacter());
                         intent.putExtra(EXTRA_USER_ROLES, data.getRoles());
-                        intent.putExtra(EXTRA_IS_SPECIFIC, isSpecific);
+                        intent.putExtra(EXTRA_IS_SPECIFIC, MenuPageFactory.getIsSupperAccount(isSpecific));
                         intent.putExtra(EXTRA_PHONE_ID, phoneId);
-                        //
                         //grants Info
                         GrantsInfo grants = data.getGrants();
-                        boolean hasStation = false;
-                        if (grants != null) {
-                            List<String> station = grants.getStation();
-                            for (String str : station) {
-                                if (str.equals("deploy")) {
-                                    hasStation = true;
-                                    break;
-                                }
-                            }
-                        }
-
-                        intent.putExtra(EXTRA_GRANTS_INFO, hasStation);
+                        intent.putExtra(EXTRA_GRANTS_INFO, MenuPageFactory.getHasStationDeploy(grants));
                         if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
                             PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
                         }

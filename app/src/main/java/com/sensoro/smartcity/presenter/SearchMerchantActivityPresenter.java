@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.ISearchMerchantActivityView;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
@@ -182,20 +183,10 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                         data.putExtra("phone", phone);
                     }
                     data.putExtra("roles", roles);
-                    data.putExtra("isSpecific", isSpecific);
+                    data.putExtra("isSpecific", MenuPageFactory.getIsSupperAccount(isSpecific));
                     //grants Info
                     GrantsInfo grants = dataUser.getGrants();
-                    boolean hasStation = false;
-                    if (grants != null) {
-                        List<String> station = grants.getStation();
-                        for (String str : station) {
-                            if (str.equals("deploy")) {
-                                hasStation = true;
-                                break;
-                            }
-                        }
-                    }
-                    data.putExtra(EXTRA_GRANTS_INFO, hasStation);
+                    data.putExtra(EXTRA_GRANTS_INFO, MenuPageFactory.getHasStationDeploy(grants));
                     getView().setIntentResult(RESULT_CODE_SEARCH_MERCHANT, data);
 //                    EventBus.getDefault().post(data);
                     getView().finishAc();

@@ -39,6 +39,10 @@ public class SortUtils {
                     sensorTypes[0] = "longitude";
                     sensorTypes[1] = "latitude";
                 }
+                if (originList.contains("smoke") && originList.contains("installed")) {
+                    sensorTypes[0] = "smoke";
+                    sensorTypes[1] = "installed";
+                }
             }
             tempSensorTypes.addAll(originList);
         }

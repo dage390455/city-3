@@ -78,7 +78,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private GeocodeSearch geocoderSearch;
     private AMapLocationClient mLocationClient;
     private AMapLocationClientOption mLocationOption;
-    private List<String> tagList = new ArrayList<>();
+    private final List<String> tagList = new ArrayList<>();
     private String contact = null;
     private String content = null;
     private RegeocodeQuery query;
@@ -152,9 +152,12 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        latLng = cameraPosition.target;
-        smoothMoveMarker.setPosition(latLng);
-        System.out.println("====>onCameraChange");
+        if (cameraPosition != null) {
+            latLng = cameraPosition.target;
+            smoothMoveMarker.setPosition(latLng);
+            System.out.println("====>onCameraChange");
+        }
+
     }
 
     @Override
@@ -173,7 +176,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         getView().setTitleTextView(sn);
         String name = deviceInfo.getName();
         if (TextUtils.isEmpty(name)) {
-            name = "例：大悦城20层走廊2号配电箱";
+            name = mContext.getResources().getString(R.string.tips_hint_name_address_set);
         }
         getView().setNameAddressEditText(name);
         if (deviceInfo.getAlarms() != null) {
@@ -201,9 +204,9 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                 }
             }
             getView().refreshTagLayout(tagList);
-            if (tagList.size() == 0) {
-                getView().addDefaultTextView();
-            }
+//            if (tagList.size() == 0) {
+//                getView().addDefaultTextView();
+//            }
         } else {
             getView().addDefaultTextView();
         }
@@ -373,7 +376,8 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 //        例：大悦城20层走廊2号配电箱
         String tags = tagListToString();
         String name_default = mContext.getString(R.string.tips_hint_name_address);
-        if (TextUtils.isEmpty(name) || name.equals(name_default) || name.equals("例：大悦城20层走廊2号配电箱")) {
+        if (TextUtils.isEmpty(name) || name.equals(name_default) || name.equals(mContext.getResources().getString(R
+                .string.tips_hint_name_address_set))) {
             getView().toastShort(mContext.getResources().getString(R.string.tips_input_name));
             getView().setUploadButtonClickable(true);
             return;

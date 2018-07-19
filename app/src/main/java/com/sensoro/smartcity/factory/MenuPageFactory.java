@@ -1,7 +1,10 @@
 package com.sensoro.smartcity.factory;
 
+import android.text.TextUtils;
+
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.MenuPageInfo;
+import com.sensoro.smartcity.server.bean.GrantsInfo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,6 +29,9 @@ public class MenuPageFactory {
     private static final MenuPageInfo stationPage = new MenuPageInfo(R.string.menu_page_station, R.mipmap
             .ic_menu_location,
             MenuPageInfo.MENU_PAGE_STATION);
+    //合同管理
+    private static final MenuPageInfo contractPage = new MenuPageInfo(R.string.menu_page_contract, R.mipmap
+            .ic_menu_location, MenuPageInfo.MENU_PAGE_CONTRACT);
 
     public static List<MenuPageInfo> createMenuPageList(boolean isSuper, String roles, boolean hasStation) {
         ArrayList<MenuPageInfo> pageInfos = new ArrayList<>();
@@ -66,5 +72,21 @@ public class MenuPageFactory {
                 }
             }
         }
+    }
+
+    public static boolean getHasStationDeploy(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> station = grants.getStation();
+            for (String str : station) {
+                if (str.equals("deploy")) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    public static boolean getIsSupperAccount(String isSupperAccountStr) {
+        return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr);
     }
 }

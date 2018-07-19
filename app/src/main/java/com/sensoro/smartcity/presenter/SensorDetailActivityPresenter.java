@@ -462,12 +462,12 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     private void refreshKLayout() {
         if (sensorTypes != null && sensorTypes.size() > 0) {
             String sensorType = sensorTypes.get(0);
-            boolean isDraw = needDrawKLayout(sensorType);
+            boolean isDraw = WidgetUtil.needDrawKLayout(sensorType);
             getView().setRecentDaysTitleTextView(WidgetUtil.getSensorTypeChinese(sensorType));
             getView().setRecentDaysInfo1TextView(WidgetUtil.getSensorTypeChinese(sensorType));
             if (sensorTypes.size() > 1) {
                 String sensorType2 = sensorTypes.get(1);
-                isDraw = needDrawKLayout(sensorType2);
+                isDraw = WidgetUtil.needDrawKLayout(sensorType2);
                 getView().setRecentDaysTitleTextView(WidgetUtil.getSensorTypeChinese(sensorType2));
                 getView().setRecentDaysInfo2TextView(true, WidgetUtil.getSensorTypesChinese(sensorTypes));
             }
@@ -486,25 +486,6 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                 getView().setChartLayoutVisible(false);
             }
         }
-
-    }
-
-    private boolean needDrawKLayout(String sensoroType) {
-        switch (sensoroType) {
-//            "level","cover","flame","alarm","smoke","drop":
-            case "level":
-            case "cover":
-            case "flame":
-            case "alarm":
-            case "smoke":
-            case "drop":
-            case "magnetic":
-            case "collision":
-                return false;
-            default:
-                return true;
-        }
-
 
     }
 

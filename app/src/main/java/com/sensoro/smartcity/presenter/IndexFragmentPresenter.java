@@ -482,7 +482,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 //                intent.putExtra("", value);
 //                Bundle bundle = new Bundle();
 //        getView().startAC(intent);
-        getView().startACForResult(intent, RESULT_CODE_SEARCH_MERCHANT);
+        getView().startACForResult(intent, REQUEST_CODE_SEARCH_DEVICE);
     }
 
     public void onHiddenChanged(boolean hidden) {

@@ -118,7 +118,7 @@ public class WidgetUtil {
         } else if (sensorType.contains("alarm")) {
             x_offset -= 5;
             y_offset -= 5;
-        } else if (sensorType.contains("smoke")) {
+        } else if (sensorType.contains("smoke") || sensorType.contains("installed")) {
             y_offset -= 4;
             x_offset -= 0;
         } else if (sensorType.contains("cover")) {
@@ -230,6 +230,14 @@ public class WidgetUtil {
                         valueTextView.setText(R.string.smoke_false);
                     }
 //                    unitTextView.setEditText(R.string.sensor_smoke);
+                } else if (sensorType.equalsIgnoreCase("installed")) {
+                    Boolean isTrue = (Boolean) value;
+                    if (isTrue) {
+                        valueTextView.setText(R.string.installed);
+                    } else {
+                        valueTextView.setText(R.string.un_installed);
+                    }
+//                    unitTextView.setText("");
                 } else if (sensorType.equals("flame")) {
                     Boolean isOk = (Boolean) value;
                     if (isOk) {
@@ -253,13 +261,13 @@ public class WidgetUtil {
             } else {
                 String valueString = sensorStruct.getValue().toString();
                 if (sensorType.equals("drop")) {
-                    if (value instanceof Double){
-                       double d = (double) value;
-                       if (d==0){
-                           valueTextView.setText(R.string.drop_false);
-                       }else {
-                           valueTextView.setText(R.string.drop_true);
-                       }
+                    if (value instanceof Double) {
+                        double d = (double) value;
+                        if (d == 0) {
+                            valueTextView.setText(R.string.drop_false);
+                        } else {
+                            valueTextView.setText(R.string.drop_true);
+                        }
                     }
                     unitTextView.setText("");
                 } else {
@@ -354,7 +362,7 @@ public class WidgetUtil {
                 return R.mipmap.ic_sensor_angle;
             } else if (tempList.contains("temperature") || tempList.contains("humidity")) {
                 return R.mipmap.ic_sensor_temp_humi;
-            } else if (tempList.contains("smoke")) {
+            } else if (tempList.contains("smoke") || tempList.contains("installed")) {
                 return R.mipmap.ic_sensor_smoke;
             } else if (tempList.contains("drop")) {
                 return R.mipmap.ic_sensor_drop;
@@ -408,7 +416,7 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("humidity")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_temp_humi);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("smoke")) {
+        } else if (sensorType.equalsIgnoreCase("smoke") || sensorType.equalsIgnoreCase("installed")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_smoke);
             layoutParams.setMargins(0, 0, pixel, default_pixel);
         } else if (sensorType.equalsIgnoreCase("distance")) {
@@ -494,6 +502,17 @@ public class WidgetUtil {
                 valueTextView.setText(R.string.smoke_true);
             } else {
                 valueTextView.setText(R.string.smoke_false);
+            }
+            layoutParams.setMargins(0, 0, pixel, default_pixel);
+            unitTextView.setText("");
+        } else if (sensorType.equalsIgnoreCase("installed")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_smoke);
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.installed);
+            } else {
+                valueTextView.setText(R.string.un_installed);
             }
             layoutParams.setMargins(0, 0, pixel, default_pixel);
             unitTextView.setText("");
@@ -661,7 +680,16 @@ public class WidgetUtil {
 //        else if (sensorType.equalsIgnoreCase("leak")) {
 //
 //        }
-        else if (sensorType.equalsIgnoreCase("level")) {
+        else if (sensorType.equalsIgnoreCase("installed")) {
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.installed);
+            } else {
+                valueTextView.setText(R.string.un_installed);
+            }
+            unitTextView.setText("");
+        } else if (sensorType.equalsIgnoreCase("level")) {
             Boolean isTrue = (Boolean) value;
             isBool = true;
             if (isTrue) {
@@ -873,6 +901,8 @@ public class WidgetUtil {
             value = "电压B";
         } else if (sensorType.equalsIgnoreCase("VOLTAGE_C")) {
             value = "电压C";
+        } else if (sensorType.equalsIgnoreCase("installed")) {
+            value = "安装状态";
         }
 
         //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
@@ -1004,6 +1034,9 @@ public class WidgetUtil {
                 case "VOLTAGE_C":
                     info = "电量低于预警值, 恢复正常";
                     break;
+                case "installed":
+                    info = "已安装，恢复正常";
+                    break;
                 default:
                     info = "未知传感器低于预警值, 恢复正常";
                     break;
@@ -1012,6 +1045,9 @@ public class WidgetUtil {
             switch (sensorType) {
                 case "smoke":
                     info = "烟雾浓度高，设备预警";
+                    break;
+                case "installed":
+                    info = "被拆卸，设备预警";
                     break;
                 case "cover":
                 case "jinggai":
@@ -1163,6 +1199,8 @@ public class WidgetUtil {
                 return "跑冒滴漏";
             } else if (sensorType.equals("smoke")) {
                 return "烟感";
+            } else if (sensorType.equalsIgnoreCase("installed")) {
+                return "安装状态";
             } else if (sensorType.equals("lpg")) {
                 return "液化石油气";
             } else if (sensorType.equals("no2")) {
@@ -1182,9 +1220,11 @@ public class WidgetUtil {
             } else if (sensorType.equalsIgnoreCase("level")) {
                 return "水位";
             } else if (sensorType.equalsIgnoreCase("drop")) {
-                return "滴漏";
+                return "跑冒滴漏";
             } else if (sensorType.equalsIgnoreCase("smoke")) {
                 return "烟感";
+            } else if (sensorType.equalsIgnoreCase("installed")) {
+                return "安装状态";
             } else if (sensorType.equalsIgnoreCase("altitude")) {
                 return "追踪器";
             } else if (sensorType.equalsIgnoreCase("latitude")) {
@@ -1238,11 +1278,30 @@ public class WidgetUtil {
             case "connection":
                 return "断开时报警";
             case "installed":
-                return "被拆卸 时报警";
+                return "被拆卸时报警";
             default:
                 return null;
         }
     }
+
+    public static boolean needDrawKLayout(String sensoroType) {
+        switch (sensoroType) {
+//            "level","cover","flame","alarm","smoke","drop":
+            case "level":
+            case "cover":
+            case "flame":
+            case "alarm":
+            case "smoke":
+            case "drop":
+            case "magnetic":
+            case "collision":
+            case "installed":
+                return false;
+            default:
+                return true;
+        }
+    }
+
     //TODO dont del
     ///////////////////////
     //    public static void judgeSensor(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {

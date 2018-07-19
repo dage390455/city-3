@@ -79,6 +79,8 @@
     <string name="alarm_true">报警</string>
     <string name="smoke_false">无烟</string>
     <string name="smoke_true">有烟</string>
+    <string name="installed">已安装</string>
+    <string name="un_installed">被拆卸</string>
     <string name="drop_false">无滴漏</string>
     <string name="drop_true">滴漏</string>
     <string name="magnetic_false">关</string>
@@ -118,6 +120,7 @@
     <string name="risks_alarm">安全隐患</string>
     <string name="misdescription">误报</string>
     <string name="alarm_test">测试</string>
+    <string name="alarm_risk">安全隐患</string>
     <string name="confirming">确认</string>
     <string name="confirming_again">再次确认</string>
     <string name="setting_name_address">设置名称/地址</string>
@@ -143,7 +146,7 @@
     <string name="tips_deploy_failed">很遗憾! 传感器点位部署失败</string>
     <string name="tips_deploy_station_failed">很遗憾! 基站部署失败</string>
     <string name="tips_deploy_not_exist">账户下不存在此设备,设备已关联\n在本账户下才能够进行部署</string>
-    <string name="tips_deploy_station_not_exist">账户下不存在此基站,设备已关联\n在本账户下才能够进行部署</string>
+    <string name="tips_deploy_station_not_exist">账户下不存在此基站,基站已关联\n在本账户下才能够进行部署</string>
     <string name="tips_input_lon">请输入经度</string>
     <string name="tips_input_lan">请输入纬度</string>
     <string name="tips_input_name">请输入名称/地址</string>
@@ -165,4 +168,5 @@
     <string name="menu_page_merchant">商户切换</string>
     <string name="menu_page_point">点位部署</string>
     <string name="menu_page_station">基站部署</string>
+    <string name="menu_page_contract">合同管理</string>
 </resources>

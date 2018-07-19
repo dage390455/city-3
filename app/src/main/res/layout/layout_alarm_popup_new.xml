@@ -4,7 +4,6 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-
               android:orientation="vertical">
 
     <ScrollView
@@ -46,7 +45,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y40"
                 android:text="预警结果类型"/>
 
             <Spinner
@@ -56,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
                 android:layout_marginRight="@dimen/x70"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y40"
                 android:animationCache="true"
                 android:padding="10dp"
                 android:spinnerMode="dropdown"/>
@@ -66,15 +65,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
-                android:layout_marginTop="@dimen/y30"
-                android:text="*检测到附近发生着火，需要立即扑救"
+                android:layout_marginTop="@dimen/y40"
                 android:textColor="#F34A4A"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y50"
                 android:text="预警成因类型"/>
 
             <Spinner
@@ -84,7 +82,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
                 android:layout_marginRight="@dimen/x70"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y40"
                 android:animationCache="true"
                 android:padding="10dp"
                 android:spinnerMode="dropdown"/>
@@ -93,7 +91,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y40"
                 android:text="预警场所"/>
 
             <Spinner
@@ -103,7 +101,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
                 android:layout_marginRight="@dimen/x70"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y40"
                 android:animationCache="true"
                 android:padding="10dp"
                 android:spinnerMode="dropdown"/>
@@ -113,7 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
                 android:layout_marginRight="@dimen/x70"
-                android:layout_marginTop="@dimen/y30"
+                android:layout_marginTop="@dimen/y40"
                 android:orientation="vertical">
 
                 <TextView
@@ -126,15 +124,16 @@
                     android:id="@+id/alarm_popup_remark"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/y30"
+                    android:layout_marginTop="@dimen/y40"
                     android:background="@drawable/shape_et_search"
                     android:enabled="true"
                     android:gravity="top"
+                    android:hint="请对预警信息进行描述"
                     android:inputType="textMultiLine"
                     android:maxLines="3"
-                    android:minLines="2"
+                    android:minLines="3"
                     android:padding="10dp"
-                    android:paddingBottom="@dimen/y30"
+                    android:paddingBottom="@dimen/y40"
                     android:paddingLeft="@dimen/x30"
                     android:paddingRight="@dimen/x30"
                     android:paddingTop="@dimen/y30"

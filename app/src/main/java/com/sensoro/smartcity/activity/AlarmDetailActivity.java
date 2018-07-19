@@ -21,7 +21,7 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     @BindView(R.id.alarm_detail_popup_shadow)
     SensoroShadowView mShadowView;
     @BindView(R.id.alarm_detail_popup_view)
-    SensoroPopupAlarmView mAlarmPopupView;
+    SensoroPopupAlarmViewNew mAlarmPopupView;
     private TimerShaftAdapter timerShaftAdapter;
     private ProgressUtils mProgressUtils;
 
@@ -85,6 +85,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
         try {
             mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
             mAlarmPopupView.setOnPopupCallbackListener(mPrestener);
+            mAlarmPopupView.setDialog(mActivity);
             confirmTextView.setOnClickListener(this);
             timerShaftAdapter = new TimerShaftAdapter(mActivity, mPrestener.getList(), new TimerShaftAdapter
                     .OnGroupItemClickListener() {
@@ -109,6 +110,18 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
             e.printStackTrace();
         }
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        handlerActivityResult(requestCode, resultCode, data);
+    }
+
+    public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mAlarmPopupView != null) {
+            mAlarmPopupView.handlerActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Override
@@ -237,6 +250,12 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 //                    confirmTextView.setVisibility(View.GONE);
                 displayStatusTextView.setVisibility(View.VISIBLE);
                 displayStatusTextView.setText(R.string.alarm_test);
+                break;
+            case Constants.DISPLAY_STATUS_RISKS:
+                confirmTextView.setText(R.string.confirming_again);
+//                    confirmTextView.setVisibility(View.GONE);
+                displayStatusTextView.setVisibility(View.VISIBLE);
+                displayStatusTextView.setText(R.string.alarm_risk);
                 break;
             default:
                 break;

@@ -94,6 +94,8 @@
     <string name="collision_true">Hit</string>
     <string name="smoke_false">Normal</string>
     <string name="smoke_true">Hit</string>
+    <string name="installed">installed</string>
+    <string name="un_installed">UnInstalled</string>
     <string name="magnetic_false">Close</string>
     <string name="magnetic_true">Open</string>
     <string name="drop_true">Droped</string>
@@ -130,6 +132,7 @@
     <string name="risks_alarm">Risks</string>
     <string name="misdescription">Mis</string>
     <string name="alarm_test">Test</string>
+    <string name="alarm_risk">Risk</string>
     <string name="confirming">Confirming</string>
     <string name="confirming_again">Confirming Again</string>
     <string name="setting_name_address">Name/Address</string>
@@ -186,5 +189,6 @@
     <string name="menu_page_merchant">Merchant Switch</string>
     <string name="menu_page_point">Point Deployment</string>
     <string name="menu_page_station">Station Deployment</string>
+    <string name="menu_page_contract">Contract management</string>
 
 </resources>
