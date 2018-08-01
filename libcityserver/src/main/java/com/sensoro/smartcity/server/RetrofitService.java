@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.server;
 
 
+import com.sensoro.smartcity.server.response.ContractAddRsp;
+import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -23,7 +25,6 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.HTTP;
-import retrofit2.http.Header;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Path;
@@ -31,7 +32,9 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 public interface RetrofitService {
-    String SCOPE_MOCHA = "https://demo-city-api.sensoro.com/";
+    //    String SCOPE_MOCHA = "https://demo-city-api.sensoro.com/";
+    //摩卡环境
+    String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
 
     String LOGIN = "sessions";
@@ -112,9 +115,13 @@ public interface RetrofitService {
     @POST("devices/app/{sn}")
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
+    //    @HTTP(method = "DELETE", path = LOGOUT, hasBody = true)
+//    Observable<ResponseBase> logout(@Header("phoneId") String phoneId, @Header("uid")
+//            String uid, @Query("phoneId") String phoneId_q, @Query("uid") String uid_q, @Body RequestBody
+// requestBody);
     @HTTP(method = "DELETE", path = LOGOUT, hasBody = true)
-    Observable<ResponseBase> logout(@Header("phoneId") String phoneId, @Header("uid")
-            String uid, @Query("phoneId") String phoneId_q, @Query("uid") String uid_q, @Body RequestBody requestBody);
+    Observable<ResponseBase> logout(@Query("phoneId") String phoneId_q, @Query("uid") String uid_q, @Body RequestBody
+            requestBody);
 
     @GET(STATION_INFO + "{sn}")
     Observable<StationInfoRsp> getStationDetail(@Path("sn") String sn);
@@ -129,4 +136,25 @@ public interface RetrofitService {
     @GET("tools/qiniu/token")
     Observable<QiNiuToken> getQiNiuToken();
 
+    @GET("contractsTemplate")
+    Observable<ContractsTemplateRsp> getContractstemplate();
+
+    //    @FormUrlEncoded
+//    @POST("contracts")
+//    Observable<ResponseBase> newContract(@Field("contract_type") Integer contractType, @Field("card_id") String
+// cardId,
+//                                         @Field("sex") Integer sex, @Field("enterprise_card_id") String
+//                                                 enterpriseCardId,
+//                                         @Field("enterprise_register_id") String enterpriseRegisterId,
+//                                         @Field("customer_name") String customerName,
+//                                         @Field("customer_enterprise_name") String customerEnterpriseName,
+//                                         @Field("customer_enterprise_validity") Integer customerEnterpriseValidity,
+//                                         @Field("customer_address") String customerAddress,
+//                                         @Field("customer_phone") String customerPhone,
+//                                         @Field("place_type") String placeType,
+//                                         @Body RequestBody requestBody,
+//                                         @Field("payTimes") int payTimes, @Field("confirmed") Boolean confirmed,
+//                                         @Field("serviceTime") int serviceTime);
+    @POST("contracts")
+    Observable<ContractAddRsp> newContract(@Body RequestBody requestBody);
 }

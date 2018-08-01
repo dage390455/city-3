@@ -70,7 +70,7 @@ public class UpLoadPhotosUtils {
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                upLoadPhotoListener.onError("获取token出错：" + errorMsg);
+                upLoadPhotoListener.onError(errorMsg);
             }
         });
     }
@@ -98,7 +98,7 @@ public class UpLoadPhotosUtils {
                     () {
                 @Override
                 public void onStart() {
-
+                    upLoadPhotoListener.onProgress(pictureNum + 1, 0);
                 }
 
                 @Override
@@ -120,9 +120,7 @@ public class UpLoadPhotosUtils {
                                         LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】张-" +
                                                 ImageItems.get
                                                         (pictureNum).name + "-->" + responseInfo.error);
-                                        upLoadPhotoListener.onError("上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】张-" +
-                                                ImageItems.get
-                                                        (pictureNum).name + "失败");
+                                        upLoadPhotoListener.onError("上传 " + "第 " + (pictureNum + 1) + " 张失败");
                                         pictureNum = 0;
                                     }
 
@@ -140,8 +138,7 @@ public class UpLoadPhotosUtils {
                 public void onError(Throwable e) {
                     LogUtils.loge(this, "压缩 " + "第【" + (pictureNum + 1) + "】张-" + ImageItems.get(pictureNum)
                             .name + "失败--->>" + e.getMessage());
-                    upLoadPhotoListener.onError("压缩 " + "第【" + (pictureNum + 1) + "】张-" + ImageItems.get(pictureNum)
-                            .name + "失败");
+                    upLoadPhotoListener.onError("上传 " + "第 " + (pictureNum + 1) + " 张失败");
                     pictureNum = 0;
                 }
             }).launch();

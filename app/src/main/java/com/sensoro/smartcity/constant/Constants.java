@@ -127,6 +127,9 @@ public interface Constants {
     String EXTRA_SETTING_INDEX = "extra_setting_index";
     String EXTRA_SETTING_TAG_LIST = "extra_tag_list";
     String EXTRA_CONTAINS_DATA = "extra_contains_data";
+    //
+    String EXTRA_CONTRACT_TYPE = "extra_contract_type";
+    //
     String PREFERENCE_LOGIN = "preference_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
     String PREFERENCE_KEY_PASSWORD = "preference_key_password";

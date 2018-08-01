@@ -119,7 +119,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
         groupHolder.tvDay.setText(time);
         groupHolder.lineView.setVisibility(View.VISIBLE);
         if ("confirm".equals(recordInfo.getType())) {
-            String[] confirmStatusArray = {"待确认", "真实预警", "误报", "巡检/测试", "安全隐患"};
+            String[] confirmStatusArray = {"待确认", "真实火警", "误报", "巡检/测试", "安全隐患"};
             String source = recordInfo.getSource();
             String confirm_text = null;
             if ("auto".equals(source)) {

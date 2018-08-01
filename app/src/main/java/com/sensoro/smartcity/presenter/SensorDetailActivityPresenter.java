@@ -178,8 +178,9 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         }
         getView().setSnTextView(mDeviceInfo.getSn(), textColor);
         getView().setDateTextView(DateUtil.getFullParseDate(mDeviceInfo.getUpdatedTime()), textColor);
-        getView().setNameTextView(TextUtils.isEmpty(mDeviceInfo.getName()) ? mDeviceInfo.getSn() : mDeviceInfo
-                .getName(), textColor);
+        String name = mDeviceInfo.getName();
+        getView().setNameTextView(TextUtils.isEmpty(name) ? mContext.getResources().getString(R
+                .string.unname) : name, textColor);
         getView().initValueColor(textColor);
     }
 

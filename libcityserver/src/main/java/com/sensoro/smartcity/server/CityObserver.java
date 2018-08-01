@@ -26,7 +26,7 @@ public abstract class CityObserver<T> implements Observer<T> {
                 e instanceof SocketTimeoutException ||
                 e instanceof TimeoutException) {
             //网络错误
-            onErrorMsg(ERR_CODE_NET_CONNECT_EX, "网络连接错误,请检查网络连接");
+            onErrorMsg(ERR_CODE_NET_CONNECT_EX, "似乎已断开与互联网的连接。");
         } else if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
             int code = httpException.response().code();

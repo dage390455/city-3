@@ -42,20 +42,20 @@ import static com.sensoro.smartcity.constant.Constants.SENSOR_STATUS_NORMAL;
 
 public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivityView> implements IOnStart {
     private Activity mContext;
-    private String sensor_sn;
+    private String mSn;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        sensor_sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN);
+        mSn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN);
     }
 
     public void requestData() {
         getView().showProgressDialog();
         //合并请求
         Observable<DeviceInfoListRsp> deviceDetailInfoList = RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList
-                (sensor_sn, null, 1);
-        Observable<DeviceAlarmTimeRsp> deviceAlarmTime = RetrofitServiceHelper.INSTANCE.getDeviceAlarmTime(sensor_sn);
+                (mSn, null, 1);
+        Observable<DeviceAlarmTimeRsp> deviceAlarmTime = RetrofitServiceHelper.INSTANCE.getDeviceAlarmTime(mSn);
         Observable.merge(deviceDetailInfoList, deviceAlarmTime).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>() {
 
@@ -93,7 +93,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
         try {
             if (response.getData().size() > 0) {
                 DeviceInfo deviceInfo = response.getData().get(0);
-                getView().setSNText(sensor_sn);
+                getView().setSNText(mSn);
                 getView().setTypeText(WidgetUtil.parseSensorTypes(mContext, deviceInfo.getSensorTypes()));
 
                 String tags[] = deviceInfo.getTags();
@@ -106,6 +106,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 //
 //                deviceInfo.getSensorTypes();
                 AlarmInfo.RuleInfo rules[] = deviceInfo.getAlarms().getRules();
+
                 String alarm = null;
                 StringBuffer sbRule = new StringBuffer();
                 for (AlarmInfo.RuleInfo ruleInfo : rules) {
@@ -115,7 +116,6 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                         sbRule.append(alarm);
                         break;
                     }
-
                 }
                 if (TextUtils.isEmpty(alarm)) {
                     for (AlarmInfo.RuleInfo ruleInfo : rules) {
@@ -210,7 +210,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
             DeviceInfo tempDeviceInfo = null;
             List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
             for (DeviceInfo deviceInfo : deviceInfoList) {
-                if (sensor_sn.equals(deviceInfo.getSn())) {
+                if (mSn.equals(deviceInfo.getSn())) {
                     tempDeviceInfo = deviceInfo;
                     break;
                 }

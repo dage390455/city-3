@@ -31,6 +31,7 @@
     <string name="confirm_info">Confirm Info</string>
     <string name="sensor_location">Sensor Location</string>
     <string name="alarm_list">Alarm List</string>
+    <string name="contract_list">Contract List</string>
     <string name="start_use">Scan Deploy</string>
     <string name="point_deploy">Point Deploy</string>
     <string name="station_deploy">Station Deploy</string>

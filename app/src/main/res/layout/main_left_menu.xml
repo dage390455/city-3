@@ -26,6 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x50"
+            android:layout_marginRight="@dimen/x50"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -41,7 +42,8 @@
                 android:id="@+id/left_menu_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="@color/c_121212"/>
+                android:textColor="@color/c_121212"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 

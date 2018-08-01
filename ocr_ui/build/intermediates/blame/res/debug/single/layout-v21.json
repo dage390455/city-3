@@ -1,0 +1,18 @@
+[
+    {
+        "merged": "/Users/sensoro/develop/smartcity_P/ocr_ui/build/intermediates/res/merged/debug/layout-v21/notification_template_icon_group.xml",
+        "source": "/Users/sensoro/.android/build-cache/7017ccb03a3193d61f5e23ddbcc3fc6e958bd9c6/output/res/layout-v21/notification_template_icon_group.xml"
+    },
+    {
+        "merged": "/Users/sensoro/develop/smartcity_P/ocr_ui/build/intermediates/res/merged/debug/layout-v21/notification_action_tombstone.xml",
+        "source": "/Users/sensoro/.android/build-cache/7017ccb03a3193d61f5e23ddbcc3fc6e958bd9c6/output/res/layout-v21/notification_action_tombstone.xml"
+    },
+    {
+        "merged": "/Users/sensoro/develop/smartcity_P/ocr_ui/build/intermediates/res/merged/debug/layout-v21/notification_template_custom_big.xml",
+        "source": "/Users/sensoro/.android/build-cache/7017ccb03a3193d61f5e23ddbcc3fc6e958bd9c6/output/res/layout-v21/notification_template_custom_big.xml"
+    },
+    {
+        "merged": "/Users/sensoro/develop/smartcity_P/ocr_ui/build/intermediates/res/merged/debug/layout-v21/notification_action.xml",
+        "source": "/Users/sensoro/.android/build-cache/7017ccb03a3193d61f5e23ddbcc3fc6e958bd9c6/output/res/layout-v21/notification_action.xml"
+    }
+]

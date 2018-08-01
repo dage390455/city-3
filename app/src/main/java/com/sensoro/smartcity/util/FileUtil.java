@@ -19,7 +19,13 @@ import java.io.OutputStream;
  */
 
 public class FileUtil {
+    public static File getSaveFile(Context context) {
+        File file = new File(context.getFilesDir(), "pic.jpg");
+        return file;
+    }
+
     private static int bufferd = 1024;
+
     public static void copyAssets(Context context, String oldPath, String newPath) {
         try {
             String fileNames[] = context.getAssets().list(oldPath);// 获取assets目录下的所有文件及目录名
@@ -120,16 +126,12 @@ public class FileUtil {
     }
 
     /**
-     *
-     * @param directory
-     *            (you don't need to begin with
-     *            Environment.getExternalStorageDirectory()+File.separator)
+     * @param directory (you don't need to begin with
+     *                  Environment.getExternalStorageDirectory()+File.separator)
      * @param fileName
      * @param content
-     * @param encoding
-     *            (UTF-8...)
-     * @param isAppend
-     *            : Context.MODE_APPEND
+     * @param encoding  (UTF-8...)
+     * @param isAppend  : Context.MODE_APPEND
      * @return
      */
     public static File writeToSDCardFile(String directory, String fileName,
@@ -154,7 +156,7 @@ public class FileUtil {
             Log.e("FileUtil", "writeToSDCardFile:" + e.getMessage());
         } finally {
             try {
-                if(os != null){
+                if (os != null) {
                     os.close();
                 }
             } catch (IOException e) {
@@ -238,7 +240,8 @@ public class FileUtil {
      * @return 主题文件绝对路径
      */
     public static String getThemePath(String themeId) {
-        String themePath = FMDataManager.getFMThemeResourceDirectory() + themeId + File.separator + themeId + FILE_TYPE_THEME;
+        String themePath = FMDataManager.getFMThemeResourceDirectory() + themeId + File.separator + themeId +
+                FILE_TYPE_THEME;
         return themePath;
     }
 

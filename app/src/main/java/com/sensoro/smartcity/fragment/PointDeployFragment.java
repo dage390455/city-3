@@ -172,6 +172,8 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.zxing_capture_iv_flash:
+                //改变mSurfaceCreated变量强制开启闪光灯 针对1.2.4
+                mQRCodeView.getCameraPreview().surfaceCreated(null);
                 if (isFlashOn) {
                     mQRCodeView.closeFlashlight();
                 } else {

@@ -29,6 +29,7 @@ import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
+import com.sensoro.smartcity.adapter.NothingSelectedSpinnerAdapter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
@@ -59,7 +60,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     private final List<String> alarmResult = new ArrayList<String>();
     private final List<String> alarmResultInfo = new ArrayList<String>();
     //
-//    private final int[] resultArr = {-1, 1, 2, 3, 4,0};
+    private final int[] resultArr = {-1, 1, 4, 2, 3, 0};
     private final int[] typeArr = {-1, 1, 2, 3, 4, 5, 6, 7, 8, 0};
     private final int[] placeArr = {-1, 1, 2, 3, 4, 5, 6, 0};
     private int selectType;
@@ -119,9 +120,12 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         selImageList = new ArrayList<>();
         adapter = new ImagePickerAdapter(mContext, selImageList, maxImgCount);
         adapter.setOnItemClickListener(this);
-        recyclerView.setLayoutManager(new GridLayoutManager(mContext, 4));
+        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
+        //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
+        recyclerView.setNestedScrollingEnabled(false);
     }
 
     private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
@@ -154,22 +158,21 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         progressDialog = new ProgressDialog(mActivity);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setMax(100);
+        progressDialog.setCancelable(false);
     }
 
     private void intData() {
-        alarmResult.add("请选择结果类型");
-        alarmResult.add("真实预警");
+        alarmResult.add("真实火警");
+        alarmResult.add("安全隐患");
         alarmResult.add("误报");
         alarmResult.add("巡检测试");
-        alarmResult.add("安全隐患");
         //
         alarmResultInfo.add("");
         alarmResultInfo.add("*监测点或附近发生着火，需要立即进行扑救");
-        alarmResultInfo.add("*无任何火情和烟雾");
-        alarmResultInfo.add("*相关人员主动测试出发的预警");
         alarmResultInfo.add("*未发生着火，但现场确实存在隐患");
+        alarmResultInfo.add("*无任何火情和烟雾");
+        alarmResultInfo.add("*相关人员主动测试发出的预警");
         //
-        alarmType.add("请选择成因类型");
         alarmType.add("用电异常");
         alarmType.add("生产作业");
         alarmType.add("吸烟");
@@ -177,10 +180,9 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         alarmType.add("烹饪");
         alarmType.add("燃气泄漏");
         alarmType.add("人为放火");
-        alarmType.add("易燃物自爆");
+        alarmType.add("易燃物自燃");
         alarmType.add("其他");
         //
-        alarmPlace.add("请选择预警场所");
         alarmPlace.add("老旧小区");
         alarmPlace.add("工厂");
         alarmPlace.add("居民作坊");
@@ -205,19 +207,24 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         mButton.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
         //
-        ArrayAdapter<String> alarmTypeAdapter = new ArrayAdapter<String>(mContext, android.R.layout
-                .simple_spinner_item, alarmType);
-        alarmTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        ArrayAdapter<String> alarmPlaceAdapter = new ArrayAdapter<String>(mContext, android.R.layout
-                .simple_spinner_item, alarmPlace);
-        alarmPlaceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         ArrayAdapter<String> alarmResultAdapter = new ArrayAdapter<String>(mContext, android.R.layout
                 .simple_spinner_item, alarmResult);
+        ArrayAdapter<String> alarmTypeAdapter = new ArrayAdapter<String>(mContext, android.R.layout
+                .simple_spinner_item, alarmType);
+        ArrayAdapter<String> alarmPlaceAdapter = new ArrayAdapter<String>(mContext, android.R.layout
+                .simple_spinner_item, alarmPlace);
+        //
+        spinnerResult.setAdapter(new NothingSelectedSpinnerAdapter(alarmResultAdapter, R.layout
+                .spinner_nothing_selected_result, mContext));
+        spinnerType.setAdapter(new NothingSelectedSpinnerAdapter(alarmTypeAdapter, R.layout
+                .spinner_nothing_selected_type, mContext));
+        spinnerPlace.setAdapter(new NothingSelectedSpinnerAdapter(alarmPlaceAdapter, R.layout
+                .spinner_nothing_selected_place, mContext));
+        //
+        alarmTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        alarmPlaceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         alarmResultAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //
-        spinnerResult.setAdapter(alarmResultAdapter);
-        spinnerType.setAdapter(alarmTypeAdapter);
-        spinnerPlace.setAdapter(alarmPlaceAdapter);
         //
         spinnerResult.setOnItemSelectedListener(this);
         spinnerType.setOnItemSelectedListener(this);
@@ -267,6 +274,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     }
 
     public void show(SensoroShadowView shadowView) {
+
         this.mShadowView = shadowView;
         this.mShadowView.setVisibility(VISIBLE);
         //
@@ -274,14 +282,16 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         spinnerType.setSelection(0, false);
         spinnerPlace.setSelection(0, false);
         //
-        selectResult = 0;
-        selectType = -1;
-        selectPlace = -1;
-        this.remarkEditText.setText("");
+        this.remarkEditText.getText().clear();
+        mRemark = null;
 //        mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
         mButton.setBackground(getResources().getDrawable(R.drawable.shape_button));
         setVisibility(View.VISIBLE);
         this.startAnimation(showAnimation);
+        setUpdateButtonClickable(true);
+        if (progressDialog != null) {
+            progressDialog.setProgress(0);
+        }
     }
 
     public void setOnPopupCallbackListener(OnPopupCallbackListener listener) {
@@ -299,17 +309,21 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     }
 
     private void doAlarmConfirm() {
+        setUpdateButtonClickable(false);
         mRemark = remarkEditText.getText().toString();
-        if (selectResult == 0) {
+        if (selectResult == -1) {
             toastShort("请选择预警结果类型");
+            setUpdateButtonClickable(true);
             return;
         }
         if (selectType == -1) {
             toastShort("请选择预警成因类型");
+            setUpdateButtonClickable(true);
             return;
         }
         if (selectPlace == -1) {
             toastShort("请选择预警场所");
+            setUpdateButtonClickable(true);
             return;
         }
         if (mListener != null) {
@@ -317,7 +331,9 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
                 upLoadPhotosUtils.doUploadPhoto(selImageList);
             } else {
                 //
+                dismissProgressDialog();
                 mListener.onPopupCallback(selectResult, selectType, selectPlace, null, mRemark);
+                setUpdateButtonClickable(true);
             }
 //
         }
@@ -338,6 +354,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
             case R.id.alarm_popup_close:
                 dismissInputMethodManager(v);
                 remarkEditText.clearFocus();
+                this.remarkEditText.getText().clear();
                 dismiss();
                 break;
             case R.id.alarm_popup_commit:
@@ -441,10 +458,12 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         LogUtils.loge(this, "上传成功---" + s);
         //TODO 上传结果
         mListener.onPopupCallback(selectResult, selectType, selectPlace, imagesUrl, mRemark);
+        setUpdateButtonClickable(true);
     }
 
     @Override
     public void onError(String errMsg) {
+        setUpdateButtonClickable(true);
         dismissProgressDialog();
         toastShort(errMsg);
     }
@@ -461,13 +480,16 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
             case R.id.spinner_result:
                 tvSpinnerResultInfo.setText(alarmResultInfo.get(position));
 //                selectResult = resultArr[position];
-                selectResult = position;
+                selectResult = resultArr[position];
+                LogUtils.loge("结果类型：" + selectResult);
                 break;
             case R.id.spinner_type:
                 selectType = typeArr[position];
+                LogUtils.loge("成因类型：" + selectType);
                 break;
             case R.id.spinner_place:
                 selectPlace = placeArr[position];
+                LogUtils.loge("场所类型：" + selectPlace);
                 break;
             default:
                 break;
@@ -507,12 +529,14 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         }
     }
 
-    private void updateButton() {
-        if (selImageList.size() > 0) {
+    private void setUpdateButtonClickable(boolean canClick) {
+        if (canClick) {
             mButton.setBackground(getResources().getDrawable(R.drawable.shape_button));
         } else {
             mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
         }
+        mButton.setEnabled(canClick);
+        mButton.setClickable(canClick);
     }
 
 }

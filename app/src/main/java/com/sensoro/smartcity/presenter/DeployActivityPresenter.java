@@ -85,7 +85,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private Activity mContext;
     private Handler mHandler;
     private DeviceInfo deviceInfo;
-    private boolean is_station;
+    private boolean hasStation;
     private String mAddress;
 
     @Override
@@ -93,9 +93,9 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         mContext = (Activity) context;
         mHandler = new Handler(Looper.getMainLooper());
         deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
-        is_station = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
-        getView().setDeployContactRelativeLayoutVisible(!is_station);
-        getView().setDeployDevicerlSignalVisible(!is_station);
+        hasStation = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
+        getView().setDeployContactRelativeLayoutVisible(!hasStation);
+        getView().setDeployDevicerlSignalVisible(!hasStation);
     }
 
     @Override
@@ -139,7 +139,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         } else {
             Intent intent = new Intent();
             intent.setClass(mContext, DeployResultActivity.class);
-            intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
+            intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
             intent.putExtra(EXTRA_SENSOR_RESULT, -1);
             getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
         }
@@ -211,7 +211,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             getView().addDefaultTextView();
         }
         String signal = deviceInfo.getSignal();
-        if (!is_station) {
+        if (!hasStation) {
             getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
         }
         //
@@ -400,7 +400,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         } else {
             final double lon = latLng.longitude;
             final double lan = latLng.latitude;
-            if (is_station) {
+            if (hasStation) {
                 LogUtils.loge(tags);
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.doStationDeploy(sn, lon, lan, tags, name).subscribeOn(Schedulers.io())
@@ -491,7 +491,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         intent.setClass(mContext, DeployResultActivity.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, -1);
         intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
         if (!TextUtils.isEmpty(errorInfo)) {
             intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
         }
@@ -627,7 +627,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     public void back() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_CONTAINS_DATA, false);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
         getView().setIntentResult(RESULT_CODE_DEPLOY, intent);
         getView().finishAc();
     }

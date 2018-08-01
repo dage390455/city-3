@@ -23,18 +23,18 @@ import rx.schedulers.Schedulers;
 
 public class DeployManualActivityPresenter extends BasePresenter<IDeployManualActivityView> implements Constants {
     private Activity mContext;
-    private boolean is_station;
+    private boolean hasStation;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        is_station = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
+        hasStation = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
     }
 
     public void clickClose() {
         Intent intent = new Intent();
         intent.putExtra(EXTRA_CONTAINS_DATA, false);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
         getView().setIntentResult(RESULT_CODE_DEPLOY, intent);
         getView().finishAc();
     }
@@ -55,7 +55,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
         if (TextUtils.isEmpty(scanSerialNumber)) {
             getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
         } else {
-            if (is_station) {
+            if (hasStation) {
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getStationDetail(scanSerialNumber.toUpperCase()).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<StationInfoRsp>() {
@@ -123,7 +123,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
         intent.setClass(mContext, DeployResultActivity.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, -1);
         intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
+        intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
         if (!TextUtils.isEmpty(errorInfo)) {
             intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
         }

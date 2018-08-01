@@ -37,6 +37,7 @@
     <string name="sensor_detail">传感器详情</string>
     <string name="confirm_info">确认信息</string>
     <string name="alarm_list">预警记录</string>
+    <string name="contract_list">合同管理</string>
     <string name="sensor_detail_sn">SN</string>
     <string name="sensor_detail_name">名称</string>
     <string name="sensor_detail_type">类型</string>
@@ -116,7 +117,7 @@
     <string name="sat">六</string>
     <string name="commit">提交</string>
     <string name="alarming">报警中</string>
-    <string name="true_alarm">真实预警</string>
+    <string name="true_alarm">真实火警</string>
     <string name="risks_alarm">安全隐患</string>
     <string name="misdescription">误报</string>
     <string name="alarm_test">测试</string>

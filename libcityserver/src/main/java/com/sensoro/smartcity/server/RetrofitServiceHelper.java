@@ -6,6 +6,9 @@ import android.text.TextUtils;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.server.response.ContractAddRsp;
+import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -183,7 +186,7 @@ public enum RetrofitServiceHelper {
             e.printStackTrace();
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        return retrofitService.logout(phoneId, uid, phoneId, uid, body);
+        return retrofitService.logout(phoneId, uid, body);
     }
 
     /**
@@ -427,7 +430,7 @@ public enum RetrofitServiceHelper {
             jsonObject.put("displayStatus", statusResult);
             jsonObject.put("reason", statusType);
             jsonObject.put("place", statusPlace);
-            if (!TextUtils.isEmpty(remark)){
+            if (!TextUtils.isEmpty(remark)) {
                 jsonObject.put("remark", remark);
             }
             jsonObject.put("source", "app");
@@ -458,5 +461,85 @@ public enum RetrofitServiceHelper {
      */
     public Observable<QiNiuToken> getQiNiuToken() {
         return retrofitService.getQiNiuToken();
+    }
+
+    /**
+     * 获取合同模板
+     *
+     * @return
+     */
+    public Observable<ContractsTemplateRsp> getContractstemplate() {
+        return retrofitService.getContractstemplate();
+    }
+
+    public Observable<ContractAddRsp> getNewContract(Integer contractType, String cardId,
+                                                     Integer sex, String enterpriseCardId,
+                                                     String enterpriseRegisterId,
+                                                     String customerName,
+                                                     String customerEnterpriseName,
+                                                     Integer customerEnterpriseValidity,
+                                                     //必选
+                                                     String customerAddress,
+                                                     String customerPhone,
+                                                     String placeType,
+                                                     List<ContractsTemplateInfo> devicesList,
+                                                     int payTimes,
+                                                     //可选
+                                                     Boolean confirmed,
+                                                     int serviceTime) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (contractType != null) {
+                jsonObject.put("contract_type", contractType);
+            }
+            if (cardId != null) {
+                jsonObject.put("card_id", cardId);
+            }
+            if (sex != null) {
+                jsonObject.put("sex", sex);
+            }
+            if (enterpriseCardId != null) {
+                jsonObject.put("enterprise_card_id", enterpriseCardId);
+            }
+            if (enterpriseRegisterId != null) {
+                jsonObject.put("enterprise_register_id", enterpriseRegisterId);
+            }
+            if (customerName != null) {
+                jsonObject.put("customer_name", customerName);
+            }
+            if (customerEnterpriseName != null) {
+                jsonObject.put("customer_enterprise_name", customerEnterpriseName);
+            }
+            if (customerEnterpriseValidity != null) {
+                jsonObject.put("customer_enterprise_validity", customerEnterpriseValidity);
+            }
+            jsonObject.put("customer_address", customerAddress);
+            jsonObject.put("customer_phone", customerPhone);
+            jsonObject.put("place_type", placeType);
+            JSONArray jsonArray = new JSONArray();
+            if (devicesList != null) {
+                for (ContractsTemplateInfo contractsTemplateInfo : devicesList) {
+                    String deviceType = contractsTemplateInfo.getDeviceType();
+                    String hardwareVersion = contractsTemplateInfo.getHardwareVersion();
+                    int quantity = contractsTemplateInfo.getQuantity();
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("deviceType", deviceType);
+                    jsonObject1.put("hardwareVersion", hardwareVersion);
+                    jsonObject1.put("quantity", quantity);
+                    jsonArray.put(jsonObject1);
+
+                }
+            }
+            jsonObject.put("devices", jsonArray);
+            jsonObject.put("payTimes", payTimes);
+            if (confirmed != null) {
+                jsonObject.put("confirmed", confirmed);
+            }
+            jsonObject.put("serviceTime", serviceTime);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.newContract(body);
     }
 }

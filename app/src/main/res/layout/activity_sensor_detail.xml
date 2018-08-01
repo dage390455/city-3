@@ -393,7 +393,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/x75"
                         android:layout_marginTop="@dimen/y45"
-                        android:text="@string/sensor_detail_battery"
+                        android:text="电池"
                         android:textSize="@dimen/city_normal_size"/>
 
                     <TextView

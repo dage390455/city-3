@@ -7,6 +7,10 @@ import android.os.Message;
 import android.support.multidex.MultiDexApplication;
 import android.widget.Toast;
 
+import com.baidu.ocr.sdk.OCR;
+import com.baidu.ocr.sdk.OnResultListener;
+import com.baidu.ocr.sdk.exception.OCRError;
+import com.baidu.ocr.sdk.model.AccessToken;
 import com.fengmap.android.FMMapSDK;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.view.CropImageView;
@@ -45,6 +49,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
     private static boolean isAPPBack = true;
     private static PushHandler pushHandler;
     public UploadManager uploadManager;
+    public boolean hasGotToken = false;
 
     @Override
     public void onCreate() {
@@ -121,16 +126,37 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         //
         initImagePicker();
         initUploadManager();
+        initORC();
+    }
+
+    private void initORC() {
+        OCR.getInstance(instance.getApplicationContext()).initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
+            @Override
+            public void onResult(AccessToken result) {
+                // 调用成功，返回AccessToken对象
+                String token = result.getAccessToken();
+                hasGotToken = true;
+                LogUtils.loge(this, "初始化QCR成功 ： token = " + token);
+            }
+
+            @Override
+            public void onError(OCRError error) {
+                // 调用失败，返回OCRError子类SDKError对象
+                hasGotToken = false;
+                String message = error.getMessage();
+                LogUtils.loge(this, message);
+            }
+        }, getApplicationContext(), "D1T3OGkU9CzoVaEBnQ8ie2xG", "YD1WmK9CG2TVUDwt2MuT2XswNkimCEf7");
     }
 
     private void initUploadManager() {
         Configuration config = new Configuration.Builder()
-                .chunkSize(512 * 1024)        // 分片上传时，每片的大小。 默认256K
-                .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
+                .chunkSize(200 * 1024)        // 分片上传时，每片的大小。 默认256K
+//                .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
                 .connectTimeout(10)           // 链接超时。默认10秒
                 .useHttps(true)               // 是否使用https上传域名
                 .responseTimeout(60)          // 服务器响应超时。默认60秒
-                .recorder(null)           // recorder分片上传时，已上传片记录器。默认null
+//                .recorder(null)           // recorder分片上传时，已上传片记录器。默认null
 //                .recorder(new re, keyGen)   // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
                 .zone(FixedZone.zone0)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
                 .build();

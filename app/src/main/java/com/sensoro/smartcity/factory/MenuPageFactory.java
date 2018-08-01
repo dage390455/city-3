@@ -30,10 +30,11 @@ public class MenuPageFactory {
             .ic_menu_location,
             MenuPageInfo.MENU_PAGE_STATION);
     //合同管理
-    private static final MenuPageInfo contractPage = new MenuPageInfo(R.string.menu_page_contract, R.mipmap
-            .ic_menu_location, MenuPageInfo.MENU_PAGE_CONTRACT);
+    private static final MenuPageInfo contractPage = new MenuPageInfo(R.string.menu_page_contract, R.mipmap.ic_menu_contract, MenuPageInfo.MENU_PAGE_CONTRACT);
 
-    public static List<MenuPageInfo> createMenuPageList(boolean isSuper, String roles, boolean hasStation) {
+    public static List<MenuPageInfo> createMenuPageList(boolean isSuper, String roles, boolean hasStation, boolean
+            hasContract) {
+//        hasContract = false;
         ArrayList<MenuPageInfo> pageInfos = new ArrayList<>();
         //超级账户
         if (isSuper) {
@@ -43,31 +44,67 @@ public class MenuPageFactory {
             //商户账号
             if (roles.equalsIgnoreCase("business")) {
                 if (hasStation) {
-                    pageInfos.add(indexPage);
-                    pageInfos.add(alarmPage);
-                    pageInfos.add(pointPage);
-                    pageInfos.add(stationPage);
+                    if (hasContract) {
+                        pageInfos.add(indexPage);
+                        pageInfos.add(alarmPage);
+                        pageInfos.add(pointPage);
+                        pageInfos.add(stationPage);
+                        pageInfos.add(contractPage);
+                    } else {
+                        pageInfos.add(indexPage);
+                        pageInfos.add(alarmPage);
+                        pageInfos.add(pointPage);
+                        pageInfos.add(stationPage);
+                    }
+
                     return pageInfos;
                 } else {
-                    pageInfos.add(indexPage);
-                    pageInfos.add(alarmPage);
-                    pageInfos.add(pointPage);
+                    if (hasContract) {
+                        pageInfos.add(indexPage);
+                        pageInfos.add(alarmPage);
+                        pageInfos.add(pointPage);
+                        pageInfos.add(contractPage);
+                    } else {
+                        pageInfos.add(indexPage);
+                        pageInfos.add(alarmPage);
+                        pageInfos.add(pointPage);
+                    }
+
                     return pageInfos;
                 }
             } else {
                 //管理员账号
                 if (hasStation) {
-                    pageInfos.add(indexPage);
-                    pageInfos.add(alarmPage);
-                    pageInfos.add(merchantPage);
-                    pageInfos.add(pointPage);
-                    pageInfos.add(stationPage);
+                    if (hasContract) {
+                        pageInfos.add(indexPage);
+                        pageInfos.add(alarmPage);
+                        pageInfos.add(merchantPage);
+                        pageInfos.add(pointPage);
+                        pageInfos.add(stationPage);
+                        pageInfos.add(contractPage);
+                    } else {
+                        pageInfos.add(indexPage);
+                        pageInfos.add(alarmPage);
+                        pageInfos.add(merchantPage);
+                        pageInfos.add(pointPage);
+                        pageInfos.add(stationPage);
+                    }
+
                     return pageInfos;
                 } else {
-                    pageInfos.add(indexPage);
-                    pageInfos.add(alarmPage);
-                    pageInfos.add(merchantPage);
-                    pageInfos.add(pointPage);
+                    if (hasContract) {
+                        pageInfos.add(indexPage);
+                        pageInfos.add(alarmPage);
+                        pageInfos.add(merchantPage);
+                        pageInfos.add(pointPage);
+                        pageInfos.add(contractPage);
+                    } else {
+                        pageInfos.add(indexPage);
+                        pageInfos.add(alarmPage);
+                        pageInfos.add(merchantPage);
+                        pageInfos.add(pointPage);
+                    }
+
                     return pageInfos;
                 }
             }

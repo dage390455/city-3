@@ -17,6 +17,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.fragment.AlarmListFragment;
+import com.sensoro.smartcity.fragment.ContractFragment;
 import com.sensoro.smartcity.fragment.IndexFragment;
 import com.sensoro.smartcity.fragment.MerchantSwitchFragment;
 import com.sensoro.smartcity.fragment.PointDeployFragment;
@@ -73,6 +74,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     private MerchantSwitchFragment merchantSwitchFragment = null;
     private PointDeployFragment pointDeployFragment = null;
     private StationDeployFragment stationDeployFragment = null;
+    private ContractFragment contractFragment =null;
     //
     private volatile Socket mSocket = null;
     private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
@@ -131,12 +133,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         merchantSwitchFragment = MerchantSwitchFragment.newInstance("merchant");
         pointDeployFragment = PointDeployFragment.newInstance("point");
         stationDeployFragment = StationDeployFragment.newInstance("station");
+        contractFragment=ContractFragment.newInstance("contract");
         //
         fragmentList.add(indexFragment);
         fragmentList.add(alarmListFragment);
         fragmentList.add(merchantSwitchFragment);
         fragmentList.add(pointDeployFragment);
         fragmentList.add(stationDeployFragment);
+        fragmentList.add(contractFragment);
         getView().updateMainPageAdapterData();
         getView().showAccountInfo(mUserName, mPhone);
         mHandler.postDelayed(mRunnable, 3000L);
@@ -162,7 +166,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 });
             }
             //
-            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation));
+            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,true));
             getView().setCurrentPagerItem(0);
             getView().setMenuSelected(0);
             reconnect();
@@ -197,7 +201,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation));
+                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,true));
                 if (mIsSupperAccount) {
                     merchantSwitchFragment.requestData();
                 }
@@ -488,6 +492,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 break;
             case MenuPageInfo.MENU_PAGE_CONTRACT:
                 //TODO 合同管理
+                getView().setCurrentPagerItem(5);
                 break;
             default:
                 break;

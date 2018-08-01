@@ -31,6 +31,32 @@
         app:qrcv_topOffset="@dimen/y500"
         app:qrcv_verticalBias="-1"/>
 
+    <RelativeLayout
+        android:id="@+id/sensor_history_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y200"
+        android:layout_alignParentTop="true"
+        android:background="@android:color/transparent">
+
+        <ImageView
+            android:id="@+id/deploy_iv_menu_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:padding="18dp"
+            android:src="@mipmap/ic_menu_list"/>
+
+        <TextView
+            android:id="@+id/sensor_deploy_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="@string/point_deploy"
+            android:textColor="@color/white"
+            android:textSize="@dimen/x60"/>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -88,30 +114,4 @@
     </LinearLayout>
 
 
-    <RelativeLayout
-        android:id="@+id/sensor_history_title_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y200"
-        android:layout_alignParentTop="true"
-        android:background="@android:color/transparent">
-
-        <ImageView
-            android:id="@+id/deploy_iv_menu_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
-            android:padding="18dp"
-            android:src="@mipmap/ic_menu_list"/>
-
-        <TextView
-            android:id="@+id/sensor_deploy_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/point_deploy"
-            android:textColor="@color/white"
-            android:textSize="@dimen/x60"/>
-    </RelativeLayout>
 </RelativeLayout>

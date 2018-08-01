@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/f7f8f9"
+                android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/contract_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y200"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/contract_iv_menu_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:padding="18dp"
+                android:src="@mipmap/ic_menu_list"/>
+
+            <TextView
+                android:id="@+id/contract_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/contract_list"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/x60"/>
+
+
+            <ImageView
+                android:id="@+id/contract_iv_add"
+                android:layout_width="@dimen/x120"
+                android:layout_height="@dimen/y160"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x20"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:padding="8dp"
+                android:src="@mipmap/pic_add"
+                />
+        </RelativeLayout>
+
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y1"
+            android:background="@color/c_e7e7e7"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/x30"
+            android:layout_marginRight="@dimen/x30"
+            android:background="@color/list_sep_color">
+
+            <com.handmark.pulltorefresh.library.PullToRefreshListView
+                android:id="@+id/contract_ptr_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/y10"
+                android:divider="@color/list_sep_color"
+                android:dividerHeight="@dimen/y30"
+                android:fadingEdge="none"
+                android:scrollbars="vertical"
+                />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/y50"
+        android:layout_marginRight="@dimen/x50">
+
+        <ImageView
+            android:id="@+id/contract_return_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y30"
+            android:layout_marginRight="@dimen/x30"
+            android:src="@mipmap/ic_return_top"
+            android:visibility="gone"/>
+    </LinearLayout>
+
+</RelativeLayout>

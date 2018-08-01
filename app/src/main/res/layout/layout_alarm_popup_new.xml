@@ -4,17 +4,18 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
+              android:background="@color/white"
               android:orientation="vertical">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         >
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
             android:orientation="vertical">
 
             <RelativeLayout
@@ -46,7 +47,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
                 android:layout_marginTop="@dimen/y40"
-                android:text="预警结果类型"/>
+                android:text="预警结果类型"
+                android:textSize="@dimen/city_tiny_large_size"/>
 
             <Spinner
                 android:id="@+id/spinner_result"
@@ -58,6 +60,7 @@
                 android:layout_marginTop="@dimen/y40"
                 android:animationCache="true"
                 android:padding="10dp"
+                android:overlapAnchor="false"
                 android:spinnerMode="dropdown"/>
 
             <TextView
@@ -73,7 +76,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
                 android:layout_marginTop="@dimen/y50"
-                android:text="预警成因类型"/>
+                android:text="预警成因类型"
+                android:textSize="@dimen/city_tiny_large_size"/>
 
             <Spinner
                 android:id="@+id/spinner_type"
@@ -85,6 +89,7 @@
                 android:layout_marginTop="@dimen/y40"
                 android:animationCache="true"
                 android:padding="10dp"
+                android:overlapAnchor="false"
                 android:spinnerMode="dropdown"/>
 
             <TextView
@@ -92,7 +97,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x70"
                 android:layout_marginTop="@dimen/y40"
-                android:text="预警场所"/>
+                android:text="预警场所"
+                android:textSize="@dimen/city_tiny_large_size"/>
 
             <Spinner
                 android:id="@+id/spinner_place"
@@ -104,6 +110,7 @@
                 android:layout_marginTop="@dimen/y40"
                 android:animationCache="true"
                 android:padding="10dp"
+                android:overlapAnchor="false"
                 android:spinnerMode="dropdown"/>
 
             <LinearLayout
@@ -118,7 +125,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/remarks"
-                    android:textSize="@dimen/city_normal_size"/>
+                    android:textSize="@dimen/city_tiny_large_size"/>
 
                 <EditText
                     android:id="@+id/alarm_popup_remark"
@@ -139,38 +146,41 @@
                     android:paddingTop="@dimen/y30"
                     android:scrollbars="vertical"
                     android:textColor="@color/c_626262"
-                    android:textSize="@dimen/city_normal_size"
+                    android:textSize="@dimen/city_tiny_large_size"
                     />
 
-
-                <android.support.v7.widget.RecyclerView
-                    android:id="@+id/recyclerView"
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/y30"
+                    android:layout_height="wrap_content">
 
-                    android:choiceMode="singleChoice"
-                    android:divider="@null"
-                    android:fadingEdge="none"
-                    android:listSelector="@android:color/transparent"
-                    android:scrollbarStyle="outsideOverlay"
-                    app:layoutManager="android.support.v7.widget.GridLayoutManager"
-                    app:spanCount="4"
-                    tools:listitem="@layout/list_item_image"/>
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/recyclerView"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/y30"
+                        android:choiceMode="singleChoice"
+                        android:divider="@null"
+                        android:fadingEdge="none"
+                        android:listSelector="@android:color/transparent"
+                        android:scrollbarStyle="outsideOverlay"/>
+                </RelativeLayout>
 
-                <Button
-                    android:id="@+id/alarm_popup_commit"
-                    style="?android:attr/borderlessButtonStyle"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/y50"
-                    android:layout_marginTop="@dimen/y50"
-                    android:background="@drawable/shape_button_normal"
-                    android:gravity="center"
-                    android:text="@string/commit"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/city_btn_text_size"/>
             </LinearLayout>
         </LinearLayout>
     </ScrollView>
+
+    <Button
+        android:id="@+id/alarm_popup_commit"
+        style="?android:attr/borderlessButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/y50"
+        android:layout_marginLeft="@dimen/x70"
+        android:layout_marginRight="@dimen/x70"
+        android:layout_marginTop="@dimen/y50"
+        android:background="@drawable/shape_button_normal"
+        android:gravity="center"
+        android:text="@string/commit"
+        android:textColor="@color/white"
+        android:textSize="@dimen/city_btn_text_size"/>
 </LinearLayout>

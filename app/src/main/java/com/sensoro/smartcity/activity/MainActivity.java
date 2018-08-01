@@ -65,10 +65,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPrestener.setAppVersion();
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
 
     @Override
     protected MainPresenter createPresenter() {
@@ -107,7 +103,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setOnItemClickListener(this);
         sensoroPager = (SensoroPager) findViewById(R.id.main_container);
-        sensoroPager.setOffscreenPageLimit(6);
+        sensoroPager.setOffscreenPageLimit(7);
         mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mPrestener
                 .getFragmentList());
         sensoroPager.setAdapter(mainPagerAdapter);

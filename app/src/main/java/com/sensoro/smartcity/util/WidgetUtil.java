@@ -827,6 +827,17 @@ public class WidgetUtil {
         }
     }
 
+    public static String getContractDeviceTypeChinese(String deviceType) {
+        switch (deviceType) {
+            case "smoke":
+                return "烟雾传感器";
+            case "co":
+                return "一氧化碳传感器";
+            default:
+                return "Sensoro传感器";
+        }
+    }
+
     public static String getSensorTypeChinese(String sensorType) {
         String value = "";
         if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("temp1")) {
@@ -1173,6 +1184,8 @@ public class WidgetUtil {
                 return "追踪器";
             } else if (temp.contains("CURRENT")) {
                 return "电表";
+            } else if (temp.contains("installed") && temp.contains("smoke")) {
+                return "烟感";
             } else {
                 return context.getString(R.string.unknown);
             }
@@ -1257,6 +1270,9 @@ public class WidgetUtil {
 
     public static String getBooleanAlarm(String sensorType) {
         switch (sensorType) {
+            case "installed":
+                //TODO 目前只有烟感存在此属性 以后扩展需要分离
+                return "被拆卸,烟雾浓度高时报警";
             case "alarm":
                 return "发生报警时报警";
             case "flame":
@@ -1277,8 +1293,6 @@ public class WidgetUtil {
                 return "打开时报警";
             case "connection":
                 return "断开时报警";
-            case "installed":
-                return "被拆卸时报警";
             default:
                 return null;
         }
