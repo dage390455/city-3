@@ -48,6 +48,7 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        mPrestener.onDestroy();
         super.onDestroy();
     }
 

@@ -26,12 +26,13 @@ public interface Constants {
     String PREFERENCE_KEY_DEVICE_NUM = "preference_key_device_num";
     String PREFERENCE_KEY_DEVICE_PHONE = "preference_key_device_phone";
     String INPUT = "INPUT";
-//    int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
+    //    int LEFT_MENU_ICON_UNSELECT[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
 //            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
 //    int LEFT_MENU_ICON_UNSELECT_BUSSIES[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
 //            R.mipmap.ic_menu_location, R.mipmap.ic_menu_location};
 //    //
-//    int LEFT_MENU_ICON_UNSELECT_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
+//    int LEFT_MENU_ICON_UNSELECT_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap
+// .ic_menu_switch,
 //            R.mipmap.ic_menu_location};
 //    int LEFT_MENU_ICON_UNSELECT_BUSSIES_NO_STATION[] = {R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm,
 //            R.mipmap.ic_menu_location};
@@ -130,6 +131,8 @@ public interface Constants {
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     //
+    String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";
+    //
     String PREFERENCE_LOGIN = "preference_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
     String PREFERENCE_KEY_PASSWORD = "preference_key_password";
@@ -183,4 +186,7 @@ public interface Constants {
     int TYPE_DEVICE_PHONE_NUM = 0x12;
 
     String EXTRA_SEARCH_CONTENT = "extra_search_content";
+    //
+    int EVENT_DATA_FINISH_CODE = 0x13;
+    //
 }

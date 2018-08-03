@@ -42,7 +42,7 @@ import com.sensoro.smartcity.activity.DeploySettingTagActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployActivityView;
-import com.sensoro.smartcity.iwidget.IOndestroy;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -66,7 +66,7 @@ import java.util.regex.Pattern;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> implements IOndestroy, AMap
+public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> implements IOnDestroy, AMap
         .OnMapClickListener, Constants, AMap.OnCameraChangeListener, AMap.OnMapLoadedListener, AMap
         .OnMarkerClickListener, AMap.InfoWindowAdapter, AMap.OnMapTouchListener, GeocodeSearch
         .OnGeocodeSearchListener, AMapLocationListener {

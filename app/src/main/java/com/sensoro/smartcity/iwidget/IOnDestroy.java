@@ -1,5 +1,5 @@
 package com.sensoro.smartcity.iwidget;
 
-public interface IOndestroy {
+public interface IOnDestroy {
     void onDestroy();
 }

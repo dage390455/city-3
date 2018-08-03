@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,11 +28,9 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<RecyclerView.V
 
     private Context mContext;
     private final List<ContractsTemplateInfo> mList = new ArrayList<>();
-    RecycleViewItemClickListener itemClickListener;
 
-    public ContractTemplateAdapter(Context context, RecycleViewItemClickListener itemClickListener) {
+    public ContractTemplateAdapter(Context context) {
         this.mContext = context;
-        this.itemClickListener = itemClickListener;
     }
 
     public void setData(List<ContractsTemplateInfo> list) {
@@ -49,7 +46,7 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<RecyclerView.V
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_contracts_template, parent, false);
 
-        return new ContractTemplateViewHolder(view, itemClickListener);
+        return new ContractTemplateViewHolder(view);
     }
 
     @Override
@@ -134,31 +131,16 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<RecyclerView.V
         EditText etContractItemNum;
         ImageView ivContractItemAdd;
 
-        public ContractTemplateViewHolder(View itemView, final RecycleViewItemClickListener listener) {
+        public ContractTemplateViewHolder(View itemView) {
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.tv_contacts_template_name);
             ivContractItemDel = (ImageView) itemView.findViewById(R.id.iv_contract_item_del);
             etContractItemNum = (EditText) itemView.findViewById(R.id.et_contract_item_num);
             ivContractItemAdd = (ImageView) itemView.findViewById(R.id.iv_contract_item_add);
             //
-
-            View.OnClickListener onItemClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
-                        listener.onItemClick(v, getAdapterPosition());
-                    }
-                }
-            };
-            ivContractItemDel.setOnClickListener(onItemClickListener);
-            ivContractItemAdd.setOnClickListener(onItemClickListener);
         }
 
 
-    }
-
-    public interface OnContractTemplateListener {
-        void onClick();
     }
 
     private void dismissInputMethodManager(View view) {

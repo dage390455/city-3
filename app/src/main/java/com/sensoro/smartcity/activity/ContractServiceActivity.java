@@ -6,6 +6,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -21,9 +22,10 @@ import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.smartcity.presenter.ContractServiceActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.popup.SelectDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -31,7 +33,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ContractServiceActivity extends BaseActivity<IContractServiceActivityView,
-        ContractServiceActivityPresenter> implements IContractServiceActivityView, RecycleViewItemClickListener {
+        ContractServiceActivityPresenter> implements IContractServiceActivityView {
 
     @BindView(R.id.iv_contract_service_back)
     ImageView ivContractServiceBack;
@@ -49,6 +51,12 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     ImageView ivContractServiceLine1;
     @BindView(R.id.ll_contract_service_line1)
     LinearLayout llContractServiceLine1;
+    //新加电话号码必选
+    @BindView(R.id.ll_contract_service_phone)
+    LinearLayout llContractServicePhone;
+    @BindView(R.id.et_contract_service_phone)
+    EditText etContractServicePhone;
+    //
     @BindView(R.id.tv_contract_service_line2)
     TextView tvContractServiceLine2;
     @BindView(R.id.et_contract_service_line2)
@@ -89,12 +97,12 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     ImageView ivContractServiceLine6;
     @BindView(R.id.ll_contract_service_line6)
     LinearLayout llContractServiceLine6;
-    @BindView(R.id.tv_contract_service_place_type_title)
-    TextView tvContractServicePlaceTitle;
+    //
     @BindView(R.id.tv_contract_service_place_type)
     TextView tvContractServicePlace;
     @BindView(R.id.ll_contract_service_place_type)
     LinearLayout llContractServicePlace;
+    //
     @BindView(R.id.ll_contract_service_layout)
     LinearLayout llContractServiceLayout;
     @BindView(R.id.iv_contract_age_del)
@@ -107,8 +115,25 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     RecyclerView rvSensorCount;
     @BindView(R.id.bt_next)
     Button btNext;
+    @BindView(R.id.iv_line1)
+    ImageView ivLine1;
+    @BindView(R.id.iv_line_phone)
+    ImageView ivLinePhone;
+    @BindView(R.id.iv_line2)
+    ImageView ivLine2;
+    @BindView(R.id.iv_line3)
+    ImageView ivLine3;
+    @BindView(R.id.iv_line4)
+    ImageView ivLine4;
+    @BindView(R.id.iv_line5)
+    ImageView ivLine5;
+    @BindView(R.id.iv_line6)
+    ImageView ivLine6;
+    @BindView(R.id.iv_line_place)
+    ImageView ivLinePlace;
     private ContractTemplateAdapter contractTemplateAdapter;
     private ProgressUtils mProgressUtils;
+    private final List<String> names = new ArrayList<>();
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -119,8 +144,15 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     }
 
     private void initView() {
+        names.add("老旧小区");
+        names.add("工厂");
+        names.add("居民作坊");
+        names.add("仓库");
+        names.add("商铺店面");
+        names.add("商场");
+        names.add("其他");
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        contractTemplateAdapter = new ContractTemplateAdapter(mActivity, this);
+        contractTemplateAdapter = new ContractTemplateAdapter(mActivity);
         rvSensorCount.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, true));
         rvSensorCount.setAdapter(contractTemplateAdapter);
         rvSensorCount.setNestedScrollingEnabled(false);
@@ -137,16 +169,22 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        mPrestener.onDestroy();
         super.onDestroy();
     }
 
     @Override
-    public void showContentText(int type, String line1, String line2, String line3, String line4, String line5,
+    public void showContentText(int type, String line1, String phone, String line2, String line3, String line4,
+                                String line5,
                                 String line6, int place) {
         switch (type) {
             case 1:
                 etContractServiceLine1.setText(line1);
                 etContractServiceLine1.setSelection(line1.length());
+                //
+                etContractServicePhone.setText(phone);
+                etContractServicePhone.setSelection(phone.length());
+
                 //
                 etContractServiceLine2.setText(line2);
                 etContractServiceLine2.setSelection(line2.length());
@@ -163,14 +201,15 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 etContractServiceLine6.setText(line6);
                 etContractServiceLine6.setSelection(line6.length());
                 //
-                llContractServicePlace.setVisibility(View.GONE);
-                //
                 tvContractServiceTitleRetake.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 tvContractServiceLine1.setText("姓名");
                 etContractServiceLine1.setText(line1);
                 etContractServiceLine1.setSelection(line1.length());
+                //
+                etContractServicePhone.setText(phone);
+                etContractServicePhone.setSelection(phone.length());
                 //
                 tvContractServiceLine2.setText("性别");
                 etContractServiceLine2.setText(line2);
@@ -184,28 +223,32 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 etContractServiceLine4.setText(line4);
                 etContractServiceLine4.setSelection(line4.length());
                 //
+                ivLine5.setVisibility(View.GONE);
                 llContractServiceLine5.setVisibility(View.GONE);
                 //
+                ivLine6.setVisibility(View.GONE);
                 llContractServiceLine6.setVisibility(View.GONE);
-                //
-                llContractServicePlace.setVisibility(View.GONE);
                 //
                 tvContractServiceTitleRetake.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 tvContractServiceLine1.setText("甲方（客户名称）");
+                etContractServiceLine1.requestFocus();
                 //
                 tvContractServiceLine2.setText("业主姓名");
                 //
                 tvContractServiceLine3.setText("手机号");
                 //
                 tvContractServiceLine4.setText("住址");
+                //已经存在电话 不显示
+                ivLinePhone.setVisibility(View.GONE);
+                llContractServicePhone.setVisibility(View.GONE);
                 //
+                ivLine5.setVisibility(View.GONE);
                 llContractServiceLine5.setVisibility(View.GONE);
                 //
+                ivLine6.setVisibility(View.GONE);
                 llContractServiceLine6.setVisibility(View.GONE);
-                //
-                llContractServicePlace.setVisibility(View.VISIBLE);
                 //
                 tvContractServiceTitleRetake.setVisibility(View.GONE);
                 break;
@@ -213,6 +256,16 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 break;
         }
 
+    }
+
+    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
+        SelectDialog dialog = new SelectDialog(mActivity, R.style
+                .transparentFrameWindowStyle,
+                listener, names);
+        if (!mActivity.isFinishing()) {
+            dialog.show();
+        }
+        return dialog;
     }
 
     @Override
@@ -247,6 +300,12 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             case R.id.iv_contract_service_line6:
                 break;
             case R.id.ll_contract_service_place_type:
+                showDialog(new SelectDialog.SelectDialogListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        tvContractServicePlace.setText(names.get(position));
+                    }
+                }, names);
                 break;
             case R.id.iv_contract_age_del:
                 String contractAgeDel = etContractAge.getText().toString();
@@ -279,9 +338,10 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 String line4 = etContractServiceLine4.getText().toString();
                 String line5 = etContractServiceLine5.getText().toString();
                 String line6 = etContractServiceLine6.getText().toString();
+                String phone = etContractServicePhone.getText().toString();
                 String line7 = etContractAge.getText().toString();
-                int place = 0;
-                mPrestener.startToNext(line1, line2, line3, line4, line5, line6, line7, place);
+                String placeType = tvContractServicePlace.getText().toString();
+                mPrestener.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType);
                 break;
         }
     }
@@ -289,7 +349,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPrestener.handleResult(requestCode,resultCode,data);
+        mPrestener.handleResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -309,17 +369,12 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
 
     @Override
     public void setIntentResult(int requestCode) {
-
+        mActivity.setResult(requestCode);
     }
 
     @Override
     public void setIntentResult(int requestCode, Intent data) {
-
-    }
-
-    @Override
-    public void onItemClick(View view, int position) {
-        mPrestener.clickItem(view, position);
+        mActivity.setResult(requestCode, data);
     }
 
     @Override

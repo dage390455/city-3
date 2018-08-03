@@ -19,7 +19,7 @@ import com.sensoro.smartcity.activity.SensorDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IIndexFragmentView;
-import com.sensoro.smartcity.iwidget.IOndestroy;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.NumberDeserializer;
@@ -38,7 +38,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> implements IOndestroy,
+public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> implements IOnDestroy,
         Constants {
     private final List<DeviceInfo> mDataList = new ArrayList<>();
     private final Handler mHandler = new Handler();

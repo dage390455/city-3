@@ -52,6 +52,7 @@
                 android:orientation="vertical">
 
                 <ImageView
+                    android:id="@+id/iv_line1"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:background="@color/c_e7e7e7"
@@ -66,12 +67,12 @@
 
                     <TextView
                         android:id="@+id/tv_contract_info_line1"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
                         android:text="法定代表人"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_b6b6b6"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
 
@@ -84,12 +85,55 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:textColor="@color/c_626262"
                         android:text="测试测试测试"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_line_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y1"
+                    android:layout_marginLeft="12dp"
+                    android:background="@color/c_e7e7e7"
+                    android:contentDescription="@null"/>
+
+                <LinearLayout
+                    android:id="@+id/ll_contract_info_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y160"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tv_contract_info_phone"
+                        android:layout_width="120dp"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="手机号"
+                        android:textColor="@color/c_b6b6b6"
+                        android:textSize="@dimen/city_tiny_large_size"/>
+
+                    <TextView
+                        android:id="@+id/et_contract_info_phone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="15dp"
+                        android:layout_weight="1"
+                        android:adjustViewBounds="true"
+                        android:background="@null"
+                        android:cropToPadding="true"
+                        android:text="测试测试测试"
+                        android:textColor="@color/c_626262"
+                        android:textSize="@dimen/city_tiny_large_size"/>
+
+
+                </LinearLayout>
+
+                <ImageView
+                    android:id="@+id/iv_line2"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
@@ -105,12 +149,12 @@
 
                     <TextView
                         android:id="@+id/tv_contract_info_line2"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
                         android:text="企业名称"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_b6b6b6"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
                     <TextView
@@ -123,12 +167,14 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:text="测试测试测试"
+                        android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
 
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_line3"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
@@ -144,12 +190,12 @@
 
                     <TextView
                         android:id="@+id/tv_contract_info_line3"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
                         android:text="社会信息用代码"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_b6b6b6"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
 
@@ -162,11 +208,13 @@
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
                         android:text="测试测试测试"
+                        android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_line4"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
@@ -182,11 +230,11 @@
 
                     <TextView
                         android:id="@+id/tv_contract_info_line4"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="15dp"
                         android:text="注册号"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_b6b6b6"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
 
@@ -200,11 +248,13 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:text="测试测试测试"
+                        android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_line5"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
@@ -219,12 +269,12 @@
 
                     <TextView
                         android:id="@+id/tv_contract_info_line5"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
                         android:text="住址"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_b6b6b6"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
 
@@ -238,11 +288,13 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:text="测试测试测试"
+                        android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_line6"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
@@ -258,13 +310,13 @@
 
                     <TextView
                         android:id="@+id/tv_contract_info_line6"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
                         android:text="有效期"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_b6b6b6"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
 
@@ -278,11 +330,13 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:text="测试测试测试"
+                        android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
                 </LinearLayout>
 
                 <ImageView
+                    android:id="@+id/iv_line_place"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
@@ -298,13 +352,13 @@
 
                     <TextView
                         android:id="@+id/tv_contract_info_place_title"
-                        android:layout_width="wrap_content"
+                        android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
                         android:text="场地性质"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_b6b6b6"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
                     <TextView
@@ -317,7 +371,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="企业"
+                        android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"
                         />
 
@@ -335,19 +389,20 @@
 
                 <TextView
                     android:id="@+id/tv_service_age"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
                     android:text="服务年限"
-                    android:textColor="@color/c_626262"
+                    android:textColor="@color/c_b6b6b6"
                     android:textSize="@dimen/city_tiny_large_size"/>
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_toRightOf="@+id/tv_service_age"
+                    android:layout_marginLeft="10dp"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
@@ -361,6 +416,7 @@
                         android:cropToPadding="true"
                         android:padding="10dp"
                         android:text="0"
+                        android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"/>
 
                 </LinearLayout>
@@ -381,22 +437,24 @@
 
 
             <RelativeLayout
+                android:id="@+id/rl_service_info_sign_time"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y160"
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/white"
-                android:gravity="center_vertical">
+                android:gravity="center_vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_service_sign"
-                    android:layout_width="wrap_content"
+                    android:layout_width="120dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
                     android:text="签约时间"
-                    android:textColor="@color/c_626262"
+                    android:textColor="@color/c_b6b6b6"
                     android:textSize="@dimen/city_tiny_large_size"/>
 
                 <LinearLayout
@@ -415,6 +473,7 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:padding="10dp"
+                        android:textColor="@color/c_626262"
                         android:text="2018.6.24"
                         android:textSize="@dimen/city_tiny_large_size"/>
 

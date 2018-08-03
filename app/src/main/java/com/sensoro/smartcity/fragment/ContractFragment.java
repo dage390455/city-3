@@ -9,6 +9,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,12 +17,15 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
-import com.sensoro.smartcity.adapter.AlarmListAdapter;
+import com.sensoro.smartcity.adapter.ContractListAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IContractFragmentView;
 import com.sensoro.smartcity.presenter.ContractFragmentPresenter;
+import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+
+import java.util.List;
 
 import butterknife.BindView;
 
@@ -31,20 +35,22 @@ import static com.sensoro.smartcity.constant.Constants.INPUT;
 
 public class ContractFragment extends BaseFragment<IContractFragmentView, ContractFragmentPresenter> implements
         IContractFragmentView, AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener,
-        AlarmListAdapter.AlarmConfirmStatusClickListener {
+        RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.contract_iv_menu_list)
     ImageView contractIvMenuList;
     @BindView(R.id.contract_title)
     TextView contractTitle;
     @BindView(R.id.contract_iv_add)
     ImageView contractIvAdd;
+    @BindView(R.id.rg_contract_select)
+    RadioGroup rgContractSelect;
     @BindView(R.id.contract_ptr_list)
     PullToRefreshListView contractPtrList;
     @BindView(R.id.contract_return_top)
     ImageView contractReturnTop;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
-    private AlarmListAdapter mAlarmListAdapter;
+    private ContractListAdapter mContractListAdapter;
 
     public static ContractFragment newInstance(String input) {
         ContractFragment contractFragment = new ContractFragment();
@@ -62,27 +68,25 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
+        rgContractSelect.setOnCheckedChangeListener(this);
         contractPtrList.setRefreshing(false);
+        contractPtrList.setMode(PullToRefreshBase.Mode.BOTH);
         contractPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
             @Override
             public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isShowDialog = false;
                 requestDataByDirection(DIRECTION_DOWN, false);
-//                requestDataByFilter(DIRECTION_DOWN, false);
             }
 
             @Override
             public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
                 isShowDialog = false;
                 requestDataByDirection(DIRECTION_UP, false);
-//                requestDataByFilter(DIRECTION_UP, false);
             }
         });
-        mAlarmListAdapter = new AlarmListAdapter(mRootFragment.getActivity(), this);
-        contractPtrList.setMode(PullToRefreshBase.Mode.BOTH);
+        mContractListAdapter = new ContractListAdapter(mRootFragment.getActivity());
         contractPtrList.setOnScrollListener(this);
-//        mAlarmListAdapter = new AlarmListAdapter(mRootFragment.getActivity(), this);
-        contractPtrList.setAdapter(mAlarmListAdapter);
+        contractPtrList.setAdapter(mContractListAdapter);
         contractPtrList.setOnItemClickListener(this);
         contractIvMenuList.setOnClickListener(this);
         contractIvMenuList.setOnClickListener(this);
@@ -111,8 +115,14 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
     }
 
     @Override
-    public void requestDataByDirection(int direction, boolean isForce) {
+    public void requestDataByDirection(int direction, boolean isFirst) {
+        mPrestener.requestDataByDirection(direction, isFirst);
+    }
 
+    @Override
+    public void updateContractList(List<ContractListInfo> data) {
+        mContractListAdapter.setData(data);
+        mContractListAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -177,7 +187,7 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-
+        mPrestener.clickItem(position);
     }
 
     @Override
@@ -202,11 +212,34 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
+        int tempPos = contractPtrList.getRefreshableView().getFirstVisiblePosition();
+        if (tempPos > 0) {
+            contractReturnTop.setVisibility(View.VISIBLE);
+        } else {
+            contractReturnTop.setVisibility(View.GONE);
+        }
     }
 
     @Override
-    public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
-
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        int id = group.getCheckedRadioButtonId();
+        // 通过id实例化选中的这个RadioButton
+//        RadioButton choise = (RadioButton) mRootView.findViewById(id);
+//        // 获取这个RadioButton的text内容
+//        String output = choise.getText().toString();
+//        Toast.makeText(MainActivity.this, "你的性别为：" + output, Toast.LENGTH_SHORT).show();
+        switch (id) {
+            case R.id.rb_contract_all:
+                mPrestener.requestContractDataAll();
+                break;
+            case R.id.rb_contract_business:
+                mPrestener.requestContractDataBusiness();
+                break;
+            case R.id.rb_contract_person:
+                mPrestener.requestContractDataPerson();
+                break;
+            default:
+                break;
+        }
     }
 }

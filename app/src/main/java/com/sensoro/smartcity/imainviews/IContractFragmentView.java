@@ -4,6 +4,9 @@ import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.smartcity.server.bean.ContractListInfo;
+
+import java.util.List;
 
 public interface IContractFragmentView extends IProgressDialog, IToast, IActivityIntent {
     //    void updateContractListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
@@ -11,5 +14,7 @@ public interface IContractFragmentView extends IProgressDialog, IToast, IActivit
 
     PullToRefreshBase.State getPullRefreshState();
 
-    void requestDataByDirection(int direction, boolean isForce);
+    void requestDataByDirection(int direction, boolean isFirst);
+
+    void updateContractList(List<ContractListInfo> data);
 }

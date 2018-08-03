@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.view.View;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -17,7 +16,10 @@ import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.BusinessLicenseData;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -25,6 +27,10 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -34,7 +40,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 
-public class ContractServiceActivityPresenter extends BasePresenter<IContractServiceActivityView> implements Constants {
+public class ContractServiceActivityPresenter extends BasePresenter<IContractServiceActivityView> implements
+        IOnCreate, IOnDestroy, Constants {
     private Activity mContext;
     private int serviceType;
     private String line1;
@@ -44,15 +51,17 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     private String line5;
     private String line6;
     //
-
-    private static final int REQUEST_CODE_LICENSE_SERVICE=0x111;
-    private static final int REQUEST_CODE_PERSON_SERVICE=0x112;
+    private String placeType;
+    //
+    private static final int REQUEST_CODE_LICENSE_SERVICE = 0x111;
+    private static final int REQUEST_CODE_PERSON_SERVICE = 0x112;
 
     private List<ContractsTemplateInfo> data;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         serviceType = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_TYPE, -1);
         refreshContent();
         getContractTemplateInfos();
@@ -68,7 +77,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 line5 = mContext.getIntent().getStringExtra("address");
                 line6 = mContext.getIntent().getStringExtra("validity_period");
                 //
-                getView().showContentText(serviceType, line1, line2, line3, line4,
+                getView().showContentText(serviceType, line1, "", line2, line3, line4,
                         line5, line6, 0);
                 break;
             case 2:
@@ -76,11 +85,11 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 line2 = mContext.getIntent().getStringExtra("sex");
                 line3 = mContext.getIntent().getStringExtra("id_number");
                 line4 = mContext.getIntent().getStringExtra("address");
-                getView().showContentText(serviceType, line1, line2, line3, line4,
+                getView().showContentText(serviceType, line1, "", line2, line3, line4,
                         null, null, 0);
                 break;
             case 3:
-                getView().showContentText(serviceType, null, null, null, null, null, null, 0);
+                getView().showContentText(serviceType, "", "", "", "", "", "", "", 0);
                 break;
             default:
                 break;
@@ -142,17 +151,18 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
         }
     }
 
-    public void clickItem(View view, int position) {
-        if (data != null) {
-            ContractsTemplateInfo contractsTemplateInfo = data.get(position);
-            switch (view.getId()) {
+//    public void clickItem(View view, int position) {
+//        if (data != null) {
+//            ContractsTemplateInfo contractsTemplateInfo = data.get(position);
+//            switch (view.getId()) {
+//
+//            }
+//        }
+//    }
 
-            }
-        }
-    }
-
-    public void startToNext(String line1, String line2, String line3, String line4, String line5, String line6,
-                            String contractAge, int place) {
+    public void startToNext(String line1, String phone, String line2, String line3, String line4, String line5,
+                            String line6,
+                            String contractAge, String place) {
         Intent intent = new Intent();
         intent.setClass(mContext, ContractInfoActivity.class);
         switch (serviceType) {
@@ -165,6 +175,12 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 intent.putExtra("line4", line4);
                 intent.putExtra("line5", line5);
                 intent.putExtra("line6", line6);
+                if (TextUtils.isEmpty(phone)) {
+                    getView().toastShort("请输入手机号");
+                    return;
+                } else {
+                    intent.putExtra("phone", phone);
+                }
                 break;
             case 2:
                 intent.putExtra(EXTRA_CONTRACT_TYPE, 2);
@@ -173,6 +189,12 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     return;
                 } else {
                     intent.putExtra("line1", line1);
+                }
+                if (TextUtils.isEmpty(phone)) {
+                    getView().toastShort("请输入手机号");
+                    return;
+                } else {
+                    intent.putExtra("phone", phone);
                 }
                 if (TextUtils.isEmpty(line2)) {
                     getView().toastShort("请输入性别");
@@ -223,6 +245,11 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             default:
                 break;
         }
+        if (TextUtils.isEmpty(place)) {
+            getView().toastShort("请选择一个场地类型");
+            return;
+        }
+        intent.putExtra("place", place);
         intent.putExtra("contract_service_life", contractAge);
         if (data != null) {
             ArrayList<ContractsTemplateInfo> dataList = (ArrayList<ContractsTemplateInfo>) data;
@@ -257,7 +284,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                                     line4 = words_result.get证件编号().getWords();
 //                            infoPopText(result);
                                     LogUtils.loge(this, businessLicenseData.toString());
-                                    getView().showContentText(serviceType, line1, line2, line3, line4,
+                                    getView().showContentText(serviceType, line1, "", line2, line3, line4,
                                             line5, line6, 0);
                                 }
                             });
@@ -280,6 +307,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             }
         }
     }
+
     private void recIDCard(String idCardSide, String filePath) {
         IDCardParams param = new IDCardParams();
         param.setImageFile(new File(filePath));
@@ -300,7 +328,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     line2 = result.getGender().getWords();
                     line3 = result.getIdNumber().getWords();
                     line4 = result.getAddress().getWords();
-                    getView().showContentText(serviceType, line1, line2, line3, line4,
+                    getView().showContentText(serviceType, line1, "", line2, line3, line4,
                             null, null, 0);
                 }
             }
@@ -312,5 +340,36 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 LogUtils.loge(this, error.getMessage());
             }
         });
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        serviceType = -1;
+        line1 = "";
+        line2 = "";
+        line3 = "";
+        line4 = "";
+        line5 = "";
+        line6 = "";
+        //
+        placeType = "";
+        //
+
+        data = null;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == EVENT_DATA_FINISH_CODE) {
+            getView().finishAc();
+        }
+        LogUtils.loge(this, eventData.toString());
     }
 }

@@ -14,13 +14,13 @@
 
         <TextView
             android:id="@+id/tv_contacts_template_show_name"
-            android:layout_width="wrap_content"
+            android:layout_width="120dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:text="服务年限"
-            android:textColor="@color/c_626262"
+            android:textColor="@color/c_b6b6b6"
             android:textSize="@dimen/city_tiny_large_size"/>
 
         <LinearLayout
@@ -41,6 +41,7 @@
                 android:inputType="number"
                 android:padding="10dp"
                 android:text="0"
+                android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_tiny_large_size"/>
 
         </LinearLayout>

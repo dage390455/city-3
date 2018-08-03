@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,6 +35,12 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     TextView tvContractInfoLine1;
     @BindView(R.id.et_contract_info_line1)
     TextView etContractInfoLine1;
+    //
+    @BindView(R.id.ll_contract_info_phone)
+    LinearLayout llContractInfoPhone;
+    @BindView(R.id.et_contract_info_phone)
+    TextView etContractInfoPhone;
+    //
     @BindView(R.id.tv_contract_info_line2)
     TextView tvContractInfoLine2;
     @BindView(R.id.et_contract_info_line2)
@@ -60,10 +67,9 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     TextView tvContractInfoLine6;
     @BindView(R.id.et_contract_info_line6)
     TextView etContractInfoLine6;
+    //
     @BindView(R.id.ll_contract_info_place)
     LinearLayout lLContractInfoPlace;
-    @BindView(R.id.tv_contract_info_place_title)
-    TextView tvContractInfoPlaceTitle;
     @BindView(R.id.tv_contract_service_place_type)
     TextView tvContractServicePlace;
     @BindView(R.id.tv_service_age)
@@ -72,12 +78,30 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     TextView tvContractAge;
     @BindView(R.id.rv_sensor_info_count)
     RecyclerView rvSensorInfoCount;
+    @BindView(R.id.rl_service_info_sign_time)
+    RelativeLayout rlServiceInfoSignTime;
     @BindView(R.id.tv_service_sign)
     TextView tvServiceSign;
     @BindView(R.id.tv_contract_sign)
     TextView tvContractSign;
     @BindView(R.id.bt_confirm)
     Button btConfirm;
+    @BindView(R.id.iv_line1)
+    ImageView ivLine1;
+    @BindView(R.id.iv_line_phone)
+    ImageView ivLinePhone;
+    @BindView(R.id.iv_line2)
+    ImageView ivLine2;
+    @BindView(R.id.iv_line3)
+    ImageView ivLine3;
+    @BindView(R.id.iv_line4)
+    ImageView ivLine4;
+    @BindView(R.id.iv_line5)
+    ImageView ivLine5;
+    @BindView(R.id.iv_line6)
+    ImageView ivLine6;
+    @BindView(R.id.iv_line_place)
+    ImageView ivLinePlace;
     private ProgressUtils mProgressUtils;
     private ContractTemplateShowAdapter contractTemplateShowAdapter;
 
@@ -110,6 +134,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        mPrestener.onDestroy();
         super.onDestroy();
     }
 
@@ -120,10 +145,12 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 finishAc();
                 break;
             case R.id.bt_confirm:
-                mPrestener.startToConfirm();
+                String text = btConfirm.getText().toString();
+                mPrestener.startToConfirm(text);
                 break;
         }
     }
+
 
     @Override
     public void startAC(Intent intent) {
@@ -137,25 +164,28 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
     public void setIntentResult(int requestCode) {
-
+        mActivity.setResult(requestCode);
     }
 
     @Override
     public void setIntentResult(int requestCode, Intent data) {
-
+        mActivity.setResult(requestCode, data);
     }
 
     @Override
-    public void showContentText(int type, String line1, String line2, String line3, String line4, String linge5,
-                                String line6, int place, String serviceAge) {
+    public void showContentText(int type, String line1, String phone, String line2, String line3, String line4,
+                                String line5, String line6, String place, String serviceAge) {
+        tvContractServicePlace.setText(place);
         switch (type) {
             case 1:
                 etContractInfoLine1.setText(line1);
+                //
+                etContractInfoPhone.setText(phone);
                 //
                 etContractInfoLine2.setText(line2);
                 //
@@ -163,17 +193,17 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 //
                 etContractInfoLine4.setText(line4);
                 //
-                etContractInfoLine5.setText(linge5);
+                etContractInfoLine5.setText(line5);
                 //
                 etContractInfoLine6.setText(line6);
-                //
-                lLContractInfoPlace.setVisibility(View.GONE);
                 //
                 tvContractAge.setText(serviceAge);
                 break;
             case 2:
                 tvContractInfoLine1.setText("姓名");
                 etContractInfoLine1.setText(line1);
+                //
+                etContractInfoPhone.setText(phone);
                 //
                 tvContractInfoLine2.setText("性别");
                 etContractInfoLine2.setText(line2);
@@ -184,17 +214,20 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 tvContractInfoLine4.setText("住址");
                 etContractInfoLine4.setText(line4);
                 //
+                ivLine5.setVisibility(View.GONE);
                 llContractInfoLine5.setVisibility(View.GONE);
                 //
+                ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
-                //
-                lLContractInfoPlace.setVisibility(View.GONE);
                 //
                 tvContractAge.setText(serviceAge);
                 break;
             case 3:
                 tvContractInfoLine1.setText("甲方（客户名称）");
                 etContractInfoLine1.setText(line1);
+                //
+                ivLinePhone.setVisibility(View.GONE);
+                llContractInfoPhone.setVisibility(View.GONE);
                 //
                 tvContractInfoLine2.setText("业主姓名");
                 etContractInfoLine2.setText(line2);
@@ -205,13 +238,13 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 tvContractInfoLine4.setText("住址");
                 etContractInfoLine4.setText(line4);
                 //
+                ivLine5.setVisibility(View.GONE);
                 llContractInfoLine5.setVisibility(View.GONE);
                 //
+                ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
                 //
                 tvContractAge.setText(serviceAge);
-                //
-                lLContractInfoPlace.setVisibility(View.VISIBLE);
                 //
                 break;
             default:
@@ -224,6 +257,18 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
         contractTemplateShowAdapter.setData(data);
         contractTemplateShowAdapter.notifyDataSetChanged();
     }
+
+    @Override
+    public void setSignTime(String time) {
+        rlServiceInfoSignTime.setVisibility(View.VISIBLE);
+        tvContractSign.setText(time);
+    }
+
+    @Override
+    public void setConfirmText(String text) {
+        btConfirm.setText(text);
+    }
+
 
     @Override
     public void showProgressDialog() {
@@ -244,4 +289,5 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     public void toastLong(String msg) {
 
     }
+
 }

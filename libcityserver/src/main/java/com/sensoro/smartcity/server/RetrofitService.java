@@ -2,6 +2,7 @@ package com.sensoro.smartcity.server;
 
 
 import com.sensoro.smartcity.server.response.ContractAddRsp;
+import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
@@ -157,4 +158,7 @@ public interface RetrofitService {
 //                                         @Field("serviceTime") int serviceTime);
     @POST("contracts")
     Observable<ContractAddRsp> newContract(@Body RequestBody requestBody);
+
+    @POST("contracts/_search")
+    Observable<ContractsListRsp> searchContract(@Body RequestBody requestBody);
 }

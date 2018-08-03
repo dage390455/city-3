@@ -9,7 +9,7 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeploySettingTagActivityView;
-import com.sensoro.smartcity.iwidget.IOndestroy;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,7 +18,7 @@ import java.util.List;
 import mabbas007.tagsedittext.utils.ResourceUtils;
 
 public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySettingTagActivityView> implements
-        Constants, IOndestroy {
+        Constants, IOnDestroy {
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
 

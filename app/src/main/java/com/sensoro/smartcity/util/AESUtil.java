@@ -227,6 +227,26 @@ public class AESUtil {
         return new String(b);
     }
 
+    /**
+     * 加密(密码)
+     */
+    public static String encode(String content, String pwd) {
+        //加密之后的字节数组,转成16进制的字符串形式输出
+        return parseByte2HexStr(encrypt(content, pwd));
+    }
+
+    /**
+     * 解密(密码)
+     */
+    public static String decode(String content, String pwd) {
+        //解密之前,先将输入的字符串按照16进制转成二进制的字节数组,作为待解密的内容输入
+        byte[] b = decrypt(parseHexStr2Byte(content), pwd);
+        if (b == null) {
+            return "";
+        }
+        return new String(b);
+    }
+
     //测试用例
     public static void test1() {
         String content = "hello abcdefggsdfasdfasdf";

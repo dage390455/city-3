@@ -51,4 +51,5 @@ public abstract class BasePresenter<V> {
     }
 
     public abstract void initData(Context context);
+
 }

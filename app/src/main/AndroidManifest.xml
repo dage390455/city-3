@@ -75,8 +75,8 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        tools:replace="android:theme"
-        android:theme="@style/MyTheme">
+        android:theme="@style/MyTheme"
+        tools:replace="android:theme">
         <meta-data
             android:name="com.amap.api.v2.apikey"
             android:value="feb394e9f7754ae572cc77a0bfc723e5"/>
@@ -219,7 +219,9 @@
             android:name=".temp.FMMapBasic"
             android:configChanges="orientation|keyboardHidden"/>
         <activity android:name=".activity.ContractIndexActivity"/>
-        <activity android:name=".activity.ContractServiceActivity"/>
+        <activity
+            android:name=".activity.ContractServiceActivity"
+            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
         <activity android:name=".activity.ContractInfoActivity"/>
         <activity android:name=".activity.ContractResultActivity"/>
 

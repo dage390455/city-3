@@ -51,7 +51,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISensorDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
-import com.sensoro.smartcity.iwidget.IOndestroy;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -91,7 +91,7 @@ import rx.schedulers.Schedulers;
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
 public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailActivityView> implements Constants,
-        GeocodeSearch.OnGeocodeSearchListener, IOnStart, IOndestroy, AMapLocationListener, AMap.OnMapLoadedListener {
+        GeocodeSearch.OnGeocodeSearchListener, IOnStart, IOnDestroy, AMapLocationListener, AMap.OnMapLoadedListener {
     private Activity mContext;
     private AMap aMap;
     private DeviceInfo mDeviceInfo;
@@ -343,7 +343,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                 .position(destPosition)
                 .draggable(true);
         Marker marker = aMap.addMarker(markerOption);
-
+        marker.setDraggable(false);
         marker.showInfoWindow();
     }
 

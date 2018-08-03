@@ -14,18 +14,25 @@ import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractServiceActivity;
 import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractIndexActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.BusinessLicenseData;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 
-import static com.sensoro.smartcity.constant.Constants.EXTRA_CONTRACT_TYPE;
-
-public class ContractIndexActivityPresenter extends BasePresenter<IContractIndexActivityView> {
+public class ContractIndexActivityPresenter extends BasePresenter<IContractIndexActivityView> implements Constants,
+        IOnCreate, IOnDestroy {
     private Activity mContext;
     private static final int REQUEST_CODE_BUSINESS_LICENSE = 123;
     private static final int REQUEST_CODE_CAMERA = 102;
@@ -33,6 +40,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
     }
 
     public void startLicense() {
@@ -56,8 +64,6 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                 FileUtil.getSaveFile(mContext.getApplication()).getAbsolutePath());
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
         getView().startACForResult(intent, REQUEST_CODE_CAMERA);
-//        Intent intent = new Intent(mContext, IDCardActivity.class);
-//        startActivity(intent);
     }
 
     public void startManual() {
@@ -91,7 +97,6 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                                     String 法人 = words_result.get法人().getWords();
                                     String 社会信用代码 = words_result.get社会信用代码().getWords();
                                     String 证件编号 = words_result.get证件编号().getWords();
-//                            infoPopText(result);
                                     LogUtils.loge(this, businessLicenseData.toString());
                                     startServiceByLience(单位名称, 地址, 成立日期, 有效期, 法人, 社会信用代码, 证件编号);
                                 }
@@ -188,5 +193,24 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
             intent.putExtra("address", address);
         }
         getView().startAC(intent);
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        if (code == EVENT_DATA_FINISH_CODE) {
+            getView().finishAc();
+        }
+        LogUtils.loge(this, eventData.toString());
     }
 }

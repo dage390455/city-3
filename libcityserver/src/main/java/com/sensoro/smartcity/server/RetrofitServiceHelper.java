@@ -8,6 +8,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
+import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
@@ -472,12 +473,12 @@ public enum RetrofitServiceHelper {
         return retrofitService.getContractstemplate();
     }
 
-    public Observable<ContractAddRsp> getNewContract(Integer contractType, String cardId,
+    public Observable<ContractAddRsp> getNewContract(Integer contractType, int createType, String cardId,
                                                      Integer sex, String enterpriseCardId,
                                                      String enterpriseRegisterId,
                                                      String customerName,
                                                      String customerEnterpriseName,
-                                                     Integer customerEnterpriseValidity,
+                                                     String customerEnterpriseValidity,
                                                      //必选
                                                      String customerAddress,
                                                      String customerPhone,
@@ -492,6 +493,7 @@ public enum RetrofitServiceHelper {
             if (contractType != null) {
                 jsonObject.put("contract_type", contractType);
             }
+            jsonObject.put("created_type", createType);
             if (cardId != null) {
                 jsonObject.put("card_id", cardId);
             }
@@ -541,5 +543,33 @@ public enum RetrofitServiceHelper {
         }
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.newContract(body);
+    }
+
+    public Observable<ContractsListRsp> searchContract(Integer contractType, Long beginTime, Long endTime, Integer limit,
+                                                       Integer offset) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONObject jsonObject1 = new JSONObject();
+            if (contractType != null) {
+                jsonObject1.put("contract_type", contractType);
+            }
+            if (beginTime != null) {
+                jsonObject1.put("beginTime", beginTime);
+            }
+            if (endTime != null) {
+                jsonObject1.put("endTime", endTime);
+            }
+            jsonObject.put("where", jsonObject1);
+            if (limit != null) {
+                jsonObject.put("limit", limit);
+            }
+            if (offset != null) {
+                jsonObject.put("offset", offset);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        return retrofitService.searchContract(body);
     }
 }

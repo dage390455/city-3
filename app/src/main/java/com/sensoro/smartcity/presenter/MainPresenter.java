@@ -24,7 +24,7 @@ import com.sensoro.smartcity.fragment.PointDeployFragment;
 import com.sensoro.smartcity.fragment.StationDeployFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOndestroy;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
@@ -56,7 +56,7 @@ import io.socket.emitter.Emitter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainPresenter extends BasePresenter<IMainView> implements IOndestroy, Constants, IOnCreate {
+public class MainPresenter extends BasePresenter<IMainView> implements IOnDestroy, Constants, IOnCreate {
     private Activity mActivity;
 
     private String mUserName = null;
@@ -74,7 +74,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     private MerchantSwitchFragment merchantSwitchFragment = null;
     private PointDeployFragment pointDeployFragment = null;
     private StationDeployFragment stationDeployFragment = null;
-    private ContractFragment contractFragment =null;
+    private ContractFragment contractFragment = null;
     //
     private volatile Socket mSocket = null;
     private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
@@ -133,7 +133,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         merchantSwitchFragment = MerchantSwitchFragment.newInstance("merchant");
         pointDeployFragment = PointDeployFragment.newInstance("point");
         stationDeployFragment = StationDeployFragment.newInstance("station");
-        contractFragment=ContractFragment.newInstance("contract");
+        contractFragment = ContractFragment.newInstance("contract");
         //
         fragmentList.add(indexFragment);
         fragmentList.add(alarmListFragment);
@@ -166,7 +166,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 });
             }
             //
-            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,true));
+            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation, true));
             getView().setCurrentPagerItem(0);
             getView().setMenuSelected(0);
             reconnect();
@@ -201,7 +201,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,true));
+                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,
+                        true));
                 if (mIsSupperAccount) {
                     merchantSwitchFragment.requestData();
                 }
@@ -334,6 +335,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData data) {
         //TODO 可以修改以此种方式传递，方便管理
+        int code = data.code;
+        if (code == EVENT_DATA_FINISH_CODE) {
+            if (contractFragment != null) {
+                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
+            }
+        }
         LogUtils.loge(this, data.toString());
     }
 
@@ -492,6 +499,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOndestro
                 break;
             case MenuPageInfo.MENU_PAGE_CONTRACT:
                 //TODO 合同管理
+                contractFragment.requestDataByDirection(DIRECTION_DOWN, true);
                 getView().setCurrentPagerItem(5);
                 break;
             default:

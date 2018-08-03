@@ -61,6 +61,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         if (supportActionBar != null) {
             supportActionBar.hide();
         }
+//        CustomDensityUtils.SetCustomDensity(this, SensoroCityApplication.getInstance());
         //控制顶部状态栏显示
 //        StatusBarCompat.setStatusBarColor(this);
         onCreateInit(savedInstanceState);
