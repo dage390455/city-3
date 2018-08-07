@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
@@ -202,7 +203,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
     @Override
     public void setNameEditText(String text) {
-        if (text != null) {
+        if (!TextUtils.isEmpty(text)) {
             mNameEt.setText(text);
             mNameEt.setSelection(text.length());
         }
@@ -210,7 +211,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
     @Override
     public void setPhoneEditText(String text) {
-        if (text != null) {
+        if (!TextUtils.isEmpty(text)) {
             mPhoneEt.setText(text);
             mPhoneEt.setSelection(text.length());
         }

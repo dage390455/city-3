@@ -6,4 +6,5 @@ import com.sensoro.smartcity.iwidget.IToast;
 
 public interface IScanLoginFragmentView extends IToast, IActivityIntent, IProgressDialog {
     void startScan();
+    void stopScan();
 }

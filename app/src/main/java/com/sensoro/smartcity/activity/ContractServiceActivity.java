@@ -61,10 +61,13 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     TextView tvContractServiceLine2;
     @BindView(R.id.et_contract_service_line2)
     EditText etContractServiceLine2;
+    @BindView(R.id.tv_show_contract_service_line2)
+    TextView tvShowContractService_line2;
     @BindView(R.id.iv_contract_service_line2)
     ImageView ivContractServiceLine2;
     @BindView(R.id.ll_contract_service_line2)
     LinearLayout llContractServiceLine2;
+
     @BindView(R.id.tv_contract_service_line3)
     TextView tvContractServiceLine3;
     @BindView(R.id.et_contract_service_line3)
@@ -134,6 +137,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     private ContractTemplateAdapter contractTemplateAdapter;
     private ProgressUtils mProgressUtils;
     private final List<String> names = new ArrayList<>();
+    private final List<String> sexs = new ArrayList<>();
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -151,6 +155,9 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
         names.add("商铺店面");
         names.add("商场");
         names.add("其他");
+        //
+        sexs.add("男");
+        sexs.add("女");
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         contractTemplateAdapter = new ContractTemplateAdapter(mActivity);
         rvSensorCount.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, true));
@@ -170,6 +177,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             mProgressUtils = null;
         }
         names.clear();
+        sexs.clear();
         super.onDestroy();
     }
 
@@ -212,8 +220,21 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 etContractServicePhone.setSelection(phone.length());
                 //
                 tvContractServiceLine2.setText("性别");
-                etContractServiceLine2.setText(line2);
-                etContractServiceLine2.setSelection(line2.length());
+                ivContractServiceLine2.setVisibility(View.VISIBLE);
+                tvShowContractService_line2.setVisibility(View.VISIBLE);
+                tvShowContractService_line2.setText(line2);
+                etContractServiceLine2.setVisibility(View.GONE);
+                llContractServiceLine2.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        showDialog(new SelectDialog.SelectDialogListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                                tvShowContractService_line2.setText(sexs.get(position));
+                            }
+                        }, sexs);
+                    }
+                });
                 //
                 tvContractServiceLine3.setText("身份证号码");
                 etContractServiceLine3.setText(line3);
@@ -258,10 +279,10 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
 
     }
 
-    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
+    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> items) {
         SelectDialog dialog = new SelectDialog(mActivity, R.style
                 .transparentFrameWindowStyle,
-                listener, names);
+                listener, items);
         if (!mActivity.isFinishing()) {
             dialog.show();
         }
@@ -334,6 +355,9 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             case R.id.bt_next:
                 String line1 = etContractServiceLine1.getText().toString();
                 String line2 = etContractServiceLine2.getText().toString();
+                //身份证性别tv
+                String sex = tvShowContractService_line2.getText().toString();
+
                 String line3 = etContractServiceLine3.getText().toString();
                 String line4 = etContractServiceLine4.getText().toString();
                 String line5 = etContractServiceLine5.getText().toString();
@@ -341,7 +365,8 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 String phone = etContractServicePhone.getText().toString();
                 String line7 = etContractAge.getText().toString();
                 String placeType = tvContractServicePlace.getText().toString();
-                mPrestener.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType);
+
+                mPrestener.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType, sex);
                 break;
         }
     }

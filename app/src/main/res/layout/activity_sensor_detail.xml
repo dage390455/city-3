@@ -283,14 +283,13 @@
                 android:id="@+id/sensor_detail_not_deploy"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:visibility="gone">
+                android:gravity="center">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:id="@+id/tv_no_deploy"
+                    android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/y200"
-                    android:layout_marginTop="@dimen/y200"
+                    android:gravity="center"
                     android:text="@string/no_deploy"
                     android:textSize="15sp"/>
             </RelativeLayout>

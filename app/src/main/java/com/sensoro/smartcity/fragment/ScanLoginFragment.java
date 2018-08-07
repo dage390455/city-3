@@ -34,9 +34,6 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
     private ImageView mMenuImageView;
 
     private ProgressUtils mProgressUtils;
-    //    private boolean isFlashOn = false;
-    private boolean mIsVisibleToUser = false;
-//    private TextView sensorDeployTitle;
 
 
     public static ScanLoginFragment newInstance(String input) {
@@ -51,7 +48,6 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         mMenuImageView = (ImageView) mRootView.findViewById(R.id.deploy_iv_menu_list);
-//        sensorDeployTitle = (TextView) mRootView.findViewById(R.id.sensor_deploy_title);
         mMenuImageView.setColorFilter(getResources().getColor(R.color.white));
         mMenuImageView.setOnClickListener(this);
         mQRCodeView = mRootView.findViewById(R.id.scan_view);
@@ -68,20 +64,15 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
     }
 
 
-
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        mIsVisibleToUser = isVisibleToUser;
         try {
             if (mPrestener != null) {
-//            mPrestener.getUserVisible(getUserVisibleHint());
-                if (mIsVisibleToUser) {
+                if (isVisibleToUser) {
                     startScan();
-//                    showRootView();
                 } else {
-                    mQRCodeView.stopCamera();
-//                    hiddenRootView();
+                    stopScan();
                 }
             }
         } catch (Exception e) {
@@ -91,15 +82,14 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         try {
-            if (mPrestener != null && mIsVisibleToUser) {
+            if (mPrestener != null && getUserVisibleHint()) {
                 startScan();
-//                showRootView();
             }
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -107,9 +97,8 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
     public void onStop() {
         super.onStop();
         try {
-            if (mPrestener != null && mIsVisibleToUser) {
-                mQRCodeView.stopCamera();
-//                hiddenRootView();
+            if (mPrestener != null && getUserVisibleHint()) {
+                stopScan();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -157,6 +146,11 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
 //        mQRCodeView.startSpotDelay(1000);
 //        mQRCodeView.showScanRect();
         mQRCodeView.startSpotAndShowRect();
+    }
+
+    @Override
+    public void stopScan() {
+        mQRCodeView.stopCamera();
     }
 
 

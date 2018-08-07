@@ -116,6 +116,8 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
     BatteryMarkerView batteryMarkerView;
     @BindView(R.id.sensor_detail_not_deploy)
     RelativeLayout notDeployLayout;
+    @BindView(R.id.tv_no_deploy)
+    TextView tvNoDeploy;
     @BindView(R.id.sensor_detail_map_layout)
     MapContainer mapLayout;
     @BindView(R.id.ll_battery_layout)
@@ -149,13 +151,21 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
     private void initView() {
         //获取当前控件的布局对象
         initChart();
-        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
+        RelativeLayout.LayoutParams mMapViewLayoutParams = (RelativeLayout.LayoutParams) mMapView.getLayoutParams();
         DisplayMetrics dm = getResources().getDisplayMetrics();
-        params.width = dm.widthPixels;
+        mMapViewLayoutParams.width = dm.widthPixels;
         //设置当前控件布局的高度
-        params.height = dm.widthPixels * 4 / 5;
-        mMapView.setLayoutParams(params);//将设置好的布局参数应用到控件中
+        mMapViewLayoutParams.height = dm.widthPixels * 4 / 5;
+        mMapView.setLayoutParams(mMapViewLayoutParams);//将设置好的布局参数应用到控件中
         setMapViewVisible(false);
+        //
+        RelativeLayout.LayoutParams tvNoDeployLayoutParams = (RelativeLayout.LayoutParams) tvNoDeploy.getLayoutParams();
+        tvNoDeployLayoutParams.width = dm.widthPixels;
+        //设置当前控件布局的高度
+        tvNoDeployLayoutParams.height = dm.widthPixels * 4 / 5;
+        tvNoDeploy.setLayoutParams(tvNoDeployLayoutParams);
+        setNotDeployLayoutVisible(false);
+        //
 //        mMapView.setVisibility(View.GONE);
         mapLayout.setScrollView(scrollView);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());

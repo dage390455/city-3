@@ -10,4 +10,6 @@ public interface IStationDeployFragmentView extends IToast, IActivityIntent, IPr
     void setTitle(String title);
 
     void startScan();
+
+    void stopScan();
 }

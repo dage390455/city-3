@@ -8,4 +8,5 @@ public interface IPointDeployFragmentView extends IToast, IActivityIntent, IProg
     void setFlashLightState(boolean isOn);
 
     void startScan();
+    void stopScan();
 }

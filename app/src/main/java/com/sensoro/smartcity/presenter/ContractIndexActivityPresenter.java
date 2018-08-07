@@ -10,6 +10,7 @@ import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.IDCardParams;
 import com.baidu.ocr.sdk.model.IDCardResult;
+import com.baidu.ocr.sdk.model.Word;
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractServiceActivity;
@@ -76,45 +77,97 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
         // 识别成功回调，营业执照识别
         if (requestCode == REQUEST_CODE_BUSINESS_LICENSE && resultCode == Activity.RESULT_OK) {
             getView().showProgressDialog();
-            RecognizeService.recBusinessLicense(mContext, FileUtil.getSaveFile(mContext.getApplicationContext())
-                            .getAbsolutePath(),
-                    new RecognizeService.ServiceListener() {
-                        @Override
-                        public void onResult(final String result) {
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    getView().dismissProgressDialog();
-                                    BusinessLicenseData businessLicenseData = RetrofitServiceHelper.INSTANCE.getGson()
+            try {
+                RecognizeService.recBusinessLicense(mContext, FileUtil.getSaveFile(mContext.getApplicationContext())
+                                .getAbsolutePath(),
+                        new RecognizeService.ServiceListener() {
+                            @Override
+                            public void onResult(final String result) {
+                                getView().dismissProgressDialog();
+                                String 单位名称 = "无";
+                                String 地址 = "无";
+                                String 成立日期 = "无";
+                                String 有效期 = "无";
+                                String 法人 = "无";
+                                String 社会信用代码 = "无";
+                                String 证件编号 = "无";
+                                try {
+                                    BusinessLicenseData businessLicenseData = RetrofitServiceHelper.INSTANCE
+                                            .getGson()
                                             .fromJson(result, BusinessLicenseData.class);
                                     BusinessLicenseData.WordsResultBean words_result = businessLicenseData
                                             .getWords_result();
-                                    String 单位名称 = words_result.get单位名称().getWords();
-                                    String 地址 = words_result.get地址().getWords();
-                                    String 成立日期 = words_result.get成立日期().getWords();
-                                    String 有效期 = words_result.get有效期().getWords();
-                                    String 法人 = words_result.get法人().getWords();
-                                    String 社会信用代码 = words_result.get社会信用代码().getWords();
-                                    String 证件编号 = words_result.get证件编号().getWords();
-                                    LogUtils.loge(this, businessLicenseData.toString());
-                                    startServiceByLience(单位名称, 地址, 成立日期, 有效期, 法人, 社会信用代码, 证件编号);
-                                }
-                            });
+                                    //
+                                    if (words_result != null) {
+                                        BusinessLicenseData.WordsResultBean.单位名称Bean words_result单位名称 = words_result
+                                                .get单位名称();
+                                        if (words_result单位名称 != null) {
+                                            单位名称 = words_result单位名称.getWords();
+                                        }
+                                        BusinessLicenseData.WordsResultBean.地址Bean words_result地址 = words_result
+                                                .get地址();
+                                        if (words_result地址 != null) {
+                                            地址 = words_result地址.getWords();
+                                        }
+                                        BusinessLicenseData.WordsResultBean.成立日期Bean words_result成立日期 = words_result
+                                                .get成立日期();
+                                        if (words_result成立日期 != null) {
+                                            成立日期 = words_result成立日期.getWords();
+                                        }
+                                        BusinessLicenseData.WordsResultBean.有效期Bean words_result有效期 = words_result
+                                                .get有效期();
+                                        if (words_result有效期 != null) {
+                                            有效期 = words_result有效期.getWords();
+                                        }
+                                        BusinessLicenseData.WordsResultBean.法人Bean words_result法人 = words_result
+                                                .get法人();
+                                        if (words_result法人 != null) {
+                                            法人 = words_result法人.getWords();
+                                        }
+                                        BusinessLicenseData.WordsResultBean.社会信用代码Bean words_result社会信用代码 =
+                                                words_result
+                                                        .get社会信用代码();
+                                        if (words_result社会信用代码 != null) {
+                                            社会信用代码 = words_result社会信用代码.getWords();
+                                        }
+                                        BusinessLicenseData.WordsResultBean.证件编号Bean words_result证件编号 = words_result
+                                                .get证件编号();
+                                        if (words_result证件编号 != null) {
+                                            证件编号 = words_result证件编号.getWords();
+                                        }
+                                    }
 
-                        }
-                    });
+                                    LogUtils.loge(this, businessLicenseData.toString());
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                                startServiceByLience(单位名称, 地址, 成立日期, 有效期, 法人, 社会信用代码, 证件编号);
+                            }
+                        });
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().dismissProgressDialog();
+                getView().toastShort("读取失败请重试");
+            }
+
         }
         if (requestCode == REQUEST_CODE_CAMERA && resultCode == Activity.RESULT_OK) {
             if (data != null) {
                 getView().showProgressDialog();
-                String contentType = data.getStringExtra(CameraActivity.KEY_CONTENT_TYPE);
-                String filePath = FileUtil.getSaveFile(mContext.getApplicationContext()).getAbsolutePath();
-                if (!TextUtils.isEmpty(contentType)) {
-                    if (CameraActivity.CONTENT_TYPE_ID_CARD_FRONT.equals(contentType)) {
-                        recIDCard(IDCardParams.ID_CARD_SIDE_FRONT, filePath);
-                    } else if (CameraActivity.CONTENT_TYPE_ID_CARD_BACK.equals(contentType)) {
-                        recIDCard(IDCardParams.ID_CARD_SIDE_BACK, filePath);
+                try {
+                    String contentType = data.getStringExtra(CameraActivity.KEY_CONTENT_TYPE);
+                    String filePath = FileUtil.getSaveFile(mContext.getApplicationContext()).getAbsolutePath();
+                    if (!TextUtils.isEmpty(contentType)) {
+                        if (CameraActivity.CONTENT_TYPE_ID_CARD_FRONT.equals(contentType)) {
+                            recIDCard(IDCardParams.ID_CARD_SIDE_FRONT, filePath);
+                        } else if (CameraActivity.CONTENT_TYPE_ID_CARD_BACK.equals(contentType)) {
+                            recIDCard(IDCardParams.ID_CARD_SIDE_BACK, filePath);
+                        }
                     }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    getView().dismissProgressDialog();
+                    getView().toastShort("读取失败请重试");
                 }
             }
         }
@@ -134,14 +187,34 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
             @Override
             public void onResult(IDCardResult result) {
                 getView().dismissProgressDialog();
-                if (result != null) {
-                    LogUtils.loge(this, result.toString());
-                    String name = result.getName().getWords();
-                    String sex = result.getGender().getWords();
-                    String idNumber = result.getIdNumber().getWords();
-                    String address = result.getAddress().getWords();
-                    startServiceByNumber(name, sex, idNumber, address);
+                String name = "无";
+                String idNumber = "无";
+                String sex = "无";
+                String address = "无";
+                try {
+                    if (result != null) {
+                        LogUtils.loge(this, result.toString());
+                        Word resultName = result.getName();
+                        if (resultName != null) {
+                            name = resultName.getWords();
+                        }
+                        Word resultGender = result.getGender();
+                        if (resultGender != null) {
+                            sex = resultGender.getWords();
+                        }
+                        Word resultIdNumber = result.getIdNumber();
+                        if (resultIdNumber != null) {
+                            idNumber = resultIdNumber.getWords();
+                        }
+                        Word resultAddress = result.getAddress();
+                        if (resultAddress != null) {
+                            address = resultAddress.getWords();
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
                 }
+                startServiceByNumber(name, sex, idNumber, address);
             }
 
             @Override

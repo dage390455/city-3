@@ -14,7 +14,6 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IPointDeployFragmentView;
 import com.sensoro.smartcity.presenter.PointDeployFragmentPresenter;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -38,8 +37,6 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 
     private ProgressUtils mProgressUtils;
     private boolean isFlashOn = false;
-    private boolean mIsVisibleToUser = false;
-
 
     public static PointDeployFragment newInstance(String input) {
         PointDeployFragment pointDeployFragment = new PointDeployFragment();
@@ -75,16 +72,12 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        mIsVisibleToUser = isVisibleToUser;
         try {
             if (mPrestener != null) {
-//            mPrestener.getUserVisible(getUserVisibleHint());
-                if (mIsVisibleToUser) {
+                if (isVisibleToUser) {
                     startScan();
-//                    showRootView();
                 } else {
-                    mQRCodeView.stopCamera();
-//                    hiddenRootView();
+                    stopScan();
                 }
             }
         } catch (Exception e) {
@@ -94,13 +87,11 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
-        LogUtils.loge(this, "用户可见: " + mIsVisibleToUser);
+    public void onStart() {
+        super.onStart();
         try {
-            if (mPrestener != null && mIsVisibleToUser) {
+            if (mPrestener != null && getUserVisibleHint()) {
                 startScan();
-//                showRootView();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -110,23 +101,14 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
     @Override
     public void onStop() {
         super.onStop();
-        LogUtils.loge(this, "用户可见: " + mIsVisibleToUser);
         try {
-            if (mPrestener != null && mIsVisibleToUser) {
-                mQRCodeView.stopCamera();
-//                hiddenRootView();
+            if (mPrestener != null && getUserVisibleHint()) {
+                stopScan();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//
-//
-//    }
 
 //    public void hiddenRootView() {
 //        if (mRootView != null) {
@@ -201,6 +183,12 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 //        mQRCodeView.startSpotDelay(1000);
 //        mQRCodeView.showScanRect();
         mQRCodeView.startSpotAndShowRect();
+//        mQRCodeView.startSpot();
+    }
+
+    @Override
+    public void stopScan() {
+        mQRCodeView.stopCamera();
     }
 
 

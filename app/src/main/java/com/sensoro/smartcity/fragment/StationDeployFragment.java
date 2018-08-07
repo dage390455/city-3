@@ -38,7 +38,6 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 
     private ProgressUtils mProgressUtils;
     private boolean isFlashOn = false;
-    private boolean mIsVisibleToUser = false;
     private TextView sensorDeployTitle;
 
 
@@ -77,16 +76,12 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
-        mIsVisibleToUser = isVisibleToUser;
         try {
             if (mPrestener != null) {
-//            mPrestener.getUserVisible(getUserVisibleHint());
-                if (mIsVisibleToUser) {
+                if (isVisibleToUser) {
                     startScan();
-//                    showRootView();
                 } else {
-                    mQRCodeView.stopCamera();
-//                    hiddenRootView();
+                    stopScan();
                 }
             }
         } catch (Exception e) {
@@ -96,15 +91,14 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         try {
-            if (mPrestener != null && mIsVisibleToUser) {
+            if (mPrestener != null && getUserVisibleHint()) {
                 startScan();
-//                showRootView();
             }
         } catch (Exception e) {
-//            e.printStackTrace();
+            e.printStackTrace();
         }
     }
 
@@ -112,20 +106,13 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
     public void onStop() {
         super.onStop();
         try {
-            if (mPrestener != null && mIsVisibleToUser) {
-                mQRCodeView.stopCamera();
-//                hiddenRootView();
+            if (mPrestener != null && getUserVisibleHint()) {
+                stopScan();
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
-//    @Override
-//    public void onPause() {
-//        super.onPause();
-//
-//    }
 
 
 //    public void hiddenRootView() {
@@ -211,6 +198,11 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 //        mQRCodeView.startSpotDelay(1000);
 //        mQRCodeView.showScanRect();
         mQRCodeView.startSpotAndShowRect();
+    }
+
+    @Override
+    public void stopScan() {
+        mQRCodeView.stopCamera();
     }
 
 
