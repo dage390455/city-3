@@ -17,7 +17,6 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractIndexActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.BusinessLicenseData;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.RecognizeService;
@@ -32,7 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 
 public class ContractIndexActivityPresenter extends BasePresenter<IContractIndexActivityView> implements Constants,
-        IOnCreate, IOnDestroy {
+        IOnCreate {
     private Activity mContext;
     private static final int REQUEST_CODE_BUSINESS_LICENSE = 123;
     private static final int REQUEST_CODE_CAMERA = 102;

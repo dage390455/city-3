@@ -171,4 +171,8 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
     }
 
 
+    @Override
+    public void onDestroy() {
+
+    }
 }

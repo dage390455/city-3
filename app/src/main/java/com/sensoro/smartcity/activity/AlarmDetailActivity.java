@@ -135,6 +135,13 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     }
 
     @Override
+    public void setUpdateButtonClickable(boolean canClick) {
+        if (mAlarmPopupView!=null){
+            mAlarmPopupView.setUpdateButtonClickable(canClick);
+        }
+    }
+
+    @Override
     protected void onDestroy() {
         if (mAlarmPopupView != null) {
             mAlarmPopupView.onDestroyPop();

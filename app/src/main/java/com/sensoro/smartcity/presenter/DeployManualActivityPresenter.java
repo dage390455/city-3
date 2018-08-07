@@ -195,4 +195,9 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
         }
         getView().finishAc();
     }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }

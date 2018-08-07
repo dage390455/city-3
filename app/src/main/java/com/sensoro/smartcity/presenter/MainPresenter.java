@@ -21,10 +21,10 @@ import com.sensoro.smartcity.fragment.ContractFragment;
 import com.sensoro.smartcity.fragment.IndexFragment;
 import com.sensoro.smartcity.fragment.MerchantSwitchFragment;
 import com.sensoro.smartcity.fragment.PointDeployFragment;
+import com.sensoro.smartcity.fragment.ScanLoginFragment;
 import com.sensoro.smartcity.fragment.StationDeployFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.push.SensoroPushIntentService;
@@ -56,7 +56,7 @@ import io.socket.emitter.Emitter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MainPresenter extends BasePresenter<IMainView> implements IOnDestroy, Constants, IOnCreate {
+public class MainPresenter extends BasePresenter<IMainView> implements Constants, IOnCreate {
     private Activity mActivity;
 
     private String mUserName = null;
@@ -75,6 +75,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
     private PointDeployFragment pointDeployFragment = null;
     private StationDeployFragment stationDeployFragment = null;
     private ContractFragment contractFragment = null;
+    private ScanLoginFragment scanLoginFragment = null;
     //
     private volatile Socket mSocket = null;
     private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
@@ -83,6 +84,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
     private final TaskRunnable mRunnable = new TaskRunnable();
     //
     private boolean hasStation = false;
+    private boolean hasContract = false;
+    private boolean hasScanLogin = false;
 
     /**
      * 超级用户
@@ -126,7 +129,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
         mCharacter = (Character) mActivity.getIntent().getSerializableExtra(EXTRA_CHARACTER);
         roles = mActivity.getIntent().getStringExtra(EXTRA_USER_ROLES);
         mIsSupperAccount = mActivity.getIntent().getBooleanExtra(EXTRA_IS_SPECIFIC, false);
-        hasStation = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_INFO, false);
+        hasStation = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_STATION, false);
+        hasContract = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_CONTRACT, false);
+        hasScanLogin = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
         //
         indexFragment = IndexFragment.newInstance(mCharacter);
         alarmListFragment = AlarmListFragment.newInstance("alarm");
@@ -134,24 +139,30 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
         pointDeployFragment = PointDeployFragment.newInstance("point");
         stationDeployFragment = StationDeployFragment.newInstance("station");
         contractFragment = ContractFragment.newInstance("contract");
+        scanLoginFragment = ScanLoginFragment.newInstance("scanLogin");
+
         //
         fragmentList.add(indexFragment);
         fragmentList.add(alarmListFragment);
         fragmentList.add(merchantSwitchFragment);
         fragmentList.add(pointDeployFragment);
         fragmentList.add(stationDeployFragment);
+        fragmentList.add(scanLoginFragment);
         fragmentList.add(contractFragment);
         getView().updateMainPageAdapterData();
         getView().showAccountInfo(mUserName, mPhone);
         mHandler.postDelayed(mRunnable, 3000L);
     }
 
-    public void changeAccount(String userName, String phone, String roles, boolean isSpecific, boolean hasStation) {
+    public void changeAccount(String userName, String phone, String roles, boolean isSpecific, boolean hasStation,
+                              boolean hasContract, boolean hasScanLogin) {
         this.mUserName = userName;
         this.mPhone = phone;
         this.mIsSupperAccount = isSpecific;
         this.roles = roles;
         this.hasStation = hasStation;
+        this.hasContract = hasContract;
+        this.hasScanLogin = hasScanLogin;
         getView().showAccountInfo(mUserName, mPhone);
         if (indexFragment != null) {
             if (mIsSupperAccount) {
@@ -166,7 +177,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
                 });
             }
             //
-            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation, true));
+            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,
+                    hasContract, hasScanLogin));
             getView().setCurrentPagerItem(0);
             getView().setMenuSelected(0);
             reconnect();
@@ -202,7 +214,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
             @Override
             public void run() {
                 getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,
-                        true));
+                        hasContract, hasScanLogin));
                 if (mIsSupperAccount) {
                     merchantSwitchFragment.requestData();
                 }
@@ -320,6 +332,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
         }
         mHandler.removeCallbacks(mRunnable);
         mHandler.removeCallbacksAndMessages(null);
+        fragmentList.clear();
         EventBus.getDefault().unregister(this);
     }
 
@@ -415,8 +428,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
             String phone = data.getStringExtra("phone");
             String roles = data.getStringExtra("roles");
             boolean isSpecific = data.getBooleanExtra("isSpecific", false);
-            hasStation = data.getBooleanExtra(EXTRA_GRANTS_INFO, false);
-            changeAccount(nickname, phone, roles, isSpecific, hasStation);
+            hasStation = data.getBooleanExtra(EXTRA_GRANTS_HAS_STATION, false);
+            hasContract = data.getBooleanExtra(EXTRA_GRANTS_HAS_CONTRACT, false);
+            hasScanLogin = data.getBooleanExtra(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
+            changeAccount(nickname, phone, roles, isSpecific, hasStation, hasContract, hasScanLogin);
         } else if (resultCode == RESULT_CODE_SEARCH_ALARM) {
             String type = data.getStringExtra(EXTRA_SENSOR_TYPE);
             int searchIndex = data.getIntExtra(EXTRA_ALARM_SEARCH_INDEX, -1);
@@ -497,10 +512,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements IOnDestro
             case MenuPageInfo.MENU_PAGE_STATION:
                 getView().setCurrentPagerItem(4);
                 break;
+            case MenuPageInfo.MENU_PAGE_SCAN_LOGIN:
+                //TODO 扫码登录
+                getView().setCurrentPagerItem(5);
+                break;
             case MenuPageInfo.MENU_PAGE_CONTRACT:
                 //TODO 合同管理
                 contractFragment.requestDataByDirection(DIRECTION_DOWN, true);
-                getView().setCurrentPagerItem(5);
+                getView().setCurrentPagerItem(6);
                 break;
             default:
                 break;

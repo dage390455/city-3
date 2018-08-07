@@ -88,6 +88,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public void onDestroyView() {
         unbinder.unbind();
+        mPrestener.onDestroy();
         mPrestener.detachView();
         super.onDestroyView();
     }

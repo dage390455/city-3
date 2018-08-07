@@ -169,7 +169,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
-        mPrestener.onDestroy();
+        names.clear();
         super.onDestroy();
     }
 

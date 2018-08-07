@@ -33,9 +33,9 @@ import retrofit2.http.Query;
 import rx.Observable;
 
 public interface RetrofitService {
-    //    String SCOPE_MOCHA = "https://demo-city-api.sensoro.com/";
+    String SCOPE_MOCHA = "https://demo-city-api.sensoro.com/";
     //摩卡环境
-    String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
+//    String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
 
     String LOGIN = "sessions";
@@ -161,4 +161,16 @@ public interface RetrofitService {
 
     @POST("contracts/_search")
     Observable<ContractsListRsp> searchContract(@Body RequestBody requestBody);
+
+    @FormUrlEncoded
+    @POST("qrcode/scan")
+    Observable<ResponseBase> getLoginScanResult(@Field("qrcodeId") String qrcodeId);
+
+    @FormUrlEncoded
+    @POST("qrcode/login")
+    Observable<ResponseBase> scanLoginIn(@Field("qrcodeId") String qrcodeId);
+
+    @FormUrlEncoded
+    @POST("qrcode/cancel")
+    Observable<ResponseBase> scanLoginCancel(@Field("qrcodeId") String qrcodeId);
 }

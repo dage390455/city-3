@@ -11,6 +11,7 @@ public class MenuPageInfo {
     public static final int MENU_PAGE_POINT = 0x104;
     public static final int MENU_PAGE_STATION = 0x105;
     public static final int MENU_PAGE_CONTRACT = 0x106;
+    public static final int MENU_PAGE_SCAN_LOGIN = 0x107;
 
     public MenuPageInfo(int titleId, int iconId, int pageId) {
         pageTitleId = titleId;

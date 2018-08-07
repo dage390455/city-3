@@ -30,11 +30,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
     private String username = null;
     private String phone = null;
 
-    public List<UserInfo> getUserInfoList() {
-        return mUserInfoList;
-    }
-
-    private List<UserInfo> mUserInfoList = new ArrayList<>();
+    private final List<UserInfo> mUserInfoList = new ArrayList<>();
     private Activity mContext;
 
     @Override
@@ -48,6 +44,10 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
         this.phone = phone;
         getView().setCurrentNameAndPhone(username, phone);
         getView().setCurrentStatusImageViewVisible(true);
+    }
+
+    public List<UserInfo> getUserInfoList() {
+        return mUserInfoList;
     }
 
     public void requestData() {
@@ -108,6 +108,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
                     GrantsInfo grants = data.getGrants();
                     ((MainActivity) mContext).changeAccount(nickname, phone, roles,
                             MenuPageFactory.getIsSupperAccount(isSpecific), MenuPageFactory.getHasStationDeploy
+                                    (grants), MenuPageFactory.getHasContract(grants), MenuPageFactory.getHasScanLogin
                                     (grants));
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());
@@ -147,5 +148,10 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
             searchIntent.putExtra("user_phone", phone);
         }
         getView().startACForResult(searchIntent, REQUEST_CODE_SEARCH_MERCHANT);
+    }
+
+    @Override
+    public void onDestroy() {
+        mUserInfoList.clear();
     }
 }

@@ -75,7 +75,6 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
 
     @Override
     protected void onDestroy() {
-        mPrestener.onDestroy();
         super.onDestroy();
     }
 

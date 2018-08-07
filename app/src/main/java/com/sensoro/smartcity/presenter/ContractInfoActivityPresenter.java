@@ -12,7 +12,6 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.LogUtils;
@@ -33,7 +32,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoActivityView> implements IOnCreate,
-        IOnDestroy, Constants {
+        Constants {
     private Activity mContext;
     private int serviceType;
     //
@@ -237,17 +236,13 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     private void handleCode(String code, String text) {
         Intent intent = new Intent();
         intent.setClass(mContext, ContractResultActivity.class);
-        //此处以md5作为key
-        String md5 = AESUtil.stringToMD5(code);
-        //
-        String encode = AESUtil.encode(code, md5);
         switch (serviceType) {
             case 1:
             case 2:
-                code = phone + ":" + encode;
+                code = AESUtil.contractEncode(phone, code);
                 break;
             case 3:
-                code = line3 + ":" + encode;
+                code = AESUtil.contractEncode(line3, code);
                 break;
         }
         intent.putExtra("code", code);
@@ -263,20 +258,10 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        id = -1;
-        serviceType = -1;
-        line1 = "";
-        line2 = "";
-        line3 = "";
-        line4 = "";
-        line5 = "";
-        line6 = "";
-        //
-        placeType = "";
-        //
-        contract_service_life = "";
-        signDate = "";
-        data = null;
+        if (data != null) {
+            data.clear();
+            data = null;
+        }
     }
 
     @Override

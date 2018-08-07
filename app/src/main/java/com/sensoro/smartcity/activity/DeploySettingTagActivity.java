@@ -180,7 +180,6 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 
     @Override
     protected void onDestroy() {
-        mPrestener.onDestroy();
         mKeywordEt.destroyDrawingCache();
         super.onDestroy();
     }

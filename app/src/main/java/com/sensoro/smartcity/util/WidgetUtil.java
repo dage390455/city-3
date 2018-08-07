@@ -381,6 +381,14 @@ public class WidgetUtil {
             } else if (tempList.contains("altitude") || tempList.contains("longitude") || tempList.contains
                     ("latitude")) {
                 return R.mipmap.ic_sensor_tracker;
+            } else if (tempList.contains("leakage_val") || tempList.contains("temp_val")) {
+                return R.mipmap.ic_sensor_electric_alarm_bg;
+            } else if (tempList.contains("CURRENT_A") || tempList.contains("CURRENT_B") || tempList.contains
+                    ("CURRENT_C") || tempList.contains("TOTAL_POWER") || tempList.contains("VOLTAGE_A") || tempList
+                    .contains("VOLTAGE_B") || tempList
+                    .contains("VOLTAGE_C")) {
+                //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
+                return R.mipmap.ic_seneor_electric_meter_bg;
             } else {
                 return 0;
             }
@@ -458,6 +466,12 @@ public class WidgetUtil {
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equals("latitude") || sensorType.equals("longitude") || sensorType.equals("altitude")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_tracker);
+            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+        } else if (sensorType.equals("leakage_val") || sensorType.equals("temp_val")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_electric_alarm_bg);
+            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+        } else if (sensorType.equals("TOTAL_POWER")) {
+            srcImageView.setImageResource(R.mipmap.ic_seneor_electric_meter_bg);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else {
             srcImageView.setVisibility(View.GONE);
@@ -822,6 +836,8 @@ public class WidgetUtil {
             return "井盖";
         } else if (sensorType.contains("pitch") || sensorType.contains("roll") || sensorType.contains("collision")) {
             return "角度";
+        } else if (sensorType.contains("temp_val") || sensorType.contains("leakage_val")) {
+            return "电气火灾";
         } else {
             return "-";
         }
@@ -914,6 +930,10 @@ public class WidgetUtil {
             value = "电压C";
         } else if (sensorType.equalsIgnoreCase("installed")) {
             value = "安装状态";
+        } else if (sensorType.equalsIgnoreCase("leakage_val")) {
+            value = "漏电流";
+        } else if (sensorType.equalsIgnoreCase("temp_val")) {
+            value = "电线温度";
         }
 
         //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
@@ -1048,6 +1068,12 @@ public class WidgetUtil {
                 case "installed":
                     info = "已安装，恢复正常";
                     break;
+                case "leakage_val":
+                    info = "漏电流低于预警值, 恢复正常";
+                    break;
+                case "temp_val":
+                    info = "电线温度低于预警值, 恢复正常";
+                    break;
                 default:
                     info = "未知传感器低于预警值, 恢复正常";
                     break;
@@ -1147,6 +1173,12 @@ public class WidgetUtil {
                 case "VOLTAGE_C":
                     info = "电量 值为 " + thresholds + " 达到预警值";
                     break;
+                case "leakage_val":
+                    info = "漏电流 值为 " + thresholds + " 达到预警值";
+                    break;
+                case "temp_val":
+                    info = "电线温度 值为 " + thresholds + " 达到预警值";
+                    break;
                 default:
                     info = "未知传感器 值为 " + thresholds + "  达到预警值";
                     break;
@@ -1186,6 +1218,9 @@ public class WidgetUtil {
                 return "电表";
             } else if (temp.contains("installed") && temp.contains("smoke")) {
                 return "烟感";
+            } else if (temp.contains("curr_val") || temp.contains("elec_energy_val") || temp.contains("leakage_val")
+                    || temp.contains("temp_val")) {
+                return "电器火灾";
             } else {
                 return context.getString(R.string.unknown);
             }

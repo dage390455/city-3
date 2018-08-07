@@ -30,14 +30,11 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
     private SharedPreferences.Editor mEditor;
     private final List<String> mHistoryKeywords = new ArrayList<>();
     private Activity mContext;
-    private List<UserInfo> mUserInfoList = new ArrayList<>();
+    private final List<UserInfo> mUserInfoList = new ArrayList<>();
     private String phoneId = null;
     private String userName = null;
     private String phone = null;
 
-    public List<String> getmHistoryKeywords() {
-        return mHistoryKeywords;
-    }
 
     @Override
     public void initData(Context context) {
@@ -50,6 +47,9 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         initSearchHistory();
     }
 
+    public List<String> getmHistoryKeywords() {
+        return mHistoryKeywords;
+    }
 
     private void initSearchHistory() {
         String history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
@@ -186,7 +186,9 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                     data.putExtra("isSpecific", MenuPageFactory.getIsSupperAccount(isSpecific));
                     //grants Info
                     GrantsInfo grants = dataUser.getGrants();
-                    data.putExtra(EXTRA_GRANTS_INFO, MenuPageFactory.getHasStationDeploy(grants));
+                    data.putExtra(EXTRA_GRANTS_HAS_STATION, MenuPageFactory.getHasStationDeploy(grants));
+                    data.putExtra(EXTRA_GRANTS_HAS_CONTRACT, MenuPageFactory.getHasContract(grants));
+                    data.putExtra(EXTRA_GRANTS_HAS_SCAN_LOGIN, MenuPageFactory.getHasScanLogin(grants));
                     getView().setIntentResult(RESULT_CODE_SEARCH_MERCHANT, data);
 //                    EventBus.getDefault().post(data);
                     getView().finishAc();
@@ -215,5 +217,11 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         } else {
             getView().toastShort("账户已停用");
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        mHistoryKeywords.clear();
+        mUserInfoList.clear();
     }
 }

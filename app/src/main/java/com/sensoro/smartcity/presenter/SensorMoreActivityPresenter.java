@@ -237,4 +237,9 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
     public void onStop() {
         EventBus.getDefault().unregister(this);
     }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }

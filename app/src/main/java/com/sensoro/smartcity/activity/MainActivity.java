@@ -73,7 +73,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     protected void onDestroy() {
-        mPrestener.onDestroy();
         mProgressUtils.destroyProgress();
         super.onDestroy();
     }
@@ -103,7 +102,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         mListView.setOnItemClickListener(this);
         sensoroPager = (SensoroPager) findViewById(R.id.main_container);
-        sensoroPager.setOffscreenPageLimit(7);
+        sensoroPager.setOffscreenPageLimit(8);
         mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mPrestener
                 .getFragmentList());
         sensoroPager.setAdapter(mainPagerAdapter);
@@ -219,8 +218,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void changeAccount(String useName, String phone, String roles, boolean isSpecific, boolean isStation) {
-        mPrestener.changeAccount(useName, phone, roles, isSpecific, isStation);
+    public void changeAccount(String useName, String phone, String roles, boolean isSpecific, boolean isStation,
+                              boolean hasContract, boolean hasScanLogin) {
+        mPrestener.changeAccount(useName, phone, roles, isSpecific, isStation, hasContract, hasScanLogin);
     }
 
     @Override

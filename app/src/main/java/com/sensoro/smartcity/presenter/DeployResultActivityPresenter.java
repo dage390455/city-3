@@ -156,4 +156,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         getView().finishAc();
 
     }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }

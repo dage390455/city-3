@@ -97,7 +97,9 @@ public interface Constants {
     String EXTRA_CHARACTER = "extra_character";
     String EXTRA_PHONE_ID = "extra_phone_id";
     String EXTRA_IS_SPECIFIC = "extra_is_specific";
-    String EXTRA_GRANTS_INFO = "extra_grants_info";
+    String EXTRA_GRANTS_HAS_STATION = "extra_grants_has_station";
+    String EXTRA_GRANTS_HAS_CONTRACT = "extra_grants_has_contract";
+    String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_IS_STATION_DEPLOY = "extra_is_station_deploy";
     String EXTRA_SENSOR_SN = "extra_sn";

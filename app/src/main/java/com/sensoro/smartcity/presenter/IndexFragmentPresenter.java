@@ -9,8 +9,6 @@ import android.media.SoundPool;
 import android.os.Handler;
 import android.util.Log;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MainActivity;
@@ -22,7 +20,6 @@ import com.sensoro.smartcity.imainviews.IIndexFragmentView;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.NumberDeserializer;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -32,19 +29,21 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> implements IOnDestroy,
         Constants {
     private final List<DeviceInfo> mDataList = new ArrayList<>();
     private final Handler mHandler = new Handler();
-    private final Gson gson = new GsonBuilder().registerTypeAdapter(double.class, new NumberDeserializer())
-            .registerTypeAdapter(int.class, new NumberDeserializer())
-            .registerTypeAdapter(Number.class, new NumberDeserializer()).create();
+    //    private final Gson gson = new GsonBuilder().registerTypeAdapter(double.class, new NumberDeserializer())
+//            .registerTypeAdapter(int.class, new NumberDeserializer())
+//            .registerTypeAdapter(Number.class, new NumberDeserializer()).create();
     private int page = 1;
     private volatile boolean isAlarmPlay = false;
     private volatile boolean isNeedRefresh = false;
@@ -55,14 +54,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 
     private int mTypeSelectedIndex = 0;
     private int mStatusSelectedIndex = 0;
-
-    public void setTypeSelectedIndex(int mTypeSelectedIndex) {
-        this.mTypeSelectedIndex = mTypeSelectedIndex;
-    }
-
-    public void setStatusSelectedIndex(int mStatusSelectedIndex) {
-        this.mStatusSelectedIndex = mStatusSelectedIndex;
-    }
 
     private Activity mContext;
 
@@ -85,6 +76,15 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         mHandler.postDelayed(mTask, 3000);
         requestWithDirection(DIRECTION_DOWN);
     }
+
+    public void setTypeSelectedIndex(int mTypeSelectedIndex) {
+        this.mTypeSelectedIndex = mTypeSelectedIndex;
+    }
+
+    public void setStatusSelectedIndex(int mStatusSelectedIndex) {
+        this.mStatusSelectedIndex = mStatusSelectedIndex;
+    }
+
 
     public void switchIndexGridOrList(int switchType) {
         if (switchType == TYPE_LIST) {
@@ -124,7 +124,25 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             if (direction == DIRECTION_DOWN) {
                 page = 1;
                 RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, null).subscribeOn(Schedulers
-                        .io()).doOnNext(new Action1<DeviceInfoListRsp>() {
+                        .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                    @Override
+                    public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
+                        //去除rfid类型
+                        List<DeviceInfo> list = deviceInfoListRsp.getData();
+                        Iterator<DeviceInfo> iterator = list.iterator();
+                        while (iterator.hasNext()) {
+                            DeviceInfo next = iterator.next();
+                            String[] sensorTypes = next.getSensorTypes();
+                            if (sensorTypes != null && sensorTypes.length > 0) {
+                                final List<String> sensorTypesList = Arrays.asList(sensorTypes);
+                                if (sensorTypesList.contains("rfid")) {
+                                    iterator.remove();
+                                }
+                            }
+                        }
+                        return deviceInfoListRsp;
+                    }
+                }).doOnNext(new Action1<DeviceInfoListRsp>() {
                     @Override
                     public void call(DeviceInfoListRsp deviceInfoListRsp) {
                         SensoroCityApplication.getInstance().setData(deviceInfoListRsp.getData());
@@ -150,7 +168,25 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             } else {
                 page++;
                 RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, null).subscribeOn(Schedulers
-                        .io()).doOnNext(new Action1<DeviceInfoListRsp>() {
+                        .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                    @Override
+                    public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
+                        //去除rfid类型
+                        List<DeviceInfo> list = deviceInfoListRsp.getData();
+                        Iterator<DeviceInfo> iterator = list.iterator();
+                        while (iterator.hasNext()) {
+                            DeviceInfo next = iterator.next();
+                            String[] sensorTypes = next.getSensorTypes();
+                            if (sensorTypes != null && sensorTypes.length > 0) {
+                                final List<String> sensorTypesList = Arrays.asList(sensorTypes);
+                                if (sensorTypesList.contains("rfid")) {
+                                    iterator.remove();
+                                }
+                            }
+                        }
+                        return deviceInfoListRsp;
+                    }
+                }).doOnNext(new Action1<DeviceInfoListRsp>() {
                     @Override
                     public void call(DeviceInfoListRsp deviceInfoListRsp) {
                         try {
@@ -207,7 +243,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
      */
     public void organizeJsonData(String json) {
         Log.d("push....", "organizeJsonData----->> " + json);
-        DeviceInfo data = gson.fromJson(json, DeviceInfo.class);
+        DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceInfo.class);
         if (data != null) {
             boolean isContains = false;
             for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
@@ -469,6 +505,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             mSoundPool = null;
         }
         mHandler.removeCallbacksAndMessages(null);
+        mDataList.clear();
     }
 
     public void toSearchAc() {

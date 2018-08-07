@@ -44,6 +44,10 @@ public class SortUtils {
                     sensorTypes[1] = "installed";
                 }
             }
+            if (originList.contains("leakage_val") && originList.contains("temp_val")) {
+                sensorTypes[0] = "leakage_val";
+                sensorTypes[1] = "temp_val";
+            }
             tempSensorTypes.addAll(originList);
         }
         return tempSensorTypes;

@@ -52,6 +52,63 @@ public class SensorDetailInfo implements Serializable {
     private SensorStruct VOLTAGE_A;
     private SensorStruct VOLTAGE_B;
 
+
+    // curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val
+    private SensorStruct curr_val;
+    private SensorStruct elec_energy_val;
+    private SensorStruct leakage_val;
+    private SensorStruct power_val;
+    private SensorStruct temp_val;
+    private SensorStruct vol_val;
+
+    public SensorStruct getCurr_val() {
+        return curr_val;
+    }
+
+    public void setCurr_val(SensorStruct curr_val) {
+        this.curr_val = curr_val;
+    }
+
+    public SensorStruct getElec_energy_val() {
+        return elec_energy_val;
+    }
+
+    public void setElec_energy_val(SensorStruct elec_energy_val) {
+        this.elec_energy_val = elec_energy_val;
+    }
+
+    public SensorStruct getLeakage_val() {
+        return leakage_val;
+    }
+
+    public void setLeakage_val(SensorStruct leakage_val) {
+        this.leakage_val = leakage_val;
+    }
+
+    public SensorStruct getPower_val() {
+        return power_val;
+    }
+
+    public void setPower_val(SensorStruct power_val) {
+        this.power_val = power_val;
+    }
+
+    public SensorStruct getTemp_val() {
+        return temp_val;
+    }
+
+    public void setTemp_val(SensorStruct temp_val) {
+        this.temp_val = temp_val;
+    }
+
+    public SensorStruct getVol_val() {
+        return vol_val;
+    }
+
+    public void setVol_val(SensorStruct vol_val) {
+        this.vol_val = vol_val;
+    }
+
     public SensorStruct getCURRENT_A() {
         return CURRENT_A;
     }
@@ -257,6 +314,25 @@ public class SensorDetailInfo implements Serializable {
         }
         if (VOLTAGE_C != null) {
             mMap.put("VOLTAGE_C", VOLTAGE_C);
+        }
+        //
+        if (curr_val!=null){
+            mMap.put("curr_val",curr_val);
+        }
+        if (elec_energy_val!=null){
+            mMap.put("elec_energy_val",elec_energy_val);
+        }
+        if (leakage_val!=null){
+            mMap.put("leakage_val",leakage_val);
+        }
+        if (power_val!=null){
+            mMap.put("power_val",power_val);
+        }
+        if (temp_val!=null){
+            mMap.put("temp_val",temp_val);
+        }
+        if (vol_val!=null){
+            mMap.put("vol_val",vol_val);
         }
 
         return mMap;

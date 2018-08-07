@@ -181,6 +181,7 @@
         android:background="@drawable/shape_button_normal"
         android:gravity="center"
         android:text="@string/commit"
+        android:clickable="true"
         android:textColor="@color/white"
         android:textSize="@dimen/city_btn_text_size"/>
 </LinearLayout>

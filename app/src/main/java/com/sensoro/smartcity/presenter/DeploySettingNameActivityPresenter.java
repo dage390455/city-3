@@ -22,12 +22,7 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
         Constants {
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
-
-    public List<String> getHistoryKeywords() {
-        return mHistoryKeywords;
-    }
-
-    private List<String> mHistoryKeywords = new ArrayList<>();
+    private final List<String> mHistoryKeywords = new ArrayList<>();
     private CharSequence tempWords = "";
     private Activity mContext;
 
@@ -50,6 +45,10 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
         } else {
             getView().setEditText("");
         }
+    }
+
+    public List<String> getHistoryKeywords() {
+        return mHistoryKeywords;
     }
 
     private void save(String text) {
@@ -150,5 +149,10 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
             }
         }
         getView().updateRelationData(tempList);
+    }
+
+    @Override
+    public void onDestroy() {
+        mHistoryKeywords.clear();
     }
 }

@@ -69,7 +69,7 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
         mPrestener.initData(mActivity);
 //        init();
 //
-        createCriterias();
+//        createCriterias();
 //        showHistory(isMultipleOr, firstDay, secondDay);
     }
 

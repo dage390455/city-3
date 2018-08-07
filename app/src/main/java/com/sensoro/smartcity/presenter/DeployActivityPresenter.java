@@ -42,17 +42,17 @@ import com.sensoro.smartcity.activity.DeploySettingTagActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployActivityView;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.RegexUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -61,12 +61,11 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.regex.Pattern;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> implements IOnDestroy, AMap
+public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> implements AMap
         .OnMapClickListener, Constants, AMap.OnCameraChangeListener, AMap.OnMapLoadedListener, AMap
         .OnMarkerClickListener, AMap.InfoWindowAdapter, AMap.OnMapTouchListener, GeocodeSearch
         .OnGeocodeSearchListener, AMapLocationListener {
@@ -109,6 +108,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             mHandler.removeCallbacksAndMessages(null);
             mHandler = null;
         }
+        tagList.clear();
     }
 
     public void initMap(AMap map) {
@@ -441,9 +441,9 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                 }
                 //电话规则过滤
 //                String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
-                String regex = "^(\\+86){0,1}1[3|4|5|6|7|8|9](\\d){9}$";
-                Pattern p = Pattern.compile(regex);
-                if (!p.matcher(content).matches()) {
+//                String regex = "^(\\+86){0,1}1[3|4|5|6|7|8|9](\\d){9}$";
+//                Pattern p = Pattern.compile(regex);
+                if (!RegexUtils.checkPhone(content)) {
                     getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
                     getView().setUploadButtonClickable(true);
                     return;

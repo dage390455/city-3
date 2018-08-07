@@ -25,10 +25,6 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
 
-    public List<String> getHistoryKeywords_deviceName() {
-        return mHistoryKeywords_deviceName;
-    }
-
     private final List<String> mHistoryKeywords_deviceName = new ArrayList<>();
     private final List<String> mHistoryKeywords_deviceNumber = new ArrayList<>();
     private final List<String> mHistoryKeywords_devicePhone = new ArrayList<>();
@@ -51,6 +47,10 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
             mEndTime = longEndTime;
         }
         mEditor = mPref.edit();
+    }
+
+    public List<String> getHistoryKeywords_deviceName() {
+        return mHistoryKeywords_deviceName;
     }
 
     /**
@@ -113,7 +113,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                     }
 
                     @Override
-                    public void onErrorMsg(int errorCode,String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -145,7 +145,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                     }
 
                     @Override
-                    public void onErrorMsg(int errorCode,String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -177,7 +177,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                     }
 
                     @Override
-                    public void onErrorMsg(int errorCode,String errorMsg) {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -347,5 +347,12 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
         getView().setClearKeywordIvVisible(true);
         save(searchType, text.trim());
         requestData(searchType, text.trim());
+    }
+
+    @Override
+    public void onDestroy() {
+        mHistoryKeywords_deviceName.clear();
+        mHistoryKeywords_deviceNumber.clear();
+        mHistoryKeywords_devicePhone.clear();
     }
 }

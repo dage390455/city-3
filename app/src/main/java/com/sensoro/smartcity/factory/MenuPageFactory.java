@@ -30,11 +30,16 @@ public class MenuPageFactory {
             .ic_menu_location,
             MenuPageInfo.MENU_PAGE_STATION);
     //合同管理
-    private static final MenuPageInfo contractPage = new MenuPageInfo(R.string.menu_page_contract, R.mipmap.ic_menu_contract, MenuPageInfo.MENU_PAGE_CONTRACT);
+    private static final MenuPageInfo contractPage = new MenuPageInfo(R.string.menu_page_contract, R.mipmap
+            .ic_menu_contract, MenuPageInfo.MENU_PAGE_CONTRACT);
+    //扫码登录
+    private static final MenuPageInfo scanLoginPage = new MenuPageInfo(R.string.menu_page_scan_login, R.mipmap
+            .ic_menu_scan_login, MenuPageInfo.MENU_PAGE_SCAN_LOGIN);
 
     public static List<MenuPageInfo> createMenuPageList(boolean isSuper, String roles, boolean hasStation, boolean
-            hasContract) {
+            hasContract, boolean hasScanLogin) {
 //        hasContract = false;
+//        boolean hasScanLogin = true;
         ArrayList<MenuPageInfo> pageInfos = new ArrayList<>();
         //超级账户
         if (isSuper) {
@@ -45,29 +50,65 @@ public class MenuPageFactory {
             if (roles.equalsIgnoreCase("business")) {
                 if (hasStation) {
                     if (hasContract) {
-                        pageInfos.add(indexPage);
-                        pageInfos.add(alarmPage);
-                        pageInfos.add(pointPage);
-                        pageInfos.add(stationPage);
-                        pageInfos.add(contractPage);
+                        if (hasScanLogin) {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(stationPage);
+                            pageInfos.add(scanLoginPage);
+                            pageInfos.add(contractPage);
+                        } else {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(stationPage);
+                            pageInfos.add(contractPage);
+                        }
+
                     } else {
-                        pageInfos.add(indexPage);
-                        pageInfos.add(alarmPage);
-                        pageInfos.add(pointPage);
-                        pageInfos.add(stationPage);
+                        if (hasScanLogin) {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(stationPage);
+                            pageInfos.add(scanLoginPage);
+                        } else {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(stationPage);
+                        }
+
                     }
 
                     return pageInfos;
                 } else {
                     if (hasContract) {
-                        pageInfos.add(indexPage);
-                        pageInfos.add(alarmPage);
-                        pageInfos.add(pointPage);
-                        pageInfos.add(contractPage);
+                        if (hasScanLogin) {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(scanLoginPage);
+                            pageInfos.add(contractPage);
+                        } else {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(contractPage);
+                        }
+
                     } else {
-                        pageInfos.add(indexPage);
-                        pageInfos.add(alarmPage);
-                        pageInfos.add(pointPage);
+                        if (hasScanLogin) {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(scanLoginPage);
+                        } else {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(pointPage);
+                        }
+
                     }
 
                     return pageInfos;
@@ -76,33 +117,73 @@ public class MenuPageFactory {
                 //管理员账号
                 if (hasStation) {
                     if (hasContract) {
-                        pageInfos.add(indexPage);
-                        pageInfos.add(alarmPage);
-                        pageInfos.add(merchantPage);
-                        pageInfos.add(pointPage);
-                        pageInfos.add(stationPage);
-                        pageInfos.add(contractPage);
+                        if (hasScanLogin) {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(merchantPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(stationPage);
+                            pageInfos.add(scanLoginPage);
+                            pageInfos.add(contractPage);
+                        } else {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(merchantPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(stationPage);
+                            pageInfos.add(contractPage);
+                        }
+
                     } else {
-                        pageInfos.add(indexPage);
-                        pageInfos.add(alarmPage);
-                        pageInfos.add(merchantPage);
-                        pageInfos.add(pointPage);
-                        pageInfos.add(stationPage);
+                        if (hasScanLogin) {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(merchantPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(stationPage);
+                            pageInfos.add(scanLoginPage);
+                        } else {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(merchantPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(stationPage);
+                        }
+
                     }
 
                     return pageInfos;
                 } else {
                     if (hasContract) {
-                        pageInfos.add(indexPage);
-                        pageInfos.add(alarmPage);
-                        pageInfos.add(merchantPage);
-                        pageInfos.add(pointPage);
-                        pageInfos.add(contractPage);
+                        if (hasScanLogin) {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(merchantPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(scanLoginPage);
+                            pageInfos.add(contractPage);
+                        } else {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(merchantPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(contractPage);
+                        }
+
                     } else {
-                        pageInfos.add(indexPage);
-                        pageInfos.add(alarmPage);
-                        pageInfos.add(merchantPage);
-                        pageInfos.add(pointPage);
+                        if (hasScanLogin) {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(merchantPage);
+                            pageInfos.add(pointPage);
+                            pageInfos.add(scanLoginPage);
+                        } else {
+                            pageInfos.add(indexPage);
+                            pageInfos.add(alarmPage);
+                            pageInfos.add(merchantPage);
+                            pageInfos.add(pointPage);
+                        }
+
                     }
 
                     return pageInfos;
@@ -111,19 +192,75 @@ public class MenuPageFactory {
         }
     }
 
+    /**
+     * 判断基站权限
+     *
+     * @param grants
+     * @return
+     */
     public static boolean getHasStationDeploy(GrantsInfo grants) {
         if (grants != null) {
             List<String> station = grants.getStation();
-            for (String str : station) {
-                if (str.equals("deploy")) {
-                    return true;
+            if (station != null) {
+                for (String str : station) {
+                    if (str.equals("deploy")) {
+                        return true;
+                    }
+                }
+            }
+
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否超级账户
+     *
+     * @param isSupperAccountStr
+     * @return
+     */
+    public static boolean getIsSupperAccount(String isSupperAccountStr) {
+        return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr);
+    }
+
+    /**
+     * 判断合同权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasContract(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> contract = grants.getContract();
+            if (contract != null) {
+                for (String str : contract) {
+                    if ("list".equals(str) || "create".equals(str)) {
+                        return true;
+                    }
                 }
             }
         }
         return false;
     }
 
-    public static boolean getIsSupperAccount(String isSupperAccountStr) {
-        return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr);
+    /**
+     * 判断扫码登录权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasScanLogin(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> tv = grants.getTv();
+            if (tv != null) {
+                for (String str : tv) {
+                    if ("qrcode".equals(str)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
+
 }

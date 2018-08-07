@@ -9,7 +9,6 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeploySettingTagActivityView;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -18,21 +17,11 @@ import java.util.List;
 import mabbas007.tagsedittext.utils.ResourceUtils;
 
 public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySettingTagActivityView> implements
-        Constants, IOnDestroy {
+        Constants {
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
 
-    public List<String> getHistoryKeywords() {
-        return mHistoryKeywords;
-    }
-
     private final List<String> mHistoryKeywords = new ArrayList<>();
-
-    public void setTagList(List<String> tagList) {
-        mTagList.clear();
-        mTagList.addAll(tagList);
-    }
-
     private final List<String> mTagList = new ArrayList<>();
     private Activity mContext;
 
@@ -57,6 +46,15 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
         }
         getView().updateSearchHistory();
         getView().setSearchHistoryLayoutVisible(mHistoryKeywords.size() > 0);
+    }
+
+    public List<String> getHistoryKeywords() {
+        return mHistoryKeywords;
+    }
+
+    public void setTagList(List<String> tagList) {
+        mTagList.clear();
+        mTagList.addAll(tagList);
     }
 
     public void doChoose(Boolean isFinish, List<String> tags) {

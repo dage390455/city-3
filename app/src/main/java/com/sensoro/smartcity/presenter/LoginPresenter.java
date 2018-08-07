@@ -32,6 +32,13 @@ import rx.schedulers.Schedulers;
 public class LoginPresenter extends BasePresenter<ILoginView> implements Constants {
     private Activity mContext;
 
+    @Override
+    public void initData(Context context) {
+        mContext = (Activity) context;
+        readLoginData();
+        initSeverUrl();
+    }
+
     private void readLoginData() {
         SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_LOGIN, Context
                 .MODE_PRIVATE);
@@ -129,7 +136,9 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         intent.putExtra(EXTRA_PHONE_ID, phoneId);
                         //grants Info
                         GrantsInfo grants = data.getGrants();
-                        intent.putExtra(EXTRA_GRANTS_INFO, MenuPageFactory.getHasStationDeploy(grants));
+                        intent.putExtra(EXTRA_GRANTS_HAS_STATION, MenuPageFactory.getHasStationDeploy(grants));
+                        intent.putExtra(EXTRA_GRANTS_HAS_CONTRACT, MenuPageFactory.getHasContract(grants));
+                        intent.putExtra(EXTRA_GRANTS_HAS_SCAN_LOGIN, MenuPageFactory.getHasScanLogin(grants));
                         if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
                             PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
                         }
@@ -182,10 +191,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     @Override
-    public void initData(Context context) {
-        mContext = (Activity) context;
-        readLoginData();
-        initSeverUrl();
-    }
+    public void onDestroy() {
 
+    }
 }

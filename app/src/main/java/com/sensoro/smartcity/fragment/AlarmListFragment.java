@@ -28,7 +28,6 @@ import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
 
 import java.util.List;
@@ -338,6 +337,13 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     @Override
     public void refreshUIBySearch(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp, String searchText) {
         mPrestener.freshUI(direction, deviceAlarmLogRsp, searchText);
+    }
+
+    @Override
+    public void setUpdateButtonClickable(boolean canClick) {
+        if (mAlarmPopupView!=null){
+            mAlarmPopupView.setUpdateButtonClickable(canClick);
+        }
     }
 
     @Override

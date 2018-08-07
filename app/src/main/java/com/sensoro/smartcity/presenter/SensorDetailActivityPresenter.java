@@ -51,7 +51,6 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISensorDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -91,20 +90,24 @@ import rx.schedulers.Schedulers;
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
 public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailActivityView> implements Constants,
-        GeocodeSearch.OnGeocodeSearchListener, IOnStart, IOnDestroy, AMapLocationListener, AMap.OnMapLoadedListener {
+        GeocodeSearch.OnGeocodeSearchListener, IOnStart, AMapLocationListener, AMap.OnMapLoadedListener {
     private Activity mContext;
     private AMap aMap;
     private DeviceInfo mDeviceInfo;
+
     private List<String> sensorTypes;
+
     private float minValue = 0;
     private LatLng destPosition = null;
     private LatLng startPosition = null;
+
     private final List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
+
     private Bitmap tempUpBitmap;
+
     private GeocodeSearch geocoderSearch;
     private String tempAddress = "未知街道";
 
-    private final String TAG = getClass().getSimpleName();
     private AMapLocationClient mLocationClient;
     private CombinedChart mChart;
     private int textColor;
@@ -195,6 +198,10 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
             mLocationClient.stopLocation();
             mLocationClient.onDestroy();
             mLocationClient = null;
+        }
+        if (sensorTypes != null) {
+            sensorTypes.clear();
+            sensorTypes = null;
         }
     }
 
@@ -718,13 +725,13 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
         String formatAddress = regeocodeResult.getRegeocodeAddress().getFormatAddress();
-        Log.e(TAG, "onRegeocodeSearched: " + "code = " + i + ",address = " + formatAddress);
+        LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + formatAddress);
         tempAddress = formatAddress;
     }
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-        Log.e(TAG, "onGeocodeSearched: " + "onGeocodeSearched");
+        LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
     }
 
     public void doNavigation() {
@@ -840,12 +847,12 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                 req.scene = SendMessageToWX.Req.WXSceneSession;
                 req.message = msg;
                 boolean b = SensoroCityApplication.getInstance().api.sendReq(req);
-                Log.e(TAG, "toShareWeChat: isSuc = " + b + ",bitmapLength = " + ratio);
+                LogUtils.loge(this, "toShareWeChat: isSuc = " + b + ",bitmapLength = " + ratio);
             }
 
             @Override
             public void onMapScreenShot(Bitmap bitmap, int i) {
-                Log.e(TAG, "onMapScreenShot: i = " + i);
+                LogUtils.loge(this, "onMapScreenShot: i = " + i);
             }
         });
     }

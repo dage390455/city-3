@@ -611,6 +611,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
     @Override
     public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark) {
         getView().showProgressDialog();
+        getView().setUpdateButtonClickable(false);
         RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
                 statusType, statusPlace,
                 remark, isReConfirm, images).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -620,12 +621,12 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
 
                             @Override
                             public void onCompleted() {
+                                getView().dismissProgressDialog();
+                                getView().dismissAlarmPopupView();
                             }
 
                             @Override
                             public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                                getView().dismissProgressDialog();
-                                getView().dismissAlarmPopupView();
                                 if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
                                     getView().toastShort(mContext.getResources().getString(R.string
@@ -639,10 +640,16 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().setUpdateButtonClickable(true);
                                 getView().dismissProgressDialog();
                                 getView().dismissAlarmPopupView();
                                 getView().toastShort(errorMsg);
                             }
                         });
+    }
+
+    @Override
+    public void onDestroy() {
+        mDeviceAlarmLogInfoList.clear();
     }
 }

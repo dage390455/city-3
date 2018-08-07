@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.util;
 
 
+import android.util.Base64;
+
 import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.Key;
@@ -135,9 +137,54 @@ public class AESUtil {
         return null;
     }
 
+    private static byte[] encrypt(String content, byte[] keyStr) {
+        try {
+            SecretKeySpec key = new SecretKeySpec(keyStr, "AES");
+            Cipher cipher = Cipher.getInstance(algorithmStr);//algorithmStr
+            byte[] byteContent = content.getBytes("utf-8");
+            cipher.init(Cipher.ENCRYPT_MODE, key);//   ʼ
+            byte[] result = cipher.doFinal(byteContent);
+            return result; //
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
     private static byte[] decrypt(byte[] content, String password) {
         try {
             byte[] keyStr = getKey(password);
+            SecretKeySpec key = new SecretKeySpec(keyStr, "AES");
+            Cipher cipher = Cipher.getInstance(algorithmStr);//algorithmStr
+            cipher.init(Cipher.DECRYPT_MODE, key);//   ʼ
+            byte[] result = cipher.doFinal(content);
+            return result; //
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        } catch (NoSuchPaddingException e) {
+            e.printStackTrace();
+        } catch (InvalidKeyException e) {
+            e.printStackTrace();
+        } catch (IllegalBlockSizeException e) {
+            e.printStackTrace();
+        } catch (BadPaddingException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    private static byte[] decrypt(byte[] content, byte[] keyStr) {
+        try {
             SecretKeySpec key = new SecretKeySpec(keyStr, "AES");
             Cipher cipher = Cipher.getInstance(algorithmStr);//algorithmStr
             cipher.init(Cipher.DECRYPT_MODE, key);//   ʼ
@@ -174,6 +221,7 @@ public class AESUtil {
      * @return
      */
     public static String parseByte2HexStr(byte buf[]) {
+
         StringBuffer sb = new StringBuffer();
         for (int i = 0; i < buf.length; i++) {
             String hex = Integer.toHexString(buf[i] & 0xFF);
@@ -284,6 +332,44 @@ public class AESUtil {
             hex.append(Integer.toHexString(b & 0xFF));
         }
 
-        return hex.toString();
+        return hex.toString().toUpperCase();
+    }
+
+    public static String contractEncode(String key, String data) {
+        byte[] hash;
+        String result = null;
+        try {
+            hash = MessageDigest.getInstance("MD5").digest(key.getBytes("UTF-8"));
+            if (hash != null) {
+                byte[] encrypt = encrypt(data, hash);
+                result = byte2Base64StringFun(key) + ":" + byte2Base64StringFun(encrypt);
+
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return result;
+    }
+
+    //base64字符串转byte[] 解密
+    public static byte[] base64String2ByteFun(String base64Str) {
+
+        return Base64.decode(base64Str, android.util.Base64.NO_WRAP);
+    }
+
+    //byte[]转base64 加密
+    public static String byte2Base64StringFun(byte[] b) {
+        return Base64.encodeToString(b, android.util.Base64.NO_WRAP);
+    }
+
+    //byte[]转base64 加密
+    public static String byte2Base64StringFun(String b) {
+        byte[] byteContent = null;
+        try {
+            byteContent = b.getBytes("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        return Base64.encodeToString(byteContent, android.util.Base64.NO_WRAP);
     }
 }

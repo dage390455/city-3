@@ -82,6 +82,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onDestroy() {
+        mPrestener.onDestroy();
         mPrestener.detachView();
         super.onDestroy();
     }

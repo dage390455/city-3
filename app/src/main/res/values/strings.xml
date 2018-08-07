@@ -34,6 +34,7 @@
     <string name="contract_list">Contract List</string>
     <string name="start_use">Scan Deploy</string>
     <string name="point_deploy">Point Deploy</string>
+    <string name="scan_login">Scan Login</string>
     <string name="station_deploy">Station Deploy</string>
     <string name="deploy_name_address">Name</string>
     <string name="deploy_contact">Contact</string>
@@ -191,5 +192,6 @@
     <string name="menu_page_point">Point Deployment</string>
     <string name="menu_page_station">Station Deployment</string>
     <string name="menu_page_contract">Contract management</string>
+    <string name="menu_page_scan_login">ScanLogin Fragment</string>
 
 </resources>

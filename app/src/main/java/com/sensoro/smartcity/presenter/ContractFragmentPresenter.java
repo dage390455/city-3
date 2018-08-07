@@ -283,4 +283,9 @@ public class ContractFragmentPresenter extends BasePresenter<IContractFragmentVi
         requestDataType = 2;
         refreshData(DIRECTION_DOWN);
     }
+
+    @Override
+    public void onDestroy() {
+        dataList.clear();
+    }
 }

@@ -10,4 +10,9 @@ public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView
     public void initData(Context context) {
 
     }
+
+    @Override
+    public void onDestroy() {
+
+    }
 }

@@ -224,6 +224,7 @@
             android:windowSoftInputMode="stateHidden|stateUnchanged"/>
         <activity android:name=".activity.ContractInfoActivity"/>
         <activity android:name=".activity.ContractResultActivity"/>
+        <activity android:name=".activity.ScanLoginResultActivity"/>
 
         <service
             android:name="com.igexin.download.DownloadService"

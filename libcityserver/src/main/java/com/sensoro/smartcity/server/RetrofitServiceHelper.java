@@ -545,7 +545,8 @@ public enum RetrofitServiceHelper {
         return retrofitService.newContract(body);
     }
 
-    public Observable<ContractsListRsp> searchContract(Integer contractType, Long beginTime, Long endTime, Integer limit,
+    public Observable<ContractsListRsp> searchContract(Integer contractType, Long beginTime, Long endTime, Integer
+            limit,
                                                        Integer offset) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -572,4 +573,17 @@ public enum RetrofitServiceHelper {
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         return retrofitService.searchContract(body);
     }
+
+    public Observable<ResponseBase> getLoginScanResult(String qrcodeId) {
+        return retrofitService.getLoginScanResult(qrcodeId);
+    }
+
+    public Observable<ResponseBase> scanLoginIn(String qrcodeId) {
+        return retrofitService.scanLoginIn(qrcodeId);
+    }
+
+    public Observable<ResponseBase> scanLoginCancel(String qrcodeId) {
+        return retrofitService.scanLoginCancel(qrcodeId);
+    }
+
 }

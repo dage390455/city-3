@@ -13,6 +13,7 @@ public interface IAlarmListFragmentView extends IProgressDialog, IToast, IActivi
     void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
 
     void showAlarmPopupView();
+
     void dismissAlarmPopupView();
 
     boolean isSelectedDateLayoutVisible();
@@ -38,4 +39,6 @@ public interface IAlarmListFragmentView extends IProgressDialog, IToast, IActivi
     void requestDataByDirection(int direction, boolean isForce);
 
     void refreshUIBySearch(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp, String searchText);
+
+    void setUpdateButtonClickable(boolean canClick);
 }

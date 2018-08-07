@@ -134,7 +134,6 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
-        mPrestener.onDestroy();
         super.onDestroy();
     }
 

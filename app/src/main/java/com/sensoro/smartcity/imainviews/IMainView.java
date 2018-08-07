@@ -20,7 +20,8 @@ public interface IMainView extends IToast, IProgressDialog, IActivityIntent {
 
     void updateMenuPager(List<MenuPageInfo> menuPageInfos);
 
-    void changeAccount(String useName, String phone, String roles, boolean isSpecific, boolean isStation);
+    void changeAccount(String useName, String phone, String roles, boolean isSpecific, boolean isStation, boolean
+            hasContract, boolean hasScanLogin);
 
     void updateMainPageAdapterData();
 }

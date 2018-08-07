@@ -11,13 +11,13 @@ import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.IDCardParams;
 import com.baidu.ocr.sdk.model.IDCardResult;
 import com.baidu.ocr.ui.camera.CameraActivity;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.BusinessLicenseData;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.RecognizeService;
@@ -27,6 +27,7 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -41,7 +42,7 @@ import rx.schedulers.Schedulers;
 
 
 public class ContractServiceActivityPresenter extends BasePresenter<IContractServiceActivityView> implements
-        IOnCreate, IOnDestroy, Constants {
+        IOnCreate, Constants {
     private Activity mContext;
     private int serviceType;
     private String line1;
@@ -171,75 +172,95 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 //
                 intent.putExtra("line1", line1);
                 intent.putExtra("line2", line2);
-                intent.putExtra("line3", line3);
-                intent.putExtra("line4", line4);
-                intent.putExtra("line5", line5);
-                intent.putExtra("line6", line6);
-                if (TextUtils.isEmpty(phone)) {
-                    getView().toastShort("请输入手机号");
-                    return;
-                } else {
+                if (RegexUtils.checkPhone(phone)) {
                     intent.putExtra("phone", phone);
+                } else {
+                    getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                    return;
                 }
+                if (RegexUtils.checkContractNotEmpty(line3) || RegexUtils.checkContractNotEmpty(line4)) {
+//                    if (RegexUtils.checkEnterpriseCardID(line3)) {
+                    intent.putExtra("line3", line3);
+//                    } else {
+//                        getView().toastShort("请输入有效社会信用代码");
+//                        return;
+//                    }
+//                    if (RegexUtils.checkRegisterCode(line4)) {
+                    intent.putExtra("line4", line4);
+//                    } else {
+//                        getView().toastShort("请输入有效注册号");
+//                        return;
+//                    }
+                } else {
+                    getView().toastShort("社会信用代码和注册号必须填写其中一个");
+                    return;
+                }
+                if (RegexUtils.checkContractNotEmpty(line5)) {
+                    intent.putExtra("line5", line5);
+                } else {
+                    getView().toastShort("请填写住址信息");
+                    return;
+                }
+                intent.putExtra("line6", line6);
                 break;
             case 2:
                 intent.putExtra(EXTRA_CONTRACT_TYPE, 2);
-                if (TextUtils.isEmpty(line1)) {
-                    getView().toastShort("请输入姓名");
-                    return;
-                } else {
+                if (RegexUtils.checkContractNotEmpty(line1)) {
                     intent.putExtra("line1", line1);
-                }
-                if (TextUtils.isEmpty(phone)) {
-                    getView().toastShort("请输入手机号");
-                    return;
                 } else {
-                    intent.putExtra("phone", phone);
+                    getView().toastShort("请输入有效姓名");
+                    return;
                 }
-                if (TextUtils.isEmpty(line2)) {
+                if (RegexUtils.checkPhone(phone)) {
+                    intent.putExtra("phone", phone);
+                } else {
+                    getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                    return;
+                }
+                if (RegexUtils.checkContractNotEmpty(line2)) {
+                    intent.putExtra("line2", line2);
+                } else {
                     getView().toastShort("请输入性别");
                     return;
-                } else {
-                    intent.putExtra("line2", line2);
                 }
-                if (TextUtils.isEmpty(line3)) {
-                    getView().toastShort("请输入身份证号码");
-                    return;
-                } else {
+                if (RegexUtils.checkUserID(line3)) {
                     intent.putExtra("line3", line3);
-                }
-                if (TextUtils.isEmpty(line4)) {
-                    getView().toastShort("请输入住址");
-                    return;
                 } else {
+                    getView().toastShort("请输入有效身份证号码");
+                    return;
+                }
+                if (RegexUtils.checkContractNotEmpty(line4)) {
                     intent.putExtra("line4", line4);
+                } else {
+                    getView().toastShort("请填写住址信息");
+                    return;
                 }
                 break;
             case 3:
                 intent.putExtra(EXTRA_CONTRACT_TYPE, 3);
-                if (TextUtils.isEmpty(line1)) {
+                if (RegexUtils.checkContractNotEmpty(line1)) {
+                    intent.putExtra("line1", line1);
+                } else {
                     getView().toastShort("请输入甲方（客户名称）");
                     return;
-                } else {
-                    intent.putExtra("line1", line1);
                 }
-                if (TextUtils.isEmpty(line2)) {
+                if (RegexUtils.checkContractNotEmpty(line2)) {
+                    intent.putExtra("line2", line2);
+                } else {
                     getView().toastShort("请输入业主姓名");
                     return;
-                } else {
-                    intent.putExtra("line2", line2);
                 }
-                if (TextUtils.isEmpty(line3)) {
-                    getView().toastShort("请输入手机号");
-                    return;
-                } else {
+                if (RegexUtils.checkPhone(line3)) {
                     intent.putExtra("line3", line3);
-                }
-                if (TextUtils.isEmpty(line4)) {
-                    getView().toastShort("请输入住址");
-                    return;
                 } else {
+                    getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                    return;
+                }
+                if (RegexUtils.checkContractNotEmpty(line4)) {
                     intent.putExtra("line4", line4);
+                } else {
+                    getView().toastShort("请填写住址信息");
+                    return;
                 }
                 break;
             default:
@@ -350,18 +371,11 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        serviceType = -1;
-        line1 = "";
-        line2 = "";
-        line3 = "";
-        line4 = "";
-        line5 = "";
-        line6 = "";
-        //
-        placeType = "";
-        //
 
-        data = null;
+        if (data != null) {
+            data.clear();
+            data = null;
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

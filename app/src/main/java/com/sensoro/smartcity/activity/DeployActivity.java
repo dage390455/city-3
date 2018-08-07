@@ -75,7 +75,6 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
-        mPrestener.onDestroy();
         setUploadButtonClickable(true);
         super.onDestroy();
         mMapView.onDestroy();

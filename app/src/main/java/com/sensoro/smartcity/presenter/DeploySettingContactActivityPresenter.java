@@ -10,11 +10,11 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeploySettingContactActivityView;
+import com.sensoro.smartcity.util.RegexUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.regex.Pattern;
 
 public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploySettingContactActivityView>
         implements Constants {
@@ -22,18 +22,10 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
     private SharedPreferences mPhonePref;
     private SharedPreferences.Editor mNameEditor;
     private SharedPreferences.Editor mPhoneEditor;
+    //
+    private final List<String> mPhoneHistoryKeywords = new ArrayList<>();
 
-    public List<String> getNameHistoryKeywords() {
-        return mNameHistoryKeywords;
-    }
-
-    private List<String> mNameHistoryKeywords = new ArrayList<>();
-
-    public List<String> getPhoneHistoryKeywords() {
-        return mPhoneHistoryKeywords;
-    }
-
-    private List<String> mPhoneHistoryKeywords = new ArrayList<>();
+    private final List<String> mNameHistoryKeywords = new ArrayList<>();
     private Activity mContext;
 
     @Override
@@ -71,6 +63,13 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
         }
     }
 
+    public List<String> getPhoneHistoryKeywords() {
+        return mPhoneHistoryKeywords;
+    }
+
+    public List<String> getNameHistoryKeywords() {
+        return mNameHistoryKeywords;
+    }
 
     private void saveName(String text) {
         String oldText = mNamePref.getString(PREFERENCE_KEY_DEPLOY_NAME, "");
@@ -144,13 +143,11 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
 
     public void doFinish(String name, String phone) {
 //        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
-        String regex = "^(\\+86){0,1}1[3|4|5|6|7|8|9](\\d){9}$";
-        Pattern p = Pattern.compile(regex);
         if (TextUtils.isEmpty(name)) {
             getView().toastShort("联系人姓名不能为空！");
             return;
         }
-        if (!TextUtils.isEmpty(phone) && p.matcher(phone).matches()) {
+        if (RegexUtils.checkPhone(phone)) {
             saveName(name);
             savePhone(phone);
 //            mNameEt.clearFocus();
@@ -164,5 +161,11 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
         } else {
             getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
         }
+    }
+
+    @Override
+    public void onDestroy() {
+        mPhoneHistoryKeywords.clear();
+        mNameHistoryKeywords.clear();
     }
 }

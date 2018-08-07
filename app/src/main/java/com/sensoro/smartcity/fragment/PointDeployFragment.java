@@ -65,15 +65,12 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
         mQRCodeView.getCameraPreview().setAutoFocusFailureDelay(0);
     }
 
-
     @Override
-    public void onDestroy() {
+    public void onDestroyView() {
         mProgressUtils.destroyProgress();
-        mPrestener.onDestroy();
         mQRCodeView.onDestroy();
-        super.onDestroy();
+        super.onDestroyView();
     }
-
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {

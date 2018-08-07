@@ -278,14 +278,12 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
      */
     @Override
     public void onDestroy() {
-        mPrestener.onDestroy();
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
         super.onDestroy();
         mMapView.onDestroy();
-
     }
 
 

@@ -27,10 +27,12 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceActivityView> implements Constants,
@@ -39,21 +41,10 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
     private SharedPreferences.Editor mEditor;
     private String history;
 
-    public List<String> getHistoryKeywords() {
-        return mHistoryKeywords;
-    }
 
     private final List<String> mHistoryKeywords = new ArrayList<>();
     private int mTypeSelectedIndex = 0;
     private int mStatusSelectedIndex = 0;
-
-    public void setTypeSelectedIndex(int mTypeSelectedIndex) {
-        this.mTypeSelectedIndex = mTypeSelectedIndex;
-    }
-
-    public void setStatusSelectedIndex(int mStatusSelectedIndex) {
-        this.mStatusSelectedIndex = mStatusSelectedIndex;
-    }
 
     private int page = 1;
     private final List<DeviceInfo> mDataList = new ArrayList<>();
@@ -78,6 +69,10 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
 
         boolean hasHistory = mHistoryKeywords.size() > 0;
         getView().setSearchHistoryLayoutVisible(hasHistory);
+    }
+
+    public List<String> getHistoryKeywords() {
+        return mHistoryKeywords;
     }
 
     @Override
@@ -108,6 +103,14 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
             }
         }
         LogUtils.loge(this, data.toString());
+    }
+
+    public void setTypeSelectedIndex(int mTypeSelectedIndex) {
+        this.mTypeSelectedIndex = mTypeSelectedIndex;
+    }
+
+    public void setStatusSelectedIndex(int mStatusSelectedIndex) {
+        this.mStatusSelectedIndex = mStatusSelectedIndex;
     }
 
     private boolean isActivityTop() {
@@ -326,8 +329,25 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         if (direction == DIRECTION_DOWN) {
             page = 1;
             RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
-                    (Schedulers.io
-                            ()).doOnNext(new Action1<DeviceInfoListRsp>() {
+                    (Schedulers.io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                @Override
+                public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
+                    //去除rfid类型
+                    List<DeviceInfo> list = deviceInfoListRsp.getData();
+                    Iterator<DeviceInfo> iterator = list.iterator();
+                    while (iterator.hasNext()) {
+                        DeviceInfo next = iterator.next();
+                        String[] sensorTypes = next.getSensorTypes();
+                        if (sensorTypes != null && sensorTypes.length > 0) {
+                            final List<String> sensorTypesList = Arrays.asList(sensorTypes);
+                            if (sensorTypesList.contains("rfid")) {
+                                iterator.remove();
+                            }
+                        }
+                    }
+                    return deviceInfoListRsp;
+                }
+            }).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
                 public void call(DeviceInfoListRsp deviceInfoListRsp) {
                     if (deviceInfoListRsp.getData().size() == 0) {
@@ -369,8 +389,25 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         } else {
             page++;
             RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
-                    (Schedulers.io
-                            ()).doOnNext(new Action1<DeviceInfoListRsp>() {
+                    (Schedulers.io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                @Override
+                public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
+                    //去除rfid类型
+                    List<DeviceInfo> list = deviceInfoListRsp.getData();
+                    Iterator<DeviceInfo> iterator = list.iterator();
+                    while (iterator.hasNext()) {
+                        DeviceInfo next = iterator.next();
+                        String[] sensorTypes = next.getSensorTypes();
+                        if (sensorTypes != null && sensorTypes.length > 0) {
+                            final List<String> sensorTypesList = Arrays.asList(sensorTypes);
+                            if (sensorTypesList.contains("rfid")) {
+                                iterator.remove();
+                            }
+                        }
+                    }
+                    return deviceInfoListRsp;
+                }
+            }).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
                 public void call(DeviceInfoListRsp deviceInfoListRsp) {
                     try {
@@ -444,4 +481,12 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
     }
 
 
+    @Override
+    public void onDestroy() {
+        mDataList.clear();
+        mHistoryKeywords.clear();
+        originHistoryList.clear();
+        currentList.clear();
+        searchStrList.clear();
+    }
 }

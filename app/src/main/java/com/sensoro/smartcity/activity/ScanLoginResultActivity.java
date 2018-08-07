@@ -3,36 +3,25 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IContractIndexActivityView;
-import com.sensoro.smartcity.presenter.ContractIndexActivityPresenter;
+import com.sensoro.smartcity.imainviews.IScanLoginResultActivityView;
+import com.sensoro.smartcity.presenter.ScanLoginResultActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
-import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ContractIndexActivity extends BaseActivity<IContractIndexActivityView, ContractIndexActivityPresenter>
-        implements IContractIndexActivityView {
-    @BindView(R.id.contract_index_back)
-    ImageView contractIndexBack;
-    @BindView(R.id.contract_index_name_license_rl)
-    RelativeLayout contractIndexNameLicenseRl;
-    @BindView(R.id.contract_index_person_rl)
-    RelativeLayout contractIndexPersonRl;
-    @BindView(R.id.contract_index_manual_rl)
-    RelativeLayout contractIndexManualRl;
+public class ScanLoginResultActivity extends BaseActivity<IScanLoginResultActivityView,
+        ScanLoginResultActivityPresenter> implements IScanLoginResultActivityView {
     private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_contract_index);
+        setContentView(R.layout.activity_scan_result);
         ButterKnife.bind(mActivity);
         mPrestener.initData(mActivity);
         initView();
@@ -52,32 +41,24 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
     }
 
     @Override
-    protected ContractIndexActivityPresenter createPresenter() {
-        return new ContractIndexActivityPresenter();
+    protected ScanLoginResultActivityPresenter createPresenter() {
+        return new ScanLoginResultActivityPresenter();
     }
 
-    @OnClick({R.id.contract_index_back, R.id.contract_index_name_license_rl, R.id.contract_index_person_rl, R.id
-            .contract_index_manual_rl})
+    @OnClick({R.id.scan_login, R.id.scan_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.contract_index_back:
-                finishAc();
+            case R.id.scan_login:
+                mPrestener.doLogin();
                 break;
-            case R.id.contract_index_name_license_rl:
-                mPrestener.startLicense();
-                break;
-            case R.id.contract_index_person_rl:
-                mPrestener.startPerson();
-                break;
-            case R.id.contract_index_manual_rl:
-                mPrestener.startManual();
+            case R.id.scan_cancel:
+                mPrestener.doCancel();
                 break;
         }
     }
 
     @Override
     public void startAC(Intent intent) {
-        mActivity.startActivity(intent);
     }
 
     @Override
@@ -87,7 +68,7 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mActivity.startActivityForResult(intent, requestCode);
+
     }
 
     @Override
@@ -98,12 +79,6 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
     @Override
     public void setIntentResult(int requestCode, Intent data) {
 
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPrestener.handActivityResult(requestCode, resultCode, data);
     }
 
     @Override

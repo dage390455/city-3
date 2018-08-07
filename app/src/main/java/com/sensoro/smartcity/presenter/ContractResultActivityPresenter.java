@@ -9,7 +9,6 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractResultActivityView;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
@@ -23,7 +22,7 @@ import cn.bingoogolapple.qrcode.core.BGAQRCodeUtil;
 import cn.bingoogolapple.qrcode.zxing.QRCodeEncoder;
 
 public class ContractResultActivityPresenter extends BasePresenter<IContractResultActivityView> implements
-        IOnDestroy, Constants {
+        Constants {
     private Activity mContext;
     private String code;
     private Bitmap bitmapTemp;
@@ -57,24 +56,39 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
                 } else {
                     getView().toastShort("生成二维码失败");
                 }
-                bitmap = null;
             }
         }.execute();
     }
 
     public void sharePic() {
+        boolean wxAppInstalled = SensoroCityApplication.getInstance().api.isWXAppInstalled();
+        if (wxAppInstalled) {
+            boolean wxAppSupportAPI = SensoroCityApplication.getInstance().api.isWXAppSupportAPI();
+            if (wxAppSupportAPI) {
+                toShareWeChat();
+            } else {
+                getView().toastShort("当前版的微信不支持分享功能");
+            }
+        } else {
+            getView().toastShort("当前手机未安装微信，请安装后重试");
+        }
+    }
+
+    private void toShareWeChat() {
         WXImageObject wxImageObject = new WXImageObject(bitmapTemp);
         WXMediaMessage wxMediaMessage = new WXMediaMessage();
         wxMediaMessage.mediaObject = wxImageObject;
         //
-        wxMediaMessage.thumbData = ImageFactory.ratio(bitmapTemp);
+        byte[] ratio = ImageFactory.ratio(bitmapTemp, 31);
+        wxMediaMessage.thumbData = ratio;
         //
         SendMessageToWX.Req req = new SendMessageToWX.Req();
         req.transaction = buildTransaction("img");
         req.message = wxMediaMessage;
         req.scene = SendMessageToWX.Req.WXSceneSession;
         boolean b = SensoroCityApplication.getInstance().api.sendReq(req);
-        LogUtils.loge("toShareWeChat: isSuc = " + b + ",bitmapLength = " + bitmapTemp.getByteCount());
+        LogUtils.loge("toShareWeChat: isSuc = " + b + ",bitmap_ratio = " + ratio.length + ",bitmapLength = " +
+                bitmapTemp.getByteCount());
     }
 
     private String buildTransaction(final String type) {

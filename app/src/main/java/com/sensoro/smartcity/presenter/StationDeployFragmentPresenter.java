@@ -16,10 +16,9 @@ import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.IStationDeployFragmentView;
-import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.util.LogUtils;
@@ -38,7 +37,7 @@ import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN_RESULT;
 import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_STATION_DEPLOY;
 
 public class StationDeployFragmentPresenter extends BasePresenter<IStationDeployFragmentView> implements
-        IOnDestroy, MediaPlayer.OnErrorListener {
+        MediaPlayer.OnErrorListener {
     private Activity mContext;
     private static final float BEEP_VOLUME = 0.10f;
     private MediaPlayer mediaPlayer;

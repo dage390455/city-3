@@ -23,4 +23,6 @@ public interface IAlarmDetailActivityView extends IActivityIntent, IToast, IProg
     void showConfirmPopup(boolean isReConfirm);
 
     void dismissConfirmPopup();
+
+    void setUpdateButtonClickable(boolean canClick);
 }

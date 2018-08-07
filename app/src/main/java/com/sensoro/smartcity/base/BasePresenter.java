@@ -2,6 +2,8 @@ package com.sensoro.smartcity.base;
 
 import android.content.Context;
 
+import com.sensoro.smartcity.iwidget.IOnDestroy;
+
 import java.lang.ref.WeakReference;
 
 /**
@@ -9,7 +11,7 @@ import java.lang.ref.WeakReference;
  * @date 2018/2/4 0004
  */
 
-public abstract class BasePresenter<V> {
+public abstract class BasePresenter<V> implements IOnDestroy{
     private WeakReference<V> mViewRef;
 
     /**

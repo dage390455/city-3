@@ -149,7 +149,6 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
-        mPrestener.onDestroy();
         super.onDestroyView();
     }
 

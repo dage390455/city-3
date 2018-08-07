@@ -35,7 +35,7 @@
     <RelativeLayout
         android:id="@+id/contract_index_name_license_rl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y160"
+        android:layout_height="@dimen/y200"
         android:layout_marginTop="@dimen/y60"
         android:background="@color/white"
         android:gravity="center_vertical">
@@ -74,7 +74,7 @@
     <RelativeLayout
         android:id="@+id/contract_index_person_rl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y160"
+        android:layout_height="@dimen/y200"
         android:layout_marginTop="@dimen/y60"
         android:background="@color/white"
         android:gravity="center_vertical">
@@ -113,7 +113,7 @@
     <RelativeLayout
         android:id="@+id/contract_index_manual_rl"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y160"
+        android:layout_height="@dimen/y200"
         android:layout_marginTop="@dimen/y60"
         android:background="@color/white"
         android:gravity="center_vertical">

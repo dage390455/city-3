@@ -133,10 +133,7 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
 
     @Override
     public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark) {
-        if (remark.length() > 30) {
-            getView().toastShort("最长不能超过30个字符");
-            return;
-        }
+        getView().setUpdateButtonClickable(false);
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(deviceAlarmLogInfo.get_id(), statusResult, statusType,
                 statusPlace,
@@ -147,12 +144,12 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
 
                             @Override
                             public void onCompleted() {
+                                getView().dismissProgressDialog();
+                                getView().dismissConfirmPopup();
                             }
 
                             @Override
                             public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                                getView().dismissProgressDialog();
-                                getView().dismissConfirmPopup();
                                 if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                                     getView().toastShort(mContext.getResources().getString(R.string
                                             .tips_commit_success));
@@ -169,7 +166,13 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
                                 getView().dismissProgressDialog();
                                 getView().dismissConfirmPopup();
                                 getView().toastShort(errorMsg);
+                                getView().setUpdateButtonClickable(true);
                             }
                         });
+    }
+
+    @Override
+    public void onDestroy() {
+        mList.clear();
     }
 }

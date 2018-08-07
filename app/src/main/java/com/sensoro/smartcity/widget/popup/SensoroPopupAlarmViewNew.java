@@ -305,6 +305,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
                 selImageList.clear();
                 adapter.setImages(selImageList);
             }
+            setUpdateButtonClickable(false);
         }
     }
 
@@ -333,7 +334,6 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
                 //
                 dismissProgressDialog();
                 mListener.onPopupCallback(selectResult, selectType, selectPlace, null, mRemark);
-                setUpdateButtonClickable(true);
             }
 //
         }
@@ -458,7 +458,6 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         LogUtils.loge(this, "上传成功---" + s);
         //TODO 上传结果
         mListener.onPopupCallback(selectResult, selectType, selectPlace, imagesUrl, mRemark);
-        setUpdateButtonClickable(true);
     }
 
     @Override
@@ -529,7 +528,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         }
     }
 
-    private void setUpdateButtonClickable(boolean canClick) {
+    public void setUpdateButtonClickable(boolean canClick) {
         if (canClick) {
             mButton.setBackground(getResources().getDrawable(R.drawable.shape_button));
         } else {

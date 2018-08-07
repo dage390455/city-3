@@ -47,7 +47,7 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void setData(List<DeviceInfo> list) {
         this.mList.clear();
-        notifyItemRangeRemoved(1, mList.size());
+        notifyItemRangeRemoved(1, list.size());
         this.mList.addAll(list);
         notifyItemRangeChanged(1, list.size());
     }
@@ -119,8 +119,8 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         String[] sensorTypes = deviceInfo.getSensorTypes();
         List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
 //        Arrays.sort(sensorTypes);
-        if (deviceInfo.getSn().endsWith("28C8")){
-            LogUtils.loge(this,"=========");
+        if (deviceInfo.getSn().endsWith("28C8")) {
+            LogUtils.loge(this, "=========");
         }
         if (sensorDetailInfo != null && sortSensorTypes.size() > 0) {
             HashMap<String, SensorStruct> stringSensorStructHashMap = sensorDetailInfo.loadData();
