@@ -14,6 +14,10 @@ import com.sensoro.smartcity.activity.SearchAlarmActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmListFragmentView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.SearchAlarmResultModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
@@ -24,6 +28,10 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -31,7 +39,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragmentView> implements Constants,
+public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragmentView> implements IOnCreate, Constants,
         SensoroPopupAlarmViewNew.OnPopupCallbackListener {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private volatile int cur_page = 1;
@@ -44,9 +52,10 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
     }
 
-    public void freshUI(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp, String searchText) {
+    private void freshUI(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp, String searchText) {
         if (direction == DIRECTION_DOWN) {
             mDeviceAlarmLogInfoList.clear();
         }
@@ -116,7 +125,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
     }
 
 
-    public void freshUI(String type) {
+    private void freshUI(String type) {
         try {
             List<DeviceAlarmLogInfo> tempList = new ArrayList<>();
             String typeArray[] = type.split(",");
@@ -429,7 +438,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
      * @param startDate
      * @param endDate
      */
-    public void requestDataByDate(String startDate, String endDate) {
+    private void requestDataByDate(String startDate, String endDate) {
         getView().setSelectedDateLayoutVisible(true);
         startTime = DateUtil.strToDate(startDate).getTime();
         endTime = DateUtil.strToDate(endDate).getTime();
@@ -468,8 +477,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
         Intent intent = new Intent(mContext, AlarmDetailActivity.class);
         intent.putExtra(EXTRA_ALARM_INFO, mDeviceAlarmLogInfoList.get(position - 1));
         intent.putExtra(EXTRA_ALARM_IS_RE_CONFIRM, isReConfirm);
-
-        getView().startACForResult(intent, REQUEST_CODE_ALARM);
+        getView().startAC(intent);
     }
 
     public void clickItemByConfirmStatus(int position, boolean isReConfirm) {
@@ -478,7 +486,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
         getView().showAlarmPopupView();
     }
 
-    public void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+    private void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
         for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
             DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
             if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
@@ -514,7 +522,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
         searchIntent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
         searchIntent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
         searchIntent.putExtra(EXTRA_FRAGMENT_INDEX, 2);
-        getView().startACForResult(searchIntent, REQUEST_CODE_SEARCH_ALARM);
+        getView().startAC(searchIntent);
 
     }
 
@@ -539,7 +547,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
         searchIntent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
         searchIntent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
         searchIntent.putExtra(EXTRA_FRAGMENT_INDEX, 2);
-        getView().startACForResult(searchIntent, REQUEST_CODE_SEARCH_ALARM);
+        getView().startAC(searchIntent);
     }
 
     /**
@@ -557,10 +565,83 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
             intent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
             intent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
         }
-        getView().startACForResult(intent, REQUEST_CODE_CALENDAR);
+        getView().startAC(intent);
     }
 
-//    @Override
+    @Override
+    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark) {
+        getView().showProgressDialog();
+        getView().setUpdateButtonClickable(false);
+        RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
+                statusType, statusPlace,
+                remark, isReConfirm, images).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe
+                        (new CityObserver<DeviceAlarmItemRsp>() {
+
+
+                            @Override
+                            public void onCompleted() {
+                                getView().dismissProgressDialog();
+                                getView().dismissAlarmPopupView();
+                            }
+
+                            @Override
+                            public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                                    getView().toastShort(mContext.getResources().getString(R.string
+                                            .tips_commit_success));
+                                    freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
+                                } else {
+                                    getView().toastShort(mContext.getResources().getString(R.string
+                                            .tips_commit_failed));
+                                }
+                            }
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().setUpdateButtonClickable(true);
+                                getView().dismissProgressDialog();
+                                getView().dismissAlarmPopupView();
+                                getView().toastShort(errorMsg);
+                            }
+                        });
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        mDeviceAlarmLogInfoList.clear();
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        Object data = eventData.data;
+        //
+        if (code == EVENT_DATA_SELECT_CALENDAR) {
+            if (data instanceof CalendarDateModel) {
+                requestDataByDate(((CalendarDateModel) data).startDate, ((CalendarDateModel) data).endDate);
+            }
+        } else if (code == EVENT_DATA_ALARM_DETAIL_RESULT) {
+            if (data instanceof DeviceAlarmLogInfo) {
+                freshDeviceAlarmLogInfo((DeviceAlarmLogInfo) data);
+            }
+        } else if (code == EVENT_DATA_SEARCH_ALARM_RESULT) {
+            if (data instanceof SearchAlarmResultModel) {
+                freshUI(DIRECTION_DOWN, ((SearchAlarmResultModel) data).deviceAlarmLogRsp, ((SearchAlarmResultModel)
+                        data).searchAlarmText);
+            }
+        }
+    }
+
+    //    @Override
 //    public void onPopupCallback(int status, String remark) {
 ////        byte[] bytes = new byte[0];
 ////        try {
@@ -607,49 +688,4 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
 //                    }
 //                });
 //    }
-
-    @Override
-    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark) {
-        getView().showProgressDialog();
-        getView().setUpdateButtonClickable(false);
-        RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
-                statusType, statusPlace,
-                remark, isReConfirm, images).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe
-                        (new CityObserver<DeviceAlarmItemRsp>() {
-
-
-                            @Override
-                            public void onCompleted() {
-                                getView().dismissProgressDialog();
-                                getView().dismissAlarmPopupView();
-                            }
-
-                            @Override
-                            public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                                    getView().toastShort(mContext.getResources().getString(R.string
-                                            .tips_commit_success));
-                                    freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
-                                } else {
-                                    getView().toastShort(mContext.getResources().getString(R.string
-                                            .tips_commit_failed));
-                                }
-                            }
-
-                            @Override
-                            public void onErrorMsg(int errorCode, String errorMsg) {
-                                getView().setUpdateButtonClickable(true);
-                                getView().dismissProgressDialog();
-                                getView().dismissAlarmPopupView();
-                                getView().toastShort(errorMsg);
-                            }
-                        });
-    }
-
-    @Override
-    public void onDestroy() {
-        mDeviceAlarmLogInfoList.clear();
-    }
 }

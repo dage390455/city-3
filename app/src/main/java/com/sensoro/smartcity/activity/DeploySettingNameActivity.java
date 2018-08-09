@@ -239,7 +239,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
+
     }
 
     @Override

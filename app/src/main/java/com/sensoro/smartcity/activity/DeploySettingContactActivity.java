@@ -240,7 +240,6 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
     }
 
     @Override

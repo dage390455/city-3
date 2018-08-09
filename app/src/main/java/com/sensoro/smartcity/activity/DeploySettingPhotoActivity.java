@@ -22,7 +22,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeployPhotoActivity extends BaseActivity<IDeployPhotoView, DeployPhotoActivityPresenter> implements
+public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, DeployPhotoActivityPresenter> implements
         IDeployPhotoView, ImagePickerAdapter.OnRecyclerViewItemClickListener {
     @BindView(R.id.rv_deploy_photo)
     RecyclerView rvDeployPhoto;
@@ -102,7 +102,6 @@ public class DeployPhotoActivity extends BaseActivity<IDeployPhotoView, DeployPh
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
     }
 
     @Override

@@ -169,7 +169,6 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -178,7 +177,6 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
     }
 
     @Override

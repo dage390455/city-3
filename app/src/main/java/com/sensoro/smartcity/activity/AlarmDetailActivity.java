@@ -212,7 +212,6 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
     }
 
     @Override

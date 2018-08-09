@@ -2,7 +2,6 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.support.v4.util.Pair;
 
 import com.applikeysolutions.cosmocalendar.model.Day;
@@ -16,20 +15,18 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ICalendarActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.DateUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static com.sensoro.smartcity.constant.Constants.EXTRA_ALARM_END_DATE;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_ALARM_START_DATE;
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_KEY_END_TIME;
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_KEY_START_TIME;
-import static com.sensoro.smartcity.constant.Constants.WEEK_TITLE_ARRAY;
-
-public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityView> implements IOnStart {
+public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityView> implements IOnStart, Constants {
     private String startDate = null;
     private String endDate = null;
     private Activity mContext;
@@ -42,7 +39,6 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
         mContext = (Activity) context;
         startTime = mContext.getIntent().getLongExtra(PREFERENCE_KEY_START_TIME, -1);
         endTime = mContext.getIntent().getLongExtra(PREFERENCE_KEY_END_TIME, -1);
-//        createCriterias();
     }
 
     @Override
@@ -133,41 +129,28 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
     public void saveDates() {
         if (isMultiple) {
             if (startDate != null && endDate != null) {
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_ALARM_START_DATE, startDate);
-                intent.putExtra(EXTRA_ALARM_END_DATE, endDate);
-                getView().setIntentResult(Constants.RESULT_CODE_CALENDAR, intent);
+                EventData eventData = new EventData();
+                eventData.code = EVENT_DATA_SELECT_CALENDAR;
+                CalendarDateModel calendarDateModel = new CalendarDateModel();
+                calendarDateModel.startDate = startDate;
+                calendarDateModel.endDate = endDate;
+                eventData.data = calendarDateModel;
+                EventBus.getDefault().post(eventData);
                 getView().finishAc();
             }
         } else {
             if (startDate != null) {
-                Intent intent = new Intent();
-                intent.putExtra(EXTRA_ALARM_START_DATE, startDate);
-                intent.putExtra(EXTRA_ALARM_END_DATE, startDate);
-                getView().setIntentResult(Constants.RESULT_CODE_CALENDAR, intent);
-                getView().finishAc();
+                EventData eventData = new EventData();
+                eventData.code = EVENT_DATA_SELECT_CALENDAR;
+                CalendarDateModel calendarDateModel = new CalendarDateModel();
+                calendarDateModel.startDate = startDate;
+                calendarDateModel.endDate = endDate;
+                eventData.data = calendarDateModel;
+                EventBus.getDefault().post(eventData);
             } else {
                 getView().toastShort(mContext.getResources().getString(R.string.tips_date_not_null));
             }
         }
-//        if (startDate != null && endDate != null) {
-//            Intent intent = new Intent();
-//            intent.putExtra(EXTRA_ALARM_START_DATE, startDate);
-//            intent.putExtra(EXTRA_ALARM_END_DATE, endDate);
-//            setResult(Constants.RESULT_CODE_CALENDAR, intent);
-//            this.finish();
-//        } else {
-//            if (startDate != null) {
-//                Intent intent = new Intent();
-//                intent.putExtra(EXTRA_ALARM_START_DATE, startDate);
-//                intent.putExtra(EXTRA_ALARM_END_DATE, startDate);
-//                setResult(Constants.RESULT_CODE_CALENDAR, intent);
-//                this.finish();
-//            } else {
-//                Toast.makeText(this, R.string.tips_date_not_null, Toast.LENGTH_SHORT).show();
-//            }
-//
-//        }
     }
 
 

@@ -2,21 +2,21 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.ISearchMerchantActivityView;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.GrantsInfo;
-import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -170,27 +170,10 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             public void onNext(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     UserInfo dataUser = userAccountControlRsp.getData();
-                    String sessionID = dataUser.getSessionID();
-                    RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
-                    String nickname = dataUser.getNickname();
-                    String phone = dataUser.getContacts();
-                    String roles = dataUser.getRoles();
-                    String isSpecific = dataUser.getIsSpecific();
-                    //
-                    Intent data = new Intent();
-                    data.putExtra("nickname", nickname);
-                    if (!TextUtils.isEmpty(phone)) {
-                        data.putExtra("phone", phone);
-                    }
-                    data.putExtra("roles", roles);
-                    data.putExtra("isSpecific", MenuPageFactory.getIsSupperAccount(isSpecific));
-                    //grants Info
-                    GrantsInfo grants = dataUser.getGrants();
-                    data.putExtra(EXTRA_GRANTS_HAS_STATION, MenuPageFactory.getHasStationDeploy(grants));
-                    data.putExtra(EXTRA_GRANTS_HAS_CONTRACT, MenuPageFactory.getHasContract(grants));
-                    data.putExtra(EXTRA_GRANTS_HAS_SCAN_LOGIN, MenuPageFactory.getHasScanLogin(grants));
-                    getView().setIntentResult(RESULT_CODE_SEARCH_MERCHANT, data);
-//                    EventBus.getDefault().post(data);
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_SEARCH_MERCHANT;
+                    eventData.data = dataUser;
+                    EventBus.getDefault().post(eventData);
                     getView().finishAc();
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());

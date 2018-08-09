@@ -21,7 +21,7 @@ public interface IDeployActivityView extends IToast, IProgressDialog, IActivityI
 
     void refreshSignal(long updateTime, String signal);
 
-    void setDeployDevicerlSignalVisible(boolean isVisible);
+    void setDeployDeviceRlSignalVisible(boolean isVisible);
 
     void setDeployContactRelativeLayoutVisible(boolean isVisible);
 

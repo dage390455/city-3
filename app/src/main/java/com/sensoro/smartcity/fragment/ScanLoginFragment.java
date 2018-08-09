@@ -136,7 +136,6 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mRootFragment.getActivity().startActivityForResult(intent, requestCode);
     }
 
     @Override

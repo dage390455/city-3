@@ -11,32 +11,33 @@ import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
+import com.sensoro.smartcity.util.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployManualActivityPresenter extends BasePresenter<IDeployManualActivityView> implements Constants {
+public class DeployManualActivityPresenter extends BasePresenter<IDeployManualActivityView> implements IOnCreate,
+        Constants {
     private Activity mContext;
     private boolean hasStation;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         hasStation = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
-    }
-
-    public void clickClose() {
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_CONTAINS_DATA, false);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
-        getView().setIntentResult(RESULT_CODE_DEPLOY, intent);
-        getView().finishAc();
     }
 
     public void clickNext(String text) {
@@ -127,7 +128,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
         if (!TextUtils.isEmpty(errorInfo)) {
             intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
         }
-        getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
+        getView().startAC(intent);
     }
 
     /**
@@ -157,7 +158,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
             intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
-            getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
+            getView().startAC(intent);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -178,7 +179,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                 intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
                 intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
                 intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
-                getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
+                getView().startAC(intent);
             } else {
                 freshError(sn, null);
             }
@@ -188,16 +189,23 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
         }
     }
 
-    public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        //数据回传
-        if (resultCode == RESULT_CODE_MAP) {
-            getView().setIntentResult(RESULT_CODE_MAP, data);
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        if (code == EVENT_DATA_DEPLOY_RESULT_FINISH || code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
+            getView().finishAc();
         }
-        getView().finishAc();
+        LogUtils.loge(this, eventData.toString());
     }
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+    }
 
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

@@ -131,7 +131,7 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
 
     @Override
     public void startAC(Intent intent) {
-
+        mRootFragment.getActivity().startActivity(intent);
     }
 
     @Override
@@ -141,7 +141,6 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mRootFragment.getActivity().startActivityForResult(intent, requestCode);
     }
 
     @Override

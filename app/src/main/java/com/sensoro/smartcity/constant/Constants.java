@@ -83,7 +83,8 @@ public interface Constants {
             R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
             R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
             R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
-            .ic_sensor_temp_humi, R.mipmap.ic_sensor_connection,R.mipmap.ic_sensor_electric_meter, R.mipmap.ic_sensor_electric_alarm, R.mipmap
+            .ic_sensor_temp_humi, R.mipmap.ic_sensor_connection, R.mipmap.ic_sensor_electric_meter, R.mipmap
+            .ic_sensor_electric_alarm, R.mipmap
             .ic_sensor_infrared, R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
 
     };
@@ -202,5 +203,21 @@ public interface Constants {
     //
     int EVENT_DATA_FINISH_CODE = 0x13;
     int EVENT_DATA_SOCKET_DATA = 0x14;
+
+    int EVENT_DATA_DEPLOY_RESULT_FINISH = 0x15;
+
+    int EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS = 0x16;
+    int EVENT_DATA_DEPLOY_SETTING_TAG = 0x17;
+    int EVENT_DATA_DEPLOY_SETTING_CONTACT = 0x18;
+    int EVENT_DATA_DEPLOY_SETTING_PHOTO = 0x19;
     //
+    int EVENT_DATA_DEPLOY_RESULT_CONTINUE = 0x20;
+    //
+    int EVENT_DATA_SEARCH_MERCHANT = 0x21;
+    //
+    int EVENT_DATA_SELECT_CALENDAR = 0x22;
+    //
+    int EVENT_DATA_ALARM_DETAIL_RESULT = 0x23;
+
+    int EVENT_DATA_SEARCH_ALARM_RESULT = 0x24;
 }

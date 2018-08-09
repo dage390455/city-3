@@ -36,7 +36,7 @@ import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployPhotoActivity;
+import com.sensoro.smartcity.activity.DeploySettingPhotoActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.DeploySettingContactActivity;
 import com.sensoro.smartcity.activity.DeploySettingNameActivity;
@@ -44,6 +44,9 @@ import com.sensoro.smartcity.activity.DeploySettingTagActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
@@ -57,6 +60,10 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -68,7 +75,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> implements AMap
+public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> implements IOnCreate, AMap
         .OnMapClickListener, Constants, AMap.OnCameraChangeListener, AMap.OnMapLoadedListener, AMap
         .OnMarkerClickListener, AMap.InfoWindowAdapter, AMap.OnMapTouchListener, GeocodeSearch
         .OnGeocodeSearchListener, AMapLocationListener {
@@ -89,37 +96,21 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private DeviceInfo deviceInfo;
     private boolean hasStation;
     private String mAddress;
-    private ArrayList<ImageItem> images;
+    private final ArrayList<ImageItem> images = new ArrayList<>();
     private UpLoadPhotosUtils upLoadPhotosUtils;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         mHandler = new Handler(Looper.getMainLooper());
         deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         hasStation = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
         getView().setDeployContactRelativeLayoutVisible(!hasStation);
-        getView().setDeployDevicerlSignalVisible(!hasStation);
+        getView().setDeployDeviceRlSignalVisible(!hasStation);
         getView().setDeployPhotoVisible(!hasStation);
     }
 
-    @Override
-    public void onDestroy() {
-        if (mLocationClient != null) {
-            mLocationClient.stopLocation();
-            mLocationClient.onDestroy();
-            mLocationClient = null;
-        }
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
-        }
-        tagList.clear();
-        if (images != null) {
-            images.clear();
-            images = null;
-        }
-    }
 
     public void initMap(AMap map) {
         this.aMap = map;
@@ -151,7 +142,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             intent.setClass(mContext, DeployResultActivity.class);
             intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
             intent.putExtra(EXTRA_SENSOR_RESULT, -1);
-            getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
+            getView().startAC(intent);
         }
     }
 
@@ -455,7 +446,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                     return;
                 }
 
-                if (images != null && images.size() > 0) {
+                if (images.size() > 0) {
                     //TODO 图片提交
                     final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
                             .UpLoadPhotoListener() {
@@ -542,7 +533,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         if (!TextUtils.isEmpty(errorInfo)) {
             intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
         }
-        getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
+        getView().startAC(intent);
     }
 
     private void freshPoint(DeviceDeployRsp deviceDeployRsp) {
@@ -573,7 +564,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         }
         //
         StationInfo stationInfo = stationInfoRsp.getData();
-        double[] lonlat = stationInfo.getLonlat();
+        double[] lonLat = stationInfo.getLonlat();
         String name = stationInfo.getName();
         String sn = stationInfo.getSn();
         String[] tags = stationInfo.getTags();
@@ -582,7 +573,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         DeviceInfo deviceInfo = new DeviceInfo();
         deviceInfo.setSn(sn);
         deviceInfo.setTags(tags);
-        deviceInfo.setLonlat(lonlat);
+        deviceInfo.setLonlat(lonLat);
         deviceInfo.setStatus(normalStatus);
         deviceInfo.setAddress(mAddress);
         deviceInfo.setUpdatedTime(updatedTime);
@@ -597,56 +588,30 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         getView().startAC(intent);
     }
 
-    public void handActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_CODE_SETTING_NAME_ADDRESS) {
-            String name = data.getStringExtra(EXTRA_SETTING_NAME_ADDRESS);
-            getView().setNameAddressEditText(name);
-        } else if (resultCode == RESULT_CODE_SETTING_TAG) {
-            List<String> tempList = data.getStringArrayListExtra(EXTRA_SETTING_TAG_LIST);
-            tagList.clear();
-            tagList.addAll(tempList);
-            getView().refreshTagLayout(tagList);
-        } else if (resultCode == RESULT_CODE_SETTING_CONTACT) {
-            contact = data.getStringExtra(EXTRA_SETTING_CONTACT);
-            content = data.getStringExtra(EXTRA_SETTING_CONTENT);
-            getView().setContactEditText(contact + ":" + content);
-        } else if (resultCode == RESULT_CODE_MAP) {
-            getView().setIntentResult(RESULT_CODE_MAP, data);
-            getView().finishAc();
-        } else if (resultCode == RESULT_CODE_DEPLOY) {
-            getView().finishAc();
-        } else if (resultCode == RESULT_SETTING_PHOTO) {
-            images = (ArrayList<ImageItem>) data.getSerializableExtra(EXTRA_DEPLOY_PHOTO);
-            if (images != null && images.size() > 0) {
-                getView().setDeployPhotoText("已选择" + images.size() + "张图片");
-            } else {
-                getView().setDeployPhotoText("未选择部署图片");
-            }
-        }
-    }
-
     public void doSettingByNameAndAddress(String nameAddress) {
         Intent intent = new Intent(mContext, DeploySettingNameActivity.class);
         intent.putExtra(EXTRA_SETTING_INDEX, SETTING_NAME_ADDRESS);
         intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, nameAddress);
-        getView().startACForResult(intent, REQUEST_SETTING_NAME_ADDRESS);
+        getView().startAC(intent);
     }
 
     public void doSettingByTag() {
         Intent intent = new Intent(mContext, DeploySettingTagActivity.class);
         intent.putExtra(EXTRA_SETTING_INDEX, SETTING_TAG);
         intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) tagList);
-        getView().startACForResult(intent, REQUEST_SETTING_TAG);
+        getView().startAC(intent);
     }
 
     public void doSettingContact() {
         Intent intent = new Intent(mContext, DeploySettingContactActivity.class);
         intent.putExtra(EXTRA_SETTING_INDEX, SETTING_CONTACT);
-        if (contact != null) {
+        if (!TextUtils.isEmpty(contact)) {
             intent.putExtra(EXTRA_SETTING_CONTACT, contact);
+        }
+        if (!TextUtils.isEmpty(content)) {
             intent.putExtra(EXTRA_SETTING_CONTENT, content);
         }
-        getView().startACForResult(intent, REQUEST_SETTING_CONTACT);
+        getView().startAC(intent);
     }
 
     public void doSignal(String sn) {
@@ -676,14 +641,6 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             }
         });
 
-    }
-
-    public void back() {
-        Intent intent = new Intent();
-        intent.putExtra(EXTRA_CONTAINS_DATA, false);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
-        getView().setIntentResult(RESULT_CODE_DEPLOY, intent);
-        getView().finishAc();
     }
 
     private void setMarkerAddress(RegeocodeAddress regeocodeAddress) {
@@ -737,11 +694,68 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
     public void doSettingPhoto() {
         //
-        Intent intent = new Intent(mContext, DeployPhotoActivity.class);
-        if (images != null && images.size() > 0) {
+        Intent intent = new Intent(mContext, DeploySettingPhotoActivity.class);
+        if (images.size() > 0) {
             intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, images);
         }
-        getView().startACForResult(intent, REQUEST_SETTING_PHOTO);
+        getView().startAC(intent);
     }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        Object data = eventData.data;
+        if (code == EVENT_DATA_DEPLOY_RESULT_FINISH || code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
+            getView().finishAc();
+        } else if (code == EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS) {
+            if (data instanceof String) {
+                getView().setNameAddressEditText((String) data);
+            }
+        } else if (code == EVENT_DATA_DEPLOY_SETTING_TAG) {
+            if (data instanceof List) {
+                tagList.clear();
+                tagList.addAll((List<String>) data);
+                getView().refreshTagLayout(tagList);
+            }
+        } else if (code == EVENT_DATA_DEPLOY_SETTING_CONTACT) {
+            if (data instanceof DeployContactModel) {
+                contact = ((DeployContactModel) data).name;
+                content = ((DeployContactModel) data).phone;
+                getView().setContactEditText(contact + ":" + content);
+            }
+        } else if (code == EVENT_DATA_DEPLOY_SETTING_PHOTO) {
+            if (data instanceof List) {
+                images.clear();
+                images.addAll((ArrayList<ImageItem>) data);
+                if (images.size() > 0) {
+                    getView().setDeployPhotoText("已选择" + images.size() + "张图片");
+                } else {
+                    getView().setDeployPhotoText("未选择部署图片");
+                }
+            }
+        }
+        LogUtils.loge(this, eventData.toString());
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        if (mLocationClient != null) {
+            mLocationClient.stopLocation();
+            mLocationClient.onDestroy();
+            mLocationClient = null;
+        }
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+            mHandler = null;
+        }
+        tagList.clear();
+        images.clear();
+    }
 }

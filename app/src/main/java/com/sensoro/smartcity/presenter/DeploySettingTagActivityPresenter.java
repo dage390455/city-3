@@ -2,13 +2,15 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeploySettingTagActivityView;
+import com.sensoro.smartcity.model.EventData;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -69,9 +71,10 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
             }
             save(tags);
             if (isFinish) {
-                Intent data = new Intent();
-                data.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) mTagList);
-                getView().setIntentResult(RESULT_CODE_SETTING_TAG, data);
+                EventData eventData = new EventData();
+                eventData.code = EVENT_DATA_DEPLOY_SETTING_TAG;
+                eventData.data = mTagList;
+                EventBus.getDefault().post(eventData);
                 getView().finishAc();
             }
         }

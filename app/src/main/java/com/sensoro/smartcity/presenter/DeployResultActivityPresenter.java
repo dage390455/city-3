@@ -2,15 +2,17 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.DateUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class DeployResultActivityPresenter extends BasePresenter<IDeployResultActivityView> implements Constants {
     private int resultCode = 0;
@@ -134,27 +136,23 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     }
 
     public void gotoContinue() {
-        Intent intent = new Intent();
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
         if (resultCode == 1 && deviceInfo != null) {
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-            intent.putExtra(EXTRA_CONTAINS_DATA, true);
-        } else {
-            intent.putExtra(EXTRA_CONTAINS_DATA, false);
+            eventData.data = deviceInfo;
         }
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
-        getView().setIntentResult(RESULT_CODE_DEPLOY, intent);
+        EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
 
     public void backHome() {
-        Intent intent = new Intent();
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_DEPLOY_RESULT_FINISH;
         if (resultCode == 1 && deviceInfo != null) {
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
+            eventData.data = deviceInfo;
         }
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, is_station);
-        getView().setIntentResult(RESULT_CODE_MAP, intent);
+        EventBus.getDefault().post(eventData);
         getView().finishAc();
-
     }
 
     @Override

@@ -148,7 +148,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @OnClick(R.id.deploy_result_back)
     public void back() {
-        gotoContinue();
+        finishAc();
     }
 
     @OnClick(R.id.deploy_result_continue_btn)
@@ -160,15 +160,6 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void backHome() {
         mPrestener.backHome();
     }
-
-//    @Override
-//    public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            gotoContinue();
-//            return false;
-//        }
-//        return super.onKeyDown(keyCode, event);
-//    }
 
     @Override
     public void toastShort(String msg) {
@@ -202,6 +193,5 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
     }
 }

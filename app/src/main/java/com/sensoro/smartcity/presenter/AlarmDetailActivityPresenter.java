@@ -2,13 +2,13 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmDetailActivityView;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
@@ -17,6 +17,8 @@ import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +32,6 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private boolean isReConfirm = false;
 
-    public List<AlarmInfo.RecordInfo> getList() {
-        return mList;
-    }
-
     private Activity mContext;
 
     @Override
@@ -44,10 +42,15 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
 //        refreshData();
     }
 
+    public List<AlarmInfo.RecordInfo> getList() {
+        return mList;
+    }
+
     public void doBack() {
-        Intent data = new Intent();
-        data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogInfo);
-        getView().setIntentResult(RESULT_CODE_ALARM_DETAIL, data);
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_ALARM_DETAIL_RESULT;
+        eventData.data = deviceAlarmLogInfo;
+        EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
 

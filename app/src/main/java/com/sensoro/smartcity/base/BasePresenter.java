@@ -7,7 +7,7 @@ import com.sensoro.smartcity.iwidget.IOnDestroy;
 import java.lang.ref.WeakReference;
 
 /**
- * @author JL-DDONG
+ * @author DDONG
  * @date 2018/2/4 0004
  */
 

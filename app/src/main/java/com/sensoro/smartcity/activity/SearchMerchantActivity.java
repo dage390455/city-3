@@ -249,12 +249,12 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
     @Override
     public void setIntentResult(int resultCode) {
-        mActivity.setResult(resultCode);
+
     }
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
+
     }
 
     @Override

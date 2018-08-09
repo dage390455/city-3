@@ -5,7 +5,6 @@ import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 
 import java.util.List;
 
@@ -32,13 +31,7 @@ public interface IAlarmListFragmentView extends IProgressDialog, IToast, IActivi
 
     PullToRefreshBase.State getPullRefreshState();
 
-    void requestDataByDate(String startDate, String endDate);
-
-    void refreshUIByType(String type);
-
     void requestDataByDirection(int direction, boolean isForce);
-
-    void refreshUIBySearch(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp, String searchText);
 
     void setUpdateButtonClickable(boolean canClick);
 }

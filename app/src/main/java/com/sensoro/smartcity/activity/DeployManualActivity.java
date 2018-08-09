@@ -68,7 +68,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 
     @OnClick(R.id.deploy_manual_close)
     public void close() {
-        mPrestener.clickClose();
+        finishAc();
     }
 
     @OnClick(R.id.deploy_manual_btn)
@@ -85,12 +85,6 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
             return false;
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPrestener.handleActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -122,7 +116,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 
     @Override
     public void startAC(Intent intent) {
-
+        mActivity.startActivity(intent);
     }
 
     @Override
@@ -132,7 +126,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mActivity.startActivityForResult(intent, requestCode);
+
     }
 
     @Override
@@ -142,7 +136,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
+
     }
 
     @Override

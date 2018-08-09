@@ -216,7 +216,6 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
     }
 
     @Override

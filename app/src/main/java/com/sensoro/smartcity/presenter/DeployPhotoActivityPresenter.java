@@ -14,16 +14,19 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployPhotoView;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView> implements Constants {
-    public static final int IMAGE_ITEM_ADD = -1;
-    public static final int REQUEST_CODE_SELECT = 100;
-    public static final int REQUEST_CODE_PREVIEW = 101;
+    private static final int IMAGE_ITEM_ADD = -1;
+    private static final int REQUEST_CODE_SELECT = 100;
+    private static final int REQUEST_CODE_PREVIEW = 101;
 
     private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
 
@@ -53,11 +56,10 @@ public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView
     }
 
     public void doFinish() {
-        Intent intent = new Intent();
-        if (selImageList.size() > 0) {
-            intent.putExtra(EXTRA_DEPLOY_PHOTO, selImageList);
-        }
-        getView().setIntentResult(RESULT_SETTING_PHOTO, intent);
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_DEPLOY_SETTING_PHOTO;
+        eventData.data = selImageList;
+        EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
 

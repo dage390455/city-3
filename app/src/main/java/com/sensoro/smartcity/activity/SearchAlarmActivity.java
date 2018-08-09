@@ -190,23 +190,6 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
         mSearchHistoryAdapter.notifyDataSetChanged();
-//        List<String> tagList = Arrays.asList(ALARM_TAG_ARRAY);
-//        mAlarmTagAdapter = new SearchAlarmTagAdapter(this, tagList, new RecycleViewItemClickListener() {
-//            @Override
-//            public void onItemClick(View view, int position) {
-//                String type = ALARM_TAG_EN_ARRAY[position];
-//                Intent data = new Intent();
-//                data.putExtra(EXTRA_SENSOR_TYPE, type);
-//                data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 1);
-//                data.putExtra(EXTRA_ALARM_SEARCH_TEXT, "类型:" + ALARM_TAG_ARRAY[position]);
-//                setResult(RESULT_CODE_SEARCH_ALARM, data);
-//                finish();
-//            }
-//        });
-//        GridLayoutManager gridLayoutManager = new GridLayoutManager(this, 4);
-//        mTagRv.setLayoutManager(gridLayoutManager);
-//        mTagRv.addItemDecoration(new SpacesItemDecoration(10));
-//        mTagRv.setAdapter(mAlarmTagAdapter);
         mKeywordEt.requestFocus();
     }
 
@@ -235,9 +218,6 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                 break;
             case R.id.search_alarm_cancel_tv:
                 mKeywordEt.clearFocus();
-//                Intent data = new Intent();
-//                data.putExtra(EXTRA_ACTIVITY_CANCEL, true);
-//                setResult(RESULT_CODE_SEARCH_ALARM, data);
                 finishAc();
                 break;
             case R.id.search_alarm_clear_iv:
@@ -338,7 +318,6 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
     }
 
     @Override

@@ -24,7 +24,6 @@ import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IAlarmListFragmentView;
 import com.sensoro.smartcity.presenter.AlarmListFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
@@ -319,15 +318,6 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
         return mPtrListView.getState();
     }
 
-    @Override
-    public void requestDataByDate(String startDate, String endDate) {
-        mPresenter.requestDataByDate(startDate, endDate);
-    }
-
-    @Override
-    public void refreshUIByType(String type) {
-        mPresenter.freshUI(type);
-    }
 
     @Override
     public void requestDataByDirection(int direction, boolean isForce) {
@@ -335,13 +325,8 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     }
 
     @Override
-    public void refreshUIBySearch(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp, String searchText) {
-        mPresenter.freshUI(direction, deviceAlarmLogRsp, searchText);
-    }
-
-    @Override
     public void setUpdateButtonClickable(boolean canClick) {
-        if (mAlarmPopupView!=null){
+        if (mAlarmPopupView != null) {
             mAlarmPopupView.setUpdateButtonClickable(canClick);
         }
     }
@@ -363,7 +348,6 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mRootFragment.getActivity().startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -374,10 +358,6 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     @Override
     public void setIntentResult(int resultCode, Intent data) {
 
-    }
-
-    public void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        mPresenter.freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
     }
 
     @Override

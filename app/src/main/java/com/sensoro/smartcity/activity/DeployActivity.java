@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -204,7 +203,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     }
 
     @Override
-    public void setDeployDevicerlSignalVisible(boolean isVisible) {
+    public void setDeployDeviceRlSignalVisible(boolean isVisible) {
         deployDeviceRlSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
@@ -262,12 +261,6 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     }
 
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPrestener.handActivityResult(requestCode, resultCode, data);
-    }
-
     @OnClick(R.id.deploy_name_relative_layout)
     public void doSettingByNameAndAddress() {
         String nameAddress = nameAddressEditText.getText().toString();
@@ -301,22 +294,12 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         setUploadButtonClickable(false);
         String sn = titleTextView.getText().toString();
         final String name = nameAddressEditText.getText().toString();
-
         mPrestener.requestUpload(sn, name);
     }
 
     @OnClick(R.id.deploy_back)
     public void back() {
-        mPrestener.back();
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            back();
-            return false;
-        }
-        return super.onKeyDown(keyCode, event);
+        finishAc();
     }
 
     @Override
@@ -331,7 +314,6 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -341,7 +323,6 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
-        mActivity.setResult(resultCode, data);
     }
 
     @Override

@@ -147,7 +147,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
         if (!TextUtils.isEmpty(phone)) {
             searchIntent.putExtra("user_phone", phone);
         }
-        getView().startACForResult(searchIntent, REQUEST_CODE_SEARCH_MERCHANT);
+        getView().startAC(searchIntent);
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
@@ -10,9 +9,13 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchAlarmActivityView;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.SearchAlarmResultModel;
 import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -103,11 +106,19 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                             getView().setTipsLinearLayoutVisible(true);
                         } else {
                             SensoroCityApplication.getInstance().saveSearchType = searchType;
-                            Intent data = new Intent();
-                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
-                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                            getView().setIntentResult(RESULT_CODE_SEARCH_ALARM, data);
+                            EventData eventData = new EventData();
+                            eventData.code= EVENT_DATA_SEARCH_ALARM_RESULT;
+                            SearchAlarmResultModel searchAlarmResultModel = new SearchAlarmResultModel();
+                            searchAlarmResultModel.searchAlarmText=text;
+                            searchAlarmResultModel.deviceAlarmLogRsp=deviceAlarmLogRsp;
+                            eventData.data=searchAlarmResultModel;
+                            EventBus.getDefault().post(eventData);
+
+//                            Intent data = new Intent();
+//                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
+//                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
+//                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
+//                            getView().setIntentResult(RESULT_CODE_SEARCH_ALARM, data);
                             getView().finishAc();
                         }
                     }
@@ -135,11 +146,14 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
 //                            tagLinearLayout.setVisibility(View.GONE);
                         } else {
                             SensoroCityApplication.getInstance().saveSearchType = searchType;
-                            Intent data = new Intent();
-                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
-                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                            getView().setIntentResult(RESULT_CODE_SEARCH_ALARM, data);
+                            //
+                            EventData eventData = new EventData();
+                            eventData.code=EVENT_DATA_SEARCH_ALARM_RESULT;
+                            SearchAlarmResultModel searchAlarmResultModel = new SearchAlarmResultModel();
+                            searchAlarmResultModel.searchAlarmText=text;
+                            searchAlarmResultModel.deviceAlarmLogRsp=deviceAlarmLogRsp;
+                            eventData.data=searchAlarmResultModel;
+                            EventBus.getDefault().post(eventData);
                             getView().finishAc();
                         }
                     }
@@ -167,11 +181,14 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
 //                            tagLinearLayout.setVisibility(View.GONE);
                         } else {
                             SensoroCityApplication.getInstance().saveSearchType = searchType;
-                            Intent data = new Intent();
-                            data.putExtra(EXTRA_ALARM_INFO, deviceAlarmLogRsp);
-                            data.putExtra(EXTRA_ALARM_SEARCH_INDEX, 0);
-                            data.putExtra(EXTRA_ALARM_SEARCH_TEXT, text);
-                            getView().setIntentResult(RESULT_CODE_SEARCH_ALARM, data);
+                            EventData eventData = new EventData();
+                            eventData.code=EVENT_DATA_SEARCH_ALARM_RESULT;
+                            SearchAlarmResultModel searchAlarmResultModel = new SearchAlarmResultModel();
+                            searchAlarmResultModel.searchAlarmText=text;
+                            searchAlarmResultModel.deviceAlarmLogRsp=deviceAlarmLogRsp;
+                            eventData.data=searchAlarmResultModel;
+                            EventBus.getDefault().post(eventData);
+                            //
                             getView().finishAc();
                         }
                     }

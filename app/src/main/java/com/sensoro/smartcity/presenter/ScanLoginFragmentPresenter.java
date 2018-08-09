@@ -82,7 +82,6 @@ public class ScanLoginFragmentPresenter extends BasePresenter<IScanLoginFragment
             intent.setClass(mContext, ScanLoginResultActivity.class);
             intent.putExtra("qrcodeId", qrcodeId);
             getView().startAC(intent);
-//            getView().startACForResult(intent, REQUEST_CODE_POINT_DEPLOY);
         } catch (Exception e) {
             e.printStackTrace();
         }

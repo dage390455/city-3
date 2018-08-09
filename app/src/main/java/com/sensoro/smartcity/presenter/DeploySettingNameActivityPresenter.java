@@ -2,7 +2,6 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
@@ -11,7 +10,10 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeploySettingNameActivityView;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
@@ -106,9 +108,10 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
         }
         save(text);
 //        mKeywordEt.clearFocus();
-        Intent data = new Intent();
-        data.putExtra(EXTRA_SETTING_NAME_ADDRESS, text);
-        getView().setIntentResult(RESULT_CODE_SETTING_NAME_ADDRESS, data);
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS;
+        eventData.data = text;
+        EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
 
