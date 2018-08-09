@@ -62,7 +62,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
     //
     private final int[] resultArr = {-1, 1, 4, 2, 3, 0};
     private final int[] typeArr = {-1, 1, 2, 3, 4, 5, 6, 7, 8, 0};
-    private final int[] placeArr = {-1, 1, 2, 3, 4, 5, 6, 0};
+    private final int[] placeArr = {-1, 1, 1, 2, 3, 4, 5, 6, 0};
     private int selectType;
     private int selectPlace;
     private int selectResult;
@@ -77,7 +77,7 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
 
     private ImagePickerAdapter adapter;
     private ArrayList<ImageItem> selImageList; //当前选择的所有图片
-    private int maxImgCount = 9;               //允许选择图片最大数
+    private final int maxImgCount = 9;               //允许选择图片最大数
     ArrayList<ImageItem> images = null;
     private Activity mActivity;
     private TextView tvSpinnerResultInfo;
@@ -183,7 +183,8 @@ public class SensoroPopupAlarmViewNew extends LinearLayout implements View.OnCli
         alarmType.add("易燃物自燃");
         alarmType.add("其他");
         //
-        alarmPlace.add("老旧小区");
+        alarmPlace.add("小区");
+        alarmPlace.add("出租房");
         alarmPlace.add("工厂");
         alarmPlace.add("居民作坊");
         alarmPlace.add("仓库");

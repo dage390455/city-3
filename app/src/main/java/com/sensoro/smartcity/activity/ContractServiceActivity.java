@@ -137,7 +137,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     private ContractTemplateAdapter contractTemplateAdapter;
     private ProgressUtils mProgressUtils;
     private final List<String> names = new ArrayList<>();
-    private final List<String> sexs = new ArrayList<>();
+    private final List<String> sexList = new ArrayList<>();
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -148,7 +148,8 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     }
 
     private void initView() {
-        names.add("老旧小区");
+        names.add("小区");
+        names.add("出租房");
         names.add("工厂");
         names.add("居民作坊");
         names.add("仓库");
@@ -156,8 +157,8 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
         names.add("商场");
         names.add("其他");
         //
-        sexs.add("男");
-        sexs.add("女");
+        sexList.add("男");
+        sexList.add("女");
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         contractTemplateAdapter = new ContractTemplateAdapter(mActivity);
         rvSensorCount.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, true));
@@ -177,7 +178,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             mProgressUtils = null;
         }
         names.clear();
-        sexs.clear();
+        sexList.clear();
         super.onDestroy();
     }
 
@@ -230,9 +231,9 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                         showDialog(new SelectDialog.SelectDialogListener() {
                             @Override
                             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                                tvShowContractService_line2.setText(sexs.get(position));
+                                tvShowContractService_line2.setText(sexList.get(position));
                             }
-                        }, sexs);
+                        }, sexList);
                     }
                 });
                 //
@@ -393,13 +394,13 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
-        mActivity.setResult(requestCode);
+    public void setIntentResult(int resultCode) {
+        mActivity.setResult(resultCode);
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
-        mActivity.setResult(requestCode, data);
+    public void setIntentResult(int resultCode, Intent data) {
+        mActivity.setResult(resultCode, data);
     }
 
     @Override

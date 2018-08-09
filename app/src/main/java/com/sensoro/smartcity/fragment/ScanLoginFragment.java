@@ -65,50 +65,9 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
 
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        try {
-            if (mPrestener != null) {
-                if (isVisibleToUser) {
-                    startScan();
-                } else {
-                    stopScan();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        try {
-            if (mPrestener != null && getUserVisibleHint()) {
-                startScan();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        try {
-            if (mPrestener != null && getUserVisibleHint()) {
-                stopScan();
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    @Override
     protected void initData(Context activity) {
         initView();
-        mPrestener.initData(activity);
+        mPresenter.initData(activity);
     }
 
 
@@ -132,7 +91,7 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.deploy_iv_menu_list:
-                ((MainActivity) getActivity()).getMenuDrawer().openMenu();
+                ((MainActivity) getActivity()).openMenu();
                 break;
             default:
                 break;
@@ -181,11 +140,11 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
+    public void setIntentResult(int resultCode, Intent data) {
 
     }
 
@@ -201,11 +160,21 @@ public class ScanLoginFragment extends BaseFragment<IScanLoginFragmentView,
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-        mPrestener.processResult(result);
+        mPresenter.processResult(result);
     }
 
     @Override
     public void onScanQRCodeOpenCameraError() {
         Log.e(TAG, "打开相机出错");
+    }
+
+    @Override
+    public void onFragmentStart() {
+        startScan();
+    }
+
+    @Override
+    public void onFragmentStop() {
+        stopScan();
     }
 }

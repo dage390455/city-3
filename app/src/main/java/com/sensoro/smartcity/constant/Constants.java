@@ -46,39 +46,45 @@ public interface Constants {
             "全部类型",
             "紧急呼叫", "追踪器", "甲烷",
             "一氧化碳", "二氧化碳", "倾角",
-            "井位", "水位检测", "地磁", "跑冒滴漏",
+            "井位", "水位检测", "地磁", "门锁", "跑冒滴漏",
             "火焰", "光线", "液化石油气", "二氧化氮",
             "PM2.5/10", "烟感", "温湿度",
-            "消防液压", "温度贴片"
+            "消防液压", "温度贴片", "通断检测", "电表", "电器火灾", "红外线", "手动报警", "声光报警"
     };
     String INDEX_TYPE_VALUES[] = {
             "all",
             "alarm", "altitude,latitude,longitude", "ch4",
             "co", "co2", "collision,pitch,roll",
-            "cover,level", "distance", "magnetic", "drop",
+            "cover,level", "distance", "magnetic", "door", "drop",
             "flame", "light", "lpg", "no2",
             "pm10,pm2_5", "smoke", "humidity,temperature",
-            "waterPressure", "humidity,temp1,temperature"
+            "waterPressure", "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+            "TOTAL_POWER,VOLTAGE_A," +
+            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+            "manual_alarm", "sound_light_alarm"
 
     };
     String SENSOR_MENU_ARRAY[] = {
             "all",
             "alarm", "latitude|longitude|altitude", "ch4",
             "co", "co2", "collision|pitch|roll",
-            "cover|level", "distance", "magnetic", "drop",
+            "cover|level", "distance", "magnetic", "door", "drop",
             "flame", "light", "lpg", "no2",
             "pm10|pm2_5", "smoke", "humidity|temperature",
-            "waterPressure", "temp1"
-
+            "waterPressure", "temp1", "connection",
+            "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
+            "manual_alarm", "sound_light_alarm"
     };
     Integer[] TYPE_MENU_RESOURCE = {
             R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
             R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,
-            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_magnetic,
+            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_magnetic, R.mipmap.ic_sensor_lock,
             R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
             R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
             R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
-            .ic_sensor_temp_humi
+            .ic_sensor_temp_humi, R.mipmap.ic_sensor_connection,R.mipmap.ic_sensor_electric_meter, R.mipmap.ic_sensor_electric_alarm, R.mipmap
+            .ic_sensor_infrared, R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
 
     };
     String[] ALARM_TAG_ARRAY = {"一氧化碳", "二氧化碳", "甲烷", "液化石油气", "二氧化氮", "跑冒滴漏", "灯井监控",
@@ -131,6 +137,9 @@ public interface Constants {
     String EXTRA_SETTING_TAG_LIST = "extra_tag_list";
     String EXTRA_CONTAINS_DATA = "extra_contains_data";
     //
+    String EXTRA_DEPLOY_PHOTO = "extra_deploy_photo";
+    String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
+    //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     //
     String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";
@@ -144,7 +153,7 @@ public interface Constants {
     int RESULT_CODE_MAP = 100;
     int RESULT_CODE_SEARCH_DEVICE = 101;
     int RESULT_CODE_SEARCH_ALARM = 102;
-    int RESULT_CODE_CHANGE_MERCHANT = 111;
+    int RESULT_SETTING_PHOTO = 111;
     int RESULT_CODE_SEARCH_MERCHANT = 113;
     int RESULT_CODE_DEPLOY = 103;
     int RESULT_CODE_ALARM = 104;
@@ -164,6 +173,8 @@ public interface Constants {
     int REQUEST_SETTING_NAME_ADDRESS = 8;
     int REQUEST_SETTING_TAG = 9;
     int REQUEST_SETTING_CONTACT = 10;
+    int REQUEST_SETTING_PHOTO = 11;
+    //
     int SENSOR_STATUS_ALARM = 0;
     int SENSOR_STATUS_NORMAL = 1;
     int SENSOR_STATUS_LOST = 2;
@@ -190,5 +201,6 @@ public interface Constants {
     String EXTRA_SEARCH_CONTENT = "extra_search_content";
     //
     int EVENT_DATA_FINISH_CODE = 0x13;
+    int EVENT_DATA_SOCKET_DATA = 0x14;
     //
 }

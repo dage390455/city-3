@@ -125,7 +125,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     @Override
     protected void initData(Context activity) {
         initView();
-        mPrestener.initData(activity);
+        mPresenter.initData(activity);
     }
 
 
@@ -162,14 +162,6 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     protected IndexFragmentPresenter createPresenter() {
         return new IndexFragmentPresenter();
     }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        //TODO 初始化刷新数据操作
-        refreshCityInfo();
-    }
-
 
     public void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
@@ -386,14 +378,6 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     }
 
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (mPrestener != null) {
-            mPrestener.onHiddenChanged(getUserVisibleHint());
-        }
-    }
-
-    @Override
     public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
     }
@@ -424,14 +408,14 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
                 break;
             case R.id.index_iv_menu_list_reverse:
             case R.id.index_iv_menu_list:
-                ((MainActivity) mRootFragment.getActivity()).getMenuDrawer().openMenu();
+                ((MainActivity) mRootFragment.getActivity()).openMenu();
                 break;
             case R.id.index_iv_search:
             case R.id.index_iv_search_reverse:
-                mPrestener.toSearchAc();
+                mPresenter.toSearchAc();
                 break;
             case R.id.index_iv_switch:
-                mPrestener.switchIndexGridOrList(switchType);
+                mPresenter.switchIndexGridOrList(switchType);
                 break;
             case R.id.index_head_alarm_num:
             case R.id.index_head_alarm_num_title:
@@ -451,7 +435,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void onItemClick(View view, int position) {
-        mPrestener.clickItem(position);
+        mPresenter.clickItem(position);
     }
 
     @Override
@@ -514,7 +498,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         //
         if (alarmCount > 0) {
             if (isFirstInit) {
-                mPrestener.playSound();
+                mPresenter.playSound();
                 mHeadAlarmNumTextView.setCurrentText(alarmStr);
                 mHeadLostNumTextView.setCurrentText(lostStr);
                 mHeadInactiveNumTextView.setCurrentText(inactiveStr);
@@ -787,7 +771,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void filterByStatusWithRequest(int position) {
-        mPrestener.setStatusSelectedIndex(position);
+        mPresenter.setStatusSelectedIndex(position);
         mStatusTextView.setTextColor(mRootFragment.getResources().getColor(R.color.c_626262));
         mStatusImageView.setColorFilter(mRootFragment.getResources().getColor(R.color.c_626262));
         mStatusImageView.setRotation(0);
@@ -798,7 +782,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void filterByTypeWithRequest(int position) {
-        mPrestener.setTypeSelectedIndex(position);
+        mPresenter.setTypeSelectedIndex(position);
         mTypeTextView.setTextColor(mRootFragment.getResources().getColor(R.color.c_626262));
         mTypeImageView.setColorFilter(mRootFragment.getResources().getColor(R.color.c_626262));
         mTypeImageView.setRotation(0);
@@ -809,23 +793,18 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
 
     @Override
-    public void handleSocketInfo(String data) {
-        mPrestener.organizeJsonData(data);
-    }
-
-    @Override
     public void reFreshDataByDirection(int direction) {
-        mPrestener.requestWithDirection(direction);
+        mPresenter.requestWithDirection(direction);
     }
 
     @Override
     public void refreshBySearch(DeviceInfoListRsp infoRspData) {
-        mPrestener.refreshWithSearch(infoRspData);
+        mPresenter.refreshWithSearch(infoRspData);
     }
 
     @Override
     public void requestTopData(boolean isFirstInit) {
-        mPrestener.requestTopData(isFirstInit);
+        mPresenter.requestTopData(isFirstInit);
     }
 
     @Override
@@ -857,12 +836,12 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
 
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
+    public void setIntentResult(int resultCode, Intent data) {
     }
 
 
@@ -922,5 +901,16 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             }
         });
         mAnimatorSetOut.start();
+    }
+
+    @Override
+    public void onFragmentStart() {
+        refreshCityInfo();
+        mPresenter.onHiddenChanged(true);
+    }
+
+    @Override
+    public void onFragmentStop() {
+        mPresenter.onHiddenChanged(false);
     }
 }

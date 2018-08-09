@@ -60,7 +60,7 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
     @Override
     protected void initData(Context activity) {
         initView();
-        mPrestener.initData(activity);
+        mPresenter.initData(activity);
     }
 
 
@@ -100,31 +100,31 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
         seperatorView = mRootView.findViewById(R.id.merchant_list_sep);
         seperatorBottomView = mRootView.findViewById(R.id.merchant_list_bottom_sep);
         rlTitleAccount = (RelativeLayout) mRootView.findViewById(R.id.rl_title_account);
-        mMerchantAdapter = new MerchantAdapter(mRootFragment.getContext(), mPrestener.getUserInfoList());
+        mMerchantAdapter = new MerchantAdapter(mRootFragment.getContext(), mPresenter.getUserInfoList());
         mListView.setAdapter(mMerchantAdapter);
         mListView.setOnItemClickListener(this);
     }
 
     public void refreshData(String username, String phone, String phoneId) {
-        if (mPrestener != null) {
-            mPrestener.refreshUserData(username, phone, phoneId);
+        if (mPresenter != null) {
+            mPresenter.refreshUserData(username, phone, phoneId);
         }
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPrestener.clickItem(position);
+        mPresenter.clickItem(position);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.merchant_iv_menu_list:
-                ((MainActivity) mRootFragment.getActivity()).getMenuDrawer().openMenu();
+                ((MainActivity) mRootFragment.getActivity()).openMenu();
                 break;
             case R.id.merchant_iv_search:
-                mPrestener.startToSearchAC();
+                mPresenter.startToSearchAC();
                 break;
         }
     }
@@ -145,12 +145,12 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
 
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
+    public void setIntentResult(int resultCode, Intent data) {
 
     }
 
@@ -208,6 +208,16 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
 
     @Override
     public void requestData() {
-        mPrestener.requestData();
+        mPresenter.requestData();
+    }
+
+    @Override
+    public void onFragmentStart() {
+
+    }
+
+    @Override
+    public void onFragmentStop() {
+
     }
 }

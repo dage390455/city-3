@@ -29,7 +29,9 @@
     <string name="station_deploy">基站部署</string>
     <string name="deploy_name_address">名称/地址</string>
     <string name="deploy_contact">预警联系人</string>
+    <string name="deploy_photo">部署图片</string>
     <string name="deploy_contact_title">设置预警联系人</string>
+    <string name="deploy_contact_photo">部署图片</string>
     <string name="deploy_phone">联系电话</string>
     <string name="input_name">输入名称</string>
     <string name="date_query">日期查询</string>
@@ -81,6 +83,10 @@
     <string name="alarm_true">报警</string>
     <string name="smoke_false">无烟</string>
     <string name="smoke_true">有烟</string>
+
+    <string name="connection_true">连通</string>
+    <string name="connection_false">断开</string>
+
     <string name="installed">已安装</string>
     <string name="un_installed">被拆卸</string>
     <string name="drop_false">无滴漏</string>

@@ -33,8 +33,6 @@ public interface IIndexFragmentView extends IToast, IProgressDialog, IActivityIn
 
     void filterByTypeWithRequest(int position);
 
-    void handleSocketInfo(String data);
-
     void reFreshDataByDirection(int direction);
 
     void refreshBySearch(DeviceInfoListRsp infoRspData);

@@ -14,7 +14,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractResultActivityView;
 import com.sensoro.smartcity.presenter.ContractResultActivityPresenter;
-import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
@@ -33,7 +32,7 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     TextView tvResultInfo;
     @BindView(R.id.tv_contract_info_title_finish)
     TextView tvContractInfoTitleFinish;
-    private ProgressUtils mProgressUtils;
+//    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -44,7 +43,7 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     }
 
     private void initView() {
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+//        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
     }
 
     @Override
@@ -114,12 +113,12 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
-        mActivity.setResult(requestCode);
+    public void setIntentResult(int resultCode) {
+        mActivity.setResult(resultCode);
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
-        mActivity.setResult(requestCode, data);
+    public void setIntentResult(int resultCode, Intent data) {
+        mActivity.setResult(resultCode, data);
     }
 }

@@ -42,7 +42,10 @@ public class SensorDetailInfo implements Serializable {
     private SensorStruct artificialGas;
     private SensorStruct waterPressure;
     private SensorStruct magnetic;
+
+    private SensorStruct door;
     private SensorStruct temp1;
+    private SensorStruct connection;
     //
     private SensorStruct CURRENT_A;
     private SensorStruct CURRENT_B;
@@ -60,6 +63,51 @@ public class SensorDetailInfo implements Serializable {
     private SensorStruct power_val;
     private SensorStruct temp_val;
     private SensorStruct vol_val;
+    //
+    private SensorStruct infrared;
+    private SensorStruct manual_alarm;
+    private SensorStruct sound_light_alarm;
+
+
+    public SensorStruct getConnection() {
+        return connection;
+    }
+
+    public void setConnection(SensorStruct connection) {
+        this.connection = connection;
+    }
+
+    public SensorStruct getDoor() {
+        return door;
+    }
+
+    public void setDoor(SensorStruct door) {
+        this.door = door;
+    }
+
+    public SensorStruct getInfrared() {
+        return infrared;
+    }
+
+    public void setInfrared(SensorStruct infrared) {
+        this.infrared = infrared;
+    }
+
+    public SensorStruct getManual_alarm() {
+        return manual_alarm;
+    }
+
+    public void setManual_alarm(SensorStruct manual_alarm) {
+        this.manual_alarm = manual_alarm;
+    }
+
+    public SensorStruct getSound_light_alarm() {
+        return sound_light_alarm;
+    }
+
+    public void setSound_light_alarm(SensorStruct sound_light_alarm) {
+        this.sound_light_alarm = sound_light_alarm;
+    }
 
     public SensorStruct getCurr_val() {
         return curr_val;
@@ -286,8 +334,14 @@ public class SensorDetailInfo implements Serializable {
         if (magnetic != null) {
             mMap.put("magnetic", magnetic);
         }
+        if (door != null) {
+            mMap.put("door", door);
+        }
         if (temp1 != null) {
             mMap.put("temp1", temp1);
+        }
+        if (connection != null) {
+            mMap.put("connection", connection);
         }
         //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
         //
@@ -316,25 +370,34 @@ public class SensorDetailInfo implements Serializable {
             mMap.put("VOLTAGE_C", VOLTAGE_C);
         }
         //
-        if (curr_val!=null){
-            mMap.put("curr_val",curr_val);
+        if (curr_val != null) {
+            mMap.put("curr_val", curr_val);
         }
-        if (elec_energy_val!=null){
-            mMap.put("elec_energy_val",elec_energy_val);
+        if (elec_energy_val != null) {
+            mMap.put("elec_energy_val", elec_energy_val);
         }
-        if (leakage_val!=null){
-            mMap.put("leakage_val",leakage_val);
+        if (leakage_val != null) {
+            mMap.put("leakage_val", leakage_val);
         }
-        if (power_val!=null){
-            mMap.put("power_val",power_val);
+        if (power_val != null) {
+            mMap.put("power_val", power_val);
         }
-        if (temp_val!=null){
-            mMap.put("temp_val",temp_val);
+        if (temp_val != null) {
+            mMap.put("temp_val", temp_val);
         }
-        if (vol_val!=null){
-            mMap.put("vol_val",vol_val);
+        if (vol_val != null) {
+            mMap.put("vol_val", vol_val);
         }
-
+        //
+        if (infrared != null) {
+            mMap.put("infrared", infrared);
+        }
+        if (manual_alarm != null) {
+            mMap.put("manual_alarm", manual_alarm);
+        }
+        if (sound_light_alarm != null) {
+            mMap.put("sound_light_alarm", sound_light_alarm);
+        }
         return mMap;
     }
 

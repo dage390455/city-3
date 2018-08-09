@@ -34,7 +34,9 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
+import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.DeployPhotoActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.DeploySettingContactActivity;
 import com.sensoro.smartcity.activity.DeploySettingNameActivity;
@@ -53,6 +55,7 @@ import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -86,6 +89,8 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private DeviceInfo deviceInfo;
     private boolean hasStation;
     private String mAddress;
+    private ArrayList<ImageItem> images;
+    private UpLoadPhotosUtils upLoadPhotosUtils;
 
     @Override
     public void initData(Context context) {
@@ -95,6 +100,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         hasStation = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
         getView().setDeployContactRelativeLayoutVisible(!hasStation);
         getView().setDeployDevicerlSignalVisible(!hasStation);
+        getView().setDeployPhotoVisible(!hasStation);
     }
 
     @Override
@@ -109,6 +115,10 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             mHandler = null;
         }
         tagList.clear();
+        if (images != null) {
+            images.clear();
+            images = null;
+        }
     }
 
     public void initMap(AMap map) {
@@ -372,9 +382,9 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         }
     }
 
-    public void requestUpload(final String sn, String name) {
+    public void requestUpload(final String sn, final String name) {
 //        例：大悦城20层走廊2号配电箱
-        String tags = tagListToString();
+        final String tags = tagListToString();
         String name_default = mContext.getString(R.string.tips_hint_name_address);
         if (TextUtils.isEmpty(name) || name.equals(name_default) || name.equals(mContext.getResources().getString(R
                 .string.tips_hint_name_address_set))) {
@@ -439,50 +449,87 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                     getView().setUploadButtonClickable(true);
                     return;
                 }
-                //电话规则过滤
-//                String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
-//                String regex = "^(\\+86){0,1}1[3|4|5|6|7|8|9](\\d){9}$";
-//                Pattern p = Pattern.compile(regex);
                 if (!RegexUtils.checkPhone(content)) {
                     getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
                     getView().setUploadButtonClickable(true);
                     return;
                 }
 
-                getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(sn, lon, lan, tags, name,
-                        contact, content).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CityObserver<DeviceDeployRsp>() {
+                if (images != null && images.size() > 0) {
+                    //TODO 图片提交
+                    final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
+                            .UpLoadPhotoListener() {
 
+                        @Override
+                        public void onStart() {
+                            getView().showStartUploadProgressDialog();
+                        }
 
-                            @Override
-                            public void onCompleted() {
-                                getView().dismissProgressDialog();
-                                getView().finishAc();
+                        @Override
+                        public void onComplete(List<String> imagesUrl) {
+                            String s = "";
+                            for (String temp : imagesUrl) {
+                                s += temp + "\n";
                             }
+                            getView().dismissUploadProgressDialog();
+                            LogUtils.loge(this, "上传成功---" + s);
+                            //TODO 上传结果
+                            doDeployResult(sn, name, tags, lon, lan, contact, content, imagesUrl);
+                        }
 
-                            @Override
-                            public void onNext(DeviceDeployRsp deviceDeployRsp) {
-                                freshPoint(deviceDeployRsp);
-                            }
+                        @Override
+                        public void onError(String errMsg) {
+                            getView().dismissUploadProgressDialog();
+                            getView().toastShort(errMsg);
+                        }
 
-                            @Override
-                            public void onErrorMsg(int errorCode, String errorMsg) {
-                                getView().dismissProgressDialog();
-                                getView().setUploadButtonClickable(true);
-                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                                    getView().toastShort(errorMsg);
-                                } else if (errorCode == 4013101 || errorCode == 4000013) {
-                                    freshError(sn, null);
-                                } else {
-                                    freshError(sn, errorMsg);
-                                }
-                            }
-                        });
+                        @Override
+                        public void onProgress(int index, double percent) {
+                            getView().showUploadProgressDialog(index, images.size(), percent);
+                        }
+                    };
+                    upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
+                    upLoadPhotosUtils.doUploadPhoto(images);
+                } else {
+                    doDeployResult(sn, name, tags, lon, lan, contact, content, null);
+                }
             }
-
         }
 
+    }
+
+    private void doDeployResult(final String sn, String name, String tags, double lon, double lan, String contact,
+                                String content, List<String> imgUrls) {
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(sn, lon, lan, tags, name,
+                contact, content, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<DeviceDeployRsp>() {
+
+
+                    @Override
+                    public void onCompleted() {
+                        getView().dismissProgressDialog();
+                        getView().finishAc();
+                    }
+
+                    @Override
+                    public void onNext(DeviceDeployRsp deviceDeployRsp) {
+                        freshPoint(deviceDeployRsp);
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().setUploadButtonClickable(true);
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                            getView().toastShort(errorMsg);
+                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+                            freshError(sn, null);
+                        } else {
+                            freshError(sn, errorMsg);
+                        }
+                    }
+                });
     }
 
     private void freshError(String scanSN, String errorInfo) {
@@ -568,6 +615,13 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             getView().finishAc();
         } else if (resultCode == RESULT_CODE_DEPLOY) {
             getView().finishAc();
+        } else if (resultCode == RESULT_SETTING_PHOTO) {
+            images = (ArrayList<ImageItem>) data.getSerializableExtra(EXTRA_DEPLOY_PHOTO);
+            if (images != null && images.size() > 0) {
+                getView().setDeployPhotoText("已选择" + images.size() + "张图片");
+            } else {
+                getView().setDeployPhotoText("未选择部署图片");
+            }
         }
     }
 
@@ -680,4 +734,14 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             });
         }
     }
+
+    public void doSettingPhoto() {
+        //
+        Intent intent = new Intent(mContext, DeployPhotoActivity.class);
+        if (images != null && images.size() > 0) {
+            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, images);
+        }
+        getView().startACForResult(intent, REQUEST_SETTING_PHOTO);
+    }
+
 }

@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -11,11 +12,15 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
 import android.text.style.TextAppearanceSpan;
+import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -33,148 +38,6 @@ import java.util.List;
  */
 
 public class WidgetUtil {
-
-    public static BitmapDrawable createBitmapDrawable(Context context, Bitmap imgMarker, String text) {
-        int width = imgMarker.getWidth();
-        int height = imgMarker.getHeight();
-        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(imgTemp);
-        Paint paint = new Paint(); // 建立画笔
-        paint.setDither(true);
-        paint.setFilterBitmap(true);
-        Rect src = new Rect(0, 0, width, height);
-        Rect dst = new Rect(0, 0, width, height);
-        canvas.drawBitmap(imgMarker, src, dst, paint);
-
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
-                | Paint.DEV_KERN_TEXT_FLAG);
-        textPaint.setTextSize(25.0f);
-        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
-        textPaint.setColor(Color.WHITE);
-
-        canvas.drawText(text, width / 2 - 5, height / 2 + 5,
-                textPaint);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
-        canvas.restore();
-        return new BitmapDrawable(context.getResources(), imgTemp);
-
-    }
-
-    public static BitmapDrawable createBigBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
-            targetBitmap) {
-        int width = srcBitmap.getWidth();
-        int height = srcBitmap.getHeight();
-        int x_offset = 0;
-        int y_offset = 0;
-        if (sensorType.contains("pm")) {
-            y_offset = -5;
-            x_offset = -5;
-        } else if (sensorType.contains("distance")) {
-            x_offset = -10;
-            y_offset = -5;
-        } else if (sensorType.contains("alarm")) {
-            x_offset = -8;
-            y_offset = -5;
-        }
-        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(imgTemp);
-        Paint paint = new Paint(); // 建立画笔
-        paint.setDither(true);
-        paint.setFilterBitmap(true);
-        Rect src = new Rect(0, 0, width, height);
-        Rect dst = new Rect(0, 0, width, height);
-        canvas.drawBitmap(srcBitmap, src, dst, paint);
-
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
-                | Paint.DEV_KERN_TEXT_FLAG);
-        textPaint.setTextSize(25.0f);
-        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
-        textPaint.setColor(Color.WHITE);
-        canvas.drawBitmap(targetBitmap, width / 4 - x_offset, height / 4 - y_offset,
-                textPaint);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
-        canvas.restore();
-        return new BitmapDrawable(context.getResources(), imgTemp);
-
-    }
-
-    public static BitmapDrawable createBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
-            targetBitmap) {
-        int width = srcBitmap.getWidth();
-        int height = srcBitmap.getHeight();
-        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(imgTemp);
-        Paint paint = new Paint(); // 建立画笔
-        paint.setDither(true);
-        paint.setFilterBitmap(true);
-        Rect src = new Rect(0, 0, width, height);
-        Rect dst = new Rect(0, 0, width, height);
-        canvas.drawBitmap(srcBitmap, src, dst, paint);
-        int x_offset = -1;
-        int y_offset = 2;
-        if (sensorType.contains("pm")) {
-            y_offset -= 5;
-            x_offset += 2;
-        } else if (sensorType.contains("alarm")) {
-            x_offset -= 5;
-            y_offset -= 5;
-        } else if (sensorType.contains("smoke") || sensorType.contains("installed")) {
-            y_offset -= 4;
-            x_offset -= 0;
-        } else if (sensorType.contains("cover")) {
-            x_offset += 3;
-            y_offset += 3;
-        } else if (sensorType.contains("co") || sensorType.contains("co2")) {
-            x_offset += 2;
-            y_offset -= 5;
-        } else if (sensorType.contains("ch4")) {
-            y_offset -= 5;
-        } else if (sensorType.contains("level") || sensorType.contains("distance")) {
-            x_offset += -2;
-        } else if (sensorType.contains("no2")) {
-            x_offset += 2;
-            y_offset -= 2;
-        } else if (sensorType.contains("latitude") || sensorType.contains("longitude")) {
-            y_offset += 2;
-        } else if (sensorType.contains("yaw") || sensorType.contains("roll") || sensorType.contains("pitch")) {
-            y_offset += 2;
-        } else if (sensorType.contains("temperature") || sensorType.contains("humidity")) {
-            y_offset += 2;
-        }
-
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
-                | Paint.DEV_KERN_TEXT_FLAG);
-        textPaint.setTextSize(25.0f);
-        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
-        textPaint.setColor(Color.WHITE);
-        Matrix matrix = new Matrix();
-        matrix.postScale(0.8f, 0.8f);
-        // 得到新的图片
-        Bitmap newbm = Bitmap.createBitmap(targetBitmap, 0, 0, targetBitmap.getWidth(), targetBitmap.getHeight(),
-                matrix,
-                true);
-
-        canvas.drawBitmap(newbm, width / 5 - x_offset, height / 5 - 5 - y_offset,
-                textPaint);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
-        canvas.restore();
-
-        return new BitmapDrawable(context.getResources(), imgTemp);
-
-    }
-
-    public static Bitmap tintBitmap(Bitmap inBitmap, int tintColor) {
-        if (inBitmap == null) {
-            return null;
-        }
-
-        Bitmap outBitmap = Bitmap.createBitmap(inBitmap.getWidth(), inBitmap.getHeight(), inBitmap.getConfig());
-        Canvas canvas = new Canvas(outBitmap);
-        Paint paint = new Paint();
-        paint.setColorFilter(new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(inBitmap, 0, 0, paint);
-        return outBitmap;
-    }
 
 
     public static void judgeSensorType(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {
@@ -230,6 +93,14 @@ public class WidgetUtil {
                         valueTextView.setText(R.string.smoke_false);
                     }
 //                    unitTextView.setEditText(R.string.sensor_smoke);
+                } else if (sensorType.equals("connection")) {
+                    Boolean isOk = (Boolean) value;
+                    if (isOk) {
+                        valueTextView.setText(R.string.connection_true);
+                    } else {
+                        valueTextView.setText(R.string.connection_false);
+                    }
+//                    unitTextView.setEditText(R.string.sensor_smoke);
                 } else if (sensorType.equalsIgnoreCase("installed")) {
                     Boolean isTrue = (Boolean) value;
                     if (isTrue) {
@@ -252,6 +123,38 @@ public class WidgetUtil {
                         valueTextView.setText(R.string.magnetic_true);
                     } else {
                         valueTextView.setText(R.string.magnetic_false);
+                    }
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+                } else if (sensorType.equals("door")) {
+                    Boolean isTrue = (Boolean) value;
+                    if (isTrue) {
+                        valueTextView.setText(R.string.magnetic_true);
+                    } else {
+                        valueTextView.setText(R.string.magnetic_false);
+                    }
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+                } else if (sensorType.equals("infrared")) {
+                    Boolean isTrue = (Boolean) value;
+                    if (isTrue) {
+                        valueTextView.setText(R.string.alarm_true);
+                    } else {
+                        valueTextView.setText(R.string.alarm_false);
+                    }
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+                } else if (sensorType.equals("manual_alarm")) {
+                    Boolean isTrue = (Boolean) value;
+                    if (isTrue) {
+                        valueTextView.setText(R.string.alarm_true);
+                    } else {
+                        valueTextView.setText(R.string.alarm_false);
+                    }
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+                } else if (sensorType.equals("sound_light_alarm")) {
+                    Boolean isTrue = (Boolean) value;
+                    if (isTrue) {
+                        valueTextView.setText(R.string.alarm_true);
+                    } else {
+                        valueTextView.setText(R.string.alarm_false);
                     }
 //                    unitTextView.setEditText(R.string.sensor_magnetic);
                 } else {
@@ -372,10 +275,14 @@ public class WidgetUtil {
                 return R.mipmap.ic_sensor_call;
             } else if (tempList.contains("flame")) {
                 return R.mipmap.ic_sensor_flame;
+            } else if (tempList.contains("connection")) {
+                return R.mipmap.ic_sensor_connection;
             } else if (tempList.contains("lpg")) {
                 return R.mipmap.ic_sensor_lpg;
-            } else if (tempList.contains("magnetic")) {
+            } else if (tempList.contains("door")) {
                 return R.mipmap.ic_sensor_lock;
+            } else if (tempList.contains("magnetic")) {
+                return R.mipmap.ic_sensor_magnetic;
             } else if (tempList.contains("waterPressure")) {
                 return R.mipmap.ic_sensor_water_pressure;
             } else if (tempList.contains("altitude") || tempList.contains("longitude") || tempList.contains
@@ -389,6 +296,12 @@ public class WidgetUtil {
                     .contains("VOLTAGE_C")) {
                 //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
                 return R.mipmap.ic_seneor_electric_meter_bg;
+            } else if (tempList.contains("infrared")) {
+                return R.mipmap.ic_sensor_infrared_bg;
+            } else if (tempList.contains("manual_alarm")) {
+                return R.mipmap.ic_sensor_manual_alarm_bg;
+            } else if (tempList.contains("sound_light_alarm")) {
+                return R.mipmap.ic_sensor_sound_light_alarm_bg;
             } else {
                 return 0;
             }
@@ -420,6 +333,9 @@ public class WidgetUtil {
             layoutParams.setMargins(0, 0, pixel, default_pixel);
         } else if (sensorType.equalsIgnoreCase("ch4")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_ch4);
+            layoutParams.setMargins(0, 0, pixel, default_pixel);
+        } else if (sensorType.equalsIgnoreCase("connection")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_connection_bg);
             layoutParams.setMargins(0, 0, pixel, default_pixel);
         } else if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("humidity")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_temp_humi);
@@ -461,6 +377,9 @@ public class WidgetUtil {
         } else if (sensorType.equals("magnetic")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_magnetic);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+        } else if (sensorType.equals("door")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lock);
+            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equals("waterPressure")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_water_pressure);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
@@ -473,6 +392,15 @@ public class WidgetUtil {
         } else if (sensorType.equals("TOTAL_POWER")) {
             srcImageView.setImageResource(R.mipmap.ic_seneor_electric_meter_bg);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+        } else if (sensorType.equalsIgnoreCase("infrared")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_infrared_bg);
+            layoutParams.setMargins(0, 0, pixel, default_pixel);
+        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_manual_alarm_bg);
+            layoutParams.setMargins(0, 0, pixel, default_pixel);
+        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_sound_light_alarm_bg);
+            layoutParams.setMargins(0, 0, pixel, default_pixel);
         } else {
             srcImageView.setVisibility(View.GONE);
         }
@@ -585,6 +513,28 @@ public class WidgetUtil {
             unitTextView.setText("");
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_magnetic);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+        } else if (sensorType.equalsIgnoreCase("door")) {
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.magnetic_true);
+            } else {
+                valueTextView.setText(R.string.magnetic_false);
+            }
+            unitTextView.setText("");
+            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lock);
+            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+        } else if (sensorType.equalsIgnoreCase("connection")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_connection_bg);
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.connection_true);
+            } else {
+                valueTextView.setText(R.string.connection_false);
+            }
+            layoutParams.setMargins(0, 0, pixel, default_pixel);
+            unitTextView.setText("");
         } else if (sensorType.equalsIgnoreCase("lpg")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lpg);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
@@ -628,17 +578,39 @@ public class WidgetUtil {
         } else if (sensorType.equals("latitude") || sensorType.equals("longitude") || sensorType.equals("altitude")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_tracker);
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("door")) { //
-            srcImageView.setVisibility(View.GONE);
-            isBool = true;
+        } else if (sensorType.equalsIgnoreCase("infrared")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_infrared_bg);
             Boolean isTrue = (Boolean) value;
+            isBool = true;
             if (isTrue) {
-                valueTextView.setText(R.string.magnetic_true);
+                valueTextView.setText(R.string.alarm_true);
             } else {
-                valueTextView.setText(R.string.magnetic_false);
+                valueTextView.setText(R.string.alarm_false);
             }
-            unitTextView.setText("");
             layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+            unitTextView.setText("");
+        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_manual_alarm_bg);
+            Boolean isTrue = (Boolean) value;
+            isBool = true;
+            if (isTrue) {
+                valueTextView.setText(R.string.alarm_true);
+            } else {
+                valueTextView.setText(R.string.alarm_false);
+            }
+            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+            unitTextView.setText("");
+        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+            srcImageView.setImageResource(R.mipmap.ic_sensor_sound_light_alarm_bg);
+            Boolean isTrue = (Boolean) value;
+            isBool = true;
+            if (isTrue) {
+                valueTextView.setText(R.string.alarm_true);
+            } else {
+                valueTextView.setText(R.string.alarm_false);
+            }
+            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+            unitTextView.setText("");
         } else {
             srcImageView.setVisibility(View.GONE);
         }
@@ -778,6 +750,60 @@ public class WidgetUtil {
                 valueTextView.setText(R.string.magnetic_false);
             }
             unitTextView.setText("");
+        } else if (sensorType.equals("door")) {
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.magnetic_true);
+            } else {
+                valueTextView.setText(R.string.magnetic_false);
+            }
+            unitTextView.setText("");
+        } else if (sensorType.equals("connection")) {
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.connection_true);
+            } else {
+                valueTextView.setText(R.string.connection_false);
+            }
+            unitTextView.setText("");
+        } else if (sensorType.equalsIgnoreCase("installed")) {
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.installed);
+            } else {
+                valueTextView.setText(R.string.un_installed);
+            }
+            unitTextView.setText("");
+        } else if (sensorType.equalsIgnoreCase("infrared")) {
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.alarm_true);
+            } else {
+                valueTextView.setText(R.string.alarm_false);
+            }
+            unitTextView.setText("");
+        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.alarm_true);
+            } else {
+                valueTextView.setText(R.string.alarm_false);
+            }
+            unitTextView.setText("");
+        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+            isBool = true;
+            Boolean isTrue = (Boolean) value;
+            if (isTrue) {
+                valueTextView.setText(R.string.alarm_true);
+            } else {
+                valueTextView.setText(R.string.alarm_false);
+            }
+            unitTextView.setText("");
         }
         if (!isBool) {
 //            unitTextView.setText("" + sensorStruct.getUnit());
@@ -838,6 +864,18 @@ public class WidgetUtil {
             return "角度";
         } else if (sensorType.contains("temp_val") || sensorType.contains("leakage_val")) {
             return "电气火灾";
+        } else if (sensorType.contains("infrared")) {
+            return "红外线";
+        } else if (sensorType.contains("manual_alarm")) {
+            return "手动报警";
+        } else if (sensorType.contains("sound_light_alarm")) {
+            return "声光报警";
+        } else if (sensorType.contains("connection")) {
+            return "通断检测";
+        } else if (sensorType.contains("door")) {
+            return "门锁";
+        } else if (sensorType.contains("magnetic")) {
+            return "地磁";
         } else {
             return "-";
         }
@@ -912,6 +950,8 @@ public class WidgetUtil {
             value = "消防液压";
         } else if (sensorType.equalsIgnoreCase("magnetic")) {
             value = "地磁";
+        } else if (sensorType.equalsIgnoreCase("door")) {
+            value = "门锁";
         } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {
             value = "电流A";
         } else if (sensorType.equalsIgnoreCase("CURRENT_B")) {
@@ -934,6 +974,14 @@ public class WidgetUtil {
             value = "漏电流";
         } else if (sensorType.equalsIgnoreCase("temp_val")) {
             value = "电线温度";
+        } else if (sensorType.equalsIgnoreCase("infrared")) {
+            value = "红外线";
+        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+            value = "手动报警";
+        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+            value = "声光报警";
+        } else if (sensorType.equalsIgnoreCase("connection")) {
+            value = "通断检测";
         }
 
         //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
@@ -998,6 +1046,9 @@ public class WidgetUtil {
                 case "drop":
                 case "leak":
                     info = "未检测到滴漏，恢复正常";
+                    break;
+                case "connection":
+                    info = "连通，恢复正常";
                     break;
                 case "door":
                     info = "门锁关闭，恢复正常";
@@ -1074,6 +1125,15 @@ public class WidgetUtil {
                 case "temp_val":
                     info = "电线温度低于预警值, 恢复正常";
                     break;
+                case "infrared":
+                    info = "红外线未感应到物体, 恢复正常";
+                    break;
+                case "manual_alarm":
+                    info = "未触发手动报警, 恢复正常";
+                    break;
+                case "sound_light_alarm":
+                    info = "未发生声光报警, 恢复正常";
+                    break;
                 default:
                     info = "未知传感器低于预警值, 恢复正常";
                     break;
@@ -1110,6 +1170,18 @@ public class WidgetUtil {
                     break;
                 case "door":
                     info = "门锁打开，设备预警";
+                    break;
+                case "infrared":
+                    info = "红外线感应到物体，设备预警";
+                    break;
+                case "manual_alarm":
+                    info = "触发手动报警，设备预警";
+                    break;
+                case "sound_light_alarm":
+                    info = "发生声光报警，设备预警";
+                    break;
+                case "connection":
+                    info = "断开，设备预警";
                     break;
                 case "temperature":
                 case "temp1":
@@ -1261,6 +1333,8 @@ public class WidgetUtil {
                 return "消防液压";
             } else if (sensorType.equals("magnetic")) {
                 return "地磁";
+            } else if (sensorType.equals("door")) {
+                return "门锁";
             } else if (sensorType.equals("flame")) {
                 return "火焰";
             } else if (sensorType.equalsIgnoreCase("cover")) {
@@ -1283,6 +1357,14 @@ public class WidgetUtil {
                 return "紧急呼叫";
             } else if (sensorType.equalsIgnoreCase("distance")) {
                 return "距离水位";
+            } else if (sensorType.equalsIgnoreCase("infrared")) {
+                return "红外线";
+            } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+                return "手动报警";
+            } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+                return "声光报警";
+            } else if (sensorType.equalsIgnoreCase("connection")) {
+                return "通断检测";
             } else {
                 return context.getString(R.string.unknown);
             }
@@ -1328,6 +1410,12 @@ public class WidgetUtil {
                 return "打开时报警";
             case "connection":
                 return "断开时报警";
+            case "infrared":
+                return "感应到物体时报警";
+            case "manual_alarm":
+                return "触发手动报警时报警";
+            case "sound_light_alarm":
+                return "发生声光报警时报警";
             default:
                 return null;
         }
@@ -1343,14 +1431,182 @@ public class WidgetUtil {
             case "smoke":
             case "drop":
             case "magnetic":
+            case "door":
             case "collision":
             case "installed":
+            case "infrared":
+            case "manual_alarm":
+            case "sound_light_alarm":
+            case "connection":
                 return false;
             default:
                 return true;
         }
     }
 
+    //
+    public static BitmapDrawable createBitmapDrawable(Context context, Bitmap imgMarker, String text) {
+        int width = imgMarker.getWidth();
+        int height = imgMarker.getHeight();
+        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(imgTemp);
+        Paint paint = new Paint(); // 建立画笔
+        paint.setDither(true);
+        paint.setFilterBitmap(true);
+        Rect src = new Rect(0, 0, width, height);
+        Rect dst = new Rect(0, 0, width, height);
+        canvas.drawBitmap(imgMarker, src, dst, paint);
+
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
+                | Paint.DEV_KERN_TEXT_FLAG);
+        textPaint.setTextSize(25.0f);
+        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
+        textPaint.setColor(Color.WHITE);
+
+        canvas.drawText(text, width / 2 - 5, height / 2 + 5,
+                textPaint);
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
+        return new BitmapDrawable(context.getResources(), imgTemp);
+
+    }
+
+    public static BitmapDrawable createBigBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
+            targetBitmap) {
+        int width = srcBitmap.getWidth();
+        int height = srcBitmap.getHeight();
+        int x_offset = 0;
+        int y_offset = 0;
+        if (sensorType.contains("pm")) {
+            y_offset = -5;
+            x_offset = -5;
+        } else if (sensorType.contains("distance")) {
+            x_offset = -10;
+            y_offset = -5;
+        } else if (sensorType.contains("alarm")) {
+            x_offset = -8;
+            y_offset = -5;
+        }
+        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(imgTemp);
+        Paint paint = new Paint(); // 建立画笔
+        paint.setDither(true);
+        paint.setFilterBitmap(true);
+        Rect src = new Rect(0, 0, width, height);
+        Rect dst = new Rect(0, 0, width, height);
+        canvas.drawBitmap(srcBitmap, src, dst, paint);
+
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
+                | Paint.DEV_KERN_TEXT_FLAG);
+        textPaint.setTextSize(25.0f);
+        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
+        textPaint.setColor(Color.WHITE);
+        canvas.drawBitmap(targetBitmap, width / 4 - x_offset, height / 4 - y_offset,
+                textPaint);
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
+        return new BitmapDrawable(context.getResources(), imgTemp);
+
+    }
+
+    public static BitmapDrawable createBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
+            targetBitmap) {
+        int width = srcBitmap.getWidth();
+        int height = srcBitmap.getHeight();
+        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(imgTemp);
+        Paint paint = new Paint(); // 建立画笔
+        paint.setDither(true);
+        paint.setFilterBitmap(true);
+        Rect src = new Rect(0, 0, width, height);
+        Rect dst = new Rect(0, 0, width, height);
+        canvas.drawBitmap(srcBitmap, src, dst, paint);
+        int x_offset = -1;
+        int y_offset = 2;
+        if (sensorType.contains("pm")) {
+            y_offset -= 5;
+            x_offset += 2;
+        } else if (sensorType.contains("alarm")) {
+            x_offset -= 5;
+            y_offset -= 5;
+        } else if (sensorType.contains("smoke") || sensorType.contains("installed")) {
+            y_offset -= 4;
+            x_offset -= 0;
+        } else if (sensorType.contains("cover")) {
+            x_offset += 3;
+            y_offset += 3;
+        } else if (sensorType.contains("co") || sensorType.contains("co2")) {
+            x_offset += 2;
+            y_offset -= 5;
+        } else if (sensorType.contains("ch4")) {
+            y_offset -= 5;
+        } else if (sensorType.contains("level") || sensorType.contains("distance")) {
+            x_offset += -2;
+        } else if (sensorType.contains("no2")) {
+            x_offset += 2;
+            y_offset -= 2;
+        } else if (sensorType.contains("latitude") || sensorType.contains("longitude")) {
+            y_offset += 2;
+        } else if (sensorType.contains("yaw") || sensorType.contains("roll") || sensorType.contains("pitch")) {
+            y_offset += 2;
+        } else if (sensorType.contains("temperature") || sensorType.contains("humidity")) {
+            y_offset += 2;
+        }
+
+        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
+                | Paint.DEV_KERN_TEXT_FLAG);
+        textPaint.setTextSize(25.0f);
+        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
+        textPaint.setColor(Color.WHITE);
+        Matrix matrix = new Matrix();
+        matrix.postScale(0.8f, 0.8f);
+        // 得到新的图片
+        Bitmap newbm = Bitmap.createBitmap(targetBitmap, 0, 0, targetBitmap.getWidth(), targetBitmap.getHeight(),
+                matrix,
+                true);
+
+        canvas.drawBitmap(newbm, width / 5 - x_offset, height / 5 - 5 - y_offset,
+                textPaint);
+        canvas.save(Canvas.ALL_SAVE_FLAG);
+        canvas.restore();
+
+        return new BitmapDrawable(context.getResources(), imgTemp);
+
+    }
+
+    public static Bitmap tintBitmap(Bitmap inBitmap, int tintColor) {
+        if (inBitmap == null) {
+            return null;
+        }
+
+        Bitmap outBitmap = Bitmap.createBitmap(inBitmap.getWidth(), inBitmap.getHeight(), inBitmap.getConfig());
+        Canvas canvas = new Canvas(outBitmap);
+        Paint paint = new Paint();
+        paint.setColorFilter(new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(inBitmap, 0, 0, paint);
+        return outBitmap;
+    }
+
+    public static boolean navigationBarExist(Activity activity) {
+        final WindowManager windowManager = activity.getWindowManager();
+        final Display d = windowManager.getDefaultDisplay();
+
+        final DisplayMetrics realDisplayMetrics = new DisplayMetrics();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            d.getRealMetrics(realDisplayMetrics);
+        }
+
+        int realHeight = realDisplayMetrics.heightPixels;
+        int realWidth = realDisplayMetrics.widthPixels;
+
+        final DisplayMetrics displayMetrics = new DisplayMetrics();
+        d.getMetrics(displayMetrics);
+
+        int displayHeight = displayMetrics.heightPixels;
+        int displayWidth = displayMetrics.widthPixels;
+
+        return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+    }
     //TODO dont del
     ///////////////////////
     //    public static void judgeSensor(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {

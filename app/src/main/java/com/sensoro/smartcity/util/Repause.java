@@ -14,44 +14,48 @@ public final class Repause implements Application.ActivityLifecycleCallbacks {
 
     private static final String TAG = "Repause";
 
-    private static Repause singleton;
+    private static Repause instance;
 
     public static void init(Application application) {
         init(application, null);
     }
 
     public static void init(Application application, Filter filter) {
-        if (singleton == null) {
-            singleton = new Repause(filter);
-            application.registerActivityLifecycleCallbacks(singleton);
+        if (instance == null) {
+            synchronized (Repause.class){
+                if (instance ==null){
+                    instance = new Repause(filter);
+                    application.registerActivityLifecycleCallbacks(instance);
+                }
+            }
         } else {
             Log.w(TAG, TAG + " has been initialized.");
         }
     }
 
     private static void checkInit() {
-        if (singleton == null) {
+        if (instance == null) {
             throw new RuntimeException(TAG + " has not been initialized.");
         }
     }
 
     public static void registerListener(Listener listener) {
         checkInit();
-        synchronized (singleton.listenerList) {
-            singleton.listenerList.add(listener);
+        synchronized (instance.listenerList) {
+            instance.listenerList.add(listener);
         }
     }
 
     public static void unregisterListener(Listener listener) {
         checkInit();
-        synchronized (singleton.listenerList) {
-            singleton.listenerList.remove(listener);
+        synchronized (instance.listenerList) {
+            instance.listenerList.remove(listener);
         }
     }
 
     public static boolean isApplicationResumed() {
         checkInit();
-        return singleton.active;
+        return instance.active;
     }
 
     public static boolean isApplicationPaused() {
@@ -60,7 +64,7 @@ public final class Repause implements Application.ActivityLifecycleCallbacks {
 
     public static void setCheckDelayTime(long checkDelayTime) {
         checkInit();
-        singleton.checkDelayTime = checkDelayTime;
+        instance.checkDelayTime = checkDelayTime;
     }
 
     private final List<Listener> listenerList = new ArrayList<>();

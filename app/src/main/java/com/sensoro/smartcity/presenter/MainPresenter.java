@@ -388,10 +388,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             if (arg instanceof JSONArray) {
                                 JSONArray jsonArray = (JSONArray) arg;
                                 final JSONObject jsonObject = jsonArray.getJSONObject(0);
-                                String s = jsonObject.toString();
-                                LogUtils.loge(this, "jsonArray = " + s);
+                                String json = jsonObject.toString();
+                                LogUtils.loge(this, "jsonArray = " + json);
                                 if (!mIsSupperAccount) {
-                                    indexFragment.handleSocketInfo(jsonObject.toString());
+                                    try {
+                                        DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json,
+                                                DeviceInfo.class);
+                                        EventData eventData = new EventData();
+                                        eventData.code = EVENT_DATA_SOCKET_DATA;
+                                        eventData.data = data;
+                                        EventBus.getDefault().post(eventData);
+                                    } catch (Exception e) {
+                                        e.printStackTrace();
+                                    }
+
                                 }
                             }
 
@@ -513,11 +523,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 getView().setCurrentPagerItem(4);
                 break;
             case MenuPageInfo.MENU_PAGE_SCAN_LOGIN:
-                //TODO 扫码登录
                 getView().setCurrentPagerItem(5);
                 break;
             case MenuPageInfo.MENU_PAGE_CONTRACT:
-                //TODO 合同管理
                 contractFragment.requestDataByDirection(DIRECTION_DOWN, true);
                 getView().setCurrentPagerItem(6);
                 break;

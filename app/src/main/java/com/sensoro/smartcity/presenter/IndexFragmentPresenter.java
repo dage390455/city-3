@@ -17,7 +17,9 @@ import com.sensoro.smartcity.activity.SensorDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IIndexFragmentView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -26,6 +28,8 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +41,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> implements IOnDestroy,
+public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> implements IOnCreate, IOnDestroy,
         Constants {
     private final List<DeviceInfo> mDataList = new ArrayList<>();
     private final Handler mHandler = new Handler();
@@ -60,6 +64,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
@@ -239,11 +244,9 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     /**
      * 处理push来的json数据
      *
-     * @param json
+     * @param data
      */
-    public void organizeJsonData(String json) {
-        Log.d("push....", "organizeJsonData----->> " + json);
-        DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceInfo.class);
+    private void organizeJsonData(DeviceInfo data) {
         if (data != null) {
             boolean isContains = false;
             for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
@@ -497,6 +500,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         if (mSoundPool != null) {
             mSoundPool.unload(mSoundId);
             mSoundPool.stop(mSoundId);
@@ -510,19 +514,26 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 
     public void toSearchAc() {
         Intent intent = new Intent(mContext, SearchDeviceActivity.class);
-//        Bundle value = new Bundle();
-//        value.putParcelableArrayList(mDataList);
-//        intent.putExtra("111", value);
-//        intent.putExtra(EXTRA_FRAGMENT_INDEX, 1);
-
-//                int size = mDataList.size();
-//                intent.putExtra("", value);
-//                Bundle bundle = new Bundle();
-//        getView().startAC(intent);
-        getView().startACForResult(intent, REQUEST_CODE_SEARCH_DEVICE);
+        getView().startAC(intent);
     }
 
     public void onHiddenChanged(boolean hidden) {
         mIsVisibleToUser = hidden;
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        if (code == EVENT_DATA_SOCKET_DATA) {
+            if (eventData.data instanceof DeviceInfo) {
+                organizeJsonData((DeviceInfo) eventData.data);
+            }
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

@@ -283,8 +283,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, String tags, String
-            name, String contact,
-                                                           String content) {
+            name, String contact, String content, List<String> imgUrls) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -309,6 +308,13 @@ public enum RetrofitServiceHelper {
             }
             if (contact != null) {
                 jsonObject.put("content", content);
+            }
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArray.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArray);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -585,5 +591,4 @@ public enum RetrofitServiceHelper {
     public Observable<ResponseBase> scanLoginCancel(String qrcodeId) {
         return retrofitService.scanLoginCancel(qrcodeId);
     }
-
 }

@@ -39,7 +39,7 @@ import java.util.List;
  */
 
 public class SensoroCityApplication extends MultiDexApplication implements Thread.UncaughtExceptionHandler, Repause
-        .Listener, SensoroPushListener {
+        .Listener, SensoroPushListener, OnResultListener<AccessToken> {
 
     private final List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
     public IWXAPI api;
@@ -49,7 +49,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
     private static boolean isAPPBack = true;
     private static PushHandler pushHandler;
     public UploadManager uploadManager;
-    public boolean hasGotToken = false;
+    public volatile boolean hasGotToken = false;
 
     @Override
     public void onCreate() {
@@ -110,12 +110,14 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
     public void onTerminate() {
         super.onTerminate();
         mDeviceInfoList.clear();
+        Repause.unregisterListener(this);
     }
 
-    void init() {
+    private void init() {
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
+        initORC();
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
         Repause.init(this);
         Repause.registerListener(this);
@@ -126,27 +128,11 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         //
         initImagePicker();
         initUploadManager();
-        initORC();
     }
 
     private void initORC() {
-        OCR.getInstance(instance.getApplicationContext()).initAccessTokenWithAkSk(new OnResultListener<AccessToken>() {
-            @Override
-            public void onResult(AccessToken result) {
-                // 调用成功，返回AccessToken对象
-                String token = result.getAccessToken();
-                hasGotToken = true;
-                LogUtils.loge(this, "初始化QCR成功 ： token = " + token);
-            }
-
-            @Override
-            public void onError(OCRError error) {
-                // 调用失败，返回OCRError子类SDKError对象
-                hasGotToken = false;
-                String message = error.getMessage();
-                LogUtils.loge(this, message);
-            }
-        }, getApplicationContext(), "D1T3OGkU9CzoVaEBnQ8ie2xG", "YD1WmK9CG2TVUDwt2MuT2XswNkimCEf7");
+        OCR.getInstance(getApplicationContext()).initAccessTokenWithAkSk(this, getApplicationContext(),
+                "D1T3OGkU9CzoVaEBnQ8ie2xG", "YD1WmK9CG2TVUDwt2MuT2XswNkimCEf7");
     }
 
     private void initUploadManager() {
@@ -206,6 +192,22 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         if (isAPPBack) {
             mNotificationUtils.sendNotification(message);
         }
+    }
+
+    @Override
+    public void onResult(AccessToken result) {
+        // 调用成功，返回AccessToken对象
+        String token = result.getAccessToken();
+        hasGotToken = true;
+        LogUtils.loge(this, "初始化QCR成功 ： token = " + token);
+    }
+
+    @Override
+    public void onError(OCRError error) {
+        // 调用失败，返回OCRError子类SDKError对象
+        hasGotToken = false;
+        String message = error.getMessage();
+        LogUtils.loge(this, message);
     }
 
     /**

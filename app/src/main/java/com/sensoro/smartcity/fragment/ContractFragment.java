@@ -62,7 +62,7 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
 
     @Override
     protected void initData(Context activity) {
-        mPrestener.initData(activity);
+        mPresenter.initData(activity);
         initView();
     }
 
@@ -116,7 +116,7 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
 
     @Override
     public void requestDataByDirection(int direction, boolean isFirst) {
-        mPrestener.requestDataByDirection(direction, isFirst);
+        mPresenter.requestDataByDirection(direction, isFirst);
     }
 
     @Override
@@ -137,16 +137,15 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mRootFragment.getActivity().startActivityForResult(intent, requestCode);
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
 
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
+    public void setIntentResult(int resultCode, Intent data) {
 
     }
 
@@ -187,17 +186,17 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPrestener.clickItem(position);
+        mPresenter.clickItem(position);
     }
 
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.contract_iv_add:
-                mPrestener.startToAdd();
+                mPresenter.startToAdd();
                 break;
             case R.id.contract_iv_menu_list:
-                ((MainActivity) getActivity()).getMenuDrawer().openMenu();
+                ((MainActivity) getActivity()).openMenu();
                 break;
             case R.id.contract_return_top:
                 contractPtrList.getRefreshableView().smoothScrollToPosition(0);
@@ -230,16 +229,26 @@ public class ContractFragment extends BaseFragment<IContractFragmentView, Contra
 //        Toast.makeText(MainActivity.this, "你的性别为：" + output, Toast.LENGTH_SHORT).show();
         switch (id) {
             case R.id.rb_contract_all:
-                mPrestener.requestContractDataAll();
+                mPresenter.requestContractDataAll();
                 break;
             case R.id.rb_contract_business:
-                mPrestener.requestContractDataBusiness();
+                mPresenter.requestContractDataBusiness();
                 break;
             case R.id.rb_contract_person:
-                mPrestener.requestContractDataPerson();
+                mPresenter.requestContractDataPerson();
                 break;
             default:
                 break;
         }
+    }
+
+    @Override
+    public void onFragmentStart() {
+
+    }
+
+    @Override
+    public void onFragmentStop() {
+
     }
 }

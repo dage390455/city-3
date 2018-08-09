@@ -9,7 +9,7 @@ public interface IActivityIntent {
 
     void startACForResult(Intent intent, int requestCode);
 
-    void setIntentResult(int requestCode);
+    void setIntentResult(int resultCode);
 
-    void setIntentResult(int requestCode, Intent data);
+    void setIntentResult(int resultCode, Intent data);
 }

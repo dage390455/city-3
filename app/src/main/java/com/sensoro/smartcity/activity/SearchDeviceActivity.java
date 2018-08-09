@@ -726,11 +726,11 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
 
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
+    public void setIntentResult(int resultCode, Intent data) {
     }
 }

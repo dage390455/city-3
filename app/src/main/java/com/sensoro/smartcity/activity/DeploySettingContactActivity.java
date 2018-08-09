@@ -234,13 +234,13 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
 
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
-        mActivity.setResult(requestCode, data);
+    public void setIntentResult(int resultCode, Intent data) {
+        mActivity.setResult(resultCode, data);
     }
 
     @Override

@@ -196,6 +196,45 @@
 
                 android:background="@color/c_e7e7e7"
                 android:contentDescription="@null"/>
+
+            <RelativeLayout
+                android:id="@+id/deploy_photo_relative_layout"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y160"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/deploy_photo_tv"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="15dp"
+                    android:text="@string/deploy_photo"
+                    android:textColor="@color/c_626262"
+                    android:textSize="@dimen/city_tiny_large_size"/>
+
+                <TextView
+                    android:id="@+id/deploy_photo_et"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="@dimen/x350"
+                    android:layout_marginRight="@dimen/x120"
+                    android:gravity="end"
+                    android:text="未选择部署图片"
+                    android:maxLines="1"
+                    android:textColor="@color/c_888888"
+                    android:textSize="@dimen/city_tiny_large_size"/>
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:adjustViewBounds="true"
+                    android:cropToPadding="true"
+                    android:padding="15dp"
+                    android:src="@mipmap/ic_forward"/>
+            </RelativeLayout>
         </LinearLayout>
 
 

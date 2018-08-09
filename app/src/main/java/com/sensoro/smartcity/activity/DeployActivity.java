@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.TypedValue;
@@ -53,11 +54,15 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     @BindView(R.id.deploy_tag_layout)
     LinearLayout tagLayout;
     @BindView(R.id.deploy_device_rl_signal)
-    RelativeLayout deployDevicerlSignal;
+    RelativeLayout deployDeviceRlSignal;
     @BindView(R.id.deploy_contact_relative_layout)
     RelativeLayout deployContactRelativeLayout;
+    @BindView(R.id.deploy_photo_relative_layout)
+    RelativeLayout deployPhotoRelativeLayout;
+    @BindView(R.id.deploy_photo_et)
+    TextView deployPhotoEt;
     private ProgressUtils mProgressUtils;
-
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -78,6 +83,14 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         setUploadButtonClickable(true);
         super.onDestroy();
         mMapView.onDestroy();
+    }
+
+
+    private void initUploadDialog() {
+        progressDialog = new ProgressDialog(mActivity);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax(100);
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -128,6 +141,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     private void init() {
         try {
             mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+            initUploadDialog();
             mPrestener.initMap(mMapView.getMap());
             mActivity.getWindow().getDecorView().postInvalidate();
         } catch (Exception e) {
@@ -191,12 +205,46 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     @Override
     public void setDeployDevicerlSignalVisible(boolean isVisible) {
-        deployDevicerlSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        deployDeviceRlSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setDeployContactRelativeLayoutVisible(boolean isVisible) {
         deployContactRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployPhotoVisible(boolean isVisible) {
+        deployPhotoRelativeLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showUploadProgressDialog(int currentNum, int count, double percent) {
+        if (progressDialog != null) {
+            String title = "正在上传第" + currentNum + "张，总共" + count + "张";
+            progressDialog.setProgress((int) (percent * 100));
+            progressDialog.setTitle(title);
+            progressDialog.show();
+        }
+    }
+
+    @Override
+    public void dismissUploadProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
+
+    @Override
+    public void showStartUploadProgressDialog() {
+        progressDialog.setTitle("请稍后");
+        progressDialog.setProgress(0);
+        progressDialog.show();
+    }
+
+    @Override
+    public void setDeployPhotoText(String text) {
+        deployPhotoEt.setText(text);
     }
 
     @Override
@@ -234,6 +282,11 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     @OnClick(R.id.deploy_contact_relative_layout)
     public void doSettingContact() {
         mPrestener.doSettingContact();
+    }
+
+    @OnClick(R.id.deploy_photo_relative_layout)
+    public void doSettingPhoto() {
+        mPrestener.doSettingPhoto();
     }
 
     @OnClick(R.id.deploy_device_signal)
@@ -282,13 +335,13 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
 
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
-        mActivity.setResult(requestCode, data);
+    public void setIntentResult(int resultCode, Intent data) {
+        mActivity.setResult(resultCode, data);
     }
 
     @Override

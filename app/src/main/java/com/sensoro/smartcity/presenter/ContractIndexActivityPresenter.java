@@ -48,8 +48,9 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
             return;
         }
         Intent intent = new Intent(mContext, CameraActivity.class);
+        String absolutePath = FileUtil.getSaveFile(mContext.getApplicationContext()).getAbsolutePath();
         intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,
-                FileUtil.getSaveFile(mContext.getApplicationContext()).getAbsolutePath());
+                absolutePath);
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE,
                 CameraActivity.CONTENT_TYPE_GENERAL);
         getView().startACForResult(intent, REQUEST_CODE_BUSINESS_LICENSE);
@@ -60,8 +61,9 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
             return;
         }
         Intent intent = new Intent(mContext, CameraActivity.class);
+        String absolutePath = FileUtil.getSaveFile(mContext.getApplication()).getAbsolutePath();
         intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,
-                FileUtil.getSaveFile(mContext.getApplication()).getAbsolutePath());
+                absolutePath);
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
         getView().startACForResult(intent, REQUEST_CODE_CAMERA);
     }
@@ -141,7 +143,7 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                startServiceByLience(单位名称, 地址, 成立日期, 有效期, 法人, 社会信用代码, 证件编号);
+                                startServiceByLicense(单位名称, 地址, 成立日期, 有效期, 法人, 社会信用代码, 证件编号);
                             }
                         });
             } catch (Exception e) {
@@ -226,8 +228,8 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
         });
     }
 
-    private void startServiceByLience(String 单位名称, String 地址, String 成立日期, String 有效期, String 法人, String 社会信用代码,
-                                      String 证件编号) {
+    private void startServiceByLicense(String 单位名称, String 地址, String 成立日期, String 有效期, String 法人, String 社会信用代码,
+                                       String 证件编号) {
         Intent intent = new Intent();
         intent.setClass(mContext, ContractServiceActivity.class);
         intent.putExtra(EXTRA_CONTRACT_TYPE, 1);

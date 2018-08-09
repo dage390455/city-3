@@ -38,7 +38,9 @@
     <string name="station_deploy">Station Deploy</string>
     <string name="deploy_name_address">Name</string>
     <string name="deploy_contact">Contact</string>
+    <string name="deploy_photo">Deploy Photo</string>
     <string name="deploy_contact_title">Setting Contact</string>
+    <string name="deploy_contact_photo">Setting Photo</string>
     <string name="deploy_phone">Phone</string>
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
@@ -96,6 +98,10 @@
     <string name="collision_true">Hit</string>
     <string name="smoke_false">Normal</string>
     <string name="smoke_true">Hit</string>
+    //
+    <string name="connection_true">Connection</string>
+    <string name="connection_false">DisConnection</string>
+    //
     <string name="installed">installed</string>
     <string name="un_installed">UnInstalled</string>
     <string name="magnetic_false">Close</string>

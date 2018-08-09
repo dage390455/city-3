@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.baidu.mobstat.StatService;
+import com.sensoro.smartcity.iwidget.IOnFragmentStart;
 import com.sensoro.smartcity.util.LogUtils;
 
 import butterknife.ButterKnife;
@@ -18,8 +19,8 @@ import butterknife.Unbinder;
  * Created by JL-DDONG on 2017/7/12 0012.
  */
 
-public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragment {
-    protected P mPrestener;
+public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragment implements IOnFragmentStart {
+    protected P mPresenter;
     protected View mRootView;
     protected Unbinder unbinder;
     protected BaseFragment mRootFragment;
@@ -28,20 +29,19 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
             savedInstanceState) {
-
-        mPrestener = createPresenter();
-        mPrestener.attachView((V) this);
-        V view = mPrestener.getView();
+        if (mRootView == null) {
+            mRootView = inflater.inflate(initRootViewId(), container, false);
+        }
+        mPresenter = createPresenter();
+        mPresenter.attachView((V) this);
+        V view = mPresenter.getView();
         if (view instanceof BaseFragment) {
             mRootFragment = (BaseFragment) view;
         } else {
             LogUtils.loge(this, "当前View转换异常！");
             mRootFragment = this;
         }
-        if (mRootView == null) {
-            mRootView = inflater.inflate(initRootViewId(), container, false);
-        }
-        unbinder = ButterKnife.bind(mPrestener.getView(), mRootView);
+        unbinder = ButterKnife.bind(mPresenter.getView(), mRootView);
         LogUtils.logd("onCreateView");
         return mRootView;
     }
@@ -49,7 +49,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        LogUtils.logd("onCreate");
     }
 
     @Override
@@ -58,6 +57,56 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         // 页面埋点
         StatService.onPageStart(getActivity(), this.getClass().getSimpleName());
     }
+
+    /**
+     * fragment onStart
+     */
+    @Override
+    public void onStart() {
+        super.onStart();
+        try {
+            if (mPresenter != null && getUserVisibleHint()) {
+                onFragmentStart();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * fragment onStop
+     */
+    @Override
+    public void onStop() {
+        super.onStop();
+        try {
+            if (mPresenter != null && getUserVisibleHint()) {
+                onFragmentStop();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * fragment 选中
+     */
+    @Override
+    public void setUserVisibleHint(boolean isVisibleToUser) {
+        super.setUserVisibleHint(isVisibleToUser);
+        try {
+            if (mPresenter != null) {
+                if (isVisibleToUser) {
+                    onFragmentStart();
+                } else {
+                    onFragmentStop();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
 
     @Override
     public void onPause() {
@@ -71,7 +120,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPrestener = null;
     }
 
     @Override
@@ -87,9 +135,18 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
 
     @Override
     public void onDestroyView() {
-        unbinder.unbind();
-        mPrestener.onDestroy();
-        mPrestener.detachView();
+        if (unbinder != null) {
+            unbinder.unbind();
+            unbinder = null;
+        }
+        if (mPresenter != null) {
+            mPresenter.onDestroy();
+            mPresenter.detachView();
+            mPresenter = null;
+        }
+        if (mRootFragment != null) {
+            mRootFragment = null;
+        }
         super.onDestroyView();
     }
 }

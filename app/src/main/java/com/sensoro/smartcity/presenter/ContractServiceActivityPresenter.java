@@ -53,8 +53,6 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     private String line5;
     private String line6;
     //
-    private String placeType;
-    //
     private static final int REQUEST_CODE_LICENSE_SERVICE = 0x111;
     private static final int REQUEST_CODE_PERSON_SERVICE = 0x112;
 
@@ -152,15 +150,6 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 break;
         }
     }
-
-//    public void clickItem(View view, int position) {
-//        if (data != null) {
-//            ContractsTemplateInfo contractsTemplateInfo = data.get(position);
-//            switch (view.getId()) {
-//
-//            }
-//        }
-//    }
 
     public void startToNext(String line1, String phone, String line2, String line3, String line4, String line5,
                             String line6,

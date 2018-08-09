@@ -21,6 +21,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.presenter.MainPresenter;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroPager;
 import com.sensoro.smartcity.widget.SensoroToast;
@@ -62,9 +63,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     protected void onStart() {
         super.onStart();
+        setLeftMenuExitButtonState();
         mPrestener.setAppVersion();
     }
-
 
     @Override
     protected MainPresenter createPresenter() {
@@ -91,12 +92,14 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mMenuDrawer.setMenuView(R.layout.main_left_menu);
         int width = getWindowManager().getDefaultDisplay().getWidth() / 3 * 2;
         mMenuDrawer.setMenuSize(width);
+        //
         mListView = (ListView) mMenuDrawer.findViewById(R.id.left_menu_list);
         mNameTextView = (TextView) findViewById(R.id.left_menu_name);
         mPhoneTextView = (TextView) findViewById(R.id.left_menu_phone);
         mVersionTextView = (TextView) findViewById(R.id.app_version);
         mExitLayout = (LinearLayout) findViewById(R.id.main_left_exit);
         mExitLayout.setOnClickListener(this);
+        //
         mMenuInfoAdapter = new MenuInfoAdapter(mActivity);
         mListView.setAdapter(mMenuInfoAdapter);
         mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
@@ -106,15 +109,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mPrestener
                 .getFragmentList());
         sensoroPager.setAdapter(mainPagerAdapter);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        if (checkDeviceHasNavigationBar()) {
-            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.y200));
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
-        } else {
-            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.y1));
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
-        }
-        mExitLayout.setLayoutParams(params);
     }
 
     public String getRoles() {
@@ -139,16 +133,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         }
     }
 
-    public MenuDrawer getMenuDrawer() {
-        return mMenuDrawer;
-    }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mMenuDrawer.closeMenu();
+        closeMenu();
         setMenuSelected(position);
-//        int menuPageId = mMenuInfoAdapter.getItem(position).menuPageId;
         mPrestener.clickMenuItem((int) mMenuInfoAdapter.getItemId(position));
     }
 
@@ -229,6 +218,31 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
+    public void openMenu() {
+        mMenuDrawer.openMenu();
+    }
+
+    /**
+     * 检查是否全面屏
+     */
+    private void setLeftMenuExitButtonState() {
+        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+        if (WidgetUtil.navigationBarExist(mActivity)) {
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.y200));
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
+        } else {
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.y1));
+            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
+        }
+        mExitLayout.setLayoutParams(params);
+    }
+
+    @Override
+    public void closeMenu() {
+        mMenuDrawer.closeMenu();
+    }
+
+    @Override
     public void showProgressDialog() {
         mProgressUtils.showProgress();
     }
@@ -264,12 +278,12 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
 
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
+    public void setIntentResult(int resultCode, Intent data) {
 
     }
 }

@@ -75,7 +75,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     @Override
     protected void initData(Context activity) {
         initView();
-        mPrestener.initData(activity);
+        mPresenter.initData(activity);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
         mCloseImageView = (ImageView) mRootView.findViewById(R.id.alarm_log_selected_close);
         mCloseImageView.setOnClickListener(this);
         mAlarmPopupView = (SensoroPopupAlarmViewNew) mRootView.findViewById(R.id.alarm_popup_view);
-        mAlarmPopupView.setOnPopupCallbackListener(mPrestener);
+        mAlarmPopupView.setOnPopupCallbackListener(mPresenter);
         mAlarmPopupView.setDialog(mRootFragment.getActivity());
         mShadowView = (SensoroShadowView) mRootView.findViewById(R.id.alarm_popup_shadow);
     }
@@ -154,7 +154,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     private void cancelSearch() {
         setSearchLayoutVisible(false);
 //        mSearchEditText.setHint("");
-        mPrestener.requestDataAll(DIRECTION_DOWN, true);
+        mPresenter.requestDataAll(DIRECTION_DOWN, true);
 //        requestDataByFilter(DIRECTION_DOWN, true);
     }
 
@@ -173,9 +173,9 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     private void requestDataByFilter(int direction, boolean isForce) {
         CharSequence searchText = mSearchEditText.getHint();
         if (!TextUtils.isEmpty(searchText) && isSearchLayoutVisible()) {
-            mPrestener.requestSearchData(direction, isForce, searchText.toString());
+            mPresenter.requestSearchData(direction, isForce, searchText.toString());
         } else {
-            mPrestener.requestDataAll(direction, isForce);
+            mPresenter.requestDataAll(direction, isForce);
         }
     }
 
@@ -184,13 +184,13 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.alarm_iv_date:
-                mPrestener.clickByDate();
+                mPresenter.clickByDate();
                 break;
             case R.id.alarm_iv_search:
-                mPrestener.searchByImageView();
+                mPresenter.searchByImageView();
                 break;
             case R.id.alarm_iv_menu_list:
-                ((MainActivity) getActivity()).getMenuDrawer().openMenu();
+                ((MainActivity) getActivity()).openMenu();
                 break;
             case R.id.alarm_log_selected_close:
                 setSelectedDateLayoutVisible(false);
@@ -200,7 +200,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
                 cancelSearch();
                 break;
             case R.id.alarm_search_et:
-                mPrestener.searchByEditText(mSearchEditText.getHint());
+                mPresenter.searchByEditText(mSearchEditText.getHint());
                 break;
             case R.id.alarm_return_top:
                 mPtrListView.getRefreshableView().smoothScrollToPosition(0);
@@ -212,7 +212,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPrestener.clickItem(position);
+        mPresenter.clickItem(position);
     }
 
 
@@ -321,22 +321,22 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
 
     @Override
     public void requestDataByDate(String startDate, String endDate) {
-        mPrestener.requestDataByDate(startDate, endDate);
+        mPresenter.requestDataByDate(startDate, endDate);
     }
 
     @Override
     public void refreshUIByType(String type) {
-        mPrestener.freshUI(type);
+        mPresenter.freshUI(type);
     }
 
     @Override
     public void requestDataByDirection(int direction, boolean isForce) {
-        mPrestener.requestDataAll(direction, isForce);
+        mPresenter.requestDataAll(direction, isForce);
     }
 
     @Override
     public void refreshUIBySearch(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp, String searchText) {
-        mPrestener.freshUI(direction, deviceAlarmLogRsp, searchText);
+        mPresenter.freshUI(direction, deviceAlarmLogRsp, searchText);
     }
 
     @Override
@@ -348,7 +348,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
 
     @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
-        mPrestener.clickItemByConfirmStatus(position, isReConfirm);
+        mPresenter.clickItemByConfirmStatus(position, isReConfirm);
     }
 
     @Override
@@ -367,16 +367,26 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     }
 
     @Override
-    public void setIntentResult(int requestCode) {
+    public void setIntentResult(int resultCode) {
 
     }
 
     @Override
-    public void setIntentResult(int requestCode, Intent data) {
+    public void setIntentResult(int resultCode, Intent data) {
 
     }
 
     public void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        mPrestener.freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
+        mPresenter.freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
+    }
+
+    @Override
+    public void onFragmentStart() {
+
+    }
+
+    @Override
+    public void onFragmentStop() {
+
     }
 }

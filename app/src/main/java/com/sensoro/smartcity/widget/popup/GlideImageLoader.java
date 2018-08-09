@@ -43,5 +43,6 @@ public class GlideImageLoader implements ImageLoader {
 
     @Override
     public void clearMemoryCache() {
+
     }
 }
