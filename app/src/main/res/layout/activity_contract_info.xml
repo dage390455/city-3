@@ -194,7 +194,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
-                        android:text="社会信息用代码"
+                        android:text="社会信用代码"
                         android:textColor="@color/c_b6b6b6"
                         android:textSize="@dimen/city_tiny_large_size"/>
 

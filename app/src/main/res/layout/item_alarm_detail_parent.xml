@@ -63,10 +63,10 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x50"
             android:layout_marginRight="@dimen/x20"
+            android:layout_marginTop="@dimen/y5"
             android:clickable="false"
             android:focusable="false"
             android:focusableInTouchMode="false"
-            android:layout_marginTop="@dimen/y5"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/city_normal_size"/>
     </LinearLayout>

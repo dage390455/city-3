@@ -2,8 +2,12 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.TextUtils;
 
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -177,5 +181,24 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
     @Override
     public void onDestroy() {
         mList.clear();
+    }
+
+    public void clickPhotoItem(int position, List<String> images) {
+        //
+        ArrayList<ImageItem> items = new ArrayList<>();
+        if (images != null && images.size() > 0) {
+            for (String url : images) {
+                ImageItem imageItem = new ImageItem();
+                imageItem.path = url;
+                imageItem.fromUrl = true;
+                items.add(imageItem);
+            }
+            Intent intentPreview = new Intent(mContext, ImageAlarmPhotoDetailActivity.class);
+            intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
+            intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
+            intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+            getView().startAC(intentPreview);
+        }
+
     }
 }

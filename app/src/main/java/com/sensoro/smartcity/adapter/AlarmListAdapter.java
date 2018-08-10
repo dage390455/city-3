@@ -100,13 +100,15 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                 AlarmInfo.RecordInfo recordInfo = recordInfoArray[i];
                 AlarmInfo.RecordInfo.Event[] event = recordInfo.getPhoneList();
 //
-                if (recordInfo.getType().equals("recovery")) {
+                String type = recordInfo.getType();
+                if ("recovery".equals(type)) {
                     holder.item_iv_status.setVisibility(View.VISIBLE);
                     holder.item_alarm_view.setVisibility(View.GONE);
                     holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_normal));
                     holder.item_status.setText("于" + DateUtil.getFullParseDate(recordInfo.getUpdatedTime()) + "恢复正常");
                     holder.item_iv_status.setImageDrawable(mContext.getResources().getDrawable(R.drawable
                             .shape_status_normal));
+
                     break;
                 } else {
                     holder.item_alarm_view.setVisibility(View.VISIBLE);

@@ -34,7 +34,8 @@ import butterknife.OnClick;
  */
 
 public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, AlarmDetailActivityPresenter>
-        implements IAlarmDetailActivityView, View.OnClickListener, View.OnTouchListener {
+        implements IAlarmDetailActivityView, View.OnClickListener, View.OnTouchListener, TimerShaftAdapter
+        .OnPhotoClickListener {
 
 
     @BindView(R.id.alarm_detail_status_iv)
@@ -99,6 +100,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
                 }
             });
+            timerShaftAdapter.setOnPhotoClickListener(this);
             expandableListView.setAdapter(timerShaftAdapter);
             expandableListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
                 @Override
@@ -136,7 +138,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @Override
     public void setUpdateButtonClickable(boolean canClick) {
-        if (mAlarmPopupView!=null){
+        if (mAlarmPopupView != null) {
             mAlarmPopupView.setUpdateButtonClickable(canClick);
         }
     }
@@ -192,7 +194,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @Override
     public void startAC(Intent intent) {
-
+        mActivity.startActivity(intent);
     }
 
     @Override
@@ -202,7 +204,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -297,5 +299,10 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     @Override
     public void toastLong(String msg) {
 
+    }
+
+    @Override
+    public void onPhotoItemClick(int position, List<String> images) {
+        mPrestener.clickPhotoItem(position, images);
     }
 }

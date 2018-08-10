@@ -46,6 +46,10 @@
                 android:inputType="number"
                 android:padding="10dp"
                 android:text="0"
+                android:gravity="center"
+                android:minEms="3"
+                android:maxEms="5"
+                android:maxLength="5"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_tiny_large_size"/>
 

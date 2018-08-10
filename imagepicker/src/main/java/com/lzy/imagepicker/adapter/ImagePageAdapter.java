@@ -7,9 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.util.Utils;
 import com.lzy.imagepicker.bean.ImageItem;
+import com.lzy.imagepicker.util.Utils;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import uk.co.senab.photoview.PhotoView;
@@ -55,13 +56,27 @@ public class ImagePageAdapter extends PagerAdapter {
     public Object instantiateItem(ViewGroup container, int position) {
         PhotoView photoView = new PhotoView(mActivity);
         ImageItem imageItem = images.get(position);
-        imagePicker.getImageLoader().displayImagePreview(mActivity, imageItem.path, photoView, screenWidth, screenHeight);
-        photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
-            @Override
-            public void onPhotoTap(View view, float x, float y) {
-                if (listener != null) listener.OnPhotoTapListener(view, x, y);
-            }
-        });
+        //TODO 区分
+        if (imageItem.fromUrl) {
+            imagePicker.getImageLoader().displayImagePreview(mActivity, imageItem.path, photoView, screenWidth,
+                    screenHeight);
+            photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+                @Override
+                public void onPhotoTap(View view, float x, float y) {
+                    if (listener != null) listener.OnPhotoTapListener(view, x, y);
+                }
+            });
+        } else {
+            imagePicker.getImageLoader().displayImagePreview(mActivity, new File(imageItem.path), photoView,
+                    screenWidth, screenHeight);
+            photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
+                @Override
+                public void onPhotoTap(View view, float x, float y) {
+                    if (listener != null) listener.OnPhotoTapListener(view, x, y);
+                }
+            });
+        }
+
         container.addView(photoView);
         return photoView;
     }

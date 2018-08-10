@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@color/white"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white">
+
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
         <RelativeLayout
             android:id="@+id/alarm_detail_title_layout"
             android:layout_width="match_parent"
@@ -16,122 +18,147 @@
                 android:id="@+id/alarm_detail_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x10"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:padding="12dp"
+                android:layout_marginLeft="@dimen/x10"
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
-                android:src="@mipmap/ic_back" />
+                android:padding="15dp"
+                android:src="@mipmap/ic_back"/>
 
             <TextView
                 android:id="@+id/alarm_detail_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="@string/alarm_detail"
-                android:textSize="@dimen/city_large_size"
                 android:textColor="@color/c_626262"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:textSize="@dimen/city_large_size"/>
 
         </RelativeLayout>
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="@dimen/y350">
+
             <RelativeLayout
-                android:layout_alignParentRight="true"
-                android:layout_alignParentBottom="true"
-                android:gravity="right"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:gravity="right">
+
                 <ImageView
                     android:id="@+id/alarm_detail_iv_type"
-                    android:src="@mipmap/ic_sensor_bg_co"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:src="@mipmap/ic_sensor_bg_co"/>
             </RelativeLayout>
+
             <LinearLayout
-                android:orientation="vertical"
-                android:layout_marginLeft="@dimen/x80"
-                android:layout_centerVertical="true"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x80"
+                android:orientation="vertical">
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <ImageView
                         android:id="@+id/alarm_detail_status_iv"
-                        android:layout_marginTop="@dimen/y20"
-                        android:layout_marginLeft="@dimen/x10"
-                        android:background="@drawable/shape_status_alarm"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x10"
+                        android:layout_marginTop="@dimen/y20"
+                        android:background="@drawable/shape_status_alarm"/>
+
                     <TextView
                         android:id="@+id/alarm_detail_status"
-                        android:layout_marginLeft="@dimen/x80"
-                        android:textSize="@dimen/city_normal_size"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x80"
+                        android:textSize="@dimen/city_normal_size"/>
+
                     <TextView
-                        android:layout_marginLeft="@dimen/x20"
-                        android:textSize="@dimen/city_normal_size"
-                        android:layout_toRightOf="@id/alarm_detail_status"
-                        android:background="@drawable/shape_display_text"
                         android:id="@+id/alarm_detail_display_status"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="@dimen/x20"
+                        android:layout_toRightOf="@id/alarm_detail_status"
+                        android:background="@drawable/shape_display_text"
+                        android:textSize="@dimen/city_normal_size"/>
                 </RelativeLayout>
+
                 <LinearLayout
-                    android:layout_marginTop="@dimen/y20"
                     android:layout_width="match_parent"
-                    android:orientation="horizontal"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/y20"
+                    android:orientation="horizontal">
+
                     <TextView
                         android:id="@+id/alarm_detail_name"
-                        android:textSize="@dimen/city_normal_size"
-                        android:text="22222"
-                        android:textColor="@color/c_626262"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="@dimen/x80"
-                        android:layout_width="0dp"
                         android:layout_weight="1"
-                        android:layout_height="wrap_content" />
+                        android:text="22222"
+                        android:textColor="@color/c_626262"
+                        android:textSize="@dimen/city_normal_size"/>
+
                     <TextView
                         android:id="@+id/alarm_detail_confirm_status"
-                        android:textColor="@color/white"
-                        android:textSize="@dimen/city_small_size"
-                        android:text="@string/confirming"
-                        android:background="@drawable/shape_confirm_text"
-                        android:layout_centerVertical="true"
-                        android:layout_alignParentRight="true"
-                        android:layout_marginRight="@dimen/x50"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginRight="@dimen/x50"
+                        android:background="@drawable/shape_confirm_text"
+                        android:text="@string/confirming"
+                        android:textColor="@color/white"
+                        android:textSize="@dimen/city_small_size"/>
                 </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
                     <TextView
-                        android:textSize="@dimen/city_normal_size"
-                        android:text="4556"
-                        android:textColor="@color/c_626262"
-                        android:layout_marginLeft="@dimen/x80"
-                        android:layout_marginBottom="@dimen/y30"
                         android:id="@+id/alarm_detail_date"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/y30"
+                        android:layout_marginLeft="@dimen/x80"
+                        android:text="4556"
+                        android:textColor="@color/c_626262"
+                        android:textSize="@dimen/city_normal_size"/>
                 </LinearLayout>
             </LinearLayout>
 
         </RelativeLayout>
+
         <View
-            android:background="@color/list_sep_color"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y50"/>
+            android:layout_height="@dimen/y1"
+            android:layout_marginLeft="@dimen/x40"
+            android:layout_marginRight="@dimen/x40"
+            android:layout_marginTop="@dimen/y50"
+            android:background="@color/search_color"
+            android:visibility="visible"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y50"
+            android:background="@color/list_sep_color"/>
+
         <LinearLayout
-            android:layout_marginLeft="@dimen/x50"
-            android:layout_marginTop="@dimen/y100"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginLeft="@dimen/x50"
+            android:layout_marginTop="@dimen/y100">
+
             <ExpandableListView
                 android:id="@+id/alarm_detail_listview"
                 android:layout_width="match_parent"
@@ -142,28 +169,31 @@
                 />
         </LinearLayout>
     </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/alarm_detail_popup_layout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical">
+
         <com.sensoro.smartcity.widget.SensoroShadowView
-            android:orientation="vertical"
-            android:background="@color/item_text_color"
-            android:alpha="0.5"
-            android:clickable="false"
-            android:visibility="gone"
             android:id="@+id/alarm_detail_popup_shadow"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent"
+            android:alpha="0.5"
+            android:background="@color/item_text_color"
+            android:clickable="false"
+            android:orientation="vertical"
+            android:visibility="gone"/>
+
         <com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew
             android:id="@+id/alarm_detail_popup_view"
-            android:visibility="gone"
-            android:layout_alignParentBottom="true"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone"/>
     </RelativeLayout>
 
 </RelativeLayout>

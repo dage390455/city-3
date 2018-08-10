@@ -125,11 +125,12 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y3"
+        android:layout_height="@dimen/y1"
         android:layout_marginLeft="@dimen/x40"
         android:layout_marginRight="@dimen/x40"
         android:layout_marginTop="@dimen/y50"
-        android:background="@color/search_color"/>
+        android:background="@color/search_color"
+        android:visibility="gone"/>
 
     <LinearLayout
         android:id="@+id/search_alarm_history_ll"

@@ -144,8 +144,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/y150"
-                    android:paddingTop="@dimen/y150">
+                    android:paddingBottom="@dimen/y100"
+                    android:paddingTop="@dimen/y100">
 
                     <LinearLayout
                         android:layout_width="wrap_content"
@@ -188,8 +188,8 @@
                     android:layout_weight="1"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:paddingBottom="@dimen/y150"
-                    android:paddingTop="@dimen/y150">
+                    android:paddingBottom="@dimen/y100"
+                    android:paddingTop="@dimen/y100">
 
                     <LinearLayout
                         android:layout_width="wrap_content"

@@ -34,11 +34,20 @@ public class GlideImageLoader implements ImageLoader {
     }
 
     @Override
-    public void displayImagePreview(Activity activity, String path, ImageView imageView, int width, int height) {
-        Glide.with(activity)                             //配置上下文
-                .load(Uri.fromFile(new File(path)))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
-                .into(imageView);
+    public void displayImagePreview(Activity activity, Object path, ImageView imageView, int width, int height) {
+        if (path instanceof File) {
+            File file = (File) path;
+            Glide.with(activity)                             //配置上下文
+                    .load(Uri.fromFile(file))      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                    .into(imageView);
+        } else if (path instanceof String) {
+            Glide.with(activity)                             //配置上下文
+                    .load(path)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                    .into(imageView);
+        }
+
     }
 
     @Override

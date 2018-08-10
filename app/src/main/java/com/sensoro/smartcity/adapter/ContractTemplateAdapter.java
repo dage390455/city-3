@@ -79,6 +79,8 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<RecyclerView.V
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                } else {
+                    mList.get(position).setQuantity(0);
                 }
             }
         };

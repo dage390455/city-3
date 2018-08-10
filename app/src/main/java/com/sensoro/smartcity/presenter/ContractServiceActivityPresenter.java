@@ -160,12 +160,22 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             case 1:
                 intent.putExtra(EXTRA_CONTRACT_TYPE, 1);
                 //
-                intent.putExtra("line1", line1);
-                intent.putExtra("line2", line2);
+                if (RegexUtils.checkContractNotEmpty(line1)) {
+                    intent.putExtra("line1", line1);
+                } else {
+                    getView().toastShort("请输入法定代表人");
+                    return;
+                }
                 if (RegexUtils.checkPhone(phone)) {
                     intent.putExtra("phone", phone);
                 } else {
                     getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                    return;
+                }
+                if (RegexUtils.checkContractNotEmpty(line2)) {
+                    intent.putExtra("line2", line2);
+                } else {
+                    getView().toastShort("请输入企业名称");
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line3) || RegexUtils.checkContractNotEmpty(line4)) {
@@ -266,17 +276,23 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             return;
         }
         intent.putExtra("place", place);
-        int serverAge = 6;
-        try {
-            serverAge = Integer.parseInt(contractAge);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        if (serverAge == 0) {
+        if (TextUtils.isEmpty(contractAge)) {
             getView().toastShort("服务年限不能少于1年");
             return;
+        } else {
+            int serverAge = 0;
+            try {
+                serverAge = Integer.parseInt(contractAge);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (serverAge == 0) {
+                getView().toastShort("服务年限不能少于1年");
+                return;
+            }
+            intent.putExtra("contract_service_life", String.valueOf(serverAge));
         }
-        intent.putExtra("contract_service_life", String.valueOf(serverAge));
+
         if (data != null && data.size() > 0) {
             int count = 0;
             for (ContractsTemplateInfo contractsTemplateInfo : data) {

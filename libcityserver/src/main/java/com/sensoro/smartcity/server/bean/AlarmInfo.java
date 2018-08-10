@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server.bean;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by sensoro on 17/7/26.
@@ -143,10 +144,39 @@ public class AlarmInfo implements Serializable {
         private int thresholds;
         private long updatedTime;
         private String source;
+        //
         private int displayStatus;
+        private int place;
+        private int reason;
         private String name;
         private String remark;
         private Event[] phoneList;
+        //
+        private List<String> images;
+
+        public int getPlace() {
+            return place;
+        }
+
+        public void setPlace(int place) {
+            this.place = place;
+        }
+
+        public int getReason() {
+            return reason;
+        }
+
+        public void setReason(int reason) {
+            this.reason = reason;
+        }
+
+        public List<String> getImages() {
+            return images;
+        }
+
+        public void setImages(List<String> images) {
+            this.images = images;
+        }
 
         public long getTimeout() {
             return timeout;
