@@ -24,6 +24,8 @@ public interface IMainView extends IToast, IProgressDialog, IActivityIntent {
             hasContract, boolean hasScanLogin);
 
     void updateMainPageAdapterData();
+
     void openMenu();
+
     void closeMenu();
 }

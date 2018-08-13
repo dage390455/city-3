@@ -46,7 +46,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     private TextView mVersionTextView = null;
     private LinearLayout mExitLayout = null;
 
-    private long exitTime = 0;
     private ProgressUtils mProgressUtils;
     private MainPagerAdapter mainPagerAdapter;
 
@@ -118,19 +117,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            exit();
-            return false;
+            return mPrestener.onKeyDown(keyCode, event);
         }
         return super.onKeyDown(keyCode, event);
-    }
-
-    private void exit() {
-        if ((System.currentTimeMillis() - exitTime) > 2000) {
-            toastShort(mActivity.getResources().getString(R.string.exit_main));
-            exitTime = System.currentTimeMillis();
-        } else {
-            finishAc();
-        }
     }
 
 

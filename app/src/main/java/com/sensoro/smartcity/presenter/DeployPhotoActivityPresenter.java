@@ -24,9 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 
 public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView> implements Constants {
-    private static final int IMAGE_ITEM_ADD = -1;
-    private static final int REQUEST_CODE_SELECT = 100;
-    private static final int REQUEST_CODE_PREVIEW = 101;
 
     private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
 

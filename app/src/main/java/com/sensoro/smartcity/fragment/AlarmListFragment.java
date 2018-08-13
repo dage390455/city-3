@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -101,6 +102,16 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
             mAlarmPopupView.onDestroyPop();
         }
         super.onDestroyView();
+    }
+
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (mAlarmPopupView.getVisibility() == View.VISIBLE) {
+                mAlarmPopupView.dismiss();
+                return false;
+            }
+        }
+        return true;
     }
 
     private void initView() {

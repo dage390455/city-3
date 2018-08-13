@@ -7,6 +7,11 @@ import com.sensoro.smartcity.R;
  */
 
 public interface Constants {
+    //上传图片相关id
+    int IMAGE_ITEM_ADD = -1;
+    int REQUEST_CODE_SELECT = 100;
+    int REQUEST_CODE_PREVIEW = 101;
+    //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
     String PREFERENCE_KEY_URL = "url";

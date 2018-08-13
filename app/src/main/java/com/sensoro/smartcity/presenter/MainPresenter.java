@@ -8,9 +8,11 @@ import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
 
 import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -57,7 +59,7 @@ import rx.schedulers.Schedulers;
 
 public class MainPresenter extends BasePresenter<IMainView> implements Constants, IOnCreate {
     private Activity mActivity;
-
+    private long exitTime = 0;
     private String mUserName = null;
     private String mPhone = null;
     private String mPhoneId = null;
@@ -386,6 +388,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         EventBus.getDefault().register(this);
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (alarmListFragment.onKeyDown(keyCode, event)) {
+            exit();
+        }
+        return false;
+    }
+
     private class TaskRunnable implements Runnable {
 
         @Override
@@ -430,6 +439,15 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 e.printStackTrace();
             }
 
+        }
+    }
+
+    private void exit() {
+        if ((System.currentTimeMillis() - exitTime) > 2000) {
+            getView().toastShort(mActivity.getResources().getString(R.string.exit_main));
+            exitTime = System.currentTimeMillis();
+        } else {
+            getView().finishAc();
         }
     }
 

@@ -71,12 +71,9 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     private Spinner spinnerPlace;
     private Spinner spinnerResult;
     //
-    public static final int IMAGE_ITEM_ADD = -1;
-    public static final int REQUEST_CODE_SELECT = 100;
-    public static final int REQUEST_CODE_PREVIEW = 101;
 
     private ImagePickerAdapter adapter;
-    private ArrayList<ImageItem> selImageList; //当前选择的所有图片
+    private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
     private final int maxImgCount = 9;               //允许选择图片最大数
     private ArrayList<ImageItem> tempImages = null;
     private Activity mActivity;
@@ -100,6 +97,11 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         if (progressDialog != null) {
             progressDialog.cancel();
         }
+        if (tempImages != null) {
+            tempImages.clear();
+            tempImages = null;
+        }
+        selImageList.clear();
     }
 
     public SensoroPopupAlarmView(Context context, @Nullable AttributeSet attrs) {
@@ -117,7 +119,6 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 
     private void initWidget() {
         RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
-        selImageList = new ArrayList<>();
         adapter = new ImagePickerAdapter(mContext, selImageList, maxImgCount);
         adapter.setOnItemClickListener(this);
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
@@ -302,10 +303,8 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     public void dismiss() {
         if (this.getVisibility() == VISIBLE) {
             this.startAnimation(dismissAnimation);
-            if (selImageList != null) {
-                selImageList.clear();
-                adapter.setImages(selImageList);
-            }
+            selImageList.clear();
+            adapter.setImages(selImageList);
             setUpdateButtonClickable(false);
         }
     }
@@ -359,13 +358,8 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                 dismiss();
                 break;
             case R.id.alarm_popup_commit:
-//                if (displayStatus != DISPLAY_STATUS_CONFIRM) {
                 dismissInputMethodManager(v);
-//                    remarkEditText.clearFocus();
                 doAlarmConfirm();
-//                } else {
-//                    toastShort(mContext.getResources().getString(R.string.tips_choose_status));
-//                }
                 break;
         }
     }
@@ -481,7 +475,6 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         switch (parent.getId()) {
             case R.id.spinner_result:
                 tvSpinnerResultInfo.setText(alarmResultInfo.get(position));
-//                selectResult = resultArr[position];
                 selectResult = resultArr[position];
                 LogUtils.loge("结果类型：" + selectResult);
                 break;
@@ -516,10 +509,6 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                 if (tempImages != null) {
                     selImageList.clear();
                     selImageList.addAll(tempImages);
-//                    selImageList.addAll(images);
-//                    HashSet<ImageItem> imageItems = new HashSet<>(selImageList);
-//                    selImageList.clear();
-//                    selImageList.addAll(imageItems);
                     adapter.setImages(selImageList);
                 }
             }

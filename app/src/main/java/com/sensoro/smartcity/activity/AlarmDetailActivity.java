@@ -163,7 +163,11 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            back();
+            if (mAlarmPopupView.getVisibility() == View.VISIBLE) {
+                mAlarmPopupView.dismiss();
+            } else {
+                back();
+            }
             return false;
         }
         return super.onKeyDown(keyCode, event);
