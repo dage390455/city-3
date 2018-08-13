@@ -26,7 +26,7 @@ import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -40,7 +40,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragmentView> implements IOnCreate, Constants,
-        SensoroPopupAlarmViewNew.OnPopupCallbackListener {
+        SensoroPopupAlarmView.OnPopupCallbackListener {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private volatile int cur_page = 1;
     private long startTime;

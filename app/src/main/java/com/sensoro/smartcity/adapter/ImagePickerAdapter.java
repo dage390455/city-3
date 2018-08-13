@@ -12,7 +12,7 @@ import android.widget.LinearLayout;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,7 +105,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                 ll_add.setVisibility(View.VISIBLE);
                 iv_img.setVisibility(View.GONE);
 //                iv_img.setImageResource(R.drawable.selector_image_add);
-                clickPosition = SensoroPopupAlarmViewNew.IMAGE_ITEM_ADD;
+                clickPosition = SensoroPopupAlarmView.IMAGE_ITEM_ADD;
                 image_delete.setVisibility(View.GONE);
             } else {
                 iv_img.setVisibility(View.VISIBLE);

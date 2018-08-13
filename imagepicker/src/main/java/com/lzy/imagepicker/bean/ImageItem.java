@@ -2,6 +2,7 @@ package com.lzy.imagepicker.bean;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.text.TextUtils;
 
 import java.io.Serializable;
 
@@ -38,6 +39,20 @@ public class ImageItem implements Serializable, Parcelable {
         return super.equals(o);
     }
 
+    @Override
+    public int hashCode() {
+        try {
+            if (TextUtils.isEmpty(path)) {
+                return (int) addTime;
+            } else {
+                return path.hashCode();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return super.hashCode();
+    }
 
     @Override
     public int describeContents() {

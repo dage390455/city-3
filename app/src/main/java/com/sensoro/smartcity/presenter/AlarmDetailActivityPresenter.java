@@ -20,7 +20,7 @@ import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -31,7 +31,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActivityView> implements Constants,
-        SensoroPopupAlarmViewNew.OnPopupCallbackListener {
+        SensoroPopupAlarmView.OnPopupCallbackListener {
     private final List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
     private DeviceAlarmLogInfo deviceAlarmLogInfo;
     private boolean isReConfirm = false;

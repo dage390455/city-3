@@ -58,13 +58,13 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPrestener.initData(mActivity);
         mPrestener.freshAccountType();
         mPrestener.onCreate();
+        mPrestener.setAppVersion();
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         setLeftMenuExitButtonState();
-        mPrestener.setAppVersion();
     }
 
     @Override

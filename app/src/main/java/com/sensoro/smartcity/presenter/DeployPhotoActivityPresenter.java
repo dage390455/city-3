@@ -32,7 +32,7 @@ public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView
 
     private final int maxImgCount = 4;
 
-    private ArrayList<ImageItem> images = null;
+    private ArrayList<ImageItem> tempImages = null;
     private Activity mContext;
 
     @Override
@@ -48,9 +48,9 @@ public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView
 
     @Override
     public void onDestroy() {
-        if (images != null) {
-            images.clear();
-            images = null;
+        if (tempImages != null) {
+            tempImages.clear();
+            tempImages = null;
         }
         selImageList.clear();
     }
@@ -106,12 +106,14 @@ public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView
                                     break;
                                 case 1:
                                     //打开选择,本次允许选择的数量
-                                    ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
+                                    //修改选择逻辑
+//                                    ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
+                                    ImagePicker.getInstance().setSelectLimit(maxImgCount);
                                     Intent intent1 = new Intent(mContext, ImageGridActivity.class);
                                     /* 如果需要进入选择的时候显示已经选中的图片，
                                      * 详情请查看ImagePickerActivity
                                      * */
-//                                intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES,images);
+                                    intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
                                     getView().startACForResult(intent1, REQUEST_CODE_SELECT);
                                     break;
                                 default:
@@ -139,19 +141,20 @@ public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
             if (data != null && requestCode == REQUEST_CODE_SELECT) {
-                images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                if (images != null) {
-                    selImageList.addAll(images);
+                tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                if (tempImages != null) {
+                    selImageList.clear();
+                    selImageList.addAll(tempImages);
                     getView().updateImageList(selImageList);
                 }
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
             //预览图片返回
             if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
-                images = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
-                if (images != null) {
+                tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
+                if (tempImages != null) {
                     selImageList.clear();
-                    selImageList.addAll(images);
+                    selImageList.addAll(tempImages);
                     getView().updateImageList(selImageList);
                 }
             }

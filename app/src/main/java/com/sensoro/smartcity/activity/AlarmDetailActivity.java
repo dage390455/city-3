@@ -21,7 +21,7 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew;
+import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import java.util.List;
 
@@ -59,7 +59,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     @BindView(R.id.alarm_detail_popup_shadow)
     SensoroShadowView mShadowView;
     @BindView(R.id.alarm_detail_popup_view)
-    SensoroPopupAlarmViewNew mAlarmPopupView;
+    SensoroPopupAlarmView mAlarmPopupView;
     private TimerShaftAdapter timerShaftAdapter;
     private ProgressUtils mProgressUtils;
 

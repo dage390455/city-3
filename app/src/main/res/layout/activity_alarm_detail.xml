@@ -188,7 +188,7 @@
             android:orientation="vertical"
             android:visibility="gone"/>
 
-        <com.sensoro.smartcity.widget.popup.SensoroPopupAlarmViewNew
+        <com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView
             android:id="@+id/alarm_detail_popup_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
