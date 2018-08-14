@@ -16,7 +16,6 @@ public interface Constants {
     String PREFERENCE_SCOPE = "alpha_tool_scope";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
-    String PREFERENCE_ALARM_HISTORY = "city_alarm_history";
     String PREFERENCE_ALARM_SEARCH_HISTORY = "preference_alarm_search_history";
     String PREFERENCE_MERCHANT_HISTORY = "city_merchant_history";
     String PREFERENCE_DEPLOY_NAME_HISTORY = "city_deploy_name_history";
@@ -51,7 +50,7 @@ public interface Constants {
             "全部类型",
             "紧急呼叫", "追踪器", "甲烷",
             "一氧化碳", "二氧化碳", "倾角",
-            "井位", "水位检测", "地磁", "门锁", "跑冒滴漏",
+            "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
             "火焰", "光线", "液化石油气", "二氧化氮",
             "PM2.5/10", "烟感", "温湿度",
             "消防液压", "温度贴片", "通断检测", "电表", "电器火灾", "红外线", "手动报警", "声光报警"
@@ -117,7 +116,6 @@ public interface Constants {
     String EXTRA_SENSOR_SN = "extra_sn";
     String EXTRA_SENSOR_NAME = "extra_name";
     String EXTRA_SENSOR_TYPES = "extra_types";
-    String EXTRA_SENSOR_TYPE = "extra_type";
     String EXTRA_SENSOR_RESULT = "extra_result";
     String EXTRA_SENSOR_RESULT_ERROR = "extra_sensor_result_error";
     String EXTRA_SENSOR_SN_RESULT = "extra_sensor_sn_result";
@@ -156,30 +154,6 @@ public interface Constants {
 
     String PREFERENCE_KEY_START_TIME = "preference_key_start_time";
     String PREFERENCE_KEY_END_TIME = "preference_key_end_time";
-    int RESULT_CODE_MAP = 100;
-    int RESULT_CODE_SEARCH_DEVICE = 101;
-    int RESULT_CODE_SEARCH_ALARM = 102;
-    int RESULT_SETTING_PHOTO = 111;
-    int RESULT_CODE_SEARCH_MERCHANT = 113;
-    int RESULT_CODE_DEPLOY = 103;
-    int RESULT_CODE_ALARM = 104;
-    int RESULT_CODE_CALENDAR = 105;
-    int RESULT_CODE_ORIGIN = 106;
-    int RESULT_CODE_SETTING_NAME_ADDRESS = 107;
-    int RESULT_CODE_SETTING_TAG = 108;
-    int RESULT_CODE_ALARM_DETAIL = 109;
-    int RESULT_CODE_SETTING_CONTACT = 110;
-    int REQUEST_CODE_SEARCH_DEVICE = 1;
-    int REQUEST_CODE_SEARCH_ALARM = 2;
-    int REQUEST_CODE_SEARCH_MERCHANT = 2;
-    int REQUEST_CODE_POINT_DEPLOY = 3;
-    int REQUEST_CODE_STATION_DEPLOY = 0x13;
-    int REQUEST_CODE_ALARM = 4;
-    int REQUEST_CODE_CALENDAR = 5;
-    int REQUEST_SETTING_NAME_ADDRESS = 8;
-    int REQUEST_SETTING_TAG = 9;
-    int REQUEST_SETTING_CONTACT = 10;
-    int REQUEST_SETTING_PHOTO = 11;
     //
     int SENSOR_STATUS_ALARM = 0;
     int SENSOR_STATUS_NORMAL = 1;
@@ -187,17 +161,13 @@ public interface Constants {
     int SENSOR_STATUS_INACTIVE = 3;
     int DISPLAY_STATUS_CONFIRM = 0;
     int DISPLAY_STATUS_ALARM = 1;
-    int DISPLAY_STATUS_MISDESCRIPTION = 2;
+    int DISPLAY_STATUS_MIS_DESCRIPTION = 2;
     int DISPLAY_STATUS_TEST = 3;
     int DISPLAY_STATUS_RISKS = 4;
     int DIRECTION_DOWN = 0;
     int DIRECTION_UP = 1;
     int TYPE_LIST = 0;
     int TYPE_GRID = 1;
-    int SETTING_NAME_ADDRESS = 0;
-    int SETTING_TAG = 1;
-    int SETTING_CONTACT = 2;
-    int SETTING_CONTENT = 3;
     String ENCODE = "HmacSHA512";
     String APP_ID = "wxa65d8bad62a982e1";
     int TYPE_DEVICE_NAME = 0x10;

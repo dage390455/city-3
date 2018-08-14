@@ -147,7 +147,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
                     holder.item_display_status.setText(R.string.true_alarm);
 //                    holder.item_status.setTextColor(mContext.getResources().getColor(R.color.sensoro_normal));
                     break;
-                case DISPLAY_STATUS_MISDESCRIPTION:
+                case DISPLAY_STATUS_MIS_DESCRIPTION:
                     holder.item_confirm_status.setText(R.string.confirming_again);
                     holder.item_confirm_status.setOnClickListener(new View.OnClickListener() {
                         @Override

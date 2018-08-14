@@ -128,9 +128,9 @@ public class WidgetUtil {
                 } else if (sensorType.equals("door")) {
                     Boolean isTrue = (Boolean) value;
                     if (isTrue) {
-                        valueTextView.setText(R.string.magnetic_true);
-                    } else {
                         valueTextView.setText(R.string.magnetic_false);
+                    } else {
+                        valueTextView.setText(R.string.magnetic_true);
                     }
 //                    unitTextView.setEditText(R.string.sensor_magnetic);
                 } else if (sensorType.equals("infrared")) {
@@ -517,9 +517,9 @@ public class WidgetUtil {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
-                valueTextView.setText(R.string.magnetic_true);
-            } else {
                 valueTextView.setText(R.string.magnetic_false);
+            } else {
+                valueTextView.setText(R.string.magnetic_true);
             }
             unitTextView.setText("");
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lock);
@@ -754,9 +754,9 @@ public class WidgetUtil {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
-                valueTextView.setText(R.string.magnetic_true);
-            } else {
                 valueTextView.setText(R.string.magnetic_false);
+            } else {
+                valueTextView.setText(R.string.magnetic_true);
             }
             unitTextView.setText("");
         } else if (sensorType.equals("connection")) {
@@ -873,7 +873,7 @@ public class WidgetUtil {
         } else if (sensorType.contains("connection")) {
             return "通断检测";
         } else if (sensorType.contains("door")) {
-            return "门锁";
+            return "门锁检测";
         } else if (sensorType.contains("magnetic")) {
             return "地磁";
         } else {
@@ -951,7 +951,7 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("magnetic")) {
             value = "地磁";
         } else if (sensorType.equalsIgnoreCase("door")) {
-            value = "门锁";
+            value = "门锁检测";
         } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {
             value = "电流A";
         } else if (sensorType.equalsIgnoreCase("CURRENT_B")) {
@@ -1334,7 +1334,7 @@ public class WidgetUtil {
             } else if (sensorType.equals("magnetic")) {
                 return "地磁";
             } else if (sensorType.equals("door")) {
-                return "门锁";
+                return "门锁检测";
             } else if (sensorType.equals("flame")) {
                 return "火焰";
             } else if (sensorType.equalsIgnoreCase("cover")) {

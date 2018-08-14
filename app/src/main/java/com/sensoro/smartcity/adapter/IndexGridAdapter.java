@@ -45,9 +45,10 @@ public class IndexGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void setData(List<DeviceInfo> list) {
         this.mList.clear();
-        notifyItemRangeRemoved(1, mList.size());
+        //去除动画效果
+//        notifyItemRangeRemoved(1, mList.size());
         this.mList.addAll(list);
-        notifyItemRangeChanged(1, list.size());
+//        notifyItemRangeChanged(1, list.size());
     }
 
     public List<DeviceInfo> getData() {

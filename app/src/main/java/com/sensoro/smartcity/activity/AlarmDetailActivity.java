@@ -251,7 +251,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
                 displayStatusTextView.setVisibility(View.VISIBLE);
                 displayStatusTextView.setText(R.string.true_alarm);
                 break;
-            case Constants.DISPLAY_STATUS_MISDESCRIPTION:
+            case Constants.DISPLAY_STATUS_MIS_DESCRIPTION:
                 confirmTextView.setText(R.string.confirming_again);
 //                    confirmTextView.setVisibility(View.GONE);
                 displayStatusTextView.setVisibility(View.VISIBLE);

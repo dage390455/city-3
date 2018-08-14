@@ -47,9 +47,10 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
 
     public void setData(List<DeviceInfo> list) {
         this.mList.clear();
-        notifyItemRangeRemoved(1, list.size());
+        //去除动画效果
+//        notifyItemRangeRemoved(1, list.size());
         this.mList.addAll(list);
-        notifyItemRangeChanged(1, list.size());
+//        notifyItemRangeInserted(1, list.size());
     }
 
     public List<DeviceInfo> getData() {
@@ -268,5 +269,4 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
             }
         };
     }
-
 }

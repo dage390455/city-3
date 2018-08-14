@@ -177,7 +177,7 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 
     @Override
     public void startAC(Intent intent) {
-
+        mRootFragment.getActivity().startActivity(intent);
     }
 
     @Override
@@ -187,7 +187,6 @@ public class StationDeployFragment extends BaseFragment<IStationDeployFragmentVi
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mRootFragment.getActivity().startActivityForResult(intent, requestCode);
     }
 
     @Override

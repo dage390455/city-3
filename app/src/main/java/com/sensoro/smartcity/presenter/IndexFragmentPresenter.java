@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.media.AudioManager;
@@ -33,6 +32,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -411,13 +411,9 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             mDataList.add(deviceInfo);
         }
         filterBySearch();
+        //排序
+        Collections.sort(mDataList);
         getView().refreshData(mDataList);
-    }
-
-    private boolean isMainActivityTop() {
-        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return name.equals(MainActivity.class.getName());
     }
 
     /**
@@ -447,6 +443,8 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                 mDataList.add(deviceInfo);
             }
         }
+        //排序
+        Collections.sort(mDataList);
     }
 
 
@@ -486,8 +484,10 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         pushData.setDeviceInfoList(mDataList);
         EventBus.getDefault().post(pushData);
         //只在主页可见出现的时候刷新
-        if (isMainActivityTop() && mIsVisibleToUser) {
+        if (mIsVisibleToUser) {
             requestTopData(false);
+            //排序
+            Collections.sort(mDataList);
             getView().refreshData(mDataList);
         }
         if (isAlarmPlay) {

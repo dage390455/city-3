@@ -102,7 +102,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                         deviceAlarmLogInfo.setSort(1);
                     }
                     break;
-                case DISPLAY_STATUS_MISDESCRIPTION:
+                case DISPLAY_STATUS_MIS_DESCRIPTION:
                     if (isHaveRecovery) {
                         deviceAlarmLogInfo.setSort(3);
                     } else {

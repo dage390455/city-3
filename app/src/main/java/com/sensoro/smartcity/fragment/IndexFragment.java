@@ -48,7 +48,6 @@ import com.sensoro.smartcity.widget.popup.SensoroPopupStatusView;
 import com.sensoro.smartcity.widget.popup.SensoroPopupTypeView;
 import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
-import java.util.Collections;
 import java.util.List;
 
 import static android.view.View.VISIBLE;
@@ -627,20 +626,17 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
-        if (mRootFragment.isVisible() && mRootFragment.isResumed()) {
-            Collections.sort(dataList);
-            if (switchType == TYPE_LIST) {
-                mListAdapter.setData(dataList);
-                mListAdapter.notifyDataSetChanged();
-                mListRecyclerView.refreshComplete();
-            } else {
-                mGridAdapter.setData(dataList);
-                mGridAdapter.notifyDataSetChanged();
-                mGridRecyclerView.refreshComplete();
-            }
-            if (dataList.size() < 5) {
-                mReturnTopImageView.setVisibility(View.GONE);
-            }
+        if (switchType == TYPE_LIST) {
+            mListAdapter.setData(dataList);
+            mListAdapter.notifyDataSetChanged();
+            mListRecyclerView.refreshComplete();
+        } else {
+            mGridAdapter.setData(dataList);
+            mGridAdapter.notifyDataSetChanged();
+            mGridRecyclerView.refreshComplete();
+        }
+        if (dataList.size() < 5) {
+            mReturnTopImageView.setVisibility(View.GONE);
         }
     }
 

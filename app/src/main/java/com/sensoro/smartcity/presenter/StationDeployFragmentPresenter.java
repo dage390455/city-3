@@ -34,7 +34,6 @@ import static com.sensoro.smartcity.constant.Constants.EXTRA_IS_STATION_DEPLOY;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT_ERROR;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN_RESULT;
-import static com.sensoro.smartcity.constant.Constants.REQUEST_CODE_STATION_DEPLOY;
 
 public class StationDeployFragmentPresenter extends BasePresenter<IStationDeployFragmentView> implements
         MediaPlayer.OnErrorListener {
@@ -59,7 +58,7 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
     public void openSNTextAc() {
         Intent intent = new Intent(mContext, DeployManualActivity.class);
         intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
-        getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
+        getView().startAC(intent);
     }
 
     private void scanFinish(final String scanSerialNumber) {
@@ -102,7 +101,7 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
             intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
         }
 
-        getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
+        getView().startAC(intent);
     }
 
     //    private void refresh(DeviceInfoListRsp response) {
@@ -146,7 +145,7 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
             intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
-            getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);
+            getView().startAC(intent);
         } catch (Exception e) {
             e.printStackTrace();
         }

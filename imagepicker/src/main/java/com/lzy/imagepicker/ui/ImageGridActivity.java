@@ -299,7 +299,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             mBtnOk.setTextColor(ContextCompat.getColor(this, R.color.white));
         } else {
             mBtnOk.setText(getString(R.string.ip_complete));
-            mBtnOk.setEnabled(false);
+            mBtnOk.setEnabled(true);
             mBtnPre.setEnabled(false);
             mBtnPre.setText(getResources().getString(R.string.ip_preview));
             mBtnPre.setTextColor(ContextCompat.getColor(this, R.color.ip_text_secondary_inverted));

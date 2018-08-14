@@ -590,21 +590,18 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
 
     public void doSettingByNameAndAddress(String nameAddress) {
         Intent intent = new Intent(mContext, DeploySettingNameActivity.class);
-        intent.putExtra(EXTRA_SETTING_INDEX, SETTING_NAME_ADDRESS);
         intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, nameAddress);
         getView().startAC(intent);
     }
 
     public void doSettingByTag() {
         Intent intent = new Intent(mContext, DeploySettingTagActivity.class);
-        intent.putExtra(EXTRA_SETTING_INDEX, SETTING_TAG);
         intent.putStringArrayListExtra(EXTRA_SETTING_TAG_LIST, (ArrayList<String>) tagList);
         getView().startAC(intent);
     }
 
     public void doSettingContact() {
         Intent intent = new Intent(mContext, DeploySettingContactActivity.class);
-        intent.putExtra(EXTRA_SETTING_INDEX, SETTING_CONTACT);
         if (!TextUtils.isEmpty(contact)) {
             intent.putExtra(EXTRA_SETTING_CONTACT, contact);
         }

@@ -14,6 +14,7 @@ import com.igexin.sdk.message.GTNotificationMessage;
 import com.igexin.sdk.message.GTTransmitMessage;
 import com.igexin.sdk.message.SetTagCmdMessage;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.util.LogUtils;
 
 /**
  * Created by sensoro on 17/2/24.
@@ -53,6 +54,8 @@ public class SensoroPushIntentService extends GTIntentService {
         String taskid = msg.getTaskId();
         String messageid = msg.getMessageId();
         byte[] payload = msg.getPayload();
+        String payloadId = msg.getPayloadId();
+        LogUtils.logd(this, "payloadId = " + payloadId);
         String pkg = msg.getPkgName();
         String cid = msg.getClientId();
 

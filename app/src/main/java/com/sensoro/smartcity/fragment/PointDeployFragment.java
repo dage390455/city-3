@@ -164,7 +164,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 
     @Override
     public void startAC(Intent intent) {
-
+        mRootFragment.getActivity().startActivity(intent);
     }
 
     @Override
@@ -174,7 +174,6 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mRootFragment.getActivity().startActivityForResult(intent, requestCode);
     }
 
     @Override
