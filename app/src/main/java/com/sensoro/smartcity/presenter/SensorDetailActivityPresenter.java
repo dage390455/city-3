@@ -129,8 +129,10 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         try {
             //
             freshTopData();
-            if (mDeviceInfo.getSensoroDetails().getBattery() != null) {
-                if (Float.parseFloat(mDeviceInfo.getSensoroDetails().getBattery().getValue().toString()) == -1) {
+//            if (mDeviceInfo.getSensoroDetails().getBattery() != null) {
+            if (mDeviceInfo.getSensoroDetails().get("battery") != null) {
+//                if (Float.parseFloat(mDeviceInfo.getSensoroDetails().getBattery().getValue().toString()) == -1) {
+                if (Float.parseFloat(mDeviceInfo.getSensoroDetails().get("battery").getValue().toString()) == -1) {
                     getView().setBatteryLayoutVisible(false);
 //                    batteryLayout.setVisibility(View.GONE);
 //                    powerLayout.setVisibility(View.VISIBLE);
@@ -263,7 +265,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         List<String> sortSensorTypes = SortUtils.sortSensorTypes(tempSensorTypes);
         for (int j = 0; j < sortSensorTypes.size(); j++) {
             String sensorType = sortSensorTypes.get(j);
-            SensorStruct struct = mDeviceInfo.getSensoroDetails().loadData().get(sensorType);
+            SensorStruct struct = mDeviceInfo.getSensoroDetails().get(sensorType);
             if (struct != null) {
                 struct.setSensorType(sensorType);
                 sensorStructList.add(struct);

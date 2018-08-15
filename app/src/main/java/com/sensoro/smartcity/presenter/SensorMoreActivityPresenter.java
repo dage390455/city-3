@@ -162,7 +162,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 //
                 freshStructData(deviceInfo);
                 //
-                SensorStruct batteryStruct = deviceInfo.getSensoroDetails().loadData().get("battery");
+                SensorStruct batteryStruct = deviceInfo.getSensoroDetails().get("battery");
                 if (batteryStruct != null) {
                     String battery = batteryStruct.getValue().toString();
                     if (battery.equals("-1.0") || battery.equals("-1")) {
@@ -170,7 +170,6 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                     } else {
                         getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
                     }
-
                 }
                 String content = deviceInfo.getAlarms().getNotification().getContent();
                 if (!TextUtils.isEmpty(content)) {

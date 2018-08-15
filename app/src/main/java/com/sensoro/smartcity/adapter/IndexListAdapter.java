@@ -13,7 +13,6 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.SensorDetailInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.SortUtils;
@@ -22,8 +21,8 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroAlarmView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -112,15 +111,14 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
 
         }
         holder.item_date.setText(DateUtil.getFullParseDate(deviceInfo.getUpdatedTime()));
-        SensorDetailInfo sensorDetailInfo = deviceInfo.getSensoroDetails();
+        Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
         String[] sensorTypes = deviceInfo.getSensorTypes();
         List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
-        if (sensorDetailInfo != null && sortSensorTypes.size() > 0) {
-            HashMap<String, SensorStruct> stringSensorStructHashMap = sensorDetailInfo.loadData();
+        if (sensoroDetails != null && sortSensorTypes.size() > 0) {
             if (sortSensorTypes.size() > 1) {
                 //两条数据
                 String sensorType1 = sortSensorTypes.get(0);
-                SensorStruct sensorStruct1 = stringSensorStructHashMap.get(sensorType1);
+                SensorStruct sensorStruct1 = sensoroDetails.get(sensorType1);
                 //第一条
                 if (sensorStruct1 == null) {
                     holder.item_value2.setText("");
@@ -133,7 +131,7 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
                 }
                 //第二条
                 String sensorType2 = sortSensorTypes.get(1);
-                SensorStruct sensorStruct2 = stringSensorStructHashMap.get(sensorType2);
+                SensorStruct sensorStruct2 = sensoroDetails.get(sensorType2);
                 if (sensorStruct2 == null) {
                     holder.item_value1.setText("");
                     holder.item_unit1.setVisibility(GONE);
@@ -146,7 +144,7 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
                 }
             } else {
                 String sensorType1 = sortSensorTypes.get(0);
-                SensorStruct sensorStruct1 = stringSensorStructHashMap.get(sensorType1);
+                SensorStruct sensorStruct1 = sensoroDetails.get(sensorType1);
                 //只有一条数据
                 if (sensorStruct1 != null) {
                     holder.item_unit1.setVisibility(VISIBLE);

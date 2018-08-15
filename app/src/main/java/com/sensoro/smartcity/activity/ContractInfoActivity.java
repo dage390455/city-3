@@ -21,7 +21,7 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
-import java.util.List;
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -252,9 +252,8 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     }
 
     @Override
-    public void updateContractTemplateAdapterInfo(List<ContractsTemplateInfo> data) {
-        contractTemplateShowAdapter.setData(data);
-        contractTemplateShowAdapter.notifyDataSetChanged();
+    public void updateContractTemplateAdapterInfo(ArrayList<ContractsTemplateInfo> data) {
+        contractTemplateShowAdapter.updateList(data);
     }
 
     @Override

@@ -1,15 +1,16 @@
 package com.sensoro.smartcity.server.bean;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Created by sensoro on 17/7/26.
  */
 
-public class DeviceHistoryInfo implements Serializable{
+public class DeviceHistoryInfo implements Serializable {
     private double lonlat[];
     private long updatedTime;
-    private SensorDetailInfo sensorDetails;
+    private Map<String, SensorStruct> sensorDetails;
 
     public double[] getLonlat() {
         return lonlat;
@@ -27,11 +28,11 @@ public class DeviceHistoryInfo implements Serializable{
         this.updatedTime = updatedTime;
     }
 
-    public SensorDetailInfo getSensorDetails() {
+    public Map<String, SensorStruct> getSensorDetails() {
         return sensorDetails;
     }
 
-    public void setSensorDetails(SensorDetailInfo sensorDetails) {
+    public void setSensorDetails(Map<String, SensorStruct> sensorDetails) {
         this.sensorDetails = sensorDetails;
     }
 }

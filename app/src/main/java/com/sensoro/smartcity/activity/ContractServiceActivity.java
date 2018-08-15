@@ -291,9 +291,8 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     }
 
     @Override
-    public void updateContractTemplateAdapterInfo(List<ContractsTemplateInfo> data) {
-        contractTemplateAdapter.setData(data);
-        contractTemplateAdapter.notifyDataSetChanged();
+    public void updateContractTemplateAdapterInfo(ArrayList<ContractsTemplateInfo> data) {
+        contractTemplateAdapter.updateList(data);
     }
 
     @OnClick({R.id.iv_contract_service_back, R.id.tv_contract_service_title_retake, R.id.iv_contract_service_line1, R
@@ -306,7 +305,6 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 finishAc();
                 break;
             case R.id.tv_contract_service_title_retake:
-//                finishAc();
                 mPrestener.retake();
                 break;
             case R.id.iv_contract_service_line1:
@@ -366,7 +364,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 String phone = etContractServicePhone.getText().toString();
                 String line7 = etContractAge.getText().toString();
                 String placeType = tvContractServicePlace.getText().toString();
-                List<ContractsTemplateInfo> data = contractTemplateAdapter.getData();
+                ArrayList<ContractsTemplateInfo> data = contractTemplateAdapter.getData();
                 mPrestener.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType, sex, data);
                 break;
         }

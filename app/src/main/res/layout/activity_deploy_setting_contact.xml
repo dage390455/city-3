@@ -1,28 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:background="@color/white"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="com.sensoro.smartcity.activity.DeploySettingContactActivity">
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/white"
+              android:orientation="vertical"
+              tools:context="com.sensoro.smartcity.activity.DeploySettingContactActivity">
+
     <RelativeLayout
         android:id="@+id/deploy_setting_contact_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y200"
         android:gravity="center_vertical"
-       >
+        >
 
         <ImageView
             android:id="@+id/deploy_setting_contact_back"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/x10"
-            android:padding="15dp"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
-            android:layout_centerVertical="true"
-            android:src="@mipmap/ic_back" />
+            android:padding="15dp"
+            android:src="@mipmap/ic_back"/>
 
         <TextView
             android:id="@+id/deploy_setting_contact_title"
@@ -31,47 +32,53 @@
             android:layout_centerInParent="true"
             android:text="@string/deploy_contact_title"
             android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_large_size" />
+            android:textSize="@dimen/city_large_size"/>
+
         <TextView
             android:id="@+id/deploy_setting_contact_finish"
-            android:text="@string/finish"
-            android:textSize="@dimen/city_tiny_large_size"
-            android:textColor="@color/c_626262"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="@dimen/x50"
-            android:layout_alignParentRight="true"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:text="@string/finish"
+            android:textColor="@color/c_626262"
+            android:textSize="@dimen/city_tiny_large_size"/>
     </RelativeLayout>
+
     <View
-        android:background="@color/c_e7e7e7"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y3"/>
+        android:layout_height="@dimen/y3"
+        android:background="@color/c_e7e7e7"/>
 
     <LinearLayout
-        android:orientation="vertical"
-        android:background="@color/c_f6f6f6"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/c_f6f6f6"
+        android:orientation="vertical">
+
         <View
-            android:layout_marginTop="@dimen/y100"
-            android:background="@color/c_e7e7e7"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y3"/>
+            android:layout_height="@dimen/y3"
+            android:layout_marginTop="@dimen/y100"
+            android:background="@color/c_e7e7e7"/>
+
         <RelativeLayout
-            android:paddingTop="@dimen/y50"
-            android:paddingBottom="@dimen/y50"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/white"
             android:gravity="center_vertical"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:paddingBottom="@dimen/y50"
+            android:paddingTop="@dimen/y50">
+
             <TextView
-                android:layout_marginLeft="@dimen/x30"
-                android:textColor="@color/c_888888"
-                android:textSize="@dimen/x45"
-                android:text="@string/name"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x30"
+                android:text="@string/name"
+                android:textColor="@color/c_888888"
+                android:textSize="@dimen/x45"/>
+
             <EditText
                 android:id="@+id/deploy_setting_contact_et"
                 android:layout_width="wrap_content"
@@ -79,86 +86,98 @@
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/x30"
                 android:background="@null"
+                android:gravity="right"
                 android:hint="@string/contact_name"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textColorHint="@color/c_e7e7e7"
-                android:gravity="right"
                 android:singleLine="true"
-                android:textSize="@dimen/x45" />
+                android:textColorHint="@color/c_e7e7e7"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/x45"/>
         </RelativeLayout>
+
         <View
-            android:background="@color/c_e7e7e7"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y3"
             android:layout_marginLeft="@dimen/x30"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/y3"/>
+            android:background="@color/c_e7e7e7"/>
+
         <RelativeLayout
-            android:background="@color/white"
-            android:paddingTop="@dimen/y50"
-            android:paddingBottom="@dimen/y50"
-            android:gravity="center_vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingBottom="@dimen/y50"
+            android:paddingTop="@dimen/y50">
+
             <TextView
-                android:layout_marginLeft="@dimen/x30"
-                android:textColor="@color/c_888888"
-                android:textSize="@dimen/x45"
-                android:text="@string/contacts"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x30"
+                android:text="@string/contacts"
+                android:textColor="@color/c_888888"
+                android:textSize="@dimen/x45"/>
+
             <EditText
                 android:id="@+id/deploy_setting_content_et"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@null"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="@dimen/x30"
+                android:background="@null"
+                android:gravity="right"
                 android:hint="@string/contact_phone"
                 android:imeOptions="actionDone"
                 android:inputType="text"
                 android:maxLines="1"
-                android:textColorHint="@color/c_e7e7e7"
-                android:gravity="right"
                 android:singleLine="true"
-                android:textSize="@dimen/x45" />
+                android:textColorHint="@color/c_e7e7e7"
+                android:textCursorDrawable="@null"
+                android:textSize="@dimen/x45"/>
         </RelativeLayout>
+
         <View
-            android:background="@color/c_e7e7e7"
-            android:layout_marginBottom="@dimen/y100"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y3"/>
+            android:layout_height="@dimen/y3"
+            android:layout_marginBottom="@dimen/y100"
+            android:background="@color/c_e7e7e7"/>
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/deploy_setting_contact_history_tv"
-            android:text="@string/history"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x45"
             android:layout_marginTop="@dimen/y45"
-            android:textSize="@dimen/city_tiny_large_size"
+            android:text="@string/history"
             android:textColor="@color/c_626262"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:textSize="@dimen/city_tiny_large_size"/>
     </LinearLayout>
+
     <LinearLayout
         android:id="@+id/deploy_setting_contact_history_layout"
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/deploy_setting_contact_history_rv"
-            android:layout_marginLeft="@dimen/x40"
-            android:layout_marginTop="@dimen/y45"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/x40"
+            android:layout_marginTop="@dimen/y45"/>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/deploy_setting_content_history_rv"
-            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x40"
             android:layout_marginTop="@dimen/y45"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:visibility="gone"/>
     </LinearLayout>
 </LinearLayout>

@@ -31,6 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -489,7 +490,7 @@ public enum RetrofitServiceHelper {
                                                      String customerAddress,
                                                      String customerPhone,
                                                      String placeType,
-                                                     List<ContractsTemplateInfo> devicesList,
+                                                     ArrayList<ContractsTemplateInfo> devicesList,
                                                      int payTimes,
                                                      //可选
                                                      Boolean confirmed,

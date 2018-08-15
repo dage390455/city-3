@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server.bean;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.Map;
 
 /**
  * Created by sensoro on 17/7/25.
@@ -33,7 +34,9 @@ public class DeviceInfo implements Serializable, Comparable {
     private String lastUpdatedTime;
     private boolean isNewDevice;
     private boolean isPushDevice;
-    private SensorDetailInfo sensoroDetails;
+
+    //    private SensorDetailInfo sensoroDetails;
+    private Map<String, SensorStruct> sensoroDetails;
 
     public String getAddress() {
         return address;
@@ -194,11 +197,18 @@ public class DeviceInfo implements Serializable, Comparable {
         this.status = status;
     }
 
-    public SensorDetailInfo getSensoroDetails() {
+    //    public SensorDetailInfo getSensoroDetails() {
+//        return sensoroDetails;
+//    }
+//
+//    public void setSensoroDetails(SensorDetailInfo sensoroDetails) {
+//        this.sensoroDetails = sensoroDetails;
+//    }
+    public Map<String, SensorStruct> getSensoroDetails() {
         return sensoroDetails;
     }
 
-    public void setSensoroDetails(SensorDetailInfo sensoroDetails) {
+    public void setSensoroDetails(Map<String, SensorStruct> sensoroDetails) {
         this.sensoroDetails = sensoroDetails;
     }
 

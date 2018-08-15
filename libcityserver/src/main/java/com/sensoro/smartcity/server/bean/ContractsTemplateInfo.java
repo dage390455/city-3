@@ -1,8 +1,10 @@
 package com.sensoro.smartcity.server.bean;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 
-public class ContractsTemplateInfo implements Serializable {
+public class ContractsTemplateInfo implements Serializable, Comparable<ContractsTemplateInfo> {
     private String deviceType;
     private String name;
     private String hardwareVersion;
@@ -48,5 +50,11 @@ public class ContractsTemplateInfo implements Serializable {
 
     public void setHardwareVersion(String hardwareVersion) {
         this.hardwareVersion = hardwareVersion;
+    }
+
+    @Override
+    public int compareTo(@NonNull ContractsTemplateInfo o) {
+        return o.deviceType.compareTo(this.deviceType);
+//        return 0;
     }
 }

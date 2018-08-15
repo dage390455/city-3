@@ -12,7 +12,6 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.SensorDetailInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.util.SortUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -21,8 +20,8 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroAlarmView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -68,20 +67,17 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
             return;
         }
         DeviceInfo deviceInfo = mList.get(position);
-
-        SensorDetailInfo sensorDetailInfo = deviceInfo.getSensoroDetails();
+        Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
         String[] sensorTypes = deviceInfo.getSensorTypes();
         //
         List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
-//        Arrays.sort(sensorTypes);
-        if (sensorDetailInfo != null && sortSensorTypes.size() > 0) {
+        if (sensoroDetails != null && sortSensorTypes.size() > 0) {
 //            holder.item_value2.setEditText("");
 //            holder.item_unit2.setEditText("");
-            HashMap<String, SensorStruct> stringSensorStructHashMap = sensorDetailInfo.loadData();
             if (sortSensorTypes.size() > 1) {
                 //两条数据
                 String sensorType1 = sortSensorTypes.get(0);
-                SensorStruct sensorStruct1 = stringSensorStructHashMap.get(sensorType1);
+                SensorStruct sensorStruct1 = sensoroDetails.get(sensorType1);
                 //第一条数据
                 if (sensorStruct1 == null) {
                     holder.item_value2.setText("");
@@ -91,7 +87,7 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
                             sensorStruct1);
                 }
                 String sensorType2 = sortSensorTypes.get(1);
-                SensorStruct sensorStruct2 = stringSensorStructHashMap.get(sensorType2);
+                SensorStruct sensorStruct2 = sensoroDetails.get(sensorType2);
                 //第二条数据
                 if (sensorStruct2 == null) {
                     holder.item_value1.setText("");
@@ -105,7 +101,7 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
                 }
             } else {
                 String sensorType1 = sortSensorTypes.get(0);
-                SensorStruct sensorStruct1 = stringSensorStructHashMap.get(sensorType1);
+                SensorStruct sensorStruct1 = sensoroDetails.get(sensorType1);
                 //只有一条数据
                 if (sensorStruct1 != null) {
                     WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,

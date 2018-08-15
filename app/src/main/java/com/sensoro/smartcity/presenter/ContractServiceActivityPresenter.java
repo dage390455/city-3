@@ -36,7 +36,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -148,7 +147,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
 
     public void startToNext(String line1, String phone, String line2, String line3, String line4, String line5,
                             String line6,
-                            String contractAge, String place, String sex, List<ContractsTemplateInfo> data) {
+                            String contractAge, String place, String sex, ArrayList<ContractsTemplateInfo> data) {
         Intent intent = new Intent();
         intent.setClass(mContext, ContractInfoActivity.class);
         switch (serviceType) {
@@ -294,19 +293,8 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
 //        }
         intent.putExtra("contract_service_life", "6");
         if (data != null && data.size() > 0) {
-            int count = 0;
-            for (ContractsTemplateInfo contractsTemplateInfo : data) {
-                int quantity = contractsTemplateInfo.getQuantity();
-                if (quantity == 0) {
-                    count++;
-                }
-            }
-            if (count == data.size()) {
-                getView().toastShort("至少选择添加一种设备");
-                return;
-            }
             final ArrayList<ContractsTemplateInfo> dataList = new ArrayList<>(data);
-            //
+            //去除未选择的设备
             Iterator<ContractsTemplateInfo> iterator = dataList.iterator();
             while (iterator.hasNext()) {
                 ContractsTemplateInfo next = iterator.next();
@@ -314,7 +302,13 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     iterator.remove();
                 }
             }
-            intent.putExtra("contract_template", dataList);
+            if (dataList.size() > 0) {
+                intent.putExtra("contract_template", dataList);
+            } else {
+                getView().toastShort("至少选择添加一种设备");
+                return;
+            }
+
         }
         getView().startAC(intent);
     }

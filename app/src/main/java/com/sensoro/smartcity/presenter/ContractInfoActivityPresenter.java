@@ -20,13 +20,13 @@ import com.sensoro.smartcity.server.bean.ContractAddInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.util.AESUtil;
+import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -48,7 +48,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     private String placeType;
     //
     private String contract_service_life;
-    private List<ContractsTemplateInfo> data;
+    private ArrayList<ContractsTemplateInfo> deviceList;
 
     @Override
     public void initData(Context context) {
@@ -102,9 +102,11 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
             default:
                 break;
         }
-        data = (ArrayList<ContractsTemplateInfo>) mContext.getIntent().getSerializableExtra
+        deviceList = (ArrayList<ContractsTemplateInfo>) mContext.getIntent().getSerializableExtra
                 ("contract_template");
-        getView().updateContractTemplateAdapterInfo(data);
+        //TODO 刷新UI顺序不一致？
+//        Collections.reverse(deviceList);
+        getView().updateContractTemplateAdapterInfo(deviceList);
     }
 
     public void startToConfirm(final String text) {
@@ -145,8 +147,14 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         switch (serviceType) {
             case 1:
                 getView().showProgressDialog();
+                if (!RegexUtils.checkContractNotEmpty(line3)) {
+                    line3 = null;
+                }
+                if (!RegexUtils.checkContractNotEmpty(line4)) {
+                    line4 = null;
+                }
                 RetrofitServiceHelper.INSTANCE.getNewContract(1, serviceType, null, null, line3, line4,
-                        line1, line2, line6, line5, phone, placeType, data, 2, null, serviceTime).subscribeOn
+                        line1, line2, line6, line5, phone, placeType, deviceList, 2, null, serviceTime).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>() {
 
                     @Override
@@ -178,7 +186,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 }
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line3, sex, null, null,
-                        line1, null, null, line4, phone, placeType, data, 2, null, serviceTime).subscribeOn
+                        line1, null, null, line4, phone, placeType, deviceList, 2, null, serviceTime).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>() {
 
                     @Override
@@ -204,7 +212,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
             case 3:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, null, null, null, null,
-                        line2, line1, null, line4, line3, placeType, data, 2, null, serviceTime).subscribeOn
+                        line2, line1, null, line4, line3, placeType, deviceList, 2, null, serviceTime).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>() {
 
                     @Override
@@ -257,9 +265,9 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        if (data != null) {
-            data.clear();
-            data = null;
+        if (deviceList != null) {
+            deviceList.clear();
+            deviceList = null;
         }
     }
 

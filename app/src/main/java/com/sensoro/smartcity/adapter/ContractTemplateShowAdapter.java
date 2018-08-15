@@ -13,31 +13,26 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.List;
 
-
-/**
- * Created by fangping on 2016/7/7.
- */
 
 public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTemplateShowAdapter
         .ContractTemplateShowViewHolder> {
 
     private Context mContext;
-    private final List<ContractsTemplateInfo> mList = new ArrayList<>();
+    private final ArrayList<ContractsTemplateInfo> mList = new ArrayList<>();
 
     public ContractTemplateShowAdapter(Context context) {
         this.mContext = context;
     }
 
-    public void setData(List<ContractsTemplateInfo> list) {
+    public void updateList(ArrayList<ContractsTemplateInfo> list) {
         this.mList.clear();
         this.mList.addAll(list);
-        //TODO 刷新UI顺序不一致？
-        Collections.reverse(mList);
+        Collections.sort(mList);
+        notifyDataSetChanged();
     }
 
-    public List<ContractsTemplateInfo> getData() {
+    public ArrayList<ContractsTemplateInfo> getData() {
         return mList;
     }
 
@@ -77,5 +72,4 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
             //
         }
     }
-
 }
