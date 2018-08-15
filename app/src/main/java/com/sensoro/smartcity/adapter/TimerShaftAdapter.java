@@ -44,8 +44,8 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
     private final String[] confirmAlarmResultInfoArray = {"", "监测点或附近发生着火，需要立即进行扑救", "无任何火情和烟雾", "相关人员主动测试发出的预警",
             "未发生着火，但现场确实存在隐患"};
     private final String[] confirmAlarmTypeArray = {"其他", "用电异常", "生产作业", "吸烟", "室内生火", "烹饪", "燃气泄漏", "人为放火", "易燃物自燃"};
-    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房",};
-    //    private final String[] confirmAlarmPlaceArray = {"其他","小区", "出租房", "工厂", "居民作坊", "仓库", "商铺店面", "商场", };
+    //    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房",};
+    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房"};
     private AlarmDetailPhotoAdapter adapter;
 
     public TimerShaftAdapter(Context context, List<AlarmInfo.RecordInfo> timeShaftBeans, OnGroupItemClickListener

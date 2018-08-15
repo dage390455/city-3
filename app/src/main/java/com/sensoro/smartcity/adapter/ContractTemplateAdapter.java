@@ -37,6 +37,7 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<ContractTempla
     public void setData(List<ContractsTemplateInfo> list) {
         this.mList.clear();
         this.mList.addAll(list);
+        //TODO 刷新UI顺序不一致？
         Collections.reverse(mList);
     }
 

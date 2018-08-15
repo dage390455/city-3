@@ -58,9 +58,9 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     private final List<String> alarmResult = new ArrayList<String>();
     private final List<String> alarmResultInfo = new ArrayList<String>();
     //
-    private final int[] resultArr = {-1, 1, 4, 2, 3, 0};
+    private final int[] resultArr = {-1, 1, 4, 2, 3};
     private final int[] typeArr = {-1, 1, 2, 3, 4, 5, 6, 7, 8, 0};
-    private final int[] placeArr = {-1, 1, 1, 2, 3, 4, 5, 6, 0};
+    private final int[] placeArr = {-1, 1, 7, 2, 3, 4, 5, 6, 0};
     private int selectType;
     private int selectPlace;
     private int selectResult;

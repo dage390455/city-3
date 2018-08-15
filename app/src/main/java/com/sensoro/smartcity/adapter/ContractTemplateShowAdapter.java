@@ -12,6 +12,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -32,6 +33,8 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
     public void setData(List<ContractsTemplateInfo> list) {
         this.mList.clear();
         this.mList.addAll(list);
+        //TODO 刷新UI顺序不一致？
+        Collections.reverse(mList);
     }
 
     public List<ContractsTemplateInfo> getData() {
@@ -58,7 +61,6 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
         holder.contractItemShowNum.setText(String.valueOf(deviceCount));
     }
 
-
     @Override
     public int getItemCount() {
         return mList.size();
@@ -75,4 +77,5 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
             //
         }
     }
+
 }
