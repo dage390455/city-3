@@ -85,15 +85,15 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
                     }
                 }
                 mNameHistoryKeywords.add(0, text);
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < mNameHistoryKeywords.size(); i++) {
                     if (i == (mNameHistoryKeywords.size() - 1)) {
-                        stringBuffer.append(mNameHistoryKeywords.get(i));
+                        stringBuilder.append(mNameHistoryKeywords.get(i));
                     } else {
-                        stringBuffer.append(mNameHistoryKeywords.get(i) + ",");
+                        stringBuilder.append(mNameHistoryKeywords.get(i)).append(",");
                     }
                 }
-                mNameEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuffer.toString());
+                mNameEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuilder.toString());
                 mNameEditor.commit();
             } else {
                 if (TextUtils.isEmpty(oldText)) {
@@ -121,15 +121,15 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
                     }
                 }
                 mPhoneHistoryKeywords.add(0, text);
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < mPhoneHistoryKeywords.size(); i++) {
                     if (i == (mPhoneHistoryKeywords.size() - 1)) {
-                        stringBuffer.append(mPhoneHistoryKeywords.get(i));
+                        stringBuilder.append(mPhoneHistoryKeywords.get(i));
                     } else {
-                        stringBuffer.append(mPhoneHistoryKeywords.get(i) + ",");
+                        stringBuilder.append(mPhoneHistoryKeywords.get(i)).append(",");
                     }
                 }
-                mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY_PHONE, stringBuffer.toString());
+                mPhoneEditor.putString(PREFERENCE_KEY_DEPLOY_PHONE, stringBuilder.toString());
                 mPhoneEditor.commit();
             } else {
                 if (TextUtils.isEmpty(oldText)) {

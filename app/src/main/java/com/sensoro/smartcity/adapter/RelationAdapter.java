@@ -18,11 +18,11 @@ import java.util.List;
  * Created by fangping on 2016/7/7.
  */
 
-public class RelationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class RelationAdapter extends RecyclerView.Adapter<RelationAdapter.RelationViewHolder> {
 
     private Context mContext;
     private List<String> mList = new ArrayList<>();
-    RecycleViewItemClickListener itemClickListener;
+    private RecycleViewItemClickListener itemClickListener;
 
     public RelationAdapter(Context context, RecycleViewItemClickListener itemClickListener) {
         this.mContext = context;
@@ -39,31 +39,32 @@ public class RelationAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolde
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public RelationViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_relation, parent, false);
 
         return new RelationViewHolder(view, itemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RelationViewHolder holder, int position) {
         if (mList == null) {
             return;
         }
-        ((RelationViewHolder) holder).nameTextView.setText(mList.get(position));
+        holder.nameTextView.setText(mList.get(position));
     }
+
 
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
-    class RelationViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        View itemView;
-        RecycleViewItemClickListener itemClickListener;
+    static class RelationViewHolder extends RecyclerView.ViewHolder {
+        final TextView nameTextView;
+        final View itemView;
+        final RecycleViewItemClickListener itemClickListener;
 
-        public RelationViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
+        RelationViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
             super(itemView);
             this.itemView = itemView;
             nameTextView = (TextView) itemView.findViewById(R.id.item_relation_name);

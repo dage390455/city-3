@@ -84,7 +84,7 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
     public void save(List<String> tags) {
         //原数据
         String oldText = mPref.getString(PREFERENCE_KEY_DEPLOY_NAME, "");
-        List<String> oldHistoryList = new ArrayList<String>();
+        List<String> oldHistoryList = new ArrayList<>();
         if (!TextUtils.isEmpty(oldText)) {
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
@@ -101,15 +101,15 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
                 tempList.add(str);
             }
         }
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < tempList.size(); i++) {
             if (i == (tempList.size() - 1)) {
-                stringBuffer.append(tempList.get(i));
+                stringBuilder.append(tempList.get(i));
             } else {
-                stringBuffer.append(tempList.get(i) + ",");
+                stringBuilder.append(tempList.get(i)).append(",");
             }
         }
-        mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuffer.toString());
+        mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuilder.toString());
         mEditor.commit();
 
     }

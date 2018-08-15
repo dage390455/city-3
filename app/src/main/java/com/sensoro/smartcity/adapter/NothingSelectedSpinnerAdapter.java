@@ -10,12 +10,12 @@ import android.widget.SpinnerAdapter;
 
 public class NothingSelectedSpinnerAdapter implements SpinnerAdapter, ListAdapter {
 
-    protected static final int EXTRA = 1;
+    private static final int EXTRA = 1;
     protected SpinnerAdapter adapter;
     protected Context context;
-    protected int nothingSelectedLayout;
-    protected int nothingSelectedDropdownLayout;
-    protected LayoutInflater layoutInflater;
+    private int nothingSelectedLayout;
+    private int nothingSelectedDropdownLayout;
+    private LayoutInflater layoutInflater;
 
     /**
      * Use this constructor to have NO 'Select One...' item, instead use

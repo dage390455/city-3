@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.model;
 
-public class EventData {
+import java.io.Serializable;
+
+public class EventData implements Serializable {
     public int code;
     public Object data;
 }

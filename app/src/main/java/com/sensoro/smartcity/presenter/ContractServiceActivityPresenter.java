@@ -12,7 +12,6 @@ import com.baidu.ocr.sdk.model.IDCardParams;
 import com.baidu.ocr.sdk.model.IDCardResult;
 import com.baidu.ocr.sdk.model.Word;
 import com.baidu.ocr.ui.camera.CameraActivity;
-import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -36,6 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -53,10 +53,6 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     private String line5;
     private String line6;
     //
-    private static final int REQUEST_CODE_LICENSE_SERVICE = 0x111;
-    private static final int REQUEST_CODE_PERSON_SERVICE = 0x112;
-
-    private List<ContractsTemplateInfo> data;
 
     @Override
     public void initData(Context context) {
@@ -109,8 +105,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
 
             @Override
             public void onNext(ContractsTemplateRsp contractsTemplateRsp) {
-                data = contractsTemplateRsp.getData();
-                getView().updateContractTemplateAdapterInfo(data);
+                getView().updateContractTemplateAdapterInfo(contractsTemplateRsp.getData());
             }
 
             @Override
@@ -153,7 +148,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
 
     public void startToNext(String line1, String phone, String line2, String line3, String line4, String line5,
                             String line6,
-                            String contractAge, String place, String sex) {
+                            String contractAge, String place, String sex, List<ContractsTemplateInfo> data) {
         Intent intent = new Intent();
         intent.setClass(mContext, ContractInfoActivity.class);
         switch (serviceType) {
@@ -169,7 +164,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 if (RegexUtils.checkPhone(phone)) {
                     intent.putExtra("phone", phone);
                 } else {
-                    getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                    getView().toastShort("请输入有效手机号");
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line2)) {
@@ -206,20 +201,25 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     getView().toastShort("请填写住址信息");
                     return;
                 }
-                intent.putExtra("line6", line6);
+                if (RegexUtils.checkContractNotEmpty(line6)) {
+                    intent.putExtra("line6", line6);
+                } else {
+                    getView().toastShort("请输入有效期");
+                    return;
+                }
                 break;
             case 2:
                 intent.putExtra(EXTRA_CONTRACT_TYPE, 2);
                 if (RegexUtils.checkContractNotEmpty(line1)) {
                     intent.putExtra("line1", line1);
                 } else {
-                    getView().toastShort("请输入有效姓名");
+                    getView().toastShort("请输入姓名");
                     return;
                 }
                 if (RegexUtils.checkPhone(phone)) {
                     intent.putExtra("phone", phone);
                 } else {
-                    getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                    getView().toastShort("请输入有效手机号");
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(sex)) {
@@ -258,7 +258,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 if (RegexUtils.checkPhone(line3)) {
                     intent.putExtra("line3", line3);
                 } else {
-                    getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                    getView().toastShort("请输入有效手机号");
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line4)) {
@@ -272,27 +272,27 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 break;
         }
         if (TextUtils.isEmpty(place)) {
-            getView().toastShort("请选择一个场地类型");
+            getView().toastShort("请选择一个场地性质");
             return;
         }
         intent.putExtra("place", place);
-        if (TextUtils.isEmpty(contractAge)) {
-            getView().toastShort("服务年限不能少于1年");
-            return;
-        } else {
-            int serverAge = 0;
-            try {
-                serverAge = Integer.parseInt(contractAge);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            if (serverAge == 0) {
-                getView().toastShort("服务年限不能少于1年");
-                return;
-            }
-            intent.putExtra("contract_service_life", String.valueOf(serverAge));
-        }
-
+//        if (TextUtils.isEmpty(contractAge)) {
+//            getView().toastShort("服务年限不能少于1年");
+//            return;
+//        } else {
+//            int serverAge = 0;
+//            try {
+//                serverAge = Integer.parseInt(contractAge);
+//            } catch (Exception e) {
+//                e.printStackTrace();
+//            }
+//            if (serverAge == 0) {
+//                getView().toastShort("服务年限不能少于1年");
+//                return;
+//            }
+//            intent.putExtra("contract_service_life", String.valueOf(serverAge));
+//        }
+        intent.putExtra("contract_service_life", "6");
         if (data != null && data.size() > 0) {
             int count = 0;
             for (ContractsTemplateInfo contractsTemplateInfo : data) {
@@ -305,7 +305,15 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 getView().toastShort("至少选择添加一种设备");
                 return;
             }
-            ArrayList<ContractsTemplateInfo> dataList = (ArrayList<ContractsTemplateInfo>) data;
+            final ArrayList<ContractsTemplateInfo> dataList = new ArrayList<>(data);
+            //
+            Iterator<ContractsTemplateInfo> iterator = dataList.iterator();
+            while (iterator.hasNext()) {
+                ContractsTemplateInfo next = iterator.next();
+                if (next.getQuantity() == 0) {
+                    iterator.remove();
+                }
+            }
             intent.putExtra("contract_template", dataList);
         }
         getView().startAC(intent);
@@ -347,11 +355,11 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                                         if (words_result地址 != null) {
                                             line5 = words_result地址.getWords();
                                         }
-                                        BusinessLicenseData.WordsResultBean.成立日期Bean words_result成立日期 = words_result
-                                                .get成立日期();
-                                        if (words_result成立日期 != null) {
-//                                            成立日期 = words_result成立日期.getWords();
-                                        }
+//                                        BusinessLicenseData.WordsResultBean.成立日期Bean words_result成立日期 = words_result
+//                                                .get成立日期();
+//                                        if (words_result成立日期 != null) {
+////                                            成立日期 = words_result成立日期.getWords();
+//                                        }
                                         BusinessLicenseData.WordsResultBean.有效期Bean words_result有效期 = words_result
                                                 .get有效期();
                                         if (words_result有效期 != null) {
@@ -474,11 +482,6 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-
-        if (data != null) {
-            data.clear();
-            data = null;
-        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

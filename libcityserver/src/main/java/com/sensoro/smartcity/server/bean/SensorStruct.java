@@ -10,7 +10,7 @@ import java.io.Serializable;
  * Created by sensoro on 17/7/26.
  */
 
-public class SensorStruct implements Serializable, Comparable<SensorStruct>{
+public class SensorStruct implements Serializable, Comparable<SensorStruct> {
 
     private String sensorType;
     private Object value;
@@ -22,7 +22,7 @@ public class SensorStruct implements Serializable, Comparable<SensorStruct>{
 
     }
 
-    public SensorStruct(String sensorType, JSONObject jsonObject) throws Exception{
+    public SensorStruct(String sensorType, JSONObject jsonObject) throws Exception {
         this.value = jsonObject.get("value");
         this.unit = jsonObject.getString("unit");
         this.sensorType = sensorType;

@@ -170,8 +170,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                 if (mTypeSelectedIndex == 0) {
                     isMatcherType = true;
                 } else {
-                    for (int j = 0; j < menuTypeArray.length; j++) {
-                        String menuType = menuTypeArray[j];
+                    for (String menuType : menuTypeArray) {
                         if (unionTypeList.contains(menuType)) {
                             isMatcherType = true;
                             break;
@@ -192,8 +191,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
     }
 
     public void filterDeviceInfo(String filter) {
-        List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
-        originDeviceInfoList.addAll(originHistoryList);
+        List<DeviceInfo> originDeviceInfoList = new ArrayList<>(originHistoryList);
         ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
             String name = deviceInfo.getName();

@@ -16,7 +16,6 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.SensorDetailInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.SortUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -33,12 +32,12 @@ import static android.view.View.VISIBLE;
  * Created by Jack on 2016/9/16.
  */
 
-public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Constants {
+public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.IndexListViewHolder> implements Constants {
 
     private Context mContext;
     private List<DeviceInfo> mList = new ArrayList<>();
 
-    RecycleViewItemClickListener itemClickListener;
+    private RecycleViewItemClickListener itemClickListener;
 
     public IndexListAdapter(Context context, RecycleViewItemClickListener itemClickListener) {
         this.mContext = context;
@@ -58,20 +57,17 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public IndexListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.item_index_list, parent, false);
         return new IndexListViewHolder(view, itemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder tempholder, int position) {
+    public void onBindViewHolder(IndexListViewHolder holder, int position) {
         if (mList == null) {
             return;
         }
-
-        IndexListViewHolder holder = (IndexListViewHolder) tempholder;
-
         DeviceInfo deviceInfo = mList.get(position);
         int color = 0;
         switch (deviceInfo.getStatus()) {
@@ -119,10 +115,6 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         SensorDetailInfo sensorDetailInfo = deviceInfo.getSensoroDetails();
         String[] sensorTypes = deviceInfo.getSensorTypes();
         List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
-//        Arrays.sort(sensorTypes);
-        if (deviceInfo.getSn().endsWith("28C8")) {
-            LogUtils.loge(this, "=========");
-        }
         if (sensorDetailInfo != null && sortSensorTypes.size() > 0) {
             HashMap<String, SensorStruct> stringSensorStructHashMap = sensorDetailInfo.loadData();
             if (sortSensorTypes.size() > 1) {
@@ -219,6 +211,7 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+
     @Override
     public int getItemCount() {
         return mList.size();
@@ -233,19 +226,19 @@ public class IndexListAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    class IndexListViewHolder extends RecyclerView.ViewHolder {
-        TextView item_name;
-        ImageView item_iv_type;
-        ImageView item_iv_status;
-        SensoroAlarmView item_alarm_view;
-        TextView item_value1;
-        TextView item_unit1;
-        TextView item_value2;
-        TextView item_unit2;
-        TextView item_date;
-        RecycleViewItemClickListener itemClickListener;
+    static class IndexListViewHolder extends RecyclerView.ViewHolder {
+        final TextView item_name;
+        final ImageView item_iv_type;
+        final ImageView item_iv_status;
+        final SensoroAlarmView item_alarm_view;
+        final TextView item_value1;
+        final TextView item_unit1;
+        final TextView item_value2;
+        final TextView item_unit2;
+        final TextView item_date;
+        final RecycleViewItemClickListener itemClickListener;
 
-        public IndexListViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
+        IndexListViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
             super(itemView);
             this.item_name = (TextView) itemView.findViewById(R.id.item_list_tv_name);
             this.item_iv_status = (ImageView) itemView.findViewById(R.id.item_list_iv_status);

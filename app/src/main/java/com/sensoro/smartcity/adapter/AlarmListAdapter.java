@@ -29,7 +29,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
     private LayoutInflater mInflater;
     private AlarmConfirmStatusClickListener mListener;
     private List<DeviceAlarmLogInfo> mList = new ArrayList<>();
-    private int selectedIndex;
+//    private int selectedIndex;
 
     public AlarmListAdapter(Context context, AlarmConfirmStatusClickListener listener) {
         this.mContext = context;
@@ -46,9 +46,9 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
         return mList;
     }
 
-    public void setSelectedIndex(int index) {
-        this.selectedIndex = index;
-    }
+//    public void setSelectedIndex(int index) {
+//        this.selectedIndex = index;
+//    }
 
     @Override
     public int getCount() {
@@ -197,7 +197,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
     }
 
 
-    class AlarmInfoViewHolder {
+    static class AlarmInfoViewHolder {
 
         TextView item_name;
         ImageView item_iv_status;
@@ -208,8 +208,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
         TextView item_confirm_status;
         TextView item_date;
 
-        public AlarmInfoViewHolder() {
-
+        AlarmInfoViewHolder() {
         }
     }
 }

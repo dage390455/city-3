@@ -58,12 +58,12 @@ public class AlarmDetailPhotoAdapter extends RecyclerView.Adapter<AlarmDetailPho
         return mData.size();
     }
 
-    public class AlarmDetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class AlarmDetailViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView ivPicAlarm;
         private int clickPosition;
 
-        public AlarmDetailViewHolder(View itemView) {
+        AlarmDetailViewHolder(View itemView) {
             super(itemView);
             ivPicAlarm = (ImageView) itemView.findViewById(R.id.iv_pic_alarm);
         }

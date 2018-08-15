@@ -5,11 +5,6 @@ import android.content.Context;
 import android.support.v4.util.Pair;
 
 import com.applikeysolutions.cosmocalendar.model.Day;
-import com.applikeysolutions.cosmocalendar.selection.criteria.BaseCriteria;
-import com.applikeysolutions.cosmocalendar.selection.criteria.WeekDayCriteria;
-import com.applikeysolutions.cosmocalendar.selection.criteria.month.CurrentMonthCriteria;
-import com.applikeysolutions.cosmocalendar.selection.criteria.month.NextMonthCriteria;
-import com.applikeysolutions.cosmocalendar.selection.criteria.month.PreviousMonthCriteria;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -21,7 +16,6 @@ import com.sensoro.smartcity.util.DateUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -76,13 +70,13 @@ public class CalendarActivityPresenter extends BasePresenter<ICalendarActivityVi
 
     }
 
-    private void createCriterias() {
-        WeekDayCriteria fridayCriteria = new WeekDayCriteria(Calendar.FRIDAY);
-        List<BaseCriteria> threeMonthsCriteriaList = new ArrayList<>();
-        threeMonthsCriteriaList.add(new CurrentMonthCriteria());
-        threeMonthsCriteriaList.add(new NextMonthCriteria());
-        threeMonthsCriteriaList.add(new PreviousMonthCriteria());
-    }
+//    private void createCriterias() {
+//        WeekDayCriteria fridayCriteria = new WeekDayCriteria(Calendar.FRIDAY);
+//        List<BaseCriteria> threeMonthsCriteriaList = new ArrayList<>();
+//        threeMonthsCriteriaList.add(new CurrentMonthCriteria());
+//        threeMonthsCriteriaList.add(new NextMonthCriteria());
+//        threeMonthsCriteriaList.add(new PreviousMonthCriteria());
+//    }
 
     public void clickDayRangeSelected(Pair<Day, Day> days) {
         try {

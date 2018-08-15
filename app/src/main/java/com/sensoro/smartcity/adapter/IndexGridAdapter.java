@@ -31,12 +31,12 @@ import static android.view.View.VISIBLE;
  * Created by Jack on 2016/9/16.
  */
 
-public class IndexGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> implements Constants {
+public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.IndexListViewHolder> implements Constants {
 
     private Context mContext;
     private List<DeviceInfo> mList = new ArrayList<>();
 
-    RecycleViewItemClickListener itemClickListener;
+    private RecycleViewItemClickListener itemClickListener;
 
     public IndexGridAdapter(Context context, RecycleViewItemClickListener itemClickListener) {
         this.mContext = context;
@@ -56,20 +56,17 @@ public class IndexGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public IndexListViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.item_index_grid, parent, false);
         return new IndexListViewHolder(view, itemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder tempholder, int position) {
+    public void onBindViewHolder(IndexListViewHolder holder, int position) {
         if (mList == null) {
             return;
         }
-
-        IndexListViewHolder holder = (IndexListViewHolder) tempholder;
-
         DeviceInfo deviceInfo = mList.get(position);
 
         SensorDetailInfo sensorDetailInfo = deviceInfo.getSensoroDetails();
@@ -202,6 +199,7 @@ public class IndexGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
+
     @Override
     public int getItemCount() {
         return mList.size();
@@ -216,18 +214,18 @@ public class IndexGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHold
         }
     }
 
-    class IndexListViewHolder extends RecyclerView.ViewHolder {
-        AutoSplitTextView item_name;
-        ImageView item_iv_status;
-        ImageView item_iv_type;
-        SensoroAlarmView item_alarm_view;
-        TextView item_value1;
-        TextView item_unit1;
-        TextView item_value2;
-        TextView item_unit2;
-        RecycleViewItemClickListener itemClickListener;
+    static class IndexListViewHolder extends RecyclerView.ViewHolder {
+        final AutoSplitTextView item_name;
+        final ImageView item_iv_status;
+        final ImageView item_iv_type;
+        final SensoroAlarmView item_alarm_view;
+        final TextView item_value1;
+        final TextView item_unit1;
+        final TextView item_value2;
+        final TextView item_unit2;
+        final RecycleViewItemClickListener itemClickListener;
 
-        public IndexListViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
+        IndexListViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
             super(itemView);
             this.item_name = (AutoSplitTextView) itemView.findViewById(R.id.item_grid_tv_name);
             this.item_iv_type = (ImageView) itemView.findViewById(R.id.item_grid_icon);

@@ -133,8 +133,6 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
 
     /**
      * 刷新基站
-     *
-     * @param stationInfoRsp
      */
     private void refreshStation(StationInfoRsp stationInfoRsp) {
         try {
@@ -167,8 +165,6 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
 
     /**
      * 刷新设备
-     *
-     * @param response
      */
     private void refreshDevice(String sn, DeviceInfoListRsp response) {
         try {

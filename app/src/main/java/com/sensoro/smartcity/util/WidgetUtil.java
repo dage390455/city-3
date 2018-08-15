@@ -39,174 +39,173 @@ import java.util.List;
 
 public class WidgetUtil {
 
-
     public static void judgeSensorType(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {
-        if (sensorStruct != null) {
+        try {
             Object value = sensorStruct.getValue();
             String sensorType = sensorStruct.getSensorType();
-            if (value instanceof Boolean) {
-                if (sensorType.equals("jinggai")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.jinggai_true);
-                    } else {
-                        valueTextView.setText(R.string.jinggai_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("cover")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.cover_true);
-                    } else {
-                        valueTextView.setText(R.string.cover_false);
-                    }
+            boolean isBoolean = false;
+            if (sensorType.equals("jinggai")) {
+                isBoolean = true;
+                Boolean isOk = (Boolean) value;
+                if (isOk) {
+                    valueTextView.setText(R.string.jinggai_true);
+                } else {
+                    valueTextView.setText(R.string.jinggai_false);
+                }
+                unitTextView.setText("");
+            } else if (sensorType.equals("cover")) {
+                isBoolean = true;
+                Boolean isOk = (Boolean) value;
+                if (isOk) {
+                    valueTextView.setText(R.string.cover_true);
+                } else {
+                    valueTextView.setText(R.string.cover_false);
+                }
 //                    unitTextView.setEditText(R.string.cover_unit);
-                } else if (sensorType.equals("level")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.level_true);
-                    } else {
-                        valueTextView.setText(R.string.level_false);
-                    }
+            } else if (sensorType.equals("level")) {
+                isBoolean = true;
+                Boolean isOk = (Boolean) value;
+                if (isOk) {
+                    valueTextView.setText(R.string.level_true);
+                } else {
+                    valueTextView.setText(R.string.level_false);
+                }
 //                    unitTextView.setEditText(R.string.level_unit);
-                } else if (sensorType.equals("collision")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.collision_true);
-                    } else {
-                        valueTextView.setText(R.string.collision_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("alarm")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.alarm_true);
-                    } else {
-                        valueTextView.setText(R.string.alarm_false);
-                    }
-                    unitTextView.setText("");
-                } else if (sensorType.equals("smoke")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.smoke_true);
-                    } else {
-                        valueTextView.setText(R.string.smoke_false);
-                    }
+            } else if (sensorType.equals("collision")) {
+                isBoolean = true;
+                Boolean isOk = (Boolean) value;
+                if (isOk) {
+                    valueTextView.setText(R.string.collision_true);
+                } else {
+                    valueTextView.setText(R.string.collision_false);
+                }
+                unitTextView.setText("");
+            } else if (sensorType.equals("alarm")) {
+                isBoolean = true;
+                Boolean isOk = (Boolean) value;
+                if (isOk) {
+                    valueTextView.setText(R.string.alarm_true);
+                } else {
+                    valueTextView.setText(R.string.alarm_false);
+                }
+                unitTextView.setText("");
+            } else if (sensorType.equals("smoke")) {
+                isBoolean = true;
+                Boolean isOk = (Boolean) value;
+                if (isOk) {
+                    valueTextView.setText(R.string.smoke_true);
+                } else {
+                    valueTextView.setText(R.string.smoke_false);
+                }
 //                    unitTextView.setEditText(R.string.sensor_smoke);
-                } else if (sensorType.equals("connection")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.connection_true);
-                    } else {
-                        valueTextView.setText(R.string.connection_false);
-                    }
+            } else if (sensorType.equals("connection")) {
+                isBoolean = true;
+                Boolean isOk = (Boolean) value;
+                if (isOk) {
+                    valueTextView.setText(R.string.connection_true);
+                } else {
+                    valueTextView.setText(R.string.connection_false);
+                }
 //                    unitTextView.setEditText(R.string.sensor_smoke);
-                } else if (sensorType.equalsIgnoreCase("installed")) {
-                    Boolean isTrue = (Boolean) value;
-                    if (isTrue) {
-                        valueTextView.setText(R.string.installed);
-                    } else {
-                        valueTextView.setText(R.string.un_installed);
-                    }
+            } else if (sensorType.equalsIgnoreCase("installed")) {
+                isBoolean = true;
+                Boolean isTrue = (Boolean) value;
+                if (isTrue) {
+                    valueTextView.setText(R.string.installed);
+                } else {
+                    valueTextView.setText(R.string.un_installed);
+                }
 //                    unitTextView.setText("");
-                } else if (sensorType.equals("flame")) {
-                    Boolean isOk = (Boolean) value;
-                    if (isOk) {
-                        valueTextView.setText(R.string.flame_true);
-                    } else {
-                        valueTextView.setText(R.string.flame_false);
-                    }
+            } else if (sensorType.equals("flame")) {
+                isBoolean = true;
+                Boolean isOk = (Boolean) value;
+                if (isOk) {
+                    valueTextView.setText(R.string.flame_true);
+                } else {
+                    valueTextView.setText(R.string.flame_false);
+                }
 //                    unitTextView.setEditText(R.string.sensor_fire);
-                } else if (sensorType.equals("magnetic")) {
-                    Boolean isTrue = (Boolean) value;
-                    if (isTrue) {
-                        valueTextView.setText(R.string.magnetic_true);
-                    } else {
-                        valueTextView.setText(R.string.magnetic_false);
-                    }
-//                    unitTextView.setEditText(R.string.sensor_magnetic);
-                } else if (sensorType.equals("door")) {
-                    Boolean isTrue = (Boolean) value;
-                    if (isTrue) {
-                        valueTextView.setText(R.string.magnetic_false);
-                    } else {
-                        valueTextView.setText(R.string.magnetic_true);
-                    }
-//                    unitTextView.setEditText(R.string.sensor_magnetic);
-                } else if (sensorType.equals("infrared")) {
-                    Boolean isTrue = (Boolean) value;
-                    if (isTrue) {
-                        valueTextView.setText(R.string.alarm_true);
-                    } else {
-                        valueTextView.setText(R.string.alarm_false);
-                    }
-//                    unitTextView.setEditText(R.string.sensor_magnetic);
-                } else if (sensorType.equals("manual_alarm")) {
-                    Boolean isTrue = (Boolean) value;
-                    if (isTrue) {
-                        valueTextView.setText(R.string.alarm_true);
-                    } else {
-                        valueTextView.setText(R.string.alarm_false);
-                    }
-//                    unitTextView.setEditText(R.string.sensor_magnetic);
-                } else if (sensorType.equals("sound_light_alarm")) {
-                    Boolean isTrue = (Boolean) value;
-                    if (isTrue) {
-                        valueTextView.setText(R.string.alarm_true);
-                    } else {
-                        valueTextView.setText(R.string.alarm_false);
-                    }
-//                    unitTextView.setEditText(R.string.sensor_magnetic);
+            } else if (sensorType.equals("magnetic")) {
+                isBoolean = true;
+                Boolean isTrue = (Boolean) value;
+                if (isTrue) {
+                    valueTextView.setText(R.string.magnetic_true);
                 } else {
-                    valueTextView.setText("-");
-                    unitTextView.setText("-");
+                    valueTextView.setText(R.string.magnetic_false);
                 }
-            } else {
-                String valueString = sensorStruct.getValue().toString();
-                if (sensorType.equals("drop")) {
-                    if (value instanceof Double) {
-                        double d = (double) value;
-                        if (d == 0) {
-                            valueTextView.setText(R.string.drop_false);
-                        } else {
-                            valueTextView.setText(R.string.drop_true);
-                        }
-                    }
-                    unitTextView.setText("");
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+            } else if (sensorType.equals("door")) {
+                isBoolean = true;
+                Boolean isTrue = (Boolean) value;
+                if (isTrue) {
+                    valueTextView.setText(R.string.magnetic_false);
                 } else {
-                    if (valueString.equals("-")) {
-                        valueTextView.setText("-");
-                        unitTextView.setText(sensorStruct.getUnit());
+                    valueTextView.setText(R.string.magnetic_true);
+                }
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+            } else if (sensorType.equals("infrared")) {
+                isBoolean = true;
+                Boolean isTrue = (Boolean) value;
+                if (isTrue) {
+                    valueTextView.setText(R.string.alarm_true);
+                } else {
+                    valueTextView.setText(R.string.alarm_false);
+                }
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+            } else if (sensorType.equals("manual_alarm")) {
+                isBoolean = true;
+                Boolean isTrue = (Boolean) value;
+                if (isTrue) {
+                    valueTextView.setText(R.string.alarm_true);
+                } else {
+                    valueTextView.setText(R.string.alarm_false);
+                }
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+            } else if (sensorType.equals("sound_light_alarm")) {
+                isBoolean = true;
+                Boolean isTrue = (Boolean) value;
+                if (isTrue) {
+                    valueTextView.setText(R.string.alarm_true);
+                } else {
+                    valueTextView.setText(R.string.alarm_false);
+                }
+//                    unitTextView.setEditText(R.string.sensor_magnetic);
+            } else if (sensorType.equals("drop")) {
+                isBoolean = true;
+                if (value instanceof Double) {
+                    double d = (double) value;
+                    if (d == 0) {
+                        valueTextView.setText(R.string.drop_false);
                     } else {
-                        //
-                        unitTextView.setText("" + sensorStruct.getUnit());
-                        if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
-                            DecimalFormat df = new DecimalFormat("###.##");
-                            setDetailTextStyle(df.format(sensorStruct.getValue()), valueTextView);
-                            return;
-                        }
-                        if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") ||
-                                sensorType.equalsIgnoreCase("temp1") ||
-                                sensorType
-                                        .equalsIgnoreCase
-                                                ("humidity") || sensorType.equalsIgnoreCase("waterPressure") ||
-                                sensorType.equalsIgnoreCase("no2")) {
-                            DecimalFormat df = new DecimalFormat("###.#");
-                            String format = df.format(sensorStruct.getValue());
-                            setDetailTextStyle(format, valueTextView);
-                            return;
-                        }
-                        valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
-                                .toString())));
-
+                        valueTextView.setText(R.string.drop_true);
                     }
                 }
+                unitTextView.setText("");
             }
-        } else {
+            if (!isBoolean) {
+                if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
+                    DecimalFormat df = new DecimalFormat("###.##");
+                    setDetailTextStyle(df.format(sensorStruct.getValue()), valueTextView);
+                } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") ||
+                        sensorType.equalsIgnoreCase("temp1") ||
+                        sensorType
+                                .equalsIgnoreCase
+                                        ("humidity") || sensorType.equalsIgnoreCase("waterPressure") ||
+                        sensorType.equalsIgnoreCase("no2")) {
+                    DecimalFormat df = new DecimalFormat("###.#");
+                    String format = df.format(sensorStruct.getValue());
+                    setDetailTextStyle(format, valueTextView);
+                } else {
+                    valueTextView.setText(String.format("%.0f", Double.valueOf(sensorStruct.getValue()
+                            .toString())));
+                }
+                String unit = sensorStruct.getUnit();
+                unitTextView.setText(unit);
+            }
+        } catch (Exception e) {
             valueTextView.setText("-");
             unitTextView.setText("-");
         }
-
     }
 
     private static void setDetailTextStyle(String text, TextView textView) {
@@ -618,14 +617,11 @@ public class WidgetUtil {
         //
         if (!isBool && !(value instanceof Boolean)) {
             //
-
-            unitTextView.setText("" + unit);
             if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
                 DecimalFormat df = new DecimalFormat("###.##");
                 setIndexTextStyle(df.format(value), valueTextView);
-                return;
-            }
-            if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+
+            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
                     .equalsIgnoreCase
                             ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
                     .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
@@ -633,10 +629,11 @@ public class WidgetUtil {
                 LogUtils.loge("value = " + value);
                 String format = df.format(value);
                 setIndexTextStyle(format, valueTextView);
-                return;
+            } else {
+                valueTextView.setText(String.format("%.0f", Double.valueOf(value
+                        .toString())));
             }
-            valueTextView.setText("" + String.format("%.0f", Double.valueOf(value
-                    .toString())));
+            unitTextView.setText(unit);
             //
         }
     }
@@ -662,11 +659,7 @@ public class WidgetUtil {
                 valueTextView.setText(R.string.smoke_false);
             }
             unitTextView.setText("");
-        }
-//        else if (sensorType.equalsIgnoreCase("leak")) {
-//
-//        }
-        else if (sensorType.equalsIgnoreCase("installed")) {
+        } else if (sensorType.equalsIgnoreCase("installed")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
@@ -693,10 +686,7 @@ public class WidgetUtil {
                 valueTextView.setText(R.string.cover_false);
             }
             unitTextView.setText("");
-        }
-//        else if (sensorType.equalsIgnoreCase("ch4")) {
-//        }
-        else if (sensorType.equalsIgnoreCase("drop")) {
+        } else if (sensorType.equalsIgnoreCase("drop")) {
             isBool = true;
             if (value instanceof Double) {
                 double d = (double) value;
@@ -707,14 +697,7 @@ public class WidgetUtil {
                 }
             }
             unitTextView.setText("");
-        }
-//        else if (sensorType.equalsIgnoreCase("light")) {
-//        } else if (sensorType.equalsIgnoreCase("distance")) {
-//        } else if (sensorType.equalsIgnoreCase("lpg")) {
-//        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
-//                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
-//        }
-        else if (sensorType.equalsIgnoreCase("collision")) {
+        } else if (sensorType.equalsIgnoreCase("collision")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
@@ -806,47 +789,21 @@ public class WidgetUtil {
             unitTextView.setText("");
         }
         if (!isBool) {
-//            unitTextView.setText("" + sensorStruct.getUnit());
-//            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude") || sensorType
-//                    .equalsIgnoreCase
-//                            ("co2")) {
-//                DecimalFormat df = new DecimalFormat("###.##");
-//                setIndexTextStyle(df.format(sensorStruct.getValue()), valueTextView);
-////                valueTextView.setText();
-//                return;
-//            }
-//            if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
-//                    .equalsIgnoreCase
-//                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
-// .equalsIgnoreCase
-//                    ("co2") ||
-//                    sensorType.equalsIgnoreCase("so2") || sensorType.equalsIgnoreCase("no2")) {
-//                DecimalFormat df = new DecimalFormat("###.#");
-//                setIndexTextStyle(df.format(sensorStruct.getValue()), valueTextView);
-////                valueTextView.setText(df.format(sensorStruct.getValue()));
-//                return;
-//            }
-//            valueTextView.setText("" + String.format("%.0f", Double.valueOf(sensorStruct.getValue()
-//                    .toString())));
-
-//            valueTextView.setText("" + String.format("%.1f", Double.valueOf(value.toString())));
-//            unitTextView.setText(sensorStruct.getUnit());
-            unitTextView.setText("" + sensorStruct.getUnit());
             if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
                 DecimalFormat df = new DecimalFormat("###.##");
                 setIndexTextStyle(df.format(value), valueTextView);
-                return;
-            }
-            if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
                     .equalsIgnoreCase
                             ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
                     .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
                 DecimalFormat df = new DecimalFormat("###.#");
                 setIndexTextStyle(df.format(value), valueTextView);
-                return;
+            } else {
+                valueTextView.setText("" + String.format("%.0f", Double.valueOf(value
+                        .toString())));
             }
-            valueTextView.setText("" + String.format("%.0f", Double.valueOf(value
-                    .toString())));
+            String unit = sensorStruct.getUnit();
+            unitTextView.setText(unit);
         }
     }
 
@@ -1021,7 +978,7 @@ public class WidgetUtil {
      * @return
      */
     public static String getAlarmDetailInfo(String sensorType, int thresholds, int status) {
-        String info = null;
+        String info = "";
         if (status == 0) {
             switch (sensorType) {
                 case "smoke":
@@ -1292,7 +1249,7 @@ public class WidgetUtil {
                 return "烟感";
             } else if (temp.contains("curr_val") || temp.contains("elec_energy_val") || temp.contains("leakage_val")
                     || temp.contains("temp_val")) {
-                return "电器火灾";
+                return "电气火灾";
             } else {
                 return context.getString(R.string.unknown);
             }

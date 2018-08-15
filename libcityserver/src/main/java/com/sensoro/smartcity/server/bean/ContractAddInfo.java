@@ -57,7 +57,7 @@ public class ContractAddInfo implements Serializable {
     private String contract_number;
     private String updatedAt;
     private String createdAt;
-    private List<DevicesBean> devices;
+    private List<ContractsTemplateInfo> devices;
 
     public int getSex() {
         return sex;
@@ -243,57 +243,12 @@ public class ContractAddInfo implements Serializable {
         this.createdAt = createdAt;
     }
 
-    public List<DevicesBean> getDevices() {
+    public List<ContractsTemplateInfo> getDevices() {
         return devices;
     }
 
-    public void setDevices(List<DevicesBean> devices) {
+    public void setDevices(List<ContractsTemplateInfo> devices) {
         this.devices = devices;
     }
 
-    public static class DevicesBean {
-        /**
-         * deviceType : 温度贴片
-         * hardwareVersion : 1
-         * quantity : 1
-         * price : 3000
-         */
-
-        private String deviceType;
-        private String hardwareVersion;
-        private int quantity;
-        private int price;
-
-        public String getDeviceType() {
-            return deviceType;
-        }
-
-        public void setDeviceType(String deviceType) {
-            this.deviceType = deviceType;
-        }
-
-        public String getHardwareVersion() {
-            return hardwareVersion;
-        }
-
-        public void setHardwareVersion(String hardwareVersion) {
-            this.hardwareVersion = hardwareVersion;
-        }
-
-        public int getQuantity() {
-            return quantity;
-        }
-
-        public void setQuantity(int quantity) {
-            this.quantity = quantity;
-        }
-
-        public int getPrice() {
-            return price;
-        }
-
-        public void setPrice(int price) {
-            this.price = price;
-        }
-    }
 }

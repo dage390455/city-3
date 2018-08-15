@@ -81,16 +81,12 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         .OnGeocodeSearchListener, AMapLocationListener {
     private AMap aMap;
     private Marker smoothMoveMarker;
-    private CameraUpdate mUpdata;
     private LatLng latLng;
-    private MyLocationStyle myLocationStyle;
     private GeocodeSearch geocoderSearch;
     private AMapLocationClient mLocationClient;
-    private AMapLocationClientOption mLocationOption;
     private final List<String> tagList = new ArrayList<>();
     private String contact = null;
     private String content = null;
-    private RegeocodeQuery query;
     private Activity mContext;
     private Handler mHandler;
     private DeviceInfo deviceInfo;
@@ -130,7 +126,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             aMap.setInfoWindowAdapter(this);
             aMap.setOnMapTouchListener(this);
             aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
-            myLocationStyle = new MyLocationStyle();
+            MyLocationStyle myLocationStyle = new MyLocationStyle();
             myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
             myLocationStyle.strokeWidth(0);
             myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
@@ -167,7 +163,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         smoothMoveMarker.setPosition(latLng);
         LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
         System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
-        query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+        RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
         geocoderSearch.getFromLocationAsyn(query);
     }
 
@@ -312,22 +308,22 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         //设置定位回调监听
         mLocationClient.setLocationListener(this);
         //初始化定位参数
-        mLocationOption = new AMapLocationClientOption();
+        AMapLocationClientOption option = new AMapLocationClientOption();
         //设置定位模式为Hight_Accuracy高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
-        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        option.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
         //设置是否返回地址信息（默认返回地址信息）
-        mLocationOption.setNeedAddress(true);
+        option.setNeedAddress(true);
         //设置是否只定位一次,默认为false
-        mLocationOption.setOnceLocation(true);
-        mLocationOption.setOnceLocationLatest(true);
+        option.setOnceLocation(true);
+        option.setOnceLocationLatest(true);
         //设置是否强制刷新WIFI，默认为强制刷新
-        mLocationOption.setWifiActiveScan(true);
+        option.setWifiActiveScan(true);
         //设置是否允许模拟位置,默认为false，不允许模拟位置
-        mLocationOption.setMockEnable(false);
+        option.setMockEnable(false);
         //设置定位间隔,单位毫秒,默认为2000ms
-        mLocationOption.setInterval(2000);
+        option.setInterval(2000);
         //给定位客户端对象设置定位参数
-        mLocationClient.setLocationOption(mLocationOption);
+        mLocationClient.setLocationOption(option);
         //启动定位
         mLocationClient.startLocation();
     }
@@ -361,9 +357,9 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             latLng = new LatLng(lat, lon);
             if (aMap != null) {
                 //可视化区域，将指定位置指定到屏幕中心位置
-                mUpdata = CameraUpdateFactory
+                CameraUpdate update = CameraUpdateFactory
                         .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
-                aMap.moveCamera(mUpdata);
+                aMap.moveCamera(update);
             }
             smoothMoveMarker.setPosition(latLng);
         } else {

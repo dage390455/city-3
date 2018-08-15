@@ -89,7 +89,9 @@ public class ScanLoginFragmentPresenter extends BasePresenter<IScanLoginFragment
 
     private void vibrate() {
         Vibrator vibrator = (Vibrator) mContext.getSystemService(VIBRATOR_SERVICE);
-        vibrator.vibrate(200);
+        if (vibrator != null) {
+            vibrator.vibrate(200);
+        }
     }
 
     private void playVoice() {

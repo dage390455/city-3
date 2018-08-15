@@ -117,19 +117,20 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
                 holder.itemEtLine2.setText(customer_enterprise_name);
                 break;
             case 2:
+            case 3:
                 holder.itemTvLine1.setText("姓名");
                 holder.itemEtLine1.setText(customer_name);
                 String customer_address = contractListInfo.getCustomer_address();
                 holder.itemTvLine2.setText("住址");
                 holder.itemEtLine2.setText(customer_address);
                 break;
-            case 3:
-                String customer_enterprise_name1 = contractListInfo.getCustomer_enterprise_name();
-                holder.itemTvLine1.setText("业主姓名");
-                holder.itemEtLine1.setText(customer_name);
-                holder.itemTvLine2.setText("甲方(客户名称)");
-                holder.itemEtLine2.setText(customer_enterprise_name1);
-                break;
+//            case 3:
+//                String customer_enterprise_name1 = contractListInfo.getCustomer_enterprise_name();
+//                holder.itemTvLine1.setText("姓名");
+//                holder.itemEtLine1.setText(customer_name);
+//                holder.itemTvLine2.setText("住址");
+//                holder.itemEtLine2.setText(customer_enterprise_name1);
+//                break;
             default:
         }
 //        convertView.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +143,7 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
     }
 
 
-    class ContractViewHolder {
+    static class ContractViewHolder {
 
         TextView itemTvLine1;
         TextView itemEtLine1;
@@ -152,7 +153,7 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         TextView itemEtNumber;
         TextView itemEtDate;
 
-        public ContractViewHolder() {
+        ContractViewHolder() {
 
         }
     }

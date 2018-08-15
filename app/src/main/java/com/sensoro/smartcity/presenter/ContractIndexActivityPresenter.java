@@ -34,8 +34,6 @@ import java.io.File;
 public class ContractIndexActivityPresenter extends BasePresenter<IContractIndexActivityView> implements Constants,
         IOnCreate {
     private Activity mContext;
-    private static final int REQUEST_CODE_BUSINESS_LICENSE = 123;
-    private static final int REQUEST_CODE_CAMERA = 102;
 
     @Override
     public void initData(Context context) {

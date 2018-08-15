@@ -63,7 +63,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private String mUserName = null;
     private String mPhone = null;
     private String mPhoneId = null;
-    private Character mCharacter = null;
     private volatile boolean mIsSupperAccount;
     private String roles;
 
@@ -127,14 +126,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         mUserName = mActivity.getIntent().getStringExtra(EXTRA_USER_NAME);
         mPhone = mActivity.getIntent().getStringExtra(EXTRA_PHONE);
         mPhoneId = mActivity.getIntent().getStringExtra(EXTRA_PHONE_ID);
-        mCharacter = (Character) mActivity.getIntent().getSerializableExtra(EXTRA_CHARACTER);
+        Character character = (Character) mActivity.getIntent().getSerializableExtra(EXTRA_CHARACTER);
         roles = mActivity.getIntent().getStringExtra(EXTRA_USER_ROLES);
         mIsSupperAccount = mActivity.getIntent().getBooleanExtra(EXTRA_IS_SPECIFIC, false);
         hasStation = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_STATION, false);
         hasContract = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_CONTRACT, false);
         hasScanLogin = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
         //
-        indexFragment = IndexFragment.newInstance(mCharacter);
+        indexFragment = IndexFragment.newInstance(character);
         alarmListFragment = AlarmListFragment.newInstance("alarm");
         merchantSwitchFragment = MerchantSwitchFragment.newInstance("merchant");
         pointDeployFragment = PointDeployFragment.newInstance("point");
@@ -422,7 +421,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json,
                                             DeviceInfo.class);
-                                    EventData eventData = new EventData();
+                                    final EventData eventData = new EventData();
                                     eventData.code = EVENT_DATA_SOCKET_DATA;
                                     eventData.data = data;
                                     EventBus.getDefault().post(eventData);
@@ -462,8 +461,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     /**
      * 通过menupage判断类型
-     *
-     * @param menuPageId
      */
     public void clickMenuItem(int menuPageId) {
         switch (menuPageId) {

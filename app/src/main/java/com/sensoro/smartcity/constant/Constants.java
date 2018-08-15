@@ -7,6 +7,11 @@ import com.sensoro.smartcity.R;
  */
 
 public interface Constants {
+    //合同扫描相关id
+    int REQUEST_CODE_LICENSE_SERVICE = 0x111;
+    int REQUEST_CODE_PERSON_SERVICE = 0x112;
+    int REQUEST_CODE_BUSINESS_LICENSE = 123;
+    int REQUEST_CODE_CAMERA = 102;
     //上传图片相关id
     int IMAGE_ITEM_ADD = -1;
     int REQUEST_CODE_SELECT = 100;
@@ -53,7 +58,7 @@ public interface Constants {
             "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
             "火焰", "光线", "液化石油气", "二氧化氮",
             "PM2.5/10", "烟感", "温湿度",
-            "消防液压", "温度贴片", "通断检测", "电表", "电器火灾", "红外线", "手动报警", "声光报警"
+            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
     };
     String INDEX_TYPE_VALUES[] = {
             "all",

@@ -98,13 +98,13 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
         notifyDataSetChanged();
     }
 
-    class MenuInfoViewHolder {
+    static class MenuInfoViewHolder {
 
         SensoroTextView item_name;
         ImageView item_icon;
         RelativeLayout rlItem;
 
-        public MenuInfoViewHolder() {
+        MenuInfoViewHolder() {
 
         }
     }

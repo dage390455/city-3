@@ -17,6 +17,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 
@@ -24,7 +25,7 @@ import java.util.List;
  * Created by fangping on 2016/7/7.
  */
 
-public class ContractTemplateAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ContractTemplateAdapter extends RecyclerView.Adapter<ContractTemplateAdapter.ContractTemplateViewHolder> {
 
     private Context mContext;
     private final List<ContractsTemplateInfo> mList = new ArrayList<>();
@@ -36,6 +37,7 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<RecyclerView.V
     public void setData(List<ContractsTemplateInfo> list) {
         this.mList.clear();
         this.mList.addAll(list);
+        Collections.reverse(mList);
     }
 
     public List<ContractsTemplateInfo> getData() {
@@ -43,21 +45,54 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<RecyclerView.V
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ContractTemplateViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_contracts_template, parent, false);
-
         return new ContractTemplateViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        String deviceType = mList.get(position).getDeviceType();
-        ((ContractTemplateViewHolder) holder).nameTextView.setText(deviceType);
-        final EditText etContractItemNum = ((ContractTemplateViewHolder) holder).etContractItemNum;
+    public void onBindViewHolder(ContractTemplateViewHolder holder, final int position) {
+        final String name = mList.get(position).getName();
+        holder.nameTextView.setText(name);
+        final EditText etContractItemNum = holder.etContractItemNum;
+        holder.ivContractItemDel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etContractItemNum.clearFocus();
+                dismissInputMethodManager(etContractItemNum);
+                String text = etContractItemNum.getText().toString();
+                if (!TextUtils.isEmpty(text)) {
+                    int i = Integer.parseInt(text);
+                    if (i > 0) {
+                        i--;
+                        etContractItemNum.setText(i + "");
+                    }
+                } else {
+                    etContractItemNum.setText(0 + "");
+                }
+            }
+        });
+        holder.ivContractItemAdd.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                etContractItemNum.clearFocus();
+                dismissInputMethodManager(etContractItemNum);
+                String text = etContractItemNum.getText().toString();
+                if (!TextUtils.isEmpty(text)) {
+                    int i = Integer.parseInt(text);
+                    if (i >= 0) {
+                        i++;
+                        etContractItemNum.setText(i + "");
+                    }
+                } else {
+                    etContractItemNum.setText(0 + "");
+                }
+            }
+        });
         if (etContractItemNum.getTag() instanceof TextWatcher) {
             etContractItemNum.removeTextChangedListener((TextWatcher) etContractItemNum.getTag());
         }
-        TextWatcher watcher = new TextWatcher() {
+        final TextWatcher watcher = new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -86,54 +121,21 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<RecyclerView.V
         };
         etContractItemNum.addTextChangedListener(watcher);
         etContractItemNum.setTag(watcher);
-        ((ContractTemplateViewHolder) holder).ivContractItemDel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etContractItemNum.clearFocus();
-                dismissInputMethodManager(etContractItemNum);
-                String text = etContractItemNum.getText().toString();
-                if (!TextUtils.isEmpty(text)) {
-                    int i = Integer.parseInt(text);
-                    if (i > 0) {
-                        i--;
-                        etContractItemNum.setText(i + "");
-                    }
-                } else {
-                    etContractItemNum.setText(0 + "");
-                }
-            }
-        });
-        ((ContractTemplateViewHolder) holder).ivContractItemAdd.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etContractItemNum.clearFocus();
-                dismissInputMethodManager(etContractItemNum);
-                String text = etContractItemNum.getText().toString();
-                if (!TextUtils.isEmpty(text)) {
-                    int i = Integer.parseInt(text);
-                    if (i >= 0) {
-                        i++;
-                        etContractItemNum.setText(i + "");
-                    }
-                } else {
-                    etContractItemNum.setText(0 + "");
-                }
-            }
-        });
     }
+
 
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
-    class ContractTemplateViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        ImageView ivContractItemDel;
-        EditText etContractItemNum;
-        ImageView ivContractItemAdd;
+    static class ContractTemplateViewHolder extends RecyclerView.ViewHolder {
+        final TextView nameTextView;
+        final ImageView ivContractItemDel;
+        final EditText etContractItemNum;
+        final ImageView ivContractItemAdd;
 
-        public ContractTemplateViewHolder(View itemView) {
+        ContractTemplateViewHolder(View itemView) {
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.tv_contacts_template_name);
             ivContractItemDel = (ImageView) itemView.findViewById(R.id.iv_contract_item_del);

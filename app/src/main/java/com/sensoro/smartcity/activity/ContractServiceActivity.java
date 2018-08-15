@@ -366,8 +366,8 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 String phone = etContractServicePhone.getText().toString();
                 String line7 = etContractAge.getText().toString();
                 String placeType = tvContractServicePlace.getText().toString();
-
-                mPrestener.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType, sex);
+                List<ContractsTemplateInfo> data = contractTemplateAdapter.getData();
+                mPrestener.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType, sex, data);
                 break;
         }
     }

@@ -69,7 +69,6 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
     /**
      * 处理接收的数据
      *
-     * @param deviceAlarmLogRsp
      */
     private void handleDeviceAlarmLogs(DeviceAlarmLogRsp deviceAlarmLogRsp) {
         List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();

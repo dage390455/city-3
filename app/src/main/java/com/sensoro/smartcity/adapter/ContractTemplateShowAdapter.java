@@ -2,6 +2,7 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,7 +19,8 @@ import java.util.List;
  * Created by fangping on 2016/7/7.
  */
 
-public class ContractTemplateShowAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTemplateShowAdapter
+        .ContractTemplateShowViewHolder> {
 
     private Context mContext;
     private final List<ContractsTemplateInfo> mList = new ArrayList<>();
@@ -37,30 +39,36 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<RecyclerVi
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public ContractTemplateShowViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_contracts_template_show, parent, false);
 
-        return new ContractTemplateViewHolder(view);
+        return new ContractTemplateShowViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, final int position) {
-        String deviceType = mList.get(position).getDeviceType();
+    public void onBindViewHolder(ContractTemplateShowViewHolder holder, int position) {
+        String name = mList.get(position).getName();
+        if (TextUtils.isEmpty(name)) {
+            holder.nameTextView.setText(mList.get(position).getDeviceType());
+        } else {
+            holder.nameTextView.setText(name);
+        }
         int deviceCount = mList.get(position).getQuantity();
-        ((ContractTemplateViewHolder) holder).nameTextView.setText(deviceType);
-        ((ContractTemplateViewHolder) holder).contractItemShowNum.setText(deviceCount + "");
+
+        holder.contractItemShowNum.setText(String.valueOf(deviceCount));
     }
+
 
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
-    class ContractTemplateViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        TextView contractItemShowNum;
+    static class ContractTemplateShowViewHolder extends RecyclerView.ViewHolder {
+        final TextView nameTextView;
+        final TextView contractItemShowNum;
 
-        public ContractTemplateViewHolder(View itemView) {
+        ContractTemplateShowViewHolder(View itemView) {
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.tv_contacts_template_show_name);
             contractItemShowNum = (TextView) itemView.findViewById(R.id.et_contract_item_show_num);

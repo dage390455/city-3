@@ -500,7 +500,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
         TextView tvTitle;
     }
 
-    private class ChildViewHolder {
+    private static class ChildViewHolder {
         LinearLayout llContact;
         LinearLayout llConfirm;
         TextView tvAlarmResult;

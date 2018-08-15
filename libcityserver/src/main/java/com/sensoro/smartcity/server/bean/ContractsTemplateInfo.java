@@ -4,10 +4,18 @@ import java.io.Serializable;
 
 public class ContractsTemplateInfo implements Serializable {
     private String deviceType;
+    private String name;
     private String hardwareVersion;
     private int quantity;
     private int price;
 
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public int getPrice() {
         return price;

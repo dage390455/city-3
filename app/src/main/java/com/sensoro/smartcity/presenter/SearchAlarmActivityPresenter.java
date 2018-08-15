@@ -241,15 +241,15 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                         mHistoryKeywords_deviceName.add(text);
                     }
                     if (mHistoryKeywords_deviceName.size() > 0) {
-                        StringBuffer stringBuffer = new StringBuffer();
+                        StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < mHistoryKeywords_deviceName.size(); i++) {
                             if (i == (mHistoryKeywords_deviceName.size() - 1)) {
-                                stringBuffer.append(mHistoryKeywords_deviceName.get(i));
+                                stringBuilder.append(mHistoryKeywords_deviceName.get(i));
                             } else {
-                                stringBuffer.append(mHistoryKeywords_deviceName.get(i) + ",");
+                                stringBuilder.append(mHistoryKeywords_deviceName.get(i)).append(",");
                             }
                         }
-                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());
+                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuilder.toString());
                         mEditor.commit();
                     }
                     break;
@@ -258,15 +258,15 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                         mHistoryKeywords_deviceNumber.add(text);
                     }
                     if (mHistoryKeywords_deviceNumber.size() > 0) {
-                        StringBuffer stringBuffer = new StringBuffer();
+                        StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < mHistoryKeywords_deviceNumber.size(); i++) {
                             if (i == (mHistoryKeywords_deviceNumber.size() - 1)) {
-                                stringBuffer.append(mHistoryKeywords_deviceNumber.get(i));
+                                stringBuilder.append(mHistoryKeywords_deviceNumber.get(i));
                             } else {
-                                stringBuffer.append(mHistoryKeywords_deviceNumber.get(i) + ",");
+                                stringBuilder.append(mHistoryKeywords_deviceNumber.get(i)).append(",");
                             }
                         }
-                        mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, stringBuffer.toString());
+                        mEditor.putString(PREFERENCE_KEY_DEVICE_NUM, stringBuilder.toString());
                         mEditor.commit();
                     }
                     break;
@@ -275,15 +275,15 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                         mHistoryKeywords_devicePhone.add(text);
                     }
                     if (mHistoryKeywords_devicePhone.size() > 0) {
-                        StringBuffer stringBuffer = new StringBuffer();
+                        StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < mHistoryKeywords_devicePhone.size(); i++) {
                             if (i == (mHistoryKeywords_devicePhone.size() - 1)) {
-                                stringBuffer.append(mHistoryKeywords_devicePhone.get(i));
+                                stringBuilder.append(mHistoryKeywords_devicePhone.get(i));
                             } else {
-                                stringBuffer.append(mHistoryKeywords_devicePhone.get(i) + ",");
+                                stringBuilder.append(mHistoryKeywords_devicePhone.get(i)).append(",");
                             }
                         }
-                        mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, stringBuffer.toString());
+                        mEditor.putString(PREFERENCE_KEY_DEVICE_PHONE, stringBuilder.toString());
                         mEditor.commit();
                     }
                     break;
@@ -292,15 +292,15 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                         mHistoryKeywords_deviceName.add(text);
                     }
                     if (mHistoryKeywords_deviceName.size() > 0) {
-                        StringBuffer stringBuffer = new StringBuffer();
+                        StringBuilder stringBuilder = new StringBuilder();
                         for (int i = 0; i < mHistoryKeywords_deviceName.size(); i++) {
                             if (i == (mHistoryKeywords_deviceName.size() - 1)) {
-                                stringBuffer.append(mHistoryKeywords_deviceName.get(i));
+                                stringBuilder.append(mHistoryKeywords_deviceName.get(i));
                             } else {
-                                stringBuffer.append(mHistoryKeywords_deviceName.get(i) + ",");
+                                stringBuilder.append(mHistoryKeywords_deviceName.get(i)).append(",");
                             }
                         }
-                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());
+                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuilder.toString());
                         mEditor.commit();
                     }
                     //

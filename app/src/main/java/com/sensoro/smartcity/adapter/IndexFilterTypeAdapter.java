@@ -20,12 +20,12 @@ import java.util.List;
  * Created by fangping on 2016/7/7.
  */
 
-public class IndexFilterTypeAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class IndexFilterTypeAdapter extends RecyclerView.Adapter<IndexFilterTypeAdapter.IndexFilterTypeViewHolder> {
 
     private Context mContext;
     private List<String> mList;
 
-    RecycleViewItemClickListener itemClickListener;
+    private RecycleViewItemClickListener itemClickListener;
 
     public IndexFilterTypeAdapter(Context context, List<String> list, RecycleViewItemClickListener itemClickListener) {
         this.mContext = context;
@@ -34,39 +34,40 @@ public class IndexFilterTypeAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public IndexFilterTypeViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.item_index_type, null);
         return new IndexFilterTypeViewHolder(view, itemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(IndexFilterTypeViewHolder holder, int position) {
         if (mList == null) {
             return;
         }
-        ((IndexFilterTypeViewHolder) holder).nameTextView.setText(mList.get(position));
+        holder.nameTextView.setText(mList.get(position));
         if (position != 0) {
-            ((IndexFilterTypeViewHolder) holder).iconLayout.setVisibility(View.VISIBLE);
-            ((IndexFilterTypeViewHolder) holder).iconImageView.setImageResource(Constants.TYPE_MENU_RESOURCE[position-1]);
+            holder.iconLayout.setVisibility(View.VISIBLE);
+            holder.iconImageView.setImageResource(Constants.TYPE_MENU_RESOURCE[position
+                    - 1]);
         } else {
-            ((IndexFilterTypeViewHolder) holder).iconLayout.setVisibility(View.GONE);
+            holder.iconLayout.setVisibility(View.GONE);
         }
-
     }
+
 
     @Override
     public int getItemCount() {
         return mList.size();
     }
 
-    class IndexFilterTypeViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        ImageView iconImageView;
-        LinearLayout iconLayout;
-        RecycleViewItemClickListener itemClickListener;
+    static class IndexFilterTypeViewHolder extends RecyclerView.ViewHolder {
+        final TextView nameTextView;
+        final ImageView iconImageView;
+        final LinearLayout iconLayout;
+        final RecycleViewItemClickListener itemClickListener;
 
-        public IndexFilterTypeViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
+        IndexFilterTypeViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
             super(itemView);
             iconImageView = (ImageView) itemView.findViewById(R.id.item_index_type_icon);
             iconLayout = (LinearLayout) itemView.findViewById(R.id.item_index_type_icon_layout);

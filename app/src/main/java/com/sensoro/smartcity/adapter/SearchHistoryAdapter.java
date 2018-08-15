@@ -17,11 +17,11 @@ import java.util.List;
  * Created by fangping on 2016/7/7.
  */
 
-public class SearchHistoryAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdapter.SearchHistoryViewHolder> {
 
     private Context mContext;
     private List<String> mList;
-    RecycleViewItemClickListener itemClickListener;
+    private RecycleViewItemClickListener itemClickListener;
 
     public SearchHistoryAdapter(Context context, List<String> list, RecycleViewItemClickListener itemClickListener) {
         this.mContext = context;
@@ -31,18 +31,18 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public SearchHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.item_search_history, null);
         return new SearchHistoryViewHolder(view, itemClickListener);
     }
 
     @Override
-    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(SearchHistoryViewHolder holder, int position) {
         if (mList == null) {
             return;
         }
-        ((SearchHistoryViewHolder) holder).nameTextView.setText(mList.get(position));
+        holder.nameTextView.setText(mList.get(position));
     }
 
     @Override
@@ -50,12 +50,12 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<RecyclerView.View
         return mList.size();
     }
 
-    class SearchHistoryViewHolder extends RecyclerView.ViewHolder {
-        TextView nameTextView;
-        View itemView;
-        RecycleViewItemClickListener itemClickListener;
+    static class SearchHistoryViewHolder extends RecyclerView.ViewHolder {
+        final TextView nameTextView;
+        final View itemView;
+        final RecycleViewItemClickListener itemClickListener;
 
-        public SearchHistoryViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
+        SearchHistoryViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
             super(itemView);
             this.itemView = itemView;
             nameTextView = (TextView) itemView.findViewById(R.id.item_history_name);

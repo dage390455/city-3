@@ -244,7 +244,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     /**
      * 处理push来的json数据
      *
-     * @param data
      */
     private void organizeJsonData(DeviceInfo data) {
         if (data != null) {
@@ -353,8 +352,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                 if (mTypeSelectedIndex == 0) {
                     isMatcherType = true;
                 } else {
-                    for (int j = 0; j < menuTypeArray.length; j++) {
-                        String menuType = menuTypeArray[j];
+                    for (String menuType : menuTypeArray) {
                         if (unionTypeList.contains(menuType)) {
                             isMatcherType = true;
                             break;
@@ -449,8 +447,9 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 
 
     private void scheduleRefresh() {
-        for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
-            DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
+        List<DeviceInfo> deviceInfoList = SensoroCityApplication.getInstance().getData();
+        for (int i = 0; i < deviceInfoList.size(); i++) {
+            DeviceInfo deviceInfo = deviceInfoList.get(i);
             switch (deviceInfo.getStatus()) {
                 case SENSOR_STATUS_ALARM:
                     deviceInfo.setSort(1);

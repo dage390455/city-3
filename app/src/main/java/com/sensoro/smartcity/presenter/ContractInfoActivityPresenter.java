@@ -49,7 +49,6 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     //
     private String contract_service_life;
     private List<ContractsTemplateInfo> data;
-    private String signDate;
 
     @Override
     public void initData(Context context) {
@@ -58,7 +57,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         serviceType = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_TYPE, -1);
         contract_service_life = mContext.getIntent().getStringExtra("contract_service_life");
         placeType = mContext.getIntent().getStringExtra("place");
-        signDate = mContext.getIntent().getStringExtra("signDate");
+        String signDate = mContext.getIntent().getStringExtra("signDate");
         id = mContext.getIntent().getIntExtra("id", -1);
         if (id == -1) {
             getView().setConfirmText("确认并生成二维码");

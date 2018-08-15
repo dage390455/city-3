@@ -81,14 +81,14 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         return mData.size();
     }
 
-    public class SelectedPicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    class SelectedPicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView iv_img;
         private ImageView image_delete;
         private LinearLayout ll_add;
         private int clickPosition;
 
-        public SelectedPicViewHolder(View itemView) {
+        SelectedPicViewHolder(View itemView) {
             super(itemView);
             iv_img = (ImageView) itemView.findViewById(R.id.iv_img);
             image_delete = (ImageView) itemView.findViewById(R.id.image_delete);

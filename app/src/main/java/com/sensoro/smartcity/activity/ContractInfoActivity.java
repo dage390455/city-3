@@ -196,7 +196,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 //
                 etContractInfoLine6.setText(line6);
                 //
-                tvContractAge.setText(serviceAge);
+                tvContractAge.setText(serviceAge + "年");
                 break;
             case 2:
                 tvContractInfoLine1.setText("姓名");
@@ -219,7 +219,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
                 //
-                tvContractAge.setText(serviceAge);
+                tvContractAge.setText(serviceAge + "年");
                 break;
             case 3:
                 tvContractInfoLine1.setText("甲方（客户名称）");
@@ -243,7 +243,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
                 //
-                tvContractAge.setText(serviceAge);
+                tvContractAge.setText(serviceAge + "年");
                 //
                 break;
             default:

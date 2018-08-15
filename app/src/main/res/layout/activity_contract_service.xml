@@ -491,6 +491,25 @@
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="6年"
+                        android:padding="10dp"
+                        android:gravity="center"
+                        android:layout_marginRight="@dimen/x150"
+                        android:textColor="@color/c_626262"
+                        android:textSize="@dimen/city_tiny_large_size"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
                     <ImageView
                         android:id="@+id/iv_contract_age_del"
                         android:layout_width="wrap_content"
@@ -504,13 +523,13 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:inputType="number"
-                        android:padding="10dp"
-                        android:text="0"
                         android:gravity="center"
-                        android:minEms="3"
+                        android:inputType="number"
                         android:maxEms="5"
                         android:maxLength="5"
+                        android:minEms="3"
+                        android:padding="10dp"
+                        android:text="0"
                         android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"/>
 

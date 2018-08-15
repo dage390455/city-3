@@ -57,7 +57,7 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
         String oldText = mPref.getString(PREFERENCE_KEY_DEPLOY_NAME, "");
         if (!TextUtils.isEmpty(text)) {
             if (mHistoryKeywords.contains(text)) {
-                List<String> list = new ArrayList<String>();
+                List<String> list = new ArrayList<>();
                 for (String o : oldText.split(",")) {
                     if (!o.equalsIgnoreCase(text)) {
                         list.add(o);
@@ -66,15 +66,15 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
                 list.add(0, text);
                 mHistoryKeywords.clear();
                 mHistoryKeywords.addAll(list);
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < list.size(); i++) {
                     if (i == (list.size() - 1)) {
-                        stringBuffer.append(list.get(i));
+                        stringBuilder.append(list.get(i));
                     } else {
-                        stringBuffer.append(list.get(i) + ",");
+                        stringBuilder.append(list.get(i)).append(",");
                     }
                 }
-                mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuffer.toString());
+                mEditor.putString(PREFERENCE_KEY_DEPLOY_NAME, stringBuilder.toString());
                 mEditor.commit();
             } else {
                 if (TextUtils.isEmpty(oldText)) {
@@ -130,8 +130,7 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
     }
 
     private void filterDeviceInfoByNameAndAddress(String filter) {
-        List<DeviceInfo> originDeviceInfoList = new ArrayList<>();
-        originDeviceInfoList.addAll(SensoroCityApplication.getInstance().getData());
+        List<DeviceInfo> originDeviceInfoList = new ArrayList<>(SensoroCityApplication.getInstance().getData());
         ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
         for (DeviceInfo deviceInfo : originDeviceInfoList) {
             if (!TextUtils.isEmpty(deviceInfo.getName())) {

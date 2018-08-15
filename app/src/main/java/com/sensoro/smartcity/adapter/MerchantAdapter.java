@@ -85,14 +85,14 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
     public void setDataList(List<UserInfo> list) {
     }
 
-    class MerchantViewHolder {
+    static class MerchantViewHolder {
 
         TextView item_name;
         TextView item_phone;
         ImageView item_status;
         ImageView item_icon;
 
-        public MerchantViewHolder() {
+        MerchantViewHolder() {
 
         }
     }

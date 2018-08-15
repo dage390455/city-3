@@ -73,15 +73,15 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                     }
                 }
                 mHistoryKeywords.add(0, text);
-                StringBuffer stringBuffer = new StringBuffer();
+                StringBuilder stringBuilder = new StringBuilder();
                 for (int i = 0; i < mHistoryKeywords.size(); i++) {
                     if (i == (mHistoryKeywords.size() - 1)) {
-                        stringBuffer.append(mHistoryKeywords.get(i));
+                        stringBuilder.append(mHistoryKeywords.get(i));
                     } else {
-                        stringBuffer.append(mHistoryKeywords.get(i) + ",");
+                        stringBuilder.append(mHistoryKeywords.get(i)).append(",");
                     }
                 }
-                mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
+                mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
                 mEditor.commit();
             } else {
                 mEditor.putString(PREFERENCE_KEY_DEVICE, text + "," + oldText);
@@ -125,7 +125,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         });
     }
 
-    public void refreshUI(UserAccountRsp userAccountRsp) {
+    private void refreshUI(UserAccountRsp userAccountRsp) {
         List<UserInfo> list = userAccountRsp.getData();
         if (list.size() > 0) {
             mUserInfoList.clear();

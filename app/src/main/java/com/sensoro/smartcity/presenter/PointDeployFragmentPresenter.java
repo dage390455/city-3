@@ -121,7 +121,9 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
 
     private void vibrate() {
         Vibrator vibrator = (Vibrator) mContext.getSystemService(VIBRATOR_SERVICE);
-        vibrator.vibrate(200);
+        if (vibrator != null) {
+            vibrator.vibrate(200);
+        }
     }
 
     private void playVoice() {
@@ -161,8 +163,8 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
 
         String serialNumber = null;
         if (result != null) {
-            String[] data = null;
-            String type = null;
+            String[] data;
+            String type;
             data = result.split("\\|");
             // if length is 2, it is fault-tolerant hardware.
             type = data[0];

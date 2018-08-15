@@ -108,12 +108,12 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 AlarmInfo.RuleInfo rules[] = deviceInfo.getAlarms().getRules();
 
                 String alarm = null;
-                StringBuffer sbRule = new StringBuffer();
+                StringBuilder stringBuilder = new StringBuilder();
                 for (AlarmInfo.RuleInfo ruleInfo : rules) {
                     String sensorType = ruleInfo.getSensorTypes();
                     alarm = WidgetUtil.getBooleanAlarm(sensorType);
                     if (!TextUtils.isEmpty(alarm)) {
-                        sbRule.append(alarm);
+                        stringBuilder.append(alarm);
                         break;
                     }
                 }
@@ -126,23 +126,28 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                         String conditionType = ruleInfo.getConditionType();
                         String rule = null;
                         if (conditionType != null) {
-                            if (conditionType.equals("gt")) {
-                                rule = sensorType + ">" + value;
-                            } else if (conditionType.equals("lt")) {
-                                rule = sensorType + "<" + value;
-                            } else if (conditionType.equals("gte")) {
-                                rule = sensorType + ">=" + value;
-                            } else if (conditionType.equals("lte")) {
-                                rule = sensorType + "<=" + value;
+                            switch (conditionType) {
+                                case "gt":
+                                    rule = sensorType + ">" + value;
+                                    break;
+                                case "lt":
+                                    rule = sensorType + "<" + value;
+                                    break;
+                                case "gte":
+                                    rule = sensorType + ">=" + value;
+                                    break;
+                                case "lte":
+                                    rule = sensorType + "<=" + value;
+                                    break;
                             }
-                            sbRule.append(" " + rule);
+                            stringBuilder.append(" ").append(rule);
                         }
 
                     }
                 }
                 //
 
-                getView().setAlarmSetting(sbRule.toString());
+                getView().setAlarmSetting(stringBuilder.toString());
                 //
                 int interval = deviceInfo.getInterval();
                 getView().setInterval(DateUtil.secToTimeBefore(interval));
@@ -219,7 +224,9 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 freshStructData(tempDeviceInfo);
             }
         }
-        LogUtils.loge(this, data.toString());
+        if (data != null) {
+            LogUtils.loge(this, data.toString());
+        }
     }
 
     private boolean isActivityTop() {

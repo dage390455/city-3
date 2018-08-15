@@ -50,9 +50,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     private OnPopupCallbackListener mListener;
     private Animation showAnimation;
     private Animation dismissAnimation;
-    private View mView;
     private SensoroShadowView mShadowView;
-    private ImageView closeImageView;
     private EditText remarkEditText;
     private Button mButton;
     private final List<String> alarmType = new ArrayList<String>();
@@ -118,7 +116,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     private void initWidget() {
-        RecyclerView recyclerView = (RecyclerView) findViewById(R.id.recyclerView);
+        RecyclerView recyclerView = findViewById(R.id.recyclerView);
         adapter = new ImagePickerAdapter(mContext, selImageList, maxImgCount);
         adapter.setOnItemClickListener(this);
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
@@ -195,16 +193,16 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     private void init() {
-        mView = LayoutInflater.from(mContext).inflate(R.layout.layout_alarm_popup_new, this);
-        tvSpinnerResultInfo = (TextView) mView.findViewById(R.id.tv_spinner_result_info);
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.layout_alarm_popup_new, this);
+        tvSpinnerResultInfo = rootView.findViewById(R.id.tv_spinner_result_info);
         //
-        closeImageView = (ImageView) mView.findViewById(R.id.alarm_popup_close);
-        remarkEditText = (EditText) mView.findViewById(R.id.alarm_popup_remark);
-        mButton = (Button) mView.findViewById(R.id.alarm_popup_commit);
+        ImageView closeImageView = rootView.findViewById(R.id.alarm_popup_close);
+        remarkEditText = rootView.findViewById(R.id.alarm_popup_remark);
+        mButton = rootView.findViewById(R.id.alarm_popup_commit);
         //
-        spinnerResult = mView.findViewById(R.id.spinner_result);
-        spinnerType = mView.findViewById(R.id.spinner_type);
-        spinnerPlace = mView.findViewById(R.id.spinner_place);
+        spinnerResult = rootView.findViewById(R.id.spinner_result);
+        spinnerType = rootView.findViewById(R.id.spinner_type);
+        spinnerPlace = rootView.findViewById(R.id.spinner_place);
         //
         mButton.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
@@ -345,7 +343,9 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) this.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        }
     }
 
     @Override
@@ -446,9 +446,9 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 
     @Override
     public void onComplete(List<String> imagesUrl) {
-        String s = "";
+        StringBuilder s = new StringBuilder();
         for (String temp : imagesUrl) {
-            s += temp + "\n";
+            s.append(temp).append("\n");
         }
         dismissProgressDialog();
 //        toastShort("上传成功---");
