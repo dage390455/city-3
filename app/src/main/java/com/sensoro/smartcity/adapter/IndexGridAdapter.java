@@ -3,6 +3,7 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -33,7 +34,7 @@ import static android.view.View.VISIBLE;
 public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.IndexListViewHolder> implements Constants {
 
     private Context mContext;
-    private List<DeviceInfo> mList = new ArrayList<>();
+    private final List<DeviceInfo> mList = new ArrayList<>();
 
     private RecycleViewItemClickListener itemClickListener;
 
@@ -63,10 +64,8 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
 
     @Override
     public void onBindViewHolder(IndexListViewHolder holder, int position) {
-        if (mList == null) {
-            return;
-        }
         DeviceInfo deviceInfo = mList.get(position);
+        //
         Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
         String[] sensorTypes = deviceInfo.getSensorTypes();
         //
@@ -74,25 +73,33 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
         if (sensoroDetails != null && sortSensorTypes.size() > 0) {
 //            holder.item_value2.setEditText("");
 //            holder.item_unit2.setEditText("");
+            String sensorType1;
+            SensorStruct sensorStruct1;
+            String sensorType2;
+            SensorStruct sensorStruct2;
             if (sortSensorTypes.size() > 1) {
                 //两条数据
-                String sensorType1 = sortSensorTypes.get(0);
-                SensorStruct sensorStruct1 = sensoroDetails.get(sensorType1);
+                sensorType1 = sortSensorTypes.get(0);
+                sensorStruct1 = sensoroDetails.get(sensorType1);
                 //第一条数据
                 if (sensorStruct1 == null) {
                     holder.item_value2.setText("");
                     holder.item_unit2.setVisibility(GONE);
                 } else {
+                    holder.item_value2.setVisibility(VISIBLE);
+                    holder.item_unit2.setVisibility(VISIBLE);
                     WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType1,
                             sensorStruct1);
                 }
-                String sensorType2 = sortSensorTypes.get(1);
-                SensorStruct sensorStruct2 = sensoroDetails.get(sensorType2);
+                sensorType2 = sortSensorTypes.get(1);
+                sensorStruct2 = sensoroDetails.get(sensorType2);
                 //第二条数据
                 if (sensorStruct2 == null) {
                     holder.item_value1.setText("");
                     holder.item_unit1.setVisibility(GONE);
                 } else {
+                    holder.item_value1.setVisibility(VISIBLE);
+                    holder.item_unit1.setVisibility(VISIBLE);
                     WidgetUtil.judgeIndexSensorType(mContext, holder.item_value1, holder.item_unit1, sensorType2,
                             sensorStruct2);
                 }
@@ -100,18 +107,20 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
                     WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
                 }
             } else {
-                String sensorType1 = sortSensorTypes.get(0);
-                SensorStruct sensorStruct1 = sensoroDetails.get(sensorType1);
+                sensorType1 = sortSensorTypes.get(0);
+                sensorStruct1 = sensoroDetails.get(sensorType1);
                 //只有一条数据
                 if (sensorStruct1 != null) {
+                    holder.item_value1.setVisibility(VISIBLE);
+                    holder.item_unit1.setVisibility(VISIBLE);
                     WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
                             sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
                 } else {
-                    if (sensorType1 != null) {
-                        WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
-                    }
                     holder.item_value1.setText("");
                     holder.item_unit1.setVisibility(GONE);
+                }
+                if (sensorType1 != null) {
+                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
                 }
             }
             Drawable drawable = null;
@@ -179,15 +188,11 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
             holder.item_unit1.setTextColor(mContext.getResources().getColor(color));
             holder.item_value2.setTextColor(mContext.getResources().getColor(color));
             holder.item_unit2.setTextColor(mContext.getResources().getColor(color));
-            if (deviceInfo.getName() == null) {
+            String deviceInfoName = deviceInfo.getName();
+            if (TextUtils.isEmpty(deviceInfoName)) {
                 holder.item_name.setText(deviceInfo.getSn());
             } else {
-                if (deviceInfo.getName().equals("")) {
-                    holder.item_name.setText(deviceInfo.getSn());
-                } else {
-                    String name = deviceInfo.getName();
-                    holder.item_name.setText(name);
-                }
+                holder.item_name.setText(deviceInfoName);
             }
         } else {
             holder.item_alarm_view.setVisibility(View.GONE);

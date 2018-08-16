@@ -243,30 +243,29 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 
     /**
      * 处理push来的json数据
-     *
      */
-    private void organizeJsonData(DeviceInfo data) {
-        if (data != null) {
+    private void organizeJsonData(DeviceInfo newDeviceInfo) {
+        if (newDeviceInfo != null) {
             boolean isContains = false;
             for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
                 DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
-                if (deviceInfo.getSn().equals(data.getSn())) {
-                    if (data.getStatus() == SENSOR_STATUS_ALARM && deviceInfo.getStatus() != SENSOR_STATUS_ALARM) {
+                if (deviceInfo.getSn().equals(newDeviceInfo.getSn())) {
+                    if (newDeviceInfo.getStatus() == SENSOR_STATUS_ALARM && deviceInfo.getStatus() != SENSOR_STATUS_ALARM) {
                         isAlarmPlay = true;
                     }
-                    data.setPushDevice(true);
-                    SensoroCityApplication.getInstance().getData().set(i, data);
+                    newDeviceInfo.setPushDevice(true);
+                    SensoroCityApplication.getInstance().getData().set(i, newDeviceInfo);
                     isContains = true;
                     break;
                 }
             }
             if (!isContains) {
-                if (data.getStatus() == SENSOR_STATUS_ALARM) {
+                if (newDeviceInfo.getStatus() == SENSOR_STATUS_ALARM) {
                     isAlarmPlay = true;
                 }
-                data.setNewDevice(true);
-                data.setPushDevice(true);
-                SensoroCityApplication.getInstance().getData().add(data);
+                newDeviceInfo.setNewDevice(true);
+                newDeviceInfo.setPushDevice(true);
+                SensoroCityApplication.getInstance().getData().add(newDeviceInfo);
             }
             isNeedRefresh = true;
         }
@@ -524,9 +523,10 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     public void onMessageEvent(EventData eventData) {
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
+        Object data = eventData.data;
         if (code == EVENT_DATA_SOCKET_DATA) {
-            if (eventData.data instanceof DeviceInfo) {
-                organizeJsonData((DeviceInfo) eventData.data);
+            if (data instanceof DeviceInfo) {
+                organizeJsonData((DeviceInfo) data);
             }
         }
     }

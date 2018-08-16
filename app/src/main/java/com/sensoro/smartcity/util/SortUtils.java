@@ -9,7 +9,7 @@ public class SortUtils {
     public static List<String> sortSensorTypes(String[] sensorTypes) {
         final List<String> tempSensorTypes = new ArrayList<>();
         //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
-        Arrays.sort(sensorTypes);
+//        Arrays.sort(sensorTypes);
         final List<String> originList = Arrays.asList(sensorTypes);
         Collections.sort(originList, String.CASE_INSENSITIVE_ORDER);
         if (sensorTypes.length == 3) {

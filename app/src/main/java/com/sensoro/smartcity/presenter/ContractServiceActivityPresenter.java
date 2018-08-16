@@ -155,6 +155,10 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 intent.putExtra(EXTRA_CONTRACT_TYPE, 1);
                 //
                 if (RegexUtils.checkContractNotEmpty(line1)) {
+                    if (line1.length() > 48) {
+                        getView().toastShort("法定代表人不能超过48个字符");
+                        return;
+                    }
                     intent.putExtra("line1", line1);
                 } else {
                     getView().toastShort("请输入法定代表人");
@@ -167,6 +171,10 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line2)) {
+                    if (line2.length() > 100) {
+                        getView().toastShort("企业名称不能超过100个字符");
+                        return;
+                    }
                     intent.putExtra("line2", line2);
                 } else {
                     getView().toastShort("请输入企业名称");
@@ -195,12 +203,20 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line5)) {
+                    if (line5.length() > 200) {
+                        getView().toastShort("住址信息不能超过200个字符");
+                        return;
+                    }
                     intent.putExtra("line5", line5);
                 } else {
                     getView().toastShort("请填写住址信息");
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line6)) {
+                    if (line6.length() > 48) {
+                        getView().toastShort("有效期不能超过48个字符");
+                        return;
+                    }
                     intent.putExtra("line6", line6);
                 } else {
                     getView().toastShort("请输入有效期");
@@ -210,6 +226,10 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             case 2:
                 intent.putExtra(EXTRA_CONTRACT_TYPE, 2);
                 if (RegexUtils.checkContractNotEmpty(line1)) {
+                    if (line1.length() > 48) {
+                        getView().toastShort("姓名不能超过48个字符");
+                        return;
+                    }
                     intent.putExtra("line1", line1);
                 } else {
                     getView().toastShort("请输入姓名");
@@ -234,6 +254,10 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line4)) {
+                    if (line4.length() > 200) {
+                        getView().toastShort("住址信息不能超过200个字符");
+                        return;
+                    }
                     intent.putExtra("line4", line4);
                 } else {
                     getView().toastShort("请填写住址信息");
@@ -243,12 +267,20 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             case 3:
                 intent.putExtra(EXTRA_CONTRACT_TYPE, 3);
                 if (RegexUtils.checkContractNotEmpty(line1)) {
+                    if (line1.length() > 100) {
+                        getView().toastShort("甲方（客户名称）不能超过100个字符");
+                        return;
+                    }
                     intent.putExtra("line1", line1);
                 } else {
                     getView().toastShort("请输入甲方（客户名称）");
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line2)) {
+                    if (line2.length() > 48) {
+                        getView().toastShort("业主姓名不能超过48个字符");
+                        return;
+                    }
                     intent.putExtra("line2", line2);
                 } else {
                     getView().toastShort("请输入业主姓名");
@@ -261,6 +293,10 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     return;
                 }
                 if (RegexUtils.checkContractNotEmpty(line4)) {
+                    if (line4.length() > 200) {
+                        getView().toastShort("住址信息不能超过200个字符");
+                        return;
+                    }
                     intent.putExtra("line4", line4);
                 } else {
                     getView().toastShort("请填写住址信息");

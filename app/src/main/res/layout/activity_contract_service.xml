@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/list_sep_color"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/list_sep_color"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/contract_service_title_layout"
@@ -20,7 +20,7 @@
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:padding="15dp"
-            android:src="@mipmap/ic_back"/>
+            android:src="@mipmap/ic_back" />
 
         <TextView
             android:id="@+id/contract_service_title"
@@ -29,7 +29,7 @@
             android:layout_centerInParent="true"
             android:text="物联网消防安全预警服务合同"
             android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_large_size"/>
+            android:textSize="@dimen/city_large_size" />
 
         <TextView
             android:id="@+id/tv_contract_service_title_retake"
@@ -40,14 +40,13 @@
             android:layout_marginRight="10dp"
             android:text="重拍"
             android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_tiny_large_size"/>
+            android:textSize="@dimen/city_tiny_large_size" />
     </RelativeLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        >
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -67,24 +66,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/y1"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null" />
 
                 <LinearLayout
                     android:id="@+id/ll_contract_service_line1"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/y160"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line1"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
                         android:text="法定代表人"
                         android:textColor="@color/c_252525"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
 
                     <EditText
@@ -97,17 +97,18 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line1"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:padding="15dp"
                         android:src="@mipmap/ic_et_delete"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -116,24 +117,25 @@
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null" />
 
                 <LinearLayout
                     android:id="@+id/ll_contract_service_phone"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/y160"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_contract_service_phone"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
                         android:text="手机号"
                         android:textColor="@color/c_252525"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
 
                     <EditText
@@ -146,17 +148,18 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_phone"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:padding="15dp"
                         android:src="@mipmap/ic_et_delete"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -165,24 +168,25 @@
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null" />
 
                 <LinearLayout
                     android:id="@+id/ll_contract_service_line2"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/y160"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line2"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
                         android:text="企业名称"
                         android:textColor="@color/c_252525"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <EditText
                         android:id="@+id/et_contract_service_line2"
@@ -194,7 +198,7 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <TextView
                         android:id="@+id/tv_show_contract_service_line2"
@@ -207,17 +211,18 @@
                         android:cropToPadding="true"
                         android:textColor="@color/c_626262"
                         android:textSize="@dimen/city_tiny_large_size"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line2"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:padding="15dp"
                         android:src="@mipmap/ic_forward"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -226,24 +231,25 @@
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null" />
 
                 <LinearLayout
                     android:id="@+id/ll_contract_service_line3"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/y160"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line3"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
                         android:text="社会信用代码"
                         android:textColor="@color/c_252525"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
 
                     <EditText
@@ -256,17 +262,18 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line3"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:padding="15dp"
                         android:src="@mipmap/ic_et_delete"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -275,23 +282,24 @@
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null" />
 
                 <LinearLayout
                     android:id="@+id/ll_contract_service_line4"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/y160"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line4"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
                         android:text="注册号"
                         android:textColor="@color/c_252525"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
 
                     <EditText
@@ -303,18 +311,20 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line4"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:padding="15dp"
                         android:src="@mipmap/ic_et_delete"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -323,23 +333,24 @@
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null" />
 
                 <LinearLayout
                     android:id="@+id/ll_contract_service_line5"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/y160"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line5"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
                         android:text="住址"
                         android:textColor="@color/c_252525"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
 
                     <EditText
@@ -351,18 +362,20 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line5"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:padding="15dp"
                         android:src="@mipmap/ic_et_delete"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -371,25 +384,26 @@
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null" />
 
                 <LinearLayout
                     android:id="@+id/ll_contract_service_line6"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/y160"
+                    android:layout_height="wrap_content"
                     android:gravity="center_vertical"
                     android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line6"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
                         android:text="有效期"
                         android:textColor="@color/c_252525"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
 
                     <EditText
@@ -402,17 +416,18 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <ImageView
                         android:id="@+id/iv_contract_service_line6"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:padding="15dp"
                         android:src="@mipmap/ic_et_delete"
-                        android:visibility="gone"/>
+                        android:visibility="gone" />
                 </LinearLayout>
 
                 <ImageView
@@ -421,7 +436,7 @@
                     android:layout_height="@dimen/y1"
                     android:layout_marginLeft="12dp"
                     android:background="@color/c_e7e7e7"
-                    android:contentDescription="@null"/>
+                    android:contentDescription="@null" />
 
                 <LinearLayout
                     android:id="@+id/ll_contract_service_place_type"
@@ -433,13 +448,14 @@
                     <TextView
                         android:id="@+id/tv_contract_service_place_type_title"
                         android:layout_width="120dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="15dp"
+                        android:gravity="center_vertical"
                         android:text="场地性质"
                         android:textColor="@color/c_252525"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <TextView
                         android:id="@+id/tv_contract_service_place_type"
@@ -452,17 +468,17 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"
-                        />
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <ImageView
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        android:layout_height="@dimen/y160"
                         android:layout_alignParentRight="true"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
+                        android:gravity="center_vertical"
                         android:padding="15dp"
-                        android:src="@mipmap/ic_forward"/>
+                        android:src="@mipmap/ic_forward" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -476,13 +492,14 @@
 
                 <TextView
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/y160"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="15dp"
+                    android:gravity="center_vertical"
                     android:text="服务年限"
                     android:textColor="@color/c_626262"
-                    android:textSize="@dimen/city_tiny_large_size"/>
+                    android:textSize="@dimen/city_tiny_large_size" />
 
                 <LinearLayout
                     android:layout_width="wrap_content"
@@ -494,12 +511,12 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="6年"
-                        android:padding="10dp"
-                        android:gravity="center"
                         android:layout_marginRight="@dimen/x150"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:text="6年"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -514,7 +531,7 @@
                         android:id="@+id/iv_contract_age_del"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_contract_del"/>
+                        android:src="@mipmap/ic_contract_del" />
 
                     <EditText
                         android:id="@+id/et_contract_age"
@@ -531,14 +548,14 @@
                         android:padding="10dp"
                         android:text="0"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_tiny_large_size"/>
+                        android:textSize="@dimen/city_tiny_large_size" />
 
                     <ImageView
                         android:id="@+id/iv_contract_age_add"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginRight="15dp"
-                        android:src="@mipmap/ic_contract_add"/>
+                        android:src="@mipmap/ic_contract_add" />
                 </LinearLayout>
             </RelativeLayout>
 
@@ -551,9 +568,7 @@
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/rv_sensor_count"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-                </android.support.v7.widget.RecyclerView>
+                    android:layout_height="wrap_content"></android.support.v7.widget.RecyclerView>
             </RelativeLayout>
 
         </LinearLayout>
@@ -573,6 +588,6 @@
         android:gravity="center"
         android:text="下一步"
         android:textColor="@color/white"
-        android:textSize="@dimen/city_btn_text_size"/>
+        android:textSize="@dimen/city_btn_text_size" />
 
 </LinearLayout>

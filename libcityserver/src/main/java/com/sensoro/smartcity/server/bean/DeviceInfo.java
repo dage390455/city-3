@@ -35,7 +35,6 @@ public class DeviceInfo implements Serializable, Comparable {
     private boolean isNewDevice;
     private boolean isPushDevice;
 
-    //    private SensorDetailInfo sensoroDetails;
     private Map<String, SensorStruct> sensoroDetails;
 
     public String getAddress() {
@@ -197,13 +196,6 @@ public class DeviceInfo implements Serializable, Comparable {
         this.status = status;
     }
 
-    //    public SensorDetailInfo getSensoroDetails() {
-//        return sensoroDetails;
-//    }
-//
-//    public void setSensoroDetails(SensorDetailInfo sensoroDetails) {
-//        this.sensoroDetails = sensoroDetails;
-//    }
     public Map<String, SensorStruct> getSensoroDetails() {
         return sensoroDetails;
     }

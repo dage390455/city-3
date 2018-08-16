@@ -34,7 +34,7 @@ import static android.view.View.VISIBLE;
 public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.IndexListViewHolder> implements Constants {
 
     private Context mContext;
-    private List<DeviceInfo> mList = new ArrayList<>();
+    private final List<DeviceInfo> mList = new ArrayList<>();
 
     private RecycleViewItemClickListener itemClickListener;
 
@@ -64,9 +64,6 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
 
     @Override
     public void onBindViewHolder(IndexListViewHolder holder, int position) {
-        if (mList == null) {
-            return;
-        }
         DeviceInfo deviceInfo = mList.get(position);
         int color = 0;
         switch (deviceInfo.getStatus()) {
@@ -89,36 +86,38 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
         holder.item_value2.setTextColor(mContext.getResources().getColor(color));
         holder.item_unit2.setTextColor(mContext.getResources().getColor(color));
         holder.item_date.setTextColor(mContext.getResources().getColor(color));
-        if (TextUtils.isEmpty(deviceInfo.getName())) {
+        String deviceInfoName = deviceInfo.getName();
+        if (TextUtils.isEmpty(deviceInfoName)) {
             holder.item_name.setText(deviceInfo.getSn());
         } else {
-            if (TextUtils.isEmpty(deviceInfo.getName())) {
-                holder.item_name.setText(deviceInfo.getSn());
-            } else {
-                String name = deviceInfo.getName();
-                char[] name_chars = name.toCharArray();
-                StringBuffer buffer = new StringBuffer();
-                for (int i = 0; i < name_chars.length; i++) {
-                    char char_name = name_chars[i];
-                    if (i % 9 == 0 && i != 0) {
-                        buffer.append(char_name);
-                    } else {
-                        buffer.append(char_name);
-                    }
-                }
-                holder.item_name.setText(buffer.toString());
-            }
-
+//            char[] name_chars = deviceInfoName.toCharArray();
+//            StringBuilder stringBuilder = new StringBuilder();
+//            for (int i = 0; i < name_chars.length; i++) {
+//                char char_name = name_chars[i];
+//                if (i % 9 == 0 && i != 0) {
+//                    stringBuilder.append(char_name);
+//                } else {
+//                    stringBuilder.append(char_name);
+//                }
+//            }
+//            holder.item_name.setText(stringBuilder.toString());
+            holder.item_name.setText(deviceInfoName);
         }
         holder.item_date.setText(DateUtil.getFullParseDate(deviceInfo.getUpdatedTime()));
+        //
         Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
         String[] sensorTypes = deviceInfo.getSensorTypes();
         List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
+        //
         if (sensoroDetails != null && sortSensorTypes.size() > 0) {
+            SensorStruct sensorStruct1;
+            String sensorType1;
+            SensorStruct sensorStruct2;
+            String sensorType2;
             if (sortSensorTypes.size() > 1) {
                 //两条数据
-                String sensorType1 = sortSensorTypes.get(0);
-                SensorStruct sensorStruct1 = sensoroDetails.get(sensorType1);
+                sensorType1 = sortSensorTypes.get(0);
+                sensorStruct1 = sensoroDetails.get(sensorType1);
                 //第一条
                 if (sensorStruct1 == null) {
                     holder.item_value2.setText("");
@@ -130,38 +129,40 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
                     holder.item_unit2.setVisibility(View.VISIBLE);
                 }
                 //第二条
-                String sensorType2 = sortSensorTypes.get(1);
-                SensorStruct sensorStruct2 = sensoroDetails.get(sensorType2);
+                sensorType2 = sortSensorTypes.get(1);
+                sensorStruct2 = sensoroDetails.get(sensorType2);
                 if (sensorStruct2 == null) {
                     holder.item_value1.setText("");
                     holder.item_unit1.setVisibility(GONE);
                 } else {
                     WidgetUtil.judgeIndexSensorType(mContext, holder.item_value1, holder.item_unit1, sensorType2,
                             sensorStruct2);
+                    holder.item_value1.setVisibility(View.VISIBLE);
+                    holder.item_unit1.setVisibility(View.VISIBLE);
                 }
                 if (sensorType1 != null) {
                     WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
                 }
             } else {
-                String sensorType1 = sortSensorTypes.get(0);
-                SensorStruct sensorStruct1 = sensoroDetails.get(sensorType1);
+                sensorType1 = sortSensorTypes.get(0);
+                sensorStruct1 = sensoroDetails.get(sensorType1);
                 //只有一条数据
                 if (sensorStruct1 != null) {
                     holder.item_unit1.setVisibility(VISIBLE);
+                    holder.item_value1.setVisibility(VISIBLE);
                     WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
                             sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
                 } else {
-                    if (sensorType1 != null) {
-                        WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
-                    }
                     holder.item_value1.setText("");
                     holder.item_unit1.setVisibility(GONE);
+                }
+                if (sensorType1 != null) {
+                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
                 }
                 holder.item_value2.setVisibility(GONE);
                 holder.item_unit2.setVisibility(GONE);
             }
             holder.item_iv_status.setVisibility(View.VISIBLE);
-
             Drawable drawable = null;
             switch (deviceInfo.getStatus()) {
                 case SENSOR_STATUS_ALARM:

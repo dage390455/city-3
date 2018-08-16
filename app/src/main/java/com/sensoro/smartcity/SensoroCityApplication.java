@@ -32,6 +32,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -41,7 +42,7 @@ import java.util.List;
 public class SensoroCityApplication extends MultiDexApplication implements Thread.UncaughtExceptionHandler, Repause
         .Listener, SensoroPushListener, OnResultListener<AccessToken> {
 
-    private final List<DeviceInfo> mDeviceInfoList = new ArrayList<>();
+    private final List<DeviceInfo> mDeviceInfoList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
     public int saveSearchType = Constants.TYPE_DEVICE_NAME;
