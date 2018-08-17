@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -21,14 +22,15 @@ import java.util.List;
 public class IndexFilterStatusAdapter extends RecyclerView.Adapter<IndexFilterStatusAdapter.IndexFilterTypeViewHolder> {
 
     private Context mContext;
-    private List<String> mList;
+    private final List<String> mList = new ArrayList<>();
 
     private RecycleViewItemClickListener itemClickListener;
 
     public IndexFilterStatusAdapter(Context context, List<String> list, RecycleViewItemClickListener
             itemClickListener) {
         this.mContext = context;
-        this.mList = list;
+        this.mList.clear();
+        this.mList.addAll(list);
         this.itemClickListener = itemClickListener;
     }
 
@@ -41,9 +43,6 @@ public class IndexFilterStatusAdapter extends RecyclerView.Adapter<IndexFilterSt
 
     @Override
     public void onBindViewHolder(IndexFilterTypeViewHolder holder, int position) {
-        if (mList == null) {
-            return;
-        }
         holder.nameTextView.setText(mList.get(position));
         Drawable drawable = null;
         if (position != 0) {

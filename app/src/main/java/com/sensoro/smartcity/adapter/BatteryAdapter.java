@@ -27,7 +27,7 @@ import java.util.List;
 public class BatteryAdapter extends RecyclerView.Adapter<BatteryAdapter.BatteryViewHolder> {
 
     private Context mContext;
-    private List<DeviceRecentInfo> mList = new ArrayList<>();
+    private final List<DeviceRecentInfo> mList = new ArrayList<>();
     private RecycleViewItemClickListener itemClickListener;
 
     public BatteryAdapter(Context context, RecycleViewItemClickListener itemClickListener) {
@@ -53,17 +53,16 @@ public class BatteryAdapter extends RecyclerView.Adapter<BatteryAdapter.BatteryV
 
     @Override
     public void onBindViewHolder(BatteryViewHolder holder, int position) {
-        if (mList == null) {
-            return;
-        }
         DeviceRecentInfo deviceRecentInfo = mList.get(position);
         Date date = DateUtil.yearStringToDate(deviceRecentInfo.getDate());
         holder.dateTextView.setText(DateUtil.getMonthDate(date.getTime()));
+
         if (deviceRecentInfo.getBatteryAvg() != null) {
             if (deviceRecentInfo.getBatteryAvg() == -1) {
                 holder.batteryImageView.setVisibility(View.GONE);
             } else {
                 holder.batteryImageView.setVisibility(View.VISIBLE);
+                //
                 RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams
                         .MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
                 int src_height = mContext.getResources().getDimensionPixelSize(R.dimen.y680);

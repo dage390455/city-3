@@ -123,7 +123,7 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
                     holder.item_value2.setText("");
                     holder.item_unit2.setVisibility(GONE);
                 } else {
-                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType1,
+                    WidgetUtil.judgeIndexSensorType(holder.item_value2, holder.item_unit2, sensorType1,
                             sensorStruct1);
                     holder.item_value2.setVisibility(View.VISIBLE);
                     holder.item_unit2.setVisibility(View.VISIBLE);
@@ -135,13 +135,10 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
                     holder.item_value1.setText("");
                     holder.item_unit1.setVisibility(GONE);
                 } else {
-                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value1, holder.item_unit1, sensorType2,
+                    WidgetUtil.judgeIndexSensorType(holder.item_value1, holder.item_unit1, sensorType2,
                             sensorStruct2);
                     holder.item_value1.setVisibility(View.VISIBLE);
                     holder.item_unit1.setVisibility(View.VISIBLE);
-                }
-                if (sensorType1 != null) {
-                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
                 }
             } else {
                 sensorType1 = sortSensorTypes.get(0);
@@ -150,17 +147,17 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
                 if (sensorStruct1 != null) {
                     holder.item_unit1.setVisibility(VISIBLE);
                     holder.item_value1.setVisibility(VISIBLE);
-                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
-                            sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
+                    WidgetUtil.judgeIndexSensorType(holder.item_value1, holder.item_unit1,
+                            sensorType1, sensorStruct1);
                 } else {
                     holder.item_value1.setText("");
                     holder.item_unit1.setVisibility(GONE);
                 }
-                if (sensorType1 != null) {
-                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
-                }
                 holder.item_value2.setVisibility(GONE);
                 holder.item_unit2.setVisibility(GONE);
+            }
+            if (sensorType1 != null) {
+                WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
             }
             holder.item_iv_status.setVisibility(View.VISIBLE);
             Drawable drawable = null;

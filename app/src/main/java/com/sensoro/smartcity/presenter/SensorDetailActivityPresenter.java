@@ -477,7 +477,9 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
             getView().setRecentDaysInfo1TextView(WidgetUtil.getSensorTypeChinese(sensorType));
             if (sensorTypes.size() > 1) {
                 String sensorType2 = sensorTypes.get(1);
-                isDraw = WidgetUtil.needDrawKLayout(sensorType2);
+                if (isDraw) {
+                    isDraw = WidgetUtil.needDrawKLayout(sensorType2);
+                }
                 getView().setRecentDaysTitleTextView(WidgetUtil.getSensorTypeChinese(sensorType2));
                 getView().setRecentDaysInfo2TextView(true, WidgetUtil.getSensorTypesChinese(sensorTypes));
             }

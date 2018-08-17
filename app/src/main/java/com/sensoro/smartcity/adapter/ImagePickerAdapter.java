@@ -2,6 +2,7 @@ package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,11 +10,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.lzy.imagepicker.ImagePicker;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -152,7 +155,15 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                 iv_img.setVisibility(View.VISIBLE);
                 ll_add.setVisibility(View.GONE);
                 image_delete.setVisibility(View.VISIBLE);
-                ImagePicker.getInstance().getImageLoader().displayImage((Activity) mContext, item.path, iv_img, 0, 0);
+                //替换压缩0.01
+                Glide.with((Activity) mContext)                             //配置上下文
+                        .load(Uri.fromFile(new File(item.path)))    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                        .error(R.drawable.ic_default_image)           //设置错误图片
+                        .placeholder(R.drawable.ic_default_image)//设置占位图片
+                        .thumbnail(0.01f)
+                        .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                        .into(iv_img);
+//                ImagePicker.getInstance().getImageLoader().displayImage(, , iv_img, 0, 0);
                 clickPosition = position;
             }
         }

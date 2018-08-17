@@ -21,7 +21,7 @@ import java.util.List;
 public class RelationAdapter extends RecyclerView.Adapter<RelationAdapter.RelationViewHolder> {
 
     private Context mContext;
-    private List<String> mList = new ArrayList<>();
+    private final List<String> mList = new ArrayList<>();
     private RecycleViewItemClickListener itemClickListener;
 
     public RelationAdapter(Context context, RecycleViewItemClickListener itemClickListener) {
@@ -47,9 +47,6 @@ public class RelationAdapter extends RecyclerView.Adapter<RelationAdapter.Relati
 
     @Override
     public void onBindViewHolder(RelationViewHolder holder, int position) {
-        if (mList == null) {
-            return;
-        }
         holder.nameTextView.setText(mList.get(position));
     }
 

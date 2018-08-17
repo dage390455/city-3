@@ -35,7 +35,7 @@ import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
 
 public class TimerShaftAdapter extends BaseExpandableListAdapter {
 
-    private LayoutInflater inflater = null;
+    private LayoutInflater inflater;
     private Context mContext;
     private OnGroupItemClickListener itemClickListener;
     private OnPhotoClickListener onPhotoClickListener;
@@ -140,6 +140,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
         String time = DateUtil.getFullParseDate(recordInfo.getUpdatedTime());
         groupHolder.tvDay.setText(time);
         groupHolder.lineView.setVisibility(View.VISIBLE);
+        //
         if ("confirm".equals(recordInfo.getType())) {
             String source = recordInfo.getSource();
             String confirm_text = null;
@@ -160,14 +161,14 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                         confirmStatusArray[recordInfo.getDisplayStatus()];
             }
             //
-            final StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append(confirm_text + "\n" + "\n");
-            stringBuffer.append("详情 ");
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer.toString());
+            final StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(confirm_text).append("\n").append("\n");
+            stringBuilder.append("详情 ");
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder.toString());
             ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
                     .color.popup_selected_text_color));
-            int start = stringBuffer.length() - 3;
-            int end = stringBuffer.length();
+            int start = stringBuilder.length() - 3;
+            int end = stringBuilder.length();
             spannableStringBuilder.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
@@ -197,55 +198,6 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             groupHolder.tvTitle.setText(spannableStringBuilder);
 
 
-            //
-//            if (!TextUtils.isEmpty(remark)) {
-//                //
-//                final StringBuffer stringBuffer = new StringBuffer();
-//                stringBuffer.append(confirm_text + "\n");
-//                stringBuffer.append("备注 ");
-//                SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer.toString());
-//                ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
-//                        .color.popup_selected_text_color));
-//                int start = stringBuffer.length() - 3;
-//                int end = stringBuffer.length();
-//                spannableStringBuilder.setSpan(new ClickableSpan() {
-//                    @Override
-//                    public void onClick(View widget) {
-//                        itemClickListener.onGroupItemClick(groupPosition, isExpanded);
-//                    }
-//
-//                    @Override
-//                    public void updateDrawState(TextPaint ds) {
-//                        super.updateDrawState(ds);
-//                        ds.setUnderlineText(false);
-//                    }
-//                }, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                spannableStringBuilder.setSpan(foregroundColorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                int drawableId = R.mipmap.ic_pack_down;
-//                if (isExpanded) {
-//                    drawableId = R.mipmap.ic_pack_up;
-//                }
-//                spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end,
-//                        Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-//                groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
-//                        .shape_status_progress));
-//                groupHolder.tvAlarmResult.setMovementMethod(LinkMovementMethod.getInstance());
-//                groupHolder.tvAlarmResult.setText(spannableStringBuilder);
-//            } else {
-//                groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
-//                        .shape_status_progress));
-//                groupHolder.tvAlarmResult.setMovementMethod(LinkMovementMethod.getInstance());
-//                groupHolder.tvAlarmResult.setText(confirm_text);
-////            groupHolder.tvAlarmResult.setEditText(ToDBC(confirm_text));
-//                groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
-//                        .shape_status_normal));
-//            }
-
-//            groupHolder.tvAlarmResult.setMovementMethod(LinkMovementMethod.getInstance());
-//            groupHolder.tvAlarmResult.setText(confirm_text);
-////            groupHolder.tvAlarmResult.setEditText(ToDBC(confirm_text));
-//            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
-//                    .shape_status_normal));
         } else if ("recovery".equals(recordInfo.getType())) {
             groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_normal));
             groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo
@@ -294,23 +246,23 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             groupHolder.tvTitle.setText(spannableStringBuilder);
         } else if ("sendSMS".equals(recordInfo.getType())) {
 
-            final StringBuffer stringBuffer = new StringBuffer();
-            stringBuffer.append("系统发送短信至:");
+            final StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append("系统发送短信至:");
             int count = recordInfo.getPhoneList().length > 3 ? 3 : recordInfo.getPhoneList().length;
             for (int i = 0; i < count; i++) {
                 AlarmInfo.RecordInfo.Event event = recordInfo.getPhoneList()[i];
                 if (i == (count - 1)) {
-                    stringBuffer.append(event.getName() + "等" + recordInfo.getPhoneList().length + "人");
+                    stringBuilder.append(event.getName()).append("等").append(recordInfo.getPhoneList().length).append("人");
                 } else {
-                    stringBuffer.append(event.getName() + ",");
+                    stringBuilder.append(event.getName()).append(",");
                 }
             }
-            stringBuffer.append(" 查看短信发送结果 ");
-            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer.toString());
+            stringBuilder.append(" 查看短信发送结果 ");
+            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder.toString());
             ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
                     .color.popup_selected_text_color));
-            int start = stringBuffer.length() - 9;
-            int end = stringBuffer.length();
+            int start = stringBuilder.length() - 9;
+            int end = stringBuilder.length();
             spannableStringBuilder.setSpan(new ClickableSpan() {
                 @Override
                 public void onClick(View widget) {
@@ -363,8 +315,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup
             parent) {
-        ChildViewHolder childHolder = null;
-        AlarmInfo.RecordInfo.Event childBean = (AlarmInfo.RecordInfo.Event) getChild(groupPosition, childPosition);
+        ChildViewHolder childHolder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.item_alarm_detail_child, null);
             childHolder = new ChildViewHolder();
@@ -393,8 +344,8 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             //TODO 新布局
             //预警结果
             int displayStatus = recordInfo.getDisplayStatus();
-            childHolder.tvAlarmResult.setText(confirmStatusArray[displayStatus] + "(" +
-                    confirmAlarmResultInfoArray[displayStatus] + ")");
+            StringBuilder stringBuilder = new StringBuilder();
+            childHolder.tvAlarmResult.setText(stringBuilder.append(confirmStatusArray[displayStatus]).append("(").append(confirmAlarmResultInfoArray[displayStatus]).append(")").toString());
             //预警成因
             int reason = recordInfo.getReason();
             childHolder.tvAlarmType.setText(confirmAlarmTypeArray[reason]);
@@ -408,7 +359,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             }
             final List<String> images = recordInfo.getImages();
             if (images != null && images.size() > 0) {
-                GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4) {
+                final GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4) {
                     @Override
                     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
                         return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
@@ -432,6 +383,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             }
             //
         } else {
+            AlarmInfo.RecordInfo.Event childBean = (AlarmInfo.RecordInfo.Event) getChild(groupPosition, childPosition);
             if (childBean != null) {
                 childHolder.llConfirm.setVisibility(View.GONE);
                 childHolder.llContact.setVisibility(View.VISIBLE);
@@ -443,10 +395,9 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                     } else if (childBean.getReciveStatus() == 2) {
                         statusString = "电话接收失败";
                     }
-                    childHolder.tvAlarmContact.setText(WidgetUtil.distinguishContacts(childBean.getSource()) + " - " +
-                            childBean
-                                    .getName() + "(" + childBean.getNumber() + ")于"
-                            + DateUtil.parseDateToString(receiveTime) + statusString);
+                    final StringBuilder stringBuilder = new StringBuilder();
+                    childHolder.tvAlarmContact.setText(stringBuilder.append(WidgetUtil.distinguishContacts(childBean.getSource())).append(" - ").append(childBean
+                            .getName()).append("(").append(childBean.getNumber()).append(")于").append(DateUtil.parseDateToString(receiveTime)).append(statusString).toString());
                 } else if ("sendSMS".equals(recordType)) {
                     String statusString = "短信接收中";
                     if (childBean.getReciveStatus() == 1) {
@@ -454,10 +405,9 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                     } else if (childBean.getReciveStatus() == 2) {
                         statusString = "短信接收失败";
                     }
-                    childHolder.tvAlarmContact.setText(WidgetUtil.distinguishContacts(childBean.getSource()) + " - " +
-                            childBean
-                                    .getName() + "(" + childBean.getNumber() + ")于"
-                            + DateUtil.parseDateToString(receiveTime) + statusString);
+                    final StringBuilder stringBuilder = new StringBuilder();
+                    childHolder.tvAlarmContact.setText(stringBuilder.append(WidgetUtil.distinguishContacts(childBean.getSource())).append(" - ").append(childBean
+                            .getName()).append("(").append(childBean.getNumber()).append(")于").append(DateUtil.parseDateToString(receiveTime)).append(statusString).toString());
                 }
 
             }

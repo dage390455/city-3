@@ -71,8 +71,6 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
         //
         List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
         if (sensoroDetails != null && sortSensorTypes.size() > 0) {
-//            holder.item_value2.setEditText("");
-//            holder.item_unit2.setEditText("");
             String sensorType1;
             SensorStruct sensorStruct1;
             String sensorType2;
@@ -88,7 +86,7 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
                 } else {
                     holder.item_value2.setVisibility(VISIBLE);
                     holder.item_unit2.setVisibility(VISIBLE);
-                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value2, holder.item_unit2, sensorType1,
+                    WidgetUtil.judgeIndexSensorType(holder.item_value2, holder.item_unit2, sensorType1,
                             sensorStruct1);
                 }
                 sensorType2 = sortSensorTypes.get(1);
@@ -100,12 +98,10 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
                 } else {
                     holder.item_value1.setVisibility(VISIBLE);
                     holder.item_unit1.setVisibility(VISIBLE);
-                    WidgetUtil.judgeIndexSensorType(mContext, holder.item_value1, holder.item_unit1, sensorType2,
+                    WidgetUtil.judgeIndexSensorType(holder.item_value1, holder.item_unit1, sensorType2,
                             sensorStruct2);
                 }
-                if (sensorType1 != null) {
-                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
-                }
+
             } else {
                 sensorType1 = sortSensorTypes.get(0);
                 sensorStruct1 = sensoroDetails.get(sensorType1);
@@ -113,15 +109,15 @@ public class IndexGridAdapter extends RecyclerView.Adapter<IndexGridAdapter.Inde
                 if (sensorStruct1 != null) {
                     holder.item_value1.setVisibility(VISIBLE);
                     holder.item_unit1.setVisibility(VISIBLE);
-                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, holder.item_value1, holder.item_unit1,
-                            sensorType1, sensorStruct1.getValue(), sensorStruct1.getUnit());
+                    WidgetUtil.judgeIndexSensorType(holder.item_value1, holder.item_unit1,
+                            sensorType1, sensorStruct1);
                 } else {
                     holder.item_value1.setText("");
                     holder.item_unit1.setVisibility(GONE);
                 }
-                if (sensorType1 != null) {
-                    WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
-                }
+            }
+            if (sensorType1 != null) {
+                WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
             }
             Drawable drawable = null;
             holder.item_unit1.setVisibility(VISIBLE);

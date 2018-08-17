@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -85,21 +86,23 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
         }
         DeviceAlarmLogInfo alarmLogInfo = mList.get(position);
         if (alarmLogInfo != null) {
-            String default_name = alarmLogInfo.getDeviceSN() == null ? mContext.getResources().getString(R.string
-                    .unname) : alarmLogInfo.getDeviceSN();
-            if (alarmLogInfo.getDeviceName() == null) {
+            String deviceName = alarmLogInfo.getDeviceName();
+            //
+            String deviceSN = alarmLogInfo.getDeviceSN();
+            String default_name = deviceSN.isEmpty() ? mContext.getResources().getString(R.string
+                    .unname) : deviceSN;
+            if (TextUtils.isEmpty(deviceName)) {
                 holder.item_name.setText(default_name);
             } else {
-                holder.item_name.setText(alarmLogInfo.getDeviceName().equals("") ? default_name : alarmLogInfo
-                        .getDeviceName());
+                holder.item_name.setText(deviceName);
             }
             holder.item_date.setText(DateUtil.getFullParseDate(alarmLogInfo.getUpdatedTime()));
+            //
             WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, alarmLogInfo.getSensorType());
+            //
             AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
-            for (int i = 0; i < recordInfoArray.length; i++) {
-                AlarmInfo.RecordInfo recordInfo = recordInfoArray[i];
-                AlarmInfo.RecordInfo.Event[] event = recordInfo.getPhoneList();
-//
+            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
+//                AlarmInfo.RecordInfo.Event[] event = recordInfo.getPhoneList();
                 String type = recordInfo.getType();
                 if ("recovery".equals(type)) {
                     holder.item_iv_status.setVisibility(View.VISIBLE);

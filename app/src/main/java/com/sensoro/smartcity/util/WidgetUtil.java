@@ -323,7 +323,7 @@ public class WidgetUtil {
             layoutParams.setMargins(0, 0, pixel, default_pixel);
         } else if (sensorType.equalsIgnoreCase("co2")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_co2);
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
+            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
         } else if (sensorType.equalsIgnoreCase("no2")) {
             srcImageView.setImageResource(R.mipmap.ic_sensor_bg_no2);
             layoutParams.setMargins(0, 0, pixel, default_pixel);
@@ -407,249 +407,13 @@ public class WidgetUtil {
         srcImageView.setLayoutParams(layoutParams);
     }
 
-    public static void judgeSensorType(Context context, ImageView srcImageView, TextView valueTextView, TextView
-            unitTextView, String sensorType, Object value, String unit) {
-        boolean isBool = false;
-        int x_ = context.getResources().getDimensionPixelSize(R.dimen.x300);
-        int y_ = context.getResources().getDimensionPixelSize(R.dimen.y400);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(210, 210);
-        int pixel = -30;
-        int bottom_pixel = -40;
-        int default_pixel = -30;
-        srcImageView.setVisibility(View.VISIBLE);
-        if (sensorType.equalsIgnoreCase("co")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_co);
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
-        } else if (sensorType.equalsIgnoreCase("co2")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_co2);
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
-        } else if (sensorType.equalsIgnoreCase("no2")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_no2);
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
-        } else if (sensorType.equalsIgnoreCase("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_pm);
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
-        } else if (sensorType.equalsIgnoreCase("ch4")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_ch4);
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
-        } else if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("humidity")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_temp_humi);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("smoke")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_smoke);
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.smoke_true);
-            } else {
-                valueTextView.setText(R.string.smoke_false);
-            }
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
-            unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("installed")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_smoke);
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.installed);
-            } else {
-                valueTextView.setText(R.string.un_installed);
-            }
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
-            unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("distance")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_level);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("level")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_level);
-            Boolean isTrue = (Boolean) value;
-            isBool = true;
-            if (isTrue) {
-                valueTextView.setText(R.string.level_true);
-            } else {
-                valueTextView.setText(R.string.level_false);
-            }
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-            unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("cover")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_cover);
-            Boolean isTrue = (Boolean) value;
-            isBool = true;
-            if (isTrue) {
-                valueTextView.setText(R.string.cover_true);
-            } else {
-                valueTextView.setText(R.string.cover_false);
-            }
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-            unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("drop")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_drop);
-            isBool = true;
-            if (value instanceof Double) {
-                double d = (double) value;
-                if (d == 0) {
-                    valueTextView.setText(R.string.drop_false);
-                } else {
-                    valueTextView.setText(R.string.drop_true);
-                }
-                layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-                unitTextView.setText("");
-            }
-        } else if (sensorType.equalsIgnoreCase("light")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_light);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("waterPressure")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_water_pressure);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("magnetic")) {
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.magnetic_true);
-            } else {
-                valueTextView.setText(R.string.magnetic_false);
-            }
-            unitTextView.setText("");
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_magnetic);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("door")) {
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.magnetic_false);
-            } else {
-                valueTextView.setText(R.string.magnetic_true);
-            }
-            unitTextView.setText("");
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lock);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("connection")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_connection_bg);
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.connection_true);
-            } else {
-                valueTextView.setText(R.string.connection_false);
-            }
-            layoutParams.setMargins(0, 0, pixel, default_pixel);
-            unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("lpg")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lpg);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
-                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_angle);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("collision")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_angle);
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.collision_true);
-            } else {
-                valueTextView.setText(R.string.collision_false);
-            }
-            unitTextView.setText("");
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("alarm")) {//alarm
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_call);
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
-            } else {
-                valueTextView.setText(R.string.alarm_false);
-            }
-            unitTextView.setText("");
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("flame")) { //
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_flame);
-            isBool = true;
-            Boolean isTrue = (Boolean) value;
-            if (isTrue) {
-                valueTextView.setText(R.string.flame_true);
-            } else {
-                valueTextView.setText(R.string.flame_false);
-            }
-            unitTextView.setText("");
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equals("latitude") || sensorType.equals("longitude") || sensorType.equals("altitude")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_tracker);
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-        } else if (sensorType.equalsIgnoreCase("infrared")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_infrared_bg);
-            Boolean isTrue = (Boolean) value;
-            isBool = true;
-            if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
-            } else {
-                valueTextView.setText(R.string.alarm_false);
-            }
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-            unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_manual_alarm_bg);
-            Boolean isTrue = (Boolean) value;
-            isBool = true;
-            if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
-            } else {
-                valueTextView.setText(R.string.alarm_false);
-            }
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-            unitTextView.setText("");
-        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
-            srcImageView.setImageResource(R.mipmap.ic_sensor_sound_light_alarm_bg);
-            Boolean isTrue = (Boolean) value;
-            isBool = true;
-            if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
-            } else {
-                valueTextView.setText(R.string.alarm_false);
-            }
-            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
-            unitTextView.setText("");
-        } else {
-            srcImageView.setVisibility(View.GONE);
-        }
-        srcImageView.setLayoutParams(layoutParams);
-        //
-        if (!isBool && !(value instanceof Boolean)) {
-            //
-            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
-                DecimalFormat df = new DecimalFormat("###.##");
-                setIndexTextStyle(df.format(value), valueTextView);
+//
 
-            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
-                    .equalsIgnoreCase
-                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
-                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
-                DecimalFormat df = new DecimalFormat("###.#");
-                LogUtils.loge("value = " + value);
-                String format = df.format(value);
-                setIndexTextStyle(format, valueTextView);
-            } else {
-                valueTextView.setText(String.format("%.0f", Double.valueOf(value
-                        .toString())));
-            }
-            unitTextView.setText(unit);
-            //
-        }
-    }
-
-    public static void judgeIndexSensorType(Context context, TextView valueTextView, TextView unitTextView, String
+    public static void judgeIndexSensorType(TextView valueTextView, TextView unitTextView, String
             sensorType, SensorStruct sensorStruct) {
         boolean isBool = false;
         Object value = sensorStruct.getValue();
 
-//        if (sensorType.equalsIgnoreCase("co")) {
-//        } else if (sensorType.equalsIgnoreCase("co2")) {
-//        } else if (sensorType.equalsIgnoreCase("so2")) {
-//        } else if (sensorType.equalsIgnoreCase("no2")) {
-//        } else if (sensorType.equalsIgnoreCase("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
-//        } else if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("humidity")) {
-//        } else
         if (sensorType.equalsIgnoreCase("smoke")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
@@ -838,16 +602,6 @@ public class WidgetUtil {
         }
     }
 
-    public static String getContractDeviceTypeChinese(String deviceType) {
-        switch (deviceType) {
-            case "smoke":
-                return "烟雾传感器";
-            case "co":
-                return "一氧化碳传感器";
-            default:
-                return "Sensoro传感器";
-        }
-    }
 
     public static String getSensorTypeChinese(String sensorType) {
         String value = "";
@@ -978,7 +732,7 @@ public class WidgetUtil {
      * @return
      */
     public static String getAlarmDetailInfo(String sensorType, int thresholds, int status) {
-        String info = "";
+        String info;
         if (status == 0) {
             switch (sensorType) {
                 case "smoke":
@@ -1401,70 +1155,6 @@ public class WidgetUtil {
         }
     }
 
-    //
-    public static BitmapDrawable createBitmapDrawable(Context context, Bitmap imgMarker, String text) {
-        int width = imgMarker.getWidth();
-        int height = imgMarker.getHeight();
-        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(imgTemp);
-        Paint paint = new Paint(); // 建立画笔
-        paint.setDither(true);
-        paint.setFilterBitmap(true);
-        Rect src = new Rect(0, 0, width, height);
-        Rect dst = new Rect(0, 0, width, height);
-        canvas.drawBitmap(imgMarker, src, dst, paint);
-
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
-                | Paint.DEV_KERN_TEXT_FLAG);
-        textPaint.setTextSize(25.0f);
-        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
-        textPaint.setColor(Color.WHITE);
-
-        canvas.drawText(text, width / 2 - 5, height / 2 + 5,
-                textPaint);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
-        canvas.restore();
-        return new BitmapDrawable(context.getResources(), imgTemp);
-
-    }
-
-    public static BitmapDrawable createBigBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
-            targetBitmap) {
-        int width = srcBitmap.getWidth();
-        int height = srcBitmap.getHeight();
-        int x_offset = 0;
-        int y_offset = 0;
-        if (sensorType.contains("pm")) {
-            y_offset = -5;
-            x_offset = -5;
-        } else if (sensorType.contains("distance")) {
-            x_offset = -10;
-            y_offset = -5;
-        } else if (sensorType.contains("alarm")) {
-            x_offset = -8;
-            y_offset = -5;
-        }
-        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(imgTemp);
-        Paint paint = new Paint(); // 建立画笔
-        paint.setDither(true);
-        paint.setFilterBitmap(true);
-        Rect src = new Rect(0, 0, width, height);
-        Rect dst = new Rect(0, 0, width, height);
-        canvas.drawBitmap(srcBitmap, src, dst, paint);
-
-        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
-                | Paint.DEV_KERN_TEXT_FLAG);
-        textPaint.setTextSize(25.0f);
-        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
-        textPaint.setColor(Color.WHITE);
-        canvas.drawBitmap(targetBitmap, width / 4 - x_offset, height / 4 - y_offset,
-                textPaint);
-        canvas.save(Canvas.ALL_SAVE_FLAG);
-        canvas.restore();
-        return new BitmapDrawable(context.getResources(), imgTemp);
-
-    }
 
     public static BitmapDrawable createBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
             targetBitmap) {
@@ -1544,6 +1234,12 @@ public class WidgetUtil {
         return outBitmap;
     }
 
+    /**
+     * 检测是否全面屏
+     *
+     * @param activity
+     * @return
+     */
     public static boolean navigationBarExist(Activity activity) {
         final WindowManager windowManager = activity.getWindowManager();
         final Display d = windowManager.getDefaultDisplay();
@@ -1565,6 +1261,312 @@ public class WidgetUtil {
         return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
     }
     //TODO dont del
+    //    public static String getContractDeviceTypeChinese(String deviceType) {
+//        switch (deviceType) {
+//            case "smoke":
+//                return "烟雾传感器";
+//            case "co":
+//                return "一氧化碳传感器";
+//            default:
+//                return "Sensoro传感器";
+//        }
+//    }
+    //
+//    public static BitmapDrawable createBitmapDrawable(Context context, Bitmap imgMarker, String text) {
+//        int width = imgMarker.getWidth();
+//        int height = imgMarker.getHeight();
+//        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(imgTemp);
+//        Paint paint = new Paint(); // 建立画笔
+//        paint.setDither(true);
+//        paint.setFilterBitmap(true);
+//        Rect src = new Rect(0, 0, width, height);
+//        Rect dst = new Rect(0, 0, width, height);
+//        canvas.drawBitmap(imgMarker, src, dst, paint);
+//
+//        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
+//                | Paint.DEV_KERN_TEXT_FLAG);
+//        textPaint.setTextSize(25.0f);
+//        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
+//        textPaint.setColor(Color.WHITE);
+//
+//        canvas.drawText(text, width / 2 - 5, height / 2 + 5,
+//                textPaint);
+//        canvas.save(Canvas.ALL_SAVE_FLAG);
+//        canvas.restore();
+//        return new BitmapDrawable(context.getResources(), imgTemp);
+//
+//    }
+//
+//    public static BitmapDrawable createBigBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
+//            targetBitmap) {
+//        int width = srcBitmap.getWidth();
+//        int height = srcBitmap.getHeight();
+//        int x_offset = 0;
+//        int y_offset = 0;
+//        if (sensorType.contains("pm")) {
+//            y_offset = -5;
+//            x_offset = -5;
+//        } else if (sensorType.contains("distance")) {
+//            x_offset = -10;
+//            y_offset = -5;
+//        } else if (sensorType.contains("alarm")) {
+//            x_offset = -8;
+//            y_offset = -5;
+//        }
+//        Bitmap imgTemp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+//        Canvas canvas = new Canvas(imgTemp);
+//        Paint paint = new Paint(); // 建立画笔
+//        paint.setDither(true);
+//        paint.setFilterBitmap(true);
+//        Rect src = new Rect(0, 0, width, height);
+//        Rect dst = new Rect(0, 0, width, height);
+//        canvas.drawBitmap(srcBitmap, src, dst, paint);
+//
+//        Paint textPaint = new Paint(Paint.ANTI_ALIAS_FLAG
+//                | Paint.DEV_KERN_TEXT_FLAG);
+//        textPaint.setTextSize(25.0f);
+//        textPaint.setTypeface(Typeface.DEFAULT_BOLD); // 采用默认的宽度
+//        textPaint.setColor(Color.WHITE);
+//        canvas.drawBitmap(targetBitmap, width / 4 - x_offset, height / 4 - y_offset,
+//                textPaint);
+//        canvas.save(Canvas.ALL_SAVE_FLAG);
+//        canvas.restore();
+//        return new BitmapDrawable(context.getResources(), imgTemp);
+//
+//    }
+    //
+//    public static void judgeSensorType(Context context, ImageView srcImageView, TextView valueTextView, TextView
+//            unitTextView, String sensorType, Object value, String unit) {
+//        boolean isBool = false;
+//        int x_ = context.getResources().getDimensionPixelSize(R.dimen.x300);
+//        int y_ = context.getResources().getDimensionPixelSize(R.dimen.y400);
+//        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(210, 210);
+//        int pixel = -30;
+//        int bottom_pixel = -40;
+//        int default_pixel = -30;
+//        srcImageView.setVisibility(View.VISIBLE);
+//        if (sensorType.equalsIgnoreCase("co")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_co);
+//            layoutParams.setMargins(0, 0, pixel, default_pixel);
+//        } else if (sensorType.equalsIgnoreCase("co2")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_co2);
+//            layoutParams.setMargins(0, 0, pixel, default_pixel);
+//        } else if (sensorType.equalsIgnoreCase("no2")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_no2);
+//            layoutParams.setMargins(0, 0, pixel, default_pixel);
+//        } else if (sensorType.equalsIgnoreCase("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_pm);
+//            layoutParams.setMargins(0, 0, pixel, default_pixel);
+//        } else if (sensorType.equalsIgnoreCase("ch4")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_ch4);
+//            layoutParams.setMargins(0, 0, pixel, default_pixel);
+//        } else if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("humidity")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_temp_humi);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("smoke")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_smoke);
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.smoke_true);
+//            } else {
+//                valueTextView.setText(R.string.smoke_false);
+//            }
+//            layoutParams.setMargins(0, 0, pixel, default_pixel);
+//            unitTextView.setText("");
+//        } else if (sensorType.equalsIgnoreCase("installed")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_smoke);
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.installed);
+//            } else {
+//                valueTextView.setText(R.string.un_installed);
+//            }
+//            layoutParams.setMargins(0, 0, pixel, default_pixel);
+//            unitTextView.setText("");
+//        } else if (sensorType.equalsIgnoreCase("distance")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_level);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("level")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_level);
+//            Boolean isTrue = (Boolean) value;
+//            isBool = true;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.level_true);
+//            } else {
+//                valueTextView.setText(R.string.level_false);
+//            }
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//            unitTextView.setText("");
+//        } else if (sensorType.equalsIgnoreCase("cover")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_cover);
+//            Boolean isTrue = (Boolean) value;
+//            isBool = true;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.cover_true);
+//            } else {
+//                valueTextView.setText(R.string.cover_false);
+//            }
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//            unitTextView.setText("");
+//        } else if (sensorType.equalsIgnoreCase("drop")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_drop);
+//            isBool = true;
+//            if (value instanceof Double) {
+//                double d = (double) value;
+//                if (d == 0) {
+//                    valueTextView.setText(R.string.drop_false);
+//                } else {
+//                    valueTextView.setText(R.string.drop_true);
+//                }
+//                layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//                unitTextView.setText("");
+//            }
+//        } else if (sensorType.equalsIgnoreCase("light")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_light);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("waterPressure")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_water_pressure);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("magnetic")) {
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.magnetic_true);
+//            } else {
+//                valueTextView.setText(R.string.magnetic_false);
+//            }
+//            unitTextView.setText("");
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_magnetic);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("door")) {
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.magnetic_false);
+//            } else {
+//                valueTextView.setText(R.string.magnetic_true);
+//            }
+//            unitTextView.setText("");
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lock);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("connection")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_connection_bg);
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.connection_true);
+//            } else {
+//                valueTextView.setText(R.string.connection_false);
+//            }
+//            layoutParams.setMargins(0, 0, pixel, default_pixel);
+//            unitTextView.setText("");
+//        } else if (sensorType.equalsIgnoreCase("lpg")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_lpg);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
+//                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_angle);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("collision")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_angle);
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.collision_true);
+//            } else {
+//                valueTextView.setText(R.string.collision_false);
+//            }
+//            unitTextView.setText("");
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("alarm")) {//alarm
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_call);
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.alarm_true);
+//            } else {
+//                valueTextView.setText(R.string.alarm_false);
+//            }
+//            unitTextView.setText("");
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("flame")) { //
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_flame);
+//            isBool = true;
+//            Boolean isTrue = (Boolean) value;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.flame_true);
+//            } else {
+//                valueTextView.setText(R.string.flame_false);
+//            }
+//            unitTextView.setText("");
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equals("latitude") || sensorType.equals("longitude") || sensorType.equals("altitude")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_bg_tracker);
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//        } else if (sensorType.equalsIgnoreCase("infrared")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_infrared_bg);
+//            Boolean isTrue = (Boolean) value;
+//            isBool = true;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.alarm_true);
+//            } else {
+//                valueTextView.setText(R.string.alarm_false);
+//            }
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//            unitTextView.setText("");
+//        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_manual_alarm_bg);
+//            Boolean isTrue = (Boolean) value;
+//            isBool = true;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.alarm_true);
+//            } else {
+//                valueTextView.setText(R.string.alarm_false);
+//            }
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//            unitTextView.setText("");
+//        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+//            srcImageView.setImageResource(R.mipmap.ic_sensor_sound_light_alarm_bg);
+//            Boolean isTrue = (Boolean) value;
+//            isBool = true;
+//            if (isTrue) {
+//                valueTextView.setText(R.string.alarm_true);
+//            } else {
+//                valueTextView.setText(R.string.alarm_false);
+//            }
+//            layoutParams.setMargins(0, 0, pixel, bottom_pixel);
+//            unitTextView.setText("");
+//        } else {
+//            srcImageView.setVisibility(View.GONE);
+//        }
+//        srcImageView.setLayoutParams(layoutParams);
+//        //
+//        if (!isBool && !(value instanceof Boolean)) {
+//            //
+//            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
+//                DecimalFormat df = new DecimalFormat("###.##");
+//                setIndexTextStyle(df.format(value), valueTextView);
+//
+//            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+//                    .equalsIgnoreCase
+//                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+//                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
+//                DecimalFormat df = new DecimalFormat("###.#");
+//                LogUtils.loge("value = " + value);
+//                String format = df.format(value);
+//                setIndexTextStyle(format, valueTextView);
+//            } else {
+//                valueTextView.setText(String.format("%.0f", Double.valueOf(value
+//                        .toString())));
+//            }
+//            unitTextView.setText(unit);
+//            //
+//        }
+//    }
+
     ///////////////////////
     //    public static void judgeSensor(SensorStruct sensorStruct, TextView valueTextView, TextView unitTextView) {
 //        boolean isBool = false;
