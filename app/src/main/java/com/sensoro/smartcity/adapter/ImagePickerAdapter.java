@@ -53,6 +53,47 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         notifyDataSetChanged();
     }
 
+//    public void removeImage(int position) {
+////        mData = new ArrayList<>(data);
+//        ImageItem imageItem = mData.get(position);
+//        Iterator<ImageItem> iterator = mData.iterator();
+//        while (iterator.hasNext()) {
+//            ImageItem next = iterator.next();
+//            if (next.equals(imageItem)) {
+//                iterator.remove();
+//                break;
+//            }
+//        }
+//        if (getItemCount() < maxImgCount) {
+//            if (isAdded){
+//                notifyItemRemoved(position-1);
+//            }else {
+//                mData.add(new ImageItem());
+//                isAdded = true;
+//                notifyItemRemoved(position-1);
+//            }
+//        }else {
+//            notifyItemRemoved(position);
+//        }
+//
+////        if (isAdded) {
+////            if (getItemCount() < maxImgCount) {
+////                mData.add(new ImageItem());
+////                isAdded = true;
+////                notifyItemRemoved(position - 1);
+//////            notifyItemRemoved(position - 1);
+////            } else {
+////                isAdded = false;
+////                notifyItemRemoved(position);
+//////            notifyItemRemoved(position);
+////            }
+////        } else {
+////            notifyItemRemoved(position);
+////        }
+//
+//
+//    }
+
     public List<ImageItem> getImages() {
         //由于图片未选满时，最后一张显示添加图片，因此这个方法返回真正的已选图片
         if (isAdded) return new ArrayList<>(mData.subList(0, mData.size() - 1));

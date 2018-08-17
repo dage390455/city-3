@@ -377,6 +377,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
                     break;
                 }
             }
+//            adapter.notifyItemRemoved(position);
             adapter.setImages(selImageList);
 //            updateButton();
         } else {

@@ -22,19 +22,10 @@ import com.lzy.imagepicker.view.SensoroToast;
 import com.lzy.imagepicker.view.SuperCheckBox;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 加载相册图片的RecyclerView适配器
- * <p>
- * 用于替换原项目的GridView，使用局部刷新解决选中照片出现闪动问题
- * <p>
- * 替换为RecyclerView后只是不再会导致全局刷新，
- * <p>
- * 但还是会出现明显的重新加载图片，可能是picasso图片加载框架的问题
- * <p>
- * Author: nanchen
- * Email: liushilin520@foxmail.com
- * Date: 2017-04-05  10:04
  */
 
 public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
@@ -93,7 +84,22 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         if (holder instanceof CameraViewHolder) {
             ((CameraViewHolder) holder).bindCamera();
         } else if (holder instanceof ImageViewHolder) {
-            ((ImageViewHolder) holder).bind(position);
+            ((ImageViewHolder) holder).bind(position, true);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(ViewHolder holder, int position, List<Object> payloads) {
+        super.onBindViewHolder(holder, position, payloads);
+        //修复局部刷新闪烁问题
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            if (holder instanceof CameraViewHolder) {
+                ((CameraViewHolder) holder).bindCamera();
+            } else if (holder instanceof ImageViewHolder) {
+                ((ImageViewHolder) holder).bind(position, false);
+            }
         }
     }
 
@@ -122,15 +128,15 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
         }
     }
 
-    private class ImageViewHolder extends ViewHolder {
+    class ImageViewHolder extends ViewHolder {
 
-        View rootView;
-        ImageView ivThumb;
-        View mask;
-        View checkView;
-        SuperCheckBox cbCheck;
+        final View rootView;
+        final ImageView ivThumb;
+        final View mask;
+        final View checkView;
+        final SuperCheckBox cbCheck;
         //替换图标方案
-        ImageView circleSelect;
+        final ImageView circleSelect;
 
         ImageViewHolder(View itemView) {
             super(itemView);
@@ -145,7 +151,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
             //让图片是个正方形
         }
 
-        void bind(final int position) {
+        void bind(final int position, boolean needReLoad) {
             final ImageItem imageItem = getItem(position);
             ivThumb.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -197,19 +203,21 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
 //                    mask.setVisibility(View.GONE);
                     cbCheck.setChecked(false);
                 }
-                circleSelect.setVisibility(cbCheck.isChecked()?View.VISIBLE:View.GONE);
+                circleSelect.setVisibility(cbCheck.isChecked() ? View.VISIBLE : View.GONE);
             } else {
                 cbCheck.setVisibility(View.GONE);
             }
-            imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize);
             //显示图片
+            if (needReLoad) {
+                imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize);
+            }
         }
 
     }
 
-    private class CameraViewHolder extends ViewHolder {
+    class CameraViewHolder extends ViewHolder {
 
-        View mItemView;
+        final View mItemView;
 
         CameraViewHolder(View itemView) {
             super(itemView);

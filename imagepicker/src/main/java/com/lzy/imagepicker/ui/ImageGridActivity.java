@@ -311,7 +311,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
 // position while click right bottom preview button
         for (int i = imagePicker.isShowCamera() ? 1 : 0; i < mRecyclerAdapter.getItemCount(); i++) {
             if (mRecyclerAdapter.getItem(i).path != null && mRecyclerAdapter.getItem(i).path.equals(item.path)) {
-                mRecyclerAdapter.notifyItemChanged(i);
+                mRecyclerAdapter.notifyItemChanged(i, 1);
                 return;
             }
         }

@@ -17,13 +17,13 @@ android {
         release {
             keyAlias 'sensoro'
             keyPassword 'sensoro'
-            storeFile file('/Users/ddong1031/Work/AppKey/sensoro.keystore')
+            storeFile file('/Users/sensoro/Work/AppKey/sensoro.keystore')
             storePassword 'sensoro'
         }
         debug {
             keyAlias 'sensoro'
             keyPassword 'sensoro'
-            storeFile file('/Users/ddong1031/Work/AppKey/sensoro.keystore')
+            storeFile file('/Users/sensoro/Work/AppKey/sensoro.keystore')
             storePassword 'sensoro'
         }
     }
