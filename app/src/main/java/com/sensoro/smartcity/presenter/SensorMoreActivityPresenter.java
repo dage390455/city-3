@@ -27,6 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.Arrays;
 import java.util.List;
 
 import rx.Observable;
@@ -94,7 +95,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
             if (response.getData().size() > 0) {
                 DeviceInfo deviceInfo = response.getData().get(0);
                 getView().setSNText(mSn);
-                getView().setTypeText(WidgetUtil.parseSensorTypes(mContext, deviceInfo.getSensorTypes()));
+                getView().setTypeText(WidgetUtil.parseSensorTypes(mContext, Arrays.asList(deviceInfo.getSensorTypes())));
 
                 String tags[] = deviceInfo.getTags();
                 if (tags != null && tags.length > 0) {
@@ -126,28 +127,34 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                         String conditionType = ruleInfo.getConditionType();
                         String rule = null;
                         if (conditionType != null) {
-                            switch (conditionType) {
-                                case "gt":
-                                    rule = sensorType + ">" + value;
-                                    break;
-                                case "lt":
-                                    rule = sensorType + "<" + value;
-                                    break;
-                                case "gte":
-                                    rule = sensorType + ">=" + value;
-                                    break;
-                                case "lte":
-                                    rule = sensorType + "<=" + value;
-                                    break;
+                            if (!TextUtils.isEmpty(sensorType)) {
+                                switch (conditionType) {
+                                    case "gt":
+                                        rule = sensorType + ">" + value;
+                                        break;
+                                    case "lt":
+                                        rule = sensorType + "<" + value;
+                                        break;
+                                    case "gte":
+                                        rule = sensorType + ">=" + value;
+                                        break;
+                                    case "lte":
+                                        rule = sensorType + "<=" + value;
+                                        break;
+                                }
+                                stringBuilder.append(" ").append(rule);
                             }
-                            stringBuilder.append(" ").append(rule);
+
                         }
 
                     }
+                    getView().setAlarmSetting(stringBuilder.append("时报警").toString());
+                } else {
+                    getView().setAlarmSetting(stringBuilder.toString());
                 }
                 //
 
-                getView().setAlarmSetting(stringBuilder.toString());
+
                 //
                 int interval = deviceInfo.getInterval();
                 getView().setInterval(DateUtil.secToTimeBefore(interval));

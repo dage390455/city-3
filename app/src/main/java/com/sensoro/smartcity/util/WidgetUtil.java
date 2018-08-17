@@ -572,37 +572,6 @@ public class WidgetUtil {
     }
 
 
-    public static String getSensorTypesChinese(List<String> sensorType) {
-        if (sensorType.contains("temperature") || sensorType.contains("humidity") || sensorType.contains("temp1")) {
-            return "温湿度";
-        } else if (sensorType.contains("pm2_5") || sensorType.contains("pm10")) {
-            return "PM10/2.5";
-        } else if (sensorType.contains("latitude") || sensorType.contains("longitude")) {
-            return "经纬度";
-        } else if (sensorType.contains("level") || sensorType.contains("cover")) {
-            return "井盖";
-        } else if (sensorType.contains("pitch") || sensorType.contains("roll") || sensorType.contains("collision")) {
-            return "角度";
-        } else if (sensorType.contains("temp_val") || sensorType.contains("leakage_val")) {
-            return "电气火灾";
-        } else if (sensorType.contains("infrared")) {
-            return "红外线";
-        } else if (sensorType.contains("manual_alarm")) {
-            return "手动报警";
-        } else if (sensorType.contains("sound_light_alarm")) {
-            return "声光报警";
-        } else if (sensorType.contains("connection")) {
-            return "通断检测";
-        } else if (sensorType.contains("door")) {
-            return "门锁检测";
-        } else if (sensorType.contains("magnetic")) {
-            return "地磁";
-        } else {
-            return "-";
-        }
-    }
-
-
     public static String getSensorTypeChinese(String sensorType) {
         String value = "";
         if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("temp1")) {
@@ -971,44 +940,39 @@ public class WidgetUtil {
     }
 
     /**
-     * 设备更多信息转换
+     * 判断设备是什么类型
      *
      * @param context
      * @param sensorTypes
      * @return
      */
-    public static String parseSensorTypes(Context context, String[] sensorTypes) {
-        if (sensorTypes.length > 1) {
-            StringBuilder sb = new StringBuilder();
-            for (String device : sensorTypes) {
-                sb.append(device);
-            }
-            String temp = sb.toString();
-            if (temp.contains("temp1")) {
+    public static String parseSensorTypes(Context context, List<String> sensorTypes) {
+        if (sensorTypes.size() > 1) {
+            if (sensorTypes.contains("temp1")) {
                 return "温度贴片";
             }
-            if (temp.contains("temperature")) {
+            if (sensorTypes.contains("temperature") || sensorTypes.contains("light")) {
                 return "温湿度";
-            } else if (temp.contains("cover")) {
+            } else if (sensorTypes.contains("cover") || sensorTypes.contains("level")) {
                 return "井位";
-            } else if (temp.contains("pm")) {
+            } else if (sensorTypes.contains("pm") || sensorTypes.contains("pm2_5")) {
                 return "PM2.5/PM10";
-            } else if (temp.contains("pitch")) {
+            } else if (sensorTypes.contains("pitch") || sensorTypes.contains("roll") || sensorTypes.contains("yaw")) {
                 return "倾角传";
-            } else if (temp.contains("latitude")) {
+            } else if (sensorTypes.contains("latitude") || sensorTypes.contains("altitude") || sensorTypes.contains("longitude")) {
                 return "追踪器";
-            } else if (temp.contains("CURRENT")) {
+            } else if (sensorTypes.contains("CURRENT") || sensorTypes.contains("VOLTAGE") || sensorTypes.contains("TOTAL_POWER")) {
                 return "电表";
-            } else if (temp.contains("installed") && temp.contains("smoke")) {
+            } else if (sensorTypes.contains("installed") && sensorTypes.contains("smoke")) {
                 return "烟感";
-            } else if (temp.contains("curr_val") || temp.contains("elec_energy_val") || temp.contains("leakage_val")
-                    || temp.contains("temp_val")) {
+            } else if (sensorTypes.contains("curr_val") || sensorTypes.contains("elec_energy_val") || sensorTypes.contains("leakage_val")
+                    || sensorTypes.contains("temp_val")) {
                 return "电气火灾";
             } else {
                 return context.getString(R.string.unknown);
             }
         } else {
-            String sensorType = sensorTypes[0];
+            String sensorType = sensorTypes.get(0);
             if (sensorType.equals("temp1")) {
                 return "温度贴片";
             }
@@ -1261,6 +1225,41 @@ public class WidgetUtil {
         return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
     }
     //TODO dont del
+
+    //    public static String getSensorTypesChinese(List<String> sensorType) {
+//        if (sensorType.contains("temperature") || sensorType.contains("humidity") || sensorType.contains("temp1")) {
+//            return "温湿度";
+//        } else if (sensorType.contains("pm2_5") || sensorType.contains("pm10")) {
+//            return "PM10/2.5";
+//        } else if (sensorType.contains("latitude") || sensorType.contains("longitude")) {
+//            return "经纬度";
+//        } else if (sensorType.contains("level") || sensorType.contains("cover")) {
+//            return "井盖";
+//        } else if (sensorType.contains("pitch") || sensorType.contains("roll") || sensorType.contains("collision")) {
+//            return "角度";
+//        } else if (sensorType.contains("temp_val") || sensorType.contains("leakage_val")) {
+//            return "电气火灾";
+//        } else if (sensorType.contains("infrared")) {
+//            return "红外线";
+//        } else if (sensorType.contains("manual_alarm")) {
+//            return "手动报警";
+//        } else if (sensorType.contains("sound_light_alarm")) {
+//            return "声光报警";
+//        } else if (sensorType.contains("connection")) {
+//            return "通断检测";
+//        } else if (sensorType.contains("door")) {
+//            return "门锁检测";
+//        } else if (sensorType.contains("magnetic")) {
+//            return "地磁";
+//        } else if (sensorType.contains("co")) {
+//            return "一氧化碳";
+//        } else if (sensorType.contains("co")) {
+//            return "一氧化碳";
+//        } else {
+//            return "-";
+//        }
+//    }
+
     //    public static String getContractDeviceTypeChinese(String deviceType) {
 //        switch (deviceType) {
 //            case "smoke":

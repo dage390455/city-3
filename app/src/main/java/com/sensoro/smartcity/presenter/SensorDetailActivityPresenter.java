@@ -95,7 +95,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     private AMap aMap;
     private DeviceInfo mDeviceInfo;
 
-    private List<String> sensorTypes;
+    private List<String> sensorTypesList;
 
     private float minValue = 0;
     private LatLng destPosition = null;
@@ -201,9 +201,9 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
             mLocationClient.onDestroy();
             mLocationClient = null;
         }
-        if (sensorTypes != null) {
-            sensorTypes.clear();
-            sensorTypes = null;
+        if (sensorTypesList != null) {
+            sensorTypesList.clear();
+            sensorTypesList = null;
         }
     }
 
@@ -382,19 +382,22 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                     DeviceRecentRsp response = ((DeviceRecentRsp) responseBase);
                     String data = response.getData().toString();
                     try {
+                        String[] sensorTypes = response.getSensorTypes();
                         JSONObject jsonObject = new JSONObject(data);
-                        String[] types = response.getSensorTypes();
-                        sensorTypes = SortUtils.sortSensorTypes(types);
+                        SensorDetailActivityPresenter.this.sensorTypesList = SortUtils.sortSensorTypes(sensorTypes);
                         Iterator<String> iterator = jsonObject.keys();
                         while (iterator.hasNext()) {
-                            String str = iterator.next();
-                            if (!TextUtils.isEmpty(str)) {
-                                JSONObject firstJsonObject = jsonObject.getJSONObject(str);
-                                DeviceRecentInfo recentInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson
-                                        (firstJsonObject.toString(),
-                                                DeviceRecentInfo.class);
-                                recentInfo.setDate(str);
-                                mRecentInfoList.add(recentInfo);
+                            String keyStr = iterator.next();
+                            if (!TextUtils.isEmpty(keyStr)) {
+                                JSONObject object = jsonObject.getJSONObject(keyStr);
+                                if (object != null) {
+                                    DeviceRecentInfo recentInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson
+                                            (object.toString(),
+                                                    DeviceRecentInfo.class);
+                                    recentInfo.setDate(keyStr);
+                                    mRecentInfoList.add(recentInfo);
+                                }
+
                             }
                         }
                         Collections.sort(mRecentInfoList);
@@ -429,59 +432,27 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     }
 
 
-//    private boolean isDrawKLayout(String sensorType) {
-//        if (sensorType.equals("artificialGas")) {
-//            return true;
-//        } else if (sensorType.equals("waterPressure")) {
-//            return true;
-//        } else if (sensorType.equals("pitch")) {
-//            return true;
-//        } else if (sensorType.equals("roll")) {
-//            return true;
-//        } else if (sensorType.equals("ch4")) {
-//            return true;
-//        } else if (sensorType.equals("co")) {
-//            return true;
-//        } else if (sensorType.equals("co2")) {
-//            return true;
-//        } else if (sensorType.equals("humidity")) {
-//            return true;
-//        } else if (sensorType.equals("distance")) {
-//            return true;
-//        } else if (sensorType.equals("light")) {
-//            return true;
-//        } else if (sensorType.equals("lpg")) {
-//            return true;
-//        } else if (sensorType.equals("light")) {
-//            return true;
-//        } else if (sensorType.equals("no2")) {
-//            return true;
-//        } else if (sensorType.equals("so2")) {
-//            return true;
-//        } else if (sensorType.equals("temperature")) {
-//            return true;
-//        } else if (sensorType.equals("pm10")) {
-//            return true;
-//        } else if (sensorType.equals("pm2_5")) {
-//            return true;
-//        } else {
-//            return false;
-//        }
-//    }
-
     private void refreshKLayout() {
-        if (sensorTypes != null && sensorTypes.size() > 0) {
-            String sensorType = sensorTypes.get(0);
-            boolean isDraw = WidgetUtil.needDrawKLayout(sensorType);
-            getView().setRecentDaysTitleTextView(WidgetUtil.getSensorTypeChinese(sensorType));
-            getView().setRecentDaysInfo1TextView(WidgetUtil.getSensorTypeChinese(sensorType));
-            if (sensorTypes.size() > 1) {
-                String sensorType2 = sensorTypes.get(1);
+        if (sensorTypesList != null && sensorTypesList.size() > 0) {
+
+            getView().setRecentDaysTitleTextView(WidgetUtil.parseSensorTypes(mContext, sensorTypesList));
+            //
+            boolean isDraw;
+            if (sensorTypesList.size() > 1) {
+                String sensorType1 = sensorTypesList.get(0);
+                isDraw = WidgetUtil.needDrawKLayout(sensorType1);
+                getView().setRecentDaysInfo2TextView(true, WidgetUtil.getSensorTypeChinese(sensorType1));
+//                getView().setRecentDaysInfo1TextView(WidgetUtil.getSensorTypeChinese(sensorType1));
+                //
+                String sensorType2 = sensorTypesList.get(1);
                 if (isDraw) {
                     isDraw = WidgetUtil.needDrawKLayout(sensorType2);
                 }
-                getView().setRecentDaysTitleTextView(WidgetUtil.getSensorTypeChinese(sensorType2));
-                getView().setRecentDaysInfo2TextView(true, WidgetUtil.getSensorTypesChinese(sensorTypes));
+                getView().setRecentDaysInfo1TextView(WidgetUtil.getSensorTypeChinese(sensorType2));
+            } else {
+                String sensorType1 = sensorTypesList.get(0);
+                isDraw = WidgetUtil.needDrawKLayout(sensorType1);
+                getView().setRecentDaysInfo1TextView(WidgetUtil.getSensorTypeChinese(sensorType1));
             }
 
             if (mRecentInfoList.size() > 0) {
@@ -504,7 +475,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     private CandleData generateCandleData1() {
         ArrayList<CandleEntry> vals1 = new ArrayList<CandleEntry>();
         for (int i = 0; i < mRecentInfoList.size(); i++) {
-            String sensorType = sensorTypes.get(0);
+            String sensorType = sensorTypesList.get(0);
             DeviceRecentInfo deviceRecentInfo = mRecentInfoList.get(i);
             if (deviceRecentInfo.getMaxValue(sensorType) != null && deviceRecentInfo.getMinValue(sensorType) != null &&
                     deviceRecentInfo.getAvgValue(sensorType) != null) {
@@ -546,9 +517,9 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
 
     private CandleData generateCandleData2() {
         ArrayList<CandleEntry> vals2 = new ArrayList<CandleEntry>();
-        if (sensorTypes.size() > 1) {
+        if (sensorTypesList.size() > 1) {
             for (int i = 0; i < mRecentInfoList.size(); i++) {
-                String sensorType = sensorTypes.get(1);
+                String sensorType = sensorTypesList.get(1);
                 DeviceRecentInfo deviceRecentInfo = mRecentInfoList.get(i);
                 if (deviceRecentInfo.getMaxValue(sensorType) != null && deviceRecentInfo.getMinValue(sensorType) !=
                         null &&
