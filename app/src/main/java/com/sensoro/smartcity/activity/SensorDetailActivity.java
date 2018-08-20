@@ -132,20 +132,20 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
         ButterKnife.bind(mActivity);
         mMapView.onCreate(savedInstanceState);// 此方法必须重写
         initView();
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mPrestener.onStart();
+        mPresenter.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPrestener.onStop();
+        mPresenter.onStop();
     }
 
     private void initView() {
@@ -178,7 +178,7 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
                         deviceRecentInfo.getDate());
             }
         });
-        mPrestener.getMapAndChart(mMapView.getMap(), mChart);
+        mPresenter.getMapAndChart(mMapView.getMap(), mChart);
     }
 
     @Override
@@ -329,17 +329,17 @@ public class SensorDetailActivity extends BaseActivity<ISensorDetailActivityView
 
     @OnClick(R.id.sensor_detail_navi_btn)
     public void navigation() {
-        mPrestener.doNavigation();
+        mPresenter.doNavigation();
     }
 
     @OnClick(R.id.sensor_detail_share_btn)
     public void detailShare() {
-        mPrestener.doDetailShare();
+        mPresenter.doDetailShare();
     }
 
     @OnClick(R.id.sensor_detail_more)
     public void doMore() {
-        mPrestener.doMore();
+        mPresenter.doMore();
     }
 
     @OnClick(R.id.sensor_detail_back)

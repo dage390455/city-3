@@ -78,7 +78,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_alarm);
         ButterKnife.bind(mActivity);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         initView();
     }
 
@@ -145,7 +145,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                         mKeywordEt.setHint("设备名称");
                         break;
                 }
-                mPrestener.refreshHistory(searchType);
+                mPresenter.refreshHistory(searchType);
             }
 
             @Override
@@ -156,7 +156,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-        mPrestener.refreshHistory(searchType);
+        mPresenter.refreshHistory(searchType);
     }
 
     @Override
@@ -179,11 +179,11 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getHistoryKeywords_deviceName(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getHistoryKeywords_deviceName(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mPrestener.clickSearchHistoryItem(searchType, position);
+                        mPresenter.clickSearchHistoryItem(searchType, position);
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
                     }
@@ -214,7 +214,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_alarm_clear_btn:
-                mPrestener.cleanHistory(searchType);
+                mPresenter.cleanHistory(searchType);
                 break;
             case R.id.search_alarm_cancel_tv:
                 mKeywordEt.clearFocus();
@@ -264,8 +264,8 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                 mKeywordEt.clearFocus();
                 setClearKeywordIvVisible(true);
                 dismissInputMethodManager(v);
-                mPrestener.save(searchType, text.trim());
-                mPrestener.requestData(searchType, text.trim());
+                mPresenter.save(searchType, text.trim());
+                mPresenter.requestData(searchType, text.trim());
             } else {
                 SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                         .show();

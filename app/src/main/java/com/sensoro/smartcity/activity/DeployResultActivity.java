@@ -50,7 +50,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_result);
         ButterKnife.bind(mActivity);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
 
@@ -153,12 +153,12 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
 
     @OnClick(R.id.deploy_result_continue_btn)
     public void gotoContinue() {
-        mPrestener.gotoContinue();
+        mPresenter.gotoContinue();
     }
 
     @OnClick(R.id.deploy_result_back_home)
     public void backHome() {
-        mPrestener.backHome();
+        mPresenter.backHome();
     }
 
     @Override

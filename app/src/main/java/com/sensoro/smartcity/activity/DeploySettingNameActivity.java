@@ -63,7 +63,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_name);
         ButterKnife.bind(mActivity);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         initView();
     }
 
@@ -91,11 +91,11 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getHistoryKeywords(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getHistoryKeywords(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String text = mPrestener.getHistoryKeywords().get(position).trim();
+                        String text = mPresenter.getHistoryKeywords().get(position).trim();
                         setEditText(text);
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
@@ -129,7 +129,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     @OnClick(R.id.deploy_setting_finish)
     public void doFinish() {
         String text = mKeywordEt.getText().toString();
-        mPrestener.doChoose(text);
+        mPresenter.doChoose(text);
     }
 
     @Override
@@ -137,7 +137,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
         if (actionId == EditorInfo.IME_ACTION_DONE) {
             dismissInputMethodManager(v);
             String text = mKeywordEt.getText().toString();
-            mPrestener.doChoose(text);
+            mPresenter.doChoose(text);
             return true;
         }
         return false;
@@ -150,7 +150,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        mPrestener.handleTextChanged(s, start, before, count);
+        mPresenter.handleTextChanged(s, start, before, count);
     }
 
     @Override

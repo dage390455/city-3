@@ -130,7 +130,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(mActivity);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         initView();
     }
 
@@ -171,13 +171,13 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     @Override
     protected void onStart() {
         super.onStart();
-        mPrestener.onStart();
+        mPresenter.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPrestener.onStop();
+        mPresenter.onStop();
     }
 
     private void initListView() {
@@ -192,14 +192,14 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             public void onRefresh() {
                 String text = mKeywordEt.getText().toString();
                 isShowDialog = false;
-                mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+                mPresenter.requestWithDirection(DIRECTION_DOWN, text);
             }
 
             @Override
             public void onLoadMore() {
                 isShowDialog = false;
                 String text = mKeywordEt.getText().toString();
-                mPrestener.requestWithDirection(DIRECTION_UP, text);
+                mPresenter.requestWithDirection(DIRECTION_UP, text);
             }
         });
         mListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -242,13 +242,13 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             @Override
             public void onRefresh() {
                 String text = mKeywordEt.getText().toString();
-                mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+                mPresenter.requestWithDirection(DIRECTION_DOWN, text);
             }
 
             @Override
             public void onLoadMore() {
                 String text = mKeywordEt.getText().toString();
-                mPrestener.requestWithDirection(DIRECTION_UP, text);
+                mPresenter.requestWithDirection(DIRECTION_UP, text);
             }
         });
         mGridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -357,7 +357,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                 mClearKeywordIv.setVisibility(View.VISIBLE);
                 mKeywordEt.clearFocus();
                 dismissInputMethodManager(view);
-                mPrestener.clickRelationItem(position);
+                mPresenter.clickRelationItem(position);
             }
         });
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
@@ -372,16 +372,16 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getHistoryKeywords(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getHistoryKeywords(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String text = mPrestener.getHistoryKeywords().get(position);
+                        String text = mPresenter.getHistoryKeywords().get(position);
                         setEditText(text);
                         mClearKeywordIv.setVisibility(View.VISIBLE);
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
-                        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+                        mPresenter.requestWithDirection(DIRECTION_DOWN, text);
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
@@ -459,7 +459,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             mTypePopupView.show(mTypeShadowLayout, new SensoroPopupTypeView.OnTypePopupItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    mPrestener.setTypeSelectedIndex(position);
+                    mPresenter.setTypeSelectedIndex(position);
                     filterByTypeWithRequest(position);
                 }
             });
@@ -488,7 +488,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             mStatusPopupView.show(mStatusShadowLayout, new SensoroPopupStatusView.OnStatusPopupItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    mPrestener.setStatusSelectedIndex(position);
+                    mPresenter.setStatusSelectedIndex(position);
                     filterByStatusWithRequest(position);
                 }
             });
@@ -503,9 +503,9 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mTypeImageView.setRotation(0);
         String typeText = INDEX_TYPE_ARRAY[position];
         mTypeTextView.setText(typeText);
-        mPrestener.setTypeSelectedIndex(position);
+        mPresenter.setTypeSelectedIndex(position);
         String text = mKeywordEt.getText().toString();
-        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+        mPresenter.requestWithDirection(DIRECTION_DOWN, text);
     }
 
     @Override
@@ -521,16 +521,16 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mStatusImageView.setRotation(0);
         String statusText = INDEX_STATUS_ARRAY[position];
         mStatusTextView.setText(statusText);
-        mPrestener.setStatusSelectedIndex(position);
+        mPresenter.setStatusSelectedIndex(position);
         String text = mKeywordEt.getText().toString();
-        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+        mPresenter.requestWithDirection(DIRECTION_DOWN, text);
     }
 
     @Override
     public void switchToTypeList() {
         switchType = TYPE_LIST;
         String text = mKeywordEt.getText().toString();
-        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+        mPresenter.requestWithDirection(DIRECTION_DOWN, text);
         mReturnTopImageView.setVisibility(View.GONE);
         mSwitchImageView.setImageResource(R.mipmap.ic_switch_grid);
         showListLayout();
@@ -560,7 +560,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     public void switchToTypeGrid() {
         switchType = TYPE_GRID;
         String text = mKeywordEt.getText().toString();
-        mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+        mPresenter.requestWithDirection(DIRECTION_DOWN, text);
         mReturnTopImageView.setVisibility(View.GONE);
         mSwitchImageView.setImageResource(R.mipmap.ic_switch_list);
         showGridLayout();
@@ -599,7 +599,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_device_clear_btn:
-                mPrestener.cleanHistory();
+                mPresenter.cleanHistory();
                 break;
             case R.id.search_device_cancel_tv:
                 mKeywordEt.clearFocus();
@@ -623,7 +623,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                 returnTop();
                 break;
             case R.id.index_iv_switch:
-                mPrestener.switchIndexGridOrList(switchType);
+                mPresenter.switchIndexGridOrList(switchType);
                 break;
             default:
                 break;
@@ -650,7 +650,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         if (!TextUtils.isEmpty(s.toString())) {
             setSearchHistoryLayoutVisible(false);
             setRelationLayoutVisible(true);
-            mPrestener.filterDeviceInfo(s.toString());
+            mPresenter.filterDeviceInfo(s.toString());
         } else {
             setSearchHistoryLayoutVisible(true);
             setRelationLayoutVisible(false);
@@ -672,11 +672,11 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                         .show();
                 return true;
             }
-            mPrestener.save(text);
+            mPresenter.save(text);
             mClearKeywordIv.setVisibility(View.VISIBLE);
             mKeywordEt.clearFocus();
             dismissInputMethodManager(v);
-            mPrestener.requestWithDirection(DIRECTION_DOWN, text);
+            mPresenter.requestWithDirection(DIRECTION_DOWN, text);
             return true;
         }
         return false;
@@ -684,7 +684,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     @Override
     public void onItemClick(View view, int position) {
-        mPrestener.clickItem(position);
+        mPresenter.clickItem(position);
     }
 
     @Override

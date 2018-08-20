@@ -39,7 +39,7 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
         setContentView(R.layout.activity_contract_result);
         ButterKnife.bind(mActivity);
         initView();
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
     private void initView() {
@@ -55,12 +55,12 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_share:
-                mPrestener.sharePic();
+                mPresenter.sharePic();
                 break;
             case R.id.iv_contract_result_back:
                 break;
             case R.id.tv_contract_info_title_finish:
-                mPrestener.finish();
+                mPresenter.finish();
                 break;
         }
 
@@ -68,7 +68,7 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        mPrestener.finish();
+        mPresenter.finish();
         return super.onKeyDown(keyCode,event);
     }
 

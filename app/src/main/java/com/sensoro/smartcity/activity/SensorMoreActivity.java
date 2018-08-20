@@ -65,7 +65,7 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
         setContentView(R.layout.activity_sensor_more);
         ButterKnife.bind(mActivity);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         tagSensoroView.setTagClickable(false);
     }
 
@@ -78,14 +78,14 @@ public class SensorMoreActivity extends BaseActivity<ISensorMoreActivityView, Se
     @Override
     protected void onStart() {
         super.onStart();
-        mPrestener.requestData();
-        mPrestener.onStart();
+        mPresenter.requestData();
+        mPresenter.onStart();
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        mPrestener.onStop();
+        mPresenter.onStop();
     }
 
     @OnClick(R.id.sensor_more_back)

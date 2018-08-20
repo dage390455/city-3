@@ -144,7 +144,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
         setContentView(R.layout.activity_contract_service);
         ButterKnife.bind(mActivity);
         initView();
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
     private void initView() {
@@ -305,7 +305,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 finishAc();
                 break;
             case R.id.tv_contract_service_title_retake:
-                mPrestener.retake();
+                mPresenter.retake();
                 break;
             case R.id.iv_contract_service_line1:
                 break;
@@ -365,7 +365,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 String line7 = etContractAge.getText().toString();
                 String placeType = tvContractServicePlace.getText().toString();
                 ArrayList<ContractsTemplateInfo> data = contractTemplateAdapter.getData();
-                mPrestener.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType, sex, data);
+                mPresenter.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType, sex, data);
                 break;
         }
     }
@@ -373,7 +373,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPrestener.handleResult(requestCode, resultCode, data);
+        mPresenter.handleResult(requestCode, resultCode, data);
     }
 
     @Override

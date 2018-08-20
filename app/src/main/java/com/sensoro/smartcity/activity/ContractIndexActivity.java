@@ -34,7 +34,7 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_contract_index);
         ButterKnife.bind(mActivity);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         initView();
     }
 
@@ -64,13 +64,13 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
                 finishAc();
                 break;
             case R.id.contract_index_name_license_rl:
-                mPrestener.startLicense();
+                mPresenter.startLicense();
                 break;
             case R.id.contract_index_person_rl:
-                mPrestener.startPerson();
+                mPresenter.startPerson();
                 break;
             case R.id.contract_index_manual_rl:
-                mPrestener.startManual();
+                mPresenter.startManual();
                 break;
         }
     }
@@ -103,7 +103,7 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPrestener.handActivityResult(requestCode, resultCode, data);
+        mPresenter.handActivityResult(requestCode, resultCode, data);
     }
 
     @Override

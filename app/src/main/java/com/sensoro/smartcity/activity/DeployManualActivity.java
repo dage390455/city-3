@@ -48,7 +48,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
         ButterKnife.bind(mActivity);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         contentEditText.addTextChangedListener(this);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
     @Override
@@ -74,7 +74,7 @@ public class DeployManualActivity extends BaseActivity<IDeployManualActivityView
     @OnClick(R.id.deploy_manual_btn)
     public void next() {
         String text = contentEditText.getText().toString();
-        mPrestener.clickNext(text);
+        mPresenter.clickNext(text);
     }
 
 

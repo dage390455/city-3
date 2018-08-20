@@ -33,11 +33,11 @@ public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, D
         setContentView(R.layout.activity_deploy_setting_photo);
         ButterKnife.bind(mActivity);
         initView();
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
     private void initView() {
-        adapter = new ImagePickerAdapter(mActivity, mPrestener.getSelImageList(), 4);
+        adapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList(), 4);
         adapter.setOnItemClickListener(this);
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
         rvDeployPhoto.setLayoutManager(layoutManager);
@@ -70,7 +70,7 @@ public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, D
                 finishAc();
                 break;
             case R.id.deploy_setting_photo_finish:
-                mPrestener.doFinish();
+                mPresenter.doFinish();
                 break;
         }
     }
@@ -97,7 +97,7 @@ public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, D
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPrestener.handleActivityResult(requestCode, resultCode, data);
+        mPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
     @Override
@@ -108,7 +108,7 @@ public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, D
     public void onItemClick(View view, int position) {
         int id = view.getId();
         List<ImageItem> images = adapter.getImages();
-        mPrestener.clickItem(id, position,images);
+        mPresenter.clickItem(id, position,images);
     }
 
     @Override

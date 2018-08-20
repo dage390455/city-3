@@ -94,7 +94,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
 
     public void requestData(String text) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getUserAccountList(text).subscribeOn(Schedulers.io()).observeOn
+        RetrofitServiceHelper.INSTANCE.getUserAccountList(text, null, 0, 100000).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>() {
 
 
@@ -130,7 +130,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         if (list.size() > 0) {
             mUserInfoList.clear();
             mUserInfoList.addAll(list);
-            getView().updateMerchantInfo();
+            getView().updateMerchantInfo(mUserInfoList);
             getView().setSearchHistoryLayoutVisible(false);
             getView().setLlMerchantItemViewVisible(true);
         } else {
@@ -141,7 +141,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
 
 //        getView().setAdapterSelectedIndex(-1);
 //        getView().updateAdapterUserInfo(list);
-//        getView().showSeperatorBottomView(list.size() != 0);
+//        getView().showSeperatorView(list.size() != 0);
     }
 
     public void cleanHistory() {
@@ -150,10 +150,6 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         mEditor.commit();
         getView().updateSearchHistory();
         getView().setSearchHistoryLayoutVisible(false);
-    }
-
-    public List<UserInfo> getUserInfoList() {
-        return mUserInfoList;
     }
 
 
@@ -193,7 +189,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
 //            getView().setAdapterSelectedIndex(position);
 //            mMerchantAdapter.setSelectedIndex(position);
 //            mMerchantAdapter.notifyDataSetChanged();
-            getView().updateMerchantInfo();
+//            getView().updateMerchantInfo();
 //            mCurrentStatusImageView.setVisibility(View.GONE);
             String uid = mUserInfoList.get(position).get_id();
             doAccountSwitch(uid);

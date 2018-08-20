@@ -68,7 +68,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         setContentView(R.layout.activity_deploy);
         ButterKnife.bind(mActivity);
         mMapView.onCreate(savedInstanceState);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         init();
 
     }
@@ -141,7 +141,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         try {
             mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
             initUploadDialog();
-            mPrestener.initMap(mMapView.getMap());
+            mPresenter.initMap(mMapView.getMap());
             mActivity.getWindow().getDecorView().postInvalidate();
         } catch (Exception e) {
             e.printStackTrace();
@@ -264,28 +264,28 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
     @OnClick(R.id.deploy_name_relative_layout)
     public void doSettingByNameAndAddress() {
         String nameAddress = nameAddressEditText.getText().toString();
-        mPrestener.doSettingByNameAndAddress(nameAddress);
+        mPresenter.doSettingByNameAndAddress(nameAddress);
     }
 
     @OnClick(R.id.deploy_tag_relative_layout)
     public void doSettingByTag() {
-        mPrestener.doSettingByTag();
+        mPresenter.doSettingByTag();
     }
 
     @OnClick(R.id.deploy_contact_relative_layout)
     public void doSettingContact() {
-        mPrestener.doSettingContact();
+        mPresenter.doSettingContact();
     }
 
     @OnClick(R.id.deploy_photo_relative_layout)
     public void doSettingPhoto() {
-        mPrestener.doSettingPhoto();
+        mPresenter.doSettingPhoto();
     }
 
     @OnClick(R.id.deploy_device_signal)
     public void doSignal() {
         String sns = titleTextView.getText().toString();
-        mPrestener.doSignal(sns);
+        mPresenter.doSignal(sns);
 
     }
 
@@ -294,7 +294,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         setUploadButtonClickable(false);
         String sn = titleTextView.getText().toString();
         final String name = nameAddressEditText.getText().toString();
-        mPrestener.requestUpload(sn, name);
+        mPresenter.requestUpload(sn, name);
     }
 
     @OnClick(R.id.deploy_back)

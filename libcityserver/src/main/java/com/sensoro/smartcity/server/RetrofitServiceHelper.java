@@ -247,8 +247,8 @@ public enum RetrofitServiceHelper {
      * @param search
      * @return
      */
-    public Observable<UserAccountRsp> getUserAccountList(String search) {
-        return retrofitService.getUserAccountList(search, "100000");
+    public Observable<UserAccountRsp> getUserAccountList(String search,Integer page,Integer offset,Integer limit) {
+        return retrofitService.getUserAccountList(search, page, 20, offset, limit);
     }
 
     /**

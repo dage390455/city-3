@@ -102,7 +102,7 @@ public interface RetrofitService {
             , @Query("unionTypes") String unionTypes);
 
     @GET(USER_ACCOUNT_LIST)
-    Observable<UserAccountRsp> getUserAccountList(@Query("search") String search, @Query("limit") String limit);
+    Observable<UserAccountRsp> getUserAccountList(@Query("search") String search, @Query("page") Integer page, @Query("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
 
     @GET(APP_UPDATE)
     Observable<UpdateRsp> getUpdateInfo();

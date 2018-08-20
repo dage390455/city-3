@@ -1,117 +1,146 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:background="@color/f7f8f9"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y200"
-        android:background="@color/white">
-
-        <ImageView
-            android:id="@+id/merchant_iv_menu_list"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
-            android:padding="18dp"
-            android:src="@mipmap/ic_menu_list"/>
-
-        <TextView
-            android:id="@+id/merchant_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="@string/merchant_switch"
-            android:textColor="@color/c_626262"
-            android:textSize="@dimen/x60"/>
-
-        <ImageView
-            android:id="@+id/merchant_iv_search"
-            android:layout_width="@dimen/x120"
-            android:layout_height="@dimen/y160"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/x20"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
-            android:padding="8dp"
-            android:src="@mipmap/ic_search"
-            />
-    </RelativeLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y1"
-        android:background="@color/c_e7e7e7"/>
-
-    <RelativeLayout
-        android:id="@+id/rl_title_account"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y180"
-        android:layout_marginTop="@dimen/y50"
-        android:background="@drawable/shape_normal_layout"
-        android:gravity="center_vertical">
-
-        <TextView
-            android:id="@+id/merchant_current_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/x100"
-            android:layout_marginTop="@dimen/y30"
-            android:textColor="@color/slide_menu_item_bg"
-            android:textSize="18sp"/>
-
-        <TextView
-            android:id="@+id/merchant_current_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/merchant_current_name"
-            android:layout_centerVertical="true"
-            android:layout_marginBottom="@dimen/y30"
-            android:layout_marginLeft="@dimen/x100"
-            android:textColor="@color/c_626262"
-            android:textSize="16sp"/>
-
-        <ImageView
-            android:id="@+id/merchant_current_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="@dimen/x100"
-            android:src="@mipmap/ic_status_selected"/>
-    </RelativeLayout>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/f7f8f9"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/y50"
-        android:background="@color/white"
+        android:layout_height="match_parent"
         android:orientation="vertical">
 
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y200"
+            android:background="@color/white">
+
+            <ImageView
+                android:id="@+id/merchant_iv_menu_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:padding="18dp"
+                android:src="@mipmap/ic_menu_list" />
+
+            <TextView
+                android:id="@+id/merchant_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="@string/merchant_switch"
+                android:textColor="@color/c_626262"
+                android:textSize="@dimen/x60" />
+
+            <ImageView
+                android:id="@+id/merchant_iv_search"
+                android:layout_width="@dimen/x120"
+                android:layout_height="@dimen/y160"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x20"
+                android:adjustViewBounds="true"
+                android:cropToPadding="true"
+                android:padding="8dp"
+                android:src="@mipmap/ic_search" />
+        </RelativeLayout>
+
         <View
-            android:id="@+id/merchant_list_sep"
             android:layout_width="match_parent"
             android:layout_height="@dimen/y1"
-            android:background="@color/c_e7e7e7"/>
+            android:background="@color/c_e7e7e7" />
 
-        <ListView
-            android:id="@+id/merchant_list"
+        <RelativeLayout
+            android:id="@+id/rl_title_account"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/y180"
+            android:layout_marginTop="@dimen/y50"
+            android:background="@drawable/shape_normal_layout"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/merchant_current_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x100"
+                android:layout_marginTop="@dimen/y30"
+                android:textColor="@color/slide_menu_item_bg"
+                android:textSize="18sp" />
+
+            <TextView
+                android:id="@+id/merchant_current_phone"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/merchant_current_name"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="@dimen/y30"
+                android:layout_marginLeft="@dimen/x100"
+                android:textColor="@color/c_626262"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/merchant_current_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="@dimen/x100"
+                android:src="@mipmap/ic_status_selected" />
+        </RelativeLayout>
+
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/x100"
-            android:divider="@color/c_e7e7e7"
-            android:dividerHeight="@dimen/y1"/>
+            android:layout_marginTop="@dimen/y50"
+            android:background="@color/white"
+            android:orientation="vertical">
 
-        <View
-            android:id="@+id/merchant_list_bottom_sep"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/y1"
-            android:background="@color/c_e7e7e7"/>
+            <View
+                android:id="@+id/merchant_list_sep"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:background="@color/c_e7e7e7" />
+
+            <com.handmark.pulltorefresh.library.PullToRefreshListView
+                android:id="@+id/fragment_merchant_list"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginLeft="@dimen/x100"
+                android:divider="@color/c_e7e7e7"
+                android:dividerHeight="@dimen/y1"
+                android:fadingEdge="none"
+                android:scrollbars="vertical" />
+
+            <View
+                android:id="@+id/merchant_list_bottom_sep"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:background="@color/c_e7e7e7" />
+        </LinearLayout>
+
+
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="@dimen/y50"
+        android:layout_marginRight="@dimen/x50">
+
+        <ImageView
+            android:id="@+id/merchant_return_top"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y30"
+            android:layout_marginRight="@dimen/x30"
+            android:src="@mipmap/ic_return_top"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>

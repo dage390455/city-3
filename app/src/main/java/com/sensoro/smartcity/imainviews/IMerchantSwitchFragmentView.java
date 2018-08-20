@@ -12,11 +12,13 @@ public interface IMerchantSwitchFragmentView extends IProgressDialog, IActivityI
 
     void setCurrentNameAndPhone(String name, String phone);
 
-    void showSeperatorBottomView(boolean isShow);
+    void showSeperatorView(boolean isShow);
 
     void setAdapterSelectedIndex(int index);
 
     void updateAdapterUserInfo(List<UserInfo> data);
 
-    void requestData();
+    void onPullRefreshComplete();
+
+    void requestDataByDirection(int direction, boolean isForce);
 }

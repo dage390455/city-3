@@ -53,11 +53,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         initWidget();
-        mPrestener.checkPush();
-        mPrestener.initData(mActivity);
-        mPrestener.freshAccountType();
-        mPrestener.onCreate();
-        mPrestener.setAppVersion();
+        mPresenter.checkPush();
+        mPresenter.initData(mActivity);
+        mPresenter.freshAccountType();
+        mPresenter.onCreate();
+        mPresenter.setAppVersion();
     }
 
     @Override
@@ -78,7 +78,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     public boolean isSupperAccount() {
-        return mPrestener.isSupperAccount();
+        return mPresenter.isSupperAccount();
     }
 
     private void initWidget() {
@@ -105,19 +105,19 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mListView.setOnItemClickListener(this);
         sensoroPager = (SensoroPager) findViewById(R.id.main_container);
         sensoroPager.setOffscreenPageLimit(8);
-        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mPrestener
+        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mPresenter
                 .getFragmentList());
         sensoroPager.setAdapter(mainPagerAdapter);
     }
 
     public String getRoles() {
-        return mPrestener.getRoles();
+        return mPresenter.getRoles();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return mPrestener.onKeyDown(keyCode, event);
+            return mPresenter.onKeyDown(keyCode, event);
         }
         return super.onKeyDown(keyCode, event);
     }
@@ -127,7 +127,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         closeMenu();
         setMenuSelected(position);
-        mPrestener.clickMenuItem((int) mMenuInfoAdapter.getItemId(position));
+        mPresenter.clickMenuItem((int) mMenuInfoAdapter.getItemId(position));
     }
 
 
@@ -138,7 +138,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPrestener.handleActivityResult(requestCode, resultCode, data);
+        mPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
 
@@ -146,7 +146,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.main_left_exit:
-                mPrestener.logout();
+                mPresenter.logout();
                 break;
         }
     }
@@ -172,7 +172,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                mPrestener.updateApp(url);
+                mPresenter.updateApp(url);
             }
         });
         builder.setPositiveButton("取消", null);
@@ -198,7 +198,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public void changeAccount(String useName, String phone, String roles, boolean isSpecific, boolean isStation,
                               boolean hasContract, boolean hasScanLogin) {
-        mPrestener.changeAccount(useName, phone, roles, isSpecific, isStation, hasContract, hasScanLogin);
+        mPresenter.changeAccount(useName, phone, roles, isSpecific, isStation, hasContract, hasScanLogin);
     }
 
     @Override

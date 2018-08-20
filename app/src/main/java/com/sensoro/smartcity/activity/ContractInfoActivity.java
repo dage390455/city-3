@@ -110,7 +110,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
         setContentView(R.layout.activity_contract_info);
         ButterKnife.bind(mActivity);
         initView();
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
     @Override
@@ -145,7 +145,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 break;
             case R.id.bt_confirm:
                 String text = btConfirm.getText().toString();
-                mPrestener.startToConfirm(text);
+                mPresenter.startToConfirm(text);
                 break;
         }
     }

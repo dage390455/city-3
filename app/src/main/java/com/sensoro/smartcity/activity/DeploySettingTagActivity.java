@@ -61,7 +61,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
         setContentView(R.layout.activity_deploy_setting_tag);
         ButterKnife.bind(mActivity);
         initView();
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
     @Override
@@ -124,11 +124,11 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getHistoryKeywords(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getHistoryKeywords(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mPrestener.clickHistory(position);
+                        mPresenter.clickHistory(position);
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
@@ -146,7 +146,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
     @OnClick(R.id.deploy_setting_tag_finish)
     public void doFinish() {
         List<String> tags = mKeywordEt.getTags();
-        mPrestener.doChoose(true, tags);
+        mPresenter.doChoose(true, tags);
     }
 
 
@@ -158,7 +158,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
 
     @Override
     public void onTagsChanged(Collection<String> tags) {
-        mPrestener.setTagList((List<String>) tags);
+        mPresenter.setTagList((List<String>) tags);
     }
 
     @Override

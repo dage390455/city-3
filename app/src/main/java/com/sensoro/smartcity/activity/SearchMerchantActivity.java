@@ -26,11 +26,14 @@ import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISearchMerchantActivityView;
 import com.sensoro.smartcity.presenter.SearchMerchantActivityPresenter;
+import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -65,7 +68,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     TextView merchantCurrentPhone;
     @BindView(R.id.merchant_current_status)
     ImageView merchantCurrentStatus;
-    @BindView(R.id.merchant_list)
+    @BindView(R.id.merchant_activity_list)
     ListView merchantList;
     private MerchantAdapter mMerchantAdapter;
     private ProgressUtils mProgressUtils;
@@ -76,7 +79,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_merchant);
         ButterKnife.bind(mActivity);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         init();
     }
 
@@ -92,22 +95,23 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getmHistoryKeywords(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getmHistoryKeywords(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String text = mPrestener.getmHistoryKeywords().get(position);
+                        String text = mPresenter.getmHistoryKeywords().get(position);
                         setEditText(text);
                         setClearKeywordIvVisible(true);
                         mKeywordEt.clearFocus();
-                        mPrestener.requestData(text);
+                        mPresenter.requestData(text);
                         dismissInputMethodManager(view);
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
-        mMerchantAdapter = new MerchantAdapter(mActivity, mPrestener.getUserInfoList());
+        mMerchantAdapter = new MerchantAdapter(mActivity);
         merchantList.setAdapter(mMerchantAdapter);
         merchantList.setOnItemClickListener(this);
+        //TODO 更改adapter presenter
         updateSearchHistory();
         showSoftInputFromWindow(mKeywordEt);
     }
@@ -144,7 +148,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_merchant_clear_btn:
-                mPrestener.cleanHistory();
+                mPresenter.cleanHistory();
                 break;
             case R.id.search_merchant_cancel_tv:
                 mKeywordEt.clearFocus();
@@ -173,8 +177,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
                         .show();
             } else {
                 setClearKeywordIvVisible(true);
-                mPrestener.save(text);
-                mPrestener.requestData(text);
+                mPresenter.save(text);
+                mPresenter.requestData(text);
                 mKeywordEt.clearFocus();
                 dismissInputMethodManager(v);
             }
@@ -212,7 +216,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     }
 
     @Override
-    public void updateMerchantInfo() {
+    public void updateMerchantInfo(List<UserInfo> users) {
+        mMerchantAdapter.setDataList(users);
         mMerchantAdapter.notifyDataSetChanged();
     }
 
@@ -279,6 +284,6 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPrestener.clickItem(position);
+        mPresenter.clickItem(position);
     }
 }

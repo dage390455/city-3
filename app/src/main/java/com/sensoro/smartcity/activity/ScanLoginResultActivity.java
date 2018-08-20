@@ -23,7 +23,7 @@ public class ScanLoginResultActivity extends BaseActivity<IScanLoginResultActivi
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_scan_result);
         ButterKnife.bind(mActivity);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         initView();
     }
 
@@ -49,10 +49,10 @@ public class ScanLoginResultActivity extends BaseActivity<IScanLoginResultActivi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.scan_login:
-                mPrestener.doLogin();
+                mPresenter.doLogin();
                 break;
             case R.id.scan_cancel:
-                mPrestener.doCancel();
+                mPresenter.doCancel();
                 break;
         }
     }

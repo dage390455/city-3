@@ -76,7 +76,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
     @Override
@@ -171,7 +171,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mPrestener.saveScopeData(scope_selectedIndex);
+                        mPresenter.saveScopeData(scope_selectedIndex);
                         toastShort(urlArr[scope_selectedIndex]);
                     }
                 }).
@@ -185,7 +185,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     public void doForwardMain() {
         String account = accountEt.getText().toString();
         String pwd = pwdEt.getText().toString();
-        mPrestener.login(account, pwd);
+        mPresenter.login(account, pwd);
     }
 
 
@@ -204,7 +204,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     public void onPermissionGranted() {
-        mPrestener.initPushSDK();
+        mPresenter.initPushSDK();
         LogUtils.logd(this, "onPermissionGranted: 权限获取完毕 ");
     }
 

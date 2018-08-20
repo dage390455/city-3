@@ -32,6 +32,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
 
     private final List<UserInfo> mUserInfoList = new ArrayList<>();
     private Activity mContext;
+    private volatile int cur_page = 1;
 
     @Override
     public void initData(Context context) {
@@ -46,42 +47,91 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
         getView().setCurrentStatusImageViewVisible(true);
     }
 
-    public List<UserInfo> getUserInfoList() {
-        return mUserInfoList;
+    public void requestDataByDirection(int direction, boolean isForce) {
+        if (isForce) {
+            getView().showProgressDialog();
+        }
+        switch (direction) {
+            case DIRECTION_DOWN:
+                cur_page = 1;
+                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, cur_page, null, null).subscribeOn(Schedulers.io()).observeOn
+                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>() {
+
+
+                    @Override
+                    public void onCompleted() {
+                        getView().dismissProgressDialog();
+                        getView().onPullRefreshComplete();
+                    }
+
+                    @Override
+                    public void onNext(UserAccountRsp userAccountRsp) {
+                        List<UserInfo> list = userAccountRsp.getData();
+                        mUserInfoList.clear();
+                        mUserInfoList.addAll(list);
+                        getView().setAdapterSelectedIndex(-1);
+                        getView().updateAdapterUserInfo(mUserInfoList);
+                        getView().showSeperatorView(list.size() != 0);
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
+                        getView().onPullRefreshComplete();
+                    }
+                });
+                break;
+            case DIRECTION_UP:
+                cur_page++;
+                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, cur_page, null, null).subscribeOn(Schedulers.io()).observeOn
+                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>() {
+
+
+                    @Override
+                    public void onCompleted() {
+                        getView().dismissProgressDialog();
+                        getView().onPullRefreshComplete();
+                    }
+
+                    @Override
+                    public void onNext(UserAccountRsp userAccountRsp) {
+                        List<UserInfo> list = userAccountRsp.getData();
+                        if (list == null || list.size() == 0) {
+                            cur_page--;
+                            getView().toastShort("没有更多数据了");
+                            getView().showSeperatorView(false);
+                        } else {
+                            mUserInfoList.addAll(list);
+                            getView().setAdapterSelectedIndex(-1);
+                            getView().updateAdapterUserInfo(mUserInfoList);
+                            getView().showSeperatorView(true);
+                        }
+
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        cur_page--;
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
+                        getView().onPullRefreshComplete();
+                    }
+                });
+                break;
+            default:
+                break;
+        }
     }
 
-    public void requestData() {
-        getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getUserAccountList(null).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>() {
-
-
-            @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onNext(UserAccountRsp userAccountRsp) {
-                refreshUI(userAccountRsp);
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-            }
-        });
-    }
-
-    private void refreshUI(UserAccountRsp userAccountRsp) {
-        List<UserInfo> list = userAccountRsp.getData();
-        mUserInfoList.clear();
-        mUserInfoList.addAll(list);
-        getView().setAdapterSelectedIndex(-1);
-        getView().updateAdapterUserInfo(list);
-        getView().showSeperatorBottomView(list.size() != 0);
-    }
+//    private void refreshUI(UserAccountRsp userAccountRsp) {
+//        List<UserInfo> list = userAccountRsp.getData();
+//        mUserInfoList.clear();
+//        mUserInfoList.addAll(list);
+//        getView().setAdapterSelectedIndex(-1);
+//        getView().updateAdapterUserInfo(mUserInfoList);
+//        getView().showSeperatorView(list.size() != 0);
+//    }
 
     private void doAccountSwitch(String uid) {
         getView().showProgressDialog();
@@ -124,11 +174,12 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
     }
 
     public void clickItem(int position) {
+        position = position - 1;
         if (!mUserInfoList.get(position).isStop()) {
             getView().setAdapterSelectedIndex(position);
 //            mMerchantAdapter.setSelectedIndex(position);
 //            mMerchantAdapter.notifyDataSetChanged();
-            getView().updateAdapterUserInfo(mUserInfoList);
+//            getView().updateAdapterUserInfo(mUserInfoList);
 //            getView().setCurrentStatusImageViewVisible(false);
 //            mCurrentStatusImageView.setVisibility(View.GONE);
             String uid = mUserInfoList.get(position).get_id();

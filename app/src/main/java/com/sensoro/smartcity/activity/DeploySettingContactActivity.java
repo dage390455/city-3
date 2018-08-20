@@ -59,7 +59,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_contact);
         ButterKnife.bind(mActivity);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
         init();
     }
 
@@ -81,11 +81,11 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
         mNameSearchHistoryRv.setLayoutManager(layoutManager);
         mNameSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mNameSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getNameHistoryKeywords(), new
+        mNameSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getNameHistoryKeywords(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String name = mPrestener.getNameHistoryKeywords().get(position).trim();
+                        String name = mPresenter.getNameHistoryKeywords().get(position).trim();
                         setNameEditText(name);
                         mNameEt.clearFocus();
                         dismissInputMethodManager(view);
@@ -107,11 +107,11 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
         SensoroLinearLayoutManager layoutManager1 = new SensoroLinearLayoutManager(mActivity);
         mPhoneSearchHistoryRv.setLayoutManager(layoutManager1);
         mPhoneSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPrestener.getPhoneHistoryKeywords(), new
+        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getPhoneHistoryKeywords(), new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String phone = mPrestener.getPhoneHistoryKeywords().get(position).trim();
+                        String phone = mPresenter.getPhoneHistoryKeywords().get(position).trim();
                         setPhoneEditText(phone);
                         mPhoneEt.clearFocus();
                         dismissInputMethodManager(view);
@@ -145,7 +145,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     public void doFinish() {
         String phoneStr = mPhoneEt.getText().toString();
         String nameStr = mNameEt.getText().toString();
-        mPrestener.doFinish(nameStr, phoneStr);
+        mPresenter.doFinish(nameStr, phoneStr);
     }
 
     @Override

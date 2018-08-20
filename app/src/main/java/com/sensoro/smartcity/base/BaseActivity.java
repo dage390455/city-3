@@ -36,7 +36,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     /**
      * 代理者
      */
-    protected P mPrestener;
+    protected P mPresenter;
     /**
      * 主AC
      */
@@ -47,9 +47,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         setTheme(R.style.MyTheme);
         super.onCreate(savedInstanceState);
-        mPrestener = createPresenter();
-        mPrestener.attachView((V) this);
-        V view = mPrestener.getView();
+        mPresenter = createPresenter();
+        mPresenter.attachView((V) this);
+        V view = mPresenter.getView();
         if (view instanceof BaseActivity) {
             mActivity = (BaseActivity) view;
         } else {
@@ -82,8 +82,8 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onDestroy() {
-        mPrestener.onDestroy();
-        mPrestener.detachView();
+        mPresenter.onDestroy();
+        mPresenter.detachView();
         super.onDestroy();
     }
 

@@ -68,13 +68,13 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
         setContentView(R.layout.activity_alarm_detail);
         ButterKnife.bind(mActivity);
         initView();
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mPrestener.refreshData();
+        mPresenter.refreshData();
     }
 
     @Override
@@ -85,10 +85,10 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     private void initView() {
         try {
             mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-            mAlarmPopupView.setOnPopupCallbackListener(mPrestener);
+            mAlarmPopupView.setOnPopupCallbackListener(mPresenter);
             mAlarmPopupView.setDialog(mActivity);
             confirmTextView.setOnClickListener(this);
-            timerShaftAdapter = new TimerShaftAdapter(mActivity, mPrestener.getList(), new TimerShaftAdapter
+            timerShaftAdapter = new TimerShaftAdapter(mActivity, mPresenter.getList(), new TimerShaftAdapter
                     .OnGroupItemClickListener() {
                 @Override
                 public void onGroupItemClick(int position, boolean isExpanded) {
@@ -157,7 +157,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @OnClick(R.id.alarm_detail_back)
     public void back() {
-        mPrestener.doBack();
+        mPresenter.doBack();
     }
 
     @Override
@@ -177,7 +177,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.alarm_detail_confirm_status:
-                mPrestener.showConfirmPopup();
+                mPresenter.showConfirmPopup();
                 break;
             default:
                 break;
@@ -188,7 +188,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     public boolean onTouch(View v, MotionEvent event) {
         switch (v.getId()) {
             case R.id.alarm_detail_confirm_status:
-                mPrestener.showConfirmPopup();
+                mPresenter.showConfirmPopup();
                 break;
             default:
                 break;
@@ -307,6 +307,6 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
 
     @Override
     public void onPhotoItemClick(int position, List<String> images) {
-        mPrestener.clickPhotoItem(position, images);
+        mPresenter.clickPhotoItem(position, images);
     }
 }

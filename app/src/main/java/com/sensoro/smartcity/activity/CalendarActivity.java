@@ -57,7 +57,7 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
         calendarView.setSelectionType(SelectionType.RANGE);
         calendarView.setOnDayRangeSelectedListener(this);
         calendarView.setOnDayClickListener(this);
-        mPrestener.initData(mActivity);
+        mPresenter.initData(mActivity);
 //        init();
 //
 //        createCriterias();
@@ -76,7 +76,7 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
     @Override
     protected void onStart() {
         super.onStart();
-        mPrestener.onStart();
+        mPresenter.onStart();
     }
 
     @Override
@@ -120,18 +120,18 @@ public class CalendarActivity extends BaseActivity<ICalendarActivityView, Calend
 
     @OnClick(R.id.calendar_save)
     public void save() {
-        mPrestener.saveDates();
+        mPresenter.saveDates();
     }
 
 
     @Override
     public void onDayRangeSelected(Pair<Day, Day> days) {
-        mPrestener.clickDayRangeSelected(days);
+        mPresenter.clickDayRangeSelected(days);
     }
 
     @Override
     public void onClick(List<Day> dayList) {
-        mPrestener.clickDay(dayList);
+        mPresenter.clickDay(dayList);
     }
 
     @Override

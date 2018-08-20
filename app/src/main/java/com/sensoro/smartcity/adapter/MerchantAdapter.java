@@ -12,23 +12,20 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.UserInfo;
 
+import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Created by fangping on 2016/7/7.
- */
 
 public class MerchantAdapter extends BaseAdapter implements Constants {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private List<UserInfo> mList;
+    private final List<UserInfo> mList = new ArrayList<>();
     private int selectedIndex = -1;
 
-    public MerchantAdapter(Context context, List<UserInfo> list) {
+    public MerchantAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        mList = list;
     }
 
     public void setSelectedIndex(int index) {
@@ -52,7 +49,7 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
 
     @Override
     public View getView(int position, View convertView, ViewGroup viewGroup) {
-        MerchantViewHolder holder = null;
+        MerchantViewHolder holder;
         if (convertView == null) {
             holder = new MerchantViewHolder();
             convertView = mInflater.inflate(R.layout.item_merchant, null);
@@ -80,6 +77,11 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
         }
 
         return convertView;
+    }
+
+    public void setDataList(List<UserInfo> data) {
+        mList.clear();
+        mList.addAll(data);
     }
 
     static class MerchantViewHolder {

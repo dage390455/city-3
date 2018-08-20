@@ -167,7 +167,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         getView().showAccountInfo(userName, phone);
         if (indexFragment != null) {
             if (isSpecific) {
-                merchantSwitchFragment.requestData();
+                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN,true);
             } else {
                 mHandler.post(new Runnable() {
                     @Override
@@ -217,7 +217,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,
                         hasContract, hasScanLogin));
                 if (mIsSupperAccount) {
-                    merchantSwitchFragment.requestData();
+                    merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN,true);
                 }
                 merchantSwitchFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
                 getView().setMenuSelected(0);
@@ -473,7 +473,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 getView().setCurrentPagerItem(1);
                 break;
             case MenuPageInfo.MENU_PAGE_MERCHANT:
-                merchantSwitchFragment.requestData();
+                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN,true);
                 merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
                 getView().setCurrentPagerItem(2);
                 break;

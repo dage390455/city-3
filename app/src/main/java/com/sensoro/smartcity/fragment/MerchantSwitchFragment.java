@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -12,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.adapter.MerchantAdapter;
@@ -24,6 +27,8 @@ import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.util.List;
 
+import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 import static com.sensoro.smartcity.constant.Constants.INPUT;
 
 /**
@@ -31,10 +36,9 @@ import static com.sensoro.smartcity.constant.Constants.INPUT;
  */
 
 public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragmentView,
-        MerchantSwitchFragmentPresenter> implements IMerchantSwitchFragmentView, AdapterView
-        .OnItemClickListener, View
-        .OnClickListener {
-    private ListView mListView;
+        MerchantSwitchFragmentPresenter> implements IMerchantSwitchFragmentView, View
+        .OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
+    private PullToRefreshListView mPullListView;
     private ImageView mMenuListImageView;
     private ImageView mSearchImageView;
     private View seperatorView;
@@ -44,8 +48,10 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
     private ImageView mCurrentStatusImageView;
     private MerchantAdapter mMerchantAdapter;
     private RelativeLayout rlTitleAccount;
+    private ImageView mReturnTopImageView;
     //
     private ProgressUtils mProgressUtils;
+    private boolean isShowDialog = true;
 
 
     public static MerchantSwitchFragment newInstance(String input) {
@@ -89,7 +95,30 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
-        mListView = (ListView) mRootView.findViewById(R.id.merchant_list);
+        mPullListView = (PullToRefreshListView) mRootView.findViewById(R.id.fragment_merchant_list);
+        //
+        mPullListView.setRefreshing(false);
+        mPullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+            @Override
+            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isShowDialog = false;
+                mPresenter.requestDataByDirection(DIRECTION_DOWN, false);
+            }
+
+            @Override
+            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+                isShowDialog = false;
+                mPresenter.requestDataByDirection(DIRECTION_UP, false);
+            }
+        });
+        mPullListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullListView.setOnScrollListener(this);
+        mMerchantAdapter = new MerchantAdapter(mRootFragment.getActivity());
+        mPullListView.setAdapter(mMerchantAdapter);
+        mPullListView.setOnItemClickListener(this);
+
+        mReturnTopImageView = (ImageView) mRootView.findViewById(R.id.merchant_return_top);
+        mReturnTopImageView.setOnClickListener(this);
         mMenuListImageView = (ImageView) mRootView.findViewById(R.id.merchant_iv_menu_list);
         mMenuListImageView.setOnClickListener(this);
         mSearchImageView = (ImageView) mRootView.findViewById(R.id.merchant_iv_search);
@@ -100,9 +129,7 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
         seperatorView = mRootView.findViewById(R.id.merchant_list_sep);
         seperatorBottomView = mRootView.findViewById(R.id.merchant_list_bottom_sep);
         rlTitleAccount = (RelativeLayout) mRootView.findViewById(R.id.rl_title_account);
-        mMerchantAdapter = new MerchantAdapter(mRootFragment.getContext(), mPresenter.getUserInfoList());
-        mListView.setAdapter(mMerchantAdapter);
-        mListView.setOnItemClickListener(this);
+
     }
 
     public void refreshData(String username, String phone, String phoneId) {
@@ -125,6 +152,9 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
                 break;
             case R.id.merchant_iv_search:
                 mPresenter.startToSearchAC();
+                break;
+            case R.id.merchant_return_top:
+                mPullListView.getRefreshableView().smoothScrollToPosition(0);
                 break;
         }
     }
@@ -155,7 +185,10 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
 
     @Override
     public void showProgressDialog() {
-        mProgressUtils.showProgress();
+        if (isShowDialog) {
+            mProgressUtils.showProgress();
+        }
+        isShowDialog = true;
     }
 
     @Override
@@ -185,7 +218,7 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
     }
 
     @Override
-    public void showSeperatorBottomView(boolean isShow) {
+    public void showSeperatorView(boolean isShow) {
         if (isShow) {
             seperatorView.setVisibility(View.VISIBLE);
         } else {
@@ -201,13 +234,18 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
 
     @Override
     public void updateAdapterUserInfo(List<UserInfo> data) {
-//        mMerchantAdapter.setDataList(data);
+        mMerchantAdapter.setDataList(data);
         mMerchantAdapter.notifyDataSetChanged();
     }
 
     @Override
-    public void requestData() {
-        mPresenter.requestData();
+    public void onPullRefreshComplete() {
+        mPullListView.onRefreshComplete();
+    }
+
+    @Override
+    public void requestDataByDirection(int direction, boolean isForce) {
+        mPresenter.requestDataByDirection(direction, isForce);
     }
 
     @Override
@@ -218,5 +256,20 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
     @Override
     public void onFragmentStop() {
 
+    }
+
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
+
+    }
+
+    @Override
+    public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+        int tempPos = mPullListView.getRefreshableView().getFirstVisiblePosition();
+        if (tempPos > 0) {
+            mReturnTopImageView.setVisibility(View.VISIBLE);
+        } else {
+            mReturnTopImageView.setVisibility(View.GONE);
+        }
     }
 }
