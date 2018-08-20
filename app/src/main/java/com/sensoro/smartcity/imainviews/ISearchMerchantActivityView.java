@@ -10,7 +10,7 @@ import java.util.List;
 public interface ISearchMerchantActivityView extends IToast, IProgressDialog, IActivityIntent {
     void setSearchHistoryLayoutVisible(boolean isVisible);
 
-    void updateSearchHistory();
+    void updateSearchHistory(List<String> strHistory);
 
     void setTipsLinearLayoutVisible(boolean isVisible);
 

@@ -100,10 +100,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         return roles;
     }
 
-    public List<Fragment> getFragmentList() {
-        return fragmentList;
-    }
-
     public void checkPush() {
         boolean pushTurnedOn = PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance());
         LogUtils.logd(this, "checkPush: " + pushTurnedOn);
@@ -149,7 +145,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         fragmentList.add(stationDeployFragment);
         fragmentList.add(scanLoginFragment);
         fragmentList.add(contractFragment);
-        getView().updateMainPageAdapterData();
+        getView().updateMainPageAdapterData(fragmentList);
         getView().showAccountInfo(mUserName, mPhone);
         mHandler.postDelayed(mRunnable, 3000L);
     }
@@ -167,7 +163,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         getView().showAccountInfo(userName, phone);
         if (indexFragment != null) {
             if (isSpecific) {
-                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN,true);
+                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
             } else {
                 mHandler.post(new Runnable() {
                     @Override
@@ -217,7 +213,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,
                         hasContract, hasScanLogin));
                 if (mIsSupperAccount) {
-                    merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN,true);
+                    merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
                 }
                 merchantSwitchFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
                 getView().setMenuSelected(0);
@@ -473,7 +469,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 getView().setCurrentPagerItem(1);
                 break;
             case MenuPageInfo.MENU_PAGE_MERCHANT:
-                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN,true);
+                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
                 merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
                 getView().setCurrentPagerItem(2);
                 break;

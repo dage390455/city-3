@@ -9,6 +9,6 @@ public interface IDeploySettingNameActivityView extends IToast,IActivityIntent{
     void setEditText(String text);
     void setSearchHistoryLayoutVisible(boolean isVisible);
     void setSearchRelationLayoutVisible(boolean isVisible);
-    void updateSearchHistoryData();
+    void updateSearchHistoryData(List<String> searchStr);
     void updateRelationData(List<String> strList);
 }

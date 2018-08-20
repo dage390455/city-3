@@ -3,21 +3,27 @@ package com.sensoro.smartcity.adapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainPagerAdapter extends FragmentPagerAdapter {
 
-    private List<Fragment> fragments;
+    private final List<Fragment> fragments = new ArrayList<>();
 //    private int mSize;
 //    private long baseId = 0;
 //    private int id = 1;
 //    private FragmentManager fm;
 
-    public MainPagerAdapter(android.support.v4.app.FragmentManager fm, List<Fragment> fragments) {
+    public MainPagerAdapter(android.support.v4.app.FragmentManager fm) {
         super(fm);
-        this.fragments = fragments;
 //        this.fm = fm;
 //        mSize = fragments == null ? 0 : fragments.size();
+    }
+
+    public void updateMainPagerAdapter(List<Fragment> fragments) {
+        this.fragments.clear();
+        this.fragments.addAll(fragments);
+        notifyDataSetChanged();
     }
 
     @Override

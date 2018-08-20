@@ -66,14 +66,15 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
             mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
+        if (mHistoryKeywords.size() > 0) {
+            getView().setSearchHistoryLayoutVisible(true);
+            getView().updateSearchHistoryData(mHistoryKeywords);
+        } else {
+            getView().setSearchHistoryLayoutVisible(false);
+        }
 
-        boolean hasHistory = mHistoryKeywords.size() > 0;
-        getView().setSearchHistoryLayoutVisible(hasHistory);
     }
 
-    public List<String> getHistoryKeywords() {
-        return mHistoryKeywords;
-    }
 
     @Override
     public void onStart() {
@@ -313,7 +314,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         mEditor.clear();
         mHistoryKeywords.clear();
         mEditor.commit();
-        getView().updateSearchHistoryData();
+        getView().updateSearchHistoryData(mHistoryKeywords);
         getView().setSearchHistoryLayoutVisible(false);
     }
 

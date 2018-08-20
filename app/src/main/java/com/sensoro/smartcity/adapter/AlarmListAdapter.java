@@ -29,7 +29,7 @@ public class AlarmListAdapter extends BaseAdapter implements Constants {
     private Context mContext;
     private LayoutInflater mInflater;
     private AlarmConfirmStatusClickListener mListener;
-    private List<DeviceAlarmLogInfo> mList = new ArrayList<>();
+    private final List<DeviceAlarmLogInfo> mList = new ArrayList<>();
 //    private int selectedIndex;
 
     public AlarmListAdapter(Context context, AlarmConfirmStatusClickListener listener) {

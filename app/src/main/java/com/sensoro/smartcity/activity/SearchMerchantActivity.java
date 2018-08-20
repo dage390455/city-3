@@ -79,8 +79,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_merchant);
         ButterKnife.bind(mActivity);
-        mPresenter.initData(mActivity);
         init();
+        mPresenter.initData(mActivity);
     }
 
     private void init() {
@@ -95,11 +95,12 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getmHistoryKeywords(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String text = mPresenter.getmHistoryKeywords().get(position);
+
+                        String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
                         setEditText(text);
                         setClearKeywordIvVisible(true);
                         mKeywordEt.clearFocus();
@@ -112,7 +113,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         merchantList.setAdapter(mMerchantAdapter);
         merchantList.setOnItemClickListener(this);
         //TODO 更改adapter presenter
-        updateSearchHistory();
+//        updateSearchHistory();
         showSoftInputFromWindow(mKeywordEt);
     }
 
@@ -159,7 +160,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
                 setClearKeywordIvVisible(false);
                 setTipsLinearLayoutVisible(false);
                 setSearchHistoryLayoutVisible(true);
-                updateSearchHistory();
+//                updateSearchHistory();
                 setLlMerchantItemViewVisible(false);
                 break;
             default:
@@ -193,8 +194,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     }
 
     @Override
-    public void updateSearchHistory() {
-        mSearchHistoryAdapter.notifyDataSetChanged();
+    public void updateSearchHistory(List<String> strHistory) {
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
     }
 
     @Override

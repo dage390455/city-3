@@ -10,7 +10,6 @@ import android.os.Vibrator;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.IScanLoginFragmentView;
@@ -103,11 +102,6 @@ public class ScanLoginFragmentPresenter extends BasePresenter<IScanLoginFragment
 
     public void processResult(String result) {
         playVoice();
-        int currentIndex = ((MainActivity) mContext).getSensoroPager().getCurrentItem();
-        System.out.println("currentIndex==>" + currentIndex);
-        if (currentIndex != 5) {
-            return;
-        }
         if (TextUtils.isEmpty(result)) {
             getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
             getView().startScan();

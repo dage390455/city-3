@@ -22,7 +22,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
@@ -70,7 +69,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
-    private int searchType = Constants.TYPE_DEVICE_NAME;
+
     //
 
 
@@ -78,8 +77,8 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_alarm);
         ButterKnife.bind(mActivity);
-        mPresenter.initData(mActivity);
         initView();
+        mPresenter.initData(mActivity);
     }
 
     private void initView() {
@@ -90,17 +89,11 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
         initSearchHistory();
-        initTabs();
     }
 
-    private void initTabs() {
-        String extra_search_content = mActivity.getIntent().getStringExtra(Constants.EXTRA_SEARCH_CONTENT);
-        if (!TextUtils.isEmpty(extra_search_content)) {
-            setEditText(extra_search_content);
-            searchType = SensoroCityApplication.getInstance().saveSearchType;
-        } else {
-            mKeywordEt.getText().clear();
-        }
+    @Override
+    public void initTabs(int searchType) {
+
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 searchTabLayout.addTab(searchTabLayout.newTab().setText("设备名称"), true);
@@ -123,40 +116,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                 searchTabLayout.addTab(searchTabLayout.newTab().setText("手机号"), false);
                 break;
         }
-        searchTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
-            @Override
-            public void onTabSelected(TabLayout.Tab tab) {
-                mKeywordEt.getText().clear();
-                switch (tab.getPosition()) {
-                    case 0:
-                        searchType = Constants.TYPE_DEVICE_NAME;
-                        mKeywordEt.setHint("设备名称");
-                        break;
-                    case 1:
-                        searchType = Constants.TYPE_DEVICE_SN;
-                        mKeywordEt.setHint("设备号");
-                        break;
-                    case 2:
-                        searchType = Constants.TYPE_DEVICE_PHONE_NUM;
-                        mKeywordEt.setHint("手机号");
-                        break;
-                    default:
-                        searchType = Constants.TYPE_DEVICE_NAME;
-                        mKeywordEt.setHint("设备名称");
-                        break;
-                }
-                mPresenter.refreshHistory(searchType);
-            }
-
-            @Override
-            public void onTabUnselected(TabLayout.Tab tab) {
-            }
-
-            @Override
-            public void onTabReselected(TabLayout.Tab tab) {
-            }
-        });
-        mPresenter.refreshHistory(searchType);
+        searchTabLayout.addOnTabSelectedListener(mPresenter);
     }
 
     @Override
@@ -165,6 +125,16 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
             mKeywordEt.setText(searchContent);
             mKeywordEt.setSelection(searchContent.length());
         }
+    }
+
+    @Override
+    public void setEditHintText(String hintText) {
+        mKeywordEt.setHint(hintText);
+    }
+
+    @Override
+    public void clearKeywordEt() {
+        mKeywordEt.getText().clear();
     }
 
 
@@ -179,17 +149,17 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getHistoryKeywords_deviceName(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        mPresenter.clickSearchHistoryItem(searchType, position);
+                        mPresenter.clickSearchHistoryItem(position);
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
-        mSearchHistoryAdapter.notifyDataSetChanged();
+//        mSearchHistoryAdapter.updateSearchHistoryAdapter(mPresenter.getHistoryKeywords_deviceName());
         mKeywordEt.requestFocus();
     }
 
@@ -214,7 +184,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.search_alarm_clear_btn:
-                mPresenter.cleanHistory(searchType);
+                mPresenter.cleanHistory();
                 break;
             case R.id.search_alarm_cancel_tv:
                 mKeywordEt.clearFocus();
@@ -264,8 +234,8 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                 mKeywordEt.clearFocus();
                 setClearKeywordIvVisible(true);
                 dismissInputMethodManager(v);
-                mPresenter.save(searchType, text.trim());
-                mPresenter.requestData(searchType, text.trim());
+                mPresenter.save(text.trim());
+                mPresenter.requestData(text.trim());
             } else {
                 SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                         .show();
@@ -293,7 +263,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
 
     @Override
     public void updateSearchHistory(List<String> historyKeywords) {
-        mSearchHistoryAdapter.setDataAndFresh(historyKeywords);
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(historyKeywords);
     }
 
     @Override

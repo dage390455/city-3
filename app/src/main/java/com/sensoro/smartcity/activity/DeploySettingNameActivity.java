@@ -63,8 +63,8 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_name);
         ButterKnife.bind(mActivity);
-        mPresenter.initData(mActivity);
         initView();
+        mPresenter.initData(mActivity);
     }
 
 
@@ -91,18 +91,17 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getHistoryKeywords(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String text = mPresenter.getHistoryKeywords().get(position).trim();
+                        String text = mSearchHistoryAdapter.getSearchHistoryList().get(position).trim();
                         setEditText(text);
                         mKeywordEt.clearFocus();
                         dismissInputMethodManager(view);
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
-        updateSearchHistoryData();
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
     }
 
@@ -205,8 +204,8 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     }
 
     @Override
-    public void updateSearchHistoryData() {
-        mSearchHistoryAdapter.notifyDataSetChanged();
+    public void updateSearchHistoryData(List<String> searchStr) {
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(searchStr);
     }
 
     @Override

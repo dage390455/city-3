@@ -39,18 +39,20 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
             mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
+        if (mHistoryKeywords.size() > 0) {
+            getView().setSearchHistoryLayoutVisible(true);
+            getView().updateSearchHistoryData(mHistoryKeywords);
+        } else {
+            getView().setSearchHistoryLayoutVisible(false);
+        }
 
-        getView().setSearchHistoryLayoutVisible(mHistoryKeywords.size() > 0);
         if (!TextUtils.isEmpty(name) && !name.equals(mContext.getResources().getString(R.string
                 .tips_hint_name_address_set))) {
             getView().setEditText(name);
         } else {
             getView().setEditText("");
         }
-    }
 
-    public List<String> getHistoryKeywords() {
-        return mHistoryKeywords;
     }
 
     private void save(String text) {

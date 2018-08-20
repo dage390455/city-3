@@ -34,8 +34,8 @@ public class ContractIndexActivity extends BaseActivity<IContractIndexActivityVi
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_contract_index);
         ButterKnife.bind(mActivity);
-        mPresenter.initData(mActivity);
         initView();
+        mPresenter.initData(mActivity);
     }
 
     private void initView() {

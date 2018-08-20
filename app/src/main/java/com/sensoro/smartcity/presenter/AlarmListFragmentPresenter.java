@@ -33,7 +33,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -68,7 +67,6 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
 
     /**
      * 处理接收的数据
-     *
      */
     private void handleDeviceAlarmLogs(DeviceAlarmLogRsp deviceAlarmLogRsp) {
         List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
@@ -124,25 +122,25 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
     }
 
 
-    private void freshUI(String type) {
-        try {
-            List<DeviceAlarmLogInfo> tempList = new ArrayList<>();
-            String typeArray[] = type.split(",");
-            for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
-                DeviceAlarmLogInfo alarmLogInfo = mDeviceAlarmLogInfoList.get(i);
-                String alarmType = alarmLogInfo.getSensorType();
-                boolean isContains = Arrays.asList(typeArray).contains(alarmType);
-                if (isContains) {
-                    tempList.add(alarmLogInfo);
-                }
-            }
-            getView().updateAlarmListAdapter(tempList);
-        } catch (Exception e) {
-            e.printStackTrace();
-            getView().toastShort(mContext.getResources().getString(R.string.tips_data_error));
-        }
-
-    }
+//    private void freshUI(String type) {
+//        try {
+//            List<DeviceAlarmLogInfo> tempList = new ArrayList<>();
+//            String typeArray[] = type.split(",");
+//            for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
+//                DeviceAlarmLogInfo alarmLogInfo = mDeviceAlarmLogInfoList.get(i);
+//                String alarmType = alarmLogInfo.getSensorType();
+//                boolean isContains = Arrays.asList(typeArray).contains(alarmType);
+//                if (isContains) {
+//                    tempList.add(alarmLogInfo);
+//                }
+//            }
+//            getView().updateAlarmListAdapter(tempList);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            getView().toastShort(mContext.getResources().getString(R.string.tips_data_error));
+//        }
+//
+//    }
 
     private void requestDataBySearchDown(Long startTime, Long endTime, final String searchType) {
         switch (SensoroCityApplication.getInstance().saveSearchType) {
@@ -639,52 +637,4 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
             }
         }
     }
-
-    //    @Override
-//    public void onPopupCallback(int status, String remark) {
-////        byte[] bytes = new byte[0];
-////        try {
-////            bytes = remark.getBytes("UTF-8");
-////        } catch (UnsupportedEncodingException e) {
-////            e.printStackTrace();
-////        }
-////        if (bytes.length > 30) {
-////            Toast.makeText(mContext, "最大不能超过32个字符", Toast.LENGTH_SHORT).show();
-////            return;
-////        }
-////        if (remark.length() > 30) {
-////            getView().toastShort("最大不能超过30个字符");
-////            return;
-////        }
-//        getView().showProgressDialog();
-//        RetrofitServiceHelper.INSTANCE.doAlarmConfirm(mCurrentDeviceAlarmLogInfo.get_id(), status,
-//                remark, isReConfirm).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe
-//                (new CityObserver<DeviceAlarmItemRsp>() {
-//
-//
-//                    @Override
-//                    public void onCompleted() {
-//                    }
-//
-//                    @Override
-//                    public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-//                        getView().dismissProgressDialog();
-//                        getView().dismissAlarmPopupView();
-//                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-//                            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-//                            getView().toastShort(mContext.getResources().getString(R.string.tips_commit_success));
-//                            freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
-//                        } else {
-//                            getView().toastShort(mContext.getResources().getString(R.string.tips_commit_failed));
-//                        }
-//                    }
-//
-//                    @Override
-//                    public void onErrorMsg(int errorCode, String errorMsg) {
-//                        getView().dismissProgressDialog();
-//                        getView().dismissAlarmPopupView();
-//                        getView().toastShort(errorMsg);
-//                    }
-//                });
-//    }
 }

@@ -16,4 +16,10 @@ public interface ISearchAlarmActivityView extends IToast, IProgressDialog, IActi
     void updateSearchHistory(List<String> historyKeywords);
 
     void setEditText(String searchContent);
+
+    void setEditHintText(String hintText);
+
+    void clearKeywordEt();
+
+    void initTabs(int searchType);
 }

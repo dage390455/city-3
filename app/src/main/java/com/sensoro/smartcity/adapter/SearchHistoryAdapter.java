@@ -10,24 +10,27 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
 /**
- * Created by fangping on 2016/7/7.
  */
 
 public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdapter.SearchHistoryViewHolder> {
 
     private Context mContext;
-    private List<String> mList;
+    private final List<String> mList = new ArrayList<>();
     private RecycleViewItemClickListener itemClickListener;
 
-    public SearchHistoryAdapter(Context context, List<String> list, RecycleViewItemClickListener itemClickListener) {
+    public SearchHistoryAdapter(Context context, RecycleViewItemClickListener itemClickListener) {
         this.mContext = context;
-        this.mList = list;
         this.itemClickListener = itemClickListener;
 
+    }
+
+    public List<String> getSearchHistoryList() {
+        return mList;
     }
 
     @Override
@@ -39,9 +42,6 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
 
     @Override
     public void onBindViewHolder(SearchHistoryViewHolder holder, int position) {
-        if (mList == null) {
-            return;
-        }
         holder.nameTextView.setText(mList.get(position));
     }
 
@@ -73,8 +73,9 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
         };
     }
 
-    public void setDataAndFresh(List<String> list) {
-        this.mList = list;
+    public void updateSearchHistoryAdapter(List<String> list) {
+        this.mList.clear();
+        this.mList.addAll(list);
         notifyDataSetChanged();
     }
 }

@@ -23,8 +23,8 @@ public class ScanLoginResultActivity extends BaseActivity<IScanLoginResultActivi
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_scan_result);
         ButterKnife.bind(mActivity);
-        mPresenter.initData(mActivity);
         initView();
+        mPresenter.initData(mActivity);
     }
 
     private void initView() {

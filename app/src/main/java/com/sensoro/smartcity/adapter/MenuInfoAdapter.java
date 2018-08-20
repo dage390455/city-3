@@ -27,7 +27,7 @@ public class MenuInfoAdapter extends BaseAdapter implements Constants {
 
     private int selectedIndex;
     //
-    private List<MenuPageInfo> menuPageInfoList = new ArrayList<>();
+    private final List<MenuPageInfo> menuPageInfoList = new ArrayList<>();
 
     public MenuInfoAdapter(Context context) {
         this.mContext = context;

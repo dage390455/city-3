@@ -130,8 +130,8 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(mActivity);
-        mPresenter.initData(mActivity);
         initView();
+        mPresenter.initData(mActivity);
     }
 
     private void initView() {
@@ -329,8 +329,8 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
     }
 
     @Override
-    public void updateSearchHistoryData() {
-        mSearchHistoryAdapter.notifyDataSetChanged();
+    public void updateSearchHistoryData(List<String> strHistory) {
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
     }
 
     @Override
@@ -372,11 +372,11 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getHistoryKeywords(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String text = mPresenter.getHistoryKeywords().get(position);
+                        String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
                         setEditText(text);
                         mClearKeywordIv.setVisibility(View.VISIBLE);
                         mKeywordEt.clearFocus();
@@ -385,7 +385,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                     }
                 });
         mSearchHistoryRv.setAdapter(mSearchHistoryAdapter);
-        updateSearchHistoryData();
+//        updateSearchHistoryData();
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
     }
 
@@ -609,7 +609,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
                 mKeywordEt.getText().clear();
                 mClearKeywordIv.setVisibility(View.GONE);
                 setTipsLinearLayoutVisible(false);
-                updateSearchHistoryData();
+//                updateSearchHistoryData();
                 break;
             case R.id.index_tv_type:
             case R.id.index_iv_type:

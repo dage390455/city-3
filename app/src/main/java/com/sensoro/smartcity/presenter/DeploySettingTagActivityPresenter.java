@@ -46,12 +46,14 @@ public class DeploySettingTagActivityPresenter extends BasePresenter<IDeploySett
         if (mTagList.size() > 0) {
             getView().updateTags(mTagList);
         }
-        getView().updateSearchHistory();
-        getView().setSearchHistoryLayoutVisible(mHistoryKeywords.size() > 0);
-    }
+        if (mHistoryKeywords.size() > 0) {
+            getView().setSearchHistoryLayoutVisible(true);
+            getView().updateSearchHistory(mHistoryKeywords);
+        } else {
+            getView().setSearchHistoryLayoutVisible(false);
+        }
 
-    public List<String> getHistoryKeywords() {
-        return mHistoryKeywords;
+
     }
 
     public void setTagList(List<String> tagList) {

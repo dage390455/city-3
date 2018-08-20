@@ -104,8 +104,6 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         }
         deviceList = (ArrayList<ContractsTemplateInfo>) mContext.getIntent().getSerializableExtra
                 ("contract_template");
-        //TODO 刷新UI顺序不一致？
-//        Collections.reverse(deviceList);
         getView().updateContractTemplateAdapterInfo(deviceList);
     }
 

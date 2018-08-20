@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.support.design.widget.TabLayout;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.SensoroCityApplication;
@@ -24,7 +25,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActivityView> implements Constants {
+public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActivityView> implements Constants, TabLayout.OnTabSelectedListener {
     private SharedPreferences mPref;
     private SharedPreferences.Editor mEditor;
 
@@ -36,6 +37,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
     private Long mStartTime = null;
     private Long mEndTime = null;
     private Activity mContext;
+    private int searchType = Constants.TYPE_DEVICE_NAME;
 
     @Override
     public void initData(Context context) {
@@ -50,16 +52,22 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
             mEndTime = longEndTime;
         }
         mEditor = mPref.edit();
-    }
-
-    public List<String> getHistoryKeywords_deviceName() {
-        return mHistoryKeywords_deviceName;
+        //
+        String extra_search_content = mContext.getIntent().getStringExtra(Constants.EXTRA_SEARCH_CONTENT);
+        if (!TextUtils.isEmpty(extra_search_content)) {
+            getView().setEditText(extra_search_content);
+            searchType = SensoroCityApplication.getInstance().saveSearchType;
+        } else {
+            getView().clearKeywordEt();
+        }
+        getView().initTabs(searchType);
+        refreshHistory();
     }
 
     /**
      * 刷新数据
      */
-    public void refreshHistory(int searchType) {
+    private void refreshHistory() {
         List<String> searchStr;
         String ori;
         switch (searchType) {
@@ -88,7 +96,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
         getView().updateSearchHistory(searchStr);
     }
 
-    public void requestData(final int searchType, final String text) {
+    public void requestData(final String text) {
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 getView().showProgressDialog();
@@ -107,11 +115,11 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                         } else {
                             SensoroCityApplication.getInstance().saveSearchType = searchType;
                             EventData eventData = new EventData();
-                            eventData.code= EVENT_DATA_SEARCH_ALARM_RESULT;
+                            eventData.code = EVENT_DATA_SEARCH_ALARM_RESULT;
                             SearchAlarmResultModel searchAlarmResultModel = new SearchAlarmResultModel();
-                            searchAlarmResultModel.searchAlarmText=text;
-                            searchAlarmResultModel.deviceAlarmLogRsp=deviceAlarmLogRsp;
-                            eventData.data=searchAlarmResultModel;
+                            searchAlarmResultModel.searchAlarmText = text;
+                            searchAlarmResultModel.deviceAlarmLogRsp = deviceAlarmLogRsp;
+                            eventData.data = searchAlarmResultModel;
                             EventBus.getDefault().post(eventData);
 
 //                            Intent data = new Intent();
@@ -148,11 +156,11 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                             SensoroCityApplication.getInstance().saveSearchType = searchType;
                             //
                             EventData eventData = new EventData();
-                            eventData.code=EVENT_DATA_SEARCH_ALARM_RESULT;
+                            eventData.code = EVENT_DATA_SEARCH_ALARM_RESULT;
                             SearchAlarmResultModel searchAlarmResultModel = new SearchAlarmResultModel();
-                            searchAlarmResultModel.searchAlarmText=text;
-                            searchAlarmResultModel.deviceAlarmLogRsp=deviceAlarmLogRsp;
-                            eventData.data=searchAlarmResultModel;
+                            searchAlarmResultModel.searchAlarmText = text;
+                            searchAlarmResultModel.deviceAlarmLogRsp = deviceAlarmLogRsp;
+                            eventData.data = searchAlarmResultModel;
                             EventBus.getDefault().post(eventData);
                             getView().finishAc();
                         }
@@ -182,11 +190,11 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                         } else {
                             SensoroCityApplication.getInstance().saveSearchType = searchType;
                             EventData eventData = new EventData();
-                            eventData.code=EVENT_DATA_SEARCH_ALARM_RESULT;
+                            eventData.code = EVENT_DATA_SEARCH_ALARM_RESULT;
                             SearchAlarmResultModel searchAlarmResultModel = new SearchAlarmResultModel();
-                            searchAlarmResultModel.searchAlarmText=text;
-                            searchAlarmResultModel.deviceAlarmLogRsp=deviceAlarmLogRsp;
-                            eventData.data=searchAlarmResultModel;
+                            searchAlarmResultModel.searchAlarmText = text;
+                            searchAlarmResultModel.deviceAlarmLogRsp = deviceAlarmLogRsp;
+                            eventData.data = searchAlarmResultModel;
                             EventBus.getDefault().post(eventData);
                             //
                             getView().finishAc();
@@ -206,7 +214,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
 
     }
 
-    public void cleanHistory(int searchType) {
+    public void cleanHistory() {
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, "");
@@ -233,7 +241,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
         mEditor.commit();
     }
 
-    public void save(int searchType, String text) {
+    public void save(String text) {
         if (!TextUtils.isEmpty(text)) {
             switch (searchType) {
                 case Constants.TYPE_DEVICE_NAME:
@@ -340,7 +348,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
 
     }
 
-    public void clickSearchHistoryItem(int searchType, int position) {
+    public void clickSearchHistoryItem(int position) {
         String text;
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
@@ -362,8 +370,8 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
         }
 
         getView().setClearKeywordIvVisible(true);
-        save(searchType, text.trim());
-        requestData(searchType, text.trim());
+        save(text.trim());
+        requestData(text.trim());
     }
 
     @Override
@@ -371,5 +379,39 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
         mHistoryKeywords_deviceName.clear();
         mHistoryKeywords_deviceNumber.clear();
         mHistoryKeywords_devicePhone.clear();
+    }
+
+    @Override
+    public void onTabSelected(TabLayout.Tab tab) {
+        getView().clearKeywordEt();
+        switch (tab.getPosition()) {
+            case 0:
+                searchType = Constants.TYPE_DEVICE_NAME;
+                getView().setEditHintText("设备名称");
+                break;
+            case 1:
+                searchType = Constants.TYPE_DEVICE_SN;
+                getView().setEditHintText("设备号");
+                break;
+            case 2:
+                searchType = Constants.TYPE_DEVICE_PHONE_NUM;
+                getView().setEditHintText("手机号");
+                break;
+            default:
+                searchType = Constants.TYPE_DEVICE_NAME;
+                getView().setEditHintText("设备名称");
+                break;
+        }
+        refreshHistory();
+    }
+
+    @Override
+    public void onTabUnselected(TabLayout.Tab tab) {
+
+    }
+
+    @Override
+    public void onTabReselected(TabLayout.Tab tab) {
+
     }
 }

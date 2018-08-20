@@ -3,6 +3,8 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IToast;
 
+import java.util.List;
+
 public interface IDeploySettingContactActivityView extends IActivityIntent, IToast {
     void setName(String name);
 
@@ -10,7 +12,7 @@ public interface IDeploySettingContactActivityView extends IActivityIntent, IToa
 
     void setSearchHistoryLayoutVisible(boolean isVisible);
 
-    void updateAdapter();
+    void updateAdapter(List<String> nameHistoryKeywords, List<String> phoneHistoryKeywords);
 
     void setNameEditText(String text);
 

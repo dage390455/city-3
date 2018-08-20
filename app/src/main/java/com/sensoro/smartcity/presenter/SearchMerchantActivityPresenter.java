@@ -47,17 +47,19 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         initSearchHistory();
     }
 
-    public List<String> getmHistoryKeywords() {
-        return mHistoryKeywords;
-    }
-
     private void initSearchHistory() {
         String history = mPref.getString(PREFERENCE_KEY_DEVICE, "");
         if (!TextUtils.isEmpty(history)) {
             mHistoryKeywords.clear();
             mHistoryKeywords.addAll(Arrays.asList(history.split(",")));
         }
-        getView().setSearchHistoryLayoutVisible(mHistoryKeywords.size() > 0);
+        if (mHistoryKeywords.size() > 0) {
+            getView().setSearchHistoryLayoutVisible(true);
+            getView().updateSearchHistory(mHistoryKeywords);
+        } else {
+            getView().setSearchHistoryLayoutVisible(false);
+        }
+
         getView().setCurrentNameAndPhone(userName, phone);
         getView().setCurrentStatusImageViewVisible(true);
     }
@@ -88,7 +90,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                 mEditor.commit();
                 mHistoryKeywords.add(0, text);
             }
-            getView().updateSearchHistory();
+            getView().updateSearchHistory(mHistoryKeywords);
         }
     }
 
@@ -148,7 +150,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         mEditor.clear();
         mHistoryKeywords.clear();
         mEditor.commit();
-        getView().updateSearchHistory();
+        getView().updateSearchHistory(mHistoryKeywords);
         getView().setSearchHistoryLayoutVisible(false);
     }
 

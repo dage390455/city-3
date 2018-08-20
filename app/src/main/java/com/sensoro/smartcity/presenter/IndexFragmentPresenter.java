@@ -45,9 +45,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         Constants {
     private final List<DeviceInfo> mDataList = new ArrayList<>();
     private final Handler mHandler = new Handler();
-    //    private final Gson gson = new GsonBuilder().registerTypeAdapter(double.class, new NumberDeserializer())
-//            .registerTypeAdapter(int.class, new NumberDeserializer())
-//            .registerTypeAdapter(Number.class, new NumberDeserializer()).create();
     private int page = 1;
     private volatile boolean isAlarmPlay = false;
     private volatile boolean isNeedRefresh = false;

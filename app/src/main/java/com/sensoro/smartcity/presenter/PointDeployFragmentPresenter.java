@@ -13,7 +13,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployActivity;
 import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
-import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.IPointDeployFragmentView;
 import com.sensoro.smartcity.server.CityObserver;
@@ -135,11 +134,6 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
 
     public void processResult(String result) {
         playVoice();
-        int currentIndex = ((MainActivity) mContext).getSensoroPager().getCurrentItem();
-        System.out.println("currentIndex==>" + currentIndex);
-        if (currentIndex != 3) {
-            return;
-        }
         if (TextUtils.isEmpty(result)) {
             getView().toastShort(mContext.getResources().getString(R.string.scan_failed));
             getView().startScan();

@@ -23,7 +23,7 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
 
     //    private Context mContext;
     private LayoutInflater mInflater;
-    private List<ContractListInfo> mList = new ArrayList<>();
+    private final List<ContractListInfo> mList = new ArrayList<>();
 //    private OnContractClickListener mListener;
 
     public ContractListAdapter(Context context) {

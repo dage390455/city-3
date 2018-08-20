@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.imainviews;
 
+import android.support.v4.app.Fragment;
+
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
@@ -23,7 +25,7 @@ public interface IMainView extends IToast, IProgressDialog, IActivityIntent {
     void changeAccount(String useName, String phone, String roles, boolean isSpecific, boolean isStation, boolean
             hasContract, boolean hasScanLogin);
 
-    void updateMainPageAdapterData();
+    void updateMainPageAdapterData(List<Fragment> fragments);
 
     void openMenu();
 

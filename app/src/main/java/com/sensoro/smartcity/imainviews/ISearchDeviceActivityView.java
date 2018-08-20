@@ -36,7 +36,7 @@ public interface ISearchDeviceActivityView extends IToast, IProgressDialog, IAct
 
     void updateRelationData(List<String> strList);
 
-    void updateSearchHistoryData();
+    void updateSearchHistoryData(List<String> strHistory);
 
     boolean getSearchDataListVisible();
 

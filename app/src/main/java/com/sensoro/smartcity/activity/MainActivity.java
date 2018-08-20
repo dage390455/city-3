@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
@@ -105,8 +106,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mListView.setOnItemClickListener(this);
         sensoroPager = (SensoroPager) findViewById(R.id.main_container);
         sensoroPager.setOffscreenPageLimit(8);
-        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager(), mPresenter
-                .getFragmentList());
+        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
         sensoroPager.setAdapter(mainPagerAdapter);
     }
 
@@ -131,9 +131,9 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
 
-    public SensoroPager getSensoroPager() {
-        return sensoroPager;
-    }
+//    public SensoroPager getSensoroPager() {
+//        return sensoroPager;
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -202,8 +202,8 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void updateMainPageAdapterData() {
-        mainPagerAdapter.notifyDataSetChanged();
+    public void updateMainPageAdapterData(List<Fragment> fragments) {
+        mainPagerAdapter.updateMainPagerAdapter(fragments);
     }
 
     @Override

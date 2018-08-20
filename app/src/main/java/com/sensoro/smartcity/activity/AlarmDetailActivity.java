@@ -88,7 +88,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
             mAlarmPopupView.setOnPopupCallbackListener(mPresenter);
             mAlarmPopupView.setDialog(mActivity);
             confirmTextView.setOnClickListener(this);
-            timerShaftAdapter = new TimerShaftAdapter(mActivity, mPresenter.getList(), new TimerShaftAdapter
+            timerShaftAdapter = new TimerShaftAdapter(mActivity, new TimerShaftAdapter
                     .OnGroupItemClickListener() {
                 @Override
                 public void onGroupItemClick(int position, boolean isExpanded) {

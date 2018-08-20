@@ -9,5 +9,5 @@ public interface IDeploySettingTagActivityView extends IActivityIntent,IToast{
     void setSearchHistoryLayoutVisible(boolean isVisible);
 
     void updateTags(List<String> tags);
-    void updateSearchHistory();
+    void updateSearchHistory(List<String> strHistory);
 }

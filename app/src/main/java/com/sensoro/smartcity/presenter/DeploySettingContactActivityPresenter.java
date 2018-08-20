@@ -61,17 +61,10 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
             if (!TextUtils.isEmpty(content)) {
                 getView().setPhone(content);
             }
+            getView().updateAdapter(mNameHistoryKeywords, mPhoneHistoryKeywords);
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    public List<String> getPhoneHistoryKeywords() {
-        return mPhoneHistoryKeywords;
-    }
-
-    public List<String> getNameHistoryKeywords() {
-        return mNameHistoryKeywords;
     }
 
     private void saveName(String text) {
@@ -145,7 +138,6 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
     }
 
     public void doFinish(String name, String phone) {
-//        String regex = "^((13[0-9])|(14[5|7])|(15([0-3]|[5-9]))|(18[0,1,2,5-9])|(177)|(171)|(176))\\d{8}$";
         if (TextUtils.isEmpty(name)) {
             getView().toastShort("联系人姓名不能为空！");
             return;
@@ -155,7 +147,7 @@ public class DeploySettingContactActivityPresenter extends BasePresenter<IDeploy
             savePhone(phone);
 //            mNameEt.clearFocus();
 //            mPhoneEt.clearFocus();
-            getView().updateAdapter();
+            getView().updateAdapter(mNameHistoryKeywords, mPhoneHistoryKeywords);
             EventData eventData = new EventData();
             eventData.code = EVENT_DATA_DEPLOY_SETTING_CONTACT;
             DeployContactModel deployContactModel = new DeployContactModel();

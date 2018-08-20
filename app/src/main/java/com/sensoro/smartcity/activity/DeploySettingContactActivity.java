@@ -29,6 +29,8 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -59,8 +61,8 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_setting_contact);
         ButterKnife.bind(mActivity);
-        mPresenter.initData(mActivity);
         init();
+        mPresenter.initData(mActivity);
     }
 
 
@@ -81,11 +83,12 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
 
         mNameSearchHistoryRv.setLayoutManager(layoutManager);
         mNameSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mNameSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getNameHistoryKeywords(), new
+        mNameSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String name = mPresenter.getNameHistoryKeywords().get(position).trim();
+                        String name = mNameSearchHistoryAdapter.getSearchHistoryList().get(position).trim();
+//                         =mPresenter.getNameHistoryKeywords().get(position).trim();
                         setNameEditText(name);
                         mNameEt.clearFocus();
                         dismissInputMethodManager(view);
@@ -107,11 +110,11 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
         SensoroLinearLayoutManager layoutManager1 = new SensoroLinearLayoutManager(mActivity);
         mPhoneSearchHistoryRv.setLayoutManager(layoutManager1);
         mPhoneSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getPhoneHistoryKeywords(), new
+        mPhoneSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
-                        String phone = mPresenter.getPhoneHistoryKeywords().get(position).trim();
+                        String phone = mPhoneSearchHistoryAdapter.getSearchHistoryList().get(position).trim();
                         setPhoneEditText(phone);
                         mPhoneEt.clearFocus();
                         dismissInputMethodManager(view);
@@ -126,7 +129,6 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
                 return false;
             }
         });
-        updateAdapter();
     }
 
 
@@ -196,9 +198,11 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
     }
 
     @Override
-    public void updateAdapter() {
-        mNameSearchHistoryAdapter.notifyDataSetChanged();
-        mPhoneSearchHistoryAdapter.notifyDataSetChanged();
+    public void updateAdapter(List<String> nameHistoryKeywords, List<String> phoneHistoryKeywords) {
+        mNameSearchHistoryAdapter.updateSearchHistoryAdapter(nameHistoryKeywords);
+        mPhoneSearchHistoryAdapter.updateSearchHistoryAdapter(phoneHistoryKeywords);
+//        mNameSearchHistoryAdapter.notifyDataSetChanged();
+//        mPhoneSearchHistoryAdapter.notifyDataSetChanged();
     }
 
     @Override

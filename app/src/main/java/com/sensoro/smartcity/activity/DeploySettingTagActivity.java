@@ -124,7 +124,7 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
         mSearchHistoryRv.setLayoutManager(layoutManager);
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
         mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(spacingInPixels));
-        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, mPresenter.getHistoryKeywords(), new
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -190,8 +190,8 @@ public class DeploySettingTagActivity extends BaseActivity<IDeploySettingTagActi
     }
 
     @Override
-    public void updateSearchHistory() {
-        mSearchHistoryAdapter.notifyDataSetChanged();
+    public void updateSearchHistory(List<String> strHistory) {
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
     }
 
     @Override
