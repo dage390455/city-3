@@ -283,6 +283,6 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
         if (code == EVENT_DATA_FINISH_CODE) {
             getView().finishAc();
         }
-        LogUtils.loge(this, eventData.toString());
+//        LogUtils.loge(this, eventData.toString());
     }
 }

@@ -11,16 +11,15 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.ISensorMoreActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.PushData;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
-import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -230,9 +229,9 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 freshStructData(tempDeviceInfo);
             }
         }
-        if (data != null) {
-            LogUtils.loge(this, data.toString());
-        }
+//        if (data != null) {
+//            LogUtils.loge(this, data.toString());
+//        }
     }
 
     private boolean isActivityTop() {

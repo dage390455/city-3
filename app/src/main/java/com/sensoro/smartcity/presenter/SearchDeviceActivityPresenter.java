@@ -15,11 +15,10 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchDeviceActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.PushData;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
-import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -103,7 +102,6 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                 getView().refreshData(mDataList);
             }
         }
-        LogUtils.loge(this, data.toString());
     }
 
     public void setTypeSelectedIndex(int mTypeSelectedIndex) {

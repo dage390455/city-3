@@ -20,7 +20,9 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.PushData;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.LogUtils;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -374,40 +376,59 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     private final Runnable mTask = new Runnable() {
         @Override
         public void run() {
-            if (isNeedRefresh) {
-                Log.e("", "run: 刷新数据！");
-                scheduleRefresh();
-            }
-            mHandler.postDelayed(this, 3000);
+            //采用线程池处理
+            ThreadPoolManager.getInstance().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (isNeedRefresh) {
+                        Log.d("scheduleRefresh", "run: 刷新数据！");
+                        scheduleRefresh();
+                    }
+                    mHandler.postDelayed(mTask, 3000);
+                }
+            });
+
         }
     };
 
-    public void refreshWithSearch(DeviceInfoListRsp deviceInfoListRsp) {
-        this.mDataList.clear();
-        for (int i = 0; i < deviceInfoListRsp.getData().size(); i++) {
-            DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(i);
-            switch (deviceInfo.getStatus()) {
-                case SENSOR_STATUS_ALARM:
-                    deviceInfo.setSort(1);
-                    break;
-                case SENSOR_STATUS_NORMAL:
-                    deviceInfo.setSort(2);
-                    break;
-                case SENSOR_STATUS_LOST:
-                    deviceInfo.setSort(3);
-                    break;
-                case SENSOR_STATUS_INACTIVE:
-                    deviceInfo.setSort(4);
-                    break;
-                default:
-                    break;
+    public void refreshWithSearch(final DeviceInfoListRsp deviceInfoListRsp) {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                mDataList.clear();
+                for (int i = 0; i < deviceInfoListRsp.getData().size(); i++) {
+                    DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(i);
+                    switch (deviceInfo.getStatus()) {
+                        case SENSOR_STATUS_ALARM:
+                            deviceInfo.setSort(1);
+                            break;
+                        case SENSOR_STATUS_NORMAL:
+                            deviceInfo.setSort(2);
+                            break;
+                        case SENSOR_STATUS_LOST:
+                            deviceInfo.setSort(3);
+                            break;
+                        case SENSOR_STATUS_INACTIVE:
+                            deviceInfo.setSort(4);
+                            break;
+                        default:
+                            break;
+                    }
+                    mDataList.add(deviceInfo);
+                }
+                filterBySearch();
+                //排序
+                Collections.sort(mDataList);
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getView().refreshData(mDataList);
+                    }
+                });
+
             }
-            mDataList.add(deviceInfo);
-        }
-        filterBySearch();
-        //排序
-        Collections.sort(mDataList);
-        getView().refreshData(mDataList);
+        });
+
     }
 
     /**
@@ -483,13 +504,26 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             requestTopData(false);
             //排序
             Collections.sort(mDataList);
-            getView().refreshData(mDataList);
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getView().refreshData(mDataList);
+                }
+            });
+
         }
         if (isAlarmPlay) {
-            playSound();
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    playSound();
+                }
+            });
+
             isAlarmPlay = false;
         }
         isNeedRefresh = false;
+        LogUtils.logd("new dataList = " + mDataList.size());
     }
 
 
@@ -516,13 +550,15 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         mIsVisibleToUser = hidden;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    //子线程处理
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         if (code == EVENT_DATA_SOCKET_DATA) {
             if (data instanceof DeviceInfo) {
+                LogUtils.loge("new SN = " + ((DeviceInfo) data).getSn());
                 organizeJsonData((DeviceInfo) data);
             }
         }

@@ -728,7 +728,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                 }
             }
         }
-        LogUtils.loge(this, eventData.toString());
+//        LogUtils.loge(this, eventData.toString());
     }
 
     @Override

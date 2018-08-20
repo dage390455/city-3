@@ -375,7 +375,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         .getHasScanLogin(grants));
             }
         }
-        LogUtils.loge(this, eventData.toString());
+//        LogUtils.loge(this, eventData.toString());
     }
 
     @Override
@@ -412,7 +412,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             JSONArray jsonArray = (JSONArray) arg;
                             final JSONObject jsonObject = jsonArray.getJSONObject(0);
                             String json = jsonObject.toString();
-                            LogUtils.loge(this, "jsonArray = " + json);
+//                            LogUtils.loge(this, "jsonArray = " + json);
                             if (!mIsSupperAccount) {
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json,

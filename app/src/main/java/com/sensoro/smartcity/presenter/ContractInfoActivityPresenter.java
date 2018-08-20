@@ -286,6 +286,5 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 }
             }
         }
-        LogUtils.loge(this, eventData.toString());
     }
 }

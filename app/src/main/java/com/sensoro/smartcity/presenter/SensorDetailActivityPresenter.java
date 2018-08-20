@@ -250,7 +250,6 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                 freshMarker();
             }
         }
-        LogUtils.loge(this, data.toString());
     }
 
     private boolean isActivityTop() {
