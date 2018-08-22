@@ -147,13 +147,12 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     //
     compile project(':MPChartLib')
-//    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
+    //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     compile project(':libcityserver')
-//    compile project(':xrecyclerview')
+    //    compile project(':xrecyclerview')
     compile 'com.jcodecraeer:xrecyclerview:1.5.9'
-
     compile project(':cosmocalendar')
-    compile project(':libpulltorefresh:pulltorefresh')
+    //    compile project(':libpulltorefresh:pulltorefresh')
     compile project(':menudrawer')
     compile files('libs/AMap_Location_V3.5.0_20170731.jar')
     compile files('libs/AMap3DMap_5.7.0_AMapNavi_5.6.0_20180109.jar')
@@ -187,4 +186,5 @@ dependencies {
     compile 'com.qiniu:qiniu-android-sdk:7.3.+'
     compile files('libs/ocr-sdk.jar')
     compile project(':ocr_ui')
+    compile project(':pulltorefresh')
 }

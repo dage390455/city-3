@@ -8,10 +8,9 @@
       <module fileurl="file://$PROJECT_DIR$/cosmocalendar/cosmocalendar.iml" filepath="$PROJECT_DIR$/cosmocalendar/cosmocalendar.iml" />
       <module fileurl="file://$PROJECT_DIR$/imagepicker/imagepicker.iml" filepath="$PROJECT_DIR$/imagepicker/imagepicker.iml" />
       <module fileurl="file://$PROJECT_DIR$/libcityserver/libcityserver.iml" filepath="$PROJECT_DIR$/libcityserver/libcityserver.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libpulltorefresh/libpulltorefresh.iml" filepath="$PROJECT_DIR$/libpulltorefresh/libpulltorefresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/menudrawer/menudrawer.iml" filepath="$PROJECT_DIR$/menudrawer/menudrawer.iml" />
       <module fileurl="file://$PROJECT_DIR$/ocr_ui/ocr_ui.iml" filepath="$PROJECT_DIR$/ocr_ui/ocr_ui.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libpulltorefresh/pulltorefresh/pulltorefresh.iml" filepath="$PROJECT_DIR$/libpulltorefresh/pulltorefresh/pulltorefresh.iml" />
+      <module fileurl="file://$PROJECT_DIR$/pulltorefresh/pulltorefresh.iml" filepath="$PROJECT_DIR$/pulltorefresh/pulltorefresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/smartcity_P.iml" filepath="$PROJECT_DIR$/smartcity_P.iml" />
     </modules>
   </component>
