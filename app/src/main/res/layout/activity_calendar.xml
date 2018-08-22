@@ -25,10 +25,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:padding="12dp"
+            android:layout_marginRight="@dimen/x20"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
-            android:layout_marginRight="@dimen/x20"
+            android:padding="12dp"
             android:src="@mipmap/ic_close" />
     </RelativeLayout>
 
@@ -36,48 +36,53 @@
         android:id="@+id/sensor_calendar_date_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_below="@+id/sensor_calendar_title_layout"
+        android:orientation="vertical"
         android:paddingBottom="@dimen/y300">
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
             android:background="@color/item_sensor_line" />
+
         <LinearLayout
             android:id="@+id/calendar_choose_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y100"
+            android:layout_marginTop="@dimen/y100"
             android:background="@color/white"
             android:gravity="center_vertical"
-            android:layout_marginTop="@dimen/y100"
-            android:layout_marginBottom="@dimen/y100"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            android:orientation="horizontal">
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="right|center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal">
+
                 <TextView
-                    android:textStyle="bold"
                     android:id="@+id/calendar_start_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/c_626262"
-                    android:textSize="35sp" />
+                    android:textSize="35sp"
+                    android:textStyle="bold" />
+
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_marginLeft="@dimen/x20"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x20"
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/calendar_start_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/c_626262"
                         android:textSize="12sp" />
+
                     <TextView
                         android:id="@+id/calendar_start_week"
                         android:layout_width="wrap_content"
@@ -91,34 +96,37 @@
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center_horizontal">
+                android:gravity="center">
+
                 <ImageView
-                    android:src="@mipmap/ic_select_date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:adjustViewBounds="true"
                     android:scaleType="fitXY"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:src="@mipmap/ic_select_date" />
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="left|center_vertical"
+                android:gravity="center"
                 android:orientation="horizontal">
+
                 <TextView
-                    android:textStyle="bold"
                     android:id="@+id/calendar_end_day"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/c_626262"
-                    android:textSize="35sp" />
+                    android:textSize="35sp"
+                    android:textStyle="bold" />
+
                 <LinearLayout
-                    android:orientation="vertical"
-                    android:layout_marginLeft="@dimen/x20"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x20"
+                    android:orientation="vertical">
+
                     <TextView
                         android:id="@+id/calendar_end_date"
                         android:layout_width="wrap_content"
@@ -136,14 +144,15 @@
 
             </LinearLayout>
         </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
             <com.applikeysolutions.cosmocalendar.view.CalendarView
                 android:id="@+id/calendar_view"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                />
+                android:layout_height="wrap_content" />
         </LinearLayout>
     </LinearLayout>
 

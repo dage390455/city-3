@@ -599,7 +599,6 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().setUpdateButtonClickable(true);
                                 getView().dismissProgressDialog();
-                                getView().dismissAlarmPopupView();
                                 getView().toastShort(errorMsg);
                             }
                         });

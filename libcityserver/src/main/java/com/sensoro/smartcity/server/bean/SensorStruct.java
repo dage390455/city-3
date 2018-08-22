@@ -85,5 +85,4 @@ public class SensorStruct implements Serializable, Comparable<SensorStruct> {
             return 1;
         }
     }
-
 }

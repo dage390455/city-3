@@ -139,7 +139,7 @@
 
                 <LinearLayout
                     android:id="@+id/sensor_detail_struct_left"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"
@@ -183,7 +183,7 @@
 
                 <LinearLayout
                     android:id="@+id/sensor_detail_struct_right"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:gravity="center"

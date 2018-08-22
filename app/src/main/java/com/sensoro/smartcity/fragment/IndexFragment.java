@@ -13,6 +13,7 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -148,6 +149,12 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        if (mListRecyclerView != null) {
+            mListRecyclerView.destroy();
+        }
+        if (mGridRecyclerView != null) {
+            mGridRecyclerView.destroy();
+        }
         super.onDestroyView();
     }
 
@@ -186,6 +193,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
                 textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                params.gravity = Gravity.CENTER_VERTICAL;
                 textView.setLayoutParams(params);
                 return textView;
             }
@@ -279,6 +287,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         mListAdapter = new IndexListAdapter(mRootFragment.getContext(), this);
         mListRecyclerView.setAdapter(mListAdapter);
         mListRecyclerView.setLayoutManager(xLinearLayoutManager);
+        mListRecyclerView.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
         int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x15);
         mListRecyclerView.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         mListRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -331,6 +340,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         mGridRecyclerView.setAdapter(mGridAdapter);
         int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x15);
         mGridRecyclerView.setLayoutManager(xGridLayoutManager);
+        mGridRecyclerView.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
         mGridRecyclerView.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         mGridRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -625,8 +635,27 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     }
 
     @Override
-    public void refreshData(List<DeviceInfo> dataList) {
+    public void refreshData(final List<DeviceInfo> dataList) {
         if (switchType == TYPE_LIST) {
+//            ThreadPoolManager.getInstance().execute(new Runnable() {
+//                @Override
+//                public void run() {
+//                    IndexListAdapterDiff indexListAdapterDiff = new IndexListAdapterDiff(mListAdapter.getData(), dataList);
+//                    final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, false);
+//                    mRootFragment.getActivity().runOnUiThread(new Runnable() {
+//                        @Override
+//                        public void run() {
+//                            diffResult.dispatchUpdatesTo(mListAdapter);
+////                            mListRecyclerView.refreshComplete();
+//                        }
+//                    });
+//
+//                }
+//            });
+//            IndexListAdapterDiff indexListAdapterDiff = new IndexListAdapterDiff(mListAdapter.getData(), dataList);
+//            final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, false);
+//            diffResult.dispatchUpdatesTo(mListAdapter);
+//            mListRecyclerView.refreshComplete();
             mListAdapter.setData(dataList);
             mListAdapter.notifyDataSetChanged();
             mListRecyclerView.refreshComplete();

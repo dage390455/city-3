@@ -147,8 +147,11 @@ dependencies {
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     //
     compile project(':MPChartLib')
+//    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     compile project(':libcityserver')
-    compile project(':xrecyclerview')
+//    compile project(':xrecyclerview')
+    compile 'com.jcodecraeer:xrecyclerview:1.5.9'
+
     compile project(':cosmocalendar')
     compile project(':libpulltorefresh:pulltorefresh')
     compile project(':menudrawer')

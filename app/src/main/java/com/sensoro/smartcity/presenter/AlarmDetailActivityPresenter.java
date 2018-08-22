@@ -119,7 +119,6 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
                                 getView().dismissProgressDialog();
-                                getView().dismissConfirmPopup();
                                 getView().toastShort(errorMsg);
                                 getView().setUpdateButtonClickable(true);
                             }

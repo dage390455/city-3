@@ -147,7 +147,9 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                         }
 
                     }
-                    getView().setAlarmSetting(stringBuilder.append("时报警").toString());
+                    if (!TextUtils.isEmpty(stringBuilder)) {
+                        getView().setAlarmSetting(stringBuilder.append("时报警").toString());
+                    }
                 } else {
                     getView().setAlarmSetting(stringBuilder.toString());
                 }
@@ -214,7 +216,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
     }
 
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PushData data) {
         if (data != null) {
             DeviceInfo tempDeviceInfo = null;
@@ -226,7 +228,14 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 }
             }
             if (tempDeviceInfo != null && isActivityTop()) {
-                freshStructData(tempDeviceInfo);
+                final DeviceInfo finalTempDeviceInfo = tempDeviceInfo;
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        freshStructData(finalTempDeviceInfo);
+                    }
+                });
+
             }
         }
 //        if (data != null) {

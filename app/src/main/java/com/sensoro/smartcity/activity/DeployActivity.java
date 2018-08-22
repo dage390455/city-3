@@ -89,6 +89,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
         progressDialog = new ProgressDialog(mActivity);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setMax(100);
+        progressDialog.setProgressNumberFormat("");
         progressDialog.setCancelable(false);
     }
 

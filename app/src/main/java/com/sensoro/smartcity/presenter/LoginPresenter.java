@@ -118,7 +118,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>() {
                 @Override
                 public void onCompleted() {
-                    getView().finishAc();
+//                    getView().dismissProgressDialog();
                 }
 
                 @Override
@@ -143,6 +143,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                             PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
                         }
                         getView().startAC(intent);
+                        getView().finishAc();
                     } else {
                         getView().dismissProgressDialog();
                         getView().toastShort(mContext.getResources().getString(R.string.tips_user_info_error));
@@ -187,7 +188,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREFERENCE_KEY_NAME, username);
         editor.putString(PREFERENCE_KEY_PASSWORD, aes_pwd);
-        editor.commit();
+        editor.apply();
     }
 
     @Override

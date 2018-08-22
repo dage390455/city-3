@@ -157,6 +157,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         progressDialog = new ProgressDialog(mActivity);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setMax(100);
+        progressDialog.setProgressNumberFormat("");
         progressDialog.setCancelable(false);
     }
 
@@ -164,7 +165,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         alarmResult.add("真实火警");
         alarmResult.add("安全隐患");
         alarmResult.add("误报");
-        alarmResult.add("巡检测试");
+        alarmResult.add("测试/巡检");
         //
         alarmResultInfo.add("");
         alarmResultInfo.add("*监测点或附近发生着火，需要立即进行扑救");
@@ -193,7 +194,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     private void init() {
-        View rootView = LayoutInflater.from(mContext).inflate(R.layout.layout_alarm_popup_new, this);
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.layout_alarm_popup, this);
         tvSpinnerResultInfo = rootView.findViewById(R.id.tv_spinner_result_info);
         //
         ImageView closeImageView = rootView.findViewById(R.id.alarm_popup_close);

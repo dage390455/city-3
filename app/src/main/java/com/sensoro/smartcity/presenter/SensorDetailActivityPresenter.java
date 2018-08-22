@@ -233,7 +233,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         mLocationClient.startLocation();
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PushData data) {
         if (data != null) {
             List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
@@ -245,9 +245,16 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                 }
             }
             if (mDeviceInfo != null && isActivityTop()) {
-                freshTopData();
-                freshStructData();
-                freshMarker();
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        freshTopData();
+                        freshStructData();
+                        freshMarker();
+                    }
+                });
+
+
             }
         }
     }

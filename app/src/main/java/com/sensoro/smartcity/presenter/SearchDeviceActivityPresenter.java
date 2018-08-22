@@ -85,11 +85,10 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PushData data) {
         if (data != null) {
             List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
-            //
             for (int i = 0; i < mDataList.size(); i++) {
                 DeviceInfo deviceInfo = mDataList.get(i);
                 for (DeviceInfo in : deviceInfoList) {
@@ -98,9 +97,16 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
                     }
                 }
             }
-            if (isActivityTop() && getView().getSearchDataListVisible()) {
-                getView().refreshData(mDataList);
-            }
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (isActivityTop() && getView().getSearchDataListVisible()) {
+                        getView().refreshData(mDataList);
+                    }
+                }
+            });
+
+
         }
     }
 
@@ -239,15 +245,15 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         }
         mHistoryKeywords.clear();
         mHistoryKeywords.addAll(tempList);
-        StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuilder = new StringBuilder();
         for (int i = 0; i < tempList.size(); i++) {
             if (i == (tempList.size() - 1)) {
-                stringBuffer.append(tempList.get(i));
+                stringBuilder.append(tempList.get(i));
             } else {
-                stringBuffer.append(tempList.get(i) + ",");
+                stringBuilder.append(tempList.get(i)).append(",");
             }
         }
-        mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
+        mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
         mEditor.commit();
         //
 //        if (TextUtils.isEmpty(oldText)) {
@@ -271,15 +277,15 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
 //                    }
 //                    mHistoryKeywords.clear();
 //                    mHistoryKeywords.addAll(tempList);
-//                    StringBuffer stringBuffer = new StringBuffer();
+//                    StringBuffer stringBuilder = new StringBuffer();
 //                    for (int i = 0; i < tempList.size(); i++) {
 //                        if (i == (tempList.size() - 1)) {
-//                            stringBuffer.append(tempList.get(i));
+//                            stringBuilder.append(tempList.get(i));
 //                        } else {
-//                            stringBuffer.append(tempList.get(i) + ",");
+//                            stringBuilder.append(tempList.get(i) + ",");
 //                        }
 //                    }
-//                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
+//                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
 //                    mEditor.commit();
 //                } else {
 //                    mHistoryKeywords.add(0, text);
@@ -292,15 +298,15 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
 //                    mHistoryKeywords.clear();
 //                    mHistoryKeywords.addAll(tempList);
 //
-//                    StringBuffer stringBuffer = new StringBuffer();
+//                    StringBuffer stringBuilder = new StringBuffer();
 //                    for (int i = 0; i < tempList.size(); i++) {
 //                        if (i == (tempList.size() - 1)) {
-//                            stringBuffer.append(tempList.get(i));
+//                            stringBuilder.append(tempList.get(i));
 //                        } else {
-//                            stringBuffer.append(tempList.get(i) + ",");
+//                            stringBuilder.append(tempList.get(i) + ",");
 //                        }
 //                    }
-//                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuffer.toString());
+//                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
 //                    mEditor.commit();
 //                }
 //            }

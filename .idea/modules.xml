@@ -13,7 +13,6 @@
       <module fileurl="file://$PROJECT_DIR$/ocr_ui/ocr_ui.iml" filepath="$PROJECT_DIR$/ocr_ui/ocr_ui.iml" />
       <module fileurl="file://$PROJECT_DIR$/libpulltorefresh/pulltorefresh/pulltorefresh.iml" filepath="$PROJECT_DIR$/libpulltorefresh/pulltorefresh/pulltorefresh.iml" />
       <module fileurl="file://$PROJECT_DIR$/smartcity_P.iml" filepath="$PROJECT_DIR$/smartcity_P.iml" />
-      <module fileurl="file://$PROJECT_DIR$/xrecyclerview/xrecyclerview.iml" filepath="$PROJECT_DIR$/xrecyclerview/xrecyclerview.iml" />
     </modules>
   </component>
 </project>

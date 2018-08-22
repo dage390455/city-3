@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/index_layout_head1"
-              android:layout_width="match_parent"
-              android:layout_height="@dimen/y1000"
-              android:gravity="center"
-              android:orientation="vertical">
+    android:id="@+id/index_layout_head1"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/y1000"
+    android:gravity="center"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:textColor="@color/white"
             android:textSize="@dimen/x180"
-            android:textStyle="bold"/>
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/index_head_alarm_num_title"
@@ -26,7 +26,7 @@
             android:layout_height="wrap_content"
             android:text="@string/today_alarm"
             android:textColor="@color/white"
-            android:textSize="@dimen/x40"/>
+            android:textSize="@dimen/x40" />
     </LinearLayout>
 
     <LinearLayout
@@ -48,7 +48,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="@color/white"
-                android:textSize="@dimen/x100"/>
+                android:textSize="@dimen/x100" />
 
             <TextView
                 android:id="@+id/index_head_lost_num_title"
@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:text="失联"
                 android:textColor="@color/white"
-                android:textSize="@dimen/x40"/>
+                android:textSize="@dimen/x40" />
         </LinearLayout>
 
         <LinearLayout
@@ -72,7 +72,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                 android:textColor="@color/white"
-                android:textSize="@dimen/x100"/>
+                android:textSize="@dimen/x100" />
 
             <TextView
                 android:id="@+id/index_head_inactive_num_title"
@@ -80,7 +80,7 @@
                 android:layout_height="wrap_content"
                 android:text="未激活"
                 android:textColor="@color/white"
-                android:textSize="@dimen/x40"/>
+                android:textSize="@dimen/x40" />
         </LinearLayout>
     </LinearLayout>
 

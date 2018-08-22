@@ -494,34 +494,28 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                 mDataList.add(deviceInfo);
             }
         }
+        //排序
+        Collections.sort(mDataList);
         //推送数据
         PushData pushData = new PushData();
         pushData.setAlarmStatus(isAlarmPlay);
         pushData.setDeviceInfoList(mDataList);
         EventBus.getDefault().post(pushData);
-        //只在主页可见出现的时候刷新
-        if (mIsVisibleToUser) {
-            requestTopData(false);
-            //排序
-            Collections.sort(mDataList);
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+        mContext.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                //只在主页可见出现的时候刷新
+                if (mIsVisibleToUser) {
+                    requestTopData(false);
                     getView().refreshData(mDataList);
                 }
-            });
-
-        }
-        if (isAlarmPlay) {
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+                //播放音乐
+                if (isAlarmPlay) {
                     playSound();
+                    isAlarmPlay = false;
                 }
-            });
-
-            isAlarmPlay = false;
-        }
+            }
+        });
         isNeedRefresh = false;
         LogUtils.logd("new dataList = " + mDataList.size());
     }
@@ -553,7 +547,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     //子线程处理
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
+        //TODO 后台线程处理消息
         int code = eventData.code;
         Object data = eventData.data;
         if (code == EVENT_DATA_SOCKET_DATA) {

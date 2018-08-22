@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                                 xmlns:app="http://schemas.android.com/apk/res-auto"
-                                                 xmlns:tools="http://schemas.android.com/tools"
-                                                 android:layout_width="match_parent"
-                                                 android:layout_height="match_parent"
-                                                 android:background="@color/f7f8f9">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/f7f8f9">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar"
@@ -17,13 +17,12 @@
             android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-            app:title="">
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
             <include
                 layout="@layout/layout_index_head1"
                 app:layout_collapseMode="pin"
-                app:layout_collapseParallaxMultiplier="0.7"/>
+                app:layout_collapseParallaxMultiplier="0.7" />
 
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
@@ -37,21 +36,20 @@
                     android:id="@+id/index_toolbar1"
                     layout="@layout/layout_toolbar1"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_height="match_parent" />
 
                 <include
                     android:id="@+id/index_toolbar2"
                     layout="@layout/layout_toolbar2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:visibility="gone"/>
+                    android:visibility="gone" />
             </android.support.v7.widget.Toolbar>
 
         </android.support.design.widget.CollapsingToolbarLayout>
     </android.support.design.widget.AppBarLayout>
 
-    <include layout="@layout/layout_index_content"
-        />
+    <include layout="@layout/layout_index_content" />
 
 
 </android.support.design.widget.CoordinatorLayout>

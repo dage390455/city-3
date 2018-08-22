@@ -42,7 +42,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
     private OnPhotoClickListener onPhotoClickListener;
     private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
     //
-    private final String[] confirmStatusArray = {"待确认", "真实火警", "误报", "巡检/测试", "安全隐患"};
+    private final String[] confirmStatusArray = {"待确认", "真实火警", "误报", "测试/巡检", "安全隐患"};
     private final String[] confirmAlarmResultInfoArray = {"", "监测点或附近发生着火，需要立即进行扑救", "无任何火情和烟雾", "相关人员主动测试发出的预警",
             "未发生着火，但现场确实存在隐患"};
     private final String[] confirmAlarmTypeArray = {"其他", "用电异常", "生产作业", "吸烟", "室内生火", "烹饪", "燃气泄漏", "人为放火", "易燃物自燃"};
@@ -155,7 +155,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                confirm_text = day + "小时无人确认，系统自动确认为巡检/测试";
+                confirm_text = day + "小时无人确认，系统自动确认为测试/巡检";
             } else if ("app".equals(source)) {
                 confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过App端确认本次预警类型为:" +
                         confirmStatusArray[recordInfo.getDisplayStatus()];

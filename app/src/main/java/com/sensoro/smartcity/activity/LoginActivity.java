@@ -71,12 +71,30 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
+        checkActivity();
         setContentView(R.layout.activity_login);
         ButterKnife.bind(mActivity);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);
         mPresenter.initData(mActivity);
+        LogUtils.loge("onCreateInit");
+        // 避免从桌面启动程序后，会重新实例化入口类的activity
+
+    }
+
+    //避免activity多次启动
+    private void checkActivity() {
+        if (!this.isTaskRoot()) {
+            Intent intent = getIntent();
+            if (intent != null) {
+                String action = intent.getAction();
+                if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)) {
+                    finishAc();
+                    return;
+                }
+            }
+        }
     }
 
     @Override
@@ -199,6 +217,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
         mPermissionUtils.unregisterObserver(this);
+        LogUtils.loge("onDestroy");
         super.onDestroy();
     }
 

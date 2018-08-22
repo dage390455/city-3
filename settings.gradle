@@ -1,1 +1,1 @@
-include ':app', ':cosmocalendar', ':libcityserver', ':ocr_ui','menudrawer', ':libpulltorefresh:pulltorefresh', 'MPChartLib', 'xrecyclerview', ':imagepicker', ':TagsEditText'
+include ':app', ':cosmocalendar', ':libcityserver', ':ocr_ui', 'menudrawer', ':libpulltorefresh:pulltorefresh', 'MPChartLib', ':imagepicker', ':TagsEditText'
