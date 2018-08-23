@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -253,12 +254,18 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     public void showAccountName(String name) {
-        accountEt.setText(name);
+        if (!TextUtils.isEmpty(name)) {
+            accountEt.setText(name);
+            accountEt.setSelection(name.length());
+        }
     }
 
     @Override
     public void showAccountPwd(String pwd) {
-        pwdEt.setText(pwd);
+        if (!TextUtils.isEmpty(pwd)) {
+            pwdEt.setText(pwd);
+            pwdEt.setSelection(pwd.length());
+        }
     }
 
     @Override

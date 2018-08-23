@@ -2,7 +2,6 @@ apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
     def verName = "2.1.1"
-
     def verCode = 1
     def buildCode = 1
     def connector = '_beta'
@@ -187,4 +186,5 @@ dependencies {
     compile files('libs/ocr-sdk.jar')
     compile project(':ocr_ui')
     compile project(':pulltorefresh')
+    compile 'me.jessyan:autosize:0.7.0'
 }

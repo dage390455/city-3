@@ -1,19 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:TagsEditText="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical"
-              tools:context="com.sensoro.smartcity.activity.DeploySettingTagActivity">
+    xmlns:TagsEditText="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    tools:context="com.sensoro.smartcity.activity.DeploySettingTagActivity">
 
     <RelativeLayout
         android:id="@+id/deploy_setting_tag_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y200"
-        android:gravity="center_vertical"
-        >
+        android:gravity="center_vertical">
 
         <ImageView
             android:id="@+id/deploy_setting_tag_back"
@@ -24,7 +23,7 @@
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:padding="15dp"
-            android:src="@mipmap/ic_back"/>
+            android:src="@mipmap/ic_back" />
 
         <TextView
             android:id="@+id/deploy_setting_tag_title"
@@ -33,7 +32,7 @@
             android:layout_centerInParent="true"
             android:text="@string/setting_tag"
             android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_large_size"/>
+            android:textSize="@dimen/city_large_size" />
 
         <TextView
             android:id="@+id/deploy_setting_tag_finish"
@@ -44,13 +43,13 @@
             android:layout_marginRight="@dimen/x50"
             android:text="@string/finish"
             android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_tiny_large_size"/>
+            android:textSize="@dimen/city_tiny_large_size" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y3"
-        android:background="@color/c_e7e7e7"/>
+        android:layout_height="@dimen/y1"
+        android:background="@color/c_e7e7e7" />
 
     <LinearLayout
         android:id="@+id/deploy_setting_tag_input_layout"
@@ -76,8 +75,7 @@
             android:textSize="15sp"
             TagsEditText:allowSpaceInTag="false"
             TagsEditText:tagsBackground="@drawable/shape_textview"
-            TagsEditText:tagsCloseImageRight="@drawable/ic_text_del"
-            />
+            TagsEditText:tagsCloseImageRight="@drawable/ic_text_del" />
     </LinearLayout>
 
     <LinearLayout
@@ -94,14 +92,14 @@
             android:layout_marginTop="@dimen/y60"
             android:text="@string/all_tag"
             android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_tiny_large_size"/>
+            android:textSize="@dimen/city_tiny_large_size" />
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/deploy_setting_tag_history_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x40"
-            android:layout_marginTop="@dimen/y45"/>
+            android:layout_marginTop="@dimen/y45" />
     </LinearLayout>
 
     <LinearLayout
@@ -115,6 +113,6 @@
             android:id="@+id/deploy_setting_tag_relation_rv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/y45"/>
+            android:layout_marginTop="@dimen/y45" />
     </LinearLayout>
 </LinearLayout>

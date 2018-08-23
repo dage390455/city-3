@@ -63,7 +63,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
      */
     @Override
     public void onStart() {
-        super.onStart();
         try {
             if (mPresenter != null && getUserVisibleHint()) {
                 onFragmentStart();
@@ -71,6 +70,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         } catch (Exception e) {
             e.printStackTrace();
         }
+        super.onStart();
     }
 
     /**
@@ -78,7 +78,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
      */
     @Override
     public void onStop() {
-        super.onStop();
         try {
             if (mPresenter != null && getUserVisibleHint()) {
                 onFragmentStop();
@@ -86,6 +85,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         } catch (Exception e) {
             e.printStackTrace();
         }
+        super.onStop();
     }
 
     /**
@@ -93,7 +93,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
      */
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
         try {
             if (mPresenter != null) {
                 if (isVisibleToUser) {
@@ -105,6 +104,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         } catch (Exception e) {
             e.printStackTrace();
         }
+        super.setUserVisibleHint(isVisibleToUser);
     }
 
 

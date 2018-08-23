@@ -70,7 +70,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y3"
+        android:layout_height="@dimen/y1"
         android:background="@color/search_color"/>
 
     <LinearLayout

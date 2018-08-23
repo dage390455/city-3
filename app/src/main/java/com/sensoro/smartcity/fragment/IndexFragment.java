@@ -188,7 +188,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             @Override
             public View makeView() {
                 TextView textView = new TextView(mRootFragment.getActivity());
-                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));//字号
+                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.index_top_alarm_size));//字号
                 textView.setTextColor(mRootFragment.getResources().getColor(R.color.white));
                 textView.setTypeface(Typeface.defaultFromStyle(Typeface.BOLD));
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
@@ -207,7 +207,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             @Override
             public View makeView() {
                 TextView textView = new TextView(mRootFragment.getActivity());
-                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));//字号
+                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.index_top_other_size));//字号
                 textView.setTextColor(mRootFragment.getResources().getColor(R.color.white));
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -224,7 +224,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             @Override
             public View makeView() {
                 TextView textView = new TextView(mRootFragment.getActivity());
-                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));//字号
+                textView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.index_top_other_size));//字号
                 textView.setTextColor(mRootFragment.getResources().getColor(R.color.white));
                 FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -534,9 +534,14 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             }
             alarmLayout.setVisibility(View.VISIBLE);
             mHeadAlarmNumTextView.setVisibility(VISIBLE);
+            //
             mHeadAlarmTitleTextView.setText(R.string.today_alarm);
+            mHeadInactiveTitleTextView.setText(R.string.status_inactive);
+            mHeadLostTitleTextView.setText(R.string.status_lost);
+            //
 //            mHeadAlarmNumTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));
-            mHeadAlarmTitleTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x20));
+            mHeadAlarmTitleTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.index_top_alarm_title_normal_size));
+            //
             mHeadLayout.setBackgroundColor(mRootFragment.getResources().getColor(R.color.sensoro_alarm));
             mToolbar1.setBackgroundColor(mRootFragment.getResources().getColor(R.color.sensoro_alarm));
             collapsingToolbarLayout.setContentScrimColor(mRootFragment.getResources().getColor(R.color.sensoro_alarm));
@@ -544,10 +549,12 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
                     .color.sensoro_alarm));
         } else {
             alarmLayout.setVisibility(View.GONE);
-            mHeadAlarmTitleTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x50));
+            //
+            mHeadAlarmTitleTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.index_top_alarm_title_large_size));
 //            mHeadAlarmNumTextView.setTextSize(mRootFragment.getResources().getDimensionPixelSize(R.dimen.x20));
             mHeadAlarmNumTextView.setVisibility(View.GONE);
             mHeadAlarmTitleTextView.setText(R.string.tips_no_alarm);
+            //
             mHeadLayout.setBackgroundColor(mRootFragment.getResources().getColor(R.color.sensoro_normal));
             mToolbar1.setBackgroundColor(mRootFragment.getResources().getColor(R.color.sensoro_normal));
             collapsingToolbarLayout.setContentScrimColor(mRootFragment.getResources().getColor(R.color.sensoro_normal));

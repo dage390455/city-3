@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/search_device_top_rl"
@@ -21,7 +21,7 @@
             android:layout_marginLeft="@dimen/x30"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
-            android:src="@mipmap/ic_search"/>
+            android:src="@mipmap/ic_search" />
 
         <EditText
             android:id="@+id/search_device_et"
@@ -40,7 +40,7 @@
             android:paddingLeft="@dimen/x20"
             android:paddingRight="@dimen/x30"
             android:singleLine="true"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/search_device_clear_iv"
@@ -50,7 +50,7 @@
             android:layout_centerVertical="true"
             android:padding="8dp"
             android:src="@mipmap/ic_et_delete"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/search_device_cancel_tv"
@@ -65,13 +65,13 @@
             android:paddingTop="14dp"
             android:text="@string/cancel"
             android:textColor="@color/c_626262"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y3"
-        android:background="@color/search_color"/>
+        android:layout_height="@dimen/y1"
+        android:background="@color/search_color" />
 
     <RelativeLayout
         android:id="@+id/index_layout_list"
@@ -85,9 +85,7 @@
             android:background="@color/index_list_bg"
             android:orientation="vertical">
 
-            <include
-                layout="@layout/layout_index_list"
-                />
+            <include layout="@layout/layout_index_list" />
         </LinearLayout>
 
         <com.sensoro.smartcity.widget.SensoroShadowView
@@ -95,19 +93,19 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <com.sensoro.smartcity.widget.SensoroShadowView
             android:id="@+id/index_status_shadow"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <include
             layout="@layout/layout_index_head2"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </RelativeLayout>
 
     <LinearLayout
@@ -122,14 +120,14 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_gantan"/>
+            android:src="@mipmap/ic_gantan" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/y20"
             android:text="@string/tips_no_search_data"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
     </LinearLayout>
 
     <LinearLayout
@@ -153,7 +151,7 @@
                 android:layout_marginTop="@dimen/y60"
                 android:text="@string/recent"
                 android:textColor="@color/c_626262"
-                android:textSize="15sp"/>
+                android:textSize="15sp" />
 
             <ImageView
                 android:id="@+id/search_device_clear_btn"
@@ -165,7 +163,7 @@
                 android:src="@mipmap/ic_rubbish"
                 android:text="@string/clear"
                 android:textSize="12sp"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
@@ -173,7 +171,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x35"
-            android:layout_marginTop="@dimen/y45"/>
+            android:layout_marginTop="@dimen/y45" />
 
     </LinearLayout>
 
@@ -185,7 +183,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/search_device_relation_rv"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
 

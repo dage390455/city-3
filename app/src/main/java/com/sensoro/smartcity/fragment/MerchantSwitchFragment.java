@@ -236,6 +236,14 @@ public class MerchantSwitchFragment extends BaseFragment<IMerchantSwitchFragment
     public void updateAdapterUserInfo(List<UserInfo> data) {
         mMerchantAdapter.setDataList(data);
         mMerchantAdapter.notifyDataSetChanged();
+//        ViewParent parent = mPullListView.getParent();
+//        if (parent instanceof LinearLayout) {
+//            if (data.size() == 0) {
+//                ((LinearLayout) parent).setBackgroundColor(mRootFragment.getActivity().getResources().getColor(R.color.f7f8f9));
+//            } else {
+//                ((LinearLayout) parent).setBackgroundColor(mRootFragment.getActivity().getResources().getColor(R.color.white));
+//            }
+//        }
     }
 
     @Override

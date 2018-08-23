@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:fitsSystemWindows="true"
-              android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/search_alarm_top_rl"
@@ -23,7 +23,7 @@
             android:layout_marginLeft="@dimen/x30"
             android:adjustViewBounds="true"
             android:cropToPadding="true"
-            android:src="@mipmap/ic_search"/>
+            android:src="@mipmap/ic_search" />
 
         <EditText
             android:id="@+id/search_alarm_et"
@@ -40,7 +40,7 @@
             android:paddingLeft="14dp"
             android:paddingRight="14dp"
             android:singleLine="true"
-            android:textSize="14sp"/>
+            android:textSize="14sp" />
 
         <ImageView
             android:id="@+id/search_alarm_clear_iv"
@@ -50,7 +50,7 @@
             android:layout_centerVertical="true"
             android:padding="8dp"
             android:src="@mipmap/ic_search_clear"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/search_alarm_cancel_tv"
@@ -65,13 +65,13 @@
             android:paddingTop="14dp"
             android:text="@string/cancel"
             android:textColor="@color/c_626262"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
     </RelativeLayout>
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y3"
-        android:background="@color/search_color"/>
+        android:layout_height="@dimen/y1"
+        android:background="@color/search_color" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/search_tablayout"
@@ -79,13 +79,7 @@
         android:layout_height="wrap_content"
         app:tabIndicatorColor="#48B0F7"
         app:tabMode="fixed"
-        app:tabSelectedTextColor="#48B0F7"/>
-
-    <!--<android.support.v4.view.ViewPager-->
-    <!--android:id="@+id/search_viewpager"-->
-    <!--android:visibility="gone"-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"/>-->
+        app:tabSelectedTextColor="#48B0F7" />
 
     <LinearLayout
         android:id="@+id/search_alarm_tag_layout"
@@ -98,7 +92,7 @@
         <android.support.v7.widget.RecyclerView
             android:id="@+id/search_alarm_tag_rv"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            android:layout_height="wrap_content" />
     </LinearLayout>
 
     <LinearLayout
@@ -113,14 +107,14 @@
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@mipmap/ic_gantan"/>
+            android:src="@mipmap/ic_gantan" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/y20"
             android:text="@string/tips_no_search_data"
-            android:textSize="13sp"/>
+            android:textSize="13sp" />
     </LinearLayout>
 
     <View
@@ -130,7 +124,7 @@
         android:layout_marginRight="@dimen/x40"
         android:layout_marginTop="@dimen/y50"
         android:background="@color/search_color"
-        android:visibility="gone"/>
+        android:visibility="gone" />
 
     <LinearLayout
         android:id="@+id/search_alarm_history_ll"
@@ -157,7 +151,7 @@
                 android:text="@string/recent"
                 android:textColor="@color/c_626262"
                 android:textSize="15sp"
-                android:textStyle="bold"/>
+                android:textStyle="bold" />
 
             <ImageView
                 android:id="@+id/search_alarm_clear_btn"
@@ -167,14 +161,14 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/y20"
                 android:src="@mipmap/ic_rubbish"
-                android:text="@string/clear"/>
+                android:text="@string/clear" />
         </RelativeLayout>
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/search_alarm_history_rv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/x40"/>
+            android:layout_marginLeft="@dimen/x40" />
 
     </LinearLayout>
 

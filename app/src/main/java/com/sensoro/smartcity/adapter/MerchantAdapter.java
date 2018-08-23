@@ -57,6 +57,7 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
             holder.item_phone = (TextView) convertView.findViewById(R.id.item_merchant_phone);
             holder.item_status = (ImageView) convertView.findViewById(R.id.item_merchant_status);
             holder.item_icon = (ImageView) convertView.findViewById(R.id.item_merchant_icon);
+            holder.itemBottomS = convertView.findViewById(R.id.item_bottom_s);
             convertView.setTag(holder);
         } else {
             holder = (MerchantViewHolder) convertView.getTag();
@@ -75,7 +76,11 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
         } else {
             holder.item_status.setVisibility(View.GONE);
         }
-
+        if (mList.size() != 0 && position == mList.size() - 1) {
+            holder.itemBottomS.setVisibility(View.VISIBLE);
+        } else {
+            holder.itemBottomS.setVisibility(View.GONE);
+        }
         return convertView;
     }
 
@@ -90,6 +95,7 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
         TextView item_phone;
         ImageView item_status;
         ImageView item_icon;
+        View itemBottomS;
 
         MerchantViewHolder() {
 

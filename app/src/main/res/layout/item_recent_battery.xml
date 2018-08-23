@@ -1,32 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center_horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
     <RelativeLayout
         android:id="@+id/item_battery_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y680">
+
         <ImageView
-            android:layout_alignParentBottom="true"
             android:id="@+id/item_battery_bg"
-            android:background="@color/battery_bg"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y680" />
+            android:layout_height="@dimen/y680"
+            android:layout_alignParentBottom="true"
+            android:background="@color/battery_bg" />
+
         <ImageView
             android:id="@+id/item_battery_value"
-            android:layout_alignBottom="@+id/item_battery_bg"
-            android:background="@color/popup_selected_text_color"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y680" />
+            android:layout_height="@dimen/y680"
+            android:layout_alignBottom="@+id/item_battery_bg"
+            android:background="@color/popup_selected_text_color" />
     </RelativeLayout>
 
     <TextView
-        android:textSize="10sp"
-        android:layout_marginTop="@dimen/y20"
         android:id="@+id/item_battery_date"
-        android:textColor="@color/c_626262"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/y20"
+        android:textColor="@color/c_626262"
+        android:textSize="10sp" />
 </LinearLayout>

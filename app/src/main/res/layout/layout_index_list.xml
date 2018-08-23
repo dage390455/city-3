@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/c_f3f5f6">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f3f5f6">
 
     <LinearLayout
         android:id="@+id/layout_index_grid"
@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/x15"
-            android:layout_marginRight="@dimen/x15"/>
+            android:layout_marginRight="@dimen/x15" />
     </LinearLayout>
 
     <LinearLayout
@@ -30,8 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/x15"
-            android:layout_marginRight="@dimen/x15"
-            />
+            android:layout_marginRight="@dimen/x15" />
     </LinearLayout>
 
     <ImageView
@@ -42,5 +41,5 @@
         android:layout_alignParentRight="true"
         android:layout_marginBottom="@dimen/y50"
         android:layout_marginRight="@dimen/x50"
-        android:src="@mipmap/ic_return_top"/>
+        android:src="@mipmap/ic_return_top" />
 </RelativeLayout>

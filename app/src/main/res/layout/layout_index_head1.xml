@@ -2,14 +2,14 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/index_layout_head1"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/y1000"
+    android:layout_height="238dp"
     android:gravity="center"
     android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
+        android:gravity="center_horizontal"
         android:orientation="vertical">
 
         <TextSwitcher
@@ -17,16 +17,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textColor="@color/white"
-            android:textSize="@dimen/x180"
+            android:textSize="@dimen/index_top_alarm_size"
             android:textStyle="bold" />
 
         <TextView
             android:id="@+id/index_head_alarm_num_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/today_alarm"
             android:textColor="@color/white"
-            android:textSize="@dimen/x40" />
+            android:textSize="@dimen/index_top_alarm_title_size" />
     </LinearLayout>
 
     <LinearLayout
@@ -46,17 +45,15 @@
                 android:id="@+id/index_head_lost_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:textColor="@color/white"
-                android:textSize="@dimen/x100" />
+                android:textSize="@dimen/index_top_alarm_title_size" />
 
             <TextView
                 android:id="@+id/index_head_lost_num_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="失联"
                 android:textColor="@color/white"
-                android:textSize="@dimen/x40" />
+                android:textSize="@dimen/index_top_alarm_title_size" />
         </LinearLayout>
 
         <LinearLayout
@@ -70,17 +67,15 @@
                 android:id="@+id/index_head_inactive_num"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text=""
                 android:textColor="@color/white"
-                android:textSize="@dimen/x100" />
+                android:textSize="@dimen/index_top_other_size" />
 
             <TextView
                 android:id="@+id/index_head_inactive_num_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="未激活"
                 android:textColor="@color/white"
-                android:textSize="@dimen/x40" />
+                android:textSize="@dimen/index_top_alarm_title_size" />
         </LinearLayout>
     </LinearLayout>
 

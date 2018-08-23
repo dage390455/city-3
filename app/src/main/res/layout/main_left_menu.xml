@@ -1,32 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white"
-    >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/left_menu_ll_head"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y400"
+        android:layout_height="100dp"
         android:background="@color/c_f5f7fa"
         android:gravity="center_vertical"
-        android:orientation="horizontal"
-        >
+        android:orientation="horizontal">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/left_menu_icon"
-            android:layout_width="@dimen/x250"
-            android:layout_height="@dimen/y250"
-            android:layout_marginLeft="@dimen/x140"
-            android:src="@mipmap/ic_launcher"
-            />
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_marginLeft="30dp"
+            android:src="@mipmap/ic_launcher" />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/x50"
-            android:layout_marginRight="@dimen/x50"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
             android:gravity="center_vertical"
             android:orientation="vertical">
 
@@ -36,15 +33,14 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="middle"
                 android:singleLine="true"
-                android:textColor="@color/c_121212"
-                />
+                android:textColor="@color/c_121212" />
 
             <TextView
                 android:id="@+id/left_menu_phone"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/c_121212"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
@@ -53,14 +49,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@id/left_menu_ll_head"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
 
         <ListView
             android:id="@+id/left_menu_list"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:divider="@android:color/transparent"/>
+            android:divider="@android:color/transparent" />
 
     </LinearLayout>
 
@@ -76,25 +71,21 @@
             android:id="@+id/app_version"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/c_121212"/>
+            android:textColor="@color/c_121212" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y200"
+            android:layout_height="40dp"
             android:layout_marginTop="@dimen/y30"
             android:background="@color/c_f5f7fa"
-            android:gravity="center_horizontal"
-            >
+            android:gravity="center">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/y60"
-                android:layout_marginTop="@dimen/y60"
                 android:text="@string/exit"
                 android:textColor="@color/c_121212"
-                android:textSize="14sp"
-                />
+                android:textSize="14sp" />
         </LinearLayout>
     </LinearLayout>
 

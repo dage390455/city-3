@@ -1,33 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/rl_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_list_item"
-                android:gravity="center_vertical"
-                android:paddingBottom="@dimen/y60"
-                android:paddingTop="@dimen/y60"
-    >
+    android:id="@+id/rl_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/selector_list_item"
+    android:gravity="center_vertical"
+    android:paddingBottom="11dp"
+    android:paddingTop="11dp">
 
     <ImageView
         android:id="@+id/item_menu_icon"
-        android:layout_width="@dimen/x60"
-        android:layout_height="@dimen/y60"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/x160"
-        android:src="@mipmap/ic_menu_index"/>
+        android:layout_marginLeft="30dp"
+        android:src="@mipmap/ic_menu_index" />
 
     <com.sensoro.smartcity.widget.SensoroTextView
         android:id="@+id/item_menu_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="@dimen/x30"
+        android:layout_marginLeft="7.5dp"
         android:layout_toRightOf="@+id/item_menu_icon"
         android:text="22222222"
         android:textColor="@color/c_626262"
-        android:textSize="@dimen/x50"
-        />
+        android:textSize="14sp" />
 
 </RelativeLayout>

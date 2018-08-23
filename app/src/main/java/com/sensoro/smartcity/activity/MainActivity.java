@@ -217,10 +217,10 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     private void setLeftMenuExitButtonState() {
         RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
         if (WidgetUtil.navigationBarExist(mActivity)) {
-            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.y200));
+            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.navigation_bar_exist));
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
         } else {
-            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.y1));
+            params.setMargins(0, 0, 0, 0);
             params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
         }
         mExitLayout.setLayoutParams(params);

@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical"
-    android:gravity="center"
-    android:paddingTop="@dimen/y80"
-    android:paddingBottom="@dimen/y80"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:paddingBottom="@dimen/y80"
+    android:paddingTop="@dimen/y80">
+
     <LinearLayout
         android:id="@+id/item_index_type_icon_layout"
-        android:gravity="center"
         android:layout_width="@dimen/x100"
-        android:layout_height="@dimen/y100">
+        android:layout_height="@dimen/y100"
+        android:gravity="center">
+
         <ImageView
-            android:src="@mipmap/ic_sensor_co"
             android:id="@+id/item_index_type_icon"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:src="@mipmap/ic_sensor_co" />
     </LinearLayout>
 
     <TextView

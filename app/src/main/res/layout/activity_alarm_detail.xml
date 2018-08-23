@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/list_sep_color">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -12,7 +12,8 @@
         <RelativeLayout
             android:id="@+id/alarm_detail_title_layout"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y200">
+            android:layout_height="@dimen/y200"
+            android:background="@color/white">
 
             <ImageView
                 android:id="@+id/alarm_detail_back"
@@ -24,7 +25,7 @@
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
                 android:padding="15dp"
-                android:src="@mipmap/ic_back"/>
+                android:src="@mipmap/ic_back" />
 
             <TextView
                 android:id="@+id/alarm_detail_title"
@@ -33,13 +34,14 @@
                 android:layout_centerInParent="true"
                 android:text="@string/alarm_detail"
                 android:textColor="@color/c_626262"
-                android:textSize="@dimen/city_large_size"/>
+                android:textSize="@dimen/city_large_size" />
 
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y350">
+            android:layout_height="@dimen/y350"
+            android:background="@color/white">
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -52,7 +54,7 @@
                     android:id="@+id/alarm_detail_iv_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:src="@mipmap/ic_sensor_bg_co"/>
+                    android:src="@mipmap/ic_sensor_bg_co" />
             </RelativeLayout>
 
             <LinearLayout
@@ -72,14 +74,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/x10"
                         android:layout_marginTop="@dimen/y20"
-                        android:background="@drawable/shape_status_alarm"/>
+                        android:background="@drawable/shape_status_alarm" />
 
                     <TextView
                         android:id="@+id/alarm_detail_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="@dimen/x80"
-                        android:textSize="@dimen/city_normal_size"/>
+                        android:textSize="@dimen/city_normal_size" />
 
                     <TextView
                         android:id="@+id/alarm_detail_display_status"
@@ -88,7 +90,7 @@
                         android:layout_marginLeft="@dimen/x20"
                         android:layout_toRightOf="@id/alarm_detail_status"
                         android:background="@drawable/shape_display_text"
-                        android:textSize="@dimen/city_normal_size"/>
+                        android:textSize="@dimen/city_normal_size" />
                 </RelativeLayout>
 
                 <LinearLayout
@@ -106,7 +108,7 @@
                         android:layout_weight="1"
                         android:text="22222"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_normal_size"/>
+                        android:textSize="@dimen/city_normal_size" />
 
                     <TextView
                         android:id="@+id/alarm_detail_confirm_status"
@@ -118,7 +120,7 @@
                         android:background="@drawable/shape_confirm_text"
                         android:text="@string/confirming"
                         android:textColor="@color/white"
-                        android:textSize="@dimen/city_small_size"/>
+                        android:textSize="@dimen/city_small_size" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -133,7 +135,7 @@
                         android:layout_marginLeft="@dimen/x80"
                         android:text="4556"
                         android:textColor="@color/c_626262"
-                        android:textSize="@dimen/city_normal_size"/>
+                        android:textSize="@dimen/city_normal_size" />
                 </LinearLayout>
             </LinearLayout>
 
@@ -142,22 +144,15 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/y1"
-            android:layout_marginLeft="@dimen/x40"
-            android:layout_marginRight="@dimen/x40"
-            android:layout_marginTop="@dimen/y50"
-            android:background="@color/search_color"
-            android:visibility="visible"/>
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/y50"
-            android:background="@color/list_sep_color"/>
+            android:layout_marginTop="10dp"
+            android:background="@color/search_color" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/x50"
-            android:layout_marginTop="@dimen/y100">
+            android:background="@color/white"
+            android:paddingLeft="@dimen/x50"
+            android:paddingTop="@dimen/y100">
 
             <ExpandableListView
                 android:id="@+id/alarm_detail_listview"
@@ -165,8 +160,7 @@
                 android:layout_height="match_parent"
                 android:divider="@null"
                 android:groupIndicator="@null"
-                android:listSelector="@android:color/transparent"
-                />
+                android:listSelector="@android:color/transparent" />
         </LinearLayout>
     </LinearLayout>
 
@@ -186,14 +180,14 @@
             android:background="@color/item_text_color"
             android:clickable="false"
             android:orientation="vertical"
-            android:visibility="gone"/>
+            android:visibility="gone" />
 
         <com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView
             android:id="@+id/alarm_detail_popup_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -112,7 +112,7 @@
                 android:layout_marginLeft="@dimen/x100"
                 android:divider="@color/c_e7e7e7"
                 android:dividerHeight="@dimen/y1"
-                android:fadingEdge="none"
+                android:showDividers="end"
                 android:scrollbars="vertical" />
 
             <View
