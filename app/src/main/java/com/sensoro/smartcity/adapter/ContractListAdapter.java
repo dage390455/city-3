@@ -100,11 +100,12 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
             try {
                 String[] ts = createdAt.split("T");
                 createdAt = ts[0];
+                createdAt = createdAt.replaceAll("-", ".");
             } catch (Exception e) {
                 e.printStackTrace();
             }
+            holder.itemEtDate.setText(createdAt);
         }
-        holder.itemEtDate.setText(createdAt);
         //
         int created_type = contractListInfo.getCreated_type();
         String customer_name = contractListInfo.getCustomer_name();

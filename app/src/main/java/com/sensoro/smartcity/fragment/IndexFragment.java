@@ -295,6 +295,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             public void onRefresh() {
                 isShowDialog = false;
                 reFreshDataByDirection(DIRECTION_DOWN);
+                requestTopData(false);
             }
 
             @Override
@@ -347,6 +348,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             public void onRefresh() {
                 isShowDialog = false;
                 reFreshDataByDirection(DIRECTION_DOWN);
+                requestTopData(false);
             }
 
             @Override
@@ -803,6 +805,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void filterByStatusWithRequest(int position) {
+        requestTopData(false);
         mPresenter.setStatusSelectedIndex(position);
         mStatusTextView.setTextColor(mRootFragment.getResources().getColor(R.color.c_626262));
         mStatusImageView.setColorFilter(mRootFragment.getResources().getColor(R.color.c_626262));
@@ -814,6 +817,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void filterByTypeWithRequest(int position) {
+        requestTopData(false);
         mPresenter.setTypeSelectedIndex(position);
         mTypeTextView.setTextColor(mRootFragment.getResources().getColor(R.color.c_626262));
         mTypeImageView.setColorFilter(mRootFragment.getResources().getColor(R.color.c_626262));

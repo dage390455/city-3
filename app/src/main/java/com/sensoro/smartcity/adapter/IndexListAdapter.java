@@ -65,81 +65,60 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
     @Override
     public void onBindViewHolder(IndexListViewHolder holder, int position) {
         DeviceInfo deviceInfo = mList.get(position);
-        int status = deviceInfo.getStatus();
-        setStatusColor(holder, status);
+        //
         String deviceInfoName = deviceInfo.getName();
         if (TextUtils.isEmpty(deviceInfoName)) {
             holder.item_name.setText(deviceInfo.getSn());
         } else {
-//            char[] name_chars = deviceInfoName.toCharArray();
-//            StringBuilder stringBuilder = new StringBuilder();
-//            for (int i = 0; i < name_chars.length; i++) {
-//                char char_name = name_chars[i];
-//                if (i % 9 == 0 && i != 0) {
-//                    stringBuilder.append(char_name);
-//                } else {
-//                    stringBuilder.append(char_name);
-//                }
-//            }
-//            holder.item_name.setText(stringBuilder.toString());
             holder.item_name.setText(deviceInfoName);
         }
         holder.item_date.setText(DateUtil.getFullParseDate(deviceInfo.getUpdatedTime()));
         //
-        Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
-        String[] sensorTypes = deviceInfo.getSensorTypes();
-        List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
+        int status = deviceInfo.getStatus();
         //
-        if (sensoroDetails != null && sortSensorTypes.size() > 0) {
-            setItemData(holder, sensoroDetails, sortSensorTypes);
-            setStatusItem(holder, status);
-        } else {
-            holder.item_alarm_view.setVisibility(View.GONE);
-            holder.item_iv_status.setVisibility(View.INVISIBLE);
-        }
-    }
-
-    /**
-     * 设置颜色item
-     *
-     * @param holder
-     * @param status
-     */
-    private void setStatusItem(IndexListViewHolder holder, int status) {
         Drawable drawable = null;
+        int color = 0;
         switch (status) {
             case SENSOR_STATUS_ALARM:
+                color = R.color.sensoro_alarm;
                 holder.item_iv_status.setVisibility(View.INVISIBLE);
                 holder.item_alarm_view.setVisibility(View.VISIBLE);
                 drawable = mContext.getResources().getDrawable(R.drawable.shape_status_alarm);
                 drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
                         .getMinimumHeight());
+                setData(holder, deviceInfo, color);
                 break;
             case SENSOR_STATUS_INACTIVE:
+                color = R.color.sensoro_inactive;
                 holder.item_alarm_view.setVisibility(View.GONE);
                 drawable = mContext.getResources().getDrawable(R.drawable.shape_status_inactive);
                 drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
                         .getMinimumHeight());
                 holder.item_value1.setText(mContext.getString(R.string.status_inactive));
+                holder.item_value1.setTextColor(mContext.getResources().getColor(color));
                 holder.item_unit1.setVisibility(GONE);
                 holder.item_value2.setVisibility(GONE);
                 holder.item_unit2.setVisibility(GONE);
                 break;
             case SENSOR_STATUS_LOST:
+                color = R.color.sensoro_lost;
                 holder.item_alarm_view.setVisibility(View.GONE);
                 drawable = mContext.getResources().getDrawable(R.drawable.shape_status_lost);
                 drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
                         .getMinimumHeight());
                 holder.item_value1.setText(mContext.getString(R.string.status_lost));
+                holder.item_value1.setTextColor(mContext.getResources().getColor(color));
                 holder.item_unit1.setVisibility(GONE);
                 holder.item_value2.setVisibility(GONE);
                 holder.item_unit2.setVisibility(GONE);
                 break;
             case SENSOR_STATUS_NORMAL:
+                color = R.color.sensoro_normal;
                 holder.item_alarm_view.setVisibility(View.GONE);
                 drawable = mContext.getResources().getDrawable(R.drawable.shape_status_normal);
                 drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
                         .getMinimumHeight());
+                setData(holder, deviceInfo, color);
                 break;
             default:
                 holder.item_alarm_view.setVisibility(View.GONE);
@@ -147,128 +126,118 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
                 break;
         }
         holder.item_iv_status.setImageDrawable(drawable);
-    }
-
-    @Override
-    public void onBindViewHolder(IndexListViewHolder holder, int position, List<Object> payloads) {
-        if (payloads.isEmpty()) {
-            onBindViewHolder(holder, position);
-        } else {
-            DeviceInfo deviceInfo = mList.get(position);
-            Map map = (Map) payloads.get(0);
-            Object statusObj = map.get("status");
-            if (statusObj != null) {
-                int status = (int) statusObj;
-                setStatusColor(holder, status);
-                //
-                Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
-                String[] sensorTypes = deviceInfo.getSensorTypes();
-                List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
-                //
-                if (sensoroDetails != null && sortSensorTypes.size() > 0) {
-                    setItemData(holder, sensoroDetails, sortSensorTypes);
-                    setStatusItem(holder, status);
-                } else {
-                    holder.item_alarm_view.setVisibility(View.GONE);
-                    holder.item_iv_status.setVisibility(View.INVISIBLE);
-                }
-            }
-            Object nameObj = map.get("name");
-            if (nameObj != null) {
-                String name = (String) nameObj;
-                holder.item_name.setText(name);
-            }
-            Object updateTimeObj = map.get("updateTime");
-            if (updateTimeObj != null) {
-                String updateTime = (String) updateTimeObj;
-                holder.item_date.setText(updateTime);
-            }
-
-        }
-    }
-
-    private void setItemData(IndexListViewHolder holder, Map<String, SensorStruct> sensoroDetails, List<String> sortSensorTypes) {
-        SensorStruct sensorStruct1;
-        String sensorType1;
-        SensorStruct sensorStruct2;
-        String sensorType2;
-        if (sortSensorTypes.size() > 1) {
-            //两条数据
-            sensorType1 = sortSensorTypes.get(0);
-            sensorStruct1 = sensoroDetails.get(sensorType1);
-            //第一条
-            if (sensorStruct1 == null) {
-                holder.item_value2.setText("");
-                holder.item_unit2.setVisibility(GONE);
-            } else {
-                WidgetUtil.judgeIndexSensorType(holder.item_value2, holder.item_unit2, sensorType1,
-                        sensorStruct1);
-                holder.item_value2.setVisibility(View.VISIBLE);
-                holder.item_unit2.setVisibility(View.VISIBLE);
-            }
-            //第二条
-            sensorType2 = sortSensorTypes.get(1);
-            sensorStruct2 = sensoroDetails.get(sensorType2);
-            if (sensorStruct2 == null) {
-                holder.item_value1.setText("");
-                holder.item_unit1.setVisibility(GONE);
-            } else {
-                WidgetUtil.judgeIndexSensorType(holder.item_value1, holder.item_unit1, sensorType2,
-                        sensorStruct2);
-                holder.item_value1.setVisibility(View.VISIBLE);
-                holder.item_unit1.setVisibility(View.VISIBLE);
-            }
-        } else {
-            sensorType1 = sortSensorTypes.get(0);
-            sensorStruct1 = sensoroDetails.get(sensorType1);
-            //只有一条数据
-            if (sensorStruct1 != null) {
-                holder.item_unit1.setVisibility(VISIBLE);
-                holder.item_value1.setVisibility(VISIBLE);
-                WidgetUtil.judgeIndexSensorType(holder.item_value1, holder.item_unit1,
-                        sensorType1, sensorStruct1);
-            } else {
-                holder.item_value1.setText("");
-                holder.item_unit1.setVisibility(GONE);
-            }
-            holder.item_value2.setVisibility(GONE);
-            holder.item_unit2.setVisibility(GONE);
-        }
-        if (sensorType1 != null) {
-            WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
-        }
-        holder.item_iv_status.setVisibility(View.VISIBLE);
-    }
-
-    /**
-     * 设置颜色
-     *
-     * @param holder
-     * @param status
-     */
-    private void setStatusColor(IndexListViewHolder holder, int status) {
-        int color = 0;
-        switch (status) {
-            case SENSOR_STATUS_ALARM:
-                color = R.color.sensoro_alarm;
-                break;
-            case SENSOR_STATUS_INACTIVE:
-                color = R.color.sensoro_inactive;
-                break;
-            case SENSOR_STATUS_LOST:
-                color = R.color.sensoro_lost;
-                break;
-            case SENSOR_STATUS_NORMAL:
-                color = R.color.sensoro_normal;
-                break;
-        }
+        //
         holder.item_name.setTextColor(mContext.getResources().getColor(color));
-        holder.item_value1.setTextColor(mContext.getResources().getColor(color));
-        holder.item_unit1.setTextColor(mContext.getResources().getColor(color));
-        holder.item_value2.setTextColor(mContext.getResources().getColor(color));
-        holder.item_unit2.setTextColor(mContext.getResources().getColor(color));
         holder.item_date.setTextColor(mContext.getResources().getColor(color));
+        //
     }
+
+    private void setData(IndexListViewHolder holder, DeviceInfo deviceInfo, int color) {
+        Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
+        String[] sensorTypes = deviceInfo.getSensorTypes();
+        List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
+        if (sensoroDetails != null && sortSensorTypes.size() > 0) {
+            SensorStruct sensorStruct1;
+            String sensorType1;
+            SensorStruct sensorStruct2;
+            String sensorType2;
+            if (sortSensorTypes.size() > 1) {
+                //两条数据
+                sensorType1 = sortSensorTypes.get(0);
+                sensorStruct1 = sensoroDetails.get(sensorType1);
+                //第一条
+                if (sensorStruct1 == null) {
+                    holder.item_value2.setText("");
+                    holder.item_unit2.setVisibility(GONE);
+                } else {
+                    holder.item_value2.setVisibility(View.VISIBLE);
+                    holder.item_unit2.setVisibility(View.VISIBLE);
+                    holder.item_value2.setTextColor(mContext.getResources().getColor(color));
+                    holder.item_unit2.setTextColor(mContext.getResources().getColor(color));
+                    WidgetUtil.judgeIndexSensorType(holder.item_value2, holder.item_unit2, sensorType1,
+                            sensorStruct1);
+                }
+                //第二条
+                sensorType2 = sortSensorTypes.get(1);
+                sensorStruct2 = sensoroDetails.get(sensorType2);
+                if (sensorStruct2 == null) {
+                    holder.item_value1.setText("");
+                    holder.item_unit1.setVisibility(GONE);
+                } else {
+                    holder.item_value1.setVisibility(View.VISIBLE);
+                    holder.item_unit1.setVisibility(View.VISIBLE);
+                    holder.item_value1.setTextColor(mContext.getResources().getColor(color));
+                    holder.item_unit1.setTextColor(mContext.getResources().getColor(color));
+                    WidgetUtil.judgeIndexSensorType(holder.item_value1, holder.item_unit1, sensorType2,
+                            sensorStruct2);
+                }
+            } else {
+                sensorType1 = sortSensorTypes.get(0);
+                sensorStruct1 = sensoroDetails.get(sensorType1);
+                //只有一条数据
+                if (sensorStruct1 != null) {
+                    holder.item_unit1.setVisibility(VISIBLE);
+                    holder.item_value1.setVisibility(VISIBLE);
+                    holder.item_value1.setTextColor(mContext.getResources().getColor(color));
+                    holder.item_unit1.setTextColor(mContext.getResources().getColor(color));
+                    WidgetUtil.judgeIndexSensorType(holder.item_value1, holder.item_unit1,
+                            sensorType1, sensorStruct1);
+                } else {
+                    holder.item_value1.setText("");
+                    holder.item_unit1.setVisibility(GONE);
+                }
+                holder.item_value2.setVisibility(GONE);
+                holder.item_unit2.setVisibility(GONE);
+            }
+            if (sensorType1 != null) {
+                WidgetUtil.judgeSensorType(mContext, holder.item_iv_type, sensorType1);
+            }
+            holder.item_iv_status.setVisibility(View.VISIBLE);
+        } else {
+            holder.item_alarm_view.setVisibility(View.GONE);
+            holder.item_iv_status.setVisibility(View.INVISIBLE);
+        }
+    }
+
+
+//    @Override
+//    public void onBindViewHolder(IndexListViewHolder holder, int position, List<Object> payloads) {
+//        if (payloads.isEmpty()) {
+//            onBindViewHolder(holder, position);
+//        } else {
+//            DeviceInfo deviceInfo = mList.get(position);
+//            Map map = (Map) payloads.get(0);
+//            Object statusObj = map.get("status");
+//            if (statusObj != null) {
+//                int status = (int) statusObj;
+//                setStatusColor(holder, status);
+//                //
+//                Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
+//                String[] sensorTypes = deviceInfo.getSensorTypes();
+//                List<String> sortSensorTypes = SortUtils.sortSensorTypes(sensorTypes);
+//                //
+//                if (sensoroDetails != null && sortSensorTypes.size() > 0) {
+//                    setItemData(holder, sensoroDetails, sortSensorTypes);
+//                    setStatusItem(holder, status);
+//                } else {
+//                    holder.item_alarm_view.setVisibility(View.GONE);
+//                    holder.item_iv_status.setVisibility(View.INVISIBLE);
+//                }
+//            }
+//            Object nameObj = map.get("name");
+//            if (nameObj != null) {
+//                String name = (String) nameObj;
+//                holder.item_name.setText(name);
+//            }
+//            Object updateTimeObj = map.get("updateTime");
+//            if (updateTimeObj != null) {
+//                String updateTime = (String) updateTimeObj;
+//                holder.item_date.setText(updateTime);
+//            }
+//
+//        }
+//    }
+
 
     @Override
     public int getItemCount() {

@@ -1,97 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="@drawable/shape_index_item"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_index_item">
+
     <com.sensoro.smartcity.widget.SensoroAlarmView
         android:id="@+id/item_grid_sensor_call"
-        android:layout_marginLeft="-8dp"
-        android:layout_marginTop="-3dp"
         android:layout_width="@dimen/x150"
-        android:layout_height="@dimen/y150" />
+        android:layout_height="@dimen/y150"
+        android:layout_marginLeft="-8dp"
+        android:layout_marginTop="-3dp" />
+
     <RelativeLayout
-        android:layout_alignParentRight="true"
-        android:layout_alignParentBottom="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true">
+
         <ImageView
             android:id="@+id/item_grid_icon"
-            android:layout_marginRight="-10dp"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginRight="-10dp" />
     </RelativeLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
+
         <RelativeLayout
-            android:layout_marginLeft="@dimen/x30"
-            android:layout_marginBottom="@dimen/y100"
             android:id="@+id/item_grid_layout_name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y100"
+            android:layout_marginLeft="@dimen/x30">
+
             <ImageView
                 android:id="@+id/item_grid_iv_status"
-                android:layout_marginTop="@dimen/y40"
-                android:src="@drawable/shape_status_alarm"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-            <com.sensoro.smartcity.widget.AutoSplitTextView
-                android:textSize="@dimen/city_normal_size"
-                android:layout_marginLeft="@dimen/x10"
-                android:layout_marginTop="@dimen/y30"
-                android:layout_marginRight="@dimen/x10"
-                android:layout_toRightOf="@id/item_grid_iv_status"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y40"
+                android:src="@drawable/shape_status_alarm" />
+
+            <TextView
                 android:id="@+id/item_grid_tv_name"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginRight="@dimen/x10"
+                android:layout_marginTop="@dimen/y30"
+                android:layout_toRightOf="@id/item_grid_iv_status"
+                android:textSize="@dimen/city_normal_size" />
         </RelativeLayout>
 
         <LinearLayout
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="@dimen/x30"
-            android:orientation="vertical"
-            android:gravity="bottom"
             android:id="@+id/item_grid_layout_struct"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y510">
+            android:layout_height="@dimen/y510"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="@dimen/x30"
+            android:gravity="bottom"
+            android:orientation="vertical">
+
             <LinearLayout
-                android:orientation="horizontal"
                 android:id="@+id/item_grid_layout"
-                android:gravity="center_horizontal|bottom"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal|bottom"
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/item_grid_value2"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/city_super_size"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/city_super_size" />
+
                 <TextView
                     android:id="@+id/item_grid_unit2"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/city_normal_size"
-                    android:layout_marginLeft="@dimen/x6"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x6"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/city_normal_size" />
             </LinearLayout>
+
             <LinearLayout
-                android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/y45"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/y45"
+                android:orientation="horizontal">
+
                 <TextView
                     android:id="@+id/item_grid_value1"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/city_super_size"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/city_super_size" />
+
                 <TextView
                     android:id="@+id/item_grid_unit1"
-                    android:textColor="@color/white"
-                    android:textSize="@dimen/city_normal_size"
-                    android:layout_marginLeft="@dimen/x6"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/x6"
+                    android:textColor="@color/white"
+                    android:textSize="@dimen/city_normal_size" />
             </LinearLayout>
         </LinearLayout>
     </RelativeLayout>

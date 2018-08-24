@@ -68,10 +68,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                boolean supperAccount = ((MainActivity) mContext).isSupperAccount();
-                if (supperAccount) {
-                    return;
-                }
                 requestTopData(true);
             }
         };
@@ -91,6 +87,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 
 
     public void switchIndexGridOrList(int switchType) {
+        requestTopData(false);
         if (switchType == TYPE_LIST) {
             getView().switchToTypeGrid();
         } else {
@@ -278,9 +275,14 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     }
 
     public void requestTopData(final boolean isFirstInit) {
+        boolean supperAccount = ((MainActivity) mContext).isSupperAccount();
+        if (supperAccount) {
+            return;
+        }
         if (isFirstInit) {
             getView().showProgressDialog();
         }
+        LogUtils.loge(this, "刷新Top信息： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribe(new CityObserver<DeviceTypeCountRsp>() {
 

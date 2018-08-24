@@ -767,12 +767,12 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
     public void doDetailShare() {
         boolean wxAppInstalled = SensoroCityApplication.getInstance().api.isWXAppInstalled();
         if (wxAppInstalled) {
-            boolean wxAppSupportAPI = SensoroCityApplication.getInstance().api.isWXAppSupportAPI();
-            if (wxAppSupportAPI) {
+//            boolean wxAppSupportAPI = SensoroCityApplication.getInstance().api.isWXAppSupportAPI();
+//            if (wxAppSupportAPI) {
                 toShareWeChat();
-            } else {
-                getView().toastShort("当前版的微信不支持分享功能");
-            }
+//            } else {
+//                getView().toastShort("当前版的微信不支持分享功能");
+//            }
         } else {
             getView().toastShort("当前手机未安装微信，请安装后重试");
         }

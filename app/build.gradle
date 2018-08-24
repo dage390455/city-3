@@ -1,10 +1,10 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
-    def verName = "2.1.1"
+    def verName = "2.2.1"
     def verCode = 1
     def buildCode = 1
-    def connector = '_beta'
+    def connector = '_v'
     def versionPropsFile = file('version.properties')
 
 
@@ -170,7 +170,8 @@ dependencies {
     //    compile 'com.zhy:okhttputils:2.0.0'
     testCompile 'junit:junit:4.12'
     //    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
-    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+//    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     //

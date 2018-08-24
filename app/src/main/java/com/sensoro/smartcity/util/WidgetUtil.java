@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Build;
+import android.provider.Settings;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -1205,6 +1206,12 @@ public class WidgetUtil {
      * @return
      */
     public static boolean navigationBarExist(Activity activity) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            if (Settings.Global.getInt(activity.getApplicationContext().getContentResolver(), "force_fsg_nav_bar", 0) != 0) {
+                return false;
+            }
+        }
+
         final WindowManager windowManager = activity.getWindowManager();
         final Display d = windowManager.getDefaultDisplay();
 

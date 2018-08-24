@@ -58,7 +58,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         instance = this;
         init();
         Thread.setDefaultUncaughtExceptionHandler(this);
-        customAdaptForExternal();
+//        customAdaptForExternal();
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not initView your app in this process.
@@ -66,7 +66,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         }
         LeakCanary.install(this);
     }
-    private void customAdaptForExternal() {
+
+//    private void customAdaptForExternal() {
 //        /**
 //         * {@link ExternalAdaptManager} 是一个管理外部三方库的适配信息和状态的管理类, 详细介绍请看 {@link ExternalAdaptManager} 的类注释
 //         */
@@ -86,7 +87,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
 //                //但前提是三方库页面的布局使用的是 dp 和 sp, 如果布局全部使用的 px, 那 AndroidAutoSize 也将无能为力
 //                //经过测试 DefaultErrorActivity 的设计图宽度在 380dp - 400dp 显示效果都是比较舒服的
 //                .addExternalAdaptInfoOfActivity(DefaultErrorActivity.class, new ExternalAdaptInfo(true, 400));
-    }
+//    }
+
     public static SensoroCityApplication getInstance() {
         return instance;
     }
