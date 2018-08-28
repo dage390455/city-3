@@ -717,7 +717,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
 
     public void doNavigation() {
         if (startPosition == null) {
-            getView().toastShort(mContext.getResources().getString(R.string.tips_location_permission));
+            getView().toastShort("定位失败，请重试");
             return;
         }
         if (isAppInstalled(mContext, "com.autonavi.minimap")) {

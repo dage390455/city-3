@@ -5,8 +5,8 @@
     android:layout_height="@dimen/y350">
     <com.sensoro.smartcity.widget.SensoroAlarmView
         android:id="@+id/item_list_sensor_call"
-        android:layout_marginLeft="-8dp"
-        android:layout_marginTop="-2dp"
+        android:layout_marginLeft="-6dp"
+        android:layout_marginTop="-2.65dp"
         android:layout_width="@dimen/x150"
         android:layout_height="@dimen/y150" />
     <RelativeLayout

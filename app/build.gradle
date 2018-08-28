@@ -153,9 +153,6 @@ dependencies {
     compile project(':cosmocalendar')
     //    compile project(':libpulltorefresh:pulltorefresh')
     compile project(':menudrawer')
-    compile files('libs/AMap_Location_V3.5.0_20170731.jar')
-    compile files('libs/AMap3DMap_5.7.0_AMapNavi_5.6.0_20180109.jar')
-    compile files('libs/AMap_Search_V5.7.0_20171229.jar')
     compile files('libs/Baidu_Mtj_3.8.2.1.jar')
     //    annotationProcessor 'com.github.jokermonn:permissions4m:1.0.2-processor'
     compile 'com.jakewharton:butterknife:8.7.0'
@@ -170,7 +167,7 @@ dependencies {
     //    compile 'com.zhy:okhttputils:2.0.0'
     testCompile 'junit:junit:4.12'
     //    annotationProcessor 'com.github.hotchemi:permissionsdispatcher-processor:2.1.2'
-//    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
+    //    compile 'com.tencent.mm.opensdk:wechat-sdk-android-with-mta:+'
     compile 'com.tencent.mm.opensdk:wechat-sdk-android-without-mta:+'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
@@ -188,4 +185,5 @@ dependencies {
     compile project(':ocr_ui')
     compile project(':pulltorefresh')
     compile 'me.jessyan:autosize:0.7.0'
+    compile files('libs/AMap3DMap_6.3.1_AMapNavi_6.2.0_AMapSearch_6.1.0_AMapTrack_1.0.0_AMapLocation_4.2.0_20180809.jar')
 }

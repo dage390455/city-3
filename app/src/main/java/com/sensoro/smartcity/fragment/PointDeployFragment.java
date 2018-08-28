@@ -153,7 +153,7 @@ public class PointDeployFragment extends BaseFragment<IPointDeployFragmentView,
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -339,7 +339,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     private void toastShort(String msg) {
-        SensoroToast.makeText(mContext, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     private void dismissInputMethodManager(View view) {

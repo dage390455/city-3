@@ -30,11 +30,11 @@ public class SensoroPopupTypeView extends LinearLayout implements RecycleViewIte
     private Context mContext;
     private RecyclerView mRecyclerView;
     private IndexFilterTypeAdapter mAdapter;
-    private View mPopupView;
     private SensoroShadowView mShadowLayout;
     private Animation showAnimation;
     private Animation dismissAnimation;
     private OnTypePopupItemClickListener mListener;
+
     public SensoroPopupTypeView(Context context) {
         super(context);
         this.mContext = context;
@@ -52,10 +52,10 @@ public class SensoroPopupTypeView extends LinearLayout implements RecycleViewIte
     }
 
     private void init() {
-        mPopupView = LayoutInflater.from(mContext).inflate(R.layout.layout_type_popup, this);
+        View rootView = LayoutInflater.from(mContext).inflate(R.layout.layout_type_popup, this);
         List<String> tempList = Arrays.asList(Constants.INDEX_TYPE_ARRAY);
         mAdapter = new IndexFilterTypeAdapter(mContext, tempList, this);
-        mRecyclerView = (RecyclerView)mPopupView.findViewById(R.id.index_type_popup_rv);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.index_type_popup_rv);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);
         mRecyclerView.setLayoutManager(gridLayoutManager);
         mRecyclerView.addItemDecoration(new SpacesItemDecoration(true, 0));

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -147,6 +148,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         if (mRootFragment != null) {
             mRootFragment = null;
         }
+        SensoroToast.INSTANCE.cancelToast();
         super.onDestroyView();
     }
 }

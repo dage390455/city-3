@@ -243,7 +243,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -115,7 +115,7 @@ public final class PermissionUtils {
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
                                     if (mNeedFinish) {
-                                        SensoroToast.makeText(mContext.get(), "需要权限！请重新打开应用", Toast.LENGTH_SHORT).show();
+                                        SensoroToast.INSTANCE.makeText(mContext.get(), "需要权限！请重新打开应用", Toast.LENGTH_SHORT).show();
                                         mContext.get().finish();
                                     }
                                 }

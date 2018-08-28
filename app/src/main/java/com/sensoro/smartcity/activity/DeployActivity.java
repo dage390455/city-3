@@ -338,7 +338,7 @@ public class DeployActivity extends BaseActivity<IDeployActivityView, DeployActi
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10).show();
+        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10).show();
     }
 
     @Override

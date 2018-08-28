@@ -20,6 +20,7 @@ import com.baidu.mobstat.StatService;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -84,6 +85,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     protected void onDestroy() {
         mPresenter.onDestroy();
         mPresenter.detachView();
+        SensoroToast.INSTANCE.cancelToast();
         super.onDestroy();
     }
 

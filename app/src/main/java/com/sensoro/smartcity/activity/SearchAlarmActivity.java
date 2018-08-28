@@ -237,7 +237,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
                 mPresenter.save(text.trim());
                 mPresenter.requestData(text.trim());
             } else {
-                SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                SensoroToast.INSTANCE.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                         .show();
             }
             return true;
@@ -302,7 +302,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

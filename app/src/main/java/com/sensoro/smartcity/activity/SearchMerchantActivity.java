@@ -174,7 +174,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String text = mKeywordEt.getText().toString();
             if (TextUtils.isEmpty(text)) {
-                SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                SensoroToast.INSTANCE.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                         .show();
             } else {
                 setClearKeywordIvVisible(true);
@@ -275,7 +275,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -7,26 +7,48 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 
 /**
  * Created by sensoro on 17/12/6.
  */
 
-public class SensoroToast {
-
+public enum SensoroToast {
+    INSTANCE;
     private Toast mToast;
+    private TextView textView;
 
-    private SensoroToast(Context context, CharSequence text, int duration) {
-        final View v = LayoutInflater.from(context).inflate(R.layout.layout_toast, null);
-        TextView textView = (TextView) v.findViewById(R.id.textView1);
-        textView.setText(text);
-        mToast = new Toast(context);
+    private void showToast(Context context, CharSequence content, int duration) {
+        if (mToast == null) {
+            mToast = new Toast(context);
+            final View v = LayoutInflater.from(context).inflate(R.layout.layout_toast, null);
+            textView = (TextView) v.findViewById(R.id.textView1);
+            mToast.setView(v);//设置自定义的view
+        }
         mToast.setDuration(duration);
-        mToast.setView(v);
+        textView.setText(content);//设置文本
     }
 
-    public static SensoroToast makeText(Context context, CharSequence text, int duration) {
-        return new SensoroToast(context, text, duration);
+
+    public void cancelToast() {
+        if (mToast != null) {
+            mToast.cancel();
+            mToast = null;
+            if (textView != null) {
+                textView.destroyDrawingCache();
+                textView = null;
+            }
+        }
+    }
+
+    public SensoroToast makeText(Context context, CharSequence text, int duration) {
+        showToast(context, text, duration);
+        return this;
+    }
+
+    public SensoroToast makeText(CharSequence text, int duration) {
+        showToast(SensoroCityApplication.getInstance().getApplicationContext(), text, duration);
+        return this;
     }
 
     public void show() {

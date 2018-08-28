@@ -189,7 +189,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
 
     @Override
     public void uncaughtException(Thread t, Throwable e) {
-        SensoroToast.makeText(SensoroCityApplication.this, "程序出错：" + t.getId() + "," + e.getMessage(),
+        SensoroToast.INSTANCE.makeText(SensoroCityApplication.this, "程序出错：" + t.getId() + "," + e.getMessage(),
                 Toast
                         .LENGTH_SHORT).show();
         android.os.Process.killProcess(android.os.Process.myPid());

@@ -185,7 +185,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mListAdapter = new IndexListAdapter(mActivity, this);
         mListRecyclerView.setAdapter(mListAdapter);
         mListRecyclerView.setLayoutManager(xLinearLayoutManager);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x15);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x8);
         mListRecyclerView.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         mListRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -235,7 +235,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         xGridLayoutManager = new SensoroXGridLayoutManager(mActivity, 3);
         mGridAdapter = new IndexGridAdapter(mActivity, this);
         mGridRecyclerView.setAdapter(mGridAdapter);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x15);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x8);
         mGridRecyclerView.setLayoutManager(xGridLayoutManager);
         mGridRecyclerView.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         mGridRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -668,7 +668,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String text = mKeywordEt.getText().toString();
             if (TextUtils.isEmpty(text)) {
-                SensoroToast.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                SensoroToast.INSTANCE.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                         .show();
                 return true;
             }
@@ -702,7 +702,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override

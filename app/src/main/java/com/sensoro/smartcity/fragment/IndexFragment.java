@@ -288,7 +288,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         mListRecyclerView.setAdapter(mListAdapter);
         mListRecyclerView.setLayoutManager(xLinearLayoutManager);
         mListRecyclerView.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
-        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x15);
+        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x8);
         mListRecyclerView.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         mListRecyclerView.setLoadingListener(new XRecyclerView.LoadingListener() {
             @Override
@@ -339,7 +339,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
         xGridLayoutManager = new SensoroXGridLayoutManager(mRootFragment.getContext(), 3);
         mGridAdapter = new IndexGridAdapter(mRootFragment.getContext(), this);
         mGridRecyclerView.setAdapter(mGridAdapter);
-        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x15);
+        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x8);
         mGridRecyclerView.setLayoutManager(xGridLayoutManager);
         mGridRecyclerView.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
         mGridRecyclerView.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
@@ -494,7 +494,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
