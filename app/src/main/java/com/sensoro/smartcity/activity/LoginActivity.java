@@ -79,7 +79,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);
         mPresenter.initData(mActivity);
-        LogUtils.loge("onCreateInit");
         // 避免从桌面启动程序后，会重新实例化入口类的activity
 
     }
@@ -167,14 +166,13 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private int scope_selectedIndex = 0;
 
     private void switchApi() {
-        final String[] urlArr = new String[]{"正式版", "Demo版"};
+        final String[] urlArr = new String[]{"正式版", "Demo版", "测试版"};
         SharedPreferences sp = getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
+        int urlType = 0;
         try {
-            boolean isDemo = sp.getBoolean(PREFERENCE_KEY_URL, false);
-            RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(isDemo);
-            if (isDemo) {
-                scope_selectedIndex = 1;
-            }
+            urlType = sp.getInt(PREFERENCE_KEY_URL, 0);
+            RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(urlType);
+            scope_selectedIndex = urlType;
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -270,10 +268,19 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     public void setLogButtonState(int which) {
-        if (which == 0) {
-            login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button));
-        } else {
-            login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_mocha));
+        switch (which) {
+            case 0:
+                login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button));
+                break;
+            case 1:
+                login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_demo));
+                break;
+            case 2:
+                login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button_test));
+                break;
+            default:
+                login_btn.setBackground(getResources().getDrawable(R.drawable.shape_button));
+                break;
         }
     }
 

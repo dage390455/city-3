@@ -32,8 +32,10 @@ public class ImageItem implements Serializable, Parcelable {
     @Override
     public boolean equals(Object o) {
         if (o instanceof ImageItem) {
+
             ImageItem item = (ImageItem) o;
             return this.path.equalsIgnoreCase(item.path) && this.addTime == item.addTime;
+//            return this.path.equalsIgnoreCase(item.path);
         }
 
         return super.equals(o);

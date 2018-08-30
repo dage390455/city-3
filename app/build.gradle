@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
-    def verName = "2.2.1"
+    def verName = "2.2.2"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
@@ -42,6 +42,12 @@ android {
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
                 GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A"
         ]
+        ndk {
+            moduleName "city"
+            //声明启用Android日志, 在c/c++的源文件中使用的#include <android/log.h> 日志将得到输出
+//            ldLibs "log"
+            abiFilters 'armeabi'    //只生成armeabi的so
+        }
     }
     buildTypes {
         debug {
@@ -147,11 +153,8 @@ dependencies {
     //
     compile project(':MPChartLib')
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    compile project(':libcityserver')
-    //    compile project(':xrecyclerview')
     compile 'com.jcodecraeer:xrecyclerview:1.5.9'
     compile project(':cosmocalendar')
-    //    compile project(':libpulltorefresh:pulltorefresh')
     compile project(':menudrawer')
     compile files('libs/Baidu_Mtj_3.8.2.1.jar')
     //    annotationProcessor 'com.github.jokermonn:permissions4m:1.0.2-processor'
@@ -162,7 +165,6 @@ dependencies {
     }
     compile 'de.hdodenhof:circleimageview:2.1.0'
     compile 'com.android.support:multidex:1.0.3'
-    compile 'com.squareup.okhttp:okhttp:2.4.0'
     //    compile 'com.squareup.okio:okio:1.5.0'
     //    compile 'com.zhy:okhttputils:2.0.0'
     testCompile 'junit:junit:4.12'
@@ -174,7 +176,6 @@ dependencies {
     //
     compile files('libs/GetuiSDK2.12.4.0.jar')
     compile project(':TagsEditText')
-    compile 'org.greenrobot:eventbus:3.1.1'
     //  更改扫描二维码为maven库
     compile 'cn.bingoogolapple:bga-qrcode-zxing:1.2.4'
     //
@@ -186,4 +187,16 @@ dependencies {
     compile project(':pulltorefresh')
     compile 'me.jessyan:autosize:0.7.0'
     compile files('libs/AMap3DMap_6.3.1_AMapNavi_6.2.0_AMapSearch_6.1.0_AMapTrack_1.0.0_AMapLocation_4.2.0_20180809.jar')
+    compile 'com.tencent.bugly:nativecrashreport:latest.release'
+    compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
+    //网络组件
+    compile 'com.squareup.retrofit2:retrofit:2.4.0'
+    compile 'com.squareup.retrofit2:converter-gson:2.4.0'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
+    compile 'io.reactivex:rxandroid:1.2.1'
+    compile 'com.squareup.retrofit2:adapter-rxjava:2.4.0'
+    compile 'com.squareup.okhttp3:logging-interceptor:3.10.0'
+    compile 'com.squareup.okhttp3:okhttp:3.10.0'
+    //消息组件
+    compile 'org.greenrobot:eventbus:3.1.1'
 }

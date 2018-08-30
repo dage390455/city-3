@@ -39,8 +39,8 @@ import java.util.Locale;
  * 2017-03-20
  *
  * @author nanchen
- *         采用单例和弱引用解决Intent传值限制导致的异常
- *         ================================================
+ * 采用单例和弱引用解决Intent传值限制导致的异常
+ * ================================================
  */
 public class ImagePicker {
 
@@ -52,6 +52,7 @@ public class ImagePicker {
     public static final int RESULT_CODE_BACK = 1005;
 
     public static final String EXTRA_RESULT_ITEMS = "extra_result_items";
+    public static final String EXTRA_RESULT_BY_TAKE_PHOTO = "extra_result_by_take_photo";
     public static final String EXTRA_SELECTED_IMAGE_POSITION = "selected_image_position";
     public static final String EXTRA_IMAGE_ITEMS = "extra_image_items";
     public static final String EXTRA_FROM_ITEMS = "extra_from_items";
@@ -256,7 +257,8 @@ public class ImagePicker {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         takePictureIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-            if (Utils.existSDCard()) takeImageFile = new File(Environment.getExternalStorageDirectory(), "/DCIM/camera/");
+            if (Utils.existSDCard())
+                takeImageFile = new File(Environment.getExternalStorageDirectory(), "/DCIM/camera/");
             else takeImageFile = Environment.getDataDirectory();
             takeImageFile = createFile(takeImageFile, "IMG_", ".jpg");
             if (takeImageFile != null) {

@@ -46,8 +46,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setTheme(R.style.MyTheme);
-        super.onCreate(savedInstanceState);
         mPresenter = createPresenter();
         mPresenter.attachView((V) this);
         V view = mPresenter.getView();
@@ -57,6 +55,8 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
             LogUtils.loge(this, "当前View转换异常！");
             mActivity = this;
         }
+        setTheme(R.style.MyTheme);
+        super.onCreate(savedInstanceState);
         //取消bar
         ActionBar supportActionBar = mActivity.getSupportActionBar();
         if (supportActionBar != null) {

@@ -14,7 +14,7 @@ public interface IMainView extends IToast, IProgressDialog, IActivityIntent {
 
     void setMenuSelected(int position);
 
-    void showUpdateAppDialog(String log, final String url);
+//    void showUpdateAppDialog(String log, final String url);
 
     void showAccountInfo(String name, String phone);
 

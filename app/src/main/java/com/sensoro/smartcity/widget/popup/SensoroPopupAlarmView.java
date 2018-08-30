@@ -39,6 +39,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+
 /**
  * Created by sensoro on 17/11/14.
  */
@@ -509,7 +511,10 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
             if (data != null && requestCode == REQUEST_CODE_SELECT) {
                 tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 if (tempImages != null) {
-                    selImageList.clear();
+                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
+                    if (!fromTakePhoto) {
+                        selImageList.clear();
+                    }
                     selImageList.addAll(tempImages);
                     adapter.setImages(selImageList);
                 }

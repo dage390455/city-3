@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+
 public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView> implements Constants {
 
     private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
@@ -140,7 +142,10 @@ public class DeployPhotoActivityPresenter extends BasePresenter<IDeployPhotoView
             if (data != null && requestCode == REQUEST_CODE_SELECT) {
                 tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 if (tempImages != null) {
-                    selImageList.clear();
+                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
+                    if (!fromTakePhoto) {
+                        selImageList.clear();
+                    }
                     selImageList.addAll(tempImages);
                     getView().updateImageList(selImageList);
                 }

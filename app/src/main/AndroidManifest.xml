@@ -243,7 +243,6 @@
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
         <provider
             android:name="com.igexin.download.DownloadProvider"
             android:authorities="downloads.${applicationId}"

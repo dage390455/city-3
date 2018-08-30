@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -36,6 +38,8 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
     private int mOutputY;
     private ArrayList<ImageItem> mImageItems;
     private ImagePicker imagePicker;
+    //新加删除原始裁剪保留的图片
+    private String originImagePath;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +63,8 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         mOutputY = imagePicker.getOutPutY();
         mIsSaveRectangle = imagePicker.isSaveRectangle();
         mImageItems = imagePicker.getSelectedImages();
-        String imagePath = mImageItems.get(0).path;
+        //TODO 破坏了原来的逻辑，以后需要编辑功能的时候，需要重新调整，只对在拍照页面采取删除原始文件
+        originImagePath = mImageItems.get(0).path;
 
         mCropImageView.setFocusStyle(imagePicker.getStyle());
         mCropImageView.setFocusWidth(imagePicker.getFocusWidth());
@@ -68,14 +73,14 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         //缩放图片
         BitmapFactory.Options options = new BitmapFactory.Options();
         options.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(imagePath, options);
+        BitmapFactory.decodeFile(originImagePath, options);
         DisplayMetrics displayMetrics = getResources().getDisplayMetrics();
         options.inSampleSize = calculateInSampleSize(options, displayMetrics.widthPixels, displayMetrics.heightPixels);
         options.inJustDecodeBounds = false;
-        mBitmap = BitmapFactory.decodeFile(imagePath, options);
+        mBitmap = BitmapFactory.decodeFile(originImagePath, options);
 //        mCropImageView.setImageBitmap(mBitmap);
         //设置默认旋转角度
-        mCropImageView.setImageBitmap(mCropImageView.rotate(mBitmap, BitmapUtil.getBitmapDegree(imagePath)));
+        mCropImageView.setImageBitmap(mCropImageView.rotate(mBitmap, BitmapUtil.getBitmapDegree(originImagePath)));
 
 //        mCropImageView.setImageURI(Uri.fromFile(new File(imagePath)));
     }
@@ -114,10 +119,22 @@ public class ImageCropActivity extends ImageBaseActivity implements View.OnClick
         ImageItem imageItem = new ImageItem();
         imageItem.path = file.getAbsolutePath();
         mImageItems.add(imageItem);
-
         Intent intent = new Intent();
+        //TODO 添加一条属性，项目更改为只有在拍照完之后才有编辑功能，此图片为拍照返回
+        intent.putExtra(ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO, true);
         intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, mImageItems);
         setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
+        //TODO 这里删除了原来的照片。破坏了原来的逻辑，以后需要编辑功能的时候，需要重新调整，只对在拍照页面采取删除原始文件
+        try {
+            if (!TextUtils.isEmpty(originImagePath)) {
+                File temp = new File(originImagePath);
+                boolean delete = temp.delete();
+                Log.e("ImageCropActivity", "onBitmapSaveSuccess: 删除原图片 ：" + delete);
+//                file.renameTo(temp);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         finish();
     }
 

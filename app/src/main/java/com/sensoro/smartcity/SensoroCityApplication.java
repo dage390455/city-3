@@ -1,11 +1,9 @@
 package com.sensoro.smartcity;
 
-import android.app.ActivityManager;
-import android.content.Context;
+import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
 import android.support.multidex.MultiDexApplication;
-import android.widget.Toast;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -17,7 +15,7 @@ import com.lzy.imagepicker.view.CropImageView;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
-import com.sensoro.smartcity.activity.LoginActivity;
+import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
@@ -25,9 +23,11 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
 import com.sensoro.smartcity.util.Repause;
-import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.popup.GlideImageLoader;
 import com.squareup.leakcanary.LeakCanary;
+import com.tencent.bugly.Bugly;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 
@@ -39,7 +39,7 @@ import java.util.List;
  * Created by sensoro on 17/7/24.
  */
 
-public class SensoroCityApplication extends MultiDexApplication implements Thread.UncaughtExceptionHandler, Repause
+public class SensoroCityApplication extends MultiDexApplication implements Repause
         .Listener, SensoroPushListener, OnResultListener<AccessToken> {
 
     private final List<DeviceInfo> mDeviceInfoList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
@@ -57,8 +57,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         super.onCreate();
         instance = this;
         init();
-        Thread.setDefaultUncaughtExceptionHandler(this);
-//        customAdaptForExternal();
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not initView your app in this process.
@@ -93,12 +91,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         return instance;
     }
 
-//    @Override
-//    protected void attachBaseContext(Context base) {
-//        super.attachBaseContext(base);
-//        MultiDex.install(base);
-//    }
-
     public void addData(List<DeviceInfo> list) {
         this.mDeviceInfoList.addAll(list);
     }
@@ -109,16 +101,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
 
     }
 
-    /**
-     * 在登录界面不推送
-     *
-     * @return
-     */
-    private boolean isNeedPush() {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return !name.equals(LoginActivity.class.getName());
-    }
 
     public List<DeviceInfo> getData() {
         return mDeviceInfoList;
@@ -151,6 +133,84 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         //
         initImagePicker();
         initUploadManager();
+        initBugLy();
+    }
+
+    private void initBugLy() {
+//  在这里设置strategy的属性，在bugly初始化时传入
+        CrashReport.UserStrategy strategy = new CrashReport.UserStrategy(getApplicationContext());
+        strategy.setAppChannel("master");  //设置渠道
+        strategy.setAppVersion(BuildConfig.VERSION_NAME);      //App的版本
+        strategy.setAppPackageName("com.sensoro.smartcity");  //App的包名
+        //
+        /**
+         * true表示app启动自动初始化升级模块;
+         * false不会自动初始化;
+         * 开发者如果担心sdk初始化影响app启动速度，可以设置为false，
+         * 在后面某个时刻手动调用Beta.init(getApplicationContext(),false);
+         */
+        Beta.autoInit = true;
+
+        /**
+         * true表示初始化时自动检查升级;
+         * false表示不会自动检查升级,需要手动调用Beta.checkUpgrade()方法;
+         */
+        Beta.autoCheckUpgrade = true;
+
+        /**
+         * 设置升级检查周期为60s(默认检查周期为0s)，60s内SDK不重复向后台请求策略);
+         */
+        Beta.upgradeCheckPeriod = 60 * 1000;
+
+        /**
+         * 设置启动延时为1s（默认延时3s），APP启动1s后初始化SDK，避免影响APP启动速度;
+         */
+        Beta.initDelay = 1 * 1000;
+
+        /**
+         * 设置通知栏大图标，largeIconId为项目中的图片资源;
+         */
+//        Beta.largeIconId = R.drawable.ic_launcher;
+
+        /**
+         * 设置状态栏小图标，smallIconId为项目中的图片资源Id;
+         */
+//        Beta.smallIconId = R.drawable.ic_launcher;
+
+        /**
+         * 设置更新弹窗默认展示的banner，defaultBannerId为项目中的图片资源Id;
+         * 当后台配置的banner拉取失败时显示此banner，默认不设置则展示“loading“;
+         */
+//        Beta.defaultBannerId = R.drawable.ic_launcher;
+
+        /**
+         * 设置sd卡的Download为更新资源保存目录;
+         * 后续更新资源会保存在此目录，需要在manifest中添加WRITE_EXTERNAL_STORAGE权限;
+         */
+        Beta.storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+
+        /**
+         * 点击过确认的弹窗在APP下次启动自动检查更新时会再次显示;
+         */
+        Beta.showInterruptedStrategy = true;
+        //
+        Beta.upgradeDialogLayoutId = R.layout.layout_upgrade_dialog;
+        /**
+         * 只允许在MainActivity上显示更新弹窗，其他activity上不显示弹窗;
+         * 不设置会默认所有activity都可以显示弹窗;
+         */
+        Beta.canShowUpgradeActs.add(MainActivity.class);
+        //设置是否显示消息通知
+        Beta.enableNotification = true;
+        //设置Wifi下自动下载
+        Beta.autoDownloadOnWifi = false;
+        //设置是否显示弹窗中的apk信息
+        Beta.canShowApkInfo = true;
+        //关闭热更新
+        Beta.enableHotfix = false;
+        // 统一初始化Bugly产品，包含Beta
+        Bugly.init(getApplicationContext(), "ab6c4abe4f", true, strategy);
+//        Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
     }
 
     private void initORC() {
@@ -185,14 +245,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Threa
         imagePicker.setFocusHeight(800);                      //裁剪框的高度。单位像素（圆形自动取宽高最小值）
         imagePicker.setOutPutX(1000);                         //保存文件的宽度。单位像素
         imagePicker.setOutPutY(1000);                         //保存文件的高度。单位像素
-    }
-
-    @Override
-    public void uncaughtException(Thread t, Throwable e) {
-        SensoroToast.INSTANCE.makeText(SensoroCityApplication.this, "程序出错：" + t.getId() + "," + e.getMessage(),
-                Toast
-                        .LENGTH_SHORT).show();
-        android.os.Process.killProcess(android.os.Process.myPid());
     }
 
     @Override

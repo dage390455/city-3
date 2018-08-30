@@ -30,9 +30,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle
             savedInstanceState) {
-        if (mRootView == null) {
-            mRootView = inflater.inflate(initRootViewId(), container, false);
-        }
         mPresenter = createPresenter();
         mPresenter.attachView((V) this);
         V view = mPresenter.getView();
@@ -41,6 +38,9 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         } else {
             LogUtils.loge(this, "当前View转换异常！");
             mRootFragment = this;
+        }
+        if (mRootView == null) {
+            mRootView = inflater.inflate(initRootViewId(), container, false);
         }
         unbinder = ButterKnife.bind(mPresenter.getView(), mRootView);
         LogUtils.logd("onCreateView");

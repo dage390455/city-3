@@ -72,14 +72,11 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 //        }
         SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_SCOPE, Context
                 .MODE_PRIVATE);
+        int urlType = 0;
         try {
-            boolean isDemo = sp.getBoolean(PREFERENCE_KEY_URL, false);
-            RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(isDemo);
-            if (isDemo) {
-                getView().setLogButtonState(1);
-            } else {
-                getView().setLogButtonState(0);
-            }
+            urlType = sp.getInt(PREFERENCE_KEY_URL, 0);
+            RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(urlType);
+            getView().setLogButtonState(urlType);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -88,14 +85,13 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     public void saveScopeData(int which) {
+        RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(which);
         getView().setLogButtonState(which);
-        RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(which != 0);
         SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_SCOPE, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
-        RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(which != 0);
-        editor.putBoolean(PREFERENCE_KEY_URL, which != 0);
-        editor.commit();
+        editor.putInt(PREFERENCE_KEY_URL, which);
+        editor.apply();
     }
 
     public void login(final String account, final String pwd) {

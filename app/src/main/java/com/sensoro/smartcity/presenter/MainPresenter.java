@@ -38,8 +38,8 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
-import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.util.LogUtils;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -222,35 +222,37 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     }
 
     private void requestUpdate() {
-        RetrofitServiceHelper.INSTANCE.getUpdateInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread()).subscribe(new CityObserver<UpdateRsp>() {
+        Beta.checkUpgrade(false,false);
 
-
-            @Override
-            public void onCompleted() {
-
-            }
-
-            @Override
-            public void onNext(UpdateRsp updateRsp) {
-                LogUtils.logd(this, "获取app升级ok========" + updateRsp.toString());
-                try {
-                    PackageInfo info = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
-                    if (info.versionCode < updateRsp.getVersion()) {
-                        String changelog = updateRsp.getChangelog();
-                        String install_url = updateRsp.getInstall_url();
-                        getView().showUpdateAppDialog(changelog, install_url);
-                    }
-                } catch (PackageManager.NameNotFoundException e) {
-                    e.printStackTrace();
-                }
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                LogUtils.loge(this, "app升级" + errorMsg);
-            }
-        });
+//        RetrofitServiceHelper.INSTANCE.getUpdateInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+//                .mainThread()).subscribe(new CityObserver<UpdateRsp>() {
+//
+//
+//            @Override
+//            public void onCompleted() {
+//
+//            }
+//
+//            @Override
+//            public void onNext(UpdateRsp updateRsp) {
+//                LogUtils.logd(this, "获取app升级ok========" + updateRsp.toString());
+//                try {
+//                    PackageInfo info = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
+//                    if (info.versionCode < updateRsp.getVersion()) {
+//                        String changelog = updateRsp.getChangelog();
+//                        String install_url = updateRsp.getInstall_url();
+//                        getView().showUpdateAppDialog(changelog, install_url);
+//                    }
+//                } catch (PackageManager.NameNotFoundException e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//
+//            @Override
+//            public void onErrorMsg(int errorCode, String errorMsg) {
+//                LogUtils.loge(this, "app升级" + errorMsg);
+//            }
+//        });
     }
 
 

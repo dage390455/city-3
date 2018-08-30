@@ -1,7 +1,5 @@
 package com.sensoro.smartcity.activity;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -164,20 +162,20 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
 
-    @Override
-    public void showUpdateAppDialog(String log, final String url) {
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setMessage(log);
-        builder.setTitle("版本更新");
-        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                mPresenter.updateApp(url);
-            }
-        });
-        builder.setPositiveButton("取消", null);
-        builder.create().show();
-    }
+//    @Override
+//    public void showUpdateAppDialog(String log, final String url) {
+//        final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+//        builder.setMessage(log);
+//        builder.setTitle("版本更新");
+//        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
+//            @Override
+//            public void onClick(DialogInterface dialog, int which) {
+//                mPresenter.updateApp(url);
+//            }
+//        });
+//        builder.setPositiveButton("取消", null);
+//        builder.create().show();
+//    }
 
     @Override
     public void showAccountInfo(String name, String phone) {
