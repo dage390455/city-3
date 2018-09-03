@@ -205,9 +205,9 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
 //        if (payloads.isEmpty()) {
 //            onBindViewHolder(holder, position);
 //        } else {
-//            DeviceInfo deviceInfo = mList.get(position);
-//            Map map = (Map) payloads.get(0);
-//            Object statusObj = map.get("status");
+//            DeviceInfo deviceInfo = mList.getInstance(position);
+//            Map map = (Map) payloads.getInstance(0);
+//            Object statusObj = map.getInstance("status");
 //            if (statusObj != null) {
 //                int status = (int) statusObj;
 //                setStatusColor(holder, status);
@@ -224,12 +224,12 @@ public class IndexListAdapter extends RecyclerView.Adapter<IndexListAdapter.Inde
 //                    holder.item_iv_status.setVisibility(View.INVISIBLE);
 //                }
 //            }
-//            Object nameObj = map.get("name");
+//            Object nameObj = map.getInstance("name");
 //            if (nameObj != null) {
 //                String name = (String) nameObj;
 //                holder.item_name.setText(name);
 //            }
-//            Object updateTimeObj = map.get("updateTime");
+//            Object updateTimeObj = map.getInstance("updateTime");
 //            if (updateTimeObj != null) {
 //                String updateTime = (String) updateTimeObj;
 //                holder.item_date.setText(updateTime);

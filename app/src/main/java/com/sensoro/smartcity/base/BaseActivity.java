@@ -195,7 +195,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         try {
             Class<?> systemPropertiesClass = Class.forName("android.os.SystemProperties");
-            Method m = systemPropertiesClass.getMethod("get", String.class);
+            Method m = systemPropertiesClass.getMethod("getInstance", String.class);
             String navBarOverride = (String) m.invoke(systemPropertiesClass, "qemu.hw.mainkeys");
             if ("1".equals(navBarOverride)) {
                 hasNavigationBar = false;

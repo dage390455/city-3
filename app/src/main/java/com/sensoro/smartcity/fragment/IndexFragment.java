@@ -116,9 +116,11 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     //
     public static IndexFragment newInstance(Character input) {
         IndexFragment indexFragment = new IndexFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(INPUT, input);
-        indexFragment.setArguments(args);
+        if (input != null) {
+            Bundle args = new Bundle();
+            args.putSerializable(INPUT, input);
+            indexFragment.setArguments(args);
+        }
         return indexFragment;
     }
 
@@ -170,6 +172,8 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     }
 
     public void initView() {
+        StatusBarCompat.setStatusBarColor(mRootFragment.getActivity(), mRootFragment.getResources().getColor(R
+                .color.sensoro_normal));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         collapsingToolbarLayout = (CollapsingToolbarLayout) mRootView.findViewById(R.id.toolbar_layout);
 //        mToolbar = (Toolbar) mRootView.findViewById(R.id.toolbar);
@@ -736,13 +740,14 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void refreshCityInfo() {
-        Character character = (Character) mRootFragment.getArguments().getSerializable(INPUT);
-        if (character != null) {
-            if (character.getShortName() != null) {
-                mTitleTextView.setText(character.isApply() ? character.getShortName() : mRootFragment.getString(R
-                        .string.city_name));
-            }
-        }
+        //TODO 暂时取消 有需求在扩展
+//        Character character = (Character) mRootFragment.getArguments().getSerializable(INPUT);
+//        if (character != null) {
+//            if (character.getShortName() != null) {
+//                mTitleTextView.setText(character.isApply() ? character.getShortName() : mRootFragment.getString(R
+//                        .string.city_name));
+//            }
+//        }
     }
 
     @Override
@@ -830,7 +835,9 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void reFreshDataByDirection(int direction) {
-        mPresenter.requestWithDirection(direction);
+        if (mPresenter != null) {
+            mPresenter.requestWithDirection(direction);
+        }
     }
 
     @Override
@@ -840,7 +847,9 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
 
     @Override
     public void requestTopData(boolean isFirstInit) {
-        mPresenter.requestTopData(isFirstInit);
+        if (mPresenter != null) {
+            mPresenter.requestTopData(isFirstInit);
+        }
     }
 
     @Override
@@ -942,11 +951,9 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     @Override
     public void onFragmentStart() {
         refreshCityInfo();
-        mPresenter.onHiddenChanged(true);
     }
 
     @Override
     public void onFragmentStop() {
-        mPresenter.onHiddenChanged(false);
     }
 }

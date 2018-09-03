@@ -11,10 +11,11 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchFragmentView;
+import com.sensoro.smartcity.model.EventLoginData;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
-import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
@@ -145,21 +146,34 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
             @Override
             public void onNext(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    UserInfo data = userAccountControlRsp.getData();
-                    String sessionID = data.getSessionID();
-                    RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
-                    String nickname = data.getNickname();
-                    String phone = data.getContacts();
+                    UserInfo userInfo = userAccountControlRsp.getData();
+                    GrantsInfo grants = userInfo.getGrants();
+
+                    String sessionID = userInfo.getSessionID();
+                    RetrofitServiceHelper.INSTANCE.saveSessionId(sessionID);
                     //
-                    String roles = data.getRoles();
+                    EventLoginData eventLoginData = new EventLoginData();
                     //
-                    String isSpecific = data.getIsSpecific();
+                    eventLoginData.userId = userInfo.get_id();
+                    eventLoginData.userName = userInfo.getNickname();
+                    eventLoginData.phone = userInfo.getContacts();
+                    eventLoginData.phoneId = phoneId;
+//            mCharacter = userInfo.getCharacter();
+                    eventLoginData.roles = userInfo.getRoles();
+                    eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(userInfo.getIsSpecific());
+                    eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
+                    eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
+                    eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
+
+//                    String nickname = data.getNickname();
+//                    String phone = data.getContacts();
+                    //
+//                    String roles = data.getRoles();
+                    //
+//                    String isSpecific = data.getIsSpecific();
                     //grantsInfo
-                    GrantsInfo grants = data.getGrants();
-                    ((MainActivity) mContext).changeAccount(nickname, phone, roles,
-                            MenuPageFactory.getIsSupperAccount(isSpecific), MenuPageFactory.getHasStationDeploy
-                                    (grants), MenuPageFactory.getHasContract(grants), MenuPageFactory.getHasScanLogin
-                                    (grants));
+                    //TODO 包装类
+                    ((MainActivity) mContext).changeAccount(eventLoginData);
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());
                 }

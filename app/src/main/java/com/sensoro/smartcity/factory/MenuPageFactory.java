@@ -3,6 +3,7 @@ package com.sensoro.smartcity.factory;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
 
@@ -36,21 +37,20 @@ public class MenuPageFactory {
     private static final MenuPageInfo scanLoginPage = new MenuPageInfo(R.string.menu_page_scan_login, R.mipmap
             .ic_menu_scan_login, MenuPageInfo.MENU_PAGE_SCAN_LOGIN);
 
-    public static List<MenuPageInfo> createMenuPageList(boolean isSuper, String roles, boolean hasStation, boolean
-            hasContract, boolean hasScanLogin) {
+    public static List<MenuPageInfo> createMenuPageList(EventLoginData eventLoginData) {
 //        hasContract = false;
 //        boolean hasScanLogin = true;
         ArrayList<MenuPageInfo> pageInfos = new ArrayList<>();
         //超级账户
-        if (isSuper) {
+        if (eventLoginData.isSupperAccount) {
             pageInfos.add(merchantPage);
             return pageInfos;
         } else {
             //商户账号
-            if (roles.equalsIgnoreCase("business")) {
-                if (hasStation) {
-                    if (hasContract) {
-                        if (hasScanLogin) {
+            if ("business".equalsIgnoreCase(eventLoginData.roles)) {
+                if (eventLoginData.hasStation) {
+                    if (eventLoginData.hasContract) {
+                        if (eventLoginData.hasScanLogin) {
                             pageInfos.add(indexPage);
                             pageInfos.add(alarmPage);
                             pageInfos.add(pointPage);
@@ -66,7 +66,7 @@ public class MenuPageFactory {
                         }
 
                     } else {
-                        if (hasScanLogin) {
+                        if (eventLoginData.hasScanLogin) {
                             pageInfos.add(indexPage);
                             pageInfos.add(alarmPage);
                             pageInfos.add(pointPage);
@@ -83,8 +83,8 @@ public class MenuPageFactory {
 
                     return pageInfos;
                 } else {
-                    if (hasContract) {
-                        if (hasScanLogin) {
+                    if (eventLoginData.hasContract) {
+                        if (eventLoginData.hasScanLogin) {
                             pageInfos.add(indexPage);
                             pageInfos.add(alarmPage);
                             pageInfos.add(pointPage);
@@ -98,7 +98,7 @@ public class MenuPageFactory {
                         }
 
                     } else {
-                        if (hasScanLogin) {
+                        if (eventLoginData.hasScanLogin) {
                             pageInfos.add(indexPage);
                             pageInfos.add(alarmPage);
                             pageInfos.add(pointPage);
@@ -115,9 +115,9 @@ public class MenuPageFactory {
                 }
             } else {
                 //管理员账号
-                if (hasStation) {
-                    if (hasContract) {
-                        if (hasScanLogin) {
+                if (eventLoginData.hasStation) {
+                    if (eventLoginData.hasContract) {
+                        if (eventLoginData.hasScanLogin) {
                             pageInfos.add(indexPage);
                             pageInfos.add(alarmPage);
                             pageInfos.add(merchantPage);
@@ -135,7 +135,7 @@ public class MenuPageFactory {
                         }
 
                     } else {
-                        if (hasScanLogin) {
+                        if (eventLoginData.hasScanLogin) {
                             pageInfos.add(indexPage);
                             pageInfos.add(alarmPage);
                             pageInfos.add(merchantPage);
@@ -154,8 +154,8 @@ public class MenuPageFactory {
 
                     return pageInfos;
                 } else {
-                    if (hasContract) {
-                        if (hasScanLogin) {
+                    if (eventLoginData.hasContract) {
+                        if (eventLoginData.hasScanLogin) {
                             pageInfos.add(indexPage);
                             pageInfos.add(alarmPage);
                             pageInfos.add(merchantPage);
@@ -171,7 +171,7 @@ public class MenuPageFactory {
                         }
 
                     } else {
-                        if (hasScanLogin) {
+                        if (eventLoginData.hasScanLogin) {
                             pageInfos.add(indexPage);
                             pageInfos.add(alarmPage);
                             pageInfos.add(merchantPage);

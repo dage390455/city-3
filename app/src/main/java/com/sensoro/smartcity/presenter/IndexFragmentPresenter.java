@@ -18,15 +18,16 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IIndexFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
+import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.LogUtils;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,17 +49,18 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     private final List<DeviceInfo> mDataList = new ArrayList<>();
     private final Handler mHandler = new Handler();
     private int page = 1;
-    private volatile boolean isAlarmPlay = false;
-    private volatile boolean isNeedRefresh = false;
+    private volatile boolean needAlarmPlay = false;
+    private volatile boolean needRefresh = false;
+    private volatile boolean needRefreshTop = false;
     private int mSoundId;
     private SoundPool mSoundPool;
-    private boolean mIsVisibleToUser = true;
-    //
-
     private int mTypeSelectedIndex = 0;
     private int mStatusSelectedIndex = 0;
 
     private Activity mContext;
+    private volatile int tempAlarmCount;
+    private volatile int tempLostCount;
+    private volatile int tempInactiveCount;
 
     @Override
     public void initData(Context context) {
@@ -246,9 +248,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
                 DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
                 if (deviceInfo.getSn().equals(newDeviceInfo.getSn())) {
-                    if (newDeviceInfo.getStatus() == SENSOR_STATUS_ALARM && deviceInfo.getStatus() != SENSOR_STATUS_ALARM) {
-                        isAlarmPlay = true;
-                    }
                     newDeviceInfo.setPushDevice(true);
                     SensoroCityApplication.getInstance().getData().set(i, newDeviceInfo);
                     isContains = true;
@@ -256,14 +255,10 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                 }
             }
             if (!isContains) {
-                if (newDeviceInfo.getStatus() == SENSOR_STATUS_ALARM) {
-                    isAlarmPlay = true;
-                }
                 newDeviceInfo.setNewDevice(true);
                 newDeviceInfo.setPushDevice(true);
                 SensoroCityApplication.getInstance().getData().add(newDeviceInfo);
             }
-            isNeedRefresh = true;
         }
     }
 
@@ -382,9 +377,10 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             ThreadPoolManager.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
-                    if (isNeedRefresh) {
+                    if (needRefresh) {
                         Log.d("scheduleRefresh", "run: 刷新数据！");
                         scheduleRefresh();
+                        needRefresh = false;
                     }
                     mHandler.postDelayed(mTask, 3000);
                 }
@@ -500,25 +496,24 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         Collections.sort(mDataList);
         //推送数据
         PushData pushData = new PushData();
-        pushData.setAlarmStatus(isAlarmPlay);
         pushData.setDeviceInfoList(mDataList);
         EventBus.getDefault().post(pushData);
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                //只在主页可见出现的时候刷新
-                if (mIsVisibleToUser) {
-                    requestTopData(false);
-                    getView().refreshData(mDataList);
+                //TODO 去掉只在主页可见出现的时候刷新
+                getView().refreshData(mDataList);
+                if (needRefreshTop) {
+                    getView().refreshTop(false, tempAlarmCount, tempLostCount, tempInactiveCount);
+                    needRefreshTop = false;
                 }
-                //播放音乐
-                if (isAlarmPlay) {
+                if (needAlarmPlay) {
                     playSound();
-                    isAlarmPlay = false;
+                    needAlarmPlay = false;
                 }
             }
         });
-        isNeedRefresh = false;
+
         LogUtils.logd("new dataList = " + mDataList.size());
     }
 
@@ -542,20 +537,32 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         getView().startAC(intent);
     }
 
-    public void onHiddenChanged(boolean hidden) {
-        mIsVisibleToUser = hidden;
-    }
-
     //子线程处理
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         //TODO 后台线程处理消息
         int code = eventData.code;
         Object data = eventData.data;
-        if (code == EVENT_DATA_SOCKET_DATA) {
+        if (code == EVENT_DATA_SOCKET_DATA_INFO) {
             if (data instanceof DeviceInfo) {
                 LogUtils.loge("new SN = " + ((DeviceInfo) data).getSn());
                 organizeJsonData((DeviceInfo) data);
+                needRefresh = true;
+            }
+        } else if (code == EVENT_DATA_SOCKET_DATA_COUNT) {
+            if (data instanceof AlarmDeviceCountsBean) {
+                AlarmDeviceCountsBean alarmDeviceCountsBean = (AlarmDeviceCountsBean) data;
+                LogUtils.loge(this, alarmDeviceCountsBean.toString());
+                int currentAlarmCount = alarmDeviceCountsBean.get_$0();
+                if (tempAlarmCount == 0 && currentAlarmCount > 0) {
+                    needAlarmPlay = true;
+                }
+                tempAlarmCount = currentAlarmCount;
+                int normalCount = alarmDeviceCountsBean.get_$1();
+                tempLostCount = alarmDeviceCountsBean.get_$2();
+                tempInactiveCount = alarmDeviceCountsBean.get_$3();
+                needRefresh = true;
+                needRefreshTop = true;
             }
         }
     }

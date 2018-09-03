@@ -18,6 +18,7 @@ public interface Constants {
     int REQUEST_CODE_PREVIEW = 101;
     //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
+    String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
@@ -107,6 +108,9 @@ public interface Constants {
     };
     String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
     String EXTRA_USER_ID = "extra_user_id";
+    //
+    String EXTRA_SAVE_NAME = "extra_save_name";
+    String EXTRA_SAVE_PWD = "extra_save_pwd";
     String EXTRA_USER_NAME = "extra_user_name";
     String EXTRA_USER_ROLES = "extra_user_roles";
     String EXTRA_PHONE = "extra_phone";
@@ -153,8 +157,11 @@ public interface Constants {
     //
     String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";
     //
-    String PREFERENCE_LOGIN = "preference_login";
+    String PREFERENCE_LOGIN_ID = "preference_login_id";
+    String PREFERENCE_LOGIN_NAME_PWD = "preference_login_name_pwd";
+    String PREFERENCE_SPLASH_LOGIN_DATA = "preference_main_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
+    String PREFERENCE_KEY_SESSION_ID = "preference_key_session_id";
     String PREFERENCE_KEY_PASSWORD = "preference_key_password";
 
     String PREFERENCE_KEY_START_TIME = "preference_key_start_time";
@@ -182,8 +189,7 @@ public interface Constants {
     String EXTRA_SEARCH_CONTENT = "extra_search_content";
     //
     int EVENT_DATA_FINISH_CODE = 0x13;
-    int EVENT_DATA_SOCKET_DATA = 0x14;
-
+    int EVENT_DATA_SOCKET_DATA_INFO = 0x14;
     int EVENT_DATA_DEPLOY_RESULT_FINISH = 0x15;
 
     int EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS = 0x16;
@@ -200,4 +206,6 @@ public interface Constants {
     int EVENT_DATA_ALARM_DETAIL_RESULT = 0x23;
 
     int EVENT_DATA_SEARCH_ALARM_RESULT = 0x24;
+    int EVENT_DATA_SOCKET_DATA_COUNT = 0x25;
+    int EVENT_DATA_SESSION_ID_OVERTIME = 0x26;
 }

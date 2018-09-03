@@ -18,6 +18,7 @@ import com.sensoro.smartcity.adapter.MainPagerAdapter;
 import com.sensoro.smartcity.adapter.MenuInfoAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMainView;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -52,17 +53,28 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         initWidget();
-        mPresenter.checkPush();
         mPresenter.initData(mActivity);
-        mPresenter.freshAccountType();
-        mPresenter.onCreate();
-        mPresenter.setAppVersion();
     }
+    //避免activity多次启动
+//    private void checkActivity() {
+//        if (!this.isTaskRoot()) {
+//            Intent intent = getIntent();
+//            if (intent != null) {
+//                String action = intent.getAction();
+//                if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)) {
+//                    finishAc();
+//                    return;
+//                }
+//            }
+//        }
+//    }
+
 
     @Override
     protected void onStart() {
         super.onStart();
         setLeftMenuExitButtonState();
+        mPresenter.setAppVersion();
     }
 
     @Override
@@ -120,7 +132,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         return super.onKeyDown(keyCode, event);
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         closeMenu();
@@ -128,10 +139,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPresenter.clickMenuItem((int) mMenuInfoAdapter.getItemId(position));
     }
 
-
-//    public SensoroPager getSensoroPager() {
-//        return sensoroPager;
-//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -162,21 +169,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
 
-//    @Override
-//    public void showUpdateAppDialog(String log, final String url) {
-//        final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-//        builder.setMessage(log);
-//        builder.setTitle("版本更新");
-//        builder.setNegativeButton("确定", new DialogInterface.OnClickListener() {
-//            @Override
-//            public void onClick(DialogInterface dialog, int which) {
-//                mPresenter.updateApp(url);
-//            }
-//        });
-//        builder.setPositiveButton("取消", null);
-//        builder.create().show();
-//    }
-
     @Override
     public void showAccountInfo(String name, String phone) {
         mNameTextView.setText(TextUtils.isEmpty(name) ? "" : name);
@@ -194,9 +186,8 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void changeAccount(String useName, String phone, String roles, boolean isSpecific, boolean isStation,
-                              boolean hasContract, boolean hasScanLogin) {
-        mPresenter.changeAccount(useName, phone, roles, isSpecific, isStation, hasContract, hasScanLogin);
+    public void changeAccount(EventLoginData eventLoginData) {
+        mPresenter.changeAccount(eventLoginData);
     }
 
     @Override
@@ -213,15 +204,17 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
      * 检查是否全面屏
      */
     private void setLeftMenuExitButtonState() {
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-        if (WidgetUtil.navigationBarExist(mActivity)) {
-            params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.navigation_bar_exist));
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
-        } else {
-            params.setMargins(0, 0, 0, 0);
-            params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
+        if (mExitLayout != null) {
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
+            if (WidgetUtil.navigationBarExist(mActivity)) {
+                params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.navigation_bar_exist));
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
+            } else {
+                params.setMargins(0, 0, 0, 0);
+                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
+            }
+            mExitLayout.setLayoutParams(params);
         }
-        mExitLayout.setLayoutParams(params);
     }
 
     @Override

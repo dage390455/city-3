@@ -127,7 +127,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
 //            List<DeviceAlarmLogInfo> tempList = new ArrayList<>();
 //            String typeArray[] = type.split(",");
 //            for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
-//                DeviceAlarmLogInfo alarmLogInfo = mDeviceAlarmLogInfoList.get(i);
+//                DeviceAlarmLogInfo alarmLogInfo = mDeviceAlarmLogInfoList.getInstance(i);
 //                String alarmType = alarmLogInfo.getSensorType();
 //                boolean isContains = Arrays.asList(typeArray).contains(alarmType);
 //                if (isContains) {

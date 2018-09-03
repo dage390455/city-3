@@ -38,6 +38,7 @@ public class UserInfo implements Serializable {
     }
 
     private GrantsInfo grants;
+
     public String getIsSpecific() {
         return isSpecific;
     }

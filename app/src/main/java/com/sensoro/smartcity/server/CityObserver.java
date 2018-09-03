@@ -1,6 +1,10 @@
 package com.sensoro.smartcity.server;
 
 
+import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.util.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -12,6 +16,8 @@ import java.util.concurrent.TimeoutException;
 
 import retrofit2.HttpException;
 import rx.Observer;
+
+import static com.sensoro.smartcity.constant.Constants.EVENT_DATA_SESSION_ID_OVERTIME;
 
 public abstract class CityObserver<T> implements Observer<T> {
     public static int ERR_CODE_NET_CONNECT_EX = -0x01;
@@ -30,6 +36,7 @@ public abstract class CityObserver<T> implements Observer<T> {
         } else if (e instanceof HttpException) {
             HttpException httpException = (HttpException) e;
             int code = httpException.response().code();
+            //sessionID过期统一处理
             String responseMsg = httpException.response().toString();
             try {
                 String errorBody = httpException.response().errorBody().string();
@@ -39,6 +46,11 @@ public abstract class CityObserver<T> implements Observer<T> {
                     String log = jsonObject.toString();
                     LogUtils.loge(this, "onError = " + log);
                     int errcode = jsonObject.getInt("errcode");
+                    if (errcode == 4000002) {
+                        EventData eventData = new EventData();
+                        eventData.code = EVENT_DATA_SESSION_ID_OVERTIME;
+                        EventBus.getDefault().post(eventData);
+                    }
                     String errinfo = jsonObject.getString("errinfo");
                     onErrorMsg(errcode, errinfo);
                 } catch (JSONException e1) {

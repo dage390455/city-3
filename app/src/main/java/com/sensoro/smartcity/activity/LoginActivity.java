@@ -3,10 +3,8 @@ package com.sensoro.smartcity.activity;
 import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.TextUtils;
@@ -33,15 +31,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_KEY_URL;
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_SCOPE;
-
 /**
  * Created by sensoro on 17/7/24.
  */
 
-public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView,
-        PermissionsResultObserve {
+public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView, PermissionsResultObserve {
 
     @BindView(R.id.login_email)
     EditText accountEt;
@@ -69,45 +63,15 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     };
     private PermissionUtils mPermissionUtils;
 
-
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        checkActivity();
         setContentView(R.layout.activity_login);
         ButterKnife.bind(mActivity);
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);
-        mPresenter.initData(mActivity);
-        // 避免从桌面启动程序后，会重新实例化入口类的activity
-
-    }
-
-    //避免activity多次启动
-    private void checkActivity() {
-        if (!this.isTaskRoot()) {
-            Intent intent = getIntent();
-            if (intent != null) {
-                String action = intent.getAction();
-                if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)) {
-                    finishAc();
-                    return;
-                }
-            }
-        }
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
     }
-
-    @Override
-    protected LoginPresenter createPresenter() {
-        return new LoginPresenter();
-    }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -116,7 +80,21 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                 FORCE_REQUIRE_PERMISSIONS);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPermissionUtils.onActivityResult(requestCode, resultCode, data, MY_REQUEST_PERMISSION_CODE);
+    }
+
+
+    @Override
+    protected LoginPresenter createPresenter() {
+        return new LoginPresenter();
+    }
+
+
     private long[] mHits = new long[7]; // 数组长度代表点击次数
+    private boolean isShowPasswordDialog = true;
 
     @OnClick(R.id.login_logo)
     public void showSwitchApi() {
@@ -128,54 +106,51 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     }
 
     private void showPasswordDialog() {
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        View view = View.inflate(mActivity, R.layout.dialog_input, null);
-        builder.setView(view);
-        builder.setCancelable(true);
-        final EditText input_edt = (EditText) view
-                .findViewById(R.id.dialog_edit);//输入内容
-        Button btn_cancel = (Button) view
-                .findViewById(R.id.btn_cancel);//取消按钮
-        Button btn_confirm = (Button) view
-                .findViewById(R.id.btn_confirm);//确定按钮
-        //取消或确定按钮监听事件处理
-        final AlertDialog dialog = builder.create();
-        dialog.setCanceledOnTouchOutside(false);
-        dialog.show();
-        btn_confirm.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String str = input_edt.getText().toString();
-                if (str.equals("SENSORO")) {
-                    switchApi();
-                } else {
-                    toastLong("密码错误！");
+        if (isShowPasswordDialog) {
+            final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+            View view = View.inflate(mActivity, R.layout.dialog_input, null);
+            builder.setView(view);
+            builder.setCancelable(true);
+            final EditText input_edt = (EditText) view
+                    .findViewById(R.id.dialog_edit);//输入内容
+            Button btn_cancel = (Button) view
+                    .findViewById(R.id.btn_cancel);//取消按钮
+            Button btn_confirm = (Button) view
+                    .findViewById(R.id.btn_confirm);//确定按钮
+            //取消或确定按钮监听事件处理
+            final AlertDialog dialog = builder.create();
+            dialog.setCanceledOnTouchOutside(false);
+            dialog.show();
+            btn_confirm.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String str = input_edt.getText().toString();
+                    if (str.equals("SENSORO")) {
+                        switchApi();
+                    } else {
+                        toastLong("密码错误！");
+                    }
+                    dialog.cancel();
+                    isShowPasswordDialog = true;
                 }
-                dialog.cancel();
-            }
-        });
-        btn_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                dialog.cancel();
-            }
-        });
+            });
+            btn_cancel.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    isShowPasswordDialog = true;
+                    dialog.cancel();
+                }
+            });
+        }
+        isShowPasswordDialog = false;
     }
 
     private int scope_selectedIndex = 0;
 
     private void switchApi() {
         final String[] urlArr = new String[]{"正式版", "Demo版", "测试版"};
-        SharedPreferences sp = getSharedPreferences(PREFERENCE_SCOPE, Context.MODE_PRIVATE);
-        int urlType = 0;
-        try {
-            urlType = sp.getInt(PREFERENCE_KEY_URL, 0);
-            RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(urlType);
-            scope_selectedIndex = urlType;
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        //
+        scope_selectedIndex = RetrofitServiceHelper.INSTANCE.getBaseUrlType();
         Dialog alertDialog = new AlertDialog.Builder(mActivity).
                 setTitle("环境切换")
                 .setSingleChoiceItems(urlArr, scope_selectedIndex, new DialogInterface.OnClickListener() {
@@ -207,28 +182,11 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        mPermissionUtils.onActivityResult(requestCode, resultCode, data, MY_REQUEST_PERMISSION_CODE);
-    }
-
-    @Override
     protected void onDestroy() {
-        mProgressUtils.destroyProgress();
         mPermissionUtils.unregisterObserver(this);
+        mProgressUtils.destroyProgress();
         LogUtils.loge("onDestroy");
         super.onDestroy();
-    }
-
-    @Override
-    public void onPermissionGranted() {
-        mPresenter.initPushSDK();
-        LogUtils.logd(this, "onPermissionGranted: 权限获取完毕 ");
-    }
-
-    @Override
-    public void onPermissionDenied() {
-        //TODO 非必要权限
     }
 
     @Override
@@ -307,6 +265,16 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     public void setIntentResult(int resultCode, Intent data) {
+
+    }
+
+    @Override
+    public void onPermissionGranted() {
+        mPresenter.initData(mActivity);
+    }
+
+    @Override
+    public void onPermissionDenied() {
 
     }
 }

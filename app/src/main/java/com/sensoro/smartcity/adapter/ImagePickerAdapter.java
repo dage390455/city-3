@@ -58,7 +58,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
 //    public void removeImage(int position) {
 ////        mData = new ArrayList<>(data);
-//        ImageItem imageItem = mData.get(position);
+//        ImageItem imageItem = mData.getInstance(position);
 //        Iterator<ImageItem> iterator = mData.iterator();
 //        while (iterator.hasNext()) {
 //            ImageItem next = iterator.next();

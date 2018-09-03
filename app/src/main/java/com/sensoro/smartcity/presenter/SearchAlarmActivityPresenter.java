@@ -326,9 +326,9 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
 //                        StringBuffer stringBuffer = new StringBuffer();
 //                        for (int i = 0; i < list.size(); i++) {
 //                            if (i == (list.size() - 1)) {
-//                                stringBuffer.append(list.get(i));
+//                                stringBuffer.append(list.getInstance(i));
 //                            } else {
-//                                stringBuffer.append(list.get(i) + ",");
+//                                stringBuffer.append(list.getInstance(i) + ",");
 //                            }
 //                        }
 //                        mEditor.putString(PREFERENCE_KEY_DEVICE_NAME, stringBuffer.toString());

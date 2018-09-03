@@ -279,7 +279,7 @@ public class CalendarSelector extends SingleMonthSelector {
     }
 
     /**
-     * get the first selected day
+     * getInstance the first selected day
      * @return the first selected day, may be null
      */
     public FullDay getStartDay(){
@@ -287,7 +287,7 @@ public class CalendarSelector extends SingleMonthSelector {
     }
 
     /**
-     * get the last selected day
+     * getInstance the last selected day
      * @return the last selected day, may be null
      */
     public FullDay getEndDay(){

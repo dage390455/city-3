@@ -108,7 +108,7 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
 //            Intent intent = new Intent();
 //            if (response.getData().size() > 0) {
 //                intent.setClass(mContext, DeployActivity.class);
-//                intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
+//                intent.putExtra(EXTRA_DEVICE_INFO, response.getData().getInstance(0));
 //                intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
 //                intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
 //                getView().startACForResult(intent, REQUEST_CODE_STATION_DEPLOY);

@@ -280,9 +280,9 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
 //                    StringBuffer stringBuilder = new StringBuffer();
 //                    for (int i = 0; i < tempList.size(); i++) {
 //                        if (i == (tempList.size() - 1)) {
-//                            stringBuilder.append(tempList.get(i));
+//                            stringBuilder.append(tempList.getInstance(i));
 //                        } else {
-//                            stringBuilder.append(tempList.get(i) + ",");
+//                            stringBuilder.append(tempList.getInstance(i) + ",");
 //                        }
 //                    }
 //                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
@@ -301,9 +301,9 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
 //                    StringBuffer stringBuilder = new StringBuffer();
 //                    for (int i = 0; i < tempList.size(); i++) {
 //                        if (i == (tempList.size() - 1)) {
-//                            stringBuilder.append(tempList.get(i));
+//                            stringBuilder.append(tempList.getInstance(i));
 //                        } else {
-//                            stringBuilder.append(tempList.get(i) + ",");
+//                            stringBuilder.append(tempList.getInstance(i) + ",");
 //                        }
 //                    }
 //                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());

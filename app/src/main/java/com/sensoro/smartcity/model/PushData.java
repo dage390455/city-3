@@ -5,16 +5,6 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import java.util.List;
 
 public class PushData {
-    public boolean isAlarmStatus() {
-        return isAlarmStatus;
-    }
-
-    public void setAlarmStatus(boolean alarmStatus) {
-        isAlarmStatus = alarmStatus;
-    }
-
-    private boolean isAlarmStatus;
-
     public List<DeviceInfo> getDeviceInfoList() {
         return deviceInfoList;
     }
@@ -27,6 +17,6 @@ public class PushData {
 
     @Override
     public String toString() {
-        return "isAlarmStatus = " + isAlarmStatus + "，deviceInfoList = " + deviceInfoList.size();
+        return "deviceInfoList = " + deviceInfoList.size();
     }
 }

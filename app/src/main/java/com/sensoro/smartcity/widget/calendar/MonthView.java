@@ -374,7 +374,7 @@ public class MonthView extends FrameLayout {
     }
 
     /**
-     * get the last row current month day count
+     * getInstance the last row current month day count
      */
     public int getCurrentMonthLastRowDayCount() {
         FullDay[] fullDayArr = scMonth.getMonthDays()[realRowCount - 1];
@@ -387,7 +387,7 @@ public class MonthView extends FrameLayout {
     }
 
     /**
-     * get the last horizontal decor
+     * getInstance the last horizontal decor
      */
     public View getLastHorizontalDecor() {
         if (horizontalDecors.size() >= realRowCount - 1)

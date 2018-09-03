@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
@@ -27,18 +26,17 @@ import com.sensoro.smartcity.fragment.ScanLoginFragment;
 import com.sensoro.smartcity.fragment.StationDeployFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
+import com.sensoro.smartcity.model.DeviceAlarmCount;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.model.MenuPageInfo;
-import com.sensoro.smartcity.push.SensoroPushIntentService;
-import com.sensoro.smartcity.push.SensoroPushService;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.Character;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.GrantsInfo;
-import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -60,13 +58,6 @@ import rx.schedulers.Schedulers;
 public class MainPresenter extends BasePresenter<IMainView> implements Constants, IOnCreate {
     private Activity mActivity;
     private long exitTime = 0;
-    private String mUserName = null;
-    private String mPhone = null;
-    private String mPhoneId = null;
-    private volatile boolean mIsSupperAccount;
-    private String roles;
-
-
     private final List<Fragment> fragmentList = new ArrayList<>();
     //
     private IndexFragment indexFragment = null;
@@ -79,13 +70,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     //
     private volatile Socket mSocket = null;
     private final DeviceInfoListener mInfoListener = new DeviceInfoListener();
+    private final DeviceAlarmCountListener mAlarmCountListener = new DeviceAlarmCountListener();
 
     private final Handler mHandler = new Handler();
     private final TaskRunnable mRunnable = new TaskRunnable();
     //
-    private boolean hasStation = false;
-    private boolean hasContract = false;
-    private boolean hasScanLogin = false;
+    private EventLoginData mEventLoginData;
 
     /**
      * 超级用户
@@ -93,50 +83,28 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
      * @return
      */
     public boolean isSupperAccount() {
-        return mIsSupperAccount;
+        return mEventLoginData != null && mEventLoginData.isSupperAccount;
     }
 
     public String getRoles() {
-        return roles;
-    }
-
-    public void checkPush() {
-        boolean pushTurnedOn = PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance());
-        LogUtils.logd(this, "checkPush: " + pushTurnedOn);
-        if (!pushTurnedOn) {
-            PushManager.getInstance().initialize(SensoroCityApplication.getInstance(), SensoroPushService.class);
-            // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
-            // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
-            // IntentService, 必须在 AndroidManifest 中声明)
-            PushManager.getInstance().registerPushIntentService(SensoroCityApplication.getInstance(),
-                    SensoroPushIntentService
-                            .class);
+        if (mEventLoginData != null) {
+            return mEventLoginData.roles;
         }
+        return "";
     }
-
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        //
-        mUserName = mActivity.getIntent().getStringExtra(EXTRA_USER_NAME);
-        mPhone = mActivity.getIntent().getStringExtra(EXTRA_PHONE);
-        mPhoneId = mActivity.getIntent().getStringExtra(EXTRA_PHONE_ID);
-        Character character = (Character) mActivity.getIntent().getSerializableExtra(EXTRA_CHARACTER);
-        roles = mActivity.getIntent().getStringExtra(EXTRA_USER_ROLES);
-        mIsSupperAccount = mActivity.getIntent().getBooleanExtra(EXTRA_IS_SPECIFIC, false);
-        hasStation = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_STATION, false);
-        hasContract = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_CONTRACT, false);
-        hasScanLogin = mActivity.getIntent().getBooleanExtra(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
-        //
-        indexFragment = IndexFragment.newInstance(character);
+        onCreate();
+        Beta.init(mActivity.getApplicationContext(), false);
+        indexFragment = IndexFragment.newInstance(null);
         alarmListFragment = AlarmListFragment.newInstance("alarm");
         merchantSwitchFragment = MerchantSwitchFragment.newInstance("merchant");
         pointDeployFragment = PointDeployFragment.newInstance("point");
         stationDeployFragment = StationDeployFragment.newInstance("station");
         contractFragment = ContractFragment.newInstance("contract");
         scanLoginFragment = ScanLoginFragment.newInstance("scanLogin");
-
         //
         fragmentList.add(indexFragment);
         fragmentList.add(alarmListFragment);
@@ -146,36 +114,46 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         fragmentList.add(scanLoginFragment);
         fragmentList.add(contractFragment);
         getView().updateMainPageAdapterData(fragmentList);
-        getView().showAccountInfo(mUserName, mPhone);
-        mHandler.postDelayed(mRunnable, 3000L);
+        mEventLoginData = (EventLoginData) mActivity.getIntent().getSerializableExtra("eventLoginData");
+        //
+        if (null != mEventLoginData) {
+            //赋值
+            LogUtils.loge("onDataEvent ---->>>" + mEventLoginData.toString());
+            getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
+            if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
+                PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
+            }
+            mHandler.postDelayed(mRunnable, 3000L);
+            freshAccountType();
+        } else {
+            openLogin();
+        }
+        LogUtils.loge(this, "initData");
     }
 
-    public void changeAccount(String userName, String phone, String roles, boolean isSpecific, boolean hasStation,
-                              boolean hasContract, boolean hasScanLogin) {
-        this.mUserName = userName;
-        this.mPhone = phone;
-        this.mIsSupperAccount = isSpecific;
-        this.roles = roles;
-        this.hasStation = hasStation;
-        this.hasContract = hasContract;
-        this.hasScanLogin = hasScanLogin;
+
+    //没有登录跳转登录界面
+    private void openLogin() {
+        Intent loginIntent = new Intent();
+        loginIntent.setClass(mActivity, LoginActivity.class);
+        getView().startAC(loginIntent);
+        getView().finishAc();
+    }
+
+    public void changeAccount(EventLoginData eventLoginData) {
+        mEventLoginData = eventLoginData;
         //
-        getView().showAccountInfo(userName, phone);
+        PreferencesHelper.getInstance().saveUserData(eventLoginData);
+        getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
         if (indexFragment != null) {
-            if (isSpecific) {
+            if (mEventLoginData.isSupperAccount) {
                 merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
             } else {
-                mHandler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-                        indexFragment.requestTopData(true);
-                    }
-                });
+                indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
+                indexFragment.requestTopData(true);
             }
             //
-            getView().updateMenuPager(MenuPageFactory.createMenuPageList(isSpecific, roles, hasStation,
-                    hasContract, hasScanLogin));
+            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
             getView().setCurrentPagerItem(0);
             getView().setMenuSelected(0);
             reconnect();
@@ -199,8 +177,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     /**
      * 简单判断账户类型
      */
-    public void freshAccountType() {
-        if (mIsSupperAccount) {
+    private void freshAccountType() {
+        if (isSupperAccount()) {
             getView().setCurrentPagerItem(2);
         } else {
             getView().setCurrentPagerItem(0);
@@ -210,49 +188,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mIsSupperAccount, roles, hasStation,
-                        hasContract, hasScanLogin));
-                if (mIsSupperAccount) {
+                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
+                if (mEventLoginData.isSupperAccount) {
                     merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
+                } else {
+                    indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
+//                    indexFragment.requestTopData(true);
                 }
-                merchantSwitchFragment.refreshData(mUserName, (mPhone == null ? "" : mPhone), mPhoneId);
+                merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
                 getView().setMenuSelected(0);
             }
-        }, 50);
+        }, 100);
     }
 
     private void requestUpdate() {
-        Beta.checkUpgrade(false,false);
-
-//        RetrofitServiceHelper.INSTANCE.getUpdateInfo().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-//                .mainThread()).subscribe(new CityObserver<UpdateRsp>() {
-//
-//
-//            @Override
-//            public void onCompleted() {
-//
-//            }
-//
-//            @Override
-//            public void onNext(UpdateRsp updateRsp) {
-//                LogUtils.logd(this, "获取app升级ok========" + updateRsp.toString());
-//                try {
-//                    PackageInfo info = mActivity.getPackageManager().getPackageInfo(mActivity.getPackageName(), 0);
-//                    if (info.versionCode < updateRsp.getVersion()) {
-//                        String changelog = updateRsp.getChangelog();
-//                        String install_url = updateRsp.getInstall_url();
-//                        getView().showUpdateAppDialog(changelog, install_url);
-//                    }
-//                } catch (PackageManager.NameNotFoundException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//
-//            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
-//                LogUtils.loge(this, "app升级" + errorMsg);
-//            }
-//        });
+        Beta.checkUpgrade(false, false);
     }
 
 
@@ -264,6 +214,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             options.forceNew = true;
             mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
             mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+            mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
             mSocket.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -276,6 +227,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (mSocket != null) {
                 mSocket.disconnect();
                 mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
                 mSocket = null;
             }
             String sessionId = RetrofitServiceHelper.INSTANCE.getSessionId();
@@ -284,6 +236,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             options.forceNew = true;
             mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
             mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+            mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
             mSocket.connect();
 
         } catch (URISyntaxException e) {
@@ -293,10 +246,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
 
     public void logout() {
-        String phoneId = mActivity.getIntent().getStringExtra(EXTRA_PHONE_ID);
-        String uid = mActivity.getIntent().getStringExtra(EXTRA_USER_ID);
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.logout(phoneId, uid).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+        RetrofitServiceHelper.INSTANCE.logout(mEventLoginData.phoneId, mEventLoginData.userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribe(new CityObserver<ResponseBase>() {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -307,15 +258,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             @Override
             public void onCompleted() {
                 getView().dismissProgressDialog();
+                getView().finishAc();
             }
 
 
             @Override
             public void onNext(ResponseBase responseBase) {
                 if (responseBase.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                    RetrofitServiceHelper.INSTANCE.clearSessionId();
                     Intent intent = new Intent(mActivity, LoginActivity.class);
                     getView().startAC(intent);
-                    getView().finishAc();
                 }
             }
         });
@@ -324,32 +276,36 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     @Override
     public void onDestroy() {
-        EventBus.getDefault().unregister(this);
+        mHandler.removeCallbacks(mRunnable);
+        mHandler.removeCallbacksAndMessages(null);
+        //移除全部粘性事件
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().removeStickyEvent(EventLoginData.class);
+            //
+            EventBus.getDefault().unregister(this);
+        }
+
+
         if (mSocket != null) {
             mSocket.disconnect();
             mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+            mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
             mSocket = null;
         }
-        mHandler.removeCallbacks(mRunnable);
-        mHandler.removeCallbacksAndMessages(null);
         fragmentList.clear();
+        Beta.unInit();
+        LogUtils.loge(this, "onDestroy");
     }
-
-    public void updateApp(String url) {
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        Uri content_url = Uri.parse(url);
-        intent.setData(content_url);
-        getView().startAC(intent);
-    }
-
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
-        if (code == EVENT_DATA_FINISH_CODE) {
+        if (code == EVENT_DATA_SESSION_ID_OVERTIME) {
+            RetrofitServiceHelper.INSTANCE.cancelAllRsp();
+            openLogin();
+        } else if (code == EVENT_DATA_FINISH_CODE) {
             if (contractFragment != null) {
                 contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
             }
@@ -360,21 +316,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             getView().setCurrentPagerItem(0);
             getView().setMenuSelected(0);
         } else if (code == EVENT_DATA_SEARCH_MERCHANT) {
-            if (data != null && data instanceof UserInfo) {
-                UserInfo dataUser = (UserInfo) data;
-                //
-                String sessionID = dataUser.getSessionID();
-                RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
-                String nickname = dataUser.getNickname();
-                String phone = dataUser.getContacts();
-                String roles = dataUser.getRoles();
-                String isSpecific = dataUser.getIsSpecific();
-                //grants Info
-                GrantsInfo grants = dataUser.getGrants();
-                //
-                changeAccount(nickname, phone, roles, MenuPageFactory.getIsSupperAccount(isSpecific), MenuPageFactory
-                        .getHasStationDeploy(grants), MenuPageFactory.getHasContract(grants), MenuPageFactory
-                        .getHasScanLogin(grants));
+            if (data != null && data instanceof EventLoginData) {
+                EventLoginData eventLoginData = (EventLoginData) data;
+                changeAccount(eventLoginData);
             }
         }
 //        LogUtils.loge(this, eventData.toString());
@@ -382,7 +326,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     @Override
     public void onCreate() {
-        EventBus.getDefault().register(this);
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -392,12 +338,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         return false;
     }
 
-    private class TaskRunnable implements Runnable {
+
+    private final class TaskRunnable implements Runnable {
 
         @Override
         public void run() {
             requestUpdate();
-            if (!mIsSupperAccount) {
+            if (!isSupperAccount()) {
                 createSocket();
             }
         }
@@ -415,12 +362,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             final JSONObject jsonObject = jsonArray.getJSONObject(0);
                             String json = jsonObject.toString();
 //                            LogUtils.loge(this, "jsonArray = " + json);
-                            if (!mIsSupperAccount) {
+                            if (!isSupperAccount()) {
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json,
                                             DeviceInfo.class);
                                     final EventData eventData = new EventData();
-                                    eventData.code = EVENT_DATA_SOCKET_DATA;
+                                    eventData.code = EVENT_DATA_SOCKET_DATA_INFO;
                                     eventData.data = data;
                                     EventBus.getDefault().post(eventData);
                                 } catch (Exception e) {
@@ -429,6 +376,42 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
                             }
 
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private final class DeviceAlarmCountListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (DeviceInfoListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            LogUtils.loge(this, "DeviceAlarmCountListener jsonArray = " + json);
+                            if (!isSupperAccount()) {
+                                try {
+                                    DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmCount.class);
+                                    List<DeviceAlarmCount.AllBean> all = deviceAlarmCount.getAll();
+                                    DeviceAlarmCount.AllBean allBean = all.get(0);
+                                    AlarmDeviceCountsBean counts = allBean.getCounts();
+                                    final EventData eventData = new EventData();
+                                    eventData.code = EVENT_DATA_SOCKET_DATA_COUNT;
+                                    eventData.data = counts;
+                                    EventBus.getDefault().post(eventData);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
                         }
                     }
                 }
@@ -472,7 +455,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 break;
             case MenuPageInfo.MENU_PAGE_MERCHANT:
                 merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
-                merchantSwitchFragment.refreshData(mUserName, mPhone, mPhoneId);
+                merchantSwitchFragment.refreshData(mEventLoginData.userName, mEventLoginData.phone, mEventLoginData.phoneId);
                 getView().setCurrentPagerItem(2);
                 break;
             case MenuPageInfo.MENU_PAGE_POINT:

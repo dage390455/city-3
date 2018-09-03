@@ -7,10 +7,13 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.ISearchMerchantActivityView;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
@@ -167,11 +170,26 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             @Override
             public void onNext(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    UserInfo dataUser = userAccountControlRsp.getData();
+                    UserInfo userInfo = userAccountControlRsp.getData();
                     EventData eventData = new EventData();
+                    GrantsInfo grants = userInfo.getGrants();
                     eventData.code = EVENT_DATA_SEARCH_MERCHANT;
-                    eventData.data = dataUser;
+                    //修改loginData包装
+                    EventLoginData eventLoginData = new EventLoginData();
+                    eventLoginData.userId = userInfo.get_id();
+                    eventLoginData.userName = userInfo.getNickname();
+                    eventLoginData.phone = userInfo.getContacts();
+                    eventLoginData.phoneId = phoneId;
+//            mCharacter = userInfo.getCharacter();
+                    eventLoginData.roles = userInfo.getRoles();
+                    eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(userInfo.getIsSpecific());
+                    eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
+                    eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
+                    eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
+                    eventData.data = eventLoginData;
                     EventBus.getDefault().post(eventData);
+                    //
+                    RetrofitServiceHelper.INSTANCE.saveSessionId(userInfo.getSessionID());
                     getView().finishAc();
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());

@@ -88,7 +88,7 @@ public class DeploySettingContactActivity extends BaseActivity<IDeploySettingCon
                     @Override
                     public void onItemClick(View view, int position) {
                         String name = mNameSearchHistoryAdapter.getSearchHistoryList().get(position).trim();
-//                         =mPresenter.getNameHistoryKeywords().get(position).trim();
+//                         =mPresenter.getNameHistoryKeywords().getInstance(position).trim();
                         setNameEditText(name);
                         mNameEt.clearFocus();
                         dismissInputMethodManager(view);

@@ -60,7 +60,7 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST(LOGIN)
     Observable<LoginRsp> login(@Field("phone") String phone, @Field("password") String pwd, @Field("phoneId") String
-            phoneId, @Field("phoneType") String phoneType);
+            phoneId, @Field("phoneType") String phoneType, @Field("remember") Boolean needRemember);
 
     @GET(DEVICE_HISTORY_LIST)
     Observable<DeviceHistoryListRsp> getDeviceHistoryList(@Query("sn") String sn, @Query("count") int count);

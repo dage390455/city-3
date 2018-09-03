@@ -86,7 +86,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             }
             //TODO
 
-//            if (!TextUtils.isEmpty(timeShaftParentBeans.get(groupPosition).getRemark())) {
+//            if (!TextUtils.isEmpty(timeShaftParentBeans.getInstance(groupPosition).getRemark())) {
 //                return 1;
 //            }
 

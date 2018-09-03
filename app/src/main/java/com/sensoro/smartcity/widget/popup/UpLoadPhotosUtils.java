@@ -10,10 +10,10 @@ import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.LogUtils;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.util.AESUtil;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.luban.CompressionPredicate;
 import com.sensoro.smartcity.util.luban.Luban;
 import com.sensoro.smartcity.util.luban.OnCompressListener;
@@ -158,11 +158,11 @@ public class UpLoadPhotosUtils {
     }
 // responseInfo -->{ver:7.3.12,ResponseInfo:1531386163309485,status:200, reqId:ekAAAGhyR3uhk0AV, xlog:body;0s.ph;0s
 // .put.in;0s.put.disk:1;1s.put.in;1s.put.disk:1;1s.ph;PFDS:2;0s.put.out:1;PFDS:3;body;rs38_4.sel:1;rwro.ins:1/same
-// entry;rs38_4.sel:5;rwro.get:5;MQ;RS.not:;RS:11;rs.put:17;rs-upload.putFile:20;UP:22, xvia:vdn-tj-cnc-1-2,
+// entry;rs38_4.sel:5;rwro.getInstance:5;MQ;RS.not:;RS:11;rs.put:17;rs-upload.putFile:20;UP:22, xvia:vdn-tj-cnc-1-2,
 // host:upload.qiniup.com, path:/, ip:220.194.102.99, port:443, duration:184 s, time:1531386195, sent:180803,error:null}
 
     ///////////////
-    //            Luban.with(mContext).ignoreBy(200).load(selImageList.get(0).path).setCompressListener(new
+    //            Luban.with(mContext).ignoreBy(200).load(selImageList.getInstance(0).path).setCompressListener(new
     // OnCompressListener() {
 //
 //
@@ -210,7 +210,7 @@ public class UpLoadPhotosUtils {
 //                    .map(new Function<List<String>, List<File>>() {
 //                        @Override public List<File> apply(@NonNull List<String> list) throws Exception {
 //                            // 同步方法直接返回压缩后的文件
-//                            return Luban.with(MainActivity.this).load(list).get();
+//                            return Luban.with(MainActivity.this).load(list).getInstance();
 //                        }
 //                    })
 //                    .observeOn(AndroidSchedulers.mainThread())
@@ -234,7 +234,7 @@ public class UpLoadPhotosUtils {
 //                    }
 //                    try {
 //
-//                        return Luban.with(mContext).load(strings).ignoreBy(200).get();
+//                        return Luban.with(mContext).load(strings).ignoreBy(200).getInstance();
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
@@ -269,13 +269,13 @@ public class UpLoadPhotosUtils {
 //                    }
 //                    try {
 //
-//                        return Luban.with(mContext).load(strings).ignoreBy(200).get();
+//                        return Luban.with(mContext).load(strings).ignoreBy(200).getInstance();
 //                    } catch (IOException e) {
 //                        e.printStackTrace();
 //                    }
 //                    // 同步方法直接返回压缩后的文件
-////                            return Luban.with(MainActivity.this).load(list).get();
-////                    Luban.with(mContext).load(imageItems).get()
+////                            return Luban.with(MainActivity.this).load(list).getInstance();
+////                    Luban.with(mContext).load(imageItems).getInstance()
 //                    return null;
 //                }
 //            }).flatMap(new Func1<List<File>, Observable<ResponseBase>>() {

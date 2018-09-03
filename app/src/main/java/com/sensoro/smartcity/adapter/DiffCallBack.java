@@ -39,7 +39,7 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
      */
     @Override
     public boolean areItemsTheSame(int oldItemPosition, int newItemPosition) {
-//        return mOldList.get(oldItemPosition).getName().equals(mNewList.get(newItemPosition).getName());
+//        return mOldList.getInstance(oldItemPosition).getName().equals(mNewList.getInstance(newItemPosition).getName());
         //用来判断 两个对象是否是相同的Item。
         return getItemsTheSame(oldItemPosition, newItemPosition);
     }
@@ -87,7 +87,7 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
     /**
      * When {@link #areItemsTheSame(int, int)} returns {@code true} for two items and
      * {@link #areContentsTheSame(int, int)} returns false for them, DiffUtil
-     * calls this method to get a payload about the change.
+     * calls this method to getInstance a payload about the change.
      * <p>
      * 当{@link #areItemsTheSame(int, int)} 返回true，且{@link #areContentsTheSame(int, int)} 返回false时，DiffUtils会回调此方法，
      * 去得到这个Item（有哪些）改变的payload。
@@ -140,8 +140,8 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
 //            onBindViewHolder(holder, position);
 //        } else {
 //            //文艺青年中的文青
-//            Bundle payload = (Bundle) payloads.get(0);//取出我们在getChangePayload（）方法返回的bundle
-//            TestBean bean = mDatas.get(position);//取出新数据源，（可以不用）
+//            Bundle payload = (Bundle) payloads.getInstance(0);//取出我们在getChangePayload（）方法返回的bundle
+//            TestBean bean = mDatas.getInstance(position);//取出新数据源，（可以不用）
 //            for (String key : payload.keySet()) {
 //                switch (key) {
 //                    case "KEY_DESC":

@@ -285,7 +285,7 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
 //        this.mRelationLayout.setVisibility(View.GONE);
 //        this.mIndexListLayout.setVisibility(VISIBLE);
 //        for (int i = 0; i < deviceInfoListRsp.getData().size(); i++) {
-//            DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(i);
+//            DeviceInfo deviceInfo = deviceInfoListRsp.getData().getInstance(i);
 //            switch (deviceInfo.getStatus()) {
 //                case SENSOR_STATUS_ALARM:
 //                    deviceInfo.setSort(1);

@@ -14,8 +14,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
-import com.sensoro.smartcity.push.SensoroPushIntentService;
-import com.sensoro.smartcity.push.SensoroPushService;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
@@ -23,6 +22,7 @@ import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -40,7 +40,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     private void readLoginData() {
-        SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_LOGIN, Context
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
                 .MODE_PRIVATE);
         String name = sp.getString(PREFERENCE_KEY_NAME, null);
         String pwd = sp.getString(PREFERENCE_KEY_PASSWORD, null);
@@ -61,37 +61,34 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 //                            PackageManager.GET_META_DATA);
 //            String msg = appInfo.metaData.getString("InstallChannel");
 //            if (msg.equalsIgnoreCase("Mocha")) {
-//                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(true);
+//                RetrofitServiceHelper.INSTANCE.saveBaseUrlType(true);
 //            } else if (msg.equalsIgnoreCase("Master")) {
-//                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(false);
+//                RetrofitServiceHelper.INSTANCE.saveBaseUrlType(false);
 //            } else {
-//                RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(true);
+//                RetrofitServiceHelper.INSTANCE.saveBaseUrlType(true);
 //            }
 //        } catch (PackageManager.NameNotFoundException e) {
 //            e.printStackTrace();
 //        }
-        SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_SCOPE, Context
-                .MODE_PRIVATE);
-        int urlType = 0;
-        try {
-            urlType = sp.getInt(PREFERENCE_KEY_URL, 0);
-            RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(urlType);
-            getView().setLogButtonState(urlType);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        getView().setLogButtonState(RetrofitServiceHelper.INSTANCE.getBaseUrlType());
+//        SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_SCOPE, Context
+//                .MODE_PRIVATE);
+//        int urlType = 0;
+//        try {
+//            urlType = sp.getInt(PREFERENCE_KEY_URL, 0);
+//            RetrofitServiceHelper.INSTANCE.saveBaseUrlType(urlType);
+//            getView().setLogButtonState(urlType);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
 
 
     }
 
     public void saveScopeData(int which) {
-        RetrofitServiceHelper.INSTANCE.setDemoTypeBaseUrl(which);
+        RetrofitServiceHelper.INSTANCE.saveBaseUrlType(which);
         getView().setLogButtonState(which);
-        SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_SCOPE, Context
-                .MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(PREFERENCE_KEY_URL, which);
-        editor.apply();
+
     }
 
     public void login(final String account, final String pwd) {
@@ -108,38 +105,42 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                 @Override
                 public void call(LoginRsp loginRsp) {
                     String sessionID = loginRsp.getData().getSessionID();
-                    RetrofitServiceHelper.INSTANCE.setSessionId(sessionID);
+                    RetrofitServiceHelper.INSTANCE.saveSessionId(sessionID);
                     saveLoginData(account, pwd);
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>() {
                 @Override
                 public void onCompleted() {
 //                    getView().dismissProgressDialog();
+                    getView().finishAc();
                 }
 
                 @Override
                 public void onNext(LoginRsp loginRsp) {
                     if (loginRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                        UserInfo data = loginRsp.getData();
-                        String isSpecific = data.getIsSpecific();
-                        Intent intent = new Intent(mContext, MainActivity.class);
-                        intent.putExtra(EXTRA_USER_ID, data.get_id());
-                        intent.putExtra(EXTRA_USER_NAME, data.getNickname());
-                        intent.putExtra(EXTRA_PHONE, data.getContacts());
-                        intent.putExtra(EXTRA_CHARACTER, data.getCharacter());
-                        intent.putExtra(EXTRA_USER_ROLES, data.getRoles());
-                        intent.putExtra(EXTRA_IS_SPECIFIC, MenuPageFactory.getIsSupperAccount(isSpecific));
-                        intent.putExtra(EXTRA_PHONE_ID, phoneId);
-                        //grants Info
-                        GrantsInfo grants = data.getGrants();
-                        intent.putExtra(EXTRA_GRANTS_HAS_STATION, MenuPageFactory.getHasStationDeploy(grants));
-                        intent.putExtra(EXTRA_GRANTS_HAS_CONTRACT, MenuPageFactory.getHasContract(grants));
-                        intent.putExtra(EXTRA_GRANTS_HAS_SCAN_LOGIN, MenuPageFactory.getHasScanLogin(grants));
+                        UserInfo userInfo = loginRsp.getData();
+                        //
+                        EventLoginData eventLoginData = new EventLoginData();
+                        GrantsInfo grants = userInfo.getGrants();
+                        //
+                        eventLoginData.userId = userInfo.get_id();
+                        eventLoginData.userName = userInfo.getNickname();
+                        eventLoginData.phone = userInfo.getContacts();
+                        eventLoginData.phoneId = phoneId;
+                        //TODO 处理Character信息
+//                      mCharacter = userInfo.getCharacter();
+                        eventLoginData.roles = userInfo.getRoles();
+                        eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(userInfo.getIsSpecific());
+                        eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
+                        eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
+                        eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
+                        //
+                        PreferencesHelper.getInstance().saveUserData(eventLoginData);
+                        //
                         if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
                             PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
                         }
-                        getView().startAC(intent);
-                        getView().finishAc();
+                        openMain(eventLoginData);
                     } else {
                         getView().dismissProgressDialog();
                         getView().toastShort(mContext.getResources().getString(R.string.tips_user_info_error));
@@ -156,19 +157,12 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         }
     }
 
-    public void initPushSDK() {
-        PushManager.getInstance().initialize(SensoroCityApplication.getInstance(), SensoroPushService.class);
-        // 注册 intentService 后 PushDemoReceiver 无效, sdk 会使用 DemoIntentService 传递数据,
-        // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
-        // IntentService, 必须在 AndroidManifest 中声明)
-        PushManager.getInstance().registerPushIntentService(SensoroCityApplication.getInstance(),
-                SensoroPushIntentService
-                        .class);
-        if (PushManager.getInstance().getClientid(SensoroCityApplication.getInstance()) == null) {
-            PushManager.getInstance().turnOffPush(SensoroCityApplication.getInstance());
-        } else {
-            PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
-        }
+    private void openMain(EventLoginData eventLoginData) {
+        Intent mainIntent = new Intent();
+        mainIntent.setClass(mContext, MainActivity.class);
+        mainIntent.putExtra("eventLoginData", eventLoginData);
+        getView().startAC(mainIntent);
+        getView().finishAc();
     }
 
     /**
@@ -179,12 +173,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
      */
     private void saveLoginData(String username, String pwd) {
         String aes_pwd = AESUtil.encode(pwd);
-        SharedPreferences sp = mContext.getSharedPreferences(PREFERENCE_LOGIN, Context
-                .MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(PREFERENCE_KEY_NAME, username);
-        editor.putString(PREFERENCE_KEY_PASSWORD, aes_pwd);
-        editor.apply();
+        PreferencesHelper.getInstance().saveLoginNamePwd(username, aes_pwd);
     }
 
     @Override
