@@ -26,9 +26,6 @@ public interface ISearchDeviceActivityView extends IToast, IProgressDialog, IAct
 
     void setTipsLinearLayoutVisible(boolean isVisible);
 
-    void filterByStatusWithRequest(int position);
-
-    void filterByTypeWithRequest(int position);
 
     void recycleViewRefreshComplete();
 
@@ -41,4 +38,8 @@ public interface ISearchDeviceActivityView extends IToast, IProgressDialog, IAct
     boolean getSearchDataListVisible();
 
     void setEditText(String text);
+
+    void setStatusView(String statusText);
+
+    void setTypeView(String typesText);
 }

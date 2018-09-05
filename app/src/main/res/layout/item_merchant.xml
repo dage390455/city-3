@@ -20,10 +20,9 @@
     <TextView
         android:id="@+id/item_merchant_name"
         android:layout_width="wrap_content"
-        android:layout_height="@dimen/y120"
+        android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/y30"
         android:layout_marginTop="@dimen/y30"
-        android:gravity="center"
         android:text="aaaaa"
         android:textColor="@color/c_626262"
         android:textSize="18sp"

@@ -106,6 +106,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         contractFragment = ContractFragment.newInstance("contract");
         scanLoginFragment = ScanLoginFragment.newInstance("scanLogin");
         //
+        if (fragmentList.size() > 0) {
+            fragmentList.clear();
+        }
         fragmentList.add(indexFragment);
         fragmentList.add(alarmListFragment);
         fragmentList.add(merchantSwitchFragment);
@@ -150,8 +153,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
             } else {
                 indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-                indexFragment.requestTopData(true);
             }
+            merchantSwitchFragment.refreshData(mEventLoginData.userName, mEventLoginData.phone, mEventLoginData.phoneId);
             //
             getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
             getView().setCurrentPagerItem(0);
@@ -193,16 +196,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                     merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
                 } else {
                     indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-//                    indexFragment.requestTopData(true);
                 }
                 merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
                 getView().setMenuSelected(0);
             }
         }, 100);
-    }
-
-    private void requestUpdate() {
-        Beta.checkUpgrade(false, false);
     }
 
 
@@ -278,14 +276,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     public void onDestroy() {
         mHandler.removeCallbacks(mRunnable);
         mHandler.removeCallbacksAndMessages(null);
-        //移除全部粘性事件
         if (EventBus.getDefault().isRegistered(this)) {
-            EventBus.getDefault().removeStickyEvent(EventLoginData.class);
-            //
             EventBus.getDefault().unregister(this);
         }
-
-
         if (mSocket != null) {
             mSocket.disconnect();
             mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
@@ -343,7 +336,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
         @Override
         public void run() {
-            requestUpdate();
+            //检查更新
+            Beta.checkUpgrade(false, false);
             if (!isSupperAccount()) {
                 createSocket();
             }
@@ -455,7 +449,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 break;
             case MenuPageInfo.MENU_PAGE_MERCHANT:
                 merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
-                merchantSwitchFragment.refreshData(mEventLoginData.userName, mEventLoginData.phone, mEventLoginData.phoneId);
                 getView().setCurrentPagerItem(2);
                 break;
             case MenuPageInfo.MENU_PAGE_POINT:

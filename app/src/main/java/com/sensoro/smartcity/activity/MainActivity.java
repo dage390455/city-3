@@ -55,20 +55,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         initWidget();
         mPresenter.initData(mActivity);
     }
-    //避免activity多次启动
-//    private void checkActivity() {
-//        if (!this.isTaskRoot()) {
-//            Intent intent = getIntent();
-//            if (intent != null) {
-//                String action = intent.getAction();
-//                if (intent.hasCategory(Intent.CATEGORY_LAUNCHER) && Intent.ACTION_MAIN.equals(action)) {
-//                    finishAc();
-//                    return;
-//                }
-//            }
-//        }
-//    }
-
 
     @Override
     protected void onStart() {

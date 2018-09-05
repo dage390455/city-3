@@ -208,4 +208,6 @@ public interface Constants {
     int EVENT_DATA_SEARCH_ALARM_RESULT = 0x24;
     int EVENT_DATA_SOCKET_DATA_COUNT = 0x25;
     int EVENT_DATA_SESSION_ID_OVERTIME = 0x26;
+    int EVENT_DATA_CANCEL_AUTH = 0x27;
+    int EVENT_DATA_AUTH_SUC = 0x28;
 }

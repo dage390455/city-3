@@ -110,13 +110,7 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         }
     }
 
-    public void setTypeSelectedIndex(int mTypeSelectedIndex) {
-        this.mTypeSelectedIndex = mTypeSelectedIndex;
-    }
 
-    public void setStatusSelectedIndex(int mStatusSelectedIndex) {
-        this.mStatusSelectedIndex = mStatusSelectedIndex;
-    }
 
     private boolean isActivityTop() {
         ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
@@ -491,5 +485,19 @@ public class SearchDeviceActivityPresenter extends BasePresenter<ISearchDeviceAc
         originHistoryList.clear();
         currentList.clear();
         searchStrList.clear();
+    }
+
+    public void filterByTypeWithRequest(int position, String text) {
+        String statusText = INDEX_TYPE_ARRAY[position];
+        getView().setTypeView(statusText);
+        this.mTypeSelectedIndex = position;
+        requestWithDirection(DIRECTION_DOWN, text);
+    }
+
+    public void filterByStatusWithRequest(int position, String text) {
+        String statusText = INDEX_STATUS_ARRAY[position];
+        getView().setStatusView(statusText);
+        this.mStatusSelectedIndex = position;
+        requestWithDirection(DIRECTION_DOWN, text);
     }
 }

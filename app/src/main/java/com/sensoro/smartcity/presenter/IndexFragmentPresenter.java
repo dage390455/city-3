@@ -76,15 +76,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         mSoundPool.setOnLoadCompleteListener(listener);
         mSoundId = mSoundPool.load(context, R.raw.alarm, 1);
         mHandler.postDelayed(mTask, 3000);
-        requestWithDirection(DIRECTION_DOWN);
-    }
-
-    public void setTypeSelectedIndex(int mTypeSelectedIndex) {
-        this.mTypeSelectedIndex = mTypeSelectedIndex;
-    }
-
-    public void setStatusSelectedIndex(int mStatusSelectedIndex) {
-        this.mStatusSelectedIndex = mStatusSelectedIndex;
     }
 
 
@@ -264,7 +255,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
 
     public void playSound() {
         String roles = ((MainActivity) mContext).getRoles();
-        if (roles != null && !roles.equals("admin")) {
+        if ("admin".equals(roles)) {
             mSoundPool.play(mSoundId, 1, 1, 0, 0, 1);
         }
     }
@@ -302,36 +293,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         });
     }
 
-    private void filterBySearch() {
-        if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0) {
-        } else {
-            List<DeviceInfo> tempTypeList = new ArrayList<>();
-            for (int i = 0; i < mDataList.size(); i++) {
-                DeviceInfo deviceInfo = mDataList.get(i);
-                String unionType = deviceInfo.getUnionType();
-                if (unionType != null) {
-                    if (unionType.equalsIgnoreCase(SENSOR_MENU_ARRAY[mTypeSelectedIndex]) || mTypeSelectedIndex == 0) {
-                        tempTypeList.add(deviceInfo);
-                    }
-                }
-            }
-
-            List<DeviceInfo> tempStatusList = new ArrayList<>();
-            if (mStatusSelectedIndex != 0) {
-                for (int i = 0; i < tempTypeList.size(); i++) {
-                    DeviceInfo deviceInfo = tempTypeList.get(i);
-                    int status = INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-                    if (deviceInfo.getStatus() == status) {
-                        tempStatusList.add(deviceInfo);
-                    }
-                }
-            } else {
-                tempStatusList.addAll(tempTypeList);
-            }
-            mDataList.clear();
-            mDataList.addAll(tempStatusList);
-        }
-    }
 
     private boolean isMatcher(DeviceInfo deviceInfo) {
         if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0) {
@@ -389,45 +350,6 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         }
     };
 
-    public void refreshWithSearch(final DeviceInfoListRsp deviceInfoListRsp) {
-        ThreadPoolManager.getInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                mDataList.clear();
-                for (int i = 0; i < deviceInfoListRsp.getData().size(); i++) {
-                    DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(i);
-                    switch (deviceInfo.getStatus()) {
-                        case SENSOR_STATUS_ALARM:
-                            deviceInfo.setSort(1);
-                            break;
-                        case SENSOR_STATUS_NORMAL:
-                            deviceInfo.setSort(2);
-                            break;
-                        case SENSOR_STATUS_LOST:
-                            deviceInfo.setSort(3);
-                            break;
-                        case SENSOR_STATUS_INACTIVE:
-                            deviceInfo.setSort(4);
-                            break;
-                        default:
-                            break;
-                    }
-                    mDataList.add(deviceInfo);
-                }
-                filterBySearch();
-                //排序
-                Collections.sort(mDataList);
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        getView().refreshData(mDataList);
-                    }
-                });
-
-            }
-        });
-
-    }
 
     /**
      * 处理数据
@@ -570,5 +492,23 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+    }
+
+    public void requestDataByStatus(int position) {
+        String statusText = INDEX_STATUS_ARRAY[position];
+        getView().setStatusView(statusText);
+        //
+        requestTopData(false);
+        this.mStatusSelectedIndex = position;
+        requestWithDirection(DIRECTION_DOWN);
+    }
+
+    public void requestDataByTypes(int position) {
+        String typeText = INDEX_TYPE_ARRAY[position];
+        getView().setTypeView(typeText);
+        //
+        requestTopData(false);
+        this.mTypeSelectedIndex = position;
+        requestWithDirection(DIRECTION_DOWN);
     }
 }

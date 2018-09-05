@@ -54,8 +54,6 @@ import static android.view.View.VISIBLE;
 import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
-import static com.sensoro.smartcity.constant.Constants.INDEX_STATUS_ARRAY;
-import static com.sensoro.smartcity.constant.Constants.INDEX_TYPE_ARRAY;
 import static com.sensoro.smartcity.constant.Constants.TYPE_GRID;
 import static com.sensoro.smartcity.constant.Constants.TYPE_LIST;
 
@@ -349,6 +347,22 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         }
     }
 
+    @Override
+    public void setStatusView(String statusText) {
+        mStatusTextView.setTextColor(getResources().getColor(R.color.c_626262));
+        mStatusImageView.setColorFilter(getResources().getColor(R.color.c_626262));
+        mStatusImageView.setRotation(0);
+        mStatusTextView.setText(statusText);
+    }
+
+    @Override
+    public void setTypeView(String typesText) {
+        mTypeTextView.setTextColor(getResources().getColor(R.color.c_626262));
+        mTypeImageView.setColorFilter(getResources().getColor(R.color.c_626262));
+        mTypeImageView.setRotation(0);
+        mTypeTextView.setText(typesText);
+    }
+
 
     private void initRelation() {
         mRelationAdapter = new RelationAdapter(mActivity, new RecycleViewItemClickListener() {
@@ -459,8 +473,10 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             mTypePopupView.show(mTypeShadowLayout, new SensoroPopupTypeView.OnTypePopupItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    mPresenter.setTypeSelectedIndex(position);
-                    filterByTypeWithRequest(position);
+                    String text = mKeywordEt.getText().toString();
+                    mPresenter.filterByTypeWithRequest(position,text);
+
+
                 }
             });
         }
@@ -488,25 +504,15 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
             mStatusPopupView.show(mStatusShadowLayout, new SensoroPopupStatusView.OnStatusPopupItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    mPresenter.setStatusSelectedIndex(position);
-                    filterByStatusWithRequest(position);
+                    String text = mKeywordEt.getText().toString();
+
+                    mPresenter.filterByStatusWithRequest(position,text);
                 }
             });
         }
 
     }
 
-    @Override
-    public void filterByTypeWithRequest(int position) {
-        mTypeTextView.setTextColor(getResources().getColor(R.color.c_626262));
-        mTypeImageView.setColorFilter(getResources().getColor(R.color.c_626262));
-        mTypeImageView.setRotation(0);
-        String typeText = INDEX_TYPE_ARRAY[position];
-        mTypeTextView.setText(typeText);
-        mPresenter.setTypeSelectedIndex(position);
-        String text = mKeywordEt.getText().toString();
-        mPresenter.requestWithDirection(DIRECTION_DOWN, text);
-    }
 
     @Override
     public void recycleViewRefreshComplete() {
@@ -514,17 +520,6 @@ public class SearchDeviceActivity extends BaseActivity<ISearchDeviceActivityView
         mGridRecyclerView.refreshComplete();
     }
 
-    @Override
-    public void filterByStatusWithRequest(int position) {
-        mStatusTextView.setTextColor(getResources().getColor(R.color.c_626262));
-        mStatusImageView.setColorFilter(getResources().getColor(R.color.c_626262));
-        mStatusImageView.setRotation(0);
-        String statusText = INDEX_STATUS_ARRAY[position];
-        mStatusTextView.setText(statusText);
-        mPresenter.setStatusSelectedIndex(position);
-        String text = mKeywordEt.getText().toString();
-        mPresenter.requestWithDirection(DIRECTION_DOWN, text);
-    }
 
     @Override
     public void switchToTypeList() {

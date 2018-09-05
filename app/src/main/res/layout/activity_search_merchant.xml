@@ -106,7 +106,7 @@
         <RelativeLayout
             android:id="@+id/rl_title_account"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y180"
+            android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/y50"
             android:background="@drawable/shape_normal_layout"
             android:gravity="center_vertical">
@@ -117,6 +117,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="@dimen/x100"
                 android:layout_marginTop="@dimen/y30"
+                android:layout_marginBottom="@dimen/y30"
                 android:textColor="@color/slide_menu_item_bg"
                 android:textSize="18sp"/>
 
@@ -129,6 +130,7 @@
                 android:layout_marginBottom="@dimen/y30"
                 android:layout_marginLeft="@dimen/x100"
                 android:textColor="@color/c_626262"
+                android:visibility="gone"
                 android:textSize="16sp"/>
 
             <ImageView

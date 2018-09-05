@@ -117,10 +117,6 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        handlerActivityResult(requestCode, resultCode, data);
-    }
-
-    public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
         if (mAlarmPopupView != null) {
             mAlarmPopupView.handlerActivityResult(requestCode, resultCode, data);
         }

@@ -37,7 +37,6 @@ import com.sensoro.smartcity.imainviews.IIndexFragmentView;
 import com.sensoro.smartcity.presenter.IndexFragmentPresenter;
 import com.sensoro.smartcity.server.bean.Character;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroShadowView;
@@ -54,8 +53,6 @@ import java.util.List;
 import static android.view.View.VISIBLE;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
-import static com.sensoro.smartcity.constant.Constants.INDEX_STATUS_ARRAY;
-import static com.sensoro.smartcity.constant.Constants.INDEX_TYPE_ARRAY;
 import static com.sensoro.smartcity.constant.Constants.INPUT;
 import static com.sensoro.smartcity.constant.Constants.TYPE_GRID;
 import static com.sensoro.smartcity.constant.Constants.TYPE_LIST;
@@ -298,14 +295,14 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             @Override
             public void onRefresh() {
                 isShowDialog = false;
-                reFreshDataByDirection(DIRECTION_DOWN);
-                requestTopData(false);
+                mPresenter.requestWithDirection(DIRECTION_DOWN);
+                mPresenter.requestTopData(false);
             }
 
             @Override
             public void onLoadMore() {
                 isShowDialog = false;
-                reFreshDataByDirection(DIRECTION_UP);
+                mPresenter.requestWithDirection(DIRECTION_UP);
             }
         });
         mListRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -351,14 +348,14 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             @Override
             public void onRefresh() {
                 isShowDialog = false;
-                reFreshDataByDirection(DIRECTION_DOWN);
-                requestTopData(false);
+                mPresenter.requestWithDirection(DIRECTION_DOWN);
+                mPresenter.requestTopData(false);
             }
 
             @Override
             public void onLoadMore() {
                 isShowDialog = false;
-                reFreshDataByDirection(DIRECTION_UP);
+                mPresenter.requestWithDirection(DIRECTION_UP);
             }
         });
         mGridRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
@@ -772,7 +769,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             mTypePopupView.show(mTypeShadowLayout, new SensoroPopupTypeView.OnTypePopupItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    filterByTypeWithRequest(position);
+                    mPresenter.requestDataByTypes(position);
                 }
             });
         }
@@ -801,7 +798,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
             mStatusPopupView.show(mStatusShadowLayout, new SensoroPopupStatusView.OnStatusPopupItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    filterByStatusWithRequest(position);
+                    mPresenter.requestDataByStatus(position);
                 }
             });
         }
@@ -809,27 +806,19 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     }
 
     @Override
-    public void filterByStatusWithRequest(int position) {
-        requestTopData(false);
-        mPresenter.setStatusSelectedIndex(position);
+    public void setStatusView(String statusText) {
         mStatusTextView.setTextColor(mRootFragment.getResources().getColor(R.color.c_626262));
         mStatusImageView.setColorFilter(mRootFragment.getResources().getColor(R.color.c_626262));
         mStatusImageView.setRotation(0);
-        String statusText = INDEX_STATUS_ARRAY[position];
         mStatusTextView.setText(statusText);
-        reFreshDataByDirection(DIRECTION_DOWN);
     }
 
     @Override
-    public void filterByTypeWithRequest(int position) {
-        requestTopData(false);
-        mPresenter.setTypeSelectedIndex(position);
+    public void setTypeView(String typesText) {
         mTypeTextView.setTextColor(mRootFragment.getResources().getColor(R.color.c_626262));
         mTypeImageView.setColorFilter(mRootFragment.getResources().getColor(R.color.c_626262));
         mTypeImageView.setRotation(0);
-        String typeText = INDEX_TYPE_ARRAY[position];
-        mTypeTextView.setText(typeText);
-        reFreshDataByDirection(DIRECTION_DOWN);
+        mTypeTextView.setText(typesText);
     }
 
 
@@ -837,18 +826,7 @@ public class IndexFragment extends BaseFragment<IIndexFragmentView, IndexFragmen
     public void reFreshDataByDirection(int direction) {
         if (mPresenter != null) {
             mPresenter.requestWithDirection(direction);
-        }
-    }
-
-    @Override
-    public void refreshBySearch(DeviceInfoListRsp infoRspData) {
-        mPresenter.refreshWithSearch(infoRspData);
-    }
-
-    @Override
-    public void requestTopData(boolean isFirstInit) {
-        if (mPresenter != null) {
-            mPresenter.requestTopData(isFirstInit);
+            mPresenter.requestTopData(false);
         }
     }
 

@@ -161,13 +161,6 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     }
 
 
-    private void cancelSearch() {
-        setSearchLayoutVisible(false);
-//        mSearchEditText.setHint("");
-        mPresenter.requestDataAll(DIRECTION_DOWN, true);
-//        requestDataByFilter(DIRECTION_DOWN, true);
-    }
-
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
         if (mAlarmPopupView != null) {
             mAlarmPopupView.handlerActivityResult(requestCode, resultCode, data);
@@ -207,7 +200,10 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
                 requestDataByFilter(DIRECTION_DOWN, true);
                 break;
             case R.id.alarm_cancel_tv:
-                cancelSearch();
+                setSearchLayoutVisible(false);
+//               mSearchEditText.setHint("");
+                mPresenter.requestDataAll(DIRECTION_DOWN, true);
+//              requestDataByFilter(DIRECTION_DOWN, true);
                 break;
             case R.id.alarm_search_et:
                 mPresenter.searchByEditText(mSearchEditText.getHint());

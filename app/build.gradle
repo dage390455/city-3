@@ -199,4 +199,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     //消息组件
     compile 'org.greenrobot:eventbus:3.1.1'
+
+    compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
 }

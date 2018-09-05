@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server;
 
 
+import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
@@ -37,6 +38,8 @@ public interface RetrofitService {
     String SCOPE_DEMO = "https://city-demo-api.sensoro.com/";
     //测试环境
     String SCOPE_TEST = "https://city-test-api.sensoro.com/";
+    //摩卡环境
+    String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
     //正式环境
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
 
@@ -54,6 +57,7 @@ public interface RetrofitService {
     String DEVICE_ALARM_LOG = "alarmplay";
     String DEVICE_BRIEF_LIST = "stats/device/brief/app";
     String DEVICE_TYPE_COUNT = "prov1/devices/status/count";
+    String DOUBLE_CHECK = "tfa/totp/verify";
     String APP_UPDATE = "http://api.fir" +
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
 
@@ -140,7 +144,7 @@ public interface RetrofitService {
     Observable<QiNiuToken> getQiNiuToken();
 
     @GET("contractsTemplate")
-    Observable<ContractsTemplateRsp> getContractstemplate();
+    Observable<ContractsTemplateRsp> getContractsTemplate();
 
     //    @FormUrlEncoded
 //    @POST("contracts")
@@ -175,4 +179,8 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST("qrcode/cancel")
     Observable<ResponseBase> scanLoginCancel(@Field("qrcodeId") String qrcodeId);
+
+    @FormUrlEncoded
+    @POST(DOUBLE_CHECK)
+    Observable<AuthRsp> doubleCheck(@Field("code") String code);
 }

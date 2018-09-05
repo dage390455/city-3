@@ -6,10 +6,15 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
 
+import com.franmontiel.persistentcookiejar.ClearableCookieJar;
+import com.franmontiel.persistentcookiejar.PersistentCookieJar;
+import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
+import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
@@ -56,6 +61,7 @@ import static com.sensoro.smartcity.constant.Constants.PREFERENCE_KEY_URL;
 import static com.sensoro.smartcity.constant.Constants.PREFERENCE_LOGIN_ID;
 import static com.sensoro.smartcity.constant.Constants.PREFERENCE_SCOPE;
 import static com.sensoro.smartcity.constant.Constants.PREFERENCE_SPLASH_LOGIN_DATA;
+import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MOCHA;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEMO;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MASTER;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_TEST;
@@ -68,7 +74,7 @@ public enum RetrofitServiceHelper {
     private final String HEADER_CONTENT_TYPE = "Content-Type";
     private final String HEADER_ACCEPT = "Accept";
     private volatile int mUrlType = -1;
-    private String sessionId = null;
+    private volatile String sessionId = null;
     public volatile String BASE_URL = SCOPE_MASTER;//http://mocha-iot-api.mocha.server.sensoro.com-----http://iot-api
     private RetrofitService retrofitService;
     private final Retrofit.Builder builder;
@@ -143,6 +149,9 @@ public enum RetrofitServiceHelper {
             case 2:
                 BASE_URL = SCOPE_TEST;
                 break;
+            case 3:
+                BASE_URL = SCOPE_MOCHA;
+                break;
             default:
                 BASE_URL = SCOPE_MASTER;
                 break;
@@ -174,6 +183,9 @@ public enum RetrofitServiceHelper {
                             break;
                         case 2:
                             BASE_URL = SCOPE_TEST;
+                            break;
+                        case 3:
+                            BASE_URL = SCOPE_MOCHA;
                             break;
                         default:
                             BASE_URL = SCOPE_MASTER;
@@ -243,11 +255,16 @@ public enum RetrofitServiceHelper {
         };
         final OkHttpClient okHttpClient = new OkHttpClient();
         OkHttpClient.Builder builder = okHttpClient.newBuilder();
+        ClearableCookieJar cookieJar =
+                new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(SensoroCityApplication.getInstance().getApplicationContext()));
+
         return builder
                 .addInterceptor(interceptor)
+                .cookieJar(cookieJar)
                 .addNetworkInterceptor(logging)
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
+//        Set-Cookie: koa:sess=neIm_GoFaHWc-WcwIfv2Sw-8ClbnPKsk; path=/; expires=Fri, 07 Sep 2018 09:25:15 GMT; httponly
     }
 
     public void cancelAllRsp() {
@@ -436,6 +453,16 @@ public enum RetrofitServiceHelper {
         return deviceDeployRspObservable;
     }
 
+    /**
+     * 基站部署
+     *
+     * @param sn
+     * @param lon
+     * @param lat
+     * @param tags
+     * @param name
+     * @return
+     */
     public Observable<StationInfoRsp> doStationDeploy(String sn, double lon, double lat, String tags, String
             name) {
         JSONObject jsonObject = new JSONObject();
@@ -605,8 +632,8 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<ContractsTemplateRsp> getContractstemplate() {
-        Observable<ContractsTemplateRsp> contractstemplate = retrofitService.getContractstemplate();
-        RxApiManager.getInstance().add("getContractstemplate", contractstemplate.subscribe());
+        Observable<ContractsTemplateRsp> contractstemplate = retrofitService.getContractsTemplate();
+        RxApiManager.getInstance().add("getContractsTemplate", contractstemplate.subscribe());
         return contractstemplate;
     }
 
@@ -684,6 +711,16 @@ public enum RetrofitServiceHelper {
         return contractAddRspObservable;
     }
 
+    /**
+     * 合同检索
+     *
+     * @param contractType
+     * @param beginTime
+     * @param endTime
+     * @param limit
+     * @param offset
+     * @return
+     */
     public Observable<ContractsListRsp> searchContract(Integer contractType, Long beginTime, Long endTime, Integer
             limit,
                                                        Integer offset) {
@@ -715,21 +752,49 @@ public enum RetrofitServiceHelper {
         return contractsListRspObservable;
     }
 
+    /**
+     * 检索大屏登录扫描结果
+     *
+     * @param qrcodeId
+     * @return
+     */
     public Observable<ResponseBase> getLoginScanResult(String qrcodeId) {
         Observable<ResponseBase> loginScanResult = retrofitService.getLoginScanResult(qrcodeId);
         RxApiManager.getInstance().add("getLoginScanResult", loginScanResult.subscribe());
         return loginScanResult;
     }
 
+    /**
+     * 进入大屏登录
+     *
+     * @param qrcodeId
+     * @return
+     */
     public Observable<ResponseBase> scanLoginIn(String qrcodeId) {
         Observable<ResponseBase> responseBaseObservable = retrofitService.scanLoginIn(qrcodeId);
         RxApiManager.getInstance().add("scanLoginIn", responseBaseObservable.subscribe());
         return responseBaseObservable;
     }
 
+    /**
+     * 取消大屏登录
+     *
+     * @param qrcodeId
+     * @return
+     */
     public Observable<ResponseBase> scanLoginCancel(String qrcodeId) {
         Observable<ResponseBase> responseBaseObservable = retrofitService.scanLoginCancel(qrcodeId);
         RxApiManager.getInstance().add("scanLoginCancel", responseBaseObservable.subscribe());
         return responseBaseObservable;
+    }
+
+    /**
+     * 二次验证
+     *
+     * @param code
+     * @return
+     */
+    public Observable<AuthRsp> doubleCheck(String code) {
+        return retrofitService.doubleCheck(code);
     }
 }

@@ -28,6 +28,15 @@ public class UserInfo implements Serializable {
     private long createdTime;
     private long updatedTime;
     private boolean isStop;
+    private Account account;
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
+    }
 
     public GrantsInfo getGrants() {
         return grants;
@@ -205,5 +214,26 @@ public class UserInfo implements Serializable {
                 ", updatedTime=" + updatedTime +
                 ", isStop=" + isStop +
                 '}';
+    }
+
+    public static class Account implements Serializable {
+        private String id;
+        private boolean totpEnable;
+
+        public boolean isTotpEnable() {
+            return totpEnable;
+        }
+
+        public void setTotpEnable(boolean totpEnable) {
+            this.totpEnable = totpEnable;
+        }
+
+        public String getId() {
+            return id;
+        }
+
+        public void setId(String id) {
+            this.id = id;
+        }
     }
 }

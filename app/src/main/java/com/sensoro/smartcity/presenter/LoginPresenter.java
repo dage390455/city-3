@@ -9,11 +9,13 @@ import android.text.TextUtils;
 import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.AuthActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -22,7 +24,12 @@ import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
@@ -35,6 +42,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        EventBus.getDefault().register(this);
         readLoginData();
         initSeverUrl();
     }
@@ -112,14 +120,12 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                 @Override
                 public void onCompleted() {
 //                    getView().dismissProgressDialog();
-                    getView().finishAc();
                 }
 
                 @Override
                 public void onNext(LoginRsp loginRsp) {
                     if (loginRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                         UserInfo userInfo = loginRsp.getData();
-                        //
                         EventLoginData eventLoginData = new EventLoginData();
                         GrantsInfo grants = userInfo.getGrants();
                         //
@@ -135,11 +141,23 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                         eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
                         //
+                        UserInfo.Account account1 = userInfo.getAccount();
+                        if (account1 != null) {
+                            String id = account1.getId();
+                            boolean totpEnable = account1.isTotpEnable();
+                            LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
+                            if (totpEnable) {
+                                openAuth(eventLoginData);
+                                return;
+                            }
+                        }
+                        //
                         PreferencesHelper.getInstance().saveUserData(eventLoginData);
                         //
                         if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
                             PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
                         }
+                        //
                         openMain(eventLoginData);
                     } else {
                         getView().dismissProgressDialog();
@@ -165,6 +183,27 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         getView().finishAc();
     }
 
+    private void openAuth(EventLoginData eventLoginData) {
+        Intent mainIntent = new Intent();
+        mainIntent.setClass(mContext, AuthActivity.class);
+        mainIntent.putExtra("eventLoginData", eventLoginData);
+        getView().startAC(mainIntent);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+//        Object data = eventData.data;
+        if (code == EVENT_DATA_CANCEL_AUTH) {
+            getView().dismissProgressDialog();
+        } else if (code == EVENT_DATA_AUTH_SUC) {
+            getView().dismissProgressDialog();
+            getView().finishAc();
+        }
+//        LogUtils.loge(this, eventData.toString());
+    }
+
     /**
      * 保存账户名称
      *
@@ -178,6 +217,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 }

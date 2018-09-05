@@ -242,6 +242,7 @@
         <activity android:name=".activity.ContractResultActivity" />
         <activity android:name=".activity.ScanLoginResultActivity" />
         <activity android:name=".activity.DeploySettingPhotoActivity" />
+        <activity android:name=".activity.AuthActivity" />
 
         <service
             android:name="com.igexin.download.DownloadService"

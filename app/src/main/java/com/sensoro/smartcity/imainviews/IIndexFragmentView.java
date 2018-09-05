@@ -4,7 +4,6 @@ import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 
 import java.util.List;
 
@@ -29,15 +28,11 @@ public interface IIndexFragmentView extends IToast, IProgressDialog, IActivityIn
 
     void showStatusPopupView();
 
-    void filterByStatusWithRequest(int position);
+    void setStatusView(String statusText);
 
-    void filterByTypeWithRequest(int position);
+    void setTypeView(String typesText);
 
     void reFreshDataByDirection(int direction);
-
-    void refreshBySearch(DeviceInfoListRsp infoRspData);
-
-    void requestTopData(final boolean isFirstInit);
 
     void recycleViewRefreshComplete();
 
