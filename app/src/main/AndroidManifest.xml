@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission
         android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions" />
@@ -243,6 +244,8 @@
         <activity android:name=".activity.ScanLoginResultActivity" />
         <activity android:name=".activity.DeploySettingPhotoActivity" />
         <activity android:name=".activity.AuthActivity" />
+        <activity android:name=".activity.TakeRecordActivity" />
+        <activity android:name=".activity.VideoPlayActivity" />
 
         <service
             android:name="com.igexin.download.DownloadService"

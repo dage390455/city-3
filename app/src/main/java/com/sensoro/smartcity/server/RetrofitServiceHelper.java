@@ -1,7 +1,5 @@
 package com.sensoro.smartcity.server;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
@@ -34,16 +32,20 @@ import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import okhttp3.Cache;
+import okhttp3.CacheControl;
 import okhttp3.Interceptor;
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
@@ -56,14 +58,9 @@ import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 import rx.Observable;
 
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_KEY_SESSION_ID;
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_KEY_URL;
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_LOGIN_ID;
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_SCOPE;
-import static com.sensoro.smartcity.constant.Constants.PREFERENCE_SPLASH_LOGIN_DATA;
-import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MOCHA;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEMO;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MASTER;
+import static com.sensoro.smartcity.server.RetrofitService.SCOPE_MOCHA;
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_TEST;
 
 public enum RetrofitServiceHelper {
@@ -103,9 +100,7 @@ public enum RetrofitServiceHelper {
      */
     public String getSessionId() {
         if (TextUtils.isEmpty(sessionId)) {
-            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
-                    .MODE_PRIVATE);
-            sessionId = sp.getString(PREFERENCE_KEY_SESSION_ID, null);
+            sessionId = PreferencesHelper.getInstance().getSessionId();
         }
         return sessionId;
     }
@@ -117,19 +112,15 @@ public enum RetrofitServiceHelper {
      */
     public void saveSessionId(String sessionId) {
         this.sessionId = sessionId;
-        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
-                .MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putString(PREFERENCE_KEY_SESSION_ID, sessionId);
-        editor.apply();
+        PreferencesHelper.getInstance().saveSessionId(sessionId);
     }
 
-    public void clearSessionId() {
+    /**
+     * 取消登录
+     */
+    public void clearLoginDataSessionId() {
         this.sessionId = null;
-        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
-                .MODE_PRIVATE).edit().clear().apply();
-        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
-                .MODE_PRIVATE).edit().clear().apply();
+        PreferencesHelper.getInstance().clearLoginDataSessionId();
     }
 
     /**
@@ -157,11 +148,7 @@ public enum RetrofitServiceHelper {
                 break;
         }
         retrofitService = builder.baseUrl(BASE_URL).build().create(RetrofitService.class);
-        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SCOPE, Context
-                .MODE_PRIVATE);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putInt(PREFERENCE_KEY_URL, urlType);
-        editor.apply();
+        PreferencesHelper.getInstance().saveBaseUrlType(urlType);
     }
 
     /**
@@ -173,9 +160,7 @@ public enum RetrofitServiceHelper {
         if (mUrlType == -1) {
             mUrlType = 0;
             try {
-                SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SCOPE, Context
-                        .MODE_PRIVATE);
-                mUrlType = sp.getInt(PREFERENCE_KEY_URL, 0);
+                mUrlType = PreferencesHelper.getInstance().getBaseUrlType();
                 if (mUrlType != 0) {
                     switch (mUrlType) {
                         case 1:
@@ -213,6 +198,7 @@ public enum RetrofitServiceHelper {
             }
         });
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
+        //
         final Interceptor interceptor = new Interceptor() {
             @Override
             public Response intercept(@NonNull Chain chain) throws IOException {
@@ -253,14 +239,56 @@ public enum RetrofitServiceHelper {
                 return response;
             }
         };
+
+        //自定义缓存设置
+        final CacheControl.Builder cacheBuilder = new CacheControl.Builder();
+        //这个是控制缓存的最大生命时间
+        cacheBuilder.maxAge(0, TimeUnit.SECONDS);
+        //这个是控制缓存的过时时间
+        cacheBuilder.maxStale(7, TimeUnit.DAYS);
+        final CacheControl cacheControl = cacheBuilder.build();
+        //缓存拦截器
+        final Interceptor cacheControlInterceptor = new Interceptor() {
+            @Override
+            public Response intercept(Chain chain) throws IOException {
+                Request request = chain.request();
+                if (!NetWorkUtils.isNetworkConnected(SensoroCityApplication.getInstance())) {
+                    request = request.newBuilder().cacheControl(cacheControl).build();
+                }
+                Response originalResponse = chain.proceed(request);
+                if (NetWorkUtils.isNetworkConnected(SensoroCityApplication.getInstance())) {
+                    // 有网络时 设置缓存为默认值
+                    String cacheControl = request.cacheControl().toString();
+                    return originalResponse.newBuilder()
+                            .header("Cache-Control", cacheControl)
+                            .removeHeader("Pragma") // 清除头信息，因为服务器如果不支持，会返回一些干扰信息，不清除下面无法生效
+                            .build();
+                } else {
+                    // 无网络时 设置超时为1周
+                    int maxStale = 60 * 60 * 24 * 7;
+                    return originalResponse.newBuilder()
+                            .header("Cache-Control", "public, only-if-cached, max-stale=" + maxStale)
+                            .removeHeader("Pragma")
+                            .build();
+                }
+            }
+        };
+
         final OkHttpClient okHttpClient = new OkHttpClient();
         OkHttpClient.Builder builder = okHttpClient.newBuilder();
-        ClearableCookieJar cookieJar =
+        //cookie
+        final ClearableCookieJar cookieJar =
                 new PersistentCookieJar(new SetCookieCache(), new SharedPrefsCookiePersistor(SensoroCityApplication.getInstance().getApplicationContext()));
-
+        //cache
+        final File httpCacheDirectory = new File(SensoroCityApplication.getInstance().getCacheDir(), "responses");
+        final int cacheSize = 10 * 1024 * 1024; // 10 MiB
+        final Cache cache = new Cache(httpCacheDirectory, cacheSize);
+        //
         return builder
                 .addInterceptor(interceptor)
+                .addInterceptor(cacheControlInterceptor)
                 .cookieJar(cookieJar)
+                .cache(cache)
                 .addNetworkInterceptor(logging)
                 .connectTimeout(DEFAULT_TIMEOUT, TimeUnit.SECONDS)
                 .build();
@@ -285,6 +313,7 @@ public enum RetrofitServiceHelper {
         RxApiManager.getInstance().add("login", login.subscribe());
         return login;
     }
+
 
     /**
      * 登出

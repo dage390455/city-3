@@ -3,7 +3,6 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
@@ -18,6 +17,7 @@ import com.sensoro.smartcity.push.SensoroPushIntentService;
 import com.sensoro.smartcity.push.SensoroPushService;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements Constants {
     private Activity mContext;
@@ -40,33 +40,12 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
                 openLogin();
                 return;
             }
-            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
-                    .MODE_PRIVATE);
-            String phoneId = sp.getString(EXTRA_PHONE_ID, null);
-            String userId = sp.getString(EXTRA_USER_ID, null);
-            LogUtils.loge("phoneId = " + phoneId + ",userId = " + userId);
-            if (TextUtils.isEmpty(phoneId) || TextUtils.isEmpty(userId)) {
+            EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+            if (TextUtils.isEmpty(userData.phoneId) || TextUtils.isEmpty(userData.userId)) {
                 openLogin();
                 return;
             }
-            String userName = sp.getString(EXTRA_USER_NAME, null);
-            String phone = sp.getString(EXTRA_PHONE, null);
-            String roles = sp.getString(EXTRA_USER_ROLES, null);
-            boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
-            boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
-            boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
-            boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
-            final EventLoginData eventLoginData = new EventLoginData();
-            eventLoginData.phoneId = phoneId;
-            eventLoginData.userId = userId;
-            eventLoginData.userName = userName;
-            eventLoginData.phone = phone;
-            eventLoginData.roles = roles;
-            eventLoginData.isSupperAccount = isSupperAccount;
-            eventLoginData.hasStation = hasStation;
-            eventLoginData.hasContract = hasContract;
-            eventLoginData.hasScanLogin = hasScanLogin;
-            openMain(eventLoginData);
+            openMain(userData);
         } catch (Exception e) {
             e.printStackTrace();
             LogUtils.loge("login Exception : " + e.getMessage());

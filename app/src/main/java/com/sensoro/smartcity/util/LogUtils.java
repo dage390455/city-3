@@ -21,14 +21,25 @@ public class LogUtils {
     }
 
     public static void loge(Object o, String msg) {
+
         if (isShowLog) {
-            e(TAG + "-->" + o.getClass().getSimpleName(), msg);
+            if (o instanceof String) {
+                e((String) o, msg);
+            } else {
+                e(TAG + "-->" + o.getClass().getSimpleName(), msg);
+            }
+
         }
     }
 
     public static void logd(Object o, String msg) {
         if (isShowLog) {
-            d(TAG + "-->" + o.getClass().getSimpleName(), msg);
+            if (o instanceof String) {
+                d((String) o, msg);
+            } else {
+                d(TAG + "-->" + o.getClass().getSimpleName(), msg);
+            }
+
         }
     }
 

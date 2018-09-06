@@ -31,7 +31,9 @@ import com.sensoro.smartcity.model.DeviceAlarmCount;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.model.MenuPageInfo;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.NetWorkUtils;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -200,7 +202,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
                 getView().setMenuSelected(0);
             }
-        }, 100);
+        }, 50);
     }
 
 
@@ -263,7 +265,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             @Override
             public void onNext(ResponseBase responseBase) {
                 if (responseBase.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    RetrofitServiceHelper.INSTANCE.clearSessionId();
+                    RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
                     Intent intent = new Intent(mActivity, LoginActivity.class);
                     getView().startAC(intent);
                 }
@@ -336,6 +338,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
         @Override
         public void run() {
+            //检查网络状态
+            ThreadPoolManager.getInstance().execute(new Runnable() {
+                @Override
+                public void run() {
+                    final boolean ping = NetWorkUtils.ping();
+                    mActivity.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            if (!ping) {
+                                getView().toastShort("似乎断开了网路连接");
+                            }
+                        }
+                    });
+                }
+            });
             //检查更新
             Beta.checkUpgrade(false, false);
             if (!isSupperAccount()) {
@@ -426,7 +443,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS || resultCode == ImagePicker.RESULT_CODE_BACK) {
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS || resultCode == ImagePicker.RESULT_CODE_BACK || resultCode == RESULT_CODE_RECORD) {
             if (alarmListFragment != null) {
                 alarmListFragment.handlerActivityResult(requestCode, resultCode, data);
             }

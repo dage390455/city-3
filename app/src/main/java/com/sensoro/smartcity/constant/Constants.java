@@ -7,15 +7,6 @@ import com.sensoro.smartcity.R;
  */
 
 public interface Constants {
-    //合同扫描相关id
-    int REQUEST_CODE_LICENSE_SERVICE = 0x111;
-    int REQUEST_CODE_PERSON_SERVICE = 0x112;
-    int REQUEST_CODE_BUSINESS_LICENSE = 123;
-    int REQUEST_CODE_CAMERA = 102;
-    //上传图片相关id
-    int IMAGE_ITEM_ADD = -1;
-    int REQUEST_CODE_SELECT = 100;
-    int REQUEST_CODE_PREVIEW = 101;
     //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
@@ -180,13 +171,28 @@ public interface Constants {
     int DIRECTION_UP = 1;
     int TYPE_LIST = 0;
     int TYPE_GRID = 1;
+    //
     String ENCODE = "HmacSHA512";
     String APP_ID = "wxa65d8bad62a982e1";
+    //
     int TYPE_DEVICE_NAME = 0x10;
     int TYPE_DEVICE_SN = 0x11;
     int TYPE_DEVICE_PHONE_NUM = 0x12;
-
+    //
     String EXTRA_SEARCH_CONTENT = "extra_search_content";
+    //
+    //合同扫描相关id
+    int REQUEST_CODE_LICENSE_SERVICE = 0x111;
+    int REQUEST_CODE_PERSON_SERVICE = 0x112;
+    int REQUEST_CODE_BUSINESS_LICENSE = 0x113;
+    int REQUEST_CODE_CAMERA = 102;
+    //上传图片相关id
+    int IMAGE_ITEM_ADD = -1;
+    int REQUEST_CODE_PREVIEW = 0x101;
+    int REQUEST_CODE_SELECT = 0x100;
+    int REQUEST_CODE_RECORD = 0x99;
+    int RESULT_CODE_RECORD = 0x98;
+    int REQUEST_CODE_PLAY_RECORD = 0x97;
     //
     int EVENT_DATA_FINISH_CODE = 0x13;
     int EVENT_DATA_SOCKET_DATA_INFO = 0x14;

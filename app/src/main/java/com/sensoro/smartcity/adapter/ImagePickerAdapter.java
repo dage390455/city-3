@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -36,6 +38,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
     private LayoutInflater mInflater;
     private OnRecyclerViewItemClickListener listener;
     private boolean isAdded;   //是否额外添加了最后一个图片
+    private String addIconContent;
 
     public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, int position);
@@ -43,6 +46,10 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setAddIconContentText(String text) {
+        this.addIconContent = text;
     }
 
     public void setImages(List<ImageItem> data) {
@@ -110,6 +117,10 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         setImages(data);
     }
 
+    public void setMaxImgCount(int maxImgCount) {
+        this.maxImgCount = maxImgCount;
+    }
+
     @Override
     public SelectedPicViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new SelectedPicViewHolder(mInflater.inflate(R.layout.list_item_image, parent, false));
@@ -127,19 +138,26 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     class SelectedPicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
+        private ImageView iv_record_play;
         private ImageView iv_img;
         private ImageView image_delete;
         private LinearLayout ll_add;
+        private TextView tv_add_content;
         private int clickPosition;
 
         SelectedPicViewHolder(View itemView) {
             super(itemView);
             iv_img = (ImageView) itemView.findViewById(R.id.iv_img);
+            iv_record_play = (ImageView) itemView.findViewById(R.id.iv_record_play);
             image_delete = (ImageView) itemView.findViewById(R.id.image_delete);
             ll_add = (LinearLayout) itemView.findViewById(R.id.ll_add);
+            tv_add_content = itemView.findViewById(R.id.tv_add_content);
         }
 
         public void bind(int position) {
+            if (!TextUtils.isEmpty(addIconContent)) {
+                tv_add_content.setText(addIconContent);
+            }
             //设置条目的点击事件
             itemView.setOnClickListener(this);
             image_delete.setOnClickListener(this);
@@ -151,10 +169,17 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 //                iv_img.setImageResource(R.drawable.selector_image_add);
                 clickPosition = SensoroPopupAlarmView.IMAGE_ITEM_ADD;
                 image_delete.setVisibility(View.GONE);
+                iv_record_play.setVisibility(View.GONE);
             } else {
                 iv_img.setVisibility(View.VISIBLE);
                 ll_add.setVisibility(View.GONE);
                 image_delete.setVisibility(View.VISIBLE);
+                if (mData != null) {
+                    ImageItem imageItem = mData.get(position);
+                    if (imageItem != null) {
+                        iv_record_play.setVisibility(imageItem.isRecord ? View.VISIBLE : View.GONE);
+                    }
+                }
                 //替换压缩0.01
                 Glide.with((Activity) mContext)                             //配置上下文
                         .load(Uri.fromFile(new File(item.path)))    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)

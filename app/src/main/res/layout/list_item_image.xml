@@ -32,12 +32,13 @@
             android:src="@mipmap/pic_add" />
 
         <TextView
+            android:id="@+id/tv_add_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:layout_marginBottom="3dp"
             android:layout_marginTop="3dp"
-            android:text="现场照片"
+            android:text="照片/视频"
             android:textColor="@color/ip_text_primary_inverted"
             android:textSize="10sp" />
     </LinearLayout>
@@ -49,6 +50,14 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
         android:src="@mipmap/picture_del"
+        android:visibility="gone" />
+
+    <ImageView
+        android:id="@+id/iv_record_play"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/item_icon_play"
         android:visibility="gone" />
 
 </RelativeLayout>

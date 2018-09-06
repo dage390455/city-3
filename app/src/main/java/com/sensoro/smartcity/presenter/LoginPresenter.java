@@ -3,7 +3,6 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
@@ -23,7 +22,6 @@ import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
-import com.sensoro.smartcity.util.AESUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
@@ -48,16 +46,13 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
     private void readLoginData() {
-        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
-                .MODE_PRIVATE);
-        String name = sp.getString(PREFERENCE_KEY_NAME, null);
-        String pwd = sp.getString(PREFERENCE_KEY_PASSWORD, null);
+        String name = PreferencesHelper.getInstance().getLoginNamePwd().get(PREFERENCE_KEY_NAME);
+        String pwd = PreferencesHelper.getInstance().getLoginNamePwd().get(PREFERENCE_KEY_PASSWORD);
         if (!TextUtils.isEmpty(name)) {
             getView().showAccountName(name);
         }
         if (!TextUtils.isEmpty(pwd)) {
-            String aes_pwd = AESUtil.decode(pwd);
-            getView().showAccountPwd(aes_pwd);
+            getView().showAccountPwd(pwd);
         }
     }
 
@@ -114,7 +109,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                 public void call(LoginRsp loginRsp) {
                     String sessionID = loginRsp.getData().getSessionID();
                     RetrofitServiceHelper.INSTANCE.saveSessionId(sessionID);
-                    saveLoginData(account, pwd);
+                    PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>() {
                 @Override
@@ -133,6 +128,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         eventLoginData.userName = userInfo.getNickname();
                         eventLoginData.phone = userInfo.getContacts();
                         eventLoginData.phoneId = phoneId;
+                        LogUtils.loge("logPresenter","phoneId = "+phoneId);
                         //TODO 处理Character信息
 //                      mCharacter = userInfo.getCharacter();
                         eventLoginData.roles = userInfo.getRoles();
@@ -153,10 +149,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         }
                         //
                         PreferencesHelper.getInstance().saveUserData(eventLoginData);
-                        //
-                        if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
-                            PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
-                        }
                         //
                         openMain(eventLoginData);
                     } else {
@@ -202,17 +194,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             getView().finishAc();
         }
 //        LogUtils.loge(this, eventData.toString());
-    }
-
-    /**
-     * 保存账户名称
-     *
-     * @param username
-     * @param pwd
-     */
-    private void saveLoginData(String username, String pwd) {
-        String aes_pwd = AESUtil.encode(pwd);
-        PreferencesHelper.getInstance().saveLoginNamePwd(username, aes_pwd);
     }
 
     @Override

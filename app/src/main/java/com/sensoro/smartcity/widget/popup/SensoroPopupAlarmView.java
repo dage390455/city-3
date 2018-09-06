@@ -28,6 +28,8 @@ import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.TakeRecordActivity;
+import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.NothingSelectedSpinnerAdapter;
 import com.sensoro.smartcity.constant.Constants;
@@ -35,6 +37,7 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -47,7 +50,7 @@ import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickListener, Constants,
         ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, AdapterView
-                .OnItemSelectedListener {
+                .OnItemSelectedListener, SelectDialog.SelectDialogListener {
     private Context mContext;
     private OnPopupCallbackListener mListener;
     private Animation showAnimation;
@@ -74,7 +77,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 
     private ImagePickerAdapter adapter;
     private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
-    private final int maxImgCount = 9;               //允许选择图片最大数
+    private int maxImgCount = 9;               //允许选择图片最大数
     private ArrayList<ImageItem> tempImages = null;
     private Activity mActivity;
     private TextView tvSpinnerResultInfo;
@@ -139,12 +142,20 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         return dialog;
     }
 
-    private void showProgressDialog(int count, double percent) {
+    private void showProgressDialogByPhoto(int count, double percent) {
         if (progressDialog != null) {
-            String title = "正在上传第" + count + "张，总共" + selImageList.size() + "张";
-            progressDialog.setProgress((int) (percent * 100));
-            progressDialog.setTitle(title);
-            progressDialog.show();
+            if (count == -1) {
+                String title = "正在上传视频";
+                progressDialog.setProgress((int) (percent * 100));
+                progressDialog.setTitle(title);
+                progressDialog.show();
+            } else {
+                String title = "正在上传第" + count + "张，总共" + selImageList.size() + "张";
+                progressDialog.setProgress((int) (percent * 100));
+                progressDialog.setTitle(title);
+                progressDialog.show();
+            }
+
         }
     }
 
@@ -383,60 +394,38 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 //            adapter.notifyItemRemoved(position);
             adapter.setImages(selImageList);
 //            updateButton();
-        } else {
-            switch (position) {
-                case IMAGE_ITEM_ADD:
-                    List<String> names = new ArrayList<>();
-                    names.add("拍照");
-                    names.add("相册");
-                    showDialog(new SelectDialog.SelectDialogListener() {
-                        @Override
-                        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                            switch (position) {
-                                case 0: // 直接调起相机
-                                    /**
-                                     * 0.4.7 目前直接调起相机不支持裁剪，如果开启裁剪后不会返回图片，请注意，后续版本会解决
-                                     *
-                                     * 但是当前直接依赖的版本已经解决，考虑到版本改动很少，所以这次没有上传到远程仓库
-                                     *
-                                     * 如果实在有所需要，请直接下载源码引用。
-                                     */
-                                    //打开选择,本次允许选择的数量
-                                    ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
-                                    Intent intent = new Intent(mActivity, ImageGridActivity.class);
-                                    intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                                    mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
-                                    break;
-                                case 1:
-                                    //打开选择,本次允许选择的数量
-                                    //修改选择逻辑
-//                                    ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
-                                    ImagePicker.getInstance().setSelectLimit(maxImgCount);
-                                    Intent intent1 = new Intent(mActivity, ImageGridActivity.class);
-                                    /* 如果需要进入选择的时候显示已经选中的图片，
-                                     * 详情请查看ImagePickerActivity
-                                     * */
-                                    intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
-                                    mActivity.startActivityForResult(intent1, REQUEST_CODE_SELECT);
-                                    break;
-                                default:
-                                    break;
-                            }
-
-                        }
-                    }, names);
-
-
+        } else if (IMAGE_ITEM_ADD == position) {
+            List<String> names = new ArrayList<>();
+            names.add("拍照");
+            names.add("相册");
+            boolean needRecord = true;
+            for (ImageItem imageItem : selImageList) {
+                if (!imageItem.isRecord) {
+                    //只要有一个是照片
+                    needRecord = false;
                     break;
-                default:
-                    //打开预览
-                    Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
-                    intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) adapter.getImages());
-                    intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
-                    intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-                    mActivity.startActivityForResult(intentPreview, REQUEST_CODE_PREVIEW);
-                    break;
+                }
             }
+            if (needRecord) {
+                names.add("拍摄视频");
+            }
+            showDialog(this, names);
+        } else {
+            //打开预览
+            ImageItem imageItem = selImageList.get(position);
+            if (imageItem.isRecord) {
+                Intent intent = new Intent();
+                intent.setClass(mActivity, VideoPlayActivity.class);
+                intent.putExtra("path_record", (Serializable) imageItem);
+                mActivity.startActivityForResult(intent, REQUEST_CODE_PLAY_RECORD);
+            } else {
+                Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
+                intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) adapter.getImages());
+                intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
+                intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+                mActivity.startActivityForResult(intentPreview, REQUEST_CODE_PREVIEW);
+            }
+
         }
 
     }
@@ -470,7 +459,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 
     @Override
     public void onProgress(int index, double percent) {
-        showProgressDialog(index, percent);
+        showProgressDialogByPhoto(index, percent);
     }
 
     @Override
@@ -501,16 +490,58 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
 
     }
 
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        switch (position) {
+            case 0: // 直接调起相机
+                /**
+                 * 0.4.7 目前直接调起相机不支持裁剪，如果开启裁剪后不会返回图片，请注意，后续版本会解决
+                 *
+                 * 但是当前直接依赖的版本已经解决，考虑到版本改动很少，所以这次没有上传到远程仓库
+                 *
+                 * 如果实在有所需要，请直接下载源码引用。
+                 */
+                //打开选择,本次允许选择的数量
+                ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
+                Intent intent = new Intent(mActivity, ImageGridActivity.class);
+                intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+                mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
+                break;
+            case 1:
+                //打开选择,本次允许选择的数量
+                //修改选择逻辑
+//                                    ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
+                ImagePicker.getInstance().setSelectLimit(maxImgCount);
+                Intent intent1 = new Intent(mActivity, ImageGridActivity.class);
+                /* 如果需要进入选择的时候显示已经选中的图片，
+                 * 详情请查看ImagePickerActivity
+                 * */
+                intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
+                mActivity.startActivityForResult(intent1, REQUEST_CODE_SELECT);
+                break;
+            case 2:
+                Intent intent2 = new Intent(mActivity, TakeRecordActivity.class);
+//                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+                mActivity.startActivityForResult(intent2, REQUEST_CODE_RECORD);
+                break;
+            default:
+                break;
+        }
+
+    }
+
     public interface OnPopupCallbackListener {
         void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark);
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
+        LogUtils.loge("handlerActivityResult requestCode = " + requestCode + ",resultCode = " + resultCode + ",data = " + data);
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
             if (data != null && requestCode == REQUEST_CODE_SELECT) {
                 tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 if (tempImages != null) {
+                    adapter.setMaxImgCount(9);
                     boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
                     if (!fromTakePhoto) {
                         selImageList.clear();
@@ -521,14 +552,32 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
             }
         } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
             //预览图片返回
-            if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
+            if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
                 tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
                 if (tempImages != null) {
+                    adapter.setMaxImgCount(9);
                     selImageList.clear();
                     selImageList.addAll(tempImages);
                     adapter.setImages(selImageList);
                 }
             }
+        } else if (resultCode == RESULT_CODE_RECORD) {
+            //拍视频
+            if (data != null && requestCode == REQUEST_CODE_RECORD) {
+                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
+                if (imageItem != null) {
+                    LogUtils.loge("--- 从视频返回  path = " + imageItem.recordPath);
+                    adapter.setMaxImgCount(1);
+                    selImageList.clear();
+                    selImageList.add(imageItem);
+                    adapter.setImages(selImageList);
+                }
+            } else if (requestCode == REQUEST_CODE_PLAY_RECORD) {
+                adapter.setMaxImgCount(9);
+                selImageList.clear();
+                adapter.setImages(selImageList);
+            }
+
         }
     }
 

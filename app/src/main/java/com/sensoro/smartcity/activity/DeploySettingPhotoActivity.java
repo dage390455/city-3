@@ -39,6 +39,7 @@ public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, D
     private void initView() {
         adapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList(), 4);
         adapter.setOnItemClickListener(this);
+        adapter.setAddIconContentText("现场照片");
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
         rvDeployPhoto.setLayoutManager(layoutManager);
         rvDeployPhoto.setHasFixedSize(true);
@@ -87,7 +88,7 @@ public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, D
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        mActivity.startActivityForResult(intent,requestCode);
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -108,7 +109,7 @@ public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, D
     public void onItemClick(View view, int position) {
         int id = view.getId();
         List<ImageItem> images = adapter.getImages();
-        mPresenter.clickItem(id, position,images);
+        mPresenter.clickItem(id, position, images);
     }
 
     @Override

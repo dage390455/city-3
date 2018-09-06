@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.igexin.sdk.PushManager;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -71,14 +69,10 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
         });
     }
 
-    //146424209
     private void saveLoginDataOpenMain(EventLoginData eventLoginData) {
         //
         PreferencesHelper.getInstance().saveUserData(eventLoginData);
         //
-        if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
-            PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
-        }
         EventData eventData = new EventData();
         eventData.code = EVENT_DATA_AUTH_SUC;
         EventBus.getDefault().post(eventData);

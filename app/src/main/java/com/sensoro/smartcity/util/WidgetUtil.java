@@ -12,6 +12,7 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.provider.Settings;
 import android.text.SpannableString;
@@ -29,6 +30,9 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
@@ -223,6 +227,48 @@ public class WidgetUtil {
                 textView.setText(text);
             }
         }
+
+    }
+
+    //文件转化成bitmap
+    public static String bitmap2File(Bitmap bitmap, String path) {
+        String pathname = path.substring(0, path.lastIndexOf(".")) + ".jpg";
+        LogUtils.loge("pathname = " + pathname);
+        File f = new File(pathname);
+        if (f.exists()) f.delete();
+        FileOutputStream fOut = null;
+        try {
+            fOut = new FileOutputStream(f);
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+            fOut.flush();
+            fOut.close();
+
+        } catch (IOException e) {
+            return null;
+        }
+        return f.getAbsolutePath();
+    }
+
+    // 获取视频缩略图
+    public static Bitmap getVideoThumbnail(String filePath) {
+        Bitmap b = null;
+        MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        try {
+            retriever.setDataSource(filePath);
+            b = retriever.getFrameAtTime();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+
+        } finally {
+            try {
+                retriever.release();
+            } catch (RuntimeException e) {
+                e.printStackTrace();
+            }
+        }
+        return b;
 
     }
 

@@ -30,7 +30,9 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
+import com.yixia.camera.VCamera;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -50,7 +52,9 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     private static PushHandler pushHandler;
     public UploadManager uploadManager;
     public volatile boolean hasGotToken = false;
+    public static String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
 
+    //    public static String VIDEO_PATH =  "/sdcard/SensroroCity/";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -133,6 +137,22 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         initImagePicker();
         initUploadManager();
         initBugLy();
+        initVc();
+    }
+
+    private void initVc() {
+        VIDEO_PATH += "SensoroCity";
+        File file = new File(VIDEO_PATH);
+        if (!file.exists()) file.mkdirs();
+
+        //设置视频缓存路径
+        VCamera.setVideoCachePath(VIDEO_PATH);
+
+        // 开启log输出,ffmpeg输出到logcat
+        VCamera.setDebugMode(false);
+
+        // 初始化拍摄SDK，必须
+        VCamera.initialize(this);
     }
 
     private void initBugLy() {
@@ -219,14 +239,14 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     private void initUploadManager() {
         Configuration config = new Configuration.Builder()
-                .chunkSize(200 * 1024)        // 分片上传时，每片的大小。 默认256K
-//                .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
+                .chunkSize(512 * 1024)        // 分片上传时，每片的大小。 默认256K
+                .putThreshhold(1024 * 1024)   // 启用分片上传阀值。默认512K
                 .connectTimeout(10)           // 链接超时。默认10秒
                 .useHttps(true)               // 是否使用https上传域名
                 .responseTimeout(60)          // 服务器响应超时。默认60秒
-//                .recorder(null)           // recorder分片上传时，已上传片记录器。默认null
+                .recorder(null)           // recorder分片上传时，已上传片记录器。默认null
 //                .recorder(new re, keyGen)   // keyGen 分片上传时，生成标识符，用于片记录器区分是那个文件的上传记录
-                .zone(FixedZone.zone0)        // 设置区域，指定不同区域的上传域名、备用域名、备用IP。
+                .zone(FixedZone.zone0)// 设置区域，指定不同区域的上传域名、备用域名、备用IP。
                 .build();
 // 重用uploadManager。一般地，只需要创建一个uploadManager对象
         uploadManager = new UploadManager(config);

@@ -32,7 +32,7 @@ android {
     defaultConfig {
         applicationId "com.sensoro.smartcity"
         minSdkVersion 20
-        targetSdkVersion 25
+        targetSdkVersion 19
         versionCode verCode
         versionName verName + connector + buildCode
 //         Enabling multidex support.
@@ -46,7 +46,8 @@ android {
             moduleName "city"
             //声明启用Android日志, 在c/c++的源文件中使用的#include <android/log.h> 日志将得到输出
 //            ldLibs "log"
-            abiFilters 'armeabi'    //只生成armeabi的so
+//            abiFilters 'armeabi','armeabi-v7a'  //只生成armeabi的so
+            abiFilters 'armeabi'  //只生成armeabi的so
         }
     }
     buildTypes {
