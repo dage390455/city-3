@@ -32,7 +32,8 @@ android {
     defaultConfig {
         applicationId "com.sensoro.smartcity"
         minSdkVersion 20
-        targetSdkVersion 19
+        //考虑到vcamera库只能在23以下
+        targetSdkVersion 22
         versionCode verCode
         versionName verName + connector + buildCode
 //         Enabling multidex support.
