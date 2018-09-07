@@ -22,6 +22,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -566,12 +567,12 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
     }
 
     @Override
-    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark) {
+    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
         getView().showProgressDialog();
         getView().setUpdateButtonClickable(false);
         RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
                 statusType, statusPlace,
-                remark, isReConfirm, images).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe
                         (new CityObserver<DeviceAlarmItemRsp>() {
 

@@ -113,7 +113,14 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return mPresenter.onKeyDown(keyCode, event);
+            if (mPresenter.onKeyDown(keyCode, event)) {
+                if (sensoroPager.getCurrentItem() != 0 && !isSupperAccount()) {
+                    onItemClick(null, null, 0, 0);
+                } else {
+                    mPresenter.exit();
+                }
+            }
+            return true;
         }
         return super.onKeyDown(keyCode, event);
     }

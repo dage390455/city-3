@@ -9,6 +9,7 @@ import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmDetailActivityView;
@@ -17,6 +18,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
@@ -24,6 +26,7 @@ import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -87,12 +90,12 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
     }
 
     @Override
-    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark) {
+    public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
         getView().setUpdateButtonClickable(false);
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(deviceAlarmLogInfo.get_id(), statusResult, statusType,
                 statusPlace,
-                remark, isReConfirm, images).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe
                         (new CityObserver<DeviceAlarmItemRsp>() {
 
@@ -130,21 +133,39 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
         mList.clear();
     }
 
-    public void clickPhotoItem(int position, List<String> images) {
+    public void clickPhotoItem(int position, List<ScenesData> scenesDataList) {
         //
         ArrayList<ImageItem> items = new ArrayList<>();
-        if (images != null && images.size() > 0) {
-            for (String url : images) {
+        if (scenesDataList != null && scenesDataList.size() > 0) {
+            for (ScenesData scenesData : scenesDataList) {
                 ImageItem imageItem = new ImageItem();
-                imageItem.path = url;
                 imageItem.fromUrl = true;
+                if ("video".equals(scenesData.type)) {
+                    imageItem.isRecord = true;
+                    imageItem.recordPath = scenesData.url;
+                    imageItem.path = scenesData.thumbUrl;
+                } else {
+                    imageItem.path = scenesData.url;
+                    imageItem.isRecord = false;
+                }
                 items.add(imageItem);
             }
-            Intent intentPreview = new Intent(mContext, ImageAlarmPhotoDetailActivity.class);
-            intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
-            intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
-            intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-            getView().startAC(intentPreview);
+            ImageItem imageItem = items.get(position);
+            if (imageItem.isRecord){
+                Intent intent = new Intent();
+                intent.setClass(mContext, VideoPlayActivity.class);
+                intent.putExtra("path_record", (Serializable) imageItem);
+                intent.putExtra("video_del",true);
+                getView().startAC(intent);
+            }else {
+                //
+                Intent intentPreview = new Intent(mContext, ImageAlarmPhotoDetailActivity.class);
+                intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
+                intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
+                intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+                getView().startAC(intentPreview);
+            }
+
         }
 
     }

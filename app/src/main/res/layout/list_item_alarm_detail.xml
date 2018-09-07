@@ -9,4 +9,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="fitXY" />
+
+    <ImageView
+        android:id="@+id/iv_record"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/item_icon_play"
+        android:visibility="gone" />
 </com.sensoro.smartcity.widget.SquareRelativeLayout>

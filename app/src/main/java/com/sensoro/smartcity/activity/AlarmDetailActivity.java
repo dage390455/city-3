@@ -17,6 +17,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAlarmDetailActivityView;
 import com.sensoro.smartcity.presenter.AlarmDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
@@ -302,7 +303,7 @@ public class AlarmDetailActivity extends BaseActivity<IAlarmDetailActivityView, 
     }
 
     @Override
-    public void onPhotoItemClick(int position, List<String> images) {
-        mPresenter.clickPhotoItem(position, images);
+    public void onPhotoItemClick(int position, List<ScenesData> scenesDataList) {
+        mPresenter.clickPhotoItem(position, scenesDataList);
     }
 }

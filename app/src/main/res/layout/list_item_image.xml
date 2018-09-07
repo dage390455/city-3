@@ -38,7 +38,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="3dp"
             android:layout_marginTop="3dp"
-            android:text="照片/视频"
+            android:text="现场照片"
             android:textColor="@color/ip_text_primary_inverted"
             android:textSize="10sp" />
     </LinearLayout>

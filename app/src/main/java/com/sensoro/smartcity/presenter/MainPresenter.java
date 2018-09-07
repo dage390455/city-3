@@ -327,10 +327,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (alarmListFragment.onKeyDown(keyCode, event)) {
-            exit();
-        }
-        return false;
+        return alarmListFragment.onKeyDown(keyCode, event);
     }
 
 
@@ -433,7 +430,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
     }
 
-    private void exit() {
+    public void exit() {
         if ((System.currentTimeMillis() - exitTime) > 2000) {
             getView().toastShort(mActivity.getResources().getString(R.string.exit_main));
             exitTime = System.currentTimeMillis();

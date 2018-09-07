@@ -33,6 +33,7 @@ import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.NothingSelectedSpinnerAdapter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroShadowView;
 import com.sensoro.smartcity.widget.SensoroToast;
@@ -124,6 +125,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
         RecyclerView recyclerView = findViewById(R.id.recyclerView);
         adapter = new ImagePickerAdapter(mContext, selImageList, maxImgCount);
         adapter.setOnItemClickListener(this);
+        adapter.canVideo(true);
         GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -438,16 +440,16 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     @Override
-    public void onComplete(List<String> imagesUrl) {
+    public void onComplete(List<ScenesData> scenesDataList) {
         StringBuilder s = new StringBuilder();
-        for (String temp : imagesUrl) {
-            s.append(temp).append("\n");
+        for (ScenesData scenesData : scenesDataList) {
+            s.append(scenesData.url).append("\n");
         }
         dismissProgressDialog();
 //        toastShort("上传成功---");
         LogUtils.loge(this, "上传成功---" + s);
         //TODO 上传结果
-        mListener.onPopupCallback(selectResult, selectType, selectPlace, imagesUrl, mRemark);
+        mListener.onPopupCallback(selectResult, selectType, selectPlace, scenesDataList, mRemark);
     }
 
     @Override
@@ -531,7 +533,7 @@ public class SensoroPopupAlarmView extends LinearLayout implements View.OnClickL
     }
 
     public interface OnPopupCallbackListener {
-        void onPopupCallback(int statusResult, int statusType, int statusPlace, List<String> images, String remark);
+        void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark);
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {

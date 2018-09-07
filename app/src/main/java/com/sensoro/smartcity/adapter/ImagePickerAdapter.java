@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +37,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
     private LayoutInflater mInflater;
     private OnRecyclerViewItemClickListener listener;
     private boolean isAdded;   //是否额外添加了最后一个图片
-    private String addIconContent;
+    private boolean canVideo;
 
     public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, int position);
@@ -46,10 +45,6 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public void setOnItemClickListener(OnRecyclerViewItemClickListener listener) {
         this.listener = listener;
-    }
-
-    public void setAddIconContentText(String text) {
-        this.addIconContent = text;
     }
 
     public void setImages(List<ImageItem> data) {
@@ -63,6 +58,9 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         notifyDataSetChanged();
     }
 
+    public void canVideo(boolean canVideo) {
+        this.canVideo = canVideo;
+    }
 //    public void removeImage(int position) {
 ////        mData = new ArrayList<>(data);
 //        ImageItem imageItem = mData.getInstance(position);
@@ -155,8 +153,14 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         }
 
         public void bind(int position) {
-            if (!TextUtils.isEmpty(addIconContent)) {
-                tv_add_content.setText(addIconContent);
+            if (canVideo) {
+                if (isAdded) {
+                    if (getItemCount() > 1) {
+                        tv_add_content.setText("照片");
+                    } else {
+                        tv_add_content.setText("照片/视频");
+                    }
+                }
             }
             //设置条目的点击事件
             itemView.setOnClickListener(this);

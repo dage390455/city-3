@@ -36,10 +36,10 @@ import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeploySettingPhotoActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.DeploySettingContactActivity;
 import com.sensoro.smartcity.activity.DeploySettingNameActivity;
+import com.sensoro.smartcity.activity.DeploySettingPhotoActivity;
 import com.sensoro.smartcity.activity.DeploySettingTagActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -51,6 +51,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -453,19 +454,21 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                         }
 
                         @Override
-                        public void onComplete(List<String> imagesUrl) {
-                            String s = "";
-                            for (String temp : imagesUrl) {
-                                s += temp + "\n";
+                        public void onComplete(List<ScenesData> scenesDataList) {
+                            ArrayList<String> strings = new ArrayList<>();
+                            for (ScenesData scenesData : scenesDataList) {
+                                scenesData.type = "image";
+                                strings.add(scenesData.url);
                             }
                             getView().dismissUploadProgressDialog();
-                            LogUtils.loge(this, "上传成功---" + s);
+                            LogUtils.loge(this, "上传成功--- size = " + strings.size());
                             //TODO 上传结果
-                            doDeployResult(sn, name, tags, lon, lan, contact, content, imagesUrl);
+                            doDeployResult(sn, name, tags, lon, lan, contact, content, strings);
                         }
 
                         @Override
                         public void onError(String errMsg) {
+                            getView().setUploadButtonClickable(true);
                             getView().dismissUploadProgressDialog();
                             getView().toastShort(errMsg);
                         }

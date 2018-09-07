@@ -69,30 +69,33 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         topBar.findViewById(com.lzy.imagepicker.R.id.btn_ok).setVisibility(View.GONE);
         topBar.findViewById(com.lzy.imagepicker.R.id.btn_back).setOnClickListener(this);
         ImageView mBtnDel = (ImageView) findViewById(com.lzy.imagepicker.R.id.btn_del);
-        //TODO 控制删除显示
-        mBtnDel.setVisibility(View.VISIBLE);
-        //
         mBtnDel.setOnClickListener(this);
         topBar.findViewById(com.lzy.imagepicker.R.id.btn_back).setOnClickListener(this);
         mTitleCount = (TextView) findViewById(com.lzy.imagepicker.R.id.tv_des);
         mTitleCount.setText("视频");
         NavigationBarChangeListener.with(this, NavigationBarChangeListener.ORIENTATION_HORIZONTAL)
                 .setListener(this);
-
+        vv_play.setOnClickListener(this);
+        //
         Intent intent = getIntent();
+        boolean videoDel = intent.getBooleanExtra("video_del", false);
+        mBtnDel.setVisibility(videoDel ? View.GONE : View.VISIBLE);
+        //
         mImageItem = (ImageItem) intent.getSerializableExtra("path_record");
         if (mImageItem != null) {
             mProgressUtils.showProgress();
             Log.e("VideoPlayActivity", "path = " + mImageItem.recordPath);
-            File file = new File(mImageItem.recordPath);
-            Log.e("VideoPlayActivity", "path size = " + file.length());
-//            vv_play.setVideoPath(mImageItem.recordPath);
-            vv_play.setVideoPath("https://resource-city.sensoro.com/24F6087E70945A4D809203E8EC904D2B");
+            vv_play.setVideoPath(mImageItem.recordPath);
             vv_play.setOnPreparedListener(this);
             vv_play.setOnErrorListener(this);
+            if (!mImageItem.fromUrl) {
+                File file = new File(mImageItem.recordPath);
+                Log.e("VideoPlayActivity", "path size = " + file.length());
+//            vv_play.setVideoPath(mImageItem.recordPath);
+            }
         }
 
-        vv_play.setOnClickListener(this);
+
     }
 
     @Override
@@ -189,6 +192,13 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
     public boolean onError(MediaPlayer mp, int what, int extra) {
         mProgressUtils.dismissProgress();
         return false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        mProgressUtils.destroyProgress();
+        vv_play.release();
+        super.onDestroy();
     }
 
     @Override

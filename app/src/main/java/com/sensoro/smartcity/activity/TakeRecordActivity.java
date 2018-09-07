@@ -217,9 +217,9 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
                 deleteDir(f.getAbsolutePath());
             }
         } else if (dir.exists()) {
-//            if (!dir.getAbsolutePath().endsWith(".jpg")) {
-            dir.delete();
-//            }
+            if (!dir.getAbsolutePath().endsWith(".jpg")) {
+                dir.delete();
+            }
         }
     }
 
