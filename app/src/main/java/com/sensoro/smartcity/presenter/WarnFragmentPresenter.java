@@ -13,16 +13,10 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> {
     @Override
     public void initData(Context context) {
         mContext = context;
-        initRcContent();
+
 
     }
 
-    private void initRcContent() {
-        MainWarnFragRcContentAdapter mainWarnFragRcContentAdapter = new MainWarnFragRcContentAdapter(mContext);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mContext);
-        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        getView().setRcContentAdapter(mainWarnFragRcContentAdapter,linearLayoutManager);
-    }
 
     @Override
     public void onDestroy() {

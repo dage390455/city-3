@@ -15,29 +15,14 @@ import com.sensoro.smartcity.imainviews.IMainViewTest;
 import java.util.ArrayList;
 
 public class MainPresenterTest extends BasePresenter<IMainViewTest> {
-
-    private ArrayList<Fragment> mFragmentList;
     private Context mContext;
 
     @Override
     public void initData(Context context) {
         mContext = context;
-        initViewPager();
+
     }
 
-    private void initViewPager() {
-        HomeFragment homeFragment = new HomeFragment();
-        WarnFragment warnFragment = new WarnFragment();
-        ManagerFragment managerFragment = new ManagerFragment();
-        mFragmentList = new ArrayList<>();
-        mFragmentList.add(homeFragment);
-        mFragmentList.add(warnFragment);
-        mFragmentList.add(managerFragment);
-        getView().setMainHomeVpAdapter(new MainFragmentPageAdapter(
-                ((MainActivityTest) mContext).getSupportFragmentManager(), mFragmentList));
-        getView().setHpCurrentItem(0);
-        getView().setRbChecked(R.id.ac_main_rb_main);
-    }
 
     @Override
     public void onDestroy() {

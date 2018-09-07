@@ -8,6 +8,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.autonavi.ae.pos.LocNGMInfo;
 import com.sensoro.smartcity.R;
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,7 +26,6 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
     @Override
     public MyViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View inflate = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_main_warn_rc_content, parent, false);
-
         return new MyViewHolder(inflate);
     }
 
@@ -34,6 +35,13 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             changeStrokeColor(holder.mainWarnRcContentTvTag,R.color.c_ff8d34);
             holder.mainWarnRcContentTvTag.setText("误报");
         }
+
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
 
     private void changeStrokeColor(View view, @ColorRes int color) {
@@ -69,4 +77,5 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             ButterKnife.bind(this, itemView);
         }
     }
+
 }

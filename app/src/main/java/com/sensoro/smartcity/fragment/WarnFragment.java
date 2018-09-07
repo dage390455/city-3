@@ -25,10 +25,22 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     ImageView fgMainWarnImvCalendar;
     @BindView(R.id.fg_main_warn_rc_content)
     RecyclerView fgMainWarnRcContent;
+    private MainWarnFragRcContentAdapter mRcContentAdapter;
 
     @Override
     protected void initData(Context activity) {
+        initView();
         mPresenter.initData(activity);
+    }
+
+    private void initView() {
+        initRcContent();
+
+        initListener();
+    }
+
+    private void initListener() {
+
     }
 
     @Override
@@ -96,10 +108,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     }
 
-    @Override
-    public void setRcContentAdapter(MainWarnFragRcContentAdapter adapter, LinearLayoutManager manager) {
-        fgMainWarnRcContent.setLayoutManager(manager);
-        fgMainWarnRcContent.setAdapter(adapter);
+    private void initRcContent() {
+        mRcContentAdapter = new MainWarnFragRcContentAdapter(mRootFragment.getActivity());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mRootFragment.getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        fgMainWarnRcContent.setLayoutManager(linearLayoutManager);
+        fgMainWarnRcContent.setAdapter(mRcContentAdapter);
     }
 
 

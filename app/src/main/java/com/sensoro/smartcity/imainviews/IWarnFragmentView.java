@@ -8,5 +8,4 @@ import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
 public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDialog {
-    void setRcContentAdapter(MainWarnFragRcContentAdapter adapter, LinearLayoutManager manager);
 }

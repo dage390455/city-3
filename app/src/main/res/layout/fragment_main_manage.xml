@@ -1,11 +1,427 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
-    <TextView
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="manage"
-        android:textSize="24sp"
-        android:textColor="@color/white"/>
-</android.support.constraint.ConstraintLayout>
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="8dp"
+            android:background="@color/white"
+            android:gravity="center_horizontal"
+            android:text="管理"
+            android:paddingTop="8dp"
+            android:textColor="@color/c_030303"
+            android:textSize="18sp" />
+
+        <LinearLayout
+            android:id="@+id/fg_main_manage_ll_main_function"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="主要功能"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_change_merchants"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/change_merchants" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="商户切换"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <TextView
+                    android:id="@+id/fg_main_manage_tv_merchant_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:text="SENSORO"
+                    android:textColor="@color/c_29c093"
+                    android:textSize="12sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/c_dfdfdf" />
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_deploy_device"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/deploy_device" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="设备部署"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/c_dfdfdf" />
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_contract_management"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/contract_managemet" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="合同管理"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/c_dfdfdf" />
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_polling_mission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/polling_mission" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="巡检任务"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/c_dfdfdf" />
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_maintenance_mission"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/maintenance_mission" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="维保任务"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="监控大屏"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_scan_login"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/scan_login" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="扫码登录"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:text="其他"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="12sp" />
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_about_us"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/about_us" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="关于我们"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/c_dfdfdf" />
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_version_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/change_merchants" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="版本信息"
+                    android:textColor="@color/c_252525"
+                    android:textSize="16sp" />
+
+                <View
+                    android:id="@+id/fg_main_manage_tv_is_upgrade"
+                    android:layout_width="12dp"
+                    android:layout_height="12dp"
+                    android:background="@drawable/shape_oval_29c"
+                    android:layout_gravity="center_vertical"
+                    />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginEnd="25dp"
+                    android:layout_marginStart="15dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/arrows_right" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/fg_main_manage_ll_exit"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:layout_marginTop="12dp"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/exit" />
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_weight="1"
+                    android:text="退出账户"
+                    android:textColor="@color/c_f34a4a"
+                    android:textSize="16sp" />
+
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>
