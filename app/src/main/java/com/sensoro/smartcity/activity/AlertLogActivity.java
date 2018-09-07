@@ -18,7 +18,7 @@ IAlertLogActivityView
 
     @Override
     protected AlertLogActivityPresenter createPresenter() {
-        return null;
+        return new AlertLogActivityPresenter();
     }
 
     @Override
