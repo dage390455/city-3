@@ -39,7 +39,6 @@ public class DeploySettingPhotoActivity extends BaseActivity<IDeployPhotoView, D
     private void initView() {
         adapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList(), 4);
         adapter.setOnItemClickListener(this);
-        adapter.setAddIconContentText("现场照片");
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
         rvDeployPhoto.setLayoutManager(layoutManager);
         rvDeployPhoto.setHasFixedSize(true);

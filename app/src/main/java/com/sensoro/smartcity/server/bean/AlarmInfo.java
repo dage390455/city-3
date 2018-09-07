@@ -154,6 +154,17 @@ public class AlarmInfo implements Serializable {
         //
         private List<String> images;
 
+        private List<ScenesData> scenes;
+
+
+        public List<ScenesData> getScenes() {
+            return scenes;
+        }
+
+        public void setScenes(List<ScenesData> scenes) {
+            this.scenes = scenes;
+        }
+
         public int getPlace() {
             return place;
         }

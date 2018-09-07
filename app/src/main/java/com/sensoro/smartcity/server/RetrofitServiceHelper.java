@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
@@ -612,7 +613,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(String id, int statusResult, int statusType, int
-            statusPlace, String remark, boolean isReconfirm, List<String> imagesUrl) {
+            statusPlace, String remark, boolean isReconfirm, List<ScenesData> scenesDataList) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("displayStatus", statusResult);
@@ -628,12 +629,18 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("type", "confirm");
             }
             //
-            if (imagesUrl != null) {
+            if (scenesDataList != null) {
                 JSONArray jsonArray = new JSONArray();
-                for (String url : imagesUrl) {
-                    jsonArray.put(url);
+                for (ScenesData scenesData : scenesDataList) {
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("type", scenesData.type);
+                    jsonObject1.put("url", scenesData.url);
+                    if (!TextUtils.isEmpty(scenesData.thumbUrl)) {
+                        jsonObject1.put("thumbUrl", scenesData.thumbUrl);
+                    }
+                    jsonArray.put(jsonObject1);
                 }
-                jsonObject.put("images", jsonArray);
+                jsonObject.put("scenes", jsonArray);
             }
         } catch (JSONException e) {
             e.printStackTrace();

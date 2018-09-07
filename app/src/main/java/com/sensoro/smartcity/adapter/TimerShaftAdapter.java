@@ -22,6 +22,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -360,8 +361,33 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
             if (!TextUtils.isEmpty(remark)) {
                 childHolder.tvAlarmRemark.setText(remark);
             }
-            final List<String> images = recordInfo.getImages();
-            if (images != null && images.size() > 0) {
+//            final List<String> images = recordInfo.getImages();
+//            if (images != null && images.size() > 0) {
+//                final GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4) {
+//                    @Override
+//                    public RecyclerView.LayoutParams generateDefaultLayoutParams() {
+//                        return new RecyclerView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                                ViewGroup.LayoutParams.WRAP_CONTENT);
+//                    }
+//                };
+//                childHolder.rvAlarmPhoto.setLayoutManager(layoutManager);
+//                childHolder.rvAlarmPhoto.setHasFixedSize(true);
+//                adapter.setOnItemClickListener(new AlarmDetailPhotoAdapter.OnRecyclerViewItemClickListener() {
+//                    @Override
+//                    public void onItemClick(View view, int position) {
+//                        if (onPhotoClickListener != null) {
+//                            onPhotoClickListener.onPhotoItemClick(position, images);
+//                        }
+//                    }
+//                });
+//                childHolder.rvAlarmPhoto.setAdapter(adapter);
+//                //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
+//                childHolder.rvAlarmPhoto.setNestedScrollingEnabled(false);
+//                adapter.setImages(images);
+//            }
+            //
+            final List<ScenesData> scenes = recordInfo.getScenes();
+            if (scenes != null && scenes.size() > 0) {
                 final GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4) {
                     @Override
                     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
@@ -375,16 +401,15 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
                     @Override
                     public void onItemClick(View view, int position) {
                         if (onPhotoClickListener != null) {
-                            onPhotoClickListener.onPhotoItemClick(position, images);
+                            onPhotoClickListener.onPhotoItemClick(position, scenes);
                         }
                     }
                 });
                 childHolder.rvAlarmPhoto.setAdapter(adapter);
                 //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
                 childHolder.rvAlarmPhoto.setNestedScrollingEnabled(false);
-                adapter.setImages(images);
+                adapter.setImages(scenes);
             }
-            //
         } else {
             AlarmInfo.RecordInfo.Event childBean = (AlarmInfo.RecordInfo.Event) getChild(groupPosition, childPosition);
             if (childBean != null) {
@@ -443,7 +468,7 @@ public class TimerShaftAdapter extends BaseExpandableListAdapter {
     }
 
     public interface OnPhotoClickListener {
-        void onPhotoItemClick(int position, List<String> images);
+        void onPhotoItemClick(int position, List<ScenesData> scenesDataList);
     }
 
     static class GroupViewHolder {
