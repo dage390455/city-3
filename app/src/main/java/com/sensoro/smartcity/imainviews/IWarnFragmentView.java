@@ -1,11 +1,18 @@
 package com.sensoro.smartcity.imainviews;
 
-import android.support.v7.widget.LinearLayoutManager;
-
-import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
+
+import java.util.List;
 
 public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDialog {
+    void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
+
+    void showAlarmPopupView();
+
+    void dismissAlarmPopupView();
+
+    void onPullRefreshComplete();
 }

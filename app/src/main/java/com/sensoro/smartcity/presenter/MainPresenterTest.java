@@ -46,6 +46,7 @@ import java.util.List;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+
 public class MainPresenterTest extends BasePresenter<IMainViewTest> implements Constants, IOnCreate {
 
     private ArrayList<Fragment> mFragmentList;
@@ -232,12 +233,14 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         }
 
     }
+
     @Override
     public void onCreate() {
         if (!EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().register(this);
         }
     }
+
     //没有登录跳转登录界面
     private void openLogin() {
         Intent loginIntent = new Intent();
@@ -278,20 +281,21 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         PreferencesHelper.getInstance().saveUserData(eventLoginData);
 //        getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
 //        if (indexFragment != null) {
-            if (mEventLoginData.isSupperAccount) {
+        if (mEventLoginData.isSupperAccount) {
 //                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
-            } else {
+        } else {
 //                indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-            }
+        }
 //            merchantSwitchFragment.refreshData(mEventLoginData.userName, mEventLoginData.phone, mEventLoginData.phoneId);
-            //
+        //
 //            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
 //            getView().setCurrentPagerItem(0);
 //            getView().setMenuSelected(0);
-            reconnect();
+        reconnect();
 //        }
 
     }
+
     private void reconnect() {
         try {
             if (mSocket != null) {
@@ -313,6 +317,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
             e.printStackTrace();
         }
     }
+
     @Override
     public void onDestroy() {
         mHandler.removeCallbacks(mRunnable);
@@ -330,6 +335,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         Beta.unInit();
         LogUtils.loge(this, "onDestroy");
     }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         //TODO 可以修改以此种方式传递，方便管理
@@ -356,6 +362,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         }
 //        LogUtils.loge(this, eventData.toString());
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
 //        return alarmListFragment.onKeyDown(keyCode, event);
         return false;
@@ -378,6 +385,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         }
 
     }
+
     private void refreshDeviceInfo(DeviceInfo deviceInfo) {
         for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
             DeviceInfo tempDeviceInfo = SensoroCityApplication.getInstance().getData().get(i);
