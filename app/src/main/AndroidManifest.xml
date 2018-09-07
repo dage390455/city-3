@@ -246,6 +246,7 @@
         <activity android:name=".activity.AuthActivity" />
         <activity android:name=".activity.TakeRecordActivity" />
         <activity android:name=".activity.VideoPlayActivity" />
+        <activity android:name=".activity.MainActivityTest" />
 
         <service
             android:name="com.igexin.download.DownloadService"

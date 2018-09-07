@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
+    android:id="@+id/dialog_main_home_menu_rl_root">
+    <ImageButton
+        android:id="@+id/dialog_main_home_menu_imv_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/main_menu_close"
+        android:background="@color/transparent"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"
+        android:padding="8dp"
+        android:layout_marginEnd="25dp"
+        android:layout_marginTop="42dp"
+        android:layout_centerVertical="true"
+        android:contentDescription="@null"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:layout_below="@id/dialog_main_home_menu_imv_close"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="25dp"
+        android:orientation="vertical">
+       <TextView
+           android:id="@+id/dialog_main_home_menu_tv_quick_deploy"
+           style="@style/style_fg_home_dialog_tv"
+           android:text="快速部署"
+           android:drawableStart="@drawable/main_home_menu_quick_deploy"/>
+       <View
+           android:layout_width="match_parent"
+           android:layout_height="1dp"
+           android:layout_marginTop="12dp"
+           android:background="@color/c_dfdfdf"/>
+
+        <TextView
+            android:id="@+id/dialog_main_home_menu_new_tv_construction"
+            style="@style/style_fg_home_dialog_tv"
+            android:text="新建合同"
+            android:drawableStart="@drawable/main_home_menu_construction"/>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:background="@color/c_dfdfdf"/>
+
+        <TextView
+            android:id="@+id/dialog_main_home_menu_tv_scan_login"
+            style="@style/style_fg_home_dialog_tv"
+            android:text="扫码登录"
+            android:drawableStart="@drawable/main_home_menu_scan_login"
+            android:layout_marginBottom="12dp"/>
+
+
+    </LinearLayout>
+
+</RelativeLayout>
