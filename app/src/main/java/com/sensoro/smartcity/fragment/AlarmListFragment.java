@@ -57,6 +57,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
     private RelativeLayout mSearchLayout;
     private RelativeLayout mSelectedDateLayout;
     private RelativeLayout mTitleLayout;
+
     private SensoroShadowView mShadowView;
     private SensoroPopupAlarmView mAlarmPopupView;
     private AlarmListAdapter mAlarmListAdapter;
@@ -154,6 +155,7 @@ public class AlarmListFragment extends BaseFragment<IAlarmListFragmentView, Alar
         mSelectedDateTextView = (TextView) mRootView.findViewById(R.id.alarm_log_selected_date);
         mCloseImageView = (ImageView) mRootView.findViewById(R.id.alarm_log_selected_close);
         mCloseImageView.setOnClickListener(this);
+
         mAlarmPopupView = (SensoroPopupAlarmView) mRootView.findViewById(R.id.alarm_popup_view);
         mAlarmPopupView.setOnPopupCallbackListener(mPresenter);
         mAlarmPopupView.setDialog(mRootFragment.getActivity());
