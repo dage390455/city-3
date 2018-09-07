@@ -38,12 +38,11 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
         initWidget();
+        mPresenter.initData(mActivity);
     }
 
     private void initWidget() {
         acMainRlGuide.setOnCheckedChangeListener(this);
-
-        mPresenter.initData(mActivity);
     }
 
     @Override
@@ -124,6 +123,7 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     @Override
     public void setMainHomeVpAdapter(MainFragmentPageAdapter mainFragmentPageAdapter) {
         acMainHvpContent.setAdapter(mainFragmentPageAdapter);
+        acMainHvpContent.setOffscreenPageLimit(5);
     }
 
     @Override
@@ -135,12 +135,5 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     @Override
     public void setRbChecked(int id) {
         acMainRlGuide.check(id);
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

@@ -5,24 +5,37 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
+import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
+import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
+
 public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPresenter> implements
-        IHomeFragmentView {
+        IHomeFragmentView, RecycleViewItemClickListener {
     @BindView(R.id.fg_main_home_tv_title)
     TextView fgMainHomeTvTitle;
     @BindView(R.id.fg_main_home_imb_add)
@@ -32,11 +45,85 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @BindView(R.id.fg_main_home_rc_type)
     RecyclerView fgMainHomeRcType;
     @BindView(R.id.fg_main_home_rc_content)
-    RecyclerView fgMainHomeRcContent;
+    XRecyclerView fgMainHomeRcContent;
+    private MainHomeFragRcContentAdapter mMainHomeFragRcContentAdapter;
+    private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeAdapter;
+    private ProgressUtils mProgressUtils;
+    private boolean isShowDialog = true;
 
     @Override
     protected void initData(Context activity) {
+        initView();
         mPresenter.initData(activity);
+    }
+
+    private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
+        initRcType();
+        initRcContent();
+    }
+
+    private void initRcContent() {
+        mMainHomeFragRcContentAdapter = new MainHomeFragRcContentAdapter(mRootFragment.getActivity());
+        mMainHomeFragRcContentAdapter.setOnItemClickLisenter(this);
+        //
+        final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
+        xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
+        fgMainHomeRcContent.setAdapter(mMainHomeFragRcContentAdapter);
+        fgMainHomeRcContent.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
+//        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x8);
+//        fgMainHomeRcContent.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        fgMainHomeRcContent.setLoadingListener(new XRecyclerView.LoadingListener() {
+            @Override
+            public void onRefresh() {
+                isShowDialog = false;
+                mPresenter.requestWithDirection(DIRECTION_DOWN);
+                mPresenter.requestTopData(false);
+            }
+
+            @Override
+            public void onLoadMore() {
+                isShowDialog = false;
+                mPresenter.requestWithDirection(DIRECTION_UP);
+            }
+        });
+        fgMainHomeRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+//                if (xLinearLayoutManager.findFirstVisibleItemPosition() == 0 && newState == SCROLL_STATE_IDLE &&
+//                        toolbarDirection == DIRECTION_DOWN) {
+////                    mListRecyclerView.setre
+//                }
+                if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
+                    if (newState == 0) {
+//                        mReturnTopImageView.setVisibility(VISIBLE);
+//                        if (returnTopAnimation.hasEnded()) {
+//                            mReturnTopImageView.startAnimation(returnTopAnimation);
+//                        }
+                    } else {
+//                        mReturnTopImageView.setVisibility(View.GONE);
+                    }
+                } else {
+//                    mReturnTopImageView.setVisibility(View.GONE);
+                }
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+
+            }
+        });
+    }
+
+    private void initRcType() {
+        mMainHomeFragRcTypeAdapter = new MainHomeFragRcTypeAdapter(mRootFragment.getActivity());
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mRootFragment.getActivity());
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        fgMainHomeRcType.setLayoutManager(linearLayoutManager);
+        fgMainHomeRcType.setAdapter(mMainHomeFragRcTypeAdapter);
     }
 
     @Override
@@ -86,17 +173,20 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void showProgressDialog() {
-
+        if (isShowDialog) {
+            mProgressUtils.showProgress();
+        }
+        isShowDialog = true;
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        mProgressUtils.dismissProgress();
     }
 
     @Override
     public void toastShort(String msg) {
-
+        SensoroToast.INSTANCE.makeText(mRootFragment.getActivity(), msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -104,26 +194,55 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     }
 
-    @Override
-    public void setRcTypeAdapter(MainHomeFragRcTypeAdapter adapter, LinearLayoutManager manager) {
-        fgMainHomeRcType.setLayoutManager(manager);
-        fgMainHomeRcType.setAdapter(adapter);
-    }
 
     @Override
-    public void setRcContentAdapter(MainHomeFragRcContentAdapter adapter, LinearLayoutManager manager) {
-        fgMainHomeRcContent.setLayoutManager(manager);
-        fgMainHomeRcContent.setAdapter(adapter);
+    public void updateRcTypeAdapter(List<String> data) {
     }
 
     @Override
     public void setImvAddVisible(boolean isVisible) {
-        fgMainHomeImbAdd.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        fgMainHomeImbAdd.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
     public void setImvSearchVisible(boolean isVisible) {
-        fgMainHomeImbSearch.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        fgMainHomeImbSearch.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void refreshTop(boolean isFirstInit, int alarmCount, int lostCount, int inactiveCount) {
+
+    }
+
+    @Override
+    public void returnTop() {
+        fgMainHomeRcContent.smoothScrollToPosition(0);
+//        mReturnTopImageView.setVisibility(View.GONE);
+    }
+
+    @Override
+    public void refreshData(List<DeviceInfo> dataList) {
+        mMainHomeFragRcContentAdapter.setData(dataList);
+        mMainHomeFragRcContentAdapter.notifyDataSetChanged();
+        fgMainHomeRcContent.refreshComplete();
+//        if (dataList.size() < 5) {
+//            mReturnTopImageView.setVisibility(View.GONE);
+//        }
+    }
+
+    @Override
+    public void showTypePopupView() {
+
+    }
+
+    @Override
+    public void setTypeView(String typesText) {
+
+    }
+
+    @Override
+    public void recycleViewRefreshComplete() {
+        fgMainHomeRcContent.refreshComplete();
     }
 
 
@@ -167,8 +286,38 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private void showDialog() {
         fgMainHomeImbAdd.clearAnimation();
         MenuDialogFragment menuDialogFragment = new MenuDialogFragment();
-        menuDialogFragment.show(getActivity().getSupportFragmentManager(),"mainMenuDialog");
+        menuDialogFragment.show(getActivity().getSupportFragmentManager(), "mainMenuDialog");
         setImvAddVisible(false);
         setImvSearchVisible(false);
+    }
+
+    @Override
+    public void onDestroyView() {
+        if (mRootView != null) {
+            ((ViewGroup) mRootView.getParent()).removeView(mRootView);
+        }
+
+//        if (mGridAdapter != null) {
+//            mGridAdapter.getData().clear();
+//        }
+//        if (mListAdapter != null) {
+//            mListAdapter.getData().clear();
+//        }
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
+//        if (mListRecyclerView != null) {
+//            mListRecyclerView.destroy();
+//        }
+//        if (mGridRecyclerView != null) {
+//            mGridRecyclerView.destroy();
+//        }
+        super.onDestroyView();
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+
     }
 }
