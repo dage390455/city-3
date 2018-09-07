@@ -1,82 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="44dp"
-        android:layout_marginStart="20dp"
         android:layout_marginEnd="13dp"
-        >
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="5dp">
+
         <TextView
             android:id="@+id/fg_main_home_tv_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/c_a6a6a6"
-            android:text="监测点数"
             android:layout_centerVertical="true"
-            android:textSize="14sp"
-            />
+            android:text="监测点数"
+            android:textColor="@color/c_a6a6a6"
+            android:textSize="14sp" />
+
         <ImageButton
             android:id="@+id/fg_main_home_imb_add"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/main_add"
-            android:background="@color/transparent"
             android:layout_alignParentEnd="true"
-            android:padding="8dp"
             android:layout_centerVertical="true"
-            android:contentDescription="@null" />
+            android:background="@color/transparent"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:src="@drawable/main_add" />
+
         <ImageButton
             android:id="@+id/fg_main_home_imb_search"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/main_search"
-            android:padding="8dp"
-            android:background="@color/transparent"
-            android:layout_toStartOf="@id/fg_main_home_imb_add"
             android:layout_centerVertical="true"
-            android:contentDescription="@null" />
+            android:layout_toStartOf="@id/fg_main_home_imb_add"
+            android:background="@color/transparent"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:src="@drawable/main_search" />
 
     </RelativeLayout>
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="4.5dp"
         android:text="218,636"
-        android:textSize="44sp"
         android:textColor="@color/c_252525"
-        />
+        android:textSize="44sp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fg_main_home_rc_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="25dp">
+        android:layout_marginTop="24.5dp">
 
     </android.support.v7.widget.RecyclerView>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="全部类型"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="28dp"
         android:drawableEnd="@drawable/main_smal_triangle"
         android:drawablePadding="8dp"
-        android:layout_marginTop="28dp"
-        android:layout_marginStart="20dp"
-        />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fg_main_home_rc_content"
-        android:layout_width="match_parent"
-        android:layout_marginStart="20dp"
-        android:layout_height="match_parent">
+        android:text="全部类型" />
 
-    </android.support.v7.widget.RecyclerView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <com.jcodecraeer.xrecyclerview.XRecyclerView
+            android:id="@+id/fg_main_home_rc_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginStart="20dp" />
+    </LinearLayout>
 
 </LinearLayout>

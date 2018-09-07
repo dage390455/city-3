@@ -8,6 +8,7 @@ import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
 public interface IMainViewTest extends IProgressDialog,IToast,IActivityIntent {
+    void setMainHomeVpAdapter(MainFragmentPageAdapter mainHomeVpAdapter);
     void setHpCurrentItem(int position);
 
     void setRbChecked(@IdRes int id);

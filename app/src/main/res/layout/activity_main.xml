@@ -4,72 +4,76 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:background="@color/white"
-    >
+    android:orientation="vertical">
+
     <com.sensoro.smartcity.widget.HomeViewPager
         android:id="@+id/ac_main_hvp_content"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
-        android:background="#1000"/>
+        android:background="#1000" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/c_dfdfdf"/>
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <RadioGroup
-        android:id="@+id/ac_main_rl_guide"
+        android:background="@color/c_dfdfdf" />
+
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content">
 
-        <RadioButton
-            android:id="@+id/ac_main_rb_main"
-            android:layout_width="0dp"
+        <RadioGroup
+            android:id="@+id/ac_main_rl_guide"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:checked="true"
-            style="@style/style_ac_main_bottom"
-            android:drawableTop="@drawable/selector_ac_main_home"
-            android:text="首页"/>
+            android:background="@color/white"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/ac_main_rb_main"
+                style="@style/style_ac_main_bottom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:drawableTop="@drawable/selector_ac_main_home"
+                android:text="首页" />
 
 
-        <RadioButton
-            android:id="@+id/ac_main_rb_warning"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/style_ac_main_bottom"
-            android:drawableTop="@drawable/selector_ac_main_warning"
-            android:text="预警"/>
+            <RadioButton
+                android:id="@+id/ac_main_rb_warning"
+                style="@style/style_ac_main_bottom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/selector_ac_main_warning"
+                android:text="预警" />
 
-        <RadioButton
-            android:id="@+id/ac_main_rb_manage"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            style="@style/style_ac_main_bottom"
-            android:drawableTop="@drawable/selector_ac_main_manage"
-            android:text="管理"/>
-    </RadioGroup>
-    <View
-        android:id="@+id/view"
-        android:layout_width="1dp"
-        android:layout_height="1dp"
-        android:layout_centerHorizontal="true"/>
-    <TextView
-        android:id="@+id/ac_main_tv_warning_count"
-        android:layout_width="16dp"
-        android:layout_height="16dp"
-        android:gravity="center"
-        android:text="3"
-        android:textSize="10sp"
-        android:layout_marginTop="4dp"
-        android:textColor="@color/white"
-        android:background="@drawable/em_unread_count_bg"
-        android:layout_alignStart="@+id/view"/>
-</RelativeLayout>
+            <RadioButton
+                android:id="@+id/ac_main_rb_manage"
+                style="@style/style_ac_main_bottom"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:drawableTop="@drawable/selector_ac_main_manage"
+                android:text="管理" />
+        </RadioGroup>
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_centerHorizontal="true" />
+
+        <TextView
+            android:id="@+id/ac_main_tv_warning_count"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignStart="@+id/view"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/em_unread_count_bg"
+            android:gravity="center"
+            android:text="3"
+            android:textColor="@color/white"
+            android:textSize="10sp" />
+    </RelativeLayout>
 
 </LinearLayout>

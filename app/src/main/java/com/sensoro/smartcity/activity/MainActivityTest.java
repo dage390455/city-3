@@ -53,8 +53,6 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     private void initView() {
         initViewPager();
         acMainRlGuide.setOnCheckedChangeListener(this);
-
-
     }
 
     @Override
@@ -132,6 +130,12 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
         }
     }
 
+    @Override
+    public void setMainHomeVpAdapter(MainFragmentPageAdapter mainFragmentPageAdapter) {
+        acMainHvpContent.setAdapter(mainFragmentPageAdapter);
+        acMainHvpContent.setOffscreenPageLimit(5);
+    }
+
 
     @Override
     public void setHpCurrentItem(int position) {
@@ -143,6 +147,7 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     public void setRbChecked(int id) {
         acMainRlGuide.check(id);
     }
+
 
     private void initViewPager() {
         HomeFragment homeFragment = new HomeFragment();
@@ -157,4 +162,5 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
         acMainHvpContent.setCurrentItem(0);
         setRbChecked(R.id.ac_main_rb_main);
     }
+
 }
