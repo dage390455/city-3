@@ -250,6 +250,8 @@
         <activity android:name=".activity.DeployDeviceDetailActivity" />
         <activity android:name=".activity.DeployDeviceTagActivity" />
         <activity android:name=".activity.DeployPicActivity" />
+        <activity android:name=".activity.ScanActivity" />
+        <activity android:name=".activity.MonitoringPointDetailActivity" />
 
         <service
             android:name="com.igexin.download.DownloadService"
