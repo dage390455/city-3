@@ -9,7 +9,7 @@ import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
-import com.sensoro.smartcity.activity.MainActivity;
+import com.sensoro.smartcity.activity.MainActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
@@ -169,7 +169,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
     private void openMain(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
-        mainIntent.setClass(mContext, MainActivity.class);
+        mainIntent.setClass(mContext, MainActivityTest.class);
         mainIntent.putExtra("eventLoginData", eventLoginData);
         getView().startAC(mainIntent);
         getView().finishAc();

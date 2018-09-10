@@ -3,7 +3,7 @@ package com.sensoro.smartcity.widget;
 import android.view.View;
 
 /**
- * Created by tangrisheng on 2016/5/11.
+ * Created by ddong on 2016/5/11.
  * RecycleView Item Click Listener
  */
 public interface RecycleViewItemClickListener {

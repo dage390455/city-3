@@ -19,6 +19,7 @@ import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 
@@ -31,7 +32,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
-        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener {
+        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, RecycleViewItemClickListener {
     @BindView(R.id.fg_main_warn_tv_search)
     TextView fgMainWarnTvSearch;
     @BindView(R.id.fg_main_warn_imv_calendar)
@@ -84,12 +85,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void startAC(Intent intent) {
-
+        mRootFragment.getActivity().startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-
+        mRootFragment.getActivity().finish();
     }
 
     @Override
@@ -143,6 +144,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private void initRcContent() {
         mRcContentAdapter = new MainWarnFragRcContentAdapter(mRootFragment.getActivity());
         mRcContentAdapter.setAlarmConfirmStatusClickListener(this);
+        mRcContentAdapter.setOnItemClickListener(this);
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fgMainWarnRcContent.setLayoutManager(xLinearLayoutManager);
@@ -263,5 +265,10 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
 
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        mPresenter.clickItem(position);
     }
 }

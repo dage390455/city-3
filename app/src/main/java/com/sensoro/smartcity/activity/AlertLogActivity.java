@@ -11,16 +11,21 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
+import com.sensoro.smartcity.adapter.TimerShaftAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlertLogActivityView;
 import com.sensoro.smartcity.presenter.AlertLogActivityPresenter;
+import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertLogActivityPresenter> implements
-        IAlertLogActivityView {
+        IAlertLogActivityView, TimerShaftAdapter.OnPhotoClickListener {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -55,6 +60,7 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     TextView acAlertTvAlertConfirm;
     @BindView(R.id.ac_alert_rc_content)
     RecyclerView acAlertRcContent;
+    private AlertLogRcContentAdapter alertLogRcContentAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -69,11 +75,12 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     }
 
     private void initRcContent() {
-        AlertLogRcContentAdapter adapter = new AlertLogRcContentAdapter(mActivity);
+        alertLogRcContentAdapter = new AlertLogRcContentAdapter(mActivity);
+        alertLogRcContentAdapter.setOnPhotoClickListener(this);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         acAlertRcContent.setLayoutManager(manager);
-        acAlertRcContent.setAdapter(adapter);
+        acAlertRcContent.setAdapter(alertLogRcContentAdapter);
     }
 
     @Override
@@ -83,12 +90,12 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
 
     @Override
     public void startAC(Intent intent) {
-
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -126,13 +133,6 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
 
     }
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
-    }
-
     @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation, R.id.ac_alert_tv_alert_confirm})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -141,11 +141,41 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
 
                 break;
             case R.id.ac_alert_tv_contact_owner:
+                mPresenter.doContactOwner();
                 break;
             case R.id.ac_alert_tv_quick_navigation:
+                mPresenter.doNavigation();
                 break;
             case R.id.ac_alert_tv_alert_confirm:
+
                 break;
         }
+    }
+
+    @Override
+    public void setDeviceNameTextView(String name) {
+        acAlertLogTvName.setText(name);
+    }
+
+    @Override
+    public void setCurrentAlarmState(int state, String time) {
+//        acAlertLlAlertTime.setBackground();
+        acAlertTvAlertTime.setText(time);
+    }
+
+    @Override
+    public void setAlarmCount(String count) {
+        acAlertTvAlertCount.setText(count);
+    }
+
+    @Override
+    public void updateAlertLogContentAdapter(List<AlarmInfo.RecordInfo> recordInfoList) {
+        alertLogRcContentAdapter.setData(recordInfoList);
+        alertLogRcContentAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPhotoItemClick(int position, List<ScenesData> scenesDataList) {
+        mPresenter.clickPhotoItem(position, scenesDataList);
     }
 }

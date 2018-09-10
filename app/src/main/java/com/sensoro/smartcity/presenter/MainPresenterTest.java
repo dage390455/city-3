@@ -12,8 +12,6 @@ import com.lzy.imagepicker.ImagePicker;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.activity.MainActivityTest;
-import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.fragment.HomeFragment;
@@ -49,7 +47,7 @@ import io.socket.emitter.Emitter;
 
 public class MainPresenterTest extends BasePresenter<IMainViewTest> implements Constants, IOnCreate {
 
-    private ArrayList<Fragment> mFragmentList;
+    private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
     private Activity mContext;
     //
     private long exitTime = 0;
@@ -74,19 +72,18 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         HomeFragment homeFragment = new HomeFragment();
         WarnFragment warnFragment = new WarnFragment();
         ManagerFragment managerFragment = new ManagerFragment();
-        mFragmentList = new ArrayList<>();
+        if (mFragmentList.size() > 0) {
+            mFragmentList.clear();
+        }
         mFragmentList.add(homeFragment);
         mFragmentList.add(warnFragment);
         mFragmentList.add(managerFragment);
-        getView().setMainHomeVpAdapter(new MainFragmentPageAdapter(
-                ((MainActivityTest) mContext).getSupportFragmentManager(), mFragmentList));
-        getView().setHpCurrentItem(0);
-        getView().setRbChecked(R.id.ac_main_rb_main);
+        getView().updateMainPageAdapterData(mFragmentList);
         //
-
         Beta.init(mContext.getApplicationContext(), false);
         mEventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra("eventLoginData");
         //
+        freshAccountType();
         if (null != mEventLoginData) {
             //赋值
             LogUtils.loge("onDataEvent ---->>>" + mEventLoginData.toString());
@@ -96,7 +93,6 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
                 PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
             }
             mHandler.postDelayed(mRunnable, 3000L);
-            freshAccountType();
         } else {
             openLogin();
         }
@@ -108,15 +104,12 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
      *
      * @return
      */
-    public boolean isSupperAccount() {
+    private boolean isSupperAccount() {
         return mEventLoginData != null && mEventLoginData.isSupperAccount;
     }
 
-    public String getRoles() {
-        if (mEventLoginData != null) {
-            return mEventLoginData.roles;
-        }
-        return "";
+    public EventLoginData getLoginData() {
+        return mEventLoginData;
     }
 
     private final class DeviceInfoListener implements Emitter.Listener {
@@ -254,25 +247,13 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
      */
     private void freshAccountType() {
         if (isSupperAccount()) {
-//            getView().setCurrentPagerItem(2);
+            getView().setRbChecked(R.id.ac_main_rb_manage);
+//            getView().setHpCurrentItem(2);
         } else {
-//            getView().setCurrentPagerItem(0);
-        }
-        //TODO 考虑到声明周期问题 暂时延缓后续优化
+//            getView().setHpCurrentItem(0);
+            getView().setRbChecked(R.id.ac_main_rb_main);
 
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-//                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
-                if (mEventLoginData.isSupperAccount) {
-//                    merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
-                } else {
-//                    indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-                }
-//                merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
-//                getView().setMenuSelected(0);
-            }
-        }, 50);
+        }
     }
 
     public void changeAccount(EventLoginData eventLoginData) {
@@ -331,7 +312,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
             mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
             mSocket = null;
         }
-//        fragmentList.clear();
+        mFragmentList.clear();
         Beta.unInit();
         LogUtils.loge(this, "onDestroy");
     }
