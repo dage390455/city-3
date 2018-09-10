@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="8dp"
+    android:layout_height="wrap_content">
+    <ImageView
+        android:id="@+id/item_alert_content_imv_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/phone_icon"
+        android:layout_marginStart="20dp"
+        android:contentDescription="@null"
+        android:layout_marginTop="4dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+    <TextView
+        android:id="@+id/item_alert_content_tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="系统将拨打电话至"
+        android:lineSpacingExtra="4dp"
+        app:layout_constraintStart_toEndOf="@id/item_alert_content_imv_icon"
+        app:layout_constraintTop_toTopOf="@id/item_alert_content_imv_icon"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:textSize="14sp"
+        android:textColor="@color/c_a6a6a6"
+        />
+    <TextView
+        android:id="@+id/item_alert_content_tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="今天 10：14：28"
+        app:layout_constraintStart_toStartOf="@id/item_alert_content_tv_content"
+        app:layout_constraintTop_toBottomOf="@id/item_alert_content_tv_content"
+        android:layout_marginTop="6dp"
+        android:textSize="12sp"
+        android:textColor="@color/c_a6a6a6"
+        />
+
+</android.support.constraint.ConstraintLayout>

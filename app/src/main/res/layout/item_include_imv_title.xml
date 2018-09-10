@@ -6,7 +6,7 @@
     android:background="@color/white"
     android:layout_height="wrap_content">
 <ImageView
-    android:id="@+id/include_text_title_imv_arrows_left"
+    android:id="@+id/include_imv_title_imv_arrows_left"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:src="@drawable/arrows_left"
@@ -20,27 +20,25 @@
     android:contentDescription="@null"
     />
     <TextView
-        android:id="@+id/include_text_title_tv_title"
+        android:id="@+id/include_imv_title_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="预警日志"
         android:textSize="18sp"
         android:textColor="@color/c_030303"
-        app:layout_constraintStart_toEndOf="@id/include_text_title_imv_arrows_left"
-        app:layout_constraintTop_toTopOf="@id/include_text_title_imv_arrows_left"
-        app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"
+        app:layout_constraintStart_toEndOf="@id/include_imv_title_imv_arrows_left"
+        app:layout_constraintTop_toTopOf="@id/include_imv_title_imv_arrows_left"
+        app:layout_constraintBottom_toBottomOf="@id/include_imv_title_imv_arrows_left"
         android:layout_marginStart="5dp"
         />
-    <TextView
-        android:id="@+id/include_text_title_tv_subtitle"
+    <ImageView
+        android:id="@+id/include_imv_title_imv_subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="历史日志"
-        android:textSize="12sp"
-        android:textColor="@color/c_a6a6a6"
+        android:src="@drawable/calendar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/include_text_title_imv_arrows_left"
-        app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"
+        app:layout_constraintTop_toTopOf="@id/include_imv_title_imv_arrows_left"
+        app:layout_constraintBottom_toBottomOf="@id/include_imv_title_imv_arrows_left"
         android:layout_marginEnd="20dp"/>
 
 
