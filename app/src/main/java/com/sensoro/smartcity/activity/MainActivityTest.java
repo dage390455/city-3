@@ -3,12 +3,16 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
+import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.fragment.HomeFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
@@ -53,6 +57,13 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     private void initView() {
         initViewPager();
         acMainRlGuide.setOnCheckedChangeListener(this);
+        initPop();
+    }
+
+    private void initPop() {
+        View view = LayoutInflater.from(mActivity).inflate(R.layout.item_pop_type_select, null);
+        RecyclerView mRcTypeSelect = view.findViewById(R.id.pop_type_select_rc);
+        TypeSelectAdapter mTypeSelectAdapter = new TypeSelectAdapter(mActivity);
     }
 
     @Override
