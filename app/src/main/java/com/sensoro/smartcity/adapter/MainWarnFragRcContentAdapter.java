@@ -16,6 +16,7 @@ import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +30,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
     private AlarmConfirmStatusClickListener mListener;
     private final List<DeviceAlarmLogInfo> mList = new ArrayList<>();
     private final String[] confirmStatusArray = {"待确认", "真实火警", "误报", "测试/巡检", "安全隐患"};
+    private RecycleViewItemClickListener recycleViewItemClickListener;
 
     public MainWarnFragRcContentAdapter(Context context) {
         mContext = context;
@@ -42,6 +44,10 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
 
     public void setAlarmConfirmStatusClickListener(AlarmConfirmStatusClickListener listener) {
         mListener = listener;
+    }
+
+    public void setOnItemClickListener(RecycleViewItemClickListener recycleViewItemClickListener) {
+        this.recycleViewItemClickListener = recycleViewItemClickListener;
     }
 
     @Override
@@ -172,7 +178,9 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if (recycleViewItemClickListener != null) {
+                    recycleViewItemClickListener.onItemClick(v, position);
+                }
             }
         });
     }

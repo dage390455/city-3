@@ -21,6 +21,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.DateUtil;
@@ -35,20 +36,13 @@ import static android.text.style.DynamicDrawableSpan.ALIGN_BASELINE;
  * Created by sensoro on 17/11/15.
  */
 
-public class TimerShaftAdapter extends BaseExpandableListAdapter {
+public class TimerShaftAdapter extends BaseExpandableListAdapter implements Constants{
 
     private LayoutInflater inflater;
     private Context mContext;
     private OnGroupItemClickListener itemClickListener;
     private OnPhotoClickListener onPhotoClickListener;
     private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
-    //
-    private final String[] confirmStatusArray = {"待确认", "真实火警", "误报", "测试/巡检", "安全隐患"};
-    private final String[] confirmAlarmResultInfoArray = {"", "监测点或附近发生着火，需要立即进行扑救", "无任何火情和烟雾", "相关人员主动测试发出的预警",
-            "未发生着火，但现场确实存在隐患"};
-    private final String[] confirmAlarmTypeArray = {"其他", "用电异常", "生产作业", "吸烟", "室内生火", "烹饪", "燃气泄漏", "人为放火", "易燃物自燃"};
-    //    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房",};
-    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房"};
     //
     private AlarmDetailPhotoAdapter adapter;
 

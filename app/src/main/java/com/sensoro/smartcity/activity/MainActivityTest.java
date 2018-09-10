@@ -10,14 +10,12 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.fragment.HomeFragment;
-import com.sensoro.smartcity.fragment.ManagerFragment;
-import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainViewTest;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.presenter.MainPresenterTest;
 import com.sensoro.smartcity.widget.HomeViewPager;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -39,7 +37,6 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     @BindView(R.id.ac_main_tv_warning_count)
     TextView acMainTvWarningCount;
 
-    private ArrayList<Fragment> mFragmentList;
     private MainFragmentPageAdapter mPageAdapter;
 
     @Override
@@ -130,12 +127,6 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
         }
     }
 
-    @Override
-    public void setMainHomeVpAdapter(MainFragmentPageAdapter mainFragmentPageAdapter) {
-        acMainHvpContent.setAdapter(mainFragmentPageAdapter);
-        acMainHvpContent.setOffscreenPageLimit(5);
-    }
-
 
     @Override
     public void setHpCurrentItem(int position) {
@@ -148,19 +139,22 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
         acMainRlGuide.check(id);
     }
 
+    @Override
+    public EventLoginData getLoginData() {
+        return mPresenter.getLoginData();
+    }
+
+    @Override
+    public void updateMainPageAdapterData(List<Fragment> fragments) {
+        mPageAdapter.setFragmentList(fragments);
+        mPageAdapter.notifyDataSetChanged();
+    }
+
 
     private void initViewPager() {
-        HomeFragment homeFragment = new HomeFragment();
-        WarnFragment warnFragment = new WarnFragment();
-        ManagerFragment managerFragment = new ManagerFragment();
-        mFragmentList = new ArrayList<>();
-        mFragmentList.add(homeFragment);
-        mFragmentList.add(warnFragment);
-        mFragmentList.add(managerFragment);
-        mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager(), mFragmentList);
+        mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager());
         acMainHvpContent.setAdapter(mPageAdapter);
-        acMainHvpContent.setCurrentItem(0);
-        setRbChecked(R.id.ac_main_rb_main);
+        acMainHvpContent.setOffscreenPageLimit(5);
     }
 
 }

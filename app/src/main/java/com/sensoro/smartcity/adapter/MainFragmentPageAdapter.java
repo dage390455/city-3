@@ -4,16 +4,21 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MainFragmentPageAdapter extends FragmentPagerAdapter {
+    private final List<Fragment> fragmentList = new ArrayList<>();
 
-    public MainFragmentPageAdapter(FragmentManager fm, List<Fragment> fragmentList) {
+    public MainFragmentPageAdapter(FragmentManager fm) {
         super(fm);
-        this.fragmentList = fragmentList;
     }
 
-    private List<Fragment> fragmentList;
+    public void setFragmentList(List<Fragment> fragmentList) {
+        this.fragmentList.clear();
+        this.fragmentList.addAll(fragmentList);
+    }
+
 
     @Override
     public Fragment getItem(int position) {
@@ -22,10 +27,6 @@ public class MainFragmentPageAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        int ret = 0;
-        if (fragmentList != null) {
-            ret = fragmentList.size();
-        }
-        return ret;
+        return fragmentList.size();
     }
 }

@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.activity;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -12,10 +11,10 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        startAC(new Intent(mActivity,DeployPicActivity.class));
+//        startAC(new Intent(mActivity,DeployPicActivity.class));
 
-//        checkActivity();
-//        mPresenter.initData(mActivity);
+        checkActivity();
+        mPresenter.initData(mActivity);
     }
 
     @Override

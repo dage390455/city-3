@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.AlarmDetailActivity;
+import com.sensoro.smartcity.activity.AlertLogActivity;
 import com.sensoro.smartcity.activity.CalendarActivity;
 import com.sensoro.smartcity.activity.SearchAlarmActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -458,8 +458,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     public void clickItem(int position) {
-        Intent intent = new Intent(mContext, AlarmDetailActivity.class);
-        intent.putExtra(EXTRA_ALARM_INFO, mDeviceAlarmLogInfoList.get(position - 1));
+        Intent intent = new Intent(mContext, AlertLogActivity.class);
+        intent.putExtra(EXTRA_ALARM_INFO, mDeviceAlarmLogInfoList.get(position));
         intent.putExtra(EXTRA_ALARM_IS_RE_CONFIRM, isReConfirm);
         getView().startAC(intent);
     }
