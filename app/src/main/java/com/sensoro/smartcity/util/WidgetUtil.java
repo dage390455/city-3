@@ -12,9 +12,13 @@ import android.graphics.PorterDuffColorFilter;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.provider.Settings;
+import android.support.annotation.NonNull;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.TextUtils;
@@ -452,6 +456,79 @@ public class WidgetUtil {
         }
         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         srcImageView.setLayoutParams(layoutParams);
+    }
+
+    public static void judgeSensorTypeNew(Context context, ImageView srcImageView, String sensorType, int resColor) {
+        int tempResId = R.drawable.type_smoke;
+        if (sensorType.equalsIgnoreCase("co")) {
+            tempResId = R.drawable.type_co;
+        } else if (sensorType.equalsIgnoreCase("co2")) {
+            tempResId = R.drawable.type_co2;
+        } else if (sensorType.equalsIgnoreCase("no2")) {
+            tempResId = R.drawable.type_no2;
+        } else if (sensorType.equalsIgnoreCase("pm2_5") || sensorType.equalsIgnoreCase("pm10")) {
+            tempResId = R.drawable.type_pm;
+        } else if (sensorType.equalsIgnoreCase("ch4")) {
+            tempResId = R.drawable.type_ch4;
+        } else if (sensorType.equalsIgnoreCase("connection")) {
+            tempResId = R.drawable.type_on_off_monitoring;
+        } else if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("humidity")) {
+            tempResId = R.drawable.type_tempature_humidity;
+        } else if (sensorType.equalsIgnoreCase("smoke") || sensorType.equalsIgnoreCase("installed")) {
+            tempResId = R.drawable.type_smoke;
+        } else if (sensorType.equalsIgnoreCase("distance")) {
+            tempResId = R.drawable.type_water_monitoring;
+        } else if (sensorType.equalsIgnoreCase("level") || sensorType.equalsIgnoreCase("distance")) {
+            tempResId = R.drawable.type_well_position;
+        } else if (sensorType.equalsIgnoreCase("cover")) {
+            tempResId = R.drawable.type_well_position;
+        } else if (sensorType.equalsIgnoreCase("drop")) {
+            tempResId = R.drawable.type_leak;
+        } else if (sensorType.equalsIgnoreCase("light")) {
+            tempResId = R.drawable.type_light;
+        } else if (sensorType.equalsIgnoreCase("lpg")) {
+            tempResId = R.drawable.type_gas;
+        } else if (sensorType.equalsIgnoreCase("roll") || sensorType.equalsIgnoreCase("yaw") || sensorType
+                .equalsIgnoreCase("pitch") || sensorType.equalsIgnoreCase("angle")) {
+            tempResId = R.drawable.type_inclination;
+        } else if (sensorType.equalsIgnoreCase("collision")) {
+            tempResId = R.drawable.type_inclination;
+        } else if (sensorType.equalsIgnoreCase("alarm")) {//alarm
+            tempResId = R.drawable.type_emergency_call;
+        } else if (sensorType.equalsIgnoreCase("flame")) { //
+            tempResId = R.drawable.type_flame;
+        } else if (sensorType.equals("magnetic")) {
+            tempResId = R.drawable.type_geomagnetic;
+        } else if (sensorType.equals("door")) {
+            tempResId = R.drawable.type_lock_monitoring;
+        } else if (sensorType.equals("waterPressure")) {
+            tempResId = R.drawable.type_fire_hydraulic;
+        } else if (sensorType.equals("latitude") || sensorType.equals("longitude") || sensorType.equals("altitude")) {
+            tempResId = R.drawable.type_tracking_device;
+        } else if (sensorType.equals("leakage_val") || sensorType.equals("temp_val")) {
+            tempResId = R.drawable.type_tempature_humidity;
+        } else if (sensorType.equals("TOTAL_POWER")) {
+            tempResId = R.drawable.type_ammeter;
+        } else if (sensorType.equalsIgnoreCase("infrared")) {
+            tempResId = R.mipmap.ic_sensor_infrared_bg;
+        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+            tempResId = R.mipmap.ic_sensor_manual_alarm_bg;
+        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+            tempResId = R.mipmap.ic_sensor_sound_light_alarm_bg;
+        } else {
+//            srcImageView.setVisibility(View.INVISIBLE);
+        }
+        changeColor(context, srcImageView, tempResId, resColor);
+    }
+
+    private static void changeColor(Context context, ImageView srcImageView, int imageResId, int resColor) {
+        Drawable drawable = ContextCompat.getDrawable(context, imageResId);
+        Drawable.ConstantState state = drawable.getConstantState();
+        Drawable drawableNew = DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+        drawableNew.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resColor));
+//            srcImageView.setImageDrawable(drawable);
+        srcImageView.setImageDrawable(drawableNew);
     }
 
 //
@@ -1166,6 +1243,15 @@ public class WidgetUtil {
         }
     }
 
+    @NonNull
+    public static void changeIconColor(Context context, ImageView imageView, int resColor) {
+        Drawable drawable = imageView.getDrawable();
+        Drawable.ConstantState state = drawable.getConstantState();
+        DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
+        DrawableCompat.setTint(drawable, context.getResources().getColor(resColor));
+        imageView.setImageDrawable(drawable);
+    }
 
     public static BitmapDrawable createBitmapDrawable(Context context, String sensorType, Bitmap srcBitmap, Bitmap
             targetBitmap) {

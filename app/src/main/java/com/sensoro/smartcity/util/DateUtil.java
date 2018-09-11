@@ -263,6 +263,10 @@ public class DateUtil {
         return new SimpleDateFormat("HH:mm:ss", Locale.ROOT).format(new Date(time));
     }
 
+    public static String getHourMmFormatDate(long time) {
+        return new SimpleDateFormat("HH:mm", Locale.ROOT).format(new Date(time));
+    }
+
     public static String getMothFormatDate(long time) {
         return new SimpleDateFormat("MM/dd HH:mm:ss", Locale.ROOT).format(new Date(time));
     }

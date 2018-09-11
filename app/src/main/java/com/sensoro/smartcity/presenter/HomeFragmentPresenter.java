@@ -21,6 +21,7 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
+import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
@@ -60,8 +61,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private int mStatusSelectedIndex = 0;
     //
     private volatile int tempAlarmCount;
-    private volatile int tempLostCount;
-    private volatile int tempInactiveCount;
+    private volatile int tempTotalCount;
+    private final List<HomeTopModel> homeTopModels = new ArrayList<>();
     /**
      * 推送轮训
      */
@@ -144,7 +145,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 //TODO 去掉只在主页可见出现的时候刷新
                 getView().refreshData(mDataList);
                 if (needRefreshTop) {
-                    getView().refreshTop(false, tempAlarmCount, tempLostCount, tempInactiveCount);
+                    getView().refreshTop(false, homeTopModels);
+                    getView().setDetectionPoints(String.valueOf(tempTotalCount));
                     needRefreshTop = false;
                 }
                 if (needAlarmPlay) {
@@ -158,10 +160,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void playSound() {
-//        String roles = ((MainActivity) mContext).getRoles();
-//        if ("admin".equals(roles)) {
-        mSoundPool.play(mSoundId, 1, 1, 0, 0, 1);
-//        }
+        EventLoginData loginData = ((MainActivityTest) mContext).getLoginData();
+        if ("admin".equals(loginData.roles)) {
+            mSoundPool.play(mSoundId, 1, 1, 0, 0, 1);
+        }
     }
 
     private boolean isMatcher(DeviceInfo deviceInfo) {
@@ -174,7 +176,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             if (unionType != null) {
                 String[] unionTypeArray = unionType.split("\\|");
                 List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                String[] menuTypeArray = SENSOR_MENU_ARRAY[mTypeSelectedIndex].split("\\|");
+                String[] menuTypeArray = SENSOR_MENU_MATCHER_ARRAY[mTypeSelectedIndex].split("\\|");
                 if (mTypeSelectedIndex == 0) {
                     isMatcherType = true;
                 } else {
@@ -254,10 +256,38 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
                 tempAlarmCount = currentAlarmCount;
                 int normalCount = alarmDeviceCountsBean.get_$1();
-                tempLostCount = alarmDeviceCountsBean.get_$2();
-                tempInactiveCount = alarmDeviceCountsBean.get_$3();
+                int lostCount = alarmDeviceCountsBean.get_$2();
+                int inactiveCount = alarmDeviceCountsBean.get_$3();
                 needRefresh = true;
                 needRefreshTop = true;
+                //
+                homeTopModels.clear();
+                if (tempAlarmCount > 0) {
+                    HomeTopModel alrmModel = new HomeTopModel();
+                    alrmModel.type = 0;
+                    alrmModel.value = tempAlarmCount;
+                    homeTopModels.add(alrmModel);
+                }
+//                HomeTopModel errorModel = new HomeTopModel();
+                if (normalCount > 0) {
+                    HomeTopModel normalModel = new HomeTopModel();
+                    normalModel.type = 1;
+                    normalModel.value = normalCount;
+                    homeTopModels.add(normalModel);
+                }
+                if (lostCount > 0) {
+                    HomeTopModel lostModel = new HomeTopModel();
+                    lostModel.type = 2;
+                    lostModel.value = lostCount;
+                    homeTopModels.add(lostModel);
+                }
+                if (inactiveCount > 0) {
+                    HomeTopModel inactiveModel = new HomeTopModel();
+                    inactiveModel.type = 3;
+                    inactiveModel.value = inactiveCount;
+                    homeTopModels.add(inactiveModel);
+                }
+                tempTotalCount = tempAlarmCount + normalCount + lostCount + inactiveCount;
             }
         } else if (code == EVENT_DATA_SEARCH_MERCHANT) {
             mContext.runOnUiThread(new Runnable() {
@@ -277,7 +307,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             return;
         }
         try {
-            String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
+            String type = mTypeSelectedIndex == 0 ? null : SELECT_TYPE_VALUES[mTypeSelectedIndex];
             Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
             getView().showProgressDialog();
             if (direction == DIRECTION_DOWN) {
@@ -418,10 +448,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void requestTopData(final boolean isFirstInit) {
-//        boolean supperAccount = ((MainActivityTest) mContext).isSupperAccount();
-//        if (supperAccount) {
-//            return;
-//        }
+        EventLoginData loginData = ((MainActivityTest) mContext).getLoginData();
+        if (loginData.isSupperAccount) {
+            return;
+        }
         if (isFirstInit) {
             getView().showProgressDialog();
         }
@@ -437,10 +467,44 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
             @Override
             public void onNext(DeviceTypeCountRsp deviceTypeCountRsp) {
+//                "alarm": 6,
+//                        "normal": 209,
+//                        "offline": 11071,
+//                        "inactive": 8599
+                homeTopModels.clear();
                 int alarmCount = deviceTypeCountRsp.getData().getAlarm();
+                int normal = deviceTypeCountRsp.getData().getNormal();
                 int lostCount = deviceTypeCountRsp.getData().getOffline();
                 int inactiveCount = deviceTypeCountRsp.getData().getInactive();
-                getView().refreshTop(isFirstInit, alarmCount, lostCount, inactiveCount);
+                //
+                if (alarmCount > 0) {
+                    HomeTopModel alrmModel = new HomeTopModel();
+                    alrmModel.type = 0;
+                    alrmModel.value = alarmCount;
+                    homeTopModels.add(alrmModel);
+                }
+//                HomeTopModel errorModel = new HomeTopModel();
+                if (normal > 0) {
+                    HomeTopModel normalModel = new HomeTopModel();
+                    normalModel.type = 1;
+                    normalModel.value = normal;
+                    homeTopModels.add(normalModel);
+                }
+                if (lostCount > 0) {
+                    HomeTopModel lostModel = new HomeTopModel();
+                    lostModel.type = 2;
+                    lostModel.value = lostCount;
+                    homeTopModels.add(lostModel);
+                }
+                if (inactiveCount > 0) {
+                    HomeTopModel inactiveModel = new HomeTopModel();
+                    inactiveModel.type = 3;
+                    inactiveModel.value = inactiveCount;
+                    homeTopModels.add(inactiveModel);
+                }
+                int total = alarmCount + normal + lostCount + inactiveCount;
+                getView().setDetectionPoints(String.valueOf(total));
+                getView().refreshTop(false, homeTopModels);
             }
 
             @Override
@@ -491,7 +555,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void requestDataByTypes(int position) {
-        String typeText = INDEX_TYPE_ARRAY[position];
+        //选择的类型：
+        String selectTypeValue = Constants.SELECT_TYPE_VALUES[position];
+        //
+        String typeText = SELECT_TYPE[position];
 //        getView().setTypeView(typeText);
         //
         requestTopData(false);
@@ -506,7 +573,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void doScanLogin() {
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra("type",Constants.TYPE_SCAN_LOGIN);
+        intent.putExtra("type", Constants.TYPE_SCAN_LOGIN);
         getView().startAC(intent);
+    }
+    public void clickAlarmInfo(int position) {
+        DeviceInfo deviceInfo = mDataList.get(position);
+        String sn = deviceInfo.getSn();
+        getView().toastShort("sn = "+sn);
+        //TODO 弹起预警记录的dialog
     }
 }

@@ -237,6 +237,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_warn_tv_search:
+
                 break;
             case R.id.fg_main_warn_imv_calendar:
                 break;

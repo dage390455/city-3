@@ -14,6 +14,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -26,6 +27,15 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     private final Context mContext;
     private final List<DeviceInfo> mList = new ArrayList<>();
     private RecycleViewItemClickListener itemClickListener;
+    private OnItemAlarmInfoClickListener onItemAlarmInfoClickListener;
+
+    public interface OnItemAlarmInfoClickListener {
+        void onAlarmInfoClick(View v, int position);
+    }
+
+    public void setOnItemAlarmInfoClickListener(OnItemAlarmInfoClickListener onItemAlarmInfoClickListener) {
+        this.onItemAlarmInfoClickListener = onItemAlarmInfoClickListener;
+    }
 
     public MainHomeFragRcContentAdapter(Context context) {
         mContext = context;
@@ -54,7 +64,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position) {
+    public void onBindViewHolder(final MyViewHolder holder, final int position) {
         DeviceInfo deviceInfo = mList.get(position);
         //
         String deviceInfoName = deviceInfo.getName();
@@ -63,7 +73,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         } else {
             holder.mainRcContentTvLocation.setText(deviceInfoName);
         }
-        holder.mainRcContentTvTime.setText(DateUtil.getFullParseDate(deviceInfo.getUpdatedTime()));
+        holder.mainRcContentTvTime.setText(DateUtil.getHourMmFormatDate(deviceInfo.getUpdatedTime()));
         //
         int status = deviceInfo.getStatus();
         //
@@ -72,6 +82,15 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         switch (status) {
             case SENSOR_STATUS_ALARM:
                 color = R.color.sensoro_alarm;
+                holder.ivItemAlarm.setVisibility(View.VISIBLE);
+                if (onItemAlarmInfoClickListener != null) {
+                    holder.ivItemAlarm.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            onItemAlarmInfoClickListener.onAlarmInfoClick(v, position);
+                        }
+                    });
+                }
 //                holder.item_iv_status.setVisibility(View.INVISIBLE);
 //                holder.item_alarm_view.setVisibility(View.VISIBLE);
 //                drawable = mContext.getResources().getDrawable(R.drawable.shape_status_alarm);
@@ -80,6 +99,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 break;
             case SENSOR_STATUS_INACTIVE:
                 color = R.color.sensoro_inactive;
+                holder.ivItemAlarm.setVisibility(View.GONE);
 //                holder.item_alarm_view.setVisibility(View.GONE);
 //                drawable = mContext.getResources().getDrawable(R.drawable.shape_status_inactive);
 //                drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
@@ -92,6 +112,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 break;
             case SENSOR_STATUS_LOST:
                 color = R.color.sensoro_lost;
+                holder.ivItemAlarm.setVisibility(View.GONE);
 //                holder.item_alarm_view.setVisibility(View.GONE);
 //                drawable = mContext.getResources().getDrawable(R.drawable.shape_status_lost);
 //                drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
@@ -104,6 +125,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 break;
             case SENSOR_STATUS_NORMAL:
                 color = R.color.sensoro_normal;
+                holder.ivItemAlarm.setVisibility(View.GONE);
 //                holder.item_alarm_view.setVisibility(View.GONE);
 //                drawable = mContext.getResources().getDrawable(R.drawable.shape_status_normal);
 //                drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
@@ -111,14 +133,17 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 //                setData(holder, deviceInfo, color);
                 break;
             default:
+                holder.ivItemAlarm.setVisibility(View.GONE);
 //                holder.item_alarm_view.setVisibility(View.GONE);
 //                holder.item_iv_status.setVisibility(View.INVISIBLE);
                 break;
         }
 //        holder.item_iv_status.setImageDrawable(drawable);
         //
-        holder.mainRcContentTvLocation.setTextColor(mContext.getResources().getColor(color));
-        holder.mainRcContentTvTime.setTextColor(mContext.getResources().getColor(color));
+        WidgetUtil.judgeSensorTypeNew(mContext, holder.mainRcContentImvIcon, deviceInfo.getSensorTypes()[0], color);
+//        WidgetUtil.changeIconColor(mContext, holder.mainRcContentImvIcon, color);
+//        holder.mainRcContentTvLocation.setTextColor(mContext.getResources().getColor(color));
+//        holder.mainRcContentTvTime.setTextColor(mContext.getResources().getColor(color));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -138,6 +163,8 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 
         @BindView(R.id.main_rc_content_imv_icon)
         ImageView mainRcContentImvIcon;
+        @BindView(R.id.iv_item_alarm)
+        ImageView ivItemAlarm;
         @BindView(R.id.main_rc_content_tv_location)
         TextView mainRcContentTvLocation;
         @BindView(R.id.main_rc_content_tv_time)
