@@ -3,6 +3,7 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 
 import java.util.List;
@@ -13,11 +14,14 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     void setImvAddVisible(boolean isVisible);
 
     void setImvSearchVisible(boolean isVisible);
-    void refreshTop(boolean isFirstInit, int alarmCount, int lostCount, int inactiveCount);
+
+    void refreshTop(boolean isFirstInit, List<HomeTopModel> data);
 
     void returnTop();
+
     void refreshData(List<DeviceInfo> dataList);
-    void showTypePopupView();
-    void setTypeView(String typesText);
+
     void recycleViewRefreshComplete();
+
+    void setDetectionPoints(String count);
 }

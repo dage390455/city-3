@@ -4,15 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,6 +32,7 @@ import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
+import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
@@ -45,15 +43,13 @@ import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPresenter> implements
-        IHomeFragmentView, RecycleViewItemClickListener, MenuDialogFragment.OnDismissListener {
+        IHomeFragmentView, RecycleViewItemClickListener, MenuDialogFragment.OnDismissListener, MainHomeFragRcTypeAdapter.OnTopClickListener, MainHomeFragRcContentAdapter.OnItemAlarmInfoClickListener {
     @BindView(R.id.fg_main_home_tv_title)
     TextView fgMainHomeTvTitle;
     @BindView(R.id.fg_main_home_imb_add)
@@ -66,6 +62,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     XRecyclerView fgMainHomeRcContent;
     @BindView(R.id.fg_main_home_tv_select_type)
     TextView fgMainHomeTvSelectType;
+    @BindView(R.id.tv_detection_point)
+    TextView tvDetectionPoint;
     private MainHomeFragRcContentAdapter mMainHomeFragRcContentAdapter;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeAdapter;
     private ProgressUtils mProgressUtils;
@@ -98,10 +96,10 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mTypeSelectAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+                mPresenter.requestDataByTypes(position);
                 //选择类型的pop点击事件
                 fgMainHomeTvSelectType.setText(Constants.SELECT_TYPE[position]);
-                //选择的类型：
-                String selectTypeValue = Constants.SELECT_TYPE_VALUES[position];
+                mPopupWindow.dismiss();
             }
         });
         mPopupWindow = new PopupWindow(mRootFragment.getActivity());
@@ -115,6 +113,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private void initRcContent() {
         mMainHomeFragRcContentAdapter = new MainHomeFragRcContentAdapter(mRootFragment.getActivity());
         mMainHomeFragRcContentAdapter.setOnItemClickLisenter(this);
+        mMainHomeFragRcContentAdapter.setOnItemAlarmInfoClickListener(this);
         //
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -170,6 +169,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     private void initRcType() {
         mMainHomeFragRcTypeAdapter = new MainHomeFragRcTypeAdapter(mRootFragment.getActivity());
+        mMainHomeFragRcTypeAdapter.setOnTopClickListener(this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mRootFragment.getActivity());
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         fgMainHomeRcType.setLayoutManager(linearLayoutManager);
@@ -260,8 +260,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     @Override
-    public void refreshTop(boolean isFirstInit, int alarmCount, int lostCount, int inactiveCount) {
-
+    public void refreshTop(boolean isFirstInit, List<HomeTopModel> data) {
+        mMainHomeFragRcTypeAdapter.setData(data);
+        mMainHomeFragRcTypeAdapter.notifyDataSetChanged();
     }
 
     @Override
@@ -281,18 +282,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     @Override
-    public void showTypePopupView() {
-
-    }
-
-    @Override
-    public void setTypeView(String typesText) {
-
-    }
-
-    @Override
     public void recycleViewRefreshComplete() {
         fgMainHomeRcContent.refreshComplete();
+    }
+
+    @Override
+    public void setDetectionPoints(String count) {
+        tvDetectionPoint.setText(count);
     }
 
 
@@ -415,4 +411,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         setImvSearchVisible(true);
     }
 
+    @Override
+    public void onStatusChange(int status) {
+        mPresenter.requestDataByStatus(status + 1);
+    }
+
+    @Override
+    public void onAlarmInfoClick(View v, int position) {
+        mPresenter.clickAlarmInfo(position);
+    }
 }

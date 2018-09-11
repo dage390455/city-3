@@ -31,6 +31,7 @@
             android:background="@color/transparent"
             android:contentDescription="@null"
             android:padding="8dp"
+            android:layout_marginRight="9dp"
             android:src="@drawable/main_add" />
 
         <ImageButton
@@ -47,6 +48,7 @@
     </RelativeLayout>
 
     <TextView
+        android:id="@+id/tv_detection_point"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -70,13 +72,13 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
+        android:background="@drawable/shape_bg_soid_fa_stroke_df_full_corner"
         android:drawableEnd="@drawable/main_smal_triangle"
         android:drawablePadding="8dp"
-        android:background="@drawable/shape_bg_soid_fa_stroke_df_full_corner"
-        android:textColor="@color/c_252525"
-        android:textSize="12sp"
+        android:padding="8dp"
         android:text="全部类型"
-        android:padding="8dp"/>
+        android:textColor="@color/c_252525"
+        android:textSize="12sp" />
 
     <LinearLayout
         android:layout_width="match_parent"

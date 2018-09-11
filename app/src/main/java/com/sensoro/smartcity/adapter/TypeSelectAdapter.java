@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -16,7 +15,6 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.List;
@@ -45,7 +43,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     }
 
     @Override
-    public void onBindViewHolder(TypeSelectHolder holder,  int position) {
+    public void onBindViewHolder(TypeSelectHolder holder, int position) {
         holder.itemPopSelectImvTypeIcon.setImageResource(typeIcons[position]);
         holder.itemPopSelectTvTypeName.setText(types[position]);
         holder.itemPopSelectTvTypeName.setTextColor(position != selectPosition ? Color.WHITE :
@@ -55,10 +53,10 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
             @Override
             public void onClick(View v) {
                 oldSelectPosition = selectPosition;
-                selectPosition = ((TypeSelectHolder)v.getTag()).getAdapterPosition();
+                selectPosition = ((TypeSelectHolder) v.getTag()).getAdapterPosition();
                 notifyDataSetChanged();
-                if (mListener!=null) {
-                    mListener.onItemClick(v,selectPosition);
+                if (mListener != null) {
+                    mListener.onItemClick(v, selectPosition);
                 }
 
             }
@@ -67,7 +65,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
     }
 
-    public void setOnItemClickListener(RecycleViewItemClickListener listener){
+    public void setOnItemClickListener(RecycleViewItemClickListener listener) {
         mListener = listener;
     }
 
@@ -77,8 +75,8 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position);
         } else {
-            if (position == selectPosition||position==oldSelectPosition) {
-                onBindViewHolder(holder,position);
+            if (position == selectPosition || position == oldSelectPosition) {
+                onBindViewHolder(holder, position);
             }
         }
     }
@@ -86,13 +84,13 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
     @NonNull
     private void changeIconColor(TypeSelectHolder holder, boolean isWhite) {
-        holder.itemPopSelectLlRoot.setBackgroundResource(isWhite?0:R.drawable.shape_bg_corner_29c_shadow);
-        holder.itemPopSelectTvTypeName.setTextColor(isWhite?mContext.getResources().getColor(R.color.c_252525):Color.WHITE);
+        holder.itemPopSelectLlRoot.setBackgroundResource(isWhite ? 0 : R.drawable.shape_bg_corner_29c_shadow);
+        holder.itemPopSelectTvTypeName.setTextColor(isWhite ? mContext.getResources().getColor(R.color.c_252525) : Color.WHITE);
         Drawable drawable = holder.itemPopSelectImvTypeIcon.getDrawable();
         Drawable.ConstantState state = drawable.getConstantState();
         DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
         drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
-        DrawableCompat.setTint(drawable, isWhite ? mContext.getResources().getColor(R.color.c_b6b6b6):Color.WHITE );
+        DrawableCompat.setTint(drawable, isWhite ? mContext.getResources().getColor(R.color.c_b6b6b6) : Color.WHITE);
         holder.itemPopSelectImvTypeIcon.setImageDrawable(drawable);
     }
 

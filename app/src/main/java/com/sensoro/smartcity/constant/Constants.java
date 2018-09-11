@@ -59,28 +59,36 @@ public interface Constants {
             "井位", "烟感", "温湿度", "倾角", "火焰",
             "水位监测", "跑冒滴漏", "液化石油气", "紧急呼叫",
             "追踪器", "消防液压", "地磁",
-            "门锁监测", "温度贴片", "通断检测", "电表","电气火灾", "红外线", "手动报警", "声光报警"
+            "门锁监测", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
     };
 
     Integer[] SELECT_TYPE_RESOURCE = {
-            R.drawable.type_all,R.drawable.type_ch4,R.drawable.type_co,R.drawable.type_co2,
-            R.drawable.type_no2,R.drawable.type_pm,R.drawable.type_light,R.drawable.type_well_position,
-            R.drawable.type_smoke,R.drawable.type_tempature_humidity,R.drawable.type_inclination,
-            R.drawable.type_flame,R.drawable.type_water_monitoring,R.drawable.type_leak,
-            R.drawable.type_gas,R.drawable.type_emergency_call,R.drawable.type_tracking_device,
-            R.drawable.type_fire_hydraulic,R.drawable.type_geomagnetic,R.drawable.type_lock_monitoring,
-            R.drawable.type_tempature_humidity,R.drawable.type_on_off_monitoring,R.drawable.type_ammeter
+            R.drawable.type_all, R.drawable.type_ch4, R.drawable.type_co, R.drawable.type_co2,
+            R.drawable.type_no2, R.drawable.type_pm, R.drawable.type_light, R.drawable.type_well_position,
+            R.drawable.type_smoke, R.drawable.type_tempature_humidity, R.drawable.type_inclination,
+            R.drawable.type_flame, R.drawable.type_water_monitoring, R.drawable.type_leak,
+            R.drawable.type_gas, R.drawable.type_emergency_call, R.drawable.type_tracking_device,
+            R.drawable.type_fire_hydraulic, R.drawable.type_geomagnetic, R.drawable.type_lock_monitoring,
+            R.drawable.type_tempature_humidity, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
             , R.mipmap.ic_sensor_electric_alarm, R.mipmap.ic_sensor_infrared,
             R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
     };
 
     String SELECT_TYPE_VALUES[] = {
-            "all",  "ch4","co", "co2","no2","pm10,pm2_5","light","cover,level","smoke",
-            "humidity,temperature","collision,pitch,roll","flame","distance","drop","lpg",
-            "alarm","altitude,latitude,longitude","waterPressure","magnetic","door",
-            "humidity,temp1,temperature","connection","CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+            "all", "ch4", "co", "co2", "no2", "pm10,pm2_5", "light", "cover,level", "smoke",
+            "humidity,temperature", "collision,pitch,roll", "flame", "distance", "drop", "lpg",
+            "alarm", "altitude,latitude,longitude", "waterPressure", "magnetic", "door",
+            "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
             "TOTAL_POWER,VOLTAGE_A," +
             "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+            "manual_alarm", "sound_light_alarm"
+    };
+    String SENSOR_MENU_MATCHER_ARRAY[] = {
+            "all", "ch4", "co", "co2", "no2", "pm10|pm2_5",
+            "light", "cover|level", "smoke", "humidity|temperature", "collision|pitch|roll", "flame",
+            "distance", "drop", "lpg", "alarm", "latitude|longitude|altitude", "waterPressure", "magnetic",
+            "door", "temp1", "connection", "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
             "manual_alarm", "sound_light_alarm"
     };
     String INDEX_TYPE_VALUES[] = {

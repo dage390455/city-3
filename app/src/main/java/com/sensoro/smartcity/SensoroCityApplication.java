@@ -9,7 +9,6 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
-import com.fengmap.android.FMMapSDK;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.view.CropImageView;
 import com.qiniu.android.common.FixedZone;
@@ -132,7 +131,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         mNotificationUtils = new NotificationUtils(this);
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
         api.registerApp(Constants.APP_ID);
-        FMMapSDK.init(this);
+//        FMMapSDK.init(this);
         //
         initImagePicker();
         initUploadManager();
