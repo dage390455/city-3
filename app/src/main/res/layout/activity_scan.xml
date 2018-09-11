@@ -7,6 +7,7 @@
         android:id="@+id/ac_scan_i"
         layout="@layout/item_include_text_title"
         app:layout_constraintStart_toStartOf="parent"
+
         />
 
 </android.support.constraint.ConstraintLayout>

@@ -94,7 +94,15 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mRcTypeSelect.addItemDecoration(dividerItemDecoration);
         mRcTypeSelect.setLayoutManager(manager);
         mRcTypeSelect.setAdapter(mTypeSelectAdapter);
-        mTypeSelectAdapter.setOnItemClickListener(this);
+        mTypeSelectAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                //选择类型的pop点击事件
+                fgMainHomeTvSelectType.setText(Constants.SELECT_TYPE[position]);
+                //选择的类型：
+                String selectTypeValue = Constants.SELECT_TYPE_VALUES[position];
+            }
+        });
         mPopupWindow = new PopupWindow(mRootFragment.getActivity());
         mPopupWindow.setContentView(view);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
@@ -377,14 +385,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void onItemClick(View view, int position) {
-        switch (view.getId()){
-            case R.id.item_pop_select_ll_root:
-                //选择类型的pop点击事件
-                fgMainHomeTvSelectType.setText(Constants.SELECT_TYPE[position]);
-                //选择的类型：
-                String selectTypeValue = Constants.SELECT_TYPE_VALUES[position];
-                break;
-        }
     }
 
 }
