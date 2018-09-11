@@ -5,12 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.activity.SearchMerchantActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
-import com.sensoro.smartcity.imainviews.IMerchantSwitchFragmentView;
+import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -20,33 +20,30 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwitchFragmentView> implements Constants {
-    private String phoneId = null;
-    private String username = null;
-    private String phone = null;
+public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwitchActivityView> implements Constants {
 
     private final List<UserInfo> mUserInfoList = new ArrayList<>();
     private Activity mContext;
     private volatile int cur_page = 1;
+    private EventLoginData mLoginData;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-
-    }
-
-    public void refreshUserData(String username, String phone, String phoneId) {
-        this.phoneId = phoneId;
-        this.username = username;
-        this.phone = phone;
-        getView().setCurrentNameAndPhone(username, phone);
-        getView().setCurrentStatusImageViewVisible(true);
+        mLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra("login_data");
+        if (mLoginData != null) {
+            getView().setCurrentNameAndPhone(mLoginData.userName, mLoginData.phone);
+            getView().setCurrentStatusImageViewVisible(true);
+            requestDataByDirection(DIRECTION_DOWN, true);
+        }
     }
 
     public void requestDataByDirection(int direction, boolean isForce) {
@@ -137,7 +134,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
 
     private void doAccountSwitch(String uid) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doAccountControl(uid, phoneId).subscribeOn(Schedulers.io()).observeOn
+        RetrofitServiceHelper.INSTANCE.doAccountControl(uid, mLoginData.phoneId).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountControlRsp>() {
             @Override
             public void onCompleted() {
@@ -158,7 +155,7 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
                     eventLoginData.userId = userInfo.get_id();
                     eventLoginData.userName = userInfo.getNickname();
                     eventLoginData.phone = userInfo.getContacts();
-                    eventLoginData.phoneId = phoneId;
+                    eventLoginData.phoneId = mLoginData.phoneId;
 //            mCharacter = userInfo.getCharacter();
                     eventLoginData.roles = userInfo.getRoles();
                     eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(userInfo.getIsSpecific());
@@ -173,8 +170,13 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
                     //
 //                    String isSpecific = data.getIsSpecific();
                     //grantsInfo
-                    //TODO 包装类
-                    ((MainActivity) mContext).changeAccount(eventLoginData);
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_SEARCH_MERCHANT;
+                    eventData.data = eventLoginData;
+                    EventBus.getDefault().post(eventData);
+                    getView().finishAc();
+                    //TODO 包装类 进行账户切换
+//                    ((MainActivity) mContext).changeAccount(eventLoginData);
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());
                 }
@@ -206,12 +208,12 @@ public class MerchantSwitchFragmentPresenter extends BasePresenter<IMerchantSwit
 
     public void startToSearchAC() {
         Intent searchIntent = new Intent(mContext, SearchMerchantActivity.class);
-        searchIntent.putExtra("phone_id", phoneId);
-        if (!TextUtils.isEmpty(username)) {
-            searchIntent.putExtra("user_name", username);
+        searchIntent.putExtra("phone_id", mLoginData.phoneId);
+        if (!TextUtils.isEmpty(mLoginData.userName)) {
+            searchIntent.putExtra("user_name", mLoginData.userName);
         }
-        if (!TextUtils.isEmpty(phone)) {
-            searchIntent.putExtra("user_phone", phone);
+        if (!TextUtils.isEmpty(mLoginData.phone)) {
+            searchIntent.putExtra("user_phone", mLoginData.phone);
         }
         getView().startAC(searchIntent);
     }

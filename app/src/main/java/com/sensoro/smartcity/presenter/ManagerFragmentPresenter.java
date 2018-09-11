@@ -3,9 +3,12 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
+import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivityTest;
+import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
@@ -68,22 +71,42 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void onFragmentStart() {
         //TODO 控制账号权限
         mLoginData = ((MainActivityTest) mContext).getLoginData();
-//                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
-        if (mLoginData.isSupperAccount) {
+        if (mLoginData!=null){
+            if (TextUtils.isEmpty(mLoginData.userName)){
+                getView().setMerchantName("SENSORO");
+            }else {
+                getView().setMerchantName(mLoginData.userName);
+            }
+
+            //                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
+            if (mLoginData.isSupperAccount) {
 
 //                    merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
-        } else {
+            } else {
 //                    indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-        }
+            }
 //                merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
 //                getView().setMenuSelected(0);
-        //TODO 版本信息
-        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+            //TODO 版本信息
+            UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
 //        upgradeInfo.
+        }
+
     }
 
     @Override
     public void onFragmentStop() {
 
+    }
+
+    public void doContract() {
+        Intent intent = new Intent(mContext, ContractManagerActivity.class);
+        getView().startAC(intent);
+    }
+
+    public void doChangeMerchants() {
+        Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
+        intent.putExtra("login_data", mLoginData);
+        getView().startAC(intent);
     }
 }

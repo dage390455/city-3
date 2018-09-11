@@ -10,14 +10,16 @@ import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.MainActivityTest;
+import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
 import com.sensoro.smartcity.activity.SearchDeviceActivity;
-import com.sensoro.smartcity.activity.SensorDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
@@ -42,7 +44,7 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> implements Constants,IOnCreate{
+public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> implements Constants, IOnCreate {
     private Activity mContext;
     private final List<DeviceInfo> mDataList = new ArrayList<>();
     private final Handler mHandler = new Handler();
@@ -80,6 +82,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
         }
     };
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
@@ -96,6 +99,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mSoundId = mSoundPool.load(context, R.raw.alarm, 1);
         mHandler.postDelayed(mTask, 3000);
     }
+
     private void scheduleRefresh() {
         List<DeviceInfo> deviceInfoList = SensoroCityApplication.getInstance().getData();
         for (int i = 0; i < deviceInfoList.size(); i++) {
@@ -151,12 +155,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
         LogUtils.logd("new dataList = " + mDataList.size());
     }
+
     public void playSound() {
 //        String roles = ((MainActivity) mContext).getRoles();
 //        if ("admin".equals(roles)) {
-            mSoundPool.play(mSoundId, 1, 1, 0, 0, 1);
+        mSoundPool.play(mSoundId, 1, 1, 0, 0, 1);
 //        }
     }
+
     private boolean isMatcher(DeviceInfo deviceInfo) {
         if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0) {
             return true;
@@ -190,11 +196,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             return isMatcherStatus && isMatcherType;
         }
     }
+
     public void clickItem(int position) {
-        int index = position - 1;
+        int index = position;
         if (index >= 0) {
             DeviceInfo deviceInfo = mDataList.get(index);
-            Intent intent = new Intent(mContext, SensorDetailActivity.class);
+            Intent intent = new Intent(mContext, MonitoringPointDetailActivity.class);
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
@@ -204,6 +211,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             getView().startAC(intent);
         }
     }
+
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
@@ -217,6 +225,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mHandler.removeCallbacksAndMessages(null);
         mDataList.clear();
     }
+
     public void toSearchAc() {
         Intent intent = new Intent(mContext, SearchDeviceActivity.class);
         getView().startAC(intent);
@@ -249,13 +258,23 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 needRefresh = true;
                 needRefreshTop = true;
             }
+        } else if (code == EVENT_DATA_SEARCH_MERCHANT) {
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    requestTopData(true);
+                    requestWithDirection(DIRECTION_DOWN);
+                }
+            });
+
         }
     }
+
     public void requestWithDirection(int direction) {
-//        boolean supperAccount = ((MainActivityTest) mContext).isSupperAccount();
-//        if (supperAccount) {
-//            return;
-//        }
+        EventLoginData loginData = ((MainActivityTest) mContext).getLoginData();
+        if (loginData.isSupperAccount) {
+            return;
+        }
         try {
             String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
             Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
@@ -373,6 +392,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             e.printStackTrace();
         }
     }
+
     /**
      * 处理push来的json数据
      */
@@ -428,6 +448,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             }
         });
     }
+
     /**
      * 处理数据
      */
@@ -458,6 +479,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         //排序
         Collections.sort(mDataList);
     }
+
     public void requestDataByStatus(int position) {
         String statusText = INDEX_STATUS_ARRAY[position];
 //        getView().setStatusView(statusText);
@@ -475,6 +497,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         this.mTypeSelectedIndex = position;
         requestWithDirection(DIRECTION_DOWN);
     }
+
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);

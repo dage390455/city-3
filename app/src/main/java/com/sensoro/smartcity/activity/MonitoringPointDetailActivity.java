@@ -8,18 +8,22 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMonitoringPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitoringPointDetailActivityPresenter;
+import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPointDetailActivityView,
-        MonitoringPointDetailActivityPresenter> implements IMonitoringPointDetailActivityView {
+        MonitoringPointDetailActivityPresenter> implements IMonitoringPointDetailActivityView, View.OnClickListener {
     @BindView(R.id.include_imv_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
     @BindView(R.id.include_imv_title_tv_title)
@@ -55,6 +59,7 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
     @BindView(R.id.ac_monitoring_point_tv_hardware_upgrade)
     TextView acMonitoringPointTvHardwareUpgrade;
     private MonitoringPointRcContentAdapter mContentAdapter;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -65,10 +70,11 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleTvTitle.setText("监控点详情");
         includeImvTitleImvSubtitle.setVisibility(View.GONE);
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity){
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -78,7 +84,7 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
         acMonitoringPointRcContent.setLayoutManager(manager);
         acMonitoringPointRcContent.addItemDecoration(dividerItemDecoration);
         acMonitoringPointRcContent.setAdapter(mContentAdapter);
-
+        acMonitoringPointImvLocation.setOnClickListener(this);
 
 
     }
@@ -90,12 +96,12 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
 
     @Override
     public void startAC(Intent intent) {
-
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -115,17 +121,17 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
 
     @Override
     public void showProgressDialog() {
-
+        mProgressUtils.showProgress();
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        mProgressUtils.dismissProgress();
     }
 
     @Override
     public void toastShort(String msg) {
-
+        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -133,4 +139,61 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
 
     }
 
+    @Override
+    public void setTitleNameTextView(String name) {
+        acMonitoringPointTvName.setText(name);
+    }
+
+    @Override
+    public void setUpdateTime(String time) {
+        acMonitoringPointTvTypeTime.setText(time);
+    }
+
+    @Override
+    public void setAlarmStateColor(int color) {
+        acMonitoringPointTvName.setTextColor(color);
+        acMonitoringPointTvTypeTime.setTextColor(color);
+    }
+
+    @Override
+    public void setContractName(String contractName) {
+        acMonitoringPointTvAlertContactName.setText(contractName);
+    }
+
+    @Override
+    public void setContractPhone(String contractPhone) {
+        acMonitoringPointTvAlertContactPhone.setText(contractPhone);
+    }
+
+    @Override
+    public void setDeviceLocation(String location) {
+        acMonitoringPointTvLocation.setText(location);
+    }
+
+    @Override
+    public void updateDeviceInfoAdapter(DeviceInfo deviceInfo) {
+        mContentAdapter.setDeviceInfo(deviceInfo);
+        mContentAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    protected void onDestroy() {
+//        if (mAlarmPopupView != null) {
+//            mAlarmPopupView.onDestroyPop();
+//        }
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
+        super.onDestroy();
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.ac_monitoring_point_imv_location:
+                mPresenter.doNavigation();
+                break;
+        }
+    }
 }

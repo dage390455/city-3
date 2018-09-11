@@ -1,11 +1,8 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -60,6 +57,7 @@ import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
@@ -88,6 +86,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
+import static com.sensoro.smartcity.util.AppUtils.isAppInstalled;
 
 public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailActivityView> implements Constants,
         GeocodeSearch.OnGeocodeSearchListener, IOnStart, AMapLocationListener, AMap.OnMapLoadedListener {
@@ -244,7 +243,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                     break;
                 }
             }
-            if (mDeviceInfo != null && isActivityTop()) {
+            if (mDeviceInfo != null && AppUtils.isActivityTop(mContext, SensorDetailActivity.class)) {
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -259,11 +258,6 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         }
     }
 
-    private boolean isActivityTop() {
-        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return name.equals(SensorDetailActivity.class.getName());
-    }
 
     private void freshStructData() {
         List<SensorStruct> sensorStructList = new ArrayList<>();
@@ -566,7 +560,6 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                 return null;
             }
         }
-
         return null;
     }
 
@@ -650,22 +643,6 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
 //        }else {
         getView().updateBatteryData(tempList);
 //        }
-    }
-
-    private boolean isAppInstalled(Context context, String packageName) {
-        PackageManager packageManager = context.getPackageManager();
-        //获取所有已安装程序的包信息
-        List<PackageInfo> pInfo = packageManager.getInstalledPackages(0);
-        //存储所有已安装程序的包名
-        List<String> pName = new ArrayList<>();
-        //从info中将报名字逐一取出
-        if (pInfo != null) {
-            for (int i = 0; i < pInfo.size(); i++) {
-                String pn = pInfo.get(i).packageName;
-                pName.add(pn);
-            }
-        }
-        return pName.contains(packageName);
     }
 
     public void getMapAndChart(AMap map, CombinedChart chart) {
@@ -769,7 +746,7 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
         if (wxAppInstalled) {
 //            boolean wxAppSupportAPI = SensoroCityApplication.getInstance().api.isWXAppSupportAPI();
 //            if (wxAppSupportAPI) {
-                toShareWeChat();
+            toShareWeChat();
 //            } else {
 //                getView().toastShort("当前版的微信不支持分享功能");
 //            }

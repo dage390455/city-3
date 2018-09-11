@@ -13,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
@@ -35,7 +36,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPresenter> implements
-        IHomeFragmentView, RecycleViewItemClickListener {
+        IHomeFragmentView, RecycleViewItemClickListener, MenuDialogFragment.OnDismissListener {
     @BindView(R.id.fg_main_home_tv_title)
     TextView fgMainHomeTvTitle;
     @BindView(R.id.fg_main_home_imb_add)
@@ -72,6 +73,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
         fgMainHomeRcContent.setAdapter(mMainHomeFragRcContentAdapter);
         fgMainHomeRcContent.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
+        fgMainHomeRcContent.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
 //        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x8);
 //        fgMainHomeRcContent.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         fgMainHomeRcContent.setLoadingListener(new XRecyclerView.LoadingListener() {
@@ -148,12 +150,12 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void startAC(Intent intent) {
-
+        mRootFragment.getActivity().startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-
+        mRootFragment.getActivity().finish();
     }
 
     @Override
@@ -258,9 +260,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     private void addImbRotate() {
-        RotateAnimation rotateAnimation = new RotateAnimation(0, 135, Animation.RELATIVE_TO_SELF, 0.5f,
+        RotateAnimation rotateAnimation = new RotateAnimation(0, 45, Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
-        rotateAnimation.setDuration(500);
+        rotateAnimation.setDuration(200);
         rotateAnimation.setRepeatCount(0);
         rotateAnimation.setFillAfter(true);
         rotateAnimation.setInterpolator(new LinearInterpolator());
@@ -286,6 +288,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private void showDialog() {
         fgMainHomeImbAdd.clearAnimation();
         MenuDialogFragment menuDialogFragment = new MenuDialogFragment();
+        menuDialogFragment.setOnDismissListener(this);
         menuDialogFragment.show(getActivity().getSupportFragmentManager(), "mainMenuDialog");
         setImvAddVisible(false);
         setImvSearchVisible(false);
@@ -318,6 +321,30 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void onItemClick(View view, int position) {
+        mPresenter.clickItem(position);
+    }
 
+    @Override
+    public void onMenuDialogFragmentDismiss(int resId) {
+        switch (resId) {
+            case R.id.dialog_main_home_menu_imv_close:
+                break;
+            case R.id.dialog_main_home_menu_tv_quick_deploy:
+                //TODO 设备部署
+                toastShort("设备部署");
+                break;
+            case R.id.dialog_main_home_menu_new_tv_construction:
+                //TODO 合同管理
+                toastShort("合同管理");
+                break;
+            case R.id.dialog_main_home_menu_tv_scan_login:
+                //TODO 扫码登录
+                toastShort("扫码登录");
+                break;
+            case R.id.dialog_main_home_menu_rl_root:
+                break;
+        }
+        setImvAddVisible(true);
+        setImvSearchVisible(true);
     }
 }
