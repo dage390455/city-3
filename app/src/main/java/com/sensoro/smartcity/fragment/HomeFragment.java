@@ -2,14 +2,27 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
+import android.os.Build;
+import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,7 +31,9 @@ import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
+import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -30,7 +45,9 @@ import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
@@ -47,10 +64,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     RecyclerView fgMainHomeRcType;
     @BindView(R.id.fg_main_home_rc_content)
     XRecyclerView fgMainHomeRcContent;
+    @BindView(R.id.fg_main_home_tv_select_type)
+    TextView fgMainHomeTvSelectType;
     private MainHomeFragRcContentAdapter mMainHomeFragRcContentAdapter;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeAdapter;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
+    private PopupWindow mPopupWindow;
 
     @Override
     protected void initData(Context activity) {
@@ -62,6 +82,34 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         initRcType();
         initRcContent();
+        initPop();
+
+    }
+
+    private void initPop() {
+        View view = LayoutInflater.from(mRootFragment.getActivity()).inflate(R.layout.item_pop_type_select, null);
+        RecyclerView mRcTypeSelect = view.findViewById(R.id.pop_type_select_rc);
+        TypeSelectAdapter mTypeSelectAdapter = new TypeSelectAdapter(mRootFragment.getActivity());
+        GridLayoutManager manager = new GridLayoutManager(mRootFragment.getActivity(), 4);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRootFragment.getActivity(), DividerItemDecoration.VERTICAL);
+        mRcTypeSelect.addItemDecoration(dividerItemDecoration);
+        mRcTypeSelect.setLayoutManager(manager);
+        mRcTypeSelect.setAdapter(mTypeSelectAdapter);
+        mTypeSelectAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                //选择类型的pop点击事件
+                fgMainHomeTvSelectType.setText(Constants.SELECT_TYPE[position]);
+                //选择的类型：
+                String selectTypeValue = Constants.SELECT_TYPE_VALUES[position];
+            }
+        });
+        mPopupWindow = new PopupWindow(mRootFragment.getActivity());
+        mPopupWindow.setContentView(view);
+        mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
+        mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        mPopupWindow.setFocusable(true);
     }
 
     private void initRcContent() {
@@ -248,7 +296,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
 
-    @OnClick({R.id.fg_main_home_imb_add, R.id.fg_main_home_imb_search})
+    @OnClick({R.id.fg_main_home_imb_add, R.id.fg_main_home_imb_search, R.id.fg_main_home_tv_select_type})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_home_imb_add:
@@ -256,6 +304,25 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 break;
             case R.id.fg_main_home_imb_search:
                 break;
+            case R.id.fg_main_home_tv_select_type:
+                showSelectTypePop();
+                break;
+        }
+    }
+
+    private void showSelectTypePop() {
+        if (Build.VERSION.SDK_INT < 24) {
+            mPopupWindow.showAsDropDown(fgMainHomeTvSelectType);
+        } else {  // 适配 android 7.0
+            int[] location = new int[2];
+            fgMainHomeTvSelectType.getLocationOnScreen(location);
+            Point point = new Point();
+            mRootFragment.getActivity().getWindowManager().getDefaultDisplay().getSize(point);
+            int tempheight = mPopupWindow.getHeight();
+            if (tempheight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempheight) {
+                mPopupWindow.setHeight(point.y - location[1] - fgMainHomeTvSelectType.getHeight());
+            }
+            mPopupWindow.showAtLocation(fgMainHomeTvSelectType, Gravity.NO_GRAVITY, location[0], location[1] + fgMainHomeTvSelectType.getHeight());
         }
     }
 
@@ -347,4 +414,5 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         setImvAddVisible(true);
         setImvSearchVisible(true);
     }
+
 }

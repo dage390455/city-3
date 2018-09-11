@@ -3,12 +3,19 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
+import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMainViewTest;
 import com.sensoro.smartcity.model.EventLoginData;
@@ -38,6 +45,7 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     TextView acMainTvWarningCount;
 
     private MainFragmentPageAdapter mPageAdapter;
+    private PopupWindow mPopupWindow;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -51,6 +59,8 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
         initViewPager();
         acMainRlGuide.setOnCheckedChangeListener(this);
     }
+
+
 
     @Override
     protected MainPresenterTest createPresenter() {
