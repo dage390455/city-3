@@ -263,9 +263,10 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
 //        getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
 //        if (indexFragment != null) {
         if (mEventLoginData.isSupperAccount) {
+            getView().setRbChecked(R.id.ac_main_rb_manage);
 //                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
         } else {
-//                indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
+            getView().setRbChecked(R.id.ac_main_rb_main);
         }
 //            merchantSwitchFragment.refreshData(mEventLoginData.userName, mEventLoginData.phone, mEventLoginData.phoneId);
         //

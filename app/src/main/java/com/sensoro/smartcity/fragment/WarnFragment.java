@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.jcodecraeer.xrecyclerview.ProgressStyle;
 import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
@@ -150,6 +151,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         fgMainWarnRcContent.setLayoutManager(xLinearLayoutManager);
         fgMainWarnRcContent.setAdapter(mRcContentAdapter);
         fgMainWarnRcContent.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
+        fgMainWarnRcContent.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
 //        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x8);
 //        fgMainHomeRcContent.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         fgMainWarnRcContent.setLoadingListener(new XRecyclerView.LoadingListener() {

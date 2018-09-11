@@ -24,7 +24,7 @@
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
                 android:padding="18dp"
-                android:src="@mipmap/ic_menu_list"/>
+                android:src="@mipmap/ic_back"/>
 
             <TextView
                 android:id="@+id/contract_title"

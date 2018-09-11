@@ -140,10 +140,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
+                mPresenter.doChangeMerchants();
                 break;
             case R.id.fg_main_manage_ll_deploy_device:
                 break;
             case R.id.fg_main_manage_ll_contract_management:
+                mPresenter.doContract();
                 break;
             case R.id.fg_main_manage_ll_polling_mission:
                 break;
@@ -159,5 +161,10 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 mPresenter.doExitAccount();
                 break;
         }
+    }
+
+    @Override
+    public void setMerchantName(String name) {
+        fgMainManageTvMerchantName.setText(name);
     }
 }

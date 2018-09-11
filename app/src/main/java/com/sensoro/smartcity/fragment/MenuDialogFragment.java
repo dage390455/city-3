@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
@@ -31,6 +32,16 @@ public class MenuDialogFragment extends DialogFragment {
     @BindView(R.id.dialog_main_home_menu_rl_root)
     RelativeLayout dialogMainHomeMenuRlRoot;
     Unbinder unbinder;
+    private OnDismissListener onDismissListener;
+    private int currentResId;
+
+    public interface OnDismissListener {
+        void onMenuDialogFragmentDismiss(int resId);
+    }
+
+    public void setOnDismissListener(OnDismissListener onDismissListener) {
+        this.onDismissListener = onDismissListener;
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,28 +80,15 @@ public class MenuDialogFragment extends DialogFragment {
 
     @OnClick({R.id.dialog_main_home_menu_imv_close, R.id.dialog_main_home_menu_tv_quick_deploy, R.id.dialog_main_home_menu_new_tv_construction, R.id.dialog_main_home_menu_tv_scan_login, R.id.dialog_main_home_menu_rl_root})
     public void onViewClicked(View view) {
-        switch (view.getId()) {
-            case R.id.dialog_main_home_menu_imv_close:
-                dialogDismiss();
-                break;
-            case R.id.dialog_main_home_menu_tv_quick_deploy:
-                break;
-            case R.id.dialog_main_home_menu_new_tv_construction:
-                break;
-            case R.id.dialog_main_home_menu_tv_scan_login:
-                break;
-            case R.id.dialog_main_home_menu_rl_root:
-                dialogDismiss();
-                break;
-        }
+        currentResId = view.getId();
+        getDialog().dismiss();
     }
 
-    public void dialogDismiss(){
-        getDialog().dismiss();
-        //调用homefragment的方法将search，add显示,直接调用
-        // setImvAddVisible(true);
-        // setImvSearchVisible(true);即可
-
-
+    @Override
+    public void onDismiss(DialogInterface dialog) {
+        super.onDismiss(dialog);
+        if (onDismissListener != null) {
+            onDismissListener.onMenuDialogFragmentDismiss(currentResId);
+        }
     }
 }
