@@ -22,6 +22,7 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +67,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     XRecyclerView fgMainHomeRcContent;
     @BindView(R.id.fg_main_home_tv_select_type)
     TextView fgMainHomeTvSelectType;
+    @BindView(R.id.fg_main_home_ll_root)
+    LinearLayout fgMainHomeLlRoot;
+
     private MainHomeFragRcContentAdapter mMainHomeFragRcContentAdapter;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeAdapter;
     private ProgressUtils mProgressUtils;
@@ -282,7 +286,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void showTypePopupView() {
-
+        mPopupWindow.showAtLocation(fgMainHomeLlRoot,Gravity.TOP,0,0);
     }
 
     @Override
@@ -305,25 +309,27 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             case R.id.fg_main_home_imb_search:
                 break;
             case R.id.fg_main_home_tv_select_type:
-                showSelectTypePop();
+//                showSelectTypePop();
+                showTypePopupView();
                 break;
         }
     }
 
     private void showSelectTypePop() {
-        if (Build.VERSION.SDK_INT < 24) {
-            mPopupWindow.showAsDropDown(fgMainHomeTvSelectType);
-        } else {  // 适配 android 7.0
-            int[] location = new int[2];
-            fgMainHomeTvSelectType.getLocationOnScreen(location);
-            Point point = new Point();
-            mRootFragment.getActivity().getWindowManager().getDefaultDisplay().getSize(point);
-            int tempheight = mPopupWindow.getHeight();
-            if (tempheight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempheight) {
-                mPopupWindow.setHeight(point.y - location[1] - fgMainHomeTvSelectType.getHeight());
-            }
-            mPopupWindow.showAtLocation(fgMainHomeTvSelectType, Gravity.NO_GRAVITY, location[0], location[1] + fgMainHomeTvSelectType.getHeight());
-        }
+//        if (Build.VERSION.SDK_INT < 24) {
+//            mPopupWindow.showAsDropDown(fgMainHomeTvSelectType);
+//        } else {  // 适配 android 7.0
+//            int[] location = new int[2];
+//            fgMainHomeTvSelectType.getLocationOnScreen(location);
+//            Point point = new Point();
+//            mRootFragment.getActivity().getWindowManager().getDefaultDisplay().getSize(point);
+//            int tempheight = mPopupWindow.getHeight();
+//            if (tempheight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempheight) {
+//                mPopupWindow.setHeight(point.y - location[1] - fgMainHomeTvSelectType.getHeight());
+//            }
+//            mPopupWindow.showAtLocation(fgMainHomeTvSelectType, Gravity.NO_GRAVITY, location[0], location[1] + fgMainHomeTvSelectType.getHeight());
+//        }
+//        mPopupWindow.showAsDropDown();
     }
 
     private void addImbRotate() {
@@ -406,6 +412,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 break;
             case R.id.dialog_main_home_menu_tv_scan_login:
                 //TODO 扫码登录
+                mPresenter.doScanLogin();
                 toastShort("扫码登录");
                 break;
             case R.id.dialog_main_home_menu_rl_root:

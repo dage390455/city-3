@@ -143,6 +143,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 mPresenter.doChangeMerchants();
                 break;
             case R.id.fg_main_manage_ll_deploy_device:
+                mPresenter.doScanDeploy();
                 break;
             case R.id.fg_main_manage_ll_contract_management:
                 mPresenter.doContract();
@@ -152,6 +153,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
             case R.id.fg_main_manage_ll_maintenance_mission:
                 break;
             case R.id.fg_main_manage_ll_scan_login:
+                mPresenter.doScanLogin();
                 break;
             case R.id.fg_main_manage_ll_about_us:
                 break;

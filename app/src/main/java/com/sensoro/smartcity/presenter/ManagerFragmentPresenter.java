@@ -9,7 +9,9 @@ import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MainActivityTest;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
+import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
 import com.sensoro.smartcity.model.EventLoginData;
@@ -107,6 +109,18 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doChangeMerchants() {
         Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
         intent.putExtra("login_data", mLoginData);
+        getView().startAC(intent);
+    }
+
+    public void doScanDeploy() {
+        Intent intent = new Intent(mContext, ScanActivity.class);
+        intent.putExtra("type", Constants.TYPE_SCAN_DEPLOY_DEVICE);
+        getView().startAC(intent);
+    }
+
+    public void doScanLogin() {
+        Intent intent = new Intent(mContext, ScanActivity.class);
+        intent.putExtra("type", Constants.TYPE_SCAN_LOGIN);
         getView().startAC(intent);
     }
 }

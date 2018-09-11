@@ -254,4 +254,7 @@ public interface Constants {
     int EVENT_DATA_SESSION_ID_OVERTIME = 0x26;
     int EVENT_DATA_CANCEL_AUTH = 0x27;
     int EVENT_DATA_AUTH_SUC = 0x28;
+
+    String TYPE_SCAN_DEPLOY_DEVICE = "deploy";
+    String TYPE_SCAN_LOGIN = "login";
 }

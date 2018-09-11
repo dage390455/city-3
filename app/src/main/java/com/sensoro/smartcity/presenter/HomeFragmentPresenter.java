@@ -12,6 +12,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MainActivityTest;
 import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
+import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchDeviceActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -501,5 +502,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+    }
+
+    public void doScanLogin() {
+        Intent intent = new Intent(mContext, ScanActivity.class);
+        intent.putExtra("type",Constants.TYPE_SCAN_LOGIN);
+        getView().startAC(intent);
     }
 }
