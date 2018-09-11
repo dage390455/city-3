@@ -18,7 +18,7 @@ IScanActivityView{
 
     @Override
     protected ScanActivityPresenter createPresenter() {
-        return null;
+        return new ScanActivityPresenter();
     }
 
     @Override
