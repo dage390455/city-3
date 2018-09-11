@@ -3,9 +3,12 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -42,6 +45,7 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     TextView acMainTvWarningCount;
 
     private MainFragmentPageAdapter mPageAdapter;
+    private PopupWindow mPopupWindow;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -54,14 +58,9 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     private void initView() {
         initViewPager();
         acMainRlGuide.setOnCheckedChangeListener(this);
-        initPop();
     }
 
-    private void initPop() {
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.item_pop_type_select, null);
-        RecyclerView mRcTypeSelect = view.findViewById(R.id.pop_type_select_rc);
-        TypeSelectAdapter mTypeSelectAdapter = new TypeSelectAdapter(mActivity);
-    }
+
 
     @Override
     protected MainPresenterTest createPresenter() {
