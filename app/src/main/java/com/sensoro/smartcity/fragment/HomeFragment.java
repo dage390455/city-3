@@ -3,9 +3,8 @@ package com.sensoro.smartcity.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
@@ -24,8 +22,10 @@ import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
@@ -59,8 +59,10 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     ImageButton fgMainHomeImbSearch;
     @BindView(R.id.fg_main_home_rc_type)
     RecyclerView fgMainHomeRcType;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     @BindView(R.id.fg_main_home_rc_content)
-    XRecyclerView fgMainHomeRcContent;
+    RecyclerView fgMainHomeRcContent;
     @BindView(R.id.fg_main_home_tv_select_type)
     TextView fgMainHomeTvSelectType;
     @BindView(R.id.fg_main_home_ll_root)
@@ -116,6 +118,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     private void initRcContent() {
+        //
         mMainHomeFragRcContentAdapter = new MainHomeFragRcContentAdapter(mRootFragment.getActivity());
         mMainHomeFragRcContentAdapter.setOnItemClickLisenter(this);
         mMainHomeFragRcContentAdapter.setOnItemAlarmInfoClickListener(this);
@@ -124,24 +127,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
         fgMainHomeRcContent.setAdapter(mMainHomeFragRcContentAdapter);
-        fgMainHomeRcContent.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
-        fgMainHomeRcContent.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
-//        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x8);
-//        fgMainHomeRcContent.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        fgMainHomeRcContent.setLoadingListener(new XRecyclerView.LoadingListener() {
-            @Override
-            public void onRefresh() {
-                isShowDialog = false;
-                mPresenter.requestWithDirection(DIRECTION_DOWN);
-                mPresenter.requestTopData(false);
-            }
-
-            @Override
-            public void onLoadMore() {
-                isShowDialog = false;
-                mPresenter.requestWithDirection(DIRECTION_UP);
-            }
-        });
+        //
         fgMainHomeRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -168,6 +154,23 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
                 super.onScrolled(recyclerView, dx, dy);
 
+            }
+        });
+        //新控件
+        refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+                isShowDialog = false;
+                mPresenter.requestWithDirection(DIRECTION_DOWN);
+                mPresenter.requestTopData(false);
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
+                isShowDialog = false;
+                mPresenter.requestWithDirection(DIRECTION_UP);
             }
         });
     }
@@ -280,7 +283,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void refreshData(List<DeviceInfo> dataList) {
         mMainHomeFragRcContentAdapter.setData(dataList);
         mMainHomeFragRcContentAdapter.notifyDataSetChanged();
-        fgMainHomeRcContent.refreshComplete();
 //        if (dataList.size() < 5) {
 //            mReturnTopImageView.setVisibility(View.GONE);
 //        }
@@ -293,7 +295,14 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void recycleViewRefreshComplete() {
-        fgMainHomeRcContent.refreshComplete();
+//        refreshLayout.computeScroll();
+        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void recycleViewRefreshCompleteNoMoreData() {
+        refreshLayout.finishLoadMoreWithNoMoreData();
     }
 
     @Override

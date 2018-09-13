@@ -15,4 +15,10 @@ public interface IAlertLogActivityView extends IToast, IProgressDialog, IActivit
     void setAlarmCount(String count);
 
     void updateAlertLogContentAdapter(List<AlarmInfo.RecordInfo> recordInfoList);
+
+    void showAlarmPopupView();
+
+    void dismissAlarmPopupView();
+
+    void setUpdateButtonClickable(boolean canClick);
 }

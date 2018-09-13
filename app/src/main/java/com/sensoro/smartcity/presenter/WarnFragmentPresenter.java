@@ -25,8 +25,10 @@ import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -39,7 +41,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> implements IOnCreate, Constants,
-        SensoroPopupAlarmView.OnPopupCallbackListener {
+        AlarmPopUtils.OnPopupCallbackListener {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private volatile int cur_page = 1;
     private long startTime;
@@ -54,6 +56,49 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         mContext = (Activity) context;
         onCreate();
         requestDataAll(DIRECTION_DOWN, true);
+    }
+
+    public void doContactOwner(int position) {
+        DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
+        AlarmInfo.RecordInfo[] records = deviceAlarmLogInfo.getRecords();
+        if (records != null && records.length > 0) {
+            String tempNumber = null;
+            outer:
+            for (AlarmInfo.RecordInfo recordInfo : records) {
+                String type = recordInfo.getType();
+                if ("sendVoice".equals(type)) {
+                    AlarmInfo.RecordInfo.Event[] phoneList = recordInfo.getPhoneList();
+                    for (AlarmInfo.RecordInfo.Event event : phoneList) {
+                        String source = event.getSource();
+                        String number = event.getNumber();
+                        if (!TextUtils.isEmpty(number)) {
+                            if ("attach".equals(source)) {
+                                LogUtils.loge("单独联系人：" + number);
+                                tempNumber = number;
+                                break outer;
+
+                            } else if ("group".equals(source)) {
+                                LogUtils.loge("分组联系人：" + number);
+                                tempNumber = number;
+                                break;
+                            } else if ("notification".equals(source)) {
+                                LogUtils.loge("账户联系人：" + number);
+                                tempNumber = number;
+                                break;
+                            }
+
+                        }
+
+                    }
+                }
+            }
+            if (TextUtils.isEmpty(tempNumber)) {
+                getView().toastShort("未找到电话联系人");
+            } else {
+                AppUtils.diallPhone(tempNumber, mContext);
+            }
+        }
+
     }
 
     private void freshUI(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp, String searchText) {
@@ -135,24 +180,21 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, searchType, null, startTime,
                         endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
-                    }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
+                        getView().onPullRefreshComplete();
+                        getView().dismissProgressDialog();
                     }
                 });
                 break;
@@ -160,24 +202,20 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, searchType, null, null, startTime,
                         endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
-
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
-                    }
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
+                        getView().onPullRefreshComplete();
+                        getView().dismissProgressDialog();
                     }
                 });
                 break;
@@ -185,24 +223,21 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, searchType, startTime,
                         endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
-                    }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
+                        getView().onPullRefreshComplete();
+                        getView().dismissProgressDialog();
                     }
                 });
                 break;
@@ -218,30 +253,28 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, searchType, null, startTime,
                         endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
-                            getView().toastShort("没有更多数据了");
-                            cur_page--;
-                        } else {
-                            freshUI(DIRECTION_UP, deviceAlarmLogRsp, null);
-                        }
-                    }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        if (deviceAlarmLogRsp.getData().size() == 0) {
+                            getView().toastShort("没有更多数据了");
+                            getView().onPullRefreshCompleteNoMoreData();
+                            cur_page--;
+                        } else {
+                            freshUI(DIRECTION_UP, deviceAlarmLogRsp, null);
+                            getView().onPullRefreshComplete();
+                        }
+                        getView().dismissProgressDialog();
                     }
                 });
                 break;
@@ -249,28 +282,25 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, searchType, null, null, startTime,
                         endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
-
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
                     @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             getView().toastShort("没有更多数据了");
+                            getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
                             freshUI(DIRECTION_UP, deviceAlarmLogRsp, null);
+                            getView().onPullRefreshComplete();
                         }
+                        getView().dismissProgressDialog();
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -280,30 +310,28 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, searchType, startTime,
                         endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
-                            getView().toastShort("没有更多数据了");
-                            cur_page--;
-                        } else {
-                            freshUI(DIRECTION_UP, deviceAlarmLogRsp, null);
-                        }
-                    }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        if (deviceAlarmLogRsp.getData().size() == 0) {
+                            getView().toastShort("没有更多数据了");
+                            getView().onPullRefreshCompleteNoMoreData();
+                            cur_page--;
+                        } else {
+                            freshUI(DIRECTION_UP, deviceAlarmLogRsp, null);
+                            getView().onPullRefreshComplete();
+                        }
+                        getView().dismissProgressDialog();
                     }
                 });
                 break;
@@ -354,26 +382,23 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, null, temp_startTime,
                         temp_endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
-
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
                     @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             getView().toastShort("没有更多数据了");
+                            getView().onPullRefreshCompleteNoMoreData();
                         } else {
                             freshUI(direction, deviceAlarmLogRsp, null);
+                            getView().onPullRefreshComplete();
                         }
+                        getView().dismissProgressDialog();
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -384,30 +409,28 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, null, temp_startTime,
                         temp_endTime,
-                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
-                            cur_page--;
-                            getView().toastShort("没有更多数据了");
-                        } else {
-                            freshUI(direction, deviceAlarmLogRsp, null);
-                        }
-                    }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        if (deviceAlarmLogRsp.getData().size() == 0) {
+                            cur_page--;
+                            getView().toastShort("没有更多数据了");
+                            getView().onPullRefreshCompleteNoMoreData();
+                        } else {
+                            freshUI(direction, deviceAlarmLogRsp, null);
+                            getView().onPullRefreshComplete();
+                        }
+                        getView().dismissProgressDialog();
                     }
                 });
                 break;
@@ -432,25 +455,22 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, startTime, endTime,
-                null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
 
             @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-                getView().onPullRefreshComplete();
-            }
-
-            @Override
-            public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+            public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                 if (deviceAlarmLogRsp.getData().size() == 0) {
                     getView().toastShort("没有更多数据了");
                 }
                 freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
+                getView().onPullRefreshComplete();
+                getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().onPullRefreshComplete();
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
@@ -561,22 +581,23 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     @Override
     public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
         getView().showProgressDialog();
-//        getView().setUpdateButtonClickable(false);
+        getView().setUpdateButtonClickable(false);
         RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
                 statusType, statusPlace,
                 remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe
-                        (new CityObserver<DeviceAlarmItemRsp>() {
+                        (new CityObserver<DeviceAlarmItemRsp>(this) {
 
 
                             @Override
-                            public void onCompleted() {
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().setUpdateButtonClickable(true);
                                 getView().dismissProgressDialog();
-                                getView().dismissAlarmPopupView();
+                                getView().toastShort(errorMsg);
                             }
 
                             @Override
-                            public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                            public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
                                 if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
                                     getView().toastShort(mContext.getResources().getString(R.string
@@ -586,13 +607,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                                     getView().toastShort(mContext.getResources().getString(R.string
                                             .tips_commit_failed));
                                 }
-                            }
-
-                            @Override
-                            public void onErrorMsg(int errorCode, String errorMsg) {
-//                                getView().setUpdateButtonClickable(true);
                                 getView().dismissProgressDialog();
-                                getView().toastShort(errorMsg);
+                                getView().dismissAlarmPopupView();
                             }
                         });
     }

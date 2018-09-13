@@ -45,14 +45,10 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
 
     private void doSecondAuth(String code) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doubleCheck(code).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AuthRsp>() {
-            @Override
-            public void onCompleted() {
-
-            }
+        RetrofitServiceHelper.INSTANCE.doubleCheck(code).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AuthRsp>(this) {
 
             @Override
-            public void onNext(AuthRsp authRsp) {
+            public void onCompleted(AuthRsp authRsp) {
                 if (authRsp.isData()) {
                     saveLoginDataOpenMain(mEventLoginData);
                 } else {

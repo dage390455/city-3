@@ -57,16 +57,11 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                 (mSn, null, 1);
         Observable<DeviceAlarmTimeRsp> deviceAlarmTime = RetrofitServiceHelper.INSTANCE.getDeviceAlarmTime(mSn);
         Observable.merge(deviceDetailInfoList, deviceAlarmTime).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>() {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
 
 
             @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onNext(ResponseBase responseBase) {
+            public void onCompleted(ResponseBase responseBase) {
                 if (responseBase instanceof DeviceInfoListRsp) {
                     refresh((DeviceInfoListRsp) responseBase);
                 } else if (responseBase instanceof DeviceAlarmTimeRsp) {
@@ -79,6 +74,7 @@ public class SensorMoreActivityPresenter extends BasePresenter<ISensorMoreActivi
                         getView().setAlarmRecentInfo(DateUtil.getFullDate(time));
                     }
                 }
+                getView().dismissProgressDialog();
             }
 
             @Override

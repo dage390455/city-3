@@ -78,8 +78,13 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_result_test);
-//        ButterKnife.bind(mActivity);
-//        mPresenter.initData(mActivity);
+        ButterKnife.bind(mActivity);
+        initView();
+        mPresenter.initData(mActivity);
+    }
+
+    private void initView() {
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
     }
 
 

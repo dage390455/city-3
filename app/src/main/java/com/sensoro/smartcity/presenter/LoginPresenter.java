@@ -111,14 +111,9 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                     RetrofitServiceHelper.INSTANCE.saveSessionId(sessionID);
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                 }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>() {
+            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(this) {
                 @Override
-                public void onCompleted() {
-//                    getView().dismissProgressDialog();
-                }
-
-                @Override
-                public void onNext(LoginRsp loginRsp) {
+                public void onCompleted(LoginRsp loginRsp) {
                     if (loginRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                         UserInfo userInfo = loginRsp.getData();
                         EventLoginData eventLoginData = new EventLoginData();
@@ -128,7 +123,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         eventLoginData.userName = userInfo.getNickname();
                         eventLoginData.phone = userInfo.getContacts();
                         eventLoginData.phoneId = phoneId;
-                        LogUtils.loge("logPresenter","phoneId = "+phoneId);
+                        LogUtils.loge("logPresenter", "phoneId = " + phoneId);
                         //TODO 处理Character信息
 //                      mCharacter = userInfo.getCharacter();
                         eventLoginData.roles = userInfo.getRoles();
@@ -151,6 +146,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         PreferencesHelper.getInstance().saveUserData(eventLoginData);
                         //
                         openMain(eventLoginData);
+                        //                    getView().dismissProgressDialog();
                     } else {
                         getView().dismissProgressDialog();
                         getView().toastShort(mContext.getResources().getString(R.string.tips_user_info_error));

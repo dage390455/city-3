@@ -54,18 +54,15 @@ public class ContractFragmentPresenter extends BasePresenter<IContractFragmentVi
                 RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, null, null, null, null).subscribeOn
                         (Schedulers
                                 .io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>() {
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
 
                     @Override
-                    public void onNext(ContractsListRsp contractsListRsp) {
+                    public void onCompleted(ContractsListRsp contractsListRsp) {
                         List<ContractListInfo> data = contractsListRsp.getData();
                         dataList.addAll(data);
                         getView().updateContractList(dataList);
+                        getView().dismissProgressDialog();
+                        getView().onPullRefreshComplete();
                     }
 
                     @Override
@@ -83,15 +80,10 @@ public class ContractFragmentPresenter extends BasePresenter<IContractFragmentVi
                 RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, null, null, null, offset).subscribeOn
                         (Schedulers
                                 .io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>() {
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
 
                     @Override
-                    public void onNext(ContractsListRsp contractsListRsp) {
+                    public void onCompleted(ContractsListRsp contractsListRsp) {
                         List<ContractListInfo> data = contractsListRsp.getData();
                         if (data.size() == 0) {
                             getView().toastShort("没有更多数据了");
@@ -100,6 +92,8 @@ public class ContractFragmentPresenter extends BasePresenter<IContractFragmentVi
                             dataList.addAll(data);
                             getView().updateContractList(dataList);
                         }
+                        getView().dismissProgressDialog();
+                        getView().onPullRefreshComplete();
                     }
 
                     @Override

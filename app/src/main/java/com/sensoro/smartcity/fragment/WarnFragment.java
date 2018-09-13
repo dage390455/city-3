@@ -2,6 +2,7 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -11,8 +12,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jcodecraeer.xrecyclerview.ProgressStyle;
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
@@ -23,6 +26,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
 
@@ -33,32 +37,40 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
-        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, RecycleViewItemClickListener {
+        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, RecycleViewItemClickListener, MainWarnFragRcContentAdapter.OnPlayPhoneListener {
     @BindView(R.id.fg_main_warn_tv_search)
     TextView fgMainWarnTvSearch;
     @BindView(R.id.fg_main_warn_imv_calendar)
     ImageView fgMainWarnImvCalendar;
     @BindView(R.id.fg_main_warn_rc_content)
-    XRecyclerView fgMainWarnRcContent;
+    RecyclerView fgMainWarnRcContent;
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
+    private AlarmPopUtils mAlarmPopUtils;
+
     @Override
     protected void initData(Context activity) {
         initView();
         mPresenter.initData(activity);
     }
 
+
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
+        mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
+        mAlarmPopUtils.setDialog(mRootFragment.getActivity());
+        mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         initRcContent();
-
         initListener();
     }
 
     private void initListener() {
 
     }
+
     /**
      * 搜索过滤器
      *
@@ -70,7 +82,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 //        if (!TextUtils.isEmpty(searchText) && isSearchLayoutVisible()) {
 //            mPresenter.requestSearchData(direction, isForce, searchText.toString());
 //        } else {
-            mPresenter.requestDataAll(direction, isForce);
+        mPresenter.requestDataAll(direction, isForce);
 //        }
     }
 
@@ -146,27 +158,29 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         mRcContentAdapter = new MainWarnFragRcContentAdapter(mRootFragment.getActivity());
         mRcContentAdapter.setAlarmConfirmStatusClickListener(this);
         mRcContentAdapter.setOnItemClickListener(this);
+        mRcContentAdapter.setOnPlayPhoneListener(this);
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fgMainWarnRcContent.setLayoutManager(xLinearLayoutManager);
         fgMainWarnRcContent.setAdapter(mRcContentAdapter);
-        fgMainWarnRcContent.getDefaultRefreshHeaderView().setRefreshTimeVisible(true);
-        fgMainWarnRcContent.setLoadingMoreProgressStyle(ProgressStyle.SquareSpin);
-//        int spacingInPixels = mRootFragment.getResources().getDimensionPixelSize(R.dimen.x8);
-//        fgMainHomeRcContent.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
-        fgMainWarnRcContent.setLoadingListener(new XRecyclerView.LoadingListener() {
+        //
+        //新控件
+        refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onRefresh() {
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
                 requestDataByFilter(DIRECTION_DOWN, false);
             }
-
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onLoadMore() {
+            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
                 requestDataByFilter(DIRECTION_UP, false);
             }
         });
+        //
         fgMainWarnRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
@@ -213,6 +227,9 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        if (mAlarmPopUtils != null) {
+            mAlarmPopUtils.onDestroyPop();
+        }
 //        if (mAlarmPopupView != null) {
 //            mAlarmPopupView.onDestroyPop();
 //        }
@@ -224,6 +241,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 //        }
         super.onDestroyView();
     }
+
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
 //            if (mAlarmPopupView.getVisibility() == View.VISIBLE) {
@@ -233,6 +251,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         }
         return true;
     }
+
     @OnClick({R.id.fg_main_warn_tv_search, R.id.fg_main_warn_imv_calendar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -252,26 +271,48 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void showAlarmPopupView() {
-
+        mAlarmPopUtils.show();
     }
 
     @Override
     public void dismissAlarmPopupView() {
-
+        mAlarmPopUtils.dismiss();
     }
 
     @Override
     public void onPullRefreshComplete() {
-        fgMainWarnRcContent.refreshComplete();
+        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void onPullRefreshCompleteNoMoreData() {
+        refreshLayout.finishLoadMoreWithNoMoreData();
+    }
+
+    @Override
+    public void setUpdateButtonClickable(boolean canClick) {
+        mAlarmPopUtils.setUpdateButtonClickable(canClick);
     }
 
     @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
-
+        mPresenter.clickItemByConfirmStatus(position, isReConfirm);
     }
 
     @Override
     public void onItemClick(View view, int position) {
         mPresenter.clickItem(position);
+    }
+
+    public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
+        if (mAlarmPopUtils != null) {
+            mAlarmPopUtils.handlerActivityResult(requestCode, resultCode, data);
+        }
+    }
+
+    @Override
+    public void onCallPhone(View v, int position) {
+        mPresenter.doContactOwner(position);
     }
 }

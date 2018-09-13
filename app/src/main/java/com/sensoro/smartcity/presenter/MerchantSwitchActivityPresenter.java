@@ -54,24 +54,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             case DIRECTION_DOWN:
                 cur_page = 1;
                 RetrofitServiceHelper.INSTANCE.getUserAccountList(null, cur_page, null, null).subscribeOn(Schedulers.io()).observeOn
-                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>() {
+                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().onPullRefreshComplete();
-                    }
-
-                    @Override
-                    public void onNext(UserAccountRsp userAccountRsp) {
-                        List<UserInfo> list = userAccountRsp.getData();
-                        mUserInfoList.clear();
-                        mUserInfoList.addAll(list);
-                        getView().setAdapterSelectedIndex(-1);
-                        getView().updateAdapterUserInfo(mUserInfoList);
-                        getView().showSeperatorView(list.size() != 0);
-                    }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
@@ -79,22 +63,35 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                         getView().toastShort(errorMsg);
                         getView().onPullRefreshComplete();
                     }
+
+                    @Override
+                    public void onCompleted(UserAccountRsp userAccountRsp) {
+                        List<UserInfo> list = userAccountRsp.getData();
+                        mUserInfoList.clear();
+                        mUserInfoList.addAll(list);
+                        getView().setAdapterSelectedIndex(-1);
+                        getView().updateAdapterUserInfo(mUserInfoList);
+                        getView().showSeperatorView(list.size() != 0);
+                        getView().dismissProgressDialog();
+                        getView().onPullRefreshComplete();
+                    }
                 });
                 break;
             case DIRECTION_UP:
                 cur_page++;
                 RetrofitServiceHelper.INSTANCE.getUserAccountList(null, cur_page, null, null).subscribeOn(Schedulers.io()).observeOn
-                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>() {
-
+                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
                     @Override
-                    public void onCompleted() {
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        cur_page--;
                         getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
                         getView().onPullRefreshComplete();
                     }
 
                     @Override
-                    public void onNext(UserAccountRsp userAccountRsp) {
+                    public void onCompleted(UserAccountRsp userAccountRsp) {
                         List<UserInfo> list = userAccountRsp.getData();
                         if (list == null || list.size() == 0) {
                             cur_page--;
@@ -106,14 +103,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                             getView().updateAdapterUserInfo(mUserInfoList);
                             getView().showSeperatorView(true);
                         }
-
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        cur_page--;
                         getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
                         getView().onPullRefreshComplete();
                     }
                 });
@@ -135,14 +125,16 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     private void doAccountSwitch(String uid) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doAccountControl(uid, mLoginData.phoneId).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountControlRsp>() {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountControlRsp>(this) {
+
             @Override
-            public void onCompleted() {
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
             }
 
             @Override
-            public void onNext(UserAccountControlRsp userAccountControlRsp) {
+            public void onCompleted(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     UserInfo userInfo = userAccountControlRsp.getData();
                     GrantsInfo grants = userInfo.getGrants();
@@ -180,12 +172,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());
                 }
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
             }
         });
     }

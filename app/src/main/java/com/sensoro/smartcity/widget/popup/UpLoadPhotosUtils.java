@@ -55,23 +55,17 @@ public class UpLoadPhotosUtils {
     private void getToken() {
         RetrofitServiceHelper.INSTANCE.getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                 .mainThread()).subscribe(new CityObserver<QiNiuToken>() {
-
-
             @Override
-            public void onCompleted() {
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                upLoadPhotoListener.onError(errorMsg);
             }
 
             @Override
-            public void onNext(QiNiuToken qiNiuToken) {
+            public void onCompleted(QiNiuToken qiNiuToken) {
                 String upToken = qiNiuToken.getUptoken();
                 String domain = qiNiuToken.getDomain();
                 baseUrl = domain;
                 doUpLoadPhoto(upToken);
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                upLoadPhotoListener.onError(errorMsg);
             }
         });
     }

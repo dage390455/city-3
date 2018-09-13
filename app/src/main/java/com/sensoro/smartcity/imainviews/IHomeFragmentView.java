@@ -23,5 +23,8 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     void recycleViewRefreshComplete();
 
+    void recycleViewRefreshCompleteNoMoreData();
+//    void recycleViewRefreshComplete();
+
     void setDetectionPoints(String count);
 }

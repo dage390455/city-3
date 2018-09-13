@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.sensoro.smartcity.R;
@@ -173,13 +174,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             boolean isMatcherType = false;
             boolean isMatcherStatus = false;
             String unionType = deviceInfo.getUnionType();
-            if (unionType != null) {
-                String[] unionTypeArray = unionType.split("\\|");
-                List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                String[] menuTypeArray = SENSOR_MENU_MATCHER_ARRAY[mTypeSelectedIndex].split("\\|");
-                if (mTypeSelectedIndex == 0) {
-                    isMatcherType = true;
-                } else {
+            if (mTypeSelectedIndex == 0) {
+                isMatcherType = true;
+            } else {
+                if (!TextUtils.isEmpty(unionType)) {
+                    String[] unionTypeArray = unionType.split("\\|");
+                    List<String> unionTypeList = Arrays.asList(unionTypeArray);
+                    String[] menuTypeArray = SENSOR_MENU_MATCHER_ARRAY[mTypeSelectedIndex].split("\\|");
                     for (String menuType : menuTypeArray) {
                         if (unionTypeList.contains(menuType)) {
                             isMatcherType = true;
@@ -337,19 +338,17 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         SensoroCityApplication.getInstance().setData(deviceInfoListRsp.getData());
                         organizeDataList();
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
                     @Override
-                    public void onCompleted() {
+                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                        getView().refreshData(mDataList);
+                        getView().recycleViewRefreshComplete();
                         getView().dismissProgressDialog();
                     }
 
                     @Override
-                    public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                        getView().refreshData(mDataList);
-                    }
-
-                    @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().recycleViewRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -391,18 +390,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             e.printStackTrace();
                         }
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
                     @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().recycleViewRefreshComplete();
-                    }
-
-                    @Override
-                    public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                         try {
                             List<DeviceInfo> data = deviceInfoListRsp.getData();
                             if (data.size() == 0) {
+                                getView().recycleViewRefreshCompleteNoMoreData();
                                 getView().toastShort("没有更多数据了");
                             } else {
                                 getView().refreshData(mDataList);
@@ -410,10 +404,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        getView().recycleViewRefreshComplete();
+                        getView().dismissProgressDialog();
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().recycleViewRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
                     }
@@ -457,17 +454,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
         LogUtils.loge(this, "刷新Top信息： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread()).subscribe(new CityObserver<DeviceTypeCountRsp>() {
+                .mainThread()).subscribe(new CityObserver<DeviceTypeCountRsp>(this) {
 
 
             @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onNext(DeviceTypeCountRsp deviceTypeCountRsp) {
-//                "alarm": 6,
+            public void onCompleted(DeviceTypeCountRsp deviceTypeCountRsp) {
+                //                "alarm": 6,
 //                        "normal": 209,
 //                        "offline": 11071,
 //                        "inactive": 8599
@@ -505,6 +497,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 int total = alarmCount + normal + lostCount + inactiveCount;
                 getView().setDetectionPoints(String.valueOf(total));
                 getView().refreshTop(false, homeTopModels);
+                getView().dismissProgressDialog();
             }
 
             @Override

@@ -153,19 +153,15 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 }
                 RetrofitServiceHelper.INSTANCE.getNewContract(1, serviceType, null, null, line3, line4,
                         line1, line2, line6, line5, phone, placeType, deviceList, 2, null, serviceTime).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>() {
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
                     @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onNext(ContractAddRsp contractAddRsp) {
+                    public void onCompleted(ContractAddRsp contractAddRsp) {
                         ContractAddInfo data = contractAddRsp.getData();
                         id = data.getId();
                         LogUtils.loge(this, "id = " + id);
                         handleCode(id + "", text);
+                        getView().dismissProgressDialog();
                     }
 
                     @Override
@@ -185,19 +181,15 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line3, sex, null, null,
                         line1, null, null, line4, phone, placeType, deviceList, 2, null, serviceTime).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>() {
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
                     @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onNext(ContractAddRsp contractAddRsp) {
+                    public void onCompleted(ContractAddRsp contractAddRsp) {
                         ContractAddInfo data = contractAddRsp.getData();
                         int id = data.getId();
                         LogUtils.loge(this, "id = " + id);
                         handleCode(id + "", text);
+                        getView().dismissProgressDialog();
                     }
 
                     @Override
@@ -211,19 +203,16 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, null, null, null, null,
                         line2, line1, null, line4, line3, placeType, deviceList, 2, null, serviceTime).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>() {
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+
 
                     @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onNext(ContractAddRsp contractAddRsp) {
+                    public void onCompleted(ContractAddRsp contractAddRsp) {
                         ContractAddInfo data = contractAddRsp.getData();
                         int id = data.getId();
                         LogUtils.loge(this, "id = " + id);
                         handleCode(id + "", text);
+                        getView().dismissProgressDialog();
                     }
 
                     @Override

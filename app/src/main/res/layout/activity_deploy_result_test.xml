@@ -2,12 +2,17 @@
     <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/c_fafafa">
+        android:background="@color/white">
 
         <include
             android:id="@+id/ac_deploy_result_title"
             layout="@layout/item_include_text_title" />
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/c_fafafa"
+            android:layout_below="@id/ac_deploy_result_title"/>
         <LinearLayout
             android:id="@+id/ac_deploy_result_bottom"
             android:layout_width="match_parent"

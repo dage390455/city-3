@@ -30,9 +30,18 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
     private AlarmConfirmStatusClickListener mListener;
     private final List<DeviceAlarmLogInfo> mList = new ArrayList<>();
     private RecycleViewItemClickListener recycleViewItemClickListener;
+    private OnPlayPhoneListener onPlayPhoneListener;
 
     public MainWarnFragRcContentAdapter(Context context) {
         mContext = context;
+    }
+
+    public interface OnPlayPhoneListener {
+        void onCallPhone(View v, int position);
+    }
+
+    public void setOnPlayPhoneListener(OnPlayPhoneListener onPlayPhoneListener) {
+        this.onPlayPhoneListener = onPlayPhoneListener;
     }
 
     @Override
@@ -166,6 +175,14 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             public void onClick(View v) {
                 if (recycleViewItemClickListener != null) {
                     recycleViewItemClickListener.onItemClick(v, position);
+                }
+            }
+        });
+        holder.mainWarnRcContentBtnContactLandlord.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onPlayPhoneListener != null) {
+                    onPlayPhoneListener.onCallPhone(v, position);
                 }
             }
         });

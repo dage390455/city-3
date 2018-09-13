@@ -97,17 +97,11 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
                 statusPlace,
                 remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe
-                        (new CityObserver<DeviceAlarmItemRsp>() {
+                        (new CityObserver<DeviceAlarmItemRsp>(this) {
 
 
                             @Override
-                            public void onCompleted() {
-                                getView().dismissProgressDialog();
-                                getView().dismissConfirmPopup();
-                            }
-
-                            @Override
-                            public void onNext(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                            public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
                                 if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                                     getView().toastShort(mContext.getResources().getString(R.string
                                             .tips_commit_success));
@@ -117,6 +111,8 @@ public class AlarmDetailActivityPresenter extends BasePresenter<IAlarmDetailActi
                                     getView().toastShort(mContext.getResources().getString(R.string
                                             .tips_commit_failed));
                                 }
+                                getView().dismissProgressDialog();
+                                getView().dismissConfirmPopup();
                             }
 
                             @Override

@@ -263,6 +263,6 @@ public interface Constants {
     int EVENT_DATA_CANCEL_AUTH = 0x27;
     int EVENT_DATA_AUTH_SUC = 0x28;
 
-    String TYPE_SCAN_DEPLOY_DEVICE = "deploy";
-    String TYPE_SCAN_LOGIN = "login";
+    int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
+    int TYPE_SCAN_LOGIN = 0x30;
 }
