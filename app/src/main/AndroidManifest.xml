@@ -14,6 +14,14 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.RESTART_PACKAGES" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
+
+    <uses-permission-sdk-23 android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission-sdk-23 android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission-sdk-23 android:name="android.permission.CAMERA" />
+    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission-sdk-23 android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission-sdk-23 android:name="android.permission.INTERNET" />
+
     <uses-permission
         android:name="android.permission.CHANGE_CONFIGURATION"
         tools:ignore="ProtectedPermissions" />
@@ -68,6 +76,7 @@
     <permission
         android:name="getui.permission.GetuiService.${applicationId}"
         android:protectionLevel="normal" />
+
 
     <application
         android:name=".SensoroCityApplication"

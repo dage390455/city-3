@@ -9,7 +9,6 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
-import com.fengmap.android.FMMapSDK;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.view.CropImageView;
 import com.qiniu.android.common.FixedZone;
@@ -19,6 +18,7 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
@@ -42,7 +42,7 @@ import java.util.List;
  */
 
 public class SensoroCityApplication extends MultiDexApplication implements Repause
-        .Listener, SensoroPushListener, OnResultListener<AccessToken> {
+        .Listener, SensoroPushListener, OnResultListener<AccessToken>, Runnable {
     private final List<DeviceInfo> mDeviceInfoList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
@@ -125,19 +125,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
-        initORC();
-        SensoroPushManager.getInstance().registerSensoroPushListener(this);
-        Repause.init(this);
-        Repause.registerListener(this);
         mNotificationUtils = new NotificationUtils(this);
-        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
-        api.registerApp(Constants.APP_ID);
-        FMMapSDK.init(this);
-        //
-        initImagePicker();
-        initUploadManager();
-        initBugLy();
-        initVc();
+        ThreadPoolManager.getInstance().execute(this);
     }
 
     private void initVc() {
@@ -302,6 +291,22 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         hasGotToken = false;
         String message = error.getMessage();
         LogUtils.loge(this, message);
+    }
+
+    @Override
+    public void run() {
+        initORC();
+        SensoroPushManager.getInstance().registerSensoroPushListener(this);
+        Repause.init(this);
+        Repause.registerListener(this);
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
+        api.registerApp(Constants.APP_ID);
+//        FMMapSDK.init(this);
+        //
+        initImagePicker();
+        initUploadManager();
+        initBugLy();
+        initVc();
     }
 
     /**

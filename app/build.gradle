@@ -33,7 +33,7 @@ android {
         applicationId "com.sensoro.smartcity"
         minSdkVersion 20
         //考虑到vcamera库只能在23以下
-        targetSdkVersion 22
+        targetSdkVersion 21
         versionCode verCode
         versionName verName + connector + buildCode
 //         Enabling multidex support.
@@ -44,11 +44,11 @@ android {
                 GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A"
         ]
         ndk {
-            moduleName "city"
+//            moduleName "city"
             //声明启用Android日志, 在c/c++的源文件中使用的#include <android/log.h> 日志将得到输出
 //            ldLibs "log"
 //            abiFilters 'armeabi','armeabi-v7a'  //只生成armeabi的so
-            abiFilters 'armeabi'  //只生成armeabi的so
+            abiFilters 'armeabi-v7a'  //只生成armeabi的so
         }
     }
     buildTypes {
@@ -85,6 +85,8 @@ android {
             exclude 'META-INF/ASL2.0'
             doNotStrip '*/mips/*.so'
             doNotStrip '*/mips64/*.so'
+            doNotStrip '*/x86_64/*.so'
+            doNotStrip '*/x86/*.so'
         }
     }
 
@@ -188,7 +190,6 @@ dependencies {
     compile project(':ocr_ui')
     compile project(':pulltorefresh')
     compile 'me.jessyan:autosize:0.7.0'
-    compile files('libs/AMap3DMap_6.3.1_AMapNavi_6.2.0_AMapSearch_6.1.0_AMapTrack_1.0.0_AMapLocation_4.2.0_20180809.jar')
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'
     //网络组件
@@ -201,6 +202,6 @@ dependencies {
     compile 'com.squareup.okhttp3:okhttp:3.10.0'
     //消息组件
     compile 'org.greenrobot:eventbus:3.1.1'
-
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
+    compile files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
 }
