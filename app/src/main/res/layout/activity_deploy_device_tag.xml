@@ -20,7 +20,7 @@
         android:layout_alignParentBottom="true"
         android:textColor="@color/white"
         android:textSize="16sp"
-        android:text="提交"
+        android:text="保存"
         android:gravity="center"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -31,5 +31,47 @@
         android:layout_marginEnd="20dp"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ac_deploy_device_tag_title"
+        app:layout_constraintBottom_toTopOf="@id/ac_deploy_device_tag_commit">
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ac_deploy_device_tag_rc_add_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="20dp"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="历史标签"
+            android:textSize="14sp"
+            android:textColor="@color/c_030303"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ac_deploy_device_tag_rc_history_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="20dp"
+            >
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+
 
 </android.support.constraint.ConstraintLayout>

@@ -90,6 +90,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private void initPop() {
         View view = LayoutInflater.from(mRootFragment.getActivity()).inflate(R.layout.item_pop_type_select, null);
         RecyclerView mRcTypeSelect = view.findViewById(R.id.pop_type_select_rc);
+        final TextView tvSelectType = view.findViewById(R.id.pop_type_tv_select_type);
         TypeSelectAdapter mTypeSelectAdapter = new TypeSelectAdapter(mRootFragment.getActivity());
         GridLayoutManager manager = new GridLayoutManager(mRootFragment.getActivity(), 4);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRootFragment.getActivity(), DividerItemDecoration.VERTICAL);
@@ -102,6 +103,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 mPresenter.requestDataByTypes(position);
                 //选择类型的pop点击事件
                 fgMainHomeTvSelectType.setText(Constants.SELECT_TYPE[position]);
+                tvSelectType.setText(Constants.SELECT_TYPE[position]);
                 mPopupWindow.dismiss();
             }
         });
@@ -315,6 +317,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         }
     }
 
+    /**
+     * poup 展示在某个控件下
+     */
     private void showSelectTypePop() {
 //        if (Build.VERSION.SDK_INT < 24) {
 //            mPopupWindow.showAsDropDown(fgMainHomeTvSelectType);
@@ -401,10 +406,10 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void onMenuDialogFragmentDismiss(int resId) {
         switch (resId) {
             case R.id.dialog_main_home_menu_imv_close:
+                mPresenter.doScanDeploy();
                 break;
             case R.id.dialog_main_home_menu_tv_quick_deploy:
                 //TODO 设备部署
-                toastShort("设备部署");
                 break;
             case R.id.dialog_main_home_menu_new_tv_construction:
                 //TODO 合同管理
@@ -413,7 +418,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             case R.id.dialog_main_home_menu_tv_scan_login:
                 //TODO 扫码登录
                 mPresenter.doScanLogin();
-                toastShort("扫码登录");
                 break;
             case R.id.dialog_main_home_menu_rl_root:
                 break;

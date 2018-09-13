@@ -255,6 +255,9 @@
         <activity android:name=".activity.MonitoringPointDetailActivity" />
         <activity android:name=".activity.ContractManagerActivity" />
         <activity android:name=".activity.MerchantSwitchActivity" />
+        <activity android:name=".activity.AlarmContactActivity" />
+        <activity android:name=".activity.NameAddressActivity" />
+        <activity android:name=".activity.DeployResultActivityTest" />
 
         <service
             android:name="com.igexin.download.DownloadService"

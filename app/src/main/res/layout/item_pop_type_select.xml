@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/c_fafafa"
     android:orientation="vertical">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/c_fafafa"/>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -21,17 +19,23 @@
             android:layout_marginTop="18dp"
             android:drawableEnd="@drawable/main_smal_triangle"
             android:drawablePadding="10dp"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
             android:text="全部类型"
             android:layout_marginBottom="16dp"
             android:textColor="@color/c_030303"
             android:textSize="18sp" />
 
     </RelativeLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/c_fafafa"/>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/pop_type_select_rc"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:background="@color/c_fafafa">
 
     </android.support.v7.widget.RecyclerView>

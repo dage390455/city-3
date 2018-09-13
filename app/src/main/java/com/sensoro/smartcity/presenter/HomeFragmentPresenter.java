@@ -582,4 +582,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         getView().toastShort("sn = "+sn);
         //TODO 弹起预警记录的dialog
     }
+
+    public void doScanDeploy() {
+        Intent intent = new Intent(mContext, ScanActivity.class);
+        intent.putExtra("type", Constants.TYPE_SCAN_DEPLOY_DEVICE);
+        getView().startAC(intent);
+    }
 }
