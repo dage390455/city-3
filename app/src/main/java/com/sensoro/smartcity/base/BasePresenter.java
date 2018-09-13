@@ -11,7 +11,7 @@ import java.lang.ref.WeakReference;
  * @date 2018/2/4 0004
  */
 
-public abstract class BasePresenter<V> implements IOnDestroy{
+public abstract class BasePresenter<V> implements IOnDestroy {
     private WeakReference<V> mViewRef;
 
     /**
@@ -29,8 +29,7 @@ public abstract class BasePresenter<V> implements IOnDestroy{
      * @return
      */
     protected V getView() {
-        V v = mViewRef.get();
-        return v;
+        return mViewRef.get();
     }
 
     /**

@@ -1,10 +1,18 @@
 package com.sensoro.smartcity;
 
+import android.content.Context;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
+import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
@@ -14,11 +22,22 @@ import com.lzy.imagepicker.view.CropImageView;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshInitializer;
+import com.scwang.smartrefresh.layout.api.RefreshFooter;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.util.DynamicTimeFormat;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
 import com.sensoro.smartcity.util.Repause;
@@ -41,7 +60,7 @@ import java.util.List;
  */
 
 public class SensoroCityApplication extends MultiDexApplication implements Repause
-        .Listener, SensoroPushListener, OnResultListener<AccessToken> {
+        .Listener, SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
     private final List<DeviceInfo> mDeviceInfoList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
@@ -52,6 +71,45 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     public UploadManager uploadManager;
     public volatile boolean hasGotToken = false;
     public static String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
+    public AMapLocationClient mLocationClient;
+
+    static {
+        //启用矢量图兼容
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        //设置全局默认配置（优先级最低，会被其他设置覆盖）
+        SmartRefreshLayout.setDefaultRefreshInitializer(new DefaultRefreshInitializer() {
+            @Override
+            public void initialize(@NonNull Context context, @NonNull RefreshLayout layout) {
+                //全局设置（优先级最低）
+//                layout.setEnableLoadMore(false);
+                layout.setEnableAutoLoadMore(true);
+                layout.setEnableOverScrollDrag(false);
+                layout.setEnableOverScrollBounce(true);
+                layout.setEnableLoadMoreWhenContentNotFull(true);
+                layout.setEnableFooterFollowWhenLoadFinished(true);
+                layout.setEnableScrollContentWhenRefreshed(true);
+            }
+        });
+        //设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
+            @NonNull
+            @Override
+            public RefreshHeader createRefreshHeader(@NonNull Context context, @NonNull RefreshLayout layout) {
+                //全局设置主题颜色（优先级第二低，可以覆盖 DefaultRefreshInitializer 的配置，与下面的ClassicsHeader绑定）
+                layout.setPrimaryColorsId(android.R.color.white);
+
+                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat("更新于 %s"));
+            }
+        });
+        //设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
+            @Override
+            public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
+                //指定为经典Footer，默认是 BallPulseFooter
+                return new ClassicsFooter(context).setDrawableSize(20);
+            }
+        });
+    }
 
     //    public static String VIDEO_PATH =  "/sdcard/SensroroCity/";
     @Override
@@ -103,6 +161,26 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     }
 
+    private void locate() {
+        mLocationClient = new AMapLocationClient(this);
+        //设置定位回调监听
+        mLocationClient.setLocationListener(this);
+        //初始化定位参数
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为Hight_Accuracy高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(false);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(2000);
+        mLocationOption.setHttpTimeOut(20000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
+    }
 
     public List<DeviceInfo> getData() {
         return mDeviceInfoList;
@@ -118,25 +196,14 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         super.onTerminate();
         mDeviceInfoList.clear();
         Repause.unregisterListener(this);
+        mLocationClient.onDestroy();
     }
 
     private void init() {
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
-        initORC();
-        SensoroPushManager.getInstance().registerSensoroPushListener(this);
-        Repause.init(this);
-        Repause.registerListener(this);
-        mNotificationUtils = new NotificationUtils(this);
-        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
-        api.registerApp(Constants.APP_ID);
-//        FMMapSDK.init(this);
-        //
-        initImagePicker();
-        initUploadManager();
-        initBugLy();
-        initVc();
+        ThreadPoolManager.getInstance().execute(this);
     }
 
     private void initVc() {
@@ -301,6 +368,42 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         hasGotToken = false;
         String message = error.getMessage();
         LogUtils.loge(this, message);
+    }
+
+    @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                //可在其中解析amapLocation获取相应内容。
+                double lat = aMapLocation.getLatitude();//获取纬度
+                double lon = aMapLocation.getLongitude();//获取经度
+//            mStartPosition = new LatLng(lat, lon);
+                LogUtils.loge(this, "定位信息------->lat = " + lat + ",lon = =" + lon);
+            } else {
+                //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                Log.e("地图错误", "定位失败, 错误码:" + aMapLocation.getErrorCode() + ", 错误信息:"
+                        + aMapLocation.getErrorInfo());
+            }
+
+        }
+    }
+
+    @Override
+    public void run() {
+        initORC();
+        SensoroPushManager.getInstance().registerSensoroPushListener(this);
+        Repause.init(this);
+        Repause.registerListener(this);
+        mNotificationUtils = new NotificationUtils(this);
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
+        api.registerApp(Constants.APP_ID);
+//        FMMapSDK.init(this);
+        //
+        initImagePicker();
+        initUploadManager();
+        initBugLy();
+        locate();
+        initVc();
     }
 
     /**

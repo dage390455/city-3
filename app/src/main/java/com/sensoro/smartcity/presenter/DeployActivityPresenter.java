@@ -403,20 +403,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.doStationDeploy(sn, lon, lan, tags, name).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(new CityObserver<StationInfoRsp>() {
-
-
-                            @Override
-                            public void onCompleted() {
-                                getView().dismissProgressDialog();
-                                getView().finishAc();
-                            }
-
-                            @Override
-                            public void onNext(StationInfoRsp stationInfoRsp) {
-                                freshStation(stationInfoRsp);
-                            }
-
+                        .subscribe(new CityObserver<StationInfoRsp>(this) {
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -429,6 +416,13 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                                 } else {
                                     freshError(sn, errorMsg);
                                 }
+                            }
+
+                            @Override
+                            public void onCompleted(StationInfoRsp stationInfoRsp) {
+                                freshStation(stationInfoRsp);
+                                getView().dismissProgressDialog();
+                                getView().finishAc();
                             }
                         });
             } else {
@@ -493,19 +487,8 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(sn, lon, lan, tags, name,
                 contact, content, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<DeviceDeployRsp>() {
+                .subscribe(new CityObserver<DeviceDeployRsp>(this) {
 
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().finishAc();
-                    }
-
-                    @Override
-                    public void onNext(DeviceDeployRsp deviceDeployRsp) {
-                        freshPoint(deviceDeployRsp);
-                    }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
@@ -518,6 +501,13 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
                         } else {
                             freshError(sn, errorMsg);
                         }
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                        freshPoint(deviceDeployRsp);
+                        getView().dismissProgressDialog();
+                        getView().finishAc();
                     }
                 });
     }
@@ -613,27 +603,23 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     public void doSignal(String sn) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
-
-            @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                if (deviceInfoListRsp.getData().size() > 0) {
-                    DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(0);
-                    String signal = deviceInfo.getSignal();
-                    getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
-                }
-            }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+            }
+
+            @Override
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                if (deviceInfoListRsp.getData().size() > 0) {
+                    DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(0);
+                    String signal = deviceInfo.getSignal();
+                    getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
+                }
+                getView().dismissProgressDialog();
             }
         });
 

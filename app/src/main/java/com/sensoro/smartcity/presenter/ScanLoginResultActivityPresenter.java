@@ -27,20 +27,16 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
         if (!TextUtils.isEmpty(qrcodeId)) {
             getView().showProgressDialog();
             RetrofitServiceHelper.INSTANCE.scanLoginIn(qrcodeId).subscribeOn(Schedulers.io()).observeOn
-                    (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>() {
+                    (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
                 @Override
-                public void onCompleted() {
-                    getView().dismissProgressDialog();
-                    getView().finishAc();
-                }
-
-                @Override
-                public void onNext(ResponseBase responseBase) {
+                public void onCompleted(ResponseBase responseBase) {
                     if (responseBase.getErrcode() == 0) {
 //                        getView().toastShort("登录成功");
                     } else {
                         getView().toastShort("登录失败请重新扫描");
                     }
+                    getView().dismissProgressDialog();
+                    getView().finishAc();
                 }
 
                 @Override
@@ -56,21 +52,18 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
         if (!TextUtils.isEmpty(qrcodeId)) {
             getView().showProgressDialog();
             RetrofitServiceHelper.INSTANCE.scanLoginCancel(qrcodeId).subscribeOn(Schedulers.io()).observeOn
-                    (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>() {
-                @Override
-                public void onCompleted() {
-                    getView().dismissProgressDialog();
-                    getView().finishAc();
-                }
+                    (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
 
                 @Override
-                public void onNext(ResponseBase responseBase) {
-//                    if (responseBase.getErrcode() == 0) {
+                public void onCompleted(ResponseBase responseBase) {
+                    //                    if (responseBase.getErrcode() == 0) {
 //                        getView().toastShort("登录成功");
 //                    } else {
 //                        getView().toastShort("登录失败请重新扫描");
 //                        getView().finishAc();
 //                    }
+                    getView().dismissProgressDialog();
+                    getView().finishAc();
                 }
 
                 @Override

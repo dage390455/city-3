@@ -48,20 +48,17 @@ public class ScanLoginFragmentPresenter extends BasePresenter<IScanLoginFragment
     private void scanFinish(final String qrcodeId) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getLoginScanResult(qrcodeId).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>() {
-            @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
 
             @Override
-            public void onNext(ResponseBase responseBase) {
+            public void onCompleted(ResponseBase responseBase) {
                 if (responseBase.getErrcode() == 0) {
                     refresh(qrcodeId);
                 } else {
                     getView().toastShort("请重新扫描后重试");
                     getView().startScan();
                 }
+                getView().dismissProgressDialog();
             }
 
             @Override

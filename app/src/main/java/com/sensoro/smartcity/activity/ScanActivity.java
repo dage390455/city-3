@@ -10,13 +10,15 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.presenter.ScanActivityPresenter;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,7 +27,7 @@ import cn.bingoogolapple.qrcode.core.QRCodeView;
 import cn.bingoogolapple.qrcode.zxing.ZXingView;
 
 public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPresenter> implements
-        IScanActivityView,QRCodeView.Delegate {
+        IScanActivityView, QRCodeView.Delegate {
     @BindView(R.id.ac_scan_qr_view)
     ZXingView acScanQrView;
     @BindView(R.id.include_text_title_imv_arrows_left)
@@ -43,6 +45,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @BindView(R.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
     private boolean isFlashOn;
+    private ProgressUtils mProgressUtils;
 
 
     @Override
@@ -54,6 +57,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setTextColor(Color.WHITE);
         includeTextTitleTvSubTitle.setVisibility(View.GONE);
         includeTextTitleClRoot.setBackgroundColor(Color.TRANSPARENT);
@@ -69,7 +73,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         Drawable.ConstantState state = drawable.getConstantState();
         DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
         drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
-        DrawableCompat.setTint(drawable,Color.WHITE);
+        DrawableCompat.setTint(drawable, Color.WHITE);
         includeTextTitleImvArrowsLeft.setImageDrawable(drawable);
     }
 
@@ -92,18 +96,19 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        mProgressUtils.destroyProgress();
         acScanQrView.onDestroy();
+        super.onDestroy();
     }
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -123,17 +128,17 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void showProgressDialog() {
-
+        mProgressUtils.showProgress();
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        mProgressUtils.dismissProgress();
     }
 
     @Override
     public void toastShort(String msg) {
-
+        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -146,7 +151,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
-
+                finishAc();
                 break;
             case R.id.ac_scan_tv_input_sn:
                 mPresenter.openSNTextAc();
@@ -165,12 +170,12 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void onScanQRCodeSuccess(String result) {
-
+        mPresenter.processResult(result);
     }
 
     @Override
     public void onScanQRCodeOpenCameraError() {
-
+        LogUtils.loge(this,"扫描出错！！！！！！！");
     }
 
     @Override
@@ -190,7 +195,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void setBottomVisible(boolean isVisible) {
-        acScanLlBottom.setVisibility(isVisible?View.VISIBLE:View.GONE);
+        acScanLlBottom.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -77,7 +76,13 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         //
         int status = deviceInfo.getStatus();
         //
-        Drawable drawable = null;
+        String[] sensorTypes = deviceInfo.getSensorTypes();
+        if (sensorTypes != null && sensorTypes.length > 0) {
+            String sensorType = sensorTypes[0];
+            if (!TextUtils.isEmpty(sensorType)) {
+                WidgetUtil.judgeSensorTypeNew(holder.mainRcContentImvIcon, sensorType);
+            }
+        }
         int color = 0;
         switch (status) {
             case SENSOR_STATUS_ALARM:
@@ -91,59 +96,24 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                         }
                     });
                 }
-//                holder.item_iv_status.setVisibility(View.INVISIBLE);
-//                holder.item_alarm_view.setVisibility(View.VISIBLE);
-//                drawable = mContext.getResources().getDrawable(R.drawable.shape_status_alarm);
-//                drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
-//                        .getMinimumHeight());
                 break;
             case SENSOR_STATUS_INACTIVE:
                 color = R.color.sensoro_inactive;
                 holder.ivItemAlarm.setVisibility(View.GONE);
-//                holder.item_alarm_view.setVisibility(View.GONE);
-//                drawable = mContext.getResources().getDrawable(R.drawable.shape_status_inactive);
-//                drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
-//                        .getMinimumHeight());
-//                holder.item_value1.setText(mContext.getString(R.string.status_inactive));
-//                holder.item_value1.setTextColor(mContext.getResources().getColor(color));
-//                holder.item_unit1.setVisibility(GONE);
-//                holder.item_value2.setVisibility(GONE);
-//                holder.item_unit2.setVisibility(GONE);
                 break;
             case SENSOR_STATUS_LOST:
                 color = R.color.sensoro_lost;
                 holder.ivItemAlarm.setVisibility(View.GONE);
-//                holder.item_alarm_view.setVisibility(View.GONE);
-//                drawable = mContext.getResources().getDrawable(R.drawable.shape_status_lost);
-//                drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
-//                        .getMinimumHeight());
-//                holder.item_value1.setText(mContext.getString(R.string.status_lost));
-//                holder.item_value1.setTextColor(mContext.getResources().getColor(color));
-//                holder.item_unit1.setVisibility(GONE);
-//                holder.item_value2.setVisibility(GONE);
-//                holder.item_unit2.setVisibility(GONE);
                 break;
             case SENSOR_STATUS_NORMAL:
                 color = R.color.sensoro_normal;
                 holder.ivItemAlarm.setVisibility(View.GONE);
-//                holder.item_alarm_view.setVisibility(View.GONE);
-//                drawable = mContext.getResources().getDrawable(R.drawable.shape_status_normal);
-//                drawable.setBounds(0, 0, drawable != null ? drawable.getMinimumWidth() : 0, drawable
-//                        .getMinimumHeight());
-//                setData(holder, deviceInfo, color);
                 break;
             default:
                 holder.ivItemAlarm.setVisibility(View.GONE);
-//                holder.item_alarm_view.setVisibility(View.GONE);
-//                holder.item_iv_status.setVisibility(View.INVISIBLE);
                 break;
         }
-//        holder.item_iv_status.setImageDrawable(drawable);
-        //
-        WidgetUtil.judgeSensorTypeNew(mContext, holder.mainRcContentImvIcon, deviceInfo.getSensorTypes()[0], color);
-//        WidgetUtil.changeIconColor(mContext, holder.mainRcContentImvIcon, color);
-//        holder.mainRcContentTvLocation.setTextColor(mContext.getResources().getColor(color));
-//        holder.mainRcContentTvTime.setTextColor(mContext.getResources().getColor(color));
+        holder.mainRcContentImvIcon.setColorFilter(mContext.getResources().getColor(color));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -63,15 +63,12 @@ public class StationDeployFragmentPresenter extends BasePresenter<IStationDeploy
     private void scanFinish(final String scanSerialNumber) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getStationDetail(scanSerialNumber).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<StationInfoRsp>() {
-            @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<StationInfoRsp>(this) {
 
             @Override
-            public void onNext(StationInfoRsp stationInfoRsp) {
+            public void onCompleted(StationInfoRsp stationInfoRsp) {
                 refresh(stationInfoRsp);
+                getView().dismissProgressDialog();
             }
 
             @Override

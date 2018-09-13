@@ -15,4 +15,6 @@ public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDia
     void dismissAlarmPopupView();
 
     void onPullRefreshComplete();
+    void onPullRefreshCompleteNoMoreData();
+    void setUpdateButtonClickable(boolean canClick);
 }

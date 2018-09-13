@@ -160,7 +160,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     private void showRationaleDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setTitle("提示")
-                .setMessage("通知中包含了重要报警信息，请前往设置，打开的通知选项。")
+                .setMessage("通知中包含了重要报警信息，请前往设置，打开通知选项。")
                 .setPositiveButton("前往设置",
                         new DialogInterface.OnClickListener() {
                             @Override

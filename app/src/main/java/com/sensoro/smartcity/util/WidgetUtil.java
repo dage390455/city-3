@@ -17,7 +17,6 @@ import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.text.SpannableString;
 import android.text.Spanned;
@@ -458,7 +457,7 @@ public class WidgetUtil {
         srcImageView.setLayoutParams(layoutParams);
     }
 
-    public static void judgeSensorTypeNew(Context context, ImageView srcImageView, String sensorType, int resColor) {
+    public static void judgeSensorTypeNew(ImageView srcImageView, String sensorType) {
         int tempResId = R.drawable.type_smoke;
         if (sensorType.equalsIgnoreCase("co")) {
             tempResId = R.drawable.type_co;
@@ -510,25 +509,27 @@ public class WidgetUtil {
         } else if (sensorType.equals("TOTAL_POWER")) {
             tempResId = R.drawable.type_ammeter;
         } else if (sensorType.equalsIgnoreCase("infrared")) {
-            tempResId = R.mipmap.ic_sensor_infrared_bg;
+            tempResId = R.mipmap.ic_sensor_infrared;
         } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
-            tempResId = R.mipmap.ic_sensor_manual_alarm_bg;
+            tempResId = R.mipmap.ic_sensor_manual_alarm;
         } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
-            tempResId = R.mipmap.ic_sensor_sound_light_alarm_bg;
+            tempResId = R.mipmap.ic_sensor_sound_light_alarm;
         } else {
 //            srcImageView.setVisibility(View.INVISIBLE);
         }
-        changeColor(context, srcImageView, tempResId, resColor);
+        srcImageView.setImageResource(tempResId);
     }
 
     private static void changeColor(Context context, ImageView srcImageView, int imageResId, int resColor) {
-        Drawable drawable = ContextCompat.getDrawable(context, imageResId);
-        Drawable.ConstantState state = drawable.getConstantState();
-        Drawable drawableNew = DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
-        drawableNew.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
-        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resColor));
-//            srcImageView.setImageDrawable(drawable);
-        srcImageView.setImageDrawable(drawableNew);
+//        Drawable drawable = ContextCompat.getDrawable(context, imageResId);
+//        Drawable.ConstantState state = drawable.getConstantState();
+//        Drawable drawableNew = DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+//        drawableNew.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
+//        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resColor));
+////            srcImageView.setImageDrawable(drawable);
+//        srcImageView.setImageDrawable(drawableNew);
+
+        srcImageView.setColorFilter(context.getResources().getColor(resColor));
     }
 
 //

@@ -100,16 +100,11 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
     public void requestData(String text) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getUserAccountList(text, null, 0, 100000).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>() {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
 
             @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onNext(UserAccountRsp userAccountRsp) {
+            public void onCompleted(UserAccountRsp userAccountRsp) {
                 refreshUI(userAccountRsp);
 //                List<UserInfo> list = userAccountRsp.getData();
 //                if (list.size() == 0) {
@@ -120,6 +115,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
 //                    getView().setIntentResult(RESULT_CODE_CHANGE_MERCHANT, data);
 //                    getView().finishAc();
 //                }
+                getView().dismissProgressDialog();
             }
 
             @Override
@@ -161,14 +157,10 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
     private void doAccountSwitch(String uid) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doAccountControl(uid, phoneId).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountControlRsp>() {
-            @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountControlRsp>(this) {
 
             @Override
-            public void onNext(UserAccountControlRsp userAccountControlRsp) {
+            public void onCompleted(UserAccountControlRsp userAccountControlRsp) {
                 if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     UserInfo userInfo = userAccountControlRsp.getData();
                     EventData eventData = new EventData();
@@ -194,6 +186,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                 } else {
                     getView().toastShort(userAccountControlRsp.getErrmsg());
                 }
+                getView().dismissProgressDialog();
             }
 
             @Override

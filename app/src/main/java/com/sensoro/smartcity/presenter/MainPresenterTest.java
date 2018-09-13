@@ -59,6 +59,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
     private final MainPresenterTest.TaskRunnable mRunnable = new MainPresenterTest.TaskRunnable();
     //
     private EventLoginData mEventLoginData;
+    private WarnFragment warnFragment;
 
     @Override
     public void initData(Context context) {
@@ -70,7 +71,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         onCreate();
         //
         HomeFragment homeFragment = new HomeFragment();
-        WarnFragment warnFragment = new WarnFragment();
+        warnFragment = new WarnFragment();
         ManagerFragment managerFragment = new ManagerFragment();
         if (mFragmentList.size() > 0) {
             mFragmentList.clear();
@@ -361,9 +362,9 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS || resultCode == ImagePicker.RESULT_CODE_BACK || resultCode == RESULT_CODE_RECORD) {
-//            if (alarmListFragment != null) {
-//                alarmListFragment.handlerActivityResult(requestCode, resultCode, data);
-//            }
+            if (warnFragment != null) {
+                warnFragment.handlerActivityResult(requestCode, resultCode, data);
+            }
         }
 
     }

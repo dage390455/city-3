@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
@@ -17,6 +18,9 @@ import com.sensoro.smartcity.imainviews.IAlertLogActivityView;
 import com.sensoro.smartcity.presenter.AlertLogActivityPresenter;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
 
@@ -61,6 +65,8 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     @BindView(R.id.ac_alert_rc_content)
     RecyclerView acAlertRcContent;
     private AlertLogRcContentAdapter alertLogRcContentAdapter;
+    private AlarmPopUtils mAlarmPopUtils;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -71,6 +77,10 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        mAlarmPopUtils = new AlarmPopUtils(mActivity);
+        mAlarmPopUtils.setDialog(mActivity);
+        mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         initRcContent();
     }
 
@@ -87,7 +97,13 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     protected AlertLogActivityPresenter createPresenter() {
         return new AlertLogActivityPresenter();
     }
-
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (mAlarmPopUtils != null) {
+            mAlarmPopUtils.handlerActivityResult(requestCode, resultCode, data);
+        }
+    }
     @Override
     public void startAC(Intent intent) {
         mActivity.startActivity(intent);
@@ -115,17 +131,17 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
 
     @Override
     public void showProgressDialog() {
-
+        mProgressUtils.showProgress();
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        mProgressUtils.dismissProgress();
     }
 
     @Override
     public void toastShort(String msg) {
-
+        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -133,7 +149,7 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
 
     }
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation, R.id.ac_alert_tv_alert_confirm})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation, R.id.ac_alert_tv_alert_confirm,R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
@@ -147,9 +163,18 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
                 mPresenter.doNavigation();
                 break;
             case R.id.ac_alert_tv_alert_confirm:
-
+                showAlarmPopupView();
+                break;
+            case R.id.include_text_title_imv_arrows_left:
+                mPresenter.doBack();
                 break;
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        mPresenter.doBack();
     }
 
     @Override
@@ -175,7 +200,34 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     }
 
     @Override
+    public void showAlarmPopupView() {
+        mAlarmPopUtils.show();
+    }
+
+    @Override
+    public void dismissAlarmPopupView() {
+        mAlarmPopUtils.dismiss();
+    }
+
+    @Override
+    public void setUpdateButtonClickable(boolean canClick) {
+        mAlarmPopUtils.setUpdateButtonClickable(canClick);
+    }
+
+    @Override
     public void onPhotoItemClick(int position, List<ScenesData> scenesDataList) {
         mPresenter.clickPhotoItem(position, scenesDataList);
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
+        if (mAlarmPopUtils != null) {
+            mAlarmPopUtils.onDestroyPop();
+        }
+        super.onDestroy();
     }
 }

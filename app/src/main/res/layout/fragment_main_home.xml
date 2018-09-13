@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fg_main_home_ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -29,10 +30,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
+            android:layout_marginRight="9dp"
             android:background="@color/transparent"
             android:contentDescription="@null"
             android:padding="8dp"
-            android:layout_marginRight="9dp"
             android:src="@drawable/main_add" />
 
         <ImageButton
@@ -81,16 +82,17 @@
         android:textColor="@color/c_252525"
         android:textSize="12sp" />
 
-    <LinearLayout
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <com.jcodecraeer.xrecyclerview.XRecyclerView
+        <android.support.v7.widget.RecyclerView
             android:id="@+id/fg_main_home_rc_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginStart="20dp" />
-    </LinearLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

@@ -43,7 +43,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         if (mLoginData != null) {
             getView().showProgressDialog();
             RetrofitServiceHelper.INSTANCE.logout(mLoginData.phoneId, mLoginData.userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                    .mainThread()).subscribe(new CityObserver<ResponseBase>() {
+                    .mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
                     getView().dismissProgressDialog();
@@ -51,19 +51,14 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 }
 
                 @Override
-                public void onCompleted() {
-                    getView().dismissProgressDialog();
-                    getView().finishAc();
-                }
-
-
-                @Override
-                public void onNext(ResponseBase responseBase) {
+                public void onCompleted(ResponseBase responseBase) {
                     if (responseBase.getErrcode() == ResponseBase.CODE_SUCCESS) {
                         RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
                         Intent intent = new Intent(mContext, LoginActivity.class);
                         getView().startAC(intent);
                     }
+                    getView().dismissProgressDialog();
+                    getView().finishAc();
                 }
             });
         }

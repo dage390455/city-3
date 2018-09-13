@@ -58,15 +58,11 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
             if (hasStation) {
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getStationDetail(scanSerialNumber.toUpperCase()).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<StationInfoRsp>() {
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<StationInfoRsp>(this) {
                     @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onNext(StationInfoRsp stationInfoRsp) {
+                    public void onCompleted(StationInfoRsp stationInfoRsp) {
                         refreshStation(stationInfoRsp);
+                        getView().dismissProgressDialog();
                     }
 
                     @Override
@@ -84,17 +80,13 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
             } else {
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
 
                     @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                         refreshDevice(scanSerialNumber, deviceInfoListRsp);
+                        getView().dismissProgressDialog();
                     }
 
                     @Override

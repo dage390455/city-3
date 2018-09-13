@@ -407,26 +407,22 @@ public class SensorDetailActivityPresenter extends BasePresenter<ISensorDetailAc
                 }
             }
         }).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>() {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
 
-
-            @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onNext(ResponseBase responseBase) {
-//                getView().setMapLayoutVisible(true);
-                getView().setMapViewVisible(true);
-                refreshBatteryLayout();
-                refreshKLayout();
-            }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+            }
+
+            @Override
+            public void onCompleted(ResponseBase responseBase) {
+                //                getView().setMapLayoutVisible(true);
+                getView().setMapViewVisible(true);
+                refreshBatteryLayout();
+                refreshKLayout();
+                getView().dismissProgressDialog();
             }
         });
     }

@@ -142,15 +142,12 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                         SensoroCityApplication.getInstance().setData(deviceInfoListRsp.getData());
                         organizeDataList();
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
                     @Override
-                    public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                         getView().refreshData(mDataList);
+                        getView().dismissProgressDialog();
                     }
 
                     @Override
@@ -196,15 +193,10 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                             e.printStackTrace();
                         }
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                        getView().recycleViewRefreshComplete();
-                    }
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
                     @Override
-                    public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                         try {
                             List<DeviceInfo> data = deviceInfoListRsp.getData();
                             if (data.size() == 0) {
@@ -215,6 +207,8 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
                         } catch (Exception e) {
                             e.printStackTrace();
                         }
+                        getView().dismissProgressDialog();
+                        getView().recycleViewRefreshComplete();
                     }
 
                     @Override
@@ -270,20 +264,16 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
         }
         LogUtils.loge(this, "刷新Top信息： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread()).subscribe(new CityObserver<DeviceTypeCountRsp>() {
+                .mainThread()).subscribe(new CityObserver<DeviceTypeCountRsp>(this) {
 
 
             @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onNext(DeviceTypeCountRsp deviceTypeCountRsp) {
+            public void onCompleted(DeviceTypeCountRsp deviceTypeCountRsp) {
                 int alarmCount = deviceTypeCountRsp.getData().getAlarm();
                 int lostCount = deviceTypeCountRsp.getData().getOffline();
                 int inactiveCount = deviceTypeCountRsp.getData().getInactive();
                 getView().refreshTop(isFirstInit, alarmCount, lostCount, inactiveCount);
+                getView().dismissProgressDialog();
             }
 
             @Override

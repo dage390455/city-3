@@ -54,11 +54,19 @@
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
-    <com.jcodecraeer.xrecyclerview.XRecyclerView
-        android:id="@+id/fg_main_warn_rc_content"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    </com.jcodecraeer.xrecyclerview.XRecyclerView>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/fg_main_warn_rc_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
 
 </LinearLayout>

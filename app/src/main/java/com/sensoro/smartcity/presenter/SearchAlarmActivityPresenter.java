@@ -101,14 +101,9 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
             case Constants.TYPE_DEVICE_NAME:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, text, null, mStartTime, mEndTime, null)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
                     @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                         getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             getView().setTipsLinearLayoutVisible(true);
@@ -141,13 +136,10 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
             case Constants.TYPE_DEVICE_SN:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, text, null, null, mStartTime, mEndTime, null)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
-                    @Override
-                    public void onCompleted() {
-                    }
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
                     @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                         getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             getView().setTipsLinearLayoutVisible(true);
@@ -176,13 +168,9 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
             case Constants.TYPE_DEVICE_PHONE_NUM:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, text, mStartTime, mEndTime, null)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>() {
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
                     @Override
-                    public void onCompleted() {
-                    }
-
-                    @Override
-                    public void onNext(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                         getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             getView().setTipsLinearLayoutVisible(true);

@@ -61,15 +61,12 @@ public class PointDeployFragmentPresenter extends BasePresenter<IPointDeployFrag
     private void scanFinish(final String scanSerialNumber) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
-            @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
             @Override
-            public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                 refresh(scanSerialNumber, deviceInfoListRsp);
+                getView().dismissProgressDialog();
             }
 
             @Override

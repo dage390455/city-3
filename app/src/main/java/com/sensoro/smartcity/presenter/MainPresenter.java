@@ -248,7 +248,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     public void logout() {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.logout(mEventLoginData.phoneId, mEventLoginData.userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread()).subscribe(new CityObserver<ResponseBase>() {
+                .mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
@@ -256,19 +256,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             }
 
             @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-                getView().finishAc();
-            }
-
-
-            @Override
-            public void onNext(ResponseBase responseBase) {
+            public void onCompleted(ResponseBase responseBase) {
                 if (responseBase.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
                     Intent intent = new Intent(mActivity, LoginActivity.class);
                     getView().startAC(intent);
                 }
+                getView().dismissProgressDialog();
+                getView().finishAc();
             }
         });
     }

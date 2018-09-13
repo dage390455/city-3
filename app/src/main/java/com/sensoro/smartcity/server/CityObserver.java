@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server;
 
 
+import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -9,6 +10,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
+import java.lang.ref.WeakReference;
 import java.net.ConnectException;
 import java.net.SocketTimeoutException;
 import java.net.UnknownHostException;
@@ -22,6 +24,18 @@ import static com.sensoro.smartcity.constant.Constants.EVENT_DATA_SESSION_ID_OVE
 public abstract class CityObserver<T> implements Observer<T> {
     public static int ERR_CODE_NET_CONNECT_EX = -0x01;
     public static int ERR_CODE_UNKNOWN_EX = -0x02;
+    private final WeakReference<BasePresenter> presenterWeakReference;
+    private boolean needPresenter = false;
+
+    public CityObserver(BasePresenter basePresenter) {
+        presenterWeakReference = new WeakReference<>(basePresenter);
+    }
+
+    public CityObserver() {
+        presenterWeakReference = null;
+        needPresenter = false;
+    }
+
 
     @Override
     public void onError(Throwable e) {
@@ -76,6 +90,29 @@ public abstract class CityObserver<T> implements Observer<T> {
 
 
     }
+
+    @Override
+    public void onCompleted() {
+
+    }
+
+    @Override
+    public void onNext(T t) {
+        if (needPresenter) {
+            if (presenterWeakReference != null) {
+                if (presenterWeakReference.get() != null && presenterWeakReference.get().isAttachedView()) {
+                    onCompleted(t);
+                } else {
+                    LogUtils.loge(this, "------->>界面在未完成任务前销毁！！！");
+                }
+            }
+        } else {
+            onCompleted(t);
+        }
+
+    }
+
+    public abstract void onCompleted(T t);
 
     public abstract void onErrorMsg(int errorCode, String errorMsg);
 }
