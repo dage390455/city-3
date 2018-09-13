@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,8 +32,6 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
-    @BindView(R.id.include_text_title_cl_root)
-    ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.ac_deploy_result_imv_icon)
     ImageView acDeployResultImvIcon;
     @BindView(R.id.ac_deploy_result_tv_state)
@@ -60,21 +57,22 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
     @BindView(R.id.ac_deploy_result_tv_continue)
     TextView acDeployResultTvContinue;
     @BindView(R.id.ac_deploy_result_ll_contact)
-    TextView acDeployResultTvLlContact;
+    LinearLayout acDeployResultTvLlContact;
     @BindView(R.id.ac_deploy_result_tv_contact)
     TextView acDeployResultTvContact;
     @BindView(R.id.ac_deploy_result_ll_signal)
-    TextView acDeployResultLlSignal;
+    LinearLayout acDeployResultLlSignal;
     @BindView(R.id.ac_deploy_result_tv_signal)
     TextView acDeployResultTvSignal;
     @BindView(R.id.ac_deploy_result_ll_status)
-    TextView acDeployResultLlStatus;
+    LinearLayout acDeployResultLlStatus;
     @BindView(R.id.ac_deploy_result_tv_status)
     TextView acDeployResultTvStatus;
     @BindView(R.id.ac_deploy_result_ll_recent_upload_time)
-    TextView acDeployResultLlRecentUploadTime;
+    LinearLayout acDeployResultLlRecentUploadTime;
     @BindView(R.id.ac_deploy_result_tv_recent_upload_time)
     TextView acDeployResultTvRecentUploadTime;
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_result_test);
@@ -84,6 +82,8 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
     }
 
     private void initView() {
+        includeTextTitleImvArrowsLeft.setVisibility(View.INVISIBLE);
+        includeTextTitleTvTitle.setText("确认信息");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
     }
 
@@ -92,7 +92,6 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
     protected DeployResultActivityPresenterTest createPresenter() {
         return new DeployResultActivityPresenterTest();
     }
-
 
     @Override
     public void refreshSignal(long updateTime, String signal) {
@@ -137,27 +136,32 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
 
     @Override
     public void setNameTextView(String name) {
+        acDeployResultLlName.setVisibility(View.VISIBLE);
         acDeployResultTvName.setText(name);
     }
 
 
     @Override
-    public void setContentTextView(String content) {
+    public void setContactTextView(String content) {
+        acDeployResultTvLlContact.setVisibility(View.VISIBLE);
         acDeployResultTvContact.setText(content);
     }
 
     @Override
     public void setStatusTextView(String status) {
+        acDeployResultLlStatus.setVisibility(View.VISIBLE);
         acDeployResultTvStatus.setText(status);
     }
 
     @Override
     public void setUpdateTextView(String update) {
+        acDeployResultLlRecentUploadTime.setVisibility(View.VISIBLE);
         acDeployResultTvRecentUploadTime.setText(update);
     }
 
     @Override
     public void setAddressTextView(String address) {
+        acDeployResultLlAddress.setVisibility(View.VISIBLE);
         acDeployResultTvAddress.setText(address);
     }
 
@@ -184,21 +188,6 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
         acDeployResultTvState.setText(msg);
     }
 
-
-    @OnClick(R.id.deploy_result_back)
-    public void back() {
-        finishAc();
-    }
-
-    @OnClick(R.id.deploy_result_continue_btn)
-    public void gotoContinue() {
-        mPresenter.gotoContinue();
-    }
-
-    @OnClick(R.id.deploy_result_back_home)
-    public void backHome() {
-        mPresenter.backHome();
-    }
 
     @Override
     public void toastShort(String msg) {
@@ -239,6 +228,7 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
+                finishAc();
                 break;
             case R.id.ac_deploy_result_tv_back_home:
                 mPresenter.backHome();

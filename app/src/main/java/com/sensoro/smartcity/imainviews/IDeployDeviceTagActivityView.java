@@ -1,8 +1,12 @@
 package com.sensoro.smartcity.imainviews;
 
 import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
-public interface IDeployDeviceTagActivityView extends IToast,IProgressDialog,IActivityIntent{
+import java.util.List;
+
+public interface IDeployDeviceTagActivityView extends IToast, IActivityIntent {
+    void updateTags(List<String> tags);
+
+    void updateSearchHistory(List<String> strHistory);
 }

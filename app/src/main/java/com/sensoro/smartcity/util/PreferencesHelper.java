@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -18,7 +19,8 @@ import java.util.Map;
 public class PreferencesHelper implements Constants {
 
     private volatile static PreferencesHelper instance;
-//    private SharedPreferences splashLoginData;
+
+    //    private SharedPreferences splashLoginData;
     private PreferencesHelper() {
 
     }
@@ -150,5 +152,21 @@ public class PreferencesHelper implements Constants {
                 .MODE_PRIVATE).edit().clear().apply();
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
                 .MODE_PRIVATE).edit().clear().apply();
+    }
+
+    public void saveDeployNameAddressHistory(String history) {
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, history).apply();
+    }
+
+    public String getDeployNameAddressHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, null);
+    }
+
+    public void saveDeployTagsHistory(String hisory) {
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_TAG, hisory).apply();
+    }
+
+    public String getDeployTagsHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_TAG, null);
     }
 }

@@ -8,6 +8,10 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.model.DeployContactModel;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -15,10 +19,16 @@ import butterknife.ButterKnife;
 public class DeployDeviceDetailAlarmContactAdapter extends RecyclerView.
         Adapter<DeployDeviceDetailAlarmContactAdapter.DeployDeviceDetailAlarmContactHolder> {
     private final Context mContext;
-
+    private final List<DeployContactModel> deployContactModels = new ArrayList<>();
 
     public DeployDeviceDetailAlarmContactAdapter(Context context) {
         mContext = context;
+    }
+
+    public void updateDeployContactModels(List<DeployContactModel> contactModels) {
+        deployContactModels.clear();
+        deployContactModels.addAll(contactModels);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -30,12 +40,13 @@ public class DeployDeviceDetailAlarmContactAdapter extends RecyclerView.
 
     @Override
     public void onBindViewHolder(DeployDeviceDetailAlarmContactHolder holder, int position) {
-
+        holder.itemDeployDeviceAlarmContactName.setText(deployContactModels.get(position).name);
+        holder.itemDeployDeviceAlarmContactPhone.setText(deployContactModels.get(position).phone);
     }
 
     @Override
     public int getItemCount() {
-        return 4;
+        return deployContactModels.size();
     }
 
     class DeployDeviceDetailAlarmContactHolder extends RecyclerView.ViewHolder {
@@ -43,9 +54,10 @@ public class DeployDeviceDetailAlarmContactAdapter extends RecyclerView.
         TextView itemDeployDeviceAlarmContactName;
         @BindView(R.id.item_deploy_device_alarm_contact_phone)
         TextView itemDeployDeviceAlarmContactPhone;
-        public DeployDeviceDetailAlarmContactHolder(View itemView) {
+
+        DeployDeviceDetailAlarmContactHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

@@ -34,6 +34,7 @@
             android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
             android:gravity="end"
+            android:layout_marginEnd="20dp"
             android:textSize="14sp"
             android:textColor="@color/c_252525"
             android:layout_marginStart="8dp"

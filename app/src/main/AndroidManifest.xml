@@ -259,6 +259,7 @@
         <activity android:name=".activity.AlarmContactActivity" />
         <activity android:name=".activity.NameAddressActivity" />
         <activity android:name=".activity.DeployResultActivityTest" />
+        <activity android:name=".activity.DeployMapActivity" />
 
         <service
             android:name="com.igexin.download.DownloadService"

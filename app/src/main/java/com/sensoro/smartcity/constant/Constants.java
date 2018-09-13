@@ -15,12 +15,16 @@ public interface Constants {
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
     String PREFERENCE_ALARM_SEARCH_HISTORY = "preference_alarm_search_history";
     String PREFERENCE_MERCHANT_HISTORY = "city_merchant_history";
-    String PREFERENCE_DEPLOY_NAME_HISTORY = "city_deploy_name_history";
+    String PREFERENCE_DEPLOY_HISTORY = "preference_deploy_history";
     String PREFERENCE_DEPLOY_TAG_HISTORY = "city_deploy_tag_history";
     String PREFERENCE_DEPLOY_CONTACT_HISTORY = "city_deploy_contact_history";
     String PREFERENCE_DEPLOY_CONTENT_HISTORY = "city_deploy_content_history";
     String PREFERENCE_KEY_DEVICE = "key_search_history_keyword";
+    //
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
+    String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
+    String PREFERENCE_KEY_DEPLOY_TAG = "preference_key_deploy_tag";
+    //
     String PREFERENCE_KEY_DEPLOY_PHONE = "preference_key_deploy_phone";
     //
     String PREFERENCE_KEY_DEVICE_NAME = "preference_key_device_name";
@@ -182,6 +186,7 @@ public interface Constants {
     String EXTRA_ACTIVITY_CANCEL = "extra_activity_cancel";
     String EXTRA_SETTING_NAME_ADDRESS = "extra_setting_name_address";
     String EXTRA_SETTING_CONTACT = "extra_setting_contact";
+    String EXTRA_SETTING_DEPLOY_CONTACT = "extra_setting_deploy_contact";
     String EXTRA_SETTING_CONTENT = "extra_setting_content";
     String EXTRA_SETTING_INDEX = "extra_setting_index";
     String EXTRA_SETTING_TAG_LIST = "extra_tag_list";
