@@ -10,13 +10,14 @@ import android.os.Vibrator;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployActivity;
+import com.sensoro.smartcity.activity.DeployDeviceDetailActivity;
 import com.sensoro.smartcity.activity.DeployManualActivity;
-import com.sensoro.smartcity.activity.DeployResultActivity;
+import com.sensoro.smartcity.activity.DeployResultActivityTest;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -25,6 +26,8 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.util.LogUtils;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 
@@ -38,7 +41,7 @@ import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT_ERROR;
 import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN_RESULT;
 
-public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements
+public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements IOnCreate,
         MediaPlayer.OnErrorListener {
     private Activity mContext;
     private static final float BEEP_VOLUME = 0.10f;
@@ -68,6 +71,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         if (mediaPlayer != null) {
             mediaPlayer.release();
             mediaPlayer = null;
@@ -200,7 +204,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                 try {
                     if (deviceInfoListRsp.getData().size() > 0) {
                         Intent intent = new Intent();
-                        intent.setClass(mContext, DeployActivity.class);
+                        intent.setClass(mContext, DeployDeviceDetailActivity.class);
                         intent.putExtra(EXTRA_DEVICE_INFO, deviceInfoListRsp.getData().get(0));
                         intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
                         intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
@@ -252,7 +256,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                         deviceInfo.setName(name);
                     }
                     Intent intent = new Intent();
-                    intent.setClass(mContext, DeployActivity.class);
+                    intent.setClass(mContext, DeployDeviceDetailActivity.class);
                     intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
                     intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
                     intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
@@ -268,7 +272,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     private void freshError(String scanSN, String errorInfo, boolean isStation) {
         //
         Intent intent = new Intent();
-        intent.setClass(mContext, DeployResultActivity.class);
+        intent.setClass(mContext, DeployResultActivityTest.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, -1);
         intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
         intent.putExtra(EXTRA_IS_STATION_DEPLOY, isStation);
@@ -299,5 +303,10 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     @Override
     public boolean onError(MediaPlayer mp, int what, int extra) {
         return false;
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

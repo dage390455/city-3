@@ -7,12 +7,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmContactRcContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -70,7 +72,7 @@ public class AlarmContactActivity extends BaseActivity<IAlarmContactActivityView
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -89,18 +91,8 @@ public class AlarmContactActivity extends BaseActivity<IAlarmContactActivityView
     }
 
     @Override
-    public void showProgressDialog() {
-
-    }
-
-    @Override
-    public void dismissProgressDialog() {
-
-    }
-
-    @Override
     public void toastShort(String msg) {
-
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -109,14 +101,25 @@ public class AlarmContactActivity extends BaseActivity<IAlarmContactActivityView
     }
 
 
-
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_alarm_contact_tv_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
+                finishAc();
                 break;
             case R.id.ac_alarm_contact_tv_save:
+                String name = acNameAddressEtAlarmContactName.getText().toString();
+                String phone = acNameAddressEtAlarmContactPhone.getText().toString();
+                mPresenter.doFinish(name,phone);
                 break;
         }
+    }
+
+    @Override
+    public void setNameAndPhone(String name, String phone) {
+        acNameAddressEtAlarmContactName.setText(name);
+        acNameAddressEtAlarmContactName.setSelection(name.length());
+        acNameAddressEtAlarmContactPhone.setText(phone);
+        acNameAddressEtAlarmContactPhone.setSelection(phone.length());
     }
 }

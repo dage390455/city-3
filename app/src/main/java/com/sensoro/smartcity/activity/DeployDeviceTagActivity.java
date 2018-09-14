@@ -15,9 +15,9 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployDeviceTagAddTagAdapter;
 import com.sensoro.smartcity.adapter.DeployDeviceTagHistoryTagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IDeployActivityView;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 import com.sensoro.smartcity.presenter.DeployDeviceTagActivityPresenter;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -28,7 +28,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivityView, DeployDeviceTagActivityPresenter>
-        implements IDeployActivityView,DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener,View.OnClickListener{
+        implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, View.OnClickListener, RecycleViewItemClickListener {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -85,6 +85,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     private void initRcHistoryTag() {
         mHistoryTagAdapter = new DeployDeviceTagHistoryTagAdapter(mActivity);
+        mHistoryTagAdapter.setRecycleViewItemClickListener(this);
         SensoroLinearLayoutManager manager = new SensoroLinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         acDeployDeviceTagRcHistoryTag.setLayoutManager(manager);
@@ -105,75 +106,6 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         return new DeployDeviceTagActivityPresenter();
     }
 
-    @Override
-    public void setTitleTextView(String title) {
-
-    }
-
-    @Override
-    public void setNameAddressEditText(String text) {
-
-    }
-
-    @Override
-    public void setUploadButtonClickable(boolean isClickable) {
-
-    }
-
-    @Override
-    public void setContactEditText(String contact) {
-
-    }
-
-    @Override
-    public void addDefaultTextView() {
-
-    }
-
-    @Override
-    public void refreshTagLayout(List<String> tagList) {
-
-    }
-
-    @Override
-    public void refreshSignal(long updateTime, String signal) {
-
-    }
-
-    @Override
-    public void setDeployDeviceRlSignalVisible(boolean isVisible) {
-
-    }
-
-    @Override
-    public void setDeployContactRelativeLayoutVisible(boolean isVisible) {
-
-    }
-
-    @Override
-    public void setDeployPhotoVisible(boolean isVisible) {
-
-    }
-
-    @Override
-    public void showUploadProgressDialog(int currentNum, int count, double percent) {
-
-    }
-
-    @Override
-    public void dismissUploadProgressDialog() {
-
-    }
-
-    @Override
-    public void showStartUploadProgressDialog() {
-
-    }
-
-    @Override
-    public void setDeployPhotoText(String text) {
-
-    }
 
     @Override
     public void startAC(Intent intent) {
@@ -182,7 +114,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -201,16 +133,6 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     }
 
     @Override
-    public void showProgressDialog() {
-
-    }
-
-    @Override
-    public void dismissProgressDialog() {
-
-    }
-
-    @Override
     public void toastShort(String msg) {
         SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
@@ -222,14 +144,15 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        if (mAddTagDialog!=null) {
+        if (mAddTagDialog != null) {
             mAddTagDialog.cancel();
         }
+        super.onDestroy();
     }
 
     @OnClick(R.id.ac_deploy_device_tag_commit)
     public void onViewClicked() {
+        mPresenter.doFinish();
     }
 
     @Override
@@ -239,27 +162,44 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         }
         mDialogEtInput.getText().clear();
         mAddTagDialog.show();
-        toastShort("添加点击了");
     }
 
     @Override
-    public void onDeleteClick() {
-        toastShort("删除点击了");
+    public void onDeleteClick(int position) {
+        mPresenter.clickDeleteTag(position);
     }
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.dialog_add_tag_tv_cancel:
                 mAddTagDialog.dismiss();
                 break;
             case R.id.dialog_add_tag_tv_confirm:
                 mAddTagDialog.dismiss();
+                String tag = mDialogEtInput.getText().toString();
+                mPresenter.addTags(tag);
                 break;
             case R.id.dialog_add_tag_imv_clear:
                 mDialogEtInput.getText().clear();
                 break;
 
         }
+    }
+
+    @Override
+    public void updateTags(List<String> tags) {
+        mAddTagAdapter.setTags(tags);
+        mAddTagAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateSearchHistory(List<String> strHistory) {
+        mHistoryTagAdapter.updateSearchHistoryAdapter(strHistory);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        mPresenter.addTags(position);
     }
 }

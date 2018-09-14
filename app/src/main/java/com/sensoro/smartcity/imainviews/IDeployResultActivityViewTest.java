@@ -14,7 +14,7 @@ public interface IDeployResultActivityViewTest extends IToast, IActivityIntent {
 
     void setNameTextView(String name);
 
-    void setContentTextView(String content);
+    void setContactTextView(String content);
 
     void setStatusTextView(String status);
 

@@ -31,7 +31,7 @@ public class DeploySettingNameActivityPresenter extends BasePresenter<IDeploySet
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        mPref = mContext.getSharedPreferences(PREFERENCE_DEPLOY_NAME_HISTORY, Activity.MODE_PRIVATE);
+        mPref = mContext.getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
         String name = mContext.getIntent().getStringExtra(EXTRA_SETTING_NAME_ADDRESS);
         String history = mPref.getString(PREFERENCE_KEY_DEPLOY_NAME, "");

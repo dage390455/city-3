@@ -11,14 +11,16 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class DeployDeviceTagAddTagAdapter extends RecyclerView.Adapter<DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagHolder> {
     private final Context mContext;
     private DeployDeviceTagAddTagItemClickListener listener;
-
+    private final List<String> tags = new ArrayList<>();
 
     public DeployDeviceTagAddTagAdapter(Context context) {
         mContext = context;
@@ -31,28 +33,49 @@ public class DeployDeviceTagAddTagAdapter extends RecyclerView.Adapter<DeployDev
         return new DeployDeviceTagAddTagHolder(view);
     }
 
+    public void setTags(List<String> tags) {
+        this.tags.clear();
+        this.tags.addAll(tags);
+    }
+
 
     @Override
-    public void onBindViewHolder(DeployDeviceTagAddTagHolder holder, int position) {
-        if (position == 5) {
+    public void onBindViewHolder(DeployDeviceTagAddTagHolder holder, final int position) {
+
+        if (tags.size() == position) {
             holder.itemDeployAdapterLlTag.setVisibility(View.GONE);
             holder.itemDeployAdapterImvAddTag.setVisibility(View.VISIBLE);
-        }else{
+        } else {
+            holder.itemDeployAdapterTvTagName.setText(tags.get(position));
             holder.itemDeployAdapterLlTag.setVisibility(View.VISIBLE);
             holder.itemDeployAdapterImvAddTag.setVisibility(View.GONE);
         }
+        holder.itemDeployAdapterImvDeleteTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onDeleteClick(position);
+                }
+            }
+        });
+        holder.itemDeployAdapterImvAddTag.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    listener.onAddClick();
+                }
+            }
+        });
     }
 
     @Override
     public int getItemCount() {
-        return 6;
+        return tags.size() + 1;
     }
 
-    public void setDeployDeviceTagAddTagItemClickListener(DeployDeviceTagAddTagItemClickListener listener){
+    public void setDeployDeviceTagAddTagItemClickListener(DeployDeviceTagAddTagItemClickListener listener) {
         this.listener = listener;
     }
-
-
 
 
     class DeployDeviceTagAddTagHolder extends RecyclerView.ViewHolder {
@@ -65,31 +88,16 @@ public class DeployDeviceTagAddTagAdapter extends RecyclerView.Adapter<DeployDev
         LinearLayout itemDeployAdapterLlTag;
         @BindView(R.id.item_deploy_adapter_imv_add_tag)
         ImageView itemDeployAdapterImvAddTag;
-        public DeployDeviceTagAddTagHolder(View itemView) {
-            super(itemView);
-            ButterKnife.bind(this,itemView);
-        }
 
-        @OnClick({R.id.item_deploy_adapter_imv_delete_tag, R.id.item_deploy_adapter_imv_add_tag})
-        public void onViewClicked(View view) {
-            switch (view.getId()) {
-                case R.id.item_deploy_adapter_imv_delete_tag:
-                    if (listener!=null) {
-                        listener.onDeleteClick();
-                    }
-                    break;
-                case R.id.item_deploy_adapter_imv_add_tag:
-                    if (listener!=null) {
-                        listener.onAddClick();
-                    }
-                    break;
-            }
+        DeployDeviceTagAddTagHolder(View itemView) {
+            super(itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
-    public interface DeployDeviceTagAddTagItemClickListener{
+    public interface DeployDeviceTagAddTagItemClickListener {
         void onAddClick();
 
-        void onDeleteClick();
+        void onDeleteClick(int position);
     }
 }

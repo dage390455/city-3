@@ -7,7 +7,6 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityViewTest;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -42,7 +41,7 @@ public class DeployResultActivityPresenterTest extends BasePresenter<IDeployResu
                 if (!TextUtils.isEmpty(sn)) {
                     getView().setSnTextView(sn);
                 }
-                if (is_station) {
+//                if (is_station) {
                     if (!TextUtils.isEmpty(errorInfo)) {
                         getView().setTipsTextView(mContext.getResources().getString(R.string
                                 .tips_deploy_station_failed));
@@ -51,14 +50,14 @@ public class DeployResultActivityPresenterTest extends BasePresenter<IDeployResu
                         getView().setTipsTextView(mContext.getResources().getString(R.string
                                 .tips_deploy_station_not_exist));
                     }
-                } else {
-                    if (!TextUtils.isEmpty(errorInfo)) {
-                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
-                        getView().setDeployResultErrorInfo("错误：" + errorInfo);
-                    } else {
-                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_not_exist));
-                    }
-                }
+//                } else {
+//                    if (!TextUtils.isEmpty(errorInfo)) {
+//                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
+//                        getView().setDeployResultErrorInfo("错误：" + errorInfo);
+//                    } else {
+//                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_not_exist));
+//                    }
+//                }
 
 
             } else {
@@ -75,7 +74,7 @@ public class DeployResultActivityPresenterTest extends BasePresenter<IDeployResu
                     String contact = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
                     String content = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
 
-                    getView().setContentTextView((TextUtils.isEmpty(contact) ?
+                    getView().setContactTextView((TextUtils.isEmpty(contact) ?
                             "无" : contact) + "(" + (TextUtils.isEmpty
                             (contact) ?
                             "无" : content) + ")");

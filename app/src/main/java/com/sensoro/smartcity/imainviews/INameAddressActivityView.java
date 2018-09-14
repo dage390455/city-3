@@ -1,8 +1,12 @@
 package com.sensoro.smartcity.imainviews;
 
 import com.sensoro.smartcity.iwidget.IActivityIntent;
-import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
-public interface INameAddressActivityView extends IToast,IProgressDialog,IActivityIntent{
+import java.util.List;
+
+public interface INameAddressActivityView extends IToast, IActivityIntent {
+    void setEditText(String text);
+
+    void updateSearchHistoryData(List<String> searchStr);
 }

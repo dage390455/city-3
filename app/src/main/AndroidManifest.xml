@@ -263,6 +263,7 @@
         <activity android:name=".activity.LoginActivityTest"
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".activity.AuthActivityTest" />
+        <activity android:name=".activity.DeployMapActivity" />
 
         <service
             android:name="com.igexin.download.DownloadService"

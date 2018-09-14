@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
@@ -16,16 +17,20 @@ import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.smartcity.adapter.DeployDeviceDetailTagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployDeviceDetailActivityView;
+import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployDeviceDetailActivityPresenter;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.TouchRecyclerview;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetailActivityView, DeployDeviceDetailActivityPresenter>
-implements IDeployDeviceDetailActivityView,View.OnClickListener{
+        implements IDeployDeviceDetailActivityView, View.OnClickListener {
 
 
     @BindView(R.id.include_text_title_imv_arrows_left)
@@ -68,6 +73,9 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
     private TextView mDialogTvMsg;
     private AlertDialog mUploadDialog;
 
+    private ProgressUtils mProgressUtils;
+    private ProgressDialog progressDialog;
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.actvity_deploy_device_detail);
@@ -78,13 +86,11 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-        includeTextTitleTvTitle.setText("01A01117C6F");
-
         updateUploadState(true);
-
+        initUploadDialog();
         initRcAlarmContact();
-
         initRcDeployDeviceTag();
     }
 
@@ -112,7 +118,6 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
     }
 
 
-
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_title, R.id.include_text_title_tv_subtitle, R.id.ac_deploy_device_detail_ll_name_location, R.id.ac_deploy_device_detail_ll_tag, R.id.ac_deploy_device_detail_ll_alarm_contact, R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload})
     public void onViewClicked(View view) {
         switch (view.getId()) {
@@ -123,7 +128,8 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
             case R.id.include_text_title_tv_subtitle:
                 break;
             case R.id.ac_deploy_device_detail_ll_name_location:
-                mPresenter.doNameAddress();
+                String nameAddress = acDeployDeviceDetailTvNameLocation.getText().toString();
+                mPresenter.doNameAddress(nameAddress);
                 break;
             case R.id.ac_deploy_device_detail_ll_tag:
                 mPresenter.doTag();
@@ -132,15 +138,16 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
                 mPresenter.doAlarmContact();
                 break;
             case R.id.ac_deploy_device_detail_ll_deploy_pic:
+                mPresenter.doSettingPhoto();
                 break;
             case R.id.ac_deploy_device_detail_ll_fixed_point:
                 break;
             case R.id.ac_deploy_device_detail_tv_upload:
                 toastShort("上传吗");
                 if (mUploadDialog == null) {
-                    initUpLoadDialog();
+                    initConfirmDialog();
                     mUploadDialog.show();
-                }else{
+                } else {
                     mUploadDialog.show();
                 }
 
@@ -148,7 +155,7 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
         }
     }
 
-    private void initUpLoadDialog() {
+    private void initConfirmDialog() {
         View view = View.inflate(mActivity, R.layout.dialog_frag_deploy_device_upload, null);
         mDialogTvCancel = view.findViewById(R.id.dialog_deploy_device_upload_tv_cancel);
         mDialogTvConfirm = view.findViewById(R.id.dialog_deploy_device_upload_tv_confirm);
@@ -165,10 +172,22 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
-        if (mUploadDialog!=null) {
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
+        if (mUploadDialog != null) {
             mUploadDialog.cancel();
         }
+        super.onDestroy();
+    }
+
+    private void initUploadDialog() {
+        progressDialog = new ProgressDialog(mActivity);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax(100);
+        progressDialog.setProgressNumberFormat("");
+        progressDialog.setCancelable(false);
     }
 
     @Override
@@ -178,7 +197,7 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -198,12 +217,12 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
 
     @Override
     public void showProgressDialog() {
-
+        mProgressUtils.showProgress();
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        mProgressUtils.dismissProgress();
     }
 
     @Override
@@ -219,15 +238,87 @@ implements IDeployDeviceDetailActivityView,View.OnClickListener{
     @Override
     public void updateUploadState(boolean isAvailable) {
         acDeployDeviceDetailTvUpload.setEnabled(isAvailable);
-        acDeployDeviceDetailTvUpload.setBackgroundResource(isAvailable?R.drawable.shape_bg_corner_29c_shadow:
+        acDeployDeviceDetailTvUpload.setBackgroundResource(isAvailable ? R.drawable.shape_bg_corner_29c_shadow :
                 R.drawable.shape_bg_corner_dfdf_shadow);
     }
 
     @Override
+    public void setDeviceTitleName(String name) {
+        includeTextTitleTvTitle.setText(name);
+    }
+
+    @Override
+    public void setNameAddressText(String text) {
+        acDeployDeviceDetailTvNameLocation.setText(text);
+    }
+
+    @Override
+    public void updateContactData(List<DeployContactModel> contacts) {
+        mAlarmContactAdapter.updateDeployContactModels(contacts);
+    }
+
+    @Override
+    public void updateTagsData(List<String> tagList) {
+        mTagAdapter.updateTags(tagList);
+    }
+
+    @Override
+    public void refreshSignal(long updateTime, String signal) {
+
+    }
+
+    @Override
+    public void setDeployDeviceRlSignalVisible(boolean isVisible) {
+
+    }
+
+    @Override
+    public void setDeployContactRelativeLayoutVisible(boolean isVisible) {
+        acDeployDeviceDetailLlAlarmContact.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployPhotoVisible(boolean isVisible) {
+        acDeployDeviceDetailLlDeployPic.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void showUploadProgressDialog(int currentNum, int count, double percent) {
+        if (progressDialog != null) {
+            String title = "正在上传第" + currentNum + "张，总共" + count + "张";
+            progressDialog.setProgress((int) (percent * 100));
+            progressDialog.setTitle(title);
+            progressDialog.show();
+        }
+    }
+
+    @Override
+    public void dismissUploadProgressDialog() {
+        progressDialog.dismiss();
+    }
+
+    @Override
+    public void showStartUploadProgressDialog() {
+        progressDialog.setTitle("请稍后");
+        progressDialog.setProgress(0);
+        progressDialog.show();
+    }
+
+    @Override
+    public void setDeployPhotoText(String text) {
+        acDeployDeviceDetailTvDeployPic.setText(text);
+    }
+
+    @Override
     public void onClick(View v) {
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.dialog_deploy_device_upload_tv_confirm:
                 mUploadDialog.dismiss();
+                updateUploadState(false);
+                String sn = includeTextTitleTvTitle.getText().toString();
+                final String name = acDeployDeviceDetailTvNameLocation.getText().toString();
+                mPresenter.requestUpload(sn, name);
+
                 break;
             case R.id.dialog_deploy_device_upload_tv_cancel:
                 mUploadDialog.dismiss();
