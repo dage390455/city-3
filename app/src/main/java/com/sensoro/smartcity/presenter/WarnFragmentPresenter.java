@@ -10,6 +10,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlertLogActivity;
 import com.sensoro.smartcity.activity.CalendarActivity;
 import com.sensoro.smartcity.activity.SearchAlarmActivity;
+import com.sensoro.smartcity.activity.SearchDeviceActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
@@ -633,5 +634,10 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                         data).searchAlarmText);
             }
         }
+    }
+
+    public void doSearch() {
+        Intent intent = new Intent(mContext, SearchDeviceActivityTest.class);
+        getView().startAC(intent);
     }
 }

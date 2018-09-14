@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -38,8 +39,8 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
         IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, RecycleViewItemClickListener, MainWarnFragRcContentAdapter.OnPlayPhoneListener {
-    @BindView(R.id.fg_main_warn_tv_search)
-    TextView fgMainWarnTvSearch;
+    @BindView(R.id.fg_main_warn_frame_search)
+    FrameLayout fgMainWarnFrameSearch;
     @BindView(R.id.fg_main_warn_imv_calendar)
     ImageView fgMainWarnImvCalendar;
     @BindView(R.id.fg_main_warn_rc_content)
@@ -252,11 +253,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         return true;
     }
 
-    @OnClick({R.id.fg_main_warn_tv_search, R.id.fg_main_warn_imv_calendar})
+    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_imv_calendar})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.fg_main_warn_tv_search:
-
+            case R.id.fg_main_warn_frame_search:
+                mPresenter.doSearch();
                 break;
             case R.id.fg_main_warn_imv_calendar:
                 break;

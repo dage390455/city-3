@@ -14,6 +14,7 @@ import com.lzy.imagepicker.ImagePicker;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
+import com.sensoro.smartcity.activity.LoginActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
@@ -140,7 +141,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     //没有登录跳转登录界面
     private void openLogin() {
         Intent loginIntent = new Intent();
-        loginIntent.setClass(mActivity, LoginActivity.class);
+        loginIntent.setClass(mActivity, LoginActivityTest.class);
         getView().startAC(loginIntent);
         getView().finishAc();
     }
@@ -259,7 +260,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             public void onCompleted(ResponseBase responseBase) {
                 if (responseBase.getErrcode() == ResponseBase.CODE_SUCCESS) {
                     RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
-                    Intent intent = new Intent(mActivity, LoginActivity.class);
+                    Intent intent = new Intent(mActivity, LoginActivityTest.class);
                     getView().startAC(intent);
                 }
                 getView().dismissProgressDialog();

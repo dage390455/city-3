@@ -15,6 +15,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
+import com.sensoro.smartcity.imainviews.ILoginViewTest;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
@@ -35,7 +36,7 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 
-public class LoginPresenter extends BasePresenter<ILoginView> implements Constants {
+public class LoginPresenterTest extends BasePresenter<ILoginViewTest> implements Constants {
     private Activity mContext;
 
     @Override
@@ -43,7 +44,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         mContext = (Activity) context;
         EventBus.getDefault().register(this);
         readLoginData();
-        initSeverUrl();
+//        initSeverUrl();
     }
 
     private void readLoginData() {
@@ -174,7 +175,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
     private void openAuth(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
-        mainIntent.setClass(mContext, AuthActivity.class);
+        mainIntent.setClass(mContext, AuthActivityTest.class);
         mainIntent.putExtra("eventLoginData", eventLoginData);
         getView().startAC(mainIntent);
     }
