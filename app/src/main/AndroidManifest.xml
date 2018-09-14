@@ -259,6 +259,10 @@
         <activity android:name=".activity.AlarmContactActivity" />
         <activity android:name=".activity.NameAddressActivity" />
         <activity android:name=".activity.DeployResultActivityTest" />
+        <activity android:name=".activity.SearchDeviceActivityTest" />
+        <activity android:name=".activity.LoginActivityTest"
+            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name=".activity.AuthActivityTest" />
         <activity android:name=".activity.DeployMapActivity" />
 
         <service

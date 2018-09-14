@@ -15,6 +15,7 @@ import com.sensoro.smartcity.activity.MainActivityTest;
 import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchDeviceActivity;
+import com.sensoro.smartcity.activity.SearchDeviceActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
@@ -579,6 +580,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void doScanDeploy() {
         Intent intent = new Intent(mContext, ScanActivity.class);
         intent.putExtra("type", Constants.TYPE_SCAN_DEPLOY_DEVICE);
+        getView().startAC(intent);
+    }
+
+    public void doSearch() {
+        Intent intent = new Intent(mContext, SearchDeviceActivityTest.class);
         getView().startAC(intent);
     }
 }

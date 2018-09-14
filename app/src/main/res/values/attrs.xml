@@ -38,4 +38,11 @@
         <attr name="tagsPaddingTop" format="dimension"/>
         <attr name="tagsPaddingBottom" format="dimension"/>
     </declare-styleable>
+
+    <declare-styleable name="NumKeyView">
+        <attr name="gbColor" format="color|reference"/>
+        <attr name="deleteDrawable" format="reference"/>
+        <attr name="decimalDrawable" format="reference"/>
+
+    </declare-styleable>
 </resources>

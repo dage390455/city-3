@@ -318,6 +318,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 addImbRotate();
                 break;
             case R.id.fg_main_home_imb_search:
+                mPresenter.doSearch();
                 break;
             case R.id.fg_main_home_tv_select_type:
 //                showSelectTypePop();

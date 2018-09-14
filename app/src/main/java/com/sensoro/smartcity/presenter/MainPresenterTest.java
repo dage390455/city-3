@@ -12,6 +12,7 @@ import com.lzy.imagepicker.ImagePicker;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
+import com.sensoro.smartcity.activity.LoginActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.fragment.HomeFragment;
@@ -238,7 +239,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
     //没有登录跳转登录界面
     private void openLogin() {
         Intent loginIntent = new Intent();
-        loginIntent.setClass(mContext, LoginActivity.class);
+        loginIntent.setClass(mContext, LoginActivityTest.class);
         getView().startAC(loginIntent);
         getView().finishAc();
     }
