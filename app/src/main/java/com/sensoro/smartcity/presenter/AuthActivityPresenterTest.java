@@ -7,14 +7,12 @@ import android.content.Intent;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.imainviews.IAuthActivityView;
 import com.sensoro.smartcity.imainviews.IAuthActivityViewTest;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.AuthRsp;
-import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -63,8 +61,6 @@ public class AuthActivityPresenterTest extends BasePresenter<IAuthActivityViewTe
     }
 
     private void saveLoginDataOpenMain(EventLoginData eventLoginData) {
-        //
-        PreferencesHelper.getInstance().saveUserData(eventLoginData);
         //
         EventData eventData = new EventData();
         eventData.code = EVENT_DATA_AUTH_SUC;

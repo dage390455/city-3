@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="合同管理"
-            android:textColor="@color/c_626262"
+            android:textColor="@color/c_252525"
             android:textSize="@dimen/city_large_size"/>
     </RelativeLayout>
 
@@ -57,7 +57,7 @@
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/iv_index_license"
             android:text="营业执照识别"
-            android:textColor="@color/c_626262"
+            android:textColor="@color/c_252525"
             android:textSize="@dimen/city_tiny_large_size"/>
 
 
@@ -96,7 +96,7 @@
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@id/iv_index_person"
             android:text="身份证识别"
-            android:textColor="@color/c_626262"
+            android:textColor="@color/c_252525"
             android:textSize="@dimen/city_tiny_large_size"/>
 
         <ImageView
@@ -135,7 +135,7 @@
             android:layout_marginLeft="15dp"
             android:layout_toRightOf="@+id/iv_index_manually"
             android:text="手动填写业主信息"
-            android:textColor="@color/c_626262"
+            android:textColor="@color/c_252525"
             android:textSize="@dimen/city_tiny_large_size"/>
 
 

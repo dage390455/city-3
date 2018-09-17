@@ -58,8 +58,8 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
     private final Handler mHandler = new Handler();
     private final MainPresenterTest.TaskRunnable mRunnable = new MainPresenterTest.TaskRunnable();
     //
-    private EventLoginData mEventLoginData;
     private WarnFragment warnFragment;
+    private boolean loginStart;
 
     @Override
     public void initData(Context context) {
@@ -81,15 +81,17 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);
         //
+        loginStart = true;
         Beta.init(mContext.getApplicationContext(), false);
-        mEventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra("eventLoginData");
+        final EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra("eventLoginData");
         //
-        freshAccountType();
-        if (null != mEventLoginData) {
+        if (null != eventLoginData) {
             //赋值
-            LogUtils.loge("onDataEvent ---->>>" + mEventLoginData.toString());
+            LogUtils.loge("onDataEvent ---->>>" + eventLoginData.toString());
+            PreferencesHelper.getInstance().saveUserData(eventLoginData);
             //显示账户信息
 //            getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
+            freshAccountType();
             if (!PushManager.getInstance().isPushTurnedOn(SensoroCityApplication.getInstance())) {
                 PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
             }
@@ -106,11 +108,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
      * @return
      */
     private boolean isSupperAccount() {
-        return mEventLoginData != null && mEventLoginData.isSupperAccount;
-    }
-
-    public EventLoginData getLoginData() {
-        return mEventLoginData;
+        return PreferencesHelper.getInstance().getUserData() != null && PreferencesHelper.getInstance().getUserData().isSupperAccount;
     }
 
     private final class DeviceInfoListener implements Emitter.Listener {
@@ -205,7 +203,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
                 }
             });
             //检查更新
-            Beta.checkUpgrade(false, false);
+//            Beta.checkUpgrade(false, false);
             if (!isSupperAccount()) {
                 createSocket();
             }
@@ -237,6 +235,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
 
     //没有登录跳转登录界面
     private void openLogin() {
+        loginStart = false;
         Intent loginIntent = new Intent();
         loginIntent.setClass(mContext, LoginActivityTest.class);
         getView().startAC(loginIntent);
@@ -249,24 +248,24 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
     private void freshAccountType() {
         if (isSupperAccount()) {
             getView().setRbChecked(R.id.ac_main_rb_manage);
-//            getView().setHpCurrentItem(2);
+            getView().setSuperAccount(true);
         } else {
-//            getView().setHpCurrentItem(0);
             getView().setRbChecked(R.id.ac_main_rb_main);
-
+            getView().setSuperAccount(false);
         }
     }
 
     public void changeAccount(EventLoginData eventLoginData) {
-        mEventLoginData = eventLoginData;
         //
         PreferencesHelper.getInstance().saveUserData(eventLoginData);
 //        getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
 //        if (indexFragment != null) {
-        if (mEventLoginData.isSupperAccount) {
+        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+            getView().setSuperAccount(true);
             getView().setRbChecked(R.id.ac_main_rb_manage);
 //                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
         } else {
+            getView().setSuperAccount(false);
             getView().setRbChecked(R.id.ac_main_rb_main);
         }
 //            merchantSwitchFragment.refreshData(mEventLoginData.userName, mEventLoginData.phone, mEventLoginData.phoneId);
@@ -326,7 +325,9 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         Object data = eventData.data;
         if (code == EVENT_DATA_SESSION_ID_OVERTIME) {
             RetrofitServiceHelper.INSTANCE.cancelAllRsp();
-            openLogin();
+            if (loginStart) {
+                openLogin();
+            }
         } else if (code == EVENT_DATA_FINISH_CODE) {
 //            if (contractFragment != null) {
 //                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
@@ -341,12 +342,19 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
                 EventLoginData eventLoginData = (EventLoginData) data;
                 changeAccount(eventLoginData);
             }
+        } else if (code == EVENT_DATA_ALARM_TOTAL_COUNT) {
+            if (data != null && data instanceof Integer) {
+                getView().setAlarmWarnCount((Integer) data);
+            }
         }
 //        LogUtils.loge(this, eventData.toString());
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-//        return alarmListFragment.onKeyDown(keyCode, event);
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            exit();
+            return true;
+        }
         return false;
     }
 

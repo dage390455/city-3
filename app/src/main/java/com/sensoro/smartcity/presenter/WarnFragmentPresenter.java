@@ -29,6 +29,7 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -111,6 +112,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 //            getView().setAlarmSearchText(searchText);
         }
         getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+        pushAlarmCount(mDeviceAlarmLogInfoList);
     }
 
     @Override
@@ -368,6 +370,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     public void requestDataAll(final int direction, boolean isForce) {
+        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+            return;
+        }
 //        if (getView().getPullRefreshState() == PullToRefreshBase.State.RESET && !isForce) {
 //            return;
 //        }
@@ -511,6 +516,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         }
         ArrayList<DeviceAlarmLogInfo> tempList = new ArrayList<>(mDeviceAlarmLogInfoList);
         getView().updateAlarmListAdapter(tempList);
+        pushAlarmCount(tempList);
     }
 
     /**
@@ -530,6 +536,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         getView().startAC(searchIntent);
 
     }
+
 
     /**
      * 通过搜索内容搜索
@@ -633,7 +640,33 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 freshUI(DIRECTION_DOWN, ((SearchAlarmResultModel) data).deviceAlarmLogRsp, ((SearchAlarmResultModel)
                         data).searchAlarmText);
             }
+        } else if (code == EVENT_DATA_SEARCH_MERCHANT) {
+            requestDataAll(DIRECTION_DOWN, true);
         }
+    }
+
+    private void pushAlarmCount(List<DeviceAlarmLogInfo> logInfoList) {
+        int count = 0;
+        out:
+        for (DeviceAlarmLogInfo deviceAlarmLogInfo : logInfoList) {
+            //
+            switch (deviceAlarmLogInfo.getDisplayStatus()) {
+                case DISPLAY_STATUS_CONFIRM:
+                    count++;
+                    break;
+                case DISPLAY_STATUS_ALARM:
+                case DISPLAY_STATUS_MIS_DESCRIPTION:
+                case DISPLAY_STATUS_TEST:
+                case DISPLAY_STATUS_RISKS:
+                    break;
+            }
+        }
+
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_ALARM_TOTAL_COUNT;
+        eventData.data = count;
+        EventBus.getDefault().post(eventData);
+
     }
 
     public void doSearch() {

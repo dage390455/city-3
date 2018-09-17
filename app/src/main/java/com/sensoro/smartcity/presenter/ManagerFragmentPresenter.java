@@ -6,19 +6,17 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.activity.ContractManagerActivity;
-import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.LoginActivityTest;
-import com.sensoro.smartcity.activity.MainActivityTest;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
-import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
@@ -27,7 +25,6 @@ import rx.schedulers.Schedulers;
 
 public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnFragmentStart {
     private Activity mContext;
-    private EventLoginData mLoginData;
 
     @Override
     public void initData(Context context) {
@@ -40,10 +37,9 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doExitAccount() {
-        mLoginData = ((MainActivityTest) mContext).getLoginData();
-        if (mLoginData != null) {
+        if (PreferencesHelper.getInstance().getUserData() != null) {
             getView().showProgressDialog();
-            RetrofitServiceHelper.INSTANCE.logout(mLoginData.phoneId, mLoginData.userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
+            RetrofitServiceHelper.INSTANCE.logout(PreferencesHelper.getInstance().getUserData().phoneId, PreferencesHelper.getInstance().getUserData().userId).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
                     .mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
@@ -68,16 +64,15 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     @Override
     public void onFragmentStart() {
         //TODO 控制账号权限
-        mLoginData = ((MainActivityTest) mContext).getLoginData();
-        if (mLoginData!=null){
-            if (TextUtils.isEmpty(mLoginData.userName)){
+        if (PreferencesHelper.getInstance().getUserData() != null) {
+            if (TextUtils.isEmpty(PreferencesHelper.getInstance().getUserData().userName)) {
                 getView().setMerchantName("SENSORO");
-            }else {
-                getView().setMerchantName(mLoginData.userName);
+            } else {
+                getView().setMerchantName(PreferencesHelper.getInstance().getUserData().userName);
             }
 
             //                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
-            if (mLoginData.isSupperAccount) {
+            if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
 
 //                    merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
             } else {
@@ -98,25 +93,69 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doContract() {
-        Intent intent = new Intent(mContext, ContractManagerActivity.class);
-        getView().startAC(intent);
+        if (PreferencesHelper.getInstance().getUserData() != null) {
+            if (PreferencesHelper.getInstance().getUserData().hasContract) {
+                Intent intent = new Intent(mContext, ContractManagerActivity.class);
+                getView().startAC(intent);
+                return;
+            }
+        }
+        getView().toastShort("无此权限");
+
     }
 
     public void doChangeMerchants() {
-        Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
-        intent.putExtra("login_data", mLoginData);
-        getView().startAC(intent);
+        if (PreferencesHelper.getInstance().getUserData() != null) {
+            if (PreferencesHelper.getInstance().getUserData().hasSubMerchant) {
+                Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
+                intent.putExtra("login_data", PreferencesHelper.getInstance().getUserData());
+                getView().startAC(intent);
+                return;
+            }
+        }
+        getView().toastShort("无此权限");
+
     }
 
     public void doScanDeploy() {
-        Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra("type", Constants.TYPE_SCAN_DEPLOY_DEVICE);
-        getView().startAC(intent);
+        if (PreferencesHelper.getInstance().getUserData() != null) {
+            if (!PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+                Intent intent = new Intent(mContext, ScanActivity.class);
+                intent.putExtra("type", Constants.TYPE_SCAN_DEPLOY_DEVICE);
+                getView().startAC(intent);
+                return;
+            }
+        }
+        getView().toastShort("无此权限");
+
     }
 
     public void doScanLogin() {
-        Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra("type", Constants.TYPE_SCAN_LOGIN);
-        getView().startAC(intent);
+        if (PreferencesHelper.getInstance().getUserData() != null) {
+            if (PreferencesHelper.getInstance().getUserData().hasScanLogin) {
+                Intent intent = new Intent(mContext, ScanActivity.class);
+                intent.putExtra("type", Constants.TYPE_SCAN_LOGIN);
+                getView().startAC(intent);
+                return;
+            }
+        }
+        getView().toastShort("无此权限");
+
+    }
+
+    public void doPollingMission() {
+        getView().toastShort("此功能暂未开放");
+    }
+
+    public void doMaintenanceMission() {
+        getView().toastShort("此功能暂未开放");
+    }
+
+    public void doAboutUs() {
+        getView().toastShort("关于我们");
+    }
+
+    public void doVersionInfo() {
+        Beta.checkUpgrade();
     }
 }

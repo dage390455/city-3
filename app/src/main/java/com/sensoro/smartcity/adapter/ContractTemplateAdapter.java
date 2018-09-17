@@ -47,7 +47,7 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<ContractTempla
     }
 
     @Override
-    public void onBindViewHolder(ContractTemplateViewHolder holder, final int position) {
+    public void onBindViewHolder(final ContractTemplateViewHolder holder, final int position) {
         final String name = mList.get(position).getName();
         holder.nameTextView.setText(name);
         final EditText etContractItemNum = holder.etContractItemNum;
@@ -106,6 +106,11 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<ContractTempla
                         int i = Integer.parseInt(text);
                         if (i >= 0) {
                             mList.get(position).setQuantity(i);
+                        }
+                        if (i>0){
+                            holder.etContractItemNum.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
+                        }else {
+                            holder.etContractItemNum.setTextColor(mContext.getResources().getColor(R.color.c_252525));
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

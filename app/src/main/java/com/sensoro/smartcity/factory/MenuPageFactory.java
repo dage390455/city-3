@@ -263,4 +263,8 @@ public class MenuPageFactory {
         return false;
     }
 
+    public static boolean getHasSubMerchant(String roles, String isSupperAccountStr) {
+        return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr) || !"business".equalsIgnoreCase(roles);
+    }
+
 }

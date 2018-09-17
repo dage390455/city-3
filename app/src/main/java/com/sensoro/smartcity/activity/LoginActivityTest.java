@@ -87,9 +87,14 @@ public class LoginActivityTest extends BaseActivity<ILoginViewTest, LoginPresent
         ButterKnife.bind(mActivity);
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);
-        mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        mPresenter.onCreate();
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE);
     }
 
     private void initView() {

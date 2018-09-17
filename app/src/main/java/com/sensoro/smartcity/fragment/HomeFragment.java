@@ -443,7 +443,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 mPresenter.doScanDeploy();
                 break;
             case R.id.dialog_main_home_menu_new_tv_construction:
-                toastShort("合同管理");
+                mPresenter.doContract();
                 break;
             case R.id.dialog_main_home_menu_tv_scan_login:
                 mPresenter.doScanLogin();
