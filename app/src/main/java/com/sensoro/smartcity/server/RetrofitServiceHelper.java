@@ -440,23 +440,18 @@ public enum RetrofitServiceHelper {
      * @param content
      * @return
      */
-    public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, String tags, String
+    public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
             name, String contact, String content, List<String> imgUrls) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
-            if (tags != null) {
-                if (BASE_URL.equals(SCOPE_MASTER)) {
-                    jsonObject.put("tags", tags);
-                } else {
-                    String[] split = tags.split(",");
-                    JSONArray jsonArray = new JSONArray();
-                    for (String temp : split) {
-                        jsonArray.put(temp);
-                    }
-                    jsonObject.put("tags", jsonArray);
+            if (tags != null && tags.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String temp : tags) {
+                    jsonArray.put(temp);
                 }
+                jsonObject.put("tags", jsonArray);
             }
             if (name != null) {
                 jsonObject.put("name", name);
@@ -464,7 +459,7 @@ public enum RetrofitServiceHelper {
             if (contact != null) {
                 jsonObject.put("contact", contact);
             }
-            if (contact != null) {
+            if (content != null) {
                 jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
@@ -493,16 +488,15 @@ public enum RetrofitServiceHelper {
      * @param name
      * @return
      */
-    public Observable<StationInfoRsp> doStationDeploy(String sn, double lon, double lat, String tags, String
+    public Observable<StationInfoRsp> doStationDeploy(String sn, double lon, double lat, List<String> tags, String
             name) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
-            if (tags != null) {
-                String[] split = tags.split(",");
+            if (tags != null && tags.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
-                for (String temp : split) {
+                for (String temp : tags) {
                     jsonArray.put(temp);
                 }
                 jsonObject.put("tags", jsonArray);

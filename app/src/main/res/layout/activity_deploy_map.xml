@@ -14,7 +14,7 @@
         android:contentDescription="@null" />
 
 
-    <com.sensoro.smartcity.widget.MapContainer
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -39,7 +39,20 @@
             android:text="信号 良"
             android:textColor="@color/white"
             android:textSize="12sp" />
-    </com.sensoro.smartcity.widget.MapContainer>
+        <ImageView
+            android:id="@+id/iv_deploy_map_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/deploy_map_back_location"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingRight="10dp"/>
+    </RelativeLayout>
 
 
     <TextView

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -29,12 +30,14 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
+import com.sensoro.smartcity.adapter.TopListAdapterDiff;
 import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -268,7 +271,26 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     @Override
-    public void refreshTop(boolean isFirstInit, List<HomeTopModel> data) {
+    public void refreshTop(boolean isFirstInit, final List<HomeTopModel> data) {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mMainHomeFragRcTypeAdapter.getData(), data);
+                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, false);
+                mRootFragment.getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        diffResult.dispatchUpdatesTo(mMainHomeFragRcTypeAdapter);
+                    }
+                });
+
+            }
+        });
+//        TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mMainHomeFragRcTypeAdapter.getData(), data);
+//        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, false);
+//        diffResult.dispatchUpdatesTo(mMainHomeFragRcTypeAdapter);
+//            mListRecyclerView.refreshComplete();
+        //
         mMainHomeFragRcTypeAdapter.setData(data);
         mMainHomeFragRcTypeAdapter.notifyDataSetChanged();
     }
@@ -416,17 +438,14 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void onMenuDialogFragmentDismiss(int resId) {
         switch (resId) {
             case R.id.dialog_main_home_menu_imv_close:
-                mPresenter.doScanDeploy();
                 break;
             case R.id.dialog_main_home_menu_tv_quick_deploy:
-                //TODO 设备部署
+                mPresenter.doScanDeploy();
                 break;
             case R.id.dialog_main_home_menu_new_tv_construction:
-                //TODO 合同管理
                 toastShort("合同管理");
                 break;
             case R.id.dialog_main_home_menu_tv_scan_login:
-                //TODO 扫码登录
                 mPresenter.doScanLogin();
                 break;
             case R.id.dialog_main_home_menu_rl_root:

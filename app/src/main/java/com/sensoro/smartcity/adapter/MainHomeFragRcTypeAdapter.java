@@ -42,6 +42,10 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         mData.addAll(data);
     }
 
+    public List<HomeTopModel> getData() {
+        return mData;
+    }
+
     public interface OnTopClickListener {
         void onStatusChange(int status);
     }
@@ -62,6 +66,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
                 holder.mainRcTypeTvStateTxt.setText("预警");
                 holder.mainRcTypeTvCount.setTextColor(Color.WHITE);
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_warning);
+                holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
                 break;
             case 1:
                 holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_29c093));
@@ -69,21 +74,23 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
                 holder.mainRcTypeTvCount.setTextColor(Color.WHITE);
                 holder.mainRcTypeTvStateTxt.setText("正常监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_normal);
+                holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
                 break;
             case 2:
-                holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-                holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_6a6a6a));
-                holder.mainRcTypeTvCount.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_5d5d5d));
+                holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.white));
+                holder.mainRcTypeTvCount.setTextColor(mContext.getResources().getColor(R.color.white));
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_lose);
+                holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
                 holder.mainRcTypeTvStateTxt.setText("失联");
                 break;
             case 3:
-                holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-                holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_6a6a6a));
-                holder.mainRcTypeTvCount.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_b6b6b6));
+                holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.white));
+                holder.mainRcTypeTvCount.setTextColor(mContext.getResources().getColor(R.color.white));
                 holder.mainRcTypeTvStateTxt.setText("未激活");
-                //TODO 失联状态暂时用故障图标
-                holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_trouble);
+                holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_inactivated);
+                holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
                 break;
         }
         holder.mainRcTypeTvCount.setText(String.valueOf(homeTopModel.value));

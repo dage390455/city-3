@@ -108,33 +108,34 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
-                android:paddingBottom="8dp"
                 android:layout_marginTop="24dp"
+                android:paddingStart="50dp"
+                android:paddingEnd="50dp"
                 android:background="@drawable/shape_bg_corner_fa_shadow"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingTop="8dp"
+                android:paddingBottom="8dp">
 
                 <LinearLayout
                     android:id="@+id/ac_deploy_result_ll_sn"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="8dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="SN:"
+                        android:text="设备号:"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_sn"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_height="wrap_content"
                         android:text="未知"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
@@ -145,12 +146,10 @@
                     android:id="@+id/ac_deploy_result_ll_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -167,31 +166,29 @@
                         android:text="未知"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
-
                 </LinearLayout>
 
                 <LinearLayout
-                    android:id="@+id/ac_deploy_result_ll_signal"
+                    android:id="@+id/ac_deploy_result_ll_address"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="信号: "
+                        android:text="位置:"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/ac_deploy_result_tv_signal"
+                        android:id="@+id/ac_deploy_result_tv_address"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:text="未知"
                         android:textColor="@color/c_252525"
@@ -203,12 +200,10 @@
                     android:id="@+id/ac_deploy_result_ll_contact"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -232,16 +227,15 @@
                     android:id="@+id/ac_deploy_result_ll_status"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
                     android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:text="状态:"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
@@ -250,10 +244,26 @@
                         android:id="@+id/ac_deploy_result_tv_status"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
                         android:text="未知"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_result_tv_signal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/shape_bg_soid_b6_full_corner"
+                        android:paddingBottom="4dp"
+                        android:paddingEnd="10dp"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:text="信号 无"
+                        android:textColor="@color/white"
+                        android:textSize="12sp" />
 
                 </LinearLayout>
 
@@ -261,12 +271,10 @@
                     android:id="@+id/ac_deploy_result_ll_recent_upload_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
@@ -279,37 +287,6 @@
                         android:id="@+id/ac_deploy_result_tv_recent_upload_time"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:text="未知"
-                        android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/ac_deploy_result_ll_address"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginBottom="8dp"
-                    android:layout_marginEnd="50dp"
-                    android:layout_marginStart="50dp"
-                    android:layout_marginTop="8dp"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="位置:"
-                        android:textColor="@color/c_252525"
-                        android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/ac_deploy_result_tv_address"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
                         android:text="未知"
                         android:textColor="@color/c_252525"

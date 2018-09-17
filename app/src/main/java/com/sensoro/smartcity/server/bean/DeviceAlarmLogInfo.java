@@ -20,11 +20,18 @@ public class DeviceAlarmLogInfo implements Serializable , Comparable<DeviceAlarm
     private long updatedTime;
     private AlarmInfo.RuleInfo []rules;
     private AlarmInfo.RecordInfo []records;
+    private double[] deviceLonlat;
     private AlarmInfo.OwnerInfo owners;
     private boolean isDeleted;
     private int displayStatus;
     private int sort;
+    public double[] getDeviceLonlat() {
+        return deviceLonlat;
+    }
 
+    public void setDeviceLonlat(double[] deviceLonlat) {
+        this.deviceLonlat = deviceLonlat;
+    }
     public String get_id() {
         return _id;
     }

@@ -86,7 +86,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         int color = 0;
         switch (status) {
             case SENSOR_STATUS_ALARM:
-                color = R.color.sensoro_alarm;
+                color = R.color.c_f34a4a;
                 holder.ivItemAlarm.setVisibility(View.VISIBLE);
                 if (onItemAlarmInfoClickListener != null) {
                     holder.ivItemAlarm.setOnClickListener(new View.OnClickListener() {
@@ -98,15 +98,15 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 }
                 break;
             case SENSOR_STATUS_INACTIVE:
-                color = R.color.sensoro_inactive;
+                color = R.color.c_b6b6b6;
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
             case SENSOR_STATUS_LOST:
-                color = R.color.sensoro_lost;
+                color = R.color.c_5d5d5d;
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
             case SENSOR_STATUS_NORMAL:
-                color = R.color.sensoro_normal;
+                color = R.color.c_29c093;
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
             default:

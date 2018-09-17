@@ -11,7 +11,6 @@ import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.LoginActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -333,11 +332,10 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
 //                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
 //            }
         } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
-//            if (data != null && data instanceof DeviceInfo) {
-//                refreshDeviceInfo((DeviceInfo) data);
-//            }
-//            getView().setCurrentPagerItem(0);
-//            getView().setMenuSelected(0);
+            if (data != null && data instanceof DeviceInfo) {
+                refreshDeviceInfo((DeviceInfo) data);
+            }
+            getView().setRbChecked(R.id.ac_main_rb_main);
         } else if (code == EVENT_DATA_SEARCH_MERCHANT) {
             if (data != null && data instanceof EventLoginData) {
                 EventLoginData eventLoginData = (EventLoginData) data;

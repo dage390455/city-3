@@ -33,6 +33,8 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     TextureMapView tmDeployMap;
     @BindView(R.id.bt_deploy_map_signal)
     TextView btDeployMapSignal;
+    @BindView(R.id.iv_deploy_map_location)
+    ImageView ivDeployMapLocation;
     @BindView(R.id.tv_deploy_map_save)
     TextView tvDeployMapSave;
     private ProgressUtils mProgressUtils;
@@ -48,9 +50,9 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     }
 
     private void iniView() {
-        includeTextTitleTvTitle.setText("部署未知");
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        includeTextTitleTvTitle.setText("部署位置");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-        mPresenter.initMap(tmDeployMap.getMap());
         mActivity.getWindow().getDecorView().postInvalidate();
     }
 
@@ -104,15 +106,15 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
         if (signal != null && (time_diff < 300000)) {
             switch (signal) {
                 case "good":
-                    signal_text = "信号质量：优";
+                    signal_text = "信号：优";
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
                     break;
                 case "normal":
-                    signal_text = "信号质量：良";
+                    signal_text = "信号：良";
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
                     break;
                 case "bad":
-                    signal_text = "信号质量：差";
+                    signal_text = "信号：差";
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
             }
@@ -122,6 +124,11 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
         }
         btDeployMapSignal.setText(signal_text);
 //        signalButton.setPadding(6, 10, 6, 10);
+    }
+
+    @Override
+    public void setSignalVisible(boolean isVisible) {
+        btDeployMapSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -164,7 +171,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
 
     }
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.bt_deploy_map_signal, R.id.tv_deploy_map_save})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.bt_deploy_map_signal, R.id.tv_deploy_map_save, R.id.iv_deploy_map_location})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -174,6 +181,8 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
                 break;
             case R.id.tv_deploy_map_save:
                 mPresenter.doSaveLocation();
+            case R.id.iv_deploy_map_location:
+                mPresenter.backToCurrentLocation();
                 break;
         }
     }

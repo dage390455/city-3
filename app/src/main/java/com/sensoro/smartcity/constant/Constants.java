@@ -194,6 +194,7 @@ public interface Constants {
     //
     String EXTRA_DEPLOY_PHOTO = "extra_deploy_photo";
     String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
+    String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     //
@@ -267,6 +268,7 @@ public interface Constants {
     int EVENT_DATA_SESSION_ID_OVERTIME = 0x26;
     int EVENT_DATA_CANCEL_AUTH = 0x27;
     int EVENT_DATA_AUTH_SUC = 0x28;
+    int EVENT_DATA_DEPLOY_MAP = 0x31;
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_LOGIN = 0x30;

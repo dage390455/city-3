@@ -18,6 +18,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -28,6 +29,8 @@ import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.IOException;
 
@@ -35,13 +38,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 import static android.content.Context.VIBRATOR_SERVICE;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_DEVICE_INFO;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_IS_STATION_DEPLOY;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_RESULT_ERROR;
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN_RESULT;
 
-public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements IOnCreate,
+public class ScanActivityPresenter extends BasePresenter<IScanActivityView> implements IOnCreate, Constants,
         MediaPlayer.OnErrorListener {
     private Activity mContext;
     private static final float BEEP_VOLUME = 0.10f;
@@ -51,6 +49,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         scanType = mContext.getIntent().getIntExtra("type", -1);
         mediaPlayer = buildMediaPlayer(mContext);
         updateTitle();
@@ -67,6 +66,17 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                 getView().setBottomVisible(false);
             }
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+//        Object data = eventData.data;
+        if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
+            getView().finishAc();
+        }
+//        LogUtils.loge(this, eventData.toString());
     }
 
     @Override

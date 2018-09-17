@@ -60,8 +60,6 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
     LinearLayout acDeployResultTvLlContact;
     @BindView(R.id.ac_deploy_result_tv_contact)
     TextView acDeployResultTvContact;
-    @BindView(R.id.ac_deploy_result_ll_signal)
-    LinearLayout acDeployResultLlSignal;
     @BindView(R.id.ac_deploy_result_tv_signal)
     TextView acDeployResultTvSignal;
     @BindView(R.id.ac_deploy_result_ll_status)
@@ -100,20 +98,20 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
         if (signal != null && (time_diff < 300000)) {
             switch (signal) {
                 case "good":
-                    signal_text = "优";
-                    acDeployResultLlSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
+                    signal_text = "信号 优";
+                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
                     break;
                 case "normal":
-                    signal_text = "良";
-                    acDeployResultLlSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
+                    signal_text = "信号 良";
+                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
                     break;
                 case "bad":
-                    signal_text = "差";
-                    acDeployResultLlSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
+                    signal_text = "信号 差";
+                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
             }
         } else {
-            signal_text = "无";
+            signal_text = "信号 无";
             acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
         }
         acDeployResultTvSignal.setText(signal_text);
@@ -180,7 +178,7 @@ public class DeployResultActivityTest extends BaseActivity<IDeployResultActivity
     public void setContactAndSignalVisible(boolean isVisible) {
 //        contactTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         acDeployResultTvLlContact.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acDeployResultLlSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployResultTvSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

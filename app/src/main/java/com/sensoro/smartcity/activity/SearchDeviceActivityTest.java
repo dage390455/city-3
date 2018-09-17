@@ -24,13 +24,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.jcodecraeer.xrecyclerview.XRecyclerView;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.IndexGridAdapter;
-import com.sensoro.smartcity.adapter.IndexListAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.RelationAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
@@ -43,7 +40,6 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.SensoroXGridLayoutManager;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
@@ -54,10 +50,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
-import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
-import static com.sensoro.smartcity.constant.Constants.TYPE_GRID;
 import static com.sensoro.smartcity.constant.Constants.TYPE_LIST;
 
 /**
@@ -66,7 +59,7 @@ import static com.sensoro.smartcity.constant.Constants.TYPE_LIST;
 
 public class SearchDeviceActivityTest extends BaseActivity<ISearchDeviceActivityViewTest, SearchDeviceActivityPresenterTest>
         implements ISearchDeviceActivityViewTest, View.OnClickListener, TextView
-        .OnEditorActionListener, TextWatcher, RecycleViewItemClickListener,MainHomeFragRcContentAdapter.OnItemAlarmInfoClickListener {
+        .OnEditorActionListener, TextWatcher, RecycleViewItemClickListener, MainHomeFragRcContentAdapter.OnItemAlarmInfoClickListener {
     @BindView(R.id.search_device_et)
     EditText mKeywordEt;
     @BindView(R.id.search_device_cancel_tv)
@@ -188,7 +181,7 @@ public class SearchDeviceActivityTest extends BaseActivity<ISearchDeviceActivity
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
                 String text = mKeywordEt.getText().toString();
-                mPresenter.requestWithDirection(Constants.DIRECTION_DOWN,text);
+                mPresenter.requestWithDirection(Constants.DIRECTION_DOWN, text);
 //                mPresenter.requestTopData(false);
             }
         });
@@ -197,13 +190,12 @@ public class SearchDeviceActivityTest extends BaseActivity<ISearchDeviceActivity
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 String text = mKeywordEt.getText().toString();
                 isShowDialog = false;
-                mPresenter.requestWithDirection(Constants.DIRECTION_UP,text);
+                mPresenter.requestWithDirection(Constants.DIRECTION_UP, text);
             }
         });
 
 
     }
-
 
 
     //    public void analyseData(DeviceInfoListRsp deviceInfoListRsp) {
@@ -264,7 +256,7 @@ public class SearchDeviceActivityTest extends BaseActivity<ISearchDeviceActivity
     public void setEditText(String text) {
         if (text != null) {
             mKeywordEt.setText(text);
-            mKeywordEt.setSelection(text.length());
+            mKeywordEt.setSelection(mKeywordEt.getText().toString().length());
         }
     }
 
@@ -338,14 +330,11 @@ public class SearchDeviceActivityTest extends BaseActivity<ISearchDeviceActivity
     }
 
 
-
-
     @Override
     public void recycleViewRefreshComplete() {
         acSearchDeviceRefreshLayout.finishRefresh();
         acSearchDeviceRefreshLayout.finishLoadMore();
     }
-
 
 
     @Override

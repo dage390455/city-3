@@ -7,9 +7,11 @@ import com.sensoro.smartcity.model.DeployContactModel;
 
 import java.util.List;
 
-public interface IDeployDeviceDetailActivityView extends IToast,IProgressDialog,IActivityIntent{
+public interface IDeployDeviceDetailActivityView extends IToast, IProgressDialog, IActivityIntent {
     void updateUploadState(boolean isAvailable);
+
     void setDeviceTitleName(String name);
+
     //
     void setNameAddressText(String text);
 
@@ -17,7 +19,7 @@ public interface IDeployDeviceDetailActivityView extends IToast,IProgressDialog,
 
     void updateTagsData(List<String> tagList);
 
-    void refreshSignal(long updateTime, String signal);
+    void refreshSignal(boolean hasStation,String signal, int resSignalId, String locationInfo);
 
     void setDeployDeviceRlSignalVisible(boolean isVisible);
 
@@ -32,4 +34,6 @@ public interface IDeployDeviceDetailActivityView extends IToast,IProgressDialog,
     void showStartUploadProgressDialog();
 
     void setDeployPhotoText(String text);
+
+    void showWarnDialog();
 }
