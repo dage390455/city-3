@@ -28,10 +28,14 @@ import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -86,7 +90,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
         }
     };
-
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
@@ -300,6 +303,21 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
             });
 
+        } else if(code == EVENT_DATA_PROGRESS_DIALOG_SHOW){
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getView().showProgressDialog();
+                }
+            });
+
+        } else if(code == EVENT_DATA_PROGRESS_DIALOG_DISMISS){
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getView().dismissProgressDialog();
+                }
+            });
         }
     }
 
@@ -572,9 +590,99 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
     public void clickAlarmInfo(int position) {
         DeviceInfo deviceInfo = mDataList.get(position);
-        String sn = deviceInfo.getSn();
-        getView().toastShort("sn = "+sn);
+        getView().showProgressDialog();
+        requestAlarmInfo(deviceInfo);
+
+    }
+
+    private void requestAlarmInfo(DeviceInfo deviceInfo) {
+        Long temp_startTime = null;
+        Long temp_endTime = null;
+        Log.e("hcs",":devce::"+deviceInfo.getSn());
+        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, temp_startTime,
+                temp_endTime,
+                null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
+
+            @Override
+            public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                DeviceAlarmLogInfo deviceAlarmLogInfo = null;
+                if (deviceAlarmLogRsp.getData().size() == 0) {
+                    getView().toastShort("获取失败");
+                } else {
+                    deviceAlarmLogInfo = handleDeviceAlarmLogs(deviceAlarmLogRsp);
+                }
+                getView().dismissProgressDialog();
+                enterAlarmLogPop(deviceAlarmLogInfo);
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+                Log.e("hcs",":醋味::"+errorMsg);
+            }
+        });
+
+    }
+
+    private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext);
+
+        mAlarmLogPop.refreshData(deviceAlarmLogInfo);
+        mAlarmLogPop.show();
+
         //TODO 弹起预警记录的dialog
+    }
+
+    private DeviceAlarmLogInfo handleDeviceAlarmLogs(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+        List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
+            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(0);
+            AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
+            boolean isHaveRecovery = false;
+            for (int j = 0; j < recordInfoArray.length; j++) {
+                AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
+                if (recordInfo.getType().equals("recovery")) {
+                    deviceAlarmLogInfo.setSort(4);
+                    isHaveRecovery = true;
+                    break;
+                } else {
+                    deviceAlarmLogInfo.setSort(1);
+                }
+            }
+            switch (deviceAlarmLogInfo.getDisplayStatus()) {
+                case DISPLAY_STATUS_CONFIRM:
+                    if (isHaveRecovery) {
+                        deviceAlarmLogInfo.setSort(2);
+                    } else {
+                        deviceAlarmLogInfo.setSort(1);
+                    }
+                    break;
+                case DISPLAY_STATUS_ALARM:
+                    if (isHaveRecovery) {
+                        deviceAlarmLogInfo.setSort(2);
+                    } else {
+                        deviceAlarmLogInfo.setSort(1);
+                    }
+                    break;
+                case DISPLAY_STATUS_MIS_DESCRIPTION:
+                    if (isHaveRecovery) {
+                        deviceAlarmLogInfo.setSort(3);
+                    } else {
+                        deviceAlarmLogInfo.setSort(1);
+                    }
+                    break;
+                case DISPLAY_STATUS_TEST:
+                    if (isHaveRecovery) {
+                        deviceAlarmLogInfo.setSort(4);
+                    } else {
+                        deviceAlarmLogInfo.setSort(1);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return deviceAlarmLogInfo;
+        //            Collections.sort(mDeviceAlarmLogInfoList);
     }
 
     public void doScanDeploy() {

@@ -98,7 +98,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         } else {
             openLogin();
         }
-        LogUtils.loge(this, "initData");
+        LogUtils.loge(this, "refreshData");
     }
 
     /**

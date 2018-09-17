@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/sensor_calendar_date_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#5000"
+    android:orientation="vertical">
+
+   <android.support.constraint.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:background="@color/white"
+       >
+       <ImageView
+           android:id="@+id/ac_calendar_imv_arrows"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:src="@drawable/calendar_arrows"
+           app:layout_constraintTop_toTopOf="parent"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintEnd_toEndOf="parent"
+           android:contentDescription="@null"
+           android:layout_marginTop="40dp"
+           />
+
+       <TextView
+           android:id="@+id/ac_calendar_tv_start_month"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="28sp"
+           android:textColor="@color/c_252525"
+           app:layout_constraintBottom_toBottomOf="@id/ac_calendar_imv_arrows"
+           app:layout_constraintEnd_toStartOf="@id/ac_calendar_imv_arrows"
+           android:layout_marginEnd="45dp"/>
+       <TextView
+           android:id="@+id/ac_calendar_tv_start_year"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="12sp"
+           android:textColor="@color/c_a6a6a6"
+           app:layout_constraintStart_toStartOf="@id/ac_calendar_tv_start_month"
+           app:layout_constraintEnd_toEndOf="@id/ac_calendar_tv_start_month"
+           app:layout_constraintTop_toBottomOf="@id/ac_calendar_tv_start_month"
+           android:layout_marginTop="4dp"
+           />
+       <TextView
+           android:id="@+id/ac_calendar_tv_end_month"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="28sp"
+           android:textColor="@color/c_252525"
+           app:layout_constraintBottom_toBottomOf="@id/ac_calendar_imv_arrows"
+           app:layout_constraintStart_toEndOf="@id/ac_calendar_imv_arrows"
+           android:layout_marginStart="45dp"
+           />
+       <TextView
+           android:id="@+id/ac_calendar_tv_end_year"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="12sp"
+           android:textColor="@color/c_a6a6a6"
+           app:layout_constraintStart_toStartOf="@id/ac_calendar_tv_end_month"
+           app:layout_constraintEnd_toEndOf="@id/ac_calendar_tv_end_month"
+           app:layout_constraintTop_toBottomOf="@id/ac_calendar_tv_end_month"
+           android:layout_marginTop="4dp"
+           />
+
+   </android.support.constraint.ConstraintLayout>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.applikeysolutions.cosmocalendar.view.CalendarView
+            android:id="@+id/calendar_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:monthTextColor="@color/c_252525"
+            app:otherDayTextColor="@color/c_a6a6a6"
+            app:selectedDayBackgroundColor="@color/c_eeeeee"
+            app:selectedDayBackgroundEndColor="@color/c_29c093"
+            app:selectedDayBackgroundStartColor="@color/c_29c093"
+            app:selectedDayTextColor="@color/c_252525"
+            app:weekDayTitleTextColor="@color/c_a6a6a6" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/calendar_btn_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/ac_calendar_tv_cancel"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y30"
+            android:layout_marginLeft="@dimen/x100"
+            android:layout_marginRight="@dimen/x100"
+            android:layout_marginTop="@dimen/y50"
+            android:background="@drawable/shape_bg_soid_ff_stroke_df_corner"
+            android:text="取消"
+            android:textColor="@color/c_252525"
+            android:layout_marginStart="40dp"
+            android:textSize="@dimen/city_btn_text_size" />
+        <Button
+            android:id="@+id/ac_calendar_tv_save"
+            style="?android:attr/borderlessButtonStyle"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y30"
+            android:layout_marginLeft="@dimen/x100"
+            android:layout_marginRight="@dimen/x100"
+            android:layout_marginTop="@dimen/y50"
+            android:background="@drawable/shape_button"
+            android:text="@string/save"
+            android:layout_marginEnd="40dp"
+            android:layout_marginStart="12dp"
+            android:textColor="@color/white"
+            android:textSize="@dimen/city_btn_text_size" />
+
+    </LinearLayout>
+</LinearLayout>
+
+
+

@@ -107,4 +107,13 @@
         <item name="android:layout_marginStart">18dp</item>
         <item name="android:layout_marginEnd">16dp</item>
     </style>
+    
+    <style name="DialogFragmentDropDownAnim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/anim_top_to_bottom</item>
+        <item name="android:windowExitAnimation">@anim/anim_bottom_to_top</item>
+    </style>
+    Theme_Holo_Light_NoActionBar
+    <style name="DialogFragmentThem" parent="@android:style/Theme.Holo.Light.NoActionBar">
+        <item name="android:windowAnimationStyle">@style/DialogFragmentDropDownAnim</item>
+    </style>
 </resources>

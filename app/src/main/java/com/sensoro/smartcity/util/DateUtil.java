@@ -210,6 +210,13 @@ public class DateUtil {
         return new SimpleDateFormat("dd", Locale.ROOT).format(new Date(time));
     }
 
+    public static String getYearDate(long time) {
+        return new SimpleDateFormat("yyyy", Locale.ROOT).format(new Date(time));
+    }
+    public static String getMonth(long time) {
+        return new SimpleDateFormat("MM", Locale.ROOT).format(new Date(time));
+    }
+
     public static String getMonthDate(long time) {
         return new SimpleDateFormat("MM/dd", Locale.ROOT).format(new Date(time));
     }
@@ -374,6 +381,7 @@ public class DateUtil {
             }
         }
     }
+
 
 
 }

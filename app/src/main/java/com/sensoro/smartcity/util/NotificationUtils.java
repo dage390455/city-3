@@ -17,6 +17,7 @@ import android.support.v4.app.NotificationCompat;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
+import com.sensoro.smartcity.activity.MainActivityTest;
 
 //import android.app.NotificationChannel;
 
@@ -54,7 +55,7 @@ public class NotificationUtils extends ContextWrapper {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
 //        final Intent intent = new Intent(this, aClass);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setComponent(new ComponentName(this, MainActivity.class));//用ComponentName得到class对象
+        intent.setComponent(new ComponentName(this, MainActivityTest.class));//用ComponentName得到class对象
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
         final PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
@@ -72,7 +73,7 @@ public class NotificationUtils extends ContextWrapper {
         final Intent intent = new Intent(Intent.ACTION_MAIN);
 //        final Intent intent = new Intent(this, aClass);
         intent.addCategory(Intent.CATEGORY_LAUNCHER);
-        intent.setComponent(new ComponentName(this, MainActivity.class));//用ComponentName得到class对象
+        intent.setComponent(new ComponentName(this, MainActivityTest.class));//用ComponentName得到class对象
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
 

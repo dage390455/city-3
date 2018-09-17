@@ -17,4 +17,11 @@ public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDia
     void onPullRefreshComplete();
     void onPullRefreshCompleteNoMoreData();
     void setUpdateButtonClickable(boolean canClick);
+
+
+    void setSelectedDateLayoutVisible(boolean b);
+
+    void setSelectedDateSearchText(String s);
+
+    boolean isSelectedDateLayoutVisible();
 }

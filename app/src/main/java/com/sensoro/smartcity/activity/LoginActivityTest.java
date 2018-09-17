@@ -336,7 +336,7 @@ public class LoginActivityTest extends BaseActivity<ILoginViewTest, LoginPresent
     }
 
     private void updatePsdIcon(boolean isEmpty) {
-        acLoginImvPsdIcon.setImageResource(isEmpty ? R.drawable.login_account : R.drawable.login_account_high_light);
+        acLoginImvPsdIcon.setImageResource(isEmpty ? R.drawable.login_psd : R.drawable.login_psd_high_light);
         acLoginImvPsdClear.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 

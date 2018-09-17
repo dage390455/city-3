@@ -32,6 +32,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.smartcity.activity.MainActivity;
+import com.sensoro.smartcity.activity.MainActivityTest;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
@@ -284,7 +285,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
          * 只允许在MainActivity上显示更新弹窗，其他activity上不显示弹窗;
          * 不设置会默认所有activity都可以显示弹窗;
          */
-        Beta.canShowUpgradeActs.add(MainActivity.class);
+        Beta.canShowUpgradeActs.add(MainActivityTest.class);
         //设置是否显示消息通知
         Beta.enableNotification = true;
         //设置Wifi下自动下载

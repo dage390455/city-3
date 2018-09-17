@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sensoro.smartcity.activity.MainActivity;
+import com.sensoro.smartcity.activity.MainActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAuthActivityView;
@@ -70,7 +71,7 @@ public class AuthActivityPresenterTest extends BasePresenter<IAuthActivityViewTe
         eventData.code = EVENT_DATA_AUTH_SUC;
         EventBus.getDefault().post(eventData);
         Intent mainIntent = new Intent();
-        mainIntent.setClass(mContext, MainActivity.class);
+        mainIntent.setClass(mContext, MainActivityTest.class);
         mainIntent.putExtra("eventLoginData", eventLoginData);
         getView().startAC(mainIntent);
         getView().finishAc();

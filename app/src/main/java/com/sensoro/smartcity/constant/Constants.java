@@ -268,6 +268,11 @@ public interface Constants {
     int EVENT_DATA_CANCEL_AUTH = 0x27;
     int EVENT_DATA_AUTH_SUC = 0x28;
 
+    int EVENT_DATA_PROGRESS_DIALOG_SHOW = 0x29;
+
+    int EVENT_DATA_PROGRESS_DIALOG_DISMISS = 0x30;
+
+
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_LOGIN = 0x30;
 }

@@ -2,14 +2,18 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -28,17 +32,22 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
 import java.util.List;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
         IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, RecycleViewItemClickListener, MainWarnFragRcContentAdapter.OnPlayPhoneListener {
+    @BindView(R.id.fg_main_warn_title_root)
+    CardView fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_warn_frame_search)
     FrameLayout fgMainWarnFrameSearch;
     @BindView(R.id.fg_main_warn_imv_calendar)
@@ -47,6 +56,13 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     RecyclerView fgMainWarnRcContent;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    @BindView(R.id.fg_main_warn_tv_date_edit)
+    TextView fgMainWarnTvDateEdit;
+    @BindView(R.id.fg_main_warn_imv_date_close)
+    ImageView fgMainWarnImvDateClose;
+    @BindView(R.id.fg_main_warn_rl_date_edit)
+    RelativeLayout fgMainWarnRlDateEdit;
+    Unbinder unbinder;
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
@@ -241,6 +257,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 //            mGridRecyclerView.destroy();
 //        }
         super.onDestroyView();
+        unbinder.unbind();
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -253,13 +270,20 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         return true;
     }
 
-    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_imv_calendar})
+    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_imv_calendar,R.id.fg_main_warn_imv_date_close})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_warn_frame_search:
                 mPresenter.doSearch();
                 break;
             case R.id.fg_main_warn_imv_calendar:
+                mPresenter.doCalendar(fgMainWarnTitleRoot);
+
+                break;
+
+            case R.id.fg_main_warn_imv_date_close:
+                fgMainWarnRlDateEdit.setVisibility(View.GONE);
+                requestDataByFilter(DIRECTION_DOWN,true);
                 break;
         }
     }
@@ -297,6 +321,21 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
+    public void setSelectedDateLayoutVisible(boolean b) {
+        fgMainWarnRlDateEdit.setVisibility(b?View.VISIBLE:View.GONE);
+    }
+
+    @Override
+    public void setSelectedDateSearchText(String s) {
+        fgMainWarnTvDateEdit.setText(s);
+    }
+
+    @Override
+    public boolean isSelectedDateLayoutVisible() {
+        return fgMainWarnRlDateEdit.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
         mPresenter.clickItemByConfirmStatus(position, isReConfirm);
     }
@@ -315,5 +354,13 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @Override
     public void onCallPhone(View v, int position) {
         mPresenter.doContactOwner(position);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
     }
 }

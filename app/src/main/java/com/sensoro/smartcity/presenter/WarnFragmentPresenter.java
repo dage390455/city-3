@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
@@ -10,7 +11,6 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AlertLogActivity;
 import com.sensoro.smartcity.activity.CalendarActivity;
 import com.sensoro.smartcity.activity.SearchAlarmActivity;
-import com.sensoro.smartcity.activity.SearchDeviceActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
@@ -30,6 +30,7 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
+import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -42,7 +43,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> implements IOnCreate, Constants,
-        AlarmPopUtils.OnPopupCallbackListener {
+        AlarmPopUtils.OnPopupCallbackListener, CalendarPopUtils.OnCalendarPopupCallbackListener {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private volatile int cur_page = 1;
     private long startTime;
@@ -50,6 +51,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     private Activity mContext;
     private boolean isReConfirm = false;
     private DeviceAlarmLogInfo mCurrentDeviceAlarmLogInfo;
+    private CalendarPopUtils mCalendarPopUtils;
 
     //
     @Override
@@ -57,6 +59,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         mContext = (Activity) context;
         onCreate();
         requestDataAll(DIRECTION_DOWN, true);
+        mCalendarPopUtils = new CalendarPopUtils(mContext);
+        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
     }
 
     public void doContactOwner(int position) {
@@ -447,12 +451,11 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
      * @param endDate
      */
     private void requestDataByDate(String startDate, String endDate) {
-//        getView().setSelectedDateLayoutVisible(true);
+        getView().setSelectedDateLayoutVisible(true);
         startTime = DateUtil.strToDate(startDate).getTime();
         endTime = DateUtil.strToDate(endDate).getTime();
-//        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-//                .getMothDayFormatDate
-//                        (endTime));
+        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
+                .getMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, startTime, endTime,
@@ -620,11 +623,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         int code = eventData.code;
         Object data = eventData.data;
         //
-        if (code == EVENT_DATA_SELECT_CALENDAR) {
-            if (data instanceof CalendarDateModel) {
-                requestDataByDate(((CalendarDateModel) data).startDate, ((CalendarDateModel) data).endDate);
-            }
-        } else if (code == EVENT_DATA_ALARM_DETAIL_RESULT) {
+        if (code == EVENT_DATA_ALARM_DETAIL_RESULT) {
             if (data instanceof DeviceAlarmLogInfo) {
                 freshDeviceAlarmLogInfo((DeviceAlarmLogInfo) data);
             }
@@ -637,7 +636,28 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     public void doSearch() {
-        Intent intent = new Intent(mContext, SearchDeviceActivityTest.class);
-        getView().startAC(intent);
+//        Intent intent = new Intent(mContext, SearchDeviceActivityTest.class);
+//        getView().startAC(intent);
+    }
+
+    public void doCalendar(CardView fgMainWarnTitleRoot) {
+        long temp_startTime = -1;
+        long temp_endTime = -1;
+        if (getView().isSelectedDateLayoutVisible()) {
+            temp_startTime = startTime;
+            temp_endTime = endTime;
+        }
+
+        mCalendarPopUtils.show(fgMainWarnTitleRoot,temp_startTime,temp_endTime);
+
+
+
+
+
+    }
+
+    @Override
+    public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
+        requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
     }
 }

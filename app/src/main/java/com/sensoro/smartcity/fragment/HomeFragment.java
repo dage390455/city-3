@@ -50,7 +50,9 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPresenter> implements
-        IHomeFragmentView, RecycleViewItemClickListener, MenuDialogFragment.OnDismissListener, MainHomeFragRcTypeAdapter.OnTopClickListener, MainHomeFragRcContentAdapter.OnItemAlarmInfoClickListener {
+        IHomeFragmentView, RecycleViewItemClickListener, MenuDialogFragment.OnDismissListener,
+        MainHomeFragRcTypeAdapter.OnTopClickListener,
+        MainHomeFragRcContentAdapter.OnItemAlarmInfoClickListener {
     @BindView(R.id.fg_main_home_tv_title)
     TextView fgMainHomeTvTitle;
     @BindView(R.id.fg_main_home_imb_add)

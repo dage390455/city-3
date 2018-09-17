@@ -134,7 +134,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         } else {
             openLogin();
         }
-        LogUtils.loge(this, "initData");
+        LogUtils.loge(this, "refreshData");
     }
 
 
