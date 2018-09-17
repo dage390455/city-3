@@ -9,4 +9,8 @@ public interface IDeployDeviceTagActivityView extends IToast, IActivityIntent {
     void updateTags(List<String> tags);
 
     void updateSearchHistory(List<String> strHistory);
+
+    void showDialogWithEdit(String text,int position);
+
+    void dismissDialog();
 }

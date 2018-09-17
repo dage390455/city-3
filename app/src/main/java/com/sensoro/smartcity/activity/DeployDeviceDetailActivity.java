@@ -122,14 +122,14 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
+                finishAc();
                 break;
             case R.id.include_text_title_tv_title:
                 break;
             case R.id.include_text_title_tv_subtitle:
                 break;
             case R.id.ac_deploy_device_detail_ll_name_location:
-                String nameAddress = acDeployDeviceDetailTvNameLocation.getText().toString();
-                mPresenter.doNameAddress(nameAddress);
+                mPresenter.doNameAddress();
                 break;
             case R.id.ac_deploy_device_detail_ll_tag:
                 mPresenter.doTag();
@@ -141,16 +141,11 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
                 mPresenter.doSettingPhoto();
                 break;
             case R.id.ac_deploy_device_detail_ll_fixed_point:
+                mPresenter.doDeployMap();
                 break;
             case R.id.ac_deploy_device_detail_tv_upload:
-                toastShort("上传吗");
-                if (mUploadDialog == null) {
-                    initConfirmDialog();
-                    mUploadDialog.show();
-                } else {
-                    mUploadDialog.show();
-                }
-
+                //TODO 上传逻辑
+                mPresenter.doConfirm();
                 break;
         }
     }
@@ -263,13 +258,26 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
     }
 
     @Override
-    public void refreshSignal(long updateTime, String signal) {
+    public void refreshSignal(boolean hasStation, String signal, int resSignalId, String locationInfo) {
+        if (hasStation) {
+            //TODO 背景选择器
+            acDeployDeviceDetailTvFixedPointSignal.setVisibility(View.GONE);
+            acDeployDeviceDetailTvFixedPointState.setText(locationInfo);
+//        signalButton.setPadding(6, 10, 6, 10);
+        } else {
+            acDeployDeviceDetailTvFixedPointSignal.setVisibility(View.VISIBLE);
+            //TODO 背景选择器
+            acDeployDeviceDetailTvFixedPointSignal.setText(signal);
+            acDeployDeviceDetailTvFixedPointSignal.setBackground(getResources().getDrawable(resSignalId));
+            acDeployDeviceDetailTvFixedPointState.setText(locationInfo);
+//        signalButton.setPadding(6, 10, 6, 10);
+        }
 
     }
 
     @Override
     public void setDeployDeviceRlSignalVisible(boolean isVisible) {
-
+        acDeployDeviceDetailTvFixedPointSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -310,18 +318,25 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
     }
 
     @Override
+    public void showWarnDialog() {
+        if (mUploadDialog == null) {
+            initConfirmDialog();
+            mUploadDialog.show();
+        } else {
+            mUploadDialog.show();
+        }
+    }
+
+    @Override
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dialog_deploy_device_upload_tv_confirm:
                 mUploadDialog.dismiss();
-                updateUploadState(false);
-                String sn = includeTextTitleTvTitle.getText().toString();
-                final String name = acDeployDeviceDetailTvNameLocation.getText().toString();
-                mPresenter.requestUpload(sn, name);
-
                 break;
             case R.id.dialog_deploy_device_upload_tv_cancel:
                 mUploadDialog.dismiss();
+                updateUploadState(false);
+                mPresenter.requestUpload();
                 break;
         }
     }

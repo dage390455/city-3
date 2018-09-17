@@ -173,11 +173,14 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                     eventLoginData.phone = userInfo.getContacts();
                     eventLoginData.phoneId = phoneId;
 //            mCharacter = userInfo.getCharacter();
-                    eventLoginData.roles = userInfo.getRoles();
-                    eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(userInfo.getIsSpecific());
+                    String roles = userInfo.getRoles();
+                    eventLoginData.roles = roles;
+                    String isSpecific = userInfo.getIsSpecific();
+                    eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
                     eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
                     eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                     eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
+                    eventLoginData.hasSubMerchant=MenuPageFactory.getHasSubMerchant(roles,isSpecific);
                     eventData.data = eventLoginData;
                     EventBus.getDefault().post(eventData);
                     //

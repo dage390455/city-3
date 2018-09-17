@@ -3,18 +3,21 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.view.KeyEvent;
+import android.view.View;
 import android.widget.PopupWindow;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMainViewTest;
-import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.presenter.MainPresenterTest;
 import com.sensoro.smartcity.widget.HomeViewPager;
+import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.util.List;
 
@@ -49,6 +52,11 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
         mPresenter.initData(mActivity);
     }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        return mPresenter.onKeyDown(keyCode, event);
+    }
+
     private void initView() {
         initViewPager();
         acMainRlGuide.setOnCheckedChangeListener(this);
@@ -68,12 +76,12 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
 
     @Override
     public void startAC(Intent intent) {
-
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -103,7 +111,7 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
 
     @Override
     public void toastShort(String msg) {
-
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -148,14 +156,28 @@ public class MainActivityTest extends BaseActivity<IMainViewTest, MainPresenterT
     }
 
     @Override
-    public EventLoginData getLoginData() {
-        return mPresenter.getLoginData();
-    }
-
-    @Override
     public void updateMainPageAdapterData(List<Fragment> fragments) {
         mPageAdapter.setFragmentList(fragments);
         mPageAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setSuperAccount(boolean isSuper) {
+        acMainRbMain.setVisibility(isSuper ? View.GONE : View.VISIBLE);
+        acMainRbWarning.setVisibility(isSuper ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void setAlarmWarnCount(int count) {
+        if (count > 0) {
+            acMainTvWarningCount.setVisibility(View.VISIBLE);
+            if (count > 99) {
+                count = 99;
+            }
+            acMainTvWarningCount.setText(String.valueOf(count));
+        } else {
+            acMainTvWarningCount.setVisibility(View.GONE);
+        }
     }
 
 

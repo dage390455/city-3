@@ -401,7 +401,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
             if (hasStation) {
                 LogUtils.loge(tags);
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.doStationDeploy(sn, lon, lan, tags, name).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.INSTANCE.doStationDeploy(sn, lon, lan, new ArrayList<String>(), name).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<StationInfoRsp>(this) {
 
@@ -485,7 +485,7 @@ public class DeployActivityPresenter extends BasePresenter<IDeployActivityView> 
     private void doDeployResult(final String sn, String name, String tags, double lon, double lan, String contact,
                                 String content, List<String> imgUrls) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(sn, lon, lan, tags, name,
+        RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(sn, lon, lan, new ArrayList<String>(), name,
                 contact, content, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<DeviceDeployRsp>(this) {
 

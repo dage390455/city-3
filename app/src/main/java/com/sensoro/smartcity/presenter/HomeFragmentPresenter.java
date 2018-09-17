@@ -11,7 +11,7 @@ import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.MainActivityTest;
+import com.sensoro.smartcity.activity.ContractIndexActivity;
 import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchDeviceActivity;
@@ -22,7 +22,6 @@ import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
@@ -36,6 +35,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -165,8 +165,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void playSound() {
-        EventLoginData loginData = ((MainActivityTest) mContext).getLoginData();
-        if ("admin".equals(loginData.roles)) {
+        if ("admin".equals(PreferencesHelper.getInstance().getUserData().roles)) {
             mSoundPool.play(mSoundId, 1, 1, 0, 0, 1);
         }
     }
@@ -322,8 +321,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void requestWithDirection(int direction) {
-        EventLoginData loginData = ((MainActivityTest) mContext).getLoginData();
-        if (loginData.isSupperAccount) {
+        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
             return;
         }
         try {
@@ -464,8 +462,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void requestTopData(final boolean isFirstInit) {
-        EventLoginData loginData = ((MainActivityTest) mContext).getLoginData();
-        if (loginData.isSupperAccount) {
+        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
             return;
         }
         if (isFirstInit) {
@@ -584,10 +581,17 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void doScanLogin() {
-        Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra("type", Constants.TYPE_SCAN_LOGIN);
-        getView().startAC(intent);
+        if (PreferencesHelper.getInstance().getUserData() != null) {
+            if (PreferencesHelper.getInstance().getUserData().hasScanLogin) {
+                Intent intent = new Intent(mContext, ScanActivity.class);
+                intent.putExtra("type", Constants.TYPE_SCAN_LOGIN);
+                getView().startAC(intent);
+                return;
+            }
+        }
+        getView().toastShort("无此权限");
     }
+
     public void clickAlarmInfo(int position) {
         DeviceInfo deviceInfo = mDataList.get(position);
         getView().showProgressDialog();
@@ -626,12 +630,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        //TODO 弹起预警记录的dialog
         AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext);
-
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
         mAlarmLogPop.show();
 
-        //TODO 弹起预警记录的dialog
     }
 
     private DeviceAlarmLogInfo handleDeviceAlarmLogs(DeviceAlarmLogRsp deviceAlarmLogRsp) {
@@ -694,5 +697,16 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void doSearch() {
         Intent intent = new Intent(mContext, SearchDeviceActivityTest.class);
         getView().startAC(intent);
+    }
+
+    public void doContract() {
+        if (PreferencesHelper.getInstance().getUserData() != null) {
+            if (PreferencesHelper.getInstance().getUserData().hasContract) {
+                Intent intent = new Intent(mContext, ContractIndexActivity.class);
+                getView().startAC(intent);
+                return;
+            }
+        }
+        getView().toastShort("无此权限");
     }
 }

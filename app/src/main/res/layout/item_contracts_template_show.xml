@@ -20,7 +20,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:text="服务年限"
-            android:textColor="@color/c_b6b6b6"
+            android:textColor="@color/c_a6a6a6"
             android:textSize="@dimen/city_tiny_large_size"/>
 
         <LinearLayout
@@ -41,7 +41,7 @@
                 android:inputType="number"
                 android:padding="10dp"
                 android:text="0"
-                android:textColor="@color/c_626262"
+                android:textColor="@color/c_252525"
                 android:textSize="@dimen/city_tiny_large_size"/>
 
         </LinearLayout>

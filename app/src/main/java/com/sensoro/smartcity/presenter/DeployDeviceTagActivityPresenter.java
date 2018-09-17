@@ -69,6 +69,7 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
                 getView().updateTags(mTagList);
             }
         }
+        getView().dismissDialog();
     }
 
     public void addTags(int position) {
@@ -138,5 +139,17 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
             }
         }
         PreferencesHelper.getInstance().saveDeployTagsHistory(stringBuilder.toString());
+    }
+
+
+    public void doEditTag(int position) {
+        String tag = mTagList.get(position);
+        getView().showDialogWithEdit(tag, position);
+    }
+
+    public void updateEditTag(int position, String text) {
+        mTagList.set(position, text);
+        getView().updateTags(mTagList);
+        getView().dismissDialog();
     }
 }

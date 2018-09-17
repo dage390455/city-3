@@ -9,7 +9,6 @@ import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
-import com.sensoro.smartcity.activity.AuthActivityTest;
 import com.sensoro.smartcity.activity.MainActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -128,7 +127,8 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         //TODO 处理Character信息
 //                      mCharacter = userInfo.getCharacter();
                         eventLoginData.roles = userInfo.getRoles();
-                        eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(userInfo.getIsSpecific());
+                        String isSpecific = userInfo.getIsSpecific();
+                        eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
                         eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
                         eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                         eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);

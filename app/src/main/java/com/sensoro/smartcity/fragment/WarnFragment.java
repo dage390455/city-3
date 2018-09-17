@@ -182,7 +182,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         fgMainWarnRcContent.setAdapter(mRcContentAdapter);
         //
         //新控件
-        refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
+        refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {

@@ -161,6 +161,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_STATION = "extra_grants_has_station";
     String EXTRA_GRANTS_HAS_CONTRACT = "extra_grants_has_contract";
     String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
+    String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_IS_STATION_DEPLOY = "extra_is_station_deploy";
     String EXTRA_SENSOR_SN = "extra_sn";
@@ -194,6 +195,7 @@ public interface Constants {
     //
     String EXTRA_DEPLOY_PHOTO = "extra_deploy_photo";
     String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
+    String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     //
@@ -267,6 +269,8 @@ public interface Constants {
     int EVENT_DATA_SESSION_ID_OVERTIME = 0x26;
     int EVENT_DATA_CANCEL_AUTH = 0x27;
     int EVENT_DATA_AUTH_SUC = 0x28;
+    int EVENT_DATA_DEPLOY_MAP = 0x31;
+    int EVENT_DATA_ALARM_TOTAL_COUNT = 0x32;
 
     int EVENT_DATA_PROGRESS_DIALOG_SHOW = 0x29;
 

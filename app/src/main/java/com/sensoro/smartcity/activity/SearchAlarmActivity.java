@@ -123,7 +123,7 @@ public class SearchAlarmActivity extends BaseActivity<ISearchAlarmActivityView, 
     public void setEditText(String searchContent) {
         if (searchContent != null) {
             mKeywordEt.setText(searchContent);
-            mKeywordEt.setSelection(searchContent.length());
+            mKeywordEt.setSelection(mKeywordEt.getText().toString().length());
         }
     }
 

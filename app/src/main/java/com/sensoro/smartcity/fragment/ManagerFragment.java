@@ -149,15 +149,19 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 mPresenter.doContract();
                 break;
             case R.id.fg_main_manage_ll_polling_mission:
+                mPresenter.doPollingMission();
                 break;
             case R.id.fg_main_manage_ll_maintenance_mission:
+                mPresenter.doMaintenanceMission();
                 break;
             case R.id.fg_main_manage_ll_scan_login:
                 mPresenter.doScanLogin();
                 break;
             case R.id.fg_main_manage_ll_about_us:
+                mPresenter.doAboutUs();
                 break;
             case R.id.fg_main_manage_ll_version_info:
+                mPresenter.doVersionInfo();
                 break;
             case R.id.fg_main_manage_ll_exit:
                 mPresenter.doExitAccount();

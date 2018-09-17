@@ -16,13 +16,13 @@ import java.util.Map;
  * Created by sensoro on 17/7/4.
  */
 
-public class PreferencesHelper implements Constants {
+public final class PreferencesHelper implements Constants {
 
     private volatile static PreferencesHelper instance;
+    private volatile EventLoginData mEventLoginData;
 
     //    private SharedPreferences splashLoginData;
     private PreferencesHelper() {
-
     }
 
     public static PreferencesHelper getInstance() {
@@ -38,6 +38,7 @@ public class PreferencesHelper implements Constants {
 
 
     public void saveUserData(EventLoginData eventLoginData) {
+        mEventLoginData = eventLoginData;
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -55,35 +56,42 @@ public class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_STATION, eventLoginData.hasStation);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT, eventLoginData.hasContract);
         editor.putBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, eventLoginData.hasScanLogin);
+        editor.putBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, eventLoginData.hasSubMerchant);
         //
         editor.apply();
     }
 
     public EventLoginData getUserData() {
-        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
-                .MODE_PRIVATE);
-        String phoneId = sp.getString(EXTRA_PHONE_ID, null);
-        String userId = sp.getString(EXTRA_USER_ID, null);
-        LogUtils.loge(this, "phoneId = " + phoneId + ",userId = " + userId);
-        String userName = sp.getString(EXTRA_USER_NAME, null);
-        String phone = sp.getString(EXTRA_PHONE, null);
-        String roles = sp.getString(EXTRA_USER_ROLES, null);
-        boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
-        boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
-        boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
-        boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
-        //
-        final EventLoginData eventLoginData = new EventLoginData();
-        eventLoginData.phoneId = phoneId;
-        eventLoginData.userId = userId;
-        eventLoginData.userName = userName;
-        eventLoginData.phone = phone;
-        eventLoginData.roles = roles;
-        eventLoginData.isSupperAccount = isSupperAccount;
-        eventLoginData.hasStation = hasStation;
-        eventLoginData.hasContract = hasContract;
-        eventLoginData.hasScanLogin = hasScanLogin;
-        return eventLoginData;
+        if (mEventLoginData == null) {
+            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
+                    .MODE_PRIVATE);
+            String phoneId = sp.getString(EXTRA_PHONE_ID, null);
+            String userId = sp.getString(EXTRA_USER_ID, null);
+            LogUtils.loge(this, "phoneId = " + phoneId + ",userId = " + userId);
+            String userName = sp.getString(EXTRA_USER_NAME, null);
+            String phone = sp.getString(EXTRA_PHONE, null);
+            String roles = sp.getString(EXTRA_USER_ROLES, null);
+            boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
+            boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
+            boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
+            boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
+            boolean hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, true);
+            //
+            final EventLoginData eventLoginData = new EventLoginData();
+            eventLoginData.phoneId = phoneId;
+            eventLoginData.userId = userId;
+            eventLoginData.userName = userName;
+            eventLoginData.phone = phone;
+            eventLoginData.roles = roles;
+            eventLoginData.hasSubMerchant = hasSubMerchant;
+            eventLoginData.isSupperAccount = isSupperAccount;
+            eventLoginData.hasStation = hasStation;
+            eventLoginData.hasContract = hasContract;
+            eventLoginData.hasScanLogin = hasScanLogin;
+            mEventLoginData = eventLoginData;
+        }
+
+        return mEventLoginData;
     }
 
     /**

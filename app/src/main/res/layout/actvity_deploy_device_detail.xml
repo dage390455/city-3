@@ -247,7 +247,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="14dp"
                     android:gravity="center_vertical"
-                    android:text="已定位"
+                    android:text="未定位"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 

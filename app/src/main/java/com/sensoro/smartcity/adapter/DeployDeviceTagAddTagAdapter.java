@@ -38,6 +38,9 @@ public class DeployDeviceTagAddTagAdapter extends RecyclerView.Adapter<DeployDev
         this.tags.addAll(tags);
     }
 
+    public List<String> getTags() {
+        return tags;
+    }
 
     @Override
     public void onBindViewHolder(DeployDeviceTagAddTagHolder holder, final int position) {
@@ -66,6 +69,15 @@ public class DeployDeviceTagAddTagAdapter extends RecyclerView.Adapter<DeployDev
                 }
             }
         });
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener!=null){
+                    listener.onClickItem(v,position);
+                }
+            }
+        });
+
     }
 
     @Override
@@ -99,5 +111,7 @@ public class DeployDeviceTagAddTagAdapter extends RecyclerView.Adapter<DeployDev
         void onAddClick();
 
         void onDeleteClick(int position);
+
+        void onClickItem(View v, int position);
     }
 }

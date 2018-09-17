@@ -19,6 +19,7 @@ import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -33,14 +34,13 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     private final List<UserInfo> mUserInfoList = new ArrayList<>();
     private Activity mContext;
     private volatile int cur_page = 1;
-    private EventLoginData mLoginData;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        mLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra("login_data");
-        if (mLoginData != null) {
-            getView().setCurrentNameAndPhone(mLoginData.userName, mLoginData.phone);
+        EventLoginData login_data = (EventLoginData) mContext.getIntent().getSerializableExtra("login_data");
+        if (login_data != null) {
+            getView().setCurrentNameAndPhone(login_data.userName, login_data.phone);
             getView().setCurrentStatusImageViewVisible(true);
             requestDataByDirection(DIRECTION_DOWN, true);
         }
@@ -124,7 +124,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
 
     private void doAccountSwitch(String uid) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doAccountControl(uid, mLoginData.phoneId).subscribeOn(Schedulers.io()).observeOn
+        RetrofitServiceHelper.INSTANCE.doAccountControl(uid, PreferencesHelper.getInstance().getUserData().phoneId).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountControlRsp>(this) {
 
             @Override
@@ -147,13 +147,16 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     eventLoginData.userId = userInfo.get_id();
                     eventLoginData.userName = userInfo.getNickname();
                     eventLoginData.phone = userInfo.getContacts();
-                    eventLoginData.phoneId = mLoginData.phoneId;
+                    eventLoginData.phoneId = PreferencesHelper.getInstance().getUserData().phoneId;
 //            mCharacter = userInfo.getCharacter();
-                    eventLoginData.roles = userInfo.getRoles();
-                    eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(userInfo.getIsSpecific());
+                    String roles = userInfo.getRoles();
+                    eventLoginData.roles = roles;
+                    String isSpecific = userInfo.getIsSpecific();
+                    eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
                     eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
                     eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                     eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
+                    eventLoginData.hasSubMerchant=MenuPageFactory.getHasSubMerchant(roles,isSpecific);
 
 //                    String nickname = data.getNickname();
 //                    String phone = data.getContacts();
@@ -195,12 +198,12 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
 
     public void startToSearchAC() {
         Intent searchIntent = new Intent(mContext, SearchMerchantActivity.class);
-        searchIntent.putExtra("phone_id", mLoginData.phoneId);
-        if (!TextUtils.isEmpty(mLoginData.userName)) {
-            searchIntent.putExtra("user_name", mLoginData.userName);
+        searchIntent.putExtra("phone_id", PreferencesHelper.getInstance().getUserData().phoneId);
+        if (!TextUtils.isEmpty(PreferencesHelper.getInstance().getUserData().userName)) {
+            searchIntent.putExtra("user_name", PreferencesHelper.getInstance().getUserData().userName);
         }
-        if (!TextUtils.isEmpty(mLoginData.phone)) {
-            searchIntent.putExtra("user_phone", mLoginData.phone);
+        if (!TextUtils.isEmpty(PreferencesHelper.getInstance().getUserData().phone)) {
+            searchIntent.putExtra("user_phone", PreferencesHelper.getInstance().getUserData().phone);
         }
         getView().startAC(searchIntent);
     }

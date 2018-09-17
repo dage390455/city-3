@@ -175,27 +175,22 @@ public class AlertLogActivityPresenter extends BasePresenter<IAlertLogActivityVi
     }
 
     public void doNavigation() {
-        AlarmInfo.RecordInfo[] records = deviceAlarmLogInfo.getRecords();
-        if (records != null && records.length > 0) {
-            for (AlarmInfo.RecordInfo recordInfo : records) {
-                double[] deviceLonlat = recordInfo.getDeviceLonlat();
-                if (deviceLonlat != null && deviceLonlat.length > 1) {
-                    destPosition = new LatLng(deviceLonlat[1], deviceLonlat[0]);
-                    AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-                    if (lastKnownLocation != null) {
-                        double lat = lastKnownLocation.getLatitude();//获取纬度
-                        double lon = lastKnownLocation.getLongitude();//获取经度
-                        LatLng startPosition = new LatLng(lat, lon);
-                        if (isAppInstalled(mContext, "com.autonavi.minimap")) {
-                            openGaoDeMap(startPosition);
-                        } else if (isAppInstalled(mContext, "com.baidu.BaiduMap")) {
-                            openBaiDuMap(startPosition);
-                        } else {
-                            openOther(startPosition);
-                        }
-                        return;
-                    }
+        double[] deviceLonlat = deviceAlarmLogInfo.getDeviceLonlat();
+        if (deviceLonlat != null && deviceLonlat.length > 1) {
+            destPosition = new LatLng(deviceLonlat[1], deviceLonlat[0]);
+            AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+            if (lastKnownLocation != null) {
+                double lat = lastKnownLocation.getLatitude();//获取纬度
+                double lon = lastKnownLocation.getLongitude();//获取经度
+                LatLng startPosition = new LatLng(lat, lon);
+                if (isAppInstalled(mContext, "com.autonavi.minimap")) {
+                    openGaoDeMap(startPosition);
+                } else if (isAppInstalled(mContext, "com.baidu.BaiduMap")) {
+                    openBaiDuMap(startPosition);
+                } else {
+                    openOther(startPosition);
                 }
+                return;
             }
         }
         getView().toastShort("未获取到位置信息");

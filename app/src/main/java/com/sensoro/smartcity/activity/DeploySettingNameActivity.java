@@ -189,7 +189,7 @@ public class DeploySettingNameActivity extends BaseActivity<IDeploySettingNameAc
     public void setEditText(String text) {
         if (!TextUtils.isEmpty(text)) {
             mKeywordEt.setText(text);
-            mKeywordEt.setSelection(text.length());
+            mKeywordEt.setSelection(mKeywordEt.getText().toString().length());
         }
     }
 

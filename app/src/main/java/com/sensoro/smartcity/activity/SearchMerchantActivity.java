@@ -212,7 +212,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     public void setEditText(String text) {
         if (text != null) {
             mKeywordEt.setText(text);
-            mKeywordEt.setSelection(text.length());
+            mKeywordEt.setSelection(mKeywordEt.getText().toString().length());
         }
     }
 

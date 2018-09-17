@@ -2,11 +2,9 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,6 +18,7 @@ import com.sensoro.smartcity.presenter.DeployDeviceTagActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.TagDialogUtils;
 
 import java.util.List;
 
@@ -27,8 +26,11 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
+import static com.sensoro.smartcity.widget.TagDialogUtils.DIALOG_TAG_ADD;
+import static com.sensoro.smartcity.widget.TagDialogUtils.DIALOG_TAG_EDIT;
+
 public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivityView, DeployDeviceTagActivityPresenter>
-        implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, View.OnClickListener, RecycleViewItemClickListener {
+        implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, RecycleViewItemClickListener, TagDialogUtils.OnTagDialogListener {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -43,11 +45,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     RecyclerView acDeployDeviceTagRcHistoryTag;
     private DeployDeviceTagAddTagAdapter mAddTagAdapter;
     private DeployDeviceTagHistoryTagAdapter mHistoryTagAdapter;
-    private AlertDialog mAddTagDialog;
-    private EditText mDialogEtInput;
-    private ImageView mDialogImvClear;
-    private TextView mDialogTvCancel;
-    private TextView mDialogTvConfirm;
+    private TagDialogUtils tagDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -58,6 +56,8 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     }
 
     private void initView() {
+        tagDialogUtils = new TagDialogUtils(mActivity);
+        tagDialogUtils.registerListener(this);
         includeTextTitleTvTitle.setText("标签");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
@@ -67,21 +67,6 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     }
 
-    private void initAddTagDialog() {
-        View view = View.inflate(mActivity, R.layout.dialog_frag_deploy_device_add_tag, null);
-        mDialogEtInput = view.findViewById(R.id.dialog_add_tag_et_input);
-        mDialogImvClear = view.findViewById(R.id.dialog_add_tag_imv_clear);
-        mDialogTvCancel = view.findViewById(R.id.dialog_add_tag_tv_cancel);
-        mDialogTvConfirm = view.findViewById(R.id.dialog_add_tag_tv_confirm);
-        mDialogTvConfirm.setOnClickListener(this);
-        mDialogTvCancel.setOnClickListener(this);
-        mDialogImvClear.setOnClickListener(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setView(view);
-        builder.setCancelable(false);
-        mAddTagDialog = builder.create();
-
-    }
 
     private void initRcHistoryTag() {
         mHistoryTagAdapter = new DeployDeviceTagHistoryTagAdapter(mActivity);
@@ -144,9 +129,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     @Override
     protected void onDestroy() {
-        if (mAddTagDialog != null) {
-            mAddTagDialog.cancel();
-        }
+        tagDialogUtils.unregisterListener();
         super.onDestroy();
     }
 
@@ -157,11 +140,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
 
     @Override
     public void onAddClick() {
-        if (mAddTagDialog == null) {
-            initAddTagDialog();
-        }
-        mDialogEtInput.getText().clear();
-        mAddTagDialog.show();
+        tagDialogUtils.show();
     }
 
     @Override
@@ -170,21 +149,8 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     }
 
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.dialog_add_tag_tv_cancel:
-                mAddTagDialog.dismiss();
-                break;
-            case R.id.dialog_add_tag_tv_confirm:
-                mAddTagDialog.dismiss();
-                String tag = mDialogEtInput.getText().toString();
-                mPresenter.addTags(tag);
-                break;
-            case R.id.dialog_add_tag_imv_clear:
-                mDialogEtInput.getText().clear();
-                break;
-
-        }
+    public void onClickItem(View v, int position) {
+        mPresenter.doEditTag(position);
     }
 
     @Override
@@ -199,7 +165,31 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     }
 
     @Override
+    public void showDialogWithEdit(String text,int position) {
+        tagDialogUtils.show(text,position);
+    }
+
+    @Override
+    public void dismissDialog() {
+        tagDialogUtils.dismissDialog();
+    }
+
+    @Override
     public void onItemClick(View view, int position) {
         mPresenter.addTags(position);
+    }
+
+    @Override
+    public void onConfirm(int type, String text,int position) {
+        switch (type) {
+            case DIALOG_TAG_ADD:
+                mPresenter.addTags(text);
+                break;
+            case DIALOG_TAG_EDIT:
+                mPresenter.updateEditTag(position,text);
+                break;
+            default:
+                break;
+        }
     }
 }
