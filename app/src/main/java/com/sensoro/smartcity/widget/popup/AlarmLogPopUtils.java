@@ -25,7 +25,6 @@ import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.adapter.TimerShaftAdapter;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
@@ -38,8 +37,6 @@ import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -54,7 +51,7 @@ import rx.schedulers.Schedulers;
 import static com.sensoro.smartcity.util.AppUtils.isAppInstalled;
 
 public class AlarmLogPopUtils extends BasePresenter implements AlarmPopUtils.OnPopupCallbackListener,
-        TimerShaftAdapter.OnPhotoClickListener,Constants{
+        TimerShaftAdapter.OnPhotoClickListener, Constants {
 
     private final FixHeightBottomSheetDialog mAlarmLogDialog;
     private final Activity mActivity;
@@ -129,17 +126,17 @@ public class AlarmLogPopUtils extends BasePresenter implements AlarmPopUtils.OnP
         mDeviceAlarmLogInfo = deviceAlarmLogInfo;
 
         String name = mDeviceAlarmLogInfo.getDeviceName();
-        acAlertLogTvName.setText(TextUtils.isEmpty(name)? mDeviceAlarmLogInfo.getDeviceSN() : name);
+        acAlertLogTvName.setText(TextUtils.isEmpty(name) ? mDeviceAlarmLogInfo.getDeviceSN() : name);
 
         acAlertTvAlertTime.setText(DateUtil.getFullParseDate(mDeviceAlarmLogInfo.getUpdatedTime()));
 
         acAlertTvAlertCount.setText(mDeviceAlarmLogInfo.getDisplayStatus() + 10 + "");
 
         int displayStatus = mDeviceAlarmLogInfo.getDisplayStatus();
-        if(displayStatus == DISPLAY_STATUS_CONFIRM){
+        if (displayStatus == DISPLAY_STATUS_CONFIRM) {
             isReConfirm = true;
             acAlertTvAlertConfirm.setText("预警确认");
-        }else{
+        } else {
             isReConfirm = false;
             acAlertTvAlertConfirm.setText("再次确认");
         }
@@ -147,7 +144,6 @@ public class AlarmLogPopUtils extends BasePresenter implements AlarmPopUtils.OnP
         initRcContentData();
 
     }
-
 
 
     private void initRcContentData() {
@@ -226,34 +222,29 @@ public class AlarmLogPopUtils extends BasePresenter implements AlarmPopUtils.OnP
             }
         }
         if (TextUtils.isEmpty(tempNumber)) {
-            SensoroToast.INSTANCE.makeText("未找到电话联系人",Toast.LENGTH_SHORT).show();
+            SensoroToast.INSTANCE.makeText("未找到电话联系人", Toast.LENGTH_SHORT).show();
         } else {
             AppUtils.diallPhone(tempNumber, mActivity);
         }
     }
 
     private void doNavigation() {
-        AlarmInfo.RecordInfo[] records = mDeviceAlarmLogInfo.getRecords();
-        if (records != null && records.length > 0) {
-            for (AlarmInfo.RecordInfo recordInfo : records) {
-                double[] deviceLonlat = recordInfo.getDeviceLonlat();
-                if (deviceLonlat != null && deviceLonlat.length > 1) {
-                    destPosition = new LatLng(deviceLonlat[1], deviceLonlat[0]);
-                    AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-                    if (lastKnownLocation != null) {
-                        double lat = lastKnownLocation.getLatitude();//获取纬度
-                        double lon = lastKnownLocation.getLongitude();//获取经度
-                        LatLng startPosition = new LatLng(lat, lon);
-                        if (isAppInstalled(mActivity, "com.autonavi.minimap")) {
-                            openGaoDeMap(startPosition);
-                        } else if (isAppInstalled(mActivity, "com.baidu.BaiduMap")) {
-                            openBaiDuMap(startPosition);
-                        } else {
-                            openOther(startPosition);
-                        }
-                        return;
-                    }
+        double[] deviceLonlat = mDeviceAlarmLogInfo.getDeviceLonlat();
+        if (deviceLonlat != null && deviceLonlat.length > 1) {
+            destPosition = new LatLng(deviceLonlat[1], deviceLonlat[0]);
+            AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+            if (lastKnownLocation != null) {
+                double lat = lastKnownLocation.getLatitude();//获取纬度
+                double lon = lastKnownLocation.getLongitude();//获取经度
+                LatLng startPosition = new LatLng(lat, lon);
+                if (isAppInstalled(mActivity, "com.autonavi.minimap")) {
+                    openGaoDeMap(startPosition);
+                } else if (isAppInstalled(mActivity, "com.baidu.BaiduMap")) {
+                    openBaiDuMap(startPosition);
+                } else {
+                    openOther(startPosition);
                 }
+                return;
             }
         }
         SensoroToast.INSTANCE.makeText("未获取到位置信息", Toast.LENGTH_SHORT).show();
@@ -316,12 +307,12 @@ public class AlarmLogPopUtils extends BasePresenter implements AlarmPopUtils.OnP
                             public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
                                 if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                                     SensoroToast.INSTANCE.makeText(mActivity.getResources().
-                                            getString(R.string.tips_commit_success),Toast.LENGTH_SHORT).show();
+                                            getString(R.string.tips_commit_success), Toast.LENGTH_SHORT).show();
                                     mDeviceAlarmLogInfo = deviceAlarmItemRsp.getData();
                                     refreshData(mDeviceAlarmLogInfo);
                                 } else {
                                     SensoroToast.INSTANCE.makeText(mActivity.getResources().
-                                            getString(R.string.tips_commit_failed),Toast.LENGTH_SHORT).show();
+                                            getString(R.string.tips_commit_failed), Toast.LENGTH_SHORT).show();
                                 }
                                 mProgressUtils.dismissProgress();
                                 mAlarmPopUtils.dismiss();
