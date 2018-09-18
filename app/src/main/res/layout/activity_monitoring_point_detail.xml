@@ -179,21 +179,6 @@
                     app:layout_constraintStart_toStartOf="parent"
 
                     />
-
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_location"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="12dp"
-                    android:lineSpacingMultiplier="1.5"
-                    android:textColor="@color/c_252525"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/ac_monitoring_point_tv_location_navigation" />
-
                 <ImageView
                     android:id="@+id/ac_monitoring_point_imv_location"
                     android:layout_width="wrap_content"
@@ -204,6 +189,24 @@
                     app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_location"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_tv_location_navigation" />
+
+                <TextView
+                    android:id="@+id/ac_monitoring_point_tv_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="12dp"
+                    android:lineSpacingMultiplier="1.5"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp"
+                    android:layout_marginEnd="8dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/ac_monitoring_point_tv_location_navigation"
+                    app:layout_constraintEnd_toStartOf="@id/ac_monitoring_point_imv_location"/>
+
+
 
             </android.support.constraint.ConstraintLayout>
 
