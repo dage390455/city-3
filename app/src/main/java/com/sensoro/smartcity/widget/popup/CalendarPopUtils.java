@@ -5,11 +5,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.OrientationHelper;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -19,19 +20,14 @@ import android.widget.Toast;
 
 import com.applikeysolutions.cosmocalendar.listeners.OnDayRangeSelectedListener;
 import com.applikeysolutions.cosmocalendar.model.Day;
-import com.applikeysolutions.cosmocalendar.selection.OnDaySelectedListener;
 import com.applikeysolutions.cosmocalendar.selection.RangeSelectionManager;
 import com.applikeysolutions.cosmocalendar.utils.SelectionType;
 import com.applikeysolutions.cosmocalendar.view.CalendarView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.SensoroToast;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -72,6 +68,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
     private long startTime;
     private long endTime;
     private OnCalendarPopupCallbackListener listener;
+    private View view;
 
     public CalendarPopUtils(Activity activity) {
         mActivity = activity;
@@ -79,14 +76,16 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
 
     private void init( ) {
         mPopupWindow = new PopupWindow(mActivity);
-        View view = LayoutInflater.from(mActivity).inflate(R.layout.activity_calendar_test, null);
-        ButterKnife.bind(this,view);
+        view = LayoutInflater.from(mActivity).inflate(R.layout.activity_calendar_test, null);
+        ButterKnife.bind(this, view);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-//        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
-        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
+//        mPopupWindow.setBackgroundDrawable(new BitmapDrawable());
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.setOutsideTouchable(true);
+        mPopupWindow.setFocusable(true);
+        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim );
         initView();
         mPopupWindow.setContentView(view);
     }
@@ -144,12 +143,13 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
     }
 
 
-    public void show(View view, long temp_startTime, long temp_endTime) {
+    public void show(final View viewLocation, long temp_startTime, long temp_endTime) {
         if(mPopupWindow==null){
             init();
         }
+        mPopupWindow.showAtLocation(viewLocation,Gravity.TOP,0,0);
         setSlectTime(temp_startTime,temp_endTime);
-        mPopupWindow.showAtLocation(view, Gravity.TOP, 0, 0);
+
     }
 
     @OnClick({R.id.ac_calendar_tv_cancel, R.id.ac_calendar_tv_save})

@@ -70,7 +70,7 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.layout_alert_log_activity);
+        setContentView(R.layout.activity_alert_log);
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);

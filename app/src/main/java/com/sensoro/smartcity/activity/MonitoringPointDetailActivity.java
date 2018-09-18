@@ -6,6 +6,7 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -16,11 +17,14 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMonitoringPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitoringPointDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.util.DpUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN;
 
 public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPointDetailActivityView,
         MonitoringPointDetailActivityPresenter> implements IMonitoringPointDetailActivityView, View.OnClickListener {
@@ -72,7 +76,8 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleTvTitle.setText("监控点详情");
-        includeImvTitleImvSubtitle.setVisibility(View.GONE);
+        includeImvTitleImvSubtitle.setImageResource(R.mipmap.ic_detail);
+        includeImvTitleImvSubtitle.setPadding(0, DpUtils.dp2px(mActivity,20),0,DpUtils.dp2px(mActivity,20));
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity) {
             @Override
@@ -85,6 +90,7 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
         acMonitoringPointRcContent.addItemDecoration(dividerItemDecoration);
         acMonitoringPointRcContent.setAdapter(mContentAdapter);
         acMonitoringPointImvLocation.setOnClickListener(this);
+        includeImvTitleImvSubtitle.setOnClickListener(this);
 
 
     }
@@ -194,6 +200,12 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
             case R.id.ac_monitoring_point_imv_location:
                 mPresenter.doNavigation();
                 break;
+            case R.id.include_imv_title_imv_subtitle:
+                mPresenter.doMore();
+
+                break;
+
         }
     }
+
 }

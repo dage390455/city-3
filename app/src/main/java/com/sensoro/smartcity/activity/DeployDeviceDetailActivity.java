@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -47,8 +48,8 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
     LinearLayout acDeployDeviceDetailLlNameLocation;
     @BindView(R.id.ac_deploy_device_detail_rc_tag)
     TouchRecyclerview acDeployDeviceDetailRcTag;
-    @BindView(R.id.ac_deploy_device_detail_ll_tag)
-    LinearLayout acDeployDeviceDetailLlTag;
+    @BindView(R.id.ac_deploy_device_detail_rl_tag)
+    RelativeLayout acDeployDeviceDetailRlTag;
     @BindView(R.id.ac_deploy_device_detail_rc_alarm_contact)
     TouchRecyclerview acDeployDeviceDetailRcAlarmContact;
     @BindView(R.id.ac_deploy_device_detail_ll_alarm_contact)
@@ -118,7 +119,7 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_title, R.id.include_text_title_tv_subtitle, R.id.ac_deploy_device_detail_ll_name_location, R.id.ac_deploy_device_detail_ll_tag, R.id.ac_deploy_device_detail_ll_alarm_contact, R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_title, R.id.include_text_title_tv_subtitle, R.id.ac_deploy_device_detail_ll_name_location, R.id.ac_deploy_device_detail_rl_tag, R.id.ac_deploy_device_detail_ll_alarm_contact, R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -131,7 +132,7 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
             case R.id.ac_deploy_device_detail_ll_name_location:
                 mPresenter.doNameAddress();
                 break;
-            case R.id.ac_deploy_device_detail_ll_tag:
+            case R.id.ac_deploy_device_detail_rl_tag:
                 mPresenter.doTag();
                 break;
             case R.id.ac_deploy_device_detail_ll_alarm_contact:

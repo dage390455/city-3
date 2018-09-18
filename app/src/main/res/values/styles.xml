@@ -85,7 +85,7 @@
         <item name="android:windowContentOverlay">@null</item>
     </style>
 
-    //主页radiobutton 样式
+    <!--主页radiobutton 样式-->
     <style name="style_ac_main_bottom">
         <item name="android:layout_weight">1</item>
         <item name="android:button">@null</item>
@@ -97,7 +97,7 @@
         <item name="android:gravity">center</item>
     </style>
 
-    //homeFragment add dialogFragment 样式
+    <!--homeFragment add dialogFragment 样式-->
     <style name="style_fg_home_dialog_tv">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -109,10 +109,10 @@
     </style>
     
     <style name="DialogFragmentDropDownAnim" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/anim_top_to_bottom</item>
-        <item name="android:windowExitAnimation">@anim/anim_bottom_to_top</item>
+        <item name="android:windowEnterAnimation">@anim/anim_pop_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_pop_dismiss</item>
     </style>
-    Theme_Holo_Light_NoActionBar
+    <!--Theme_Holo_Light_NoActionBar-->
     <style name="DialogFragmentThem" parent="@android:style/Theme.Holo.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/DialogFragmentDropDownAnim</item>
     </style>

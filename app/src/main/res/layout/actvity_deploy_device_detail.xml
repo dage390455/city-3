@@ -70,14 +70,15 @@
                 android:layout_marginStart="20dp"
                 android:background="@color/c_dfdfdf" />
 
-            <LinearLayout
-                android:id="@+id/ac_deploy_device_detail_ll_tag"
+            <RelativeLayout
+                android:id="@+id/ac_deploy_device_detail_rl_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                >
 
                 <TextView
+                    android:id="@+id/ac_deploy_device_detail_tv_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -85,29 +86,44 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:text="标签"
+                    android:layout_centerVertical="true"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
-                <com.sensoro.smartcity.widget.TouchRecyclerview
-                    android:id="@+id/ac_deploy_device_detail_rc_tag"
-                    android:layout_width="0dp"
-                    android:layout_marginStart="16dp"
-                    android:layout_gravity="center_vertical"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                </com.sensoro.smartcity.widget.TouchRecyclerview>
-
                 <ImageView
+                    android:id="@+id/ac_deploy_device_detail_imv_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="20dp"
                     android:layout_marginStart="8dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
 
-            </LinearLayout>
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_centerVertical="true"
+                    android:layout_toEndOf="@id/ac_deploy_device_detail_tv_tag"
+                    android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag"
+                    >
+                    <com.sensoro.smartcity.widget.TouchRecyclerview
+                        android:id="@+id/ac_deploy_device_detail_rc_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        >
+
+                    </com.sensoro.smartcity.widget.TouchRecyclerview>
+                </RelativeLayout>
+
+
+
+
+            </RelativeLayout>
 
 
             <LinearLayout

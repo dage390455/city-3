@@ -264,6 +264,7 @@
             android:windowSoftInputMode="stateAlwaysHidden"/>
         <activity android:name=".activity.AuthActivityTest" />
         <activity android:name=".activity.DeployMapActivity" />
+        <activity android:name=".activity.SensorMoreActivityTest" />
 
         <service
             android:name="com.igexin.download.DownloadService"

@@ -16,6 +16,8 @@ import com.amap.api.services.geocoder.RegeocodeResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
+import com.sensoro.smartcity.activity.SensorMoreActivity;
+import com.sensoro.smartcity.activity.SensorMoreActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitoringPointDetailActivityView;
@@ -334,5 +336,11 @@ public class MonitoringPointDetailActivityPresenter extends BasePresenter<IMonit
             }
         });
 
+    }
+
+    public void doMore() {
+        Intent intent = new Intent(mContext, SensorMoreActivityTest.class);
+        intent.putExtra(EXTRA_SENSOR_SN, mDeviceInfo.getSn());
+        getView().startAC(intent);
     }
 }

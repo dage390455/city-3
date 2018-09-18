@@ -1,0 +1,752 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:TagsEditText="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/sensor_detail_bg"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/sensor_more_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y200"
+        android:background="@color/white">
+
+        <ImageView
+            android:id="@+id/sensor_more_back"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/x10"
+            android:adjustViewBounds="true"
+            android:cropToPadding="true"
+            android:padding="15dp"
+            android:src="@mipmap/ic_back" />
+
+        <TextView
+            android:id="@+id/sensor_more_title_sn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="传感器详情"
+            android:textColor="@color/c_626262"
+            android:textSize="@dimen/x60" />
+
+    </RelativeLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/y1"
+        android:background="@color/c_e7e7e7" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/sensor_more_basic_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y50"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y1"
+                    android:background="@color/c_e7e7e7"
+                    android:contentDescription="@null" />
+
+                <RelativeLayout
+                    android:id="@+id/sensor_more_layout_sn"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_item_selector"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="@string/sensor_detail_sn"
+                        android:textColor="@color/c_626262"
+                        android:textSize="@dimen/x50" />
+
+
+                    <TextView
+                        android:id="@+id/sensor_more_tv_sn"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="15dp"
+                        android:singleLine="true"
+                        android:textColor="#9b9b9b"
+                        android:textSize="@dimen/x50" />
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/y1"
+                    android:layout_marginLeft="12dp"
+                    android:background="@color/c_e7e7e7"
+                    android:contentDescription="@null" />
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_item_selector"
+                    android:orientation="horizontal"
+                    android:paddingBottom="10dp"
+                    android:paddingTop="10dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="15dp"
+                        android:text="@string/sensor_detail_name"
+                        android:textColor="@color/c_626262"
+                        android:textSize="@dimen/x50" />
+
+                    <TextView
+                        android:id="@+id/sensor_more_tv_name"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginLeft="10dp"
+                        android:layout_marginRight="15dp"
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:gravity="end"
+                        android:textColor="#9b9b9b"
+                        android:textSize="@dimen/x50" />
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_type"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:layout_marginLeft="12dp"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_type"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_type"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
+                            android:maxEms="8"
+                            android:singleLine="true"
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_status"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:layout_marginLeft="12dp"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_status"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="16dp"
+                            android:background="@drawable/shape_marker_normal"
+                            android:ellipsize="end"
+                            android:maxEms="8"
+                            android:paddingBottom="@dimen/y10"
+                            android:paddingLeft="@dimen/x20"
+                            android:paddingRight="@dimen/x20"
+                            android:paddingTop="@dimen/y10"
+                            android:singleLine="true"
+                            android:text="@string/status_normal"
+                            android:textColor="@color/white"
+                            android:textSize="@dimen/x45" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_tag"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:layout_marginLeft="12dp"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:id="@+id/sensor_tv_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_centerVertical="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_tag"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+                        <!-- <RelativeLayout
+                             android:layout_width="0dp"
+                             android:layout_height="wrap_content"
+                             android:layout_marginLeft="30dp"
+                             android:layout_marginRight="15dp"
+                             android:layout_weight="1">
+
+                             <TextView
+                                 android:id="@+id/sensor_more_tv_tag"
+                                 android:layout_width="wrap_content"
+                                 android:layout_height="wrap_content"
+                                 android:layout_alignParentEnd="true"
+                                 android:layout_gravity="end"
+                                 android:textColor="#9b9b9b"
+                                 android:textSize="@dimen/x50"
+                                 android:visibility="gone"/>
+
+                             <mabbas007.tagsedittext.TagsEditText
+                                 android:id="@+id/sensor_more_sensoro_tag"
+                                 android:layout_width="match_parent"
+                                 android:layout_height="wrap_content"
+                                 android:layout_alignParentEnd="true"
+                                 android:autoLink="none"
+                                 android:background="@null"
+                                 android:clickable="false"
+                                 android:cursorVisible="false"
+                                 android:editable="false"
+                                 android:focusable="false"
+                                 android:focusableInTouchMode="false"
+                                 android:gravity="end"
+                                 android:paddingLeft="@dimen/x30"
+                                 android:textColor="#9b9b9b"
+                                 android:textSize="@dimen/city_normal_size"
+                                 TagsEditText:allowSpaceInTag="false"
+                                 TagsEditText:tagsBackground="@drawable/shape_textview"
+                                 />
+                         </RelativeLayout>-->
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="16dp"
+                            android:layout_marginEnd="16dp"
+                            android:layout_toEndOf="@id/sensor_tv_tag">
+                            <com.sensoro.smartcity.widget.TouchRecyclerview
+                                android:id="@+id/sensor_more_rc_tag"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                >
+
+                            </com.sensoro.smartcity.widget.TouchRecyclerview>
+
+                        </RelativeLayout>
+
+
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_battery"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:layout_marginLeft="12dp"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_battery"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_battery"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
+                            android:maxEms="8"
+                            android:singleLine="true"
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+
+            <LinearLayout
+                android:id="@+id/sensor_more_location_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y50"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_lon"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_lon"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_lon"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_lan"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:layout_marginLeft="12dp"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_lan"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_lan"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
+                            android:singleLine="true"
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_phone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:layout_marginLeft="12dp"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_phone"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_phone"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
+                            android:maxEms="8"
+                            android:singleLine="true"
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+
+            <LinearLayout
+                android:id="@+id/sensor_more_report_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y50"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_report"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_recent_report"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_report"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="15dp"
+                            android:singleLine="true"
+                            android:text=""
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_interval"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:layout_marginLeft="12dp"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_interval"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_interval"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginLeft="10dp"
+                            android:layout_marginRight="15dp"
+                            android:ellipsize="end"
+                            android:maxEms="8"
+                            android:singleLine="true"
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+
+            <LinearLayout
+                android:id="@+id/sensor_more_alarm_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/y50"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_alarm"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <RelativeLayout
+
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_recent_alarm"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_alarm_recent"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_marginRight="15dp"
+                            android:singleLine="true"
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/sensor_more_layout_alarm_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="@dimen/y1"
+                        android:layout_marginLeft="12dp"
+                        android:background="@color/c_e7e7e7"
+                        android:contentDescription="@null" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_item_selector"
+                        android:orientation="horizontal"
+                        android:paddingBottom="10dp"
+                        android:paddingTop="10dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentLeft="true"
+                            android:layout_marginLeft="15dp"
+                            android:text="@string/sensor_detail_alarm_setting"
+                            android:textColor="@color/c_626262"
+                            android:textSize="@dimen/x50" />
+
+
+                        <TextView
+                            android:id="@+id/sensor_more_tv_alarm_setting"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/x20"
+                            android:layout_marginRight="15dp"
+                            android:layout_weight="1"
+                            android:ellipsize="end"
+                            android:gravity="end"
+                            android:textColor="#9b9b9b"
+                            android:textSize="@dimen/x50" />
+
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:layout_marginBottom="@dimen/y50"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>
