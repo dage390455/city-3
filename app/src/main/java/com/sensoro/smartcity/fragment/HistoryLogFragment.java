@@ -2,11 +2,7 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -17,8 +13,6 @@ import com.sensoro.smartcity.imainviews.HistoryLogFragmentPresenter;
 import com.sensoro.smartcity.imainviews.IHistoryLogFragmentView;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 public class HistoryLogFragment extends BaseFragment<IHistoryLogFragmentView, HistoryLogFragmentPresenter>
         implements IHistoryLogFragmentView {
@@ -30,7 +24,6 @@ public class HistoryLogFragment extends BaseFragment<IHistoryLogFragmentView, Hi
     ImageView includeImvTitleImvSubtitle;
     @BindView(R.id.fg_history_log_rc_content)
     RecyclerView fgHistoryLogRcContent;
-    Unbinder unbinder;
 
     @Override
     protected void initData(Context activity) {
@@ -104,19 +97,5 @@ public class HistoryLogFragment extends BaseFragment<IHistoryLogFragmentView, Hi
     @Override
     public void toastLong(String msg) {
 
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        // TODO: inflate a fragment view
-        View rootView = super.onCreateView(inflater, container, savedInstanceState);
-        unbinder = ButterKnife.bind(this, rootView);
-        return rootView;
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        unbinder.unbind();
     }
 }

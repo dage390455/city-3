@@ -30,16 +30,20 @@ import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.NothingSelectedSpinnerAdapter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.model.AlarmPopModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-
-import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 public class AlarmPopUtils implements View.OnClickListener, Constants,
         ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, AdapterView
@@ -109,7 +113,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     private ImagePickerAdapter adapter;
     private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
     private int maxImgCount = 9;               //允许选择图片最大数
-    private ArrayList<ImageItem> tempImages = null;
+    //    private ArrayList<ImageItem> tempImages = null;
     private Activity mActivity;
     private TextView tvSpinnerResultInfo;
     private ProgressDialog progressDialog;
@@ -124,10 +128,10 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         if (progressDialog != null) {
             progressDialog.cancel();
         }
-        if (tempImages != null) {
-            tempImages.clear();
-            tempImages = null;
-        }
+//        if (tempImages != null) {
+//            tempImages.clear();
+//            tempImages = null;
+//        }
         selImageList.clear();
     }
 
@@ -277,6 +281,9 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         if (bottomSheetDialog != null) {
             bottomSheetDialog.show();
         }
+        if (!EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().register(this);
+        }
     }
 
 
@@ -291,6 +298,9 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     }
 
     private void clearData() {
+        if (EventBus.getDefault().isRegistered(this)) {
+            EventBus.getDefault().unregister(this);
+        }
         selImageList.clear();
         adapter.setImages(selImageList);
         setUpdateButtonClickable(false);
@@ -525,50 +535,54 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark);
     }
 
-    public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
-        LogUtils.loge("handlerActivityResult requestCode = " + requestCode + ",resultCode = " + resultCode + ",data = " + data);
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-            //添加图片返回
-            if (data != null && requestCode == REQUEST_CODE_SELECT) {
-                tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
-                if (tempImages != null) {
-                    adapter.setMaxImgCount(9);
-                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
-                    if (!fromTakePhoto) {
-                        selImageList.clear();
-                    }
-                    selImageList.addAll(tempImages);
-                    adapter.setImages(selImageList);
-                }
-            }
-        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-            //预览图片返回
-            if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
-                tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
-                if (tempImages != null) {
-                    adapter.setMaxImgCount(9);
-                    selImageList.clear();
-                    selImageList.addAll(tempImages);
-                    adapter.setImages(selImageList);
-                }
-            }
-        } else if (resultCode == RESULT_CODE_RECORD) {
-            //拍视频
-            if (data != null && requestCode == REQUEST_CODE_RECORD) {
-                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
-                if (imageItem != null) {
-                    LogUtils.loge("--- 从视频返回  path = " + imageItem.recordPath);
-                    adapter.setMaxImgCount(1);
-                    selImageList.clear();
-                    selImageList.add(imageItem);
-                    adapter.setImages(selImageList);
-                }
-            } else if (requestCode == REQUEST_CODE_PLAY_RECORD) {
-                adapter.setMaxImgCount(9);
-                selImageList.clear();
-                adapter.setImages(selImageList);
-            }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        Object data = eventData.data;
+        if (code == EVENT_DATA_ALARM_POP_IMAGES) {
+            if (data instanceof AlarmPopModel) {
+                AlarmPopModel alarmPopModel = (AlarmPopModel) data;
+                if (alarmPopModel.resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+                    //添加图片返回
+                    if (alarmPopModel.requestCode == REQUEST_CODE_SELECT) {
+                        if (alarmPopModel.imageItems != null) {
+                            adapter.setMaxImgCount(9);
+                            if (!alarmPopModel.fromTakePhoto) {
+                                selImageList.clear();
+                            }
+                            selImageList.addAll(alarmPopModel.imageItems);
+                            adapter.setImages(selImageList);
+                        }
+                    }
+                } else if (alarmPopModel.resultCode == ImagePicker.RESULT_CODE_BACK) {
+                    //预览图片返回
+                    if (alarmPopModel.requestCode == REQUEST_CODE_PREVIEW) {
+                        if (alarmPopModel.imageItems != null) {
+                            adapter.setMaxImgCount(9);
+                            selImageList.clear();
+                            selImageList.addAll(alarmPopModel.imageItems);
+                            adapter.setImages(selImageList);
+                        }
+                    }
+                } else if (alarmPopModel.resultCode == RESULT_CODE_RECORD) {
+                    //拍视频
+                    if (alarmPopModel.requestCode == REQUEST_CODE_RECORD) {
+                        if (alarmPopModel.imageItems != null) {
+                            adapter.setMaxImgCount(1);
+                            selImageList.clear();
+                            selImageList.addAll(alarmPopModel.imageItems);
+                            adapter.setImages(selImageList);
+                        }
+                    } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
+                        adapter.setMaxImgCount(9);
+                        selImageList.clear();
+                        adapter.setImages(selImageList);
+                    }
+
+                }
+            }
         }
     }
 

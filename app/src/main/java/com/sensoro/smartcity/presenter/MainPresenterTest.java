@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 
 import com.igexin.sdk.PushManager;
 import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivityTest;
@@ -20,6 +21,7 @@ import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainViewTest;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
+import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.DeviceAlarmCount;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
@@ -45,6 +47,8 @@ import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
 
+import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+
 public class MainPresenterTest extends BasePresenter<IMainViewTest> implements Constants, IOnCreate {
 
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
@@ -59,7 +63,6 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
     private final MainPresenterTest.TaskRunnable mRunnable = new MainPresenterTest.TaskRunnable();
     //
     private WarnFragment warnFragment;
-    private boolean loginStart;
 
     @Override
     public void initData(Context context) {
@@ -81,7 +84,6 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);
         //
-        loginStart = true;
         Beta.init(mContext.getApplicationContext(), false);
         final EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra("eventLoginData");
         //
@@ -235,7 +237,6 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
 
     //没有登录跳转登录界面
     private void openLogin() {
-        loginStart = false;
         Intent loginIntent = new Intent();
         loginIntent.setClass(mContext, LoginActivityTest.class);
         getView().startAC(loginIntent);
@@ -325,9 +326,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         Object data = eventData.data;
         if (code == EVENT_DATA_SESSION_ID_OVERTIME) {
             RetrofitServiceHelper.INSTANCE.cancelAllRsp();
-            if (loginStart) {
-                openLogin();
-            }
+            openLogin();
         } else if (code == EVENT_DATA_FINISH_CODE) {
 //            if (contractFragment != null) {
 //                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
@@ -368,11 +367,70 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == ImagePicker.RESULT_CODE_ITEMS || resultCode == ImagePicker.RESULT_CODE_BACK || resultCode == RESULT_CODE_RECORD) {
-            if (warnFragment != null) {
-                warnFragment.handlerActivityResult(requestCode, resultCode, data);
+        //TODO 对照片信息统一处理
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+            //添加图片返回
+            if (data != null && requestCode == REQUEST_CODE_SELECT) {
+                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                if (tempImages != null) {
+                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.fromTakePhoto = fromTakePhoto;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
             }
+        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
+            //预览图片返回
+            if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
+                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
+                if (tempImages != null) {
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
+            }
+        } else if (resultCode == RESULT_CODE_RECORD) {
+            //拍视频
+            if (data != null && requestCode == REQUEST_CODE_RECORD) {
+                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
+                if (imageItem != null) {
+                    LogUtils.loge("--- 从视频返回  path = " + imageItem.recordPath);
+                    ArrayList<ImageItem> tempImages = new ArrayList<>();
+                    tempImages.add(imageItem);
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
+            } else if (requestCode == REQUEST_CODE_PLAY_RECORD) {
+                EventData eventData = new EventData();
+                eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                AlarmPopModel alarmPopModel = new AlarmPopModel();
+                alarmPopModel.requestCode = requestCode;
+                alarmPopModel.resultCode = resultCode;
+                eventData.data = alarmPopModel;
+                EventBus.getDefault().post(eventData);
+            }
+
         }
+        //
+        LogUtils.loge("handlerActivityResult requestCode = " + requestCode + ",resultCode = " + resultCode + ",data = " + data);
+
 
     }
 
