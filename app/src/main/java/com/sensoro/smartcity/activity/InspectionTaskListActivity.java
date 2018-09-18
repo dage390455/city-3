@@ -2,8 +2,11 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -11,15 +14,22 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionTaskAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
 import com.sensoro.smartcity.presenter.InspectionTaskListActivityPresenter;
+import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
+import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskListActivityView, InspectionTaskListActivityPresenter>
         implements IInspectionTaskListActivityView {
@@ -43,6 +53,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     RecyclerView acInspectionTaskListRcContent;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
+    private InspectionTaskAdapter mTaskAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -59,7 +70,24 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     }
 
     private void initRcContent() {
-        InspectionTaskAdapter inspectionTaskAdapter = new InspectionTaskAdapter(mActivity);
+        mTaskAdapter = new InspectionTaskAdapter(mActivity);
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        acInspectionTaskListRcContent.setAdapter(mTaskAdapter);
+
+        refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+                Log.e("hcs",":::onrefresh");
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
+                Log.e("hcs",":loadmore::");
+            }
+        });
     }
 
     @Override

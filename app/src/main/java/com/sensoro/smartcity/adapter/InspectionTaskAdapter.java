@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorRes;
 import android.support.constraint.ConstraintLayout;
@@ -12,12 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.squareup.leakcanary.LeakTraceElement;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.amap.api.col.sl3.kc.c;
 
 public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAdapter.InspectionTaskHolder> {
     private final Context mContext;
@@ -37,18 +36,28 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         holder.itemInspectionAdapterTvTitle.setText("巡检任务2018.05.01");
         holder.itemInspectionAdapterTvTime.setText("2018/05/01 - 2018/05/31");
 
-        holder.itemInspectionAdapterTvState.setText("待执行");
-        setTvState(holder.itemInspectionAdapterTvState,R.color.c_29c093,"待执行");
+        if(position==0){
+            setTvState(holder.itemInspectionAdapterTvState,R.color.c_8058a5,"待执行");
+
+        }else if(position==1){
+            setTvState(holder.itemInspectionAdapterTvState,R.color.c_3aa7f0,"待执行");
+        }else if(position==2){
+            setTvState(holder.itemInspectionAdapterTvState,R.color.c_ff8d34,"超时未完成");
+        }
 
     }
 
     private void setTvState(TextView textView, @ColorRes int color, String text) {
+        Drawable[] compoundDrawables = textView.getCompoundDrawables();
+        ((GradientDrawable)compoundDrawables[0]).setColor(mContext.getResources().getColor(color));
+        textView.setText(text);
+
 
     }
 
     @Override
     public int getItemCount() {
-        return 0;
+        return 3;
     }
 
     class InspectionTaskHolder extends RecyclerView.ViewHolder {
@@ -69,10 +78,4 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         }
     }
 
-    static class ViewHolder {
-
-        ViewHolder(View view) {
-
-        }
-    }
 }

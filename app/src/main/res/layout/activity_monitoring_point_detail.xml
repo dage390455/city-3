@@ -186,9 +186,9 @@
                     android:layout_marginEnd="20dp"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right"
-                    app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_location"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_tv_location_navigation" />
+                    app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
                     android:id="@+id/ac_monitoring_point_tv_location"
