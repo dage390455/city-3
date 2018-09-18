@@ -36,6 +36,7 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="3dp"
+            android:visibility="gone"
             android:src="@drawable/deploy_map_back_location" />
     </RelativeLayout>
 

@@ -270,7 +270,7 @@
         <activity android:name=".activity.DeployMapActivity" />
         <activity android:name=".activity.SensorMoreActivityTest" />
         <activity android:name=".activity.MonitorPointMapActivity" />
-
+        <activity android:name=".activity.InspectionTaskListActivity" />
         <service
             android:name="com.igexin.download.DownloadService"
             android:process=":pushservice" />

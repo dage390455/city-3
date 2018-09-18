@@ -22,7 +22,7 @@ import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.SensorDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
@@ -103,7 +103,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                     break;
                 }
             }
-            if (mDeviceInfo != null && AppUtils.isActivityTop(mContext, SensorDetailActivity.class)) {
+            if (mDeviceInfo != null && AppUtils.isActivityTop(mContext, MonitorPointMapActivity.class)) {
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {

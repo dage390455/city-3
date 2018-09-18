@@ -52,6 +52,7 @@ public class MonitoringPointDetailActivityPresenter extends BasePresenter<IMonit
 
     private final List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
     private int textColor;
+    private String content;
 
     @Override
     public void initData(Context context) {
@@ -93,7 +94,7 @@ public class MonitoringPointDetailActivityPresenter extends BasePresenter<IMonit
         mDeviceInfo.getSensorTypes();
         String contact = mDeviceInfo.getContact();
 //        String address = mDeviceInfo.getAddress();
-        String content = mDeviceInfo.getContent();
+        content = mDeviceInfo.getContent();
         if (TextUtils.isEmpty(contact)) {
             contact = "未设定";
         }
@@ -289,5 +290,13 @@ public class MonitoringPointDetailActivityPresenter extends BasePresenter<IMonit
         intent.setClass(mContext, MonitorPointMapActivity.class);
         intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
         getView().startAC(intent);
+    }
+
+    public void doContact() {
+        if (TextUtils.isEmpty(content) || "未设定".equals(content)) {
+            getView().toastShort("未设置电话联系人");
+            return;
+        }
+        AppUtils.diallPhone(content, mContext);
     }
 }
