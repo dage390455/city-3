@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.support.v7.widget.LinearLayoutManager;
@@ -23,7 +22,6 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
 import com.sensoro.smartcity.adapter.TimerShaftAdapter;
-import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -50,7 +48,7 @@ import rx.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.util.AppUtils.isAppInstalled;
 
-public class AlarmLogPopUtils extends BasePresenter implements AlarmPopUtils.OnPopupCallbackListener,
+public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         TimerShaftAdapter.OnPhotoClickListener, Constants {
 
     private final FixHeightBottomSheetDialog mAlarmLogDialog;
@@ -300,7 +298,7 @@ public class AlarmLogPopUtils extends BasePresenter implements AlarmPopUtils.OnP
                 statusPlace,
                 remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe
-                        (new CityObserver<DeviceAlarmItemRsp>(this) {
+                        (new CityObserver<DeviceAlarmItemRsp>() {
 
 
                             @Override
@@ -361,15 +359,5 @@ public class AlarmLogPopUtils extends BasePresenter implements AlarmPopUtils.OnP
             }
 
         }
-    }
-
-    @Override
-    public void initData(Context context) {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
     }
 }

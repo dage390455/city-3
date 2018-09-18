@@ -247,7 +247,9 @@
         <activity android:name=".activity.AuthActivity" />
         <activity android:name=".activity.TakeRecordActivity" />
         <activity android:name=".activity.VideoPlayActivity" />
-        <activity android:name=".activity.MainActivityTest" />
+        <activity
+            android:name=".activity.MainActivityTest"
+            android:launchMode="singleInstance" />
         <activity android:name=".activity.DeployDeviceDetailActivity" />
         <activity android:name=".activity.DeployDeviceTagActivity" />
         <activity android:name=".activity.DeployPicActivity" />
@@ -260,8 +262,10 @@
         <activity android:name=".activity.NameAddressActivity" />
         <activity android:name=".activity.DeployResultActivityTest" />
         <activity android:name=".activity.SearchDeviceActivityTest" />
-        <activity android:name=".activity.LoginActivityTest"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity
+            android:name=".activity.LoginActivityTest"
+            android:launchMode="singleInstance"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activity.AuthActivityTest" />
         <activity android:name=".activity.DeployMapActivity" />
 

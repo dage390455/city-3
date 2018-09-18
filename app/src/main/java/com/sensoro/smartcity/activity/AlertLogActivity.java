@@ -97,13 +97,14 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     protected AlertLogActivityPresenter createPresenter() {
         return new AlertLogActivityPresenter();
     }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (mAlarmPopUtils != null) {
-            mAlarmPopUtils.handlerActivityResult(requestCode, resultCode, data);
-        }
+        //TODO 数据回传
+        mPresenter.handlerActivityResult(requestCode, resultCode, data);
     }
+
     @Override
     public void startAC(Intent intent) {
         mActivity.startActivity(intent);
@@ -149,7 +150,7 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
 
     }
 
-    @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation, R.id.ac_alert_tv_alert_confirm,R.id.include_text_title_imv_arrows_left})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_alert_tv_contact_owner, R.id.ac_alert_tv_quick_navigation, R.id.ac_alert_tv_alert_confirm, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:

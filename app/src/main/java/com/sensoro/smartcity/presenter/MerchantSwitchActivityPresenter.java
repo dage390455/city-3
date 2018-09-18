@@ -10,6 +10,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
@@ -22,6 +23,8 @@ import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +32,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwitchActivityView> implements Constants {
+public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwitchActivityView> implements Constants, IOnCreate {
 
     private final List<UserInfo> mUserInfoList = new ArrayList<>();
     private Activity mContext;
@@ -38,6 +41,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         EventLoginData login_data = (EventLoginData) mContext.getIntent().getSerializableExtra("login_data");
         if (login_data != null) {
             getView().setCurrentNameAndPhone(login_data.userName, login_data.phone);
@@ -156,7 +160,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
                     eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                     eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
-                    eventLoginData.hasSubMerchant=MenuPageFactory.getHasSubMerchant(roles,isSpecific);
+                    eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
 
 //                    String nickname = data.getNickname();
 //                    String phone = data.getContacts();
@@ -210,6 +214,23 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mUserInfoList.clear();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+//        Object data = eventData.data;
+        if (code == EVENT_DATA_SEARCH_MERCHANT) {
+            getView().finishAc();
+        }
+//        LogUtils.loge(this, eventData.toString());
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

@@ -90,6 +90,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
         }
     };
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
@@ -302,21 +303,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
             });
 
-        } else if(code == EVENT_DATA_PROGRESS_DIALOG_SHOW){
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getView().showProgressDialog();
-                }
-            });
-
-        } else if(code == EVENT_DATA_PROGRESS_DIALOG_DISMISS){
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    getView().dismissProgressDialog();
-                }
-            });
         }
     }
 
@@ -602,7 +588,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private void requestAlarmInfo(DeviceInfo deviceInfo) {
         Long temp_startTime = null;
         Long temp_endTime = null;
-        Log.e("hcs",":devce::"+deviceInfo.getSn());
+        Log.e("hcs", ":devce::" + deviceInfo.getSn());
         RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, temp_startTime,
                 temp_endTime,
                 null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
@@ -623,7 +609,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
-                Log.e("hcs",":醋味::"+errorMsg);
+                Log.e("hcs", ":醋味::" + errorMsg);
             }
         });
 
@@ -639,52 +625,52 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     private DeviceAlarmLogInfo handleDeviceAlarmLogs(DeviceAlarmLogRsp deviceAlarmLogRsp) {
         List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
-            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(0);
-            AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-            boolean isHaveRecovery = false;
-            for (int j = 0; j < recordInfoArray.length; j++) {
-                AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
-                if (recordInfo.getType().equals("recovery")) {
-                    deviceAlarmLogInfo.setSort(4);
-                    isHaveRecovery = true;
-                    break;
+        DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(0);
+        AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
+        boolean isHaveRecovery = false;
+        for (int j = 0; j < recordInfoArray.length; j++) {
+            AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
+            if (recordInfo.getType().equals("recovery")) {
+                deviceAlarmLogInfo.setSort(4);
+                isHaveRecovery = true;
+                break;
+            } else {
+                deviceAlarmLogInfo.setSort(1);
+            }
+        }
+        switch (deviceAlarmLogInfo.getDisplayStatus()) {
+            case DISPLAY_STATUS_CONFIRM:
+                if (isHaveRecovery) {
+                    deviceAlarmLogInfo.setSort(2);
                 } else {
                     deviceAlarmLogInfo.setSort(1);
                 }
-            }
-            switch (deviceAlarmLogInfo.getDisplayStatus()) {
-                case DISPLAY_STATUS_CONFIRM:
-                    if (isHaveRecovery) {
-                        deviceAlarmLogInfo.setSort(2);
-                    } else {
-                        deviceAlarmLogInfo.setSort(1);
-                    }
-                    break;
-                case DISPLAY_STATUS_ALARM:
-                    if (isHaveRecovery) {
-                        deviceAlarmLogInfo.setSort(2);
-                    } else {
-                        deviceAlarmLogInfo.setSort(1);
-                    }
-                    break;
-                case DISPLAY_STATUS_MIS_DESCRIPTION:
-                    if (isHaveRecovery) {
-                        deviceAlarmLogInfo.setSort(3);
-                    } else {
-                        deviceAlarmLogInfo.setSort(1);
-                    }
-                    break;
-                case DISPLAY_STATUS_TEST:
-                    if (isHaveRecovery) {
-                        deviceAlarmLogInfo.setSort(4);
-                    } else {
-                        deviceAlarmLogInfo.setSort(1);
-                    }
-                    break;
-                default:
-                    break;
-            }
-            return deviceAlarmLogInfo;
+                break;
+            case DISPLAY_STATUS_ALARM:
+                if (isHaveRecovery) {
+                    deviceAlarmLogInfo.setSort(2);
+                } else {
+                    deviceAlarmLogInfo.setSort(1);
+                }
+                break;
+            case DISPLAY_STATUS_MIS_DESCRIPTION:
+                if (isHaveRecovery) {
+                    deviceAlarmLogInfo.setSort(3);
+                } else {
+                    deviceAlarmLogInfo.setSort(1);
+                }
+                break;
+            case DISPLAY_STATUS_TEST:
+                if (isHaveRecovery) {
+                    deviceAlarmLogInfo.setSort(4);
+                } else {
+                    deviceAlarmLogInfo.setSort(1);
+                }
+                break;
+            default:
+                break;
+        }
+        return deviceAlarmLogInfo;
         //            Collections.sort(mDeviceAlarmLogInfoList);
     }
 
