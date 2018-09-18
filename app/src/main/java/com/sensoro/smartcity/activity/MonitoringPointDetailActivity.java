@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -62,6 +63,10 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
     TextView acMonitoringPointTvAlarmSound;
     @BindView(R.id.ac_monitoring_point_tv_hardware_upgrade)
     TextView acMonitoringPointTvHardwareUpgrade;
+    @BindView(R.id.ac_monitoring_point_cl_alert_contact)
+    ConstraintLayout acMonitoringPointClAlertContact;
+    @BindView(R.id.ac_monitoring_point_cl_location_navigation)
+    ConstraintLayout acMonitoringPointClLocationNavigation;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private ProgressUtils mProgressUtils;
 
@@ -91,6 +96,8 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
         acMonitoringPointRcContent.setAdapter(mContentAdapter);
         acMonitoringPointImvLocation.setOnClickListener(this);
         includeImvTitleImvSubtitle.setOnClickListener(this);
+        acMonitoringPointClAlertContact.setOnClickListener(this);
+        acMonitoringPointClLocationNavigation.setOnClickListener(this);
 
 
     }
@@ -202,7 +209,12 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
                 break;
             case R.id.include_imv_title_imv_subtitle:
                 mPresenter.doMore();
-
+                break;
+            case R.id.ac_monitoring_point_cl_alert_contact:
+               toastShort("预警联系人");
+                break;
+            case R.id.ac_monitoring_point_cl_location_navigation:
+                toastShort("位置导航");
                 break;
 
         }
