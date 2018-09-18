@@ -180,6 +180,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/ac_monitoring_point_tv_location_navigation"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintLeft_toLeftOf="@+id/ac_monitoring_point_imv_location"
                 />
             <ImageView
                 android:id="@+id/ac_monitoring_point_imv_location"
@@ -190,7 +191,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="20dp"
                 android:contentDescription="@null"
-                android:src="@drawable/monitoring_location"/>
+                android:src="@drawable/arrows_right"/>
         </android.support.constraint.ConstraintLayout>
 
 <android.support.constraint.ConstraintLayout

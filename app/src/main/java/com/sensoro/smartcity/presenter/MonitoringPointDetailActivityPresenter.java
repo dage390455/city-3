@@ -3,20 +3,16 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.text.TextUtils;
 
-import com.amap.api.location.AMapLocation;
-import com.amap.api.maps.model.LatLng;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
-import com.sensoro.smartcity.activity.SensorMoreActivity;
 import com.sensoro.smartcity.activity.SensorMoreActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -50,13 +46,10 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.util.AppUtils.isAppInstalled;
-
 public class MonitoringPointDetailActivityPresenter extends BasePresenter<IMonitoringPointDetailActivityView> implements IOnStart, Constants, GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
     private DeviceInfo mDeviceInfo;
 
-    private LatLng destPosition = null;
     private final List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
     private int textColor;
 
@@ -117,16 +110,17 @@ public class MonitoringPointDetailActivityPresenter extends BasePresenter<IMonit
         geocoderSearch.setOnGeocodeSearchListener(this);
         double[] lonlat = mDeviceInfo.getLonlat();
         try {
-            destPosition = new LatLng(lonlat[1], lonlat[0]);
-            RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(mDeviceInfo.getLonlat()[1], mDeviceInfo
-                    .getLonlat()[0]), 200, GeocodeSearch.AMAP);
+            double v = lonlat[1];
+            double v1 = lonlat[0];
+            if (v == 0 || v1 == 0) {
+                getView().setDeviceLocation("未设置位置信息");
+                return;
+            }
+            RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(v, v1), 200, GeocodeSearch.AMAP);
             geocoderSearch.getFromLocationAsyn(query);
-//        if (mDeviceInfo.getSensorTypes().length > 0) {
-//
-//        }
         } catch (Exception e) {
             e.printStackTrace();
-            getView().setDeviceLocation("未知街道");
+            getView().setDeviceLocation("未设置位置信息");
         }
 
     }
@@ -259,88 +253,41 @@ public class MonitoringPointDetailActivityPresenter extends BasePresenter<IMonit
     }
 
 
-    public void doNavigation() {
-        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-        if (lastKnownLocation != null) {
-            double lat = lastKnownLocation.getLatitude();//获取纬度
-            double lon = lastKnownLocation.getLongitude();//获取经度
-            LatLng startPosition = new LatLng(lat, lon);
-            if (isAppInstalled(mContext, "com.autonavi.minimap")) {
-                openGaoDeMap(startPosition);
-            } else if (isAppInstalled(mContext, "com.baidu.BaiduMap")) {
-                openBaiDuMap(startPosition);
-            } else {
-                openOther(startPosition);
-            }
-            return;
-        }
-        getView().toastShort("定位失败，请重试");
-
-    }
-
-    private void openGaoDeMap(LatLng startPosition) {
-
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        Uri uri = Uri.parse("amapuri://route/plan/?sid=BGVIS1&slat=" + startPosition.latitude + "&slon=" +
-                startPosition.longitude + "&sname=当前位置" + "&did=BGVIS2&dlat=" + destPosition.latitude + "&dlon=" +
-                destPosition.longitude +
-                "&dname=设备部署位置" + "&dev=0&t=0");
-        intent.setData(uri);
-        //启动该页面即可
-        getView().startAC(intent);
-    }
-
-    private void openBaiDuMap(LatLng startPosition) {
-        Intent intent = new Intent();
-        intent.setData(Uri.parse("baidumap://map/direction?origin=name:当前位置|latlng:" + startPosition.latitude + "," +
-                startPosition.longitude +
-                "&destination=name:设备部署位置|latlng:" + destPosition.latitude + "," + destPosition.longitude +
-                "&mode=driving&coord_type=gcj02"));
-        getView().startAC(intent);
-    }
-
-    private void openOther(LatLng startPosition) {
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        String url = "http://uri.amap.com/navigation?from=" + startPosition.longitude + "," + startPosition.latitude
-                + ",当前位置" +
-                "&to=" + destPosition.longitude + "," + destPosition.latitude + "," +
-                "设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
-        Uri content_url = Uri.parse(url);
-        intent.setData(content_url);
-        getView().startAC(intent);
-    }
-
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-        final String address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
+        String address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
         LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getView().setDeviceLocation(address);
-            }
-        });
-
+        if (TextUtils.isEmpty(address)) {
+            address = "未知街道";
+        }
+        mDeviceInfo.setAddress(address);
+        getView().setDeviceLocation(address);
     }
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
         LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
-        mContext.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getView().setDeviceLocation("未知街道");
-            }
-        });
-
+        getView().setDeviceLocation("未知街道");
     }
 
     public void doMore() {
         Intent intent = new Intent(mContext, SensorMoreActivityTest.class);
         intent.putExtra(EXTRA_SENSOR_SN, mDeviceInfo.getSn());
+        getView().startAC(intent);
+    }
+
+    public void doNavigation() {
+        double[] lonlat = mDeviceInfo.getLonlat();
+
+        double v = lonlat[1];
+        double v1 = lonlat[0];
+        if (lonlat.length > 1 && v == 0 || v1 == 0) {
+            getView().toastShort("未设置定位信息");
+            return;
+        }
+        Intent intent = new Intent();
+        intent.setClass(mContext, MonitorPointMapActivity.class);
+        intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
         getView().startAC(intent);
     }
 }

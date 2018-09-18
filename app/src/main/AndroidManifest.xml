@@ -269,6 +269,7 @@
         <activity android:name=".activity.AuthActivityTest" />
         <activity android:name=".activity.DeployMapActivity" />
         <activity android:name=".activity.SensorMoreActivityTest" />
+        <activity android:name=".activity.MonitorPointMapActivity" />
 
         <service
             android:name="com.igexin.download.DownloadService"
