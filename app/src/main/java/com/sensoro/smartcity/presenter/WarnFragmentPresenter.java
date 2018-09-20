@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.CardView;
 import android.text.TextUtils;
+import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlertLogActivity;
@@ -455,7 +456,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         requestSearchData(DIRECTION_DOWN, null);
     }
 
-    public void doCalendar(CardView fgMainWarnTitleRoot) {
+    public void doCalendar(LinearLayout fgMainWarnTitleRoot) {
         long temp_startTime = -1;
         long temp_endTime = -1;
         if (getView().isSelectedDateLayoutVisible()) {

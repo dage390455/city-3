@@ -7,6 +7,8 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -46,17 +48,30 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     @BindView(R.id.include_imv_title_imv_subtitle)
     ImageView includeImvTitleImvSubtitle;
     @BindView(R.id.fg_history_log_rc_content)
-    RecyclerView fgHistoryLogRcContent;
+    RecyclerView acHistoryLogRcContent;
     @BindView(R.id.rl_alarm_log_date_edit)
     RelativeLayout rlAlarmLogDateEdit;
     @BindView(R.id.tv_alarm_log_date_edit)
     TextView tvAlarmLogDateEdit;
     @BindView(R.id.iv_alarm_log_date_close)
     ImageView ivAlarmLogDateClose;
+    @BindView(R.id.alarm_return_top)
+    ImageView mReturnTopImageView;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private CalendarPopUtils mCalendarPopUtils;
     private AlarmHistoryLogRcContentAdapter mAlarmHistoryLogRcContentAdapter;
+    private Animation returnTopAnimation;
+
+
+    @Override
+    protected void onCreateInit(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_alarm_history_log);
+        ButterKnife.bind(mActivity);
+        initView();
+        mPresenter.initData(mActivity);
+    }
+
     private void initView() {
         includeImvTitleTvTitle.setText("历史日志");
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
@@ -64,10 +79,15 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
         mAlarmHistoryLogRcContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
         linearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-        fgHistoryLogRcContent.setLayoutManager(linearLayoutManager);
-        fgHistoryLogRcContent.setAdapter(mAlarmHistoryLogRcContentAdapter);
+        acHistoryLogRcContent.setLayoutManager(linearLayoutManager);
+        acHistoryLogRcContent.setAdapter(mAlarmHistoryLogRcContentAdapter);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
-        fgHistoryLogRcContent.addItemDecoration(dividerItemDecoration);
+        acHistoryLogRcContent.addItemDecoration(dividerItemDecoration);
+        //
+        returnTopAnimation = AnimationUtils.loadAnimation(mActivity, R.anim.return_top_in_anim);
+        mReturnTopImageView.setAnimation(returnTopAnimation);
+        mReturnTopImageView.setVisibility(View.GONE);
+        mReturnTopImageView.setOnClickListener(this);
         //
         //新控件
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
@@ -86,7 +106,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
             }
         });
         //
-        fgHistoryLogRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
+        acHistoryLogRcContent.addOnScrollListener(new RecyclerView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
@@ -96,15 +116,15 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
 //                }
                 if (linearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
-//                        mReturnTopImageView.setVisibility(VISIBLE);
-//                        if (returnTopAnimation.hasEnded()) {
-//                            mReturnTopImageView.startAnimation(returnTopAnimation);
-//                        }
+                        mReturnTopImageView.setVisibility(View.VISIBLE);
+                        if (returnTopAnimation.hasEnded()) {
+                            mReturnTopImageView.startAnimation(returnTopAnimation);
+                        }
                     } else {
-//                        mReturnTopImageView.setVisibility(View.GONE);
+                        mReturnTopImageView.setVisibility(View.GONE);
                     }
                 } else {
-//                    mReturnTopImageView.setVisibility(View.GONE);
+                    mReturnTopImageView.setVisibility(View.GONE);
                 }
             }
 
@@ -120,13 +140,13 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
         ivAlarmLogDateClose.setOnClickListener(this);
     }
 
-
     @Override
-    protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_alarm_history_log);
-        ButterKnife.bind(mActivity);
-        initView();
-        mPresenter.initData(mActivity);
+    protected void onDestroy() {
+        super.onDestroy();
+        if (returnTopAnimation != null) {
+            returnTopAnimation.cancel();
+            returnTopAnimation = null;
+        }
     }
 
     @Override
@@ -231,6 +251,10 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
                 break;
             case R.id.iv_alarm_log_date_close:
                 mPresenter.closeDateSearch();
+                break;
+            case R.id.alarm_return_top:
+                acHistoryLogRcContent.smoothScrollToPosition(0);
+                mReturnTopImageView.setVisibility(View.GONE);
                 break;
         }
     }

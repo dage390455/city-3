@@ -182,7 +182,7 @@
             android:layout_marginBottom="@dimen/y30"
             android:layout_marginRight="@dimen/x30"
             android:src="@mipmap/ic_return_top"
-            android:visibility="gone"/>
+            android:visibility="visible"/>
     </LinearLayout>
 
     <RelativeLayout
