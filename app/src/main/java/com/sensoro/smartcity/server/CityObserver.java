@@ -25,10 +25,11 @@ public abstract class CityObserver<T> implements Observer<T> {
     public static int ERR_CODE_NET_CONNECT_EX = -0x01;
     public static int ERR_CODE_UNKNOWN_EX = -0x02;
     private final WeakReference<BasePresenter> presenterWeakReference;
-    private boolean needPresenter = false;
+    private boolean needPresenter;
 
     public CityObserver(BasePresenter basePresenter) {
         presenterWeakReference = new WeakReference<>(basePresenter);
+        needPresenter = true;
     }
 
     public CityObserver() {
@@ -93,7 +94,9 @@ public abstract class CityObserver<T> implements Observer<T> {
 
     @Override
     public void onCompleted() {
-
+        if (presenterWeakReference != null) {
+            presenterWeakReference.clear();
+        }
     }
 
     @Override

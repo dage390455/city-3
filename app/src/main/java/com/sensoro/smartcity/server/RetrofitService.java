@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server;
 
 
+import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
@@ -60,6 +61,7 @@ public interface RetrofitService {
     String DOUBLE_CHECK = "tfa/totp/verify";
     String APP_UPDATE = "http://api.fir" +
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
+    String ALARM_COUNT = "prov1/alarms/count";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -103,7 +105,7 @@ public interface RetrofitService {
     @GET(DEVICE_ALARM_LOG)
     Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(@Query("count") int count, @Query("page") int page, @Query
             ("sn") String sn, @Query("deviceName") String deviceName, @Query("phone")
-                                                                String phone, @Query("beginTime") Long beginTime,
+                                                                String phone, @Query("search") String search, @Query("beginTime") Long beginTime,
                                                         @Query("endTime") Long endTime
             , @Query("unionTypes") String unionTypes);
 
@@ -183,4 +185,8 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST(DOUBLE_CHECK)
     Observable<AuthRsp> doubleCheck(@Field("code") String code);
+
+    @GET(ALARM_COUNT)
+    Observable<AlarmCountRsp> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
+                                            @Query("displayStatus") String displayStatus, @Query("sn") String sn);
 }

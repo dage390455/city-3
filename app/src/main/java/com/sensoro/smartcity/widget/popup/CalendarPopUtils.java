@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.util.Pair;
 import android.support.v7.widget.OrientationHelper;
@@ -9,8 +8,6 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -37,8 +34,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView.OnDaySelectObserver
-,Constants,PopupWindow.OnDismissListener{
+public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarView.OnDaySelectObserver
+        , Constants, PopupWindow.OnDismissListener {
 
     private PopupWindow mPopupWindow = null;
     private final Activity mActivity;
@@ -74,7 +71,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
         mActivity = activity;
     }
 
-    private void init( ) {
+    private void init() {
         mPopupWindow = new PopupWindow(mActivity);
         view = LayoutInflater.from(mActivity).inflate(R.layout.activity_calendar_test, null);
         ButterKnife.bind(this, view);
@@ -85,7 +82,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
         mPopupWindow.setOnDismissListener(this);
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
-        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim );
+        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
         initView();
         mPopupWindow.setContentView(view);
     }
@@ -98,7 +95,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
 
     }
 
-    private void setSlectTime(long startTime,long endTime){
+    private void setSlectTime(long startTime, long endTime) {
         this.startTime = startTime;
         this.endTime = endTime;
         showHistory();
@@ -107,8 +104,8 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
     private void showHistory() {
         try {
             if (startTime == -1 || endTime == -1) {
-                setStartDate("","");
-                setEndDate("","");
+                setStartDate("", "");
+                setEndDate("", "");
 
                 return;
             }
@@ -118,12 +115,12 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
             startDate = DateUtil.getDateByOtherFormat(startTime);//"/"
             endDate = DateUtil.getDateByOtherFormat(endTime);
 
-            setStartDate(DateUtil.getMonth(startTime)+"."+DateUtil.getDayDate(startTime), DateUtil.getYearDate(startTime));
+            setStartDate(DateUtil.getMonth(startTime) + "." + DateUtil.getDayDate(startTime), DateUtil.getYearDate(startTime));
             boolean onlyOneDay = startTime == endTime;
             if (onlyOneDay) {
                 setEndDate("", "");
             } else {
-                setEndDate(DateUtil.getMonth(endTime)+"."+DateUtil.getDayDate(endTime), DateUtil.getYearDate(endTime));
+                setEndDate(DateUtil.getMonth(endTime) + "." + DateUtil.getDayDate(endTime), DateUtil.getYearDate(endTime));
             }
 
             if (calendarView.getSelectionManager() instanceof RangeSelectionManager) {
@@ -144,11 +141,11 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
 
 
     public void show(final View viewLocation, long temp_startTime, long temp_endTime) {
-        if(mPopupWindow==null){
+        if (mPopupWindow == null) {
             init();
         }
-        mPopupWindow.showAtLocation(viewLocation,Gravity.TOP,0,0);
-        setSlectTime(temp_startTime,temp_endTime);
+        mPopupWindow.showAtLocation(viewLocation, Gravity.TOP, 0, 0);
+        setSlectTime(temp_startTime, temp_endTime);
 
     }
 
@@ -163,6 +160,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
                 break;
         }
     }
+
     private void saveDate() {
         if (isMultiple) {
             if (startDate != null && endDate != null) {
@@ -186,6 +184,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
 
 
     }
+
     @Override
     public void onDayRangeSelected(Pair<Day, Day> days) {
         try {
@@ -202,8 +201,8 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
                     .get(Calendar.DAY_OF_MONTH);
             String temp_endDate = calendarEnd.get(Calendar.YEAR) + "-" + endMonth + "-" + calendarEnd.get
                     (Calendar.DAY_OF_MONTH);
-            setStartDate(firstMonth+"." + calendarFirst.get(Calendar.DAY_OF_MONTH),calendarFirst.get(Calendar.YEAR)+"" );
-            setEndDate(endMonth+"." + calendarEnd.get(Calendar.DAY_OF_MONTH),calendarFirst.get(Calendar.YEAR)+"");
+            setStartDate(firstMonth + "." + calendarFirst.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
+            setEndDate(endMonth + "." + calendarEnd.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -233,8 +232,8 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
                     (Calendar.DAY_OF_MONTH);
             String temp_startDate = calendarFirst.get(Calendar.YEAR) + "-" + firstMonth + "-" + calendarFirst
                     .get(Calendar.DAY_OF_MONTH);
-            setStartDate(firstMonth+"." + calendarFirst.get(Calendar.DAY_OF_MONTH),calendarFirst.get(Calendar.YEAR)+"" );
-            setEndDate("","");
+            setStartDate(firstMonth + "." + calendarFirst.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
+            setEndDate("", "");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -243,13 +242,13 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener,CalendarView
 
     @Override
     public void onDismiss() {
-        if (calendarView !=null) {
+        if (calendarView != null) {
             calendarView.clearSelections();
         }
 
     }
 
-    public void setOnCalendarPopupCallbackListener(OnCalendarPopupCallbackListener listener){
+    public void setOnCalendarPopupCallbackListener(OnCalendarPopupCallbackListener listener) {
         this.listener = listener;
     }
 

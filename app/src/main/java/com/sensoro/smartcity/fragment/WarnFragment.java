@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.fragment;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -9,6 +10,9 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -26,7 +30,6 @@ import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
@@ -40,15 +43,19 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
-        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener, RecycleViewItemClickListener, MainWarnFragRcContentAdapter.OnPlayPhoneListener {
+        IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener {
     @BindView(R.id.fg_main_warn_title_root)
     CardView fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_warn_frame_search)
     FrameLayout fgMainWarnFrameSearch;
+    @BindView(R.id.fg_main_warn_et_search)
+    EditText fgMainWarnEtSearch;
     @BindView(R.id.fg_main_warn_imv_calendar)
     ImageView fgMainWarnImvCalendar;
     @BindView(R.id.fg_main_warn_rc_content)
     RecyclerView fgMainWarnRcContent;
+    @BindView(R.id.tv_warn_alarm_search_cancel)
+    TextView tvWarnAlarmSearchCancel;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.fg_main_warn_tv_date_edit)
@@ -69,32 +76,50 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
-        mAlarmPopUtils.setDialog(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
+        fgMainWarnEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    // 当按了搜索之后关闭软键盘
+                    String text = fgMainWarnEtSearch.getText().toString();
+                    mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                    dismissInputMethodManager(fgMainWarnEtSearch);
+                    return true;
+                }
+                return false;
+            }
+        });
         initRcContent();
-        initListener();
-    }
-
-    private void initListener() {
 
     }
 
-    /**
-     * 搜索过滤器
-     *
-     * @param direction
-     * @param isForce
-     */
-    private void requestDataByFilter(int direction, boolean isForce) {
-//        CharSequence searchText = mSearchEditText.getHint();
-//        if (!TextUtils.isEmpty(searchText) && isSearchLayoutVisible()) {
-//            mPresenter.requestSearchData(direction, isForce, searchText.toString());
-//        } else {
-        mPresenter.requestDataAll(direction, isForce);
-//        }
+    private void setEditTextState(boolean canEdit) {
+        if (canEdit) {
+            fgMainWarnEtSearch.setFocusableInTouchMode(true);
+            fgMainWarnEtSearch.setFocusable(true);
+            fgMainWarnEtSearch.requestFocus();
+        } else {
+            fgMainWarnEtSearch.setFocusable(false);
+            fgMainWarnEtSearch.setFocusableInTouchMode(false);
+        }
+    }
+
+
+    private void dismissInputMethodManager(View view) {
+        fgMainWarnEtSearch.setCursorVisible(false);
+        InputMethodManager imm = (InputMethodManager) mRootFragment.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+    }
+
+    public void forceOpenSoftKeyboard() {
+        fgMainWarnEtSearch.setCursorVisible(true);
+        InputMethodManager imm = (InputMethodManager) mRootFragment.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     @Override
@@ -168,8 +193,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     private void initRcContent() {
         mRcContentAdapter = new MainWarnFragRcContentAdapter(mRootFragment.getActivity());
         mRcContentAdapter.setAlarmConfirmStatusClickListener(this);
-        mRcContentAdapter.setOnItemClickListener(this);
-        mRcContentAdapter.setOnPlayPhoneListener(this);
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
         fgMainWarnRcContent.setLayoutManager(xLinearLayoutManager);
@@ -181,14 +204,16 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                requestDataByFilter(DIRECTION_DOWN, false);
+                String text = fgMainWarnEtSearch.getText().toString();
+                mPresenter.requestSearchData(DIRECTION_DOWN, text);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                requestDataByFilter(DIRECTION_UP, false);
+                String text = fgMainWarnEtSearch.getText().toString();
+                mPresenter.requestSearchData(DIRECTION_UP, text);
             }
         });
         //
@@ -228,12 +253,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             ((ViewGroup) mRootView.getParent()).removeView(mRootView);
         }
 
-//        if (mGridAdapter != null) {
-//            mGridAdapter.getData().clear();
-//        }
-//        if (mListAdapter != null) {
-//            mListAdapter.getData().clear();
-//        }
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
@@ -253,32 +272,32 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         super.onDestroyView();
     }
 
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-//            if (mAlarmPopupView.getVisibility() == View.VISIBLE) {
-//                mAlarmPopupView.dismiss();
-//                return false;
-//            }
-        }
-        return true;
-    }
-
-    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_imv_calendar, R.id.fg_main_warn_imv_date_close})
+    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_imv_calendar, R.id.fg_main_warn_imv_date_close, R.id.tv_warn_alarm_search_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_warn_frame_search:
-                mPresenter.doSearch();
+                fgMainWarnEtSearch.requestFocus();
+                forceOpenSoftKeyboard();
                 break;
             case R.id.fg_main_warn_imv_calendar:
                 mPresenter.doCalendar(fgMainWarnTitleRoot);
-
                 break;
-
             case R.id.fg_main_warn_imv_date_close:
                 fgMainWarnRlDateEdit.setVisibility(View.GONE);
-                requestDataByFilter(DIRECTION_DOWN, true);
+                String text = fgMainWarnEtSearch.getText().toString();
+                mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                break;
+            case R.id.tv_warn_alarm_search_cancel:
+                doCancelSearch();
                 break;
         }
+    }
+
+    private void doCancelSearch() {
+        if (getSearchTextVisible()) {
+            fgMainWarnEtSearch.getText().clear();
+        }
+        mPresenter.doCancelSearch();
     }
 
     @Override
@@ -329,19 +348,37 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
+    public void setSearchButtonTextVisible(boolean isVisible) {
+        if (isVisible) {
+            tvWarnAlarmSearchCancel.setVisibility(View.VISIBLE);
+//            setEditTextState(false);
+            dismissInputMethodManager(fgMainWarnEtSearch);
+        } else {
+            tvWarnAlarmSearchCancel.setVisibility(View.GONE);
+//            setEditTextState(true);
+        }
+
+    }
+
+
+    @Override
+    public boolean getSearchTextVisible() {
+        return tvWarnAlarmSearchCancel.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
         mPresenter.clickItemByConfirmStatus(position, isReConfirm);
     }
 
     @Override
-    public void onItemClick(View view, int position) {
-        mPresenter.clickItem(position);
-    }
-
-
-    @Override
     public void onCallPhone(View v, int position) {
         mPresenter.doContactOwner(position);
+    }
+
+    @Override
+    public void onItemClick(View view, int position, boolean isReConfirm) {
+        mPresenter.clickItem(position, isReConfirm);
     }
 
 }

@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <android.support.v7.widget.CardView
         android:id="@+id/fg_main_warn_title_root"
         android:layout_width="match_parent"
@@ -32,27 +33,38 @@
                     android:layout_weight="1"
                     android:background="@drawable/shape_bg_full_corner">
 
-                    <TextView
-                        android:id="@+id/fg_main_warn_tv_search"
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/fg_main_warn_et_search"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="8dp"
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="8dp"
+                        android:background="@null"
                         android:drawablePadding="8dp"
+                        android:imeOptions="actionSearch"
+                        android:singleLine="true"
+                        android:textColorHint="@color/c_a6a6a6"
                         android:drawableStart="@drawable/main_search"
-                        android:text="设备名称/设备号/手机号"
-                        android:textColor="@color/c_a6a6a6"
+                        android:hint="设备名称/设备号/手机号"
+                        android:textColor="@color/c_252525"
                         android:textSize="12sp" />
                 </FrameLayout>
-
+                <TextView
+                    android:id="@+id/tv_warn_alarm_search_cancel"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_252525"
+                    android:visibility="gone"
+                    android:text="取消"/>
                 <ImageView
                     android:id="@+id/fg_main_warn_imv_calendar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
                     android:background="@color/transparent"
                     android:contentDescription="@null"
                     android:padding="10dp"
@@ -64,9 +76,9 @@
                 android:id="@+id/fg_main_warn_rl_date_edit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:layout_marginStart="20dp"
                 android:layout_marginEnd="10dp"
+                android:layout_marginStart="20dp"
+                android:background="@color/white"
                 android:visibility="gone">
 
                 <TextView
@@ -85,8 +97,8 @@
                     android:layout_alignParentEnd="true"
                     android:layout_alignTop="@+id/fg_main_warn_tv_date_edit"
                     android:contentDescription="@null"
-                    android:scaleType="centerInside"
                     android:padding="8dp"
+                    android:scaleType="centerInside"
                     android:src="@mipmap/ic_close" />
             </RelativeLayout>
         </LinearLayout>

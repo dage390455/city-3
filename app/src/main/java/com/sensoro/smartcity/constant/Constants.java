@@ -10,6 +10,7 @@ public interface Constants {
     //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
+    String SOCKET_EVENT_DEVICE_ALARM_DISPLAY = "city.alarm.display";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
@@ -224,6 +225,12 @@ public interface Constants {
     int DIRECTION_UP = 1;
     int TYPE_LIST = 0;
     int TYPE_GRID = 1;
+
+    //
+    int MODEL_ALARM_STATUS_EVENT_CODE_CREATE = 0;
+    int MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY = 2;
+    int MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM = 3;
+    int MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM = 4;
     //
     String ENCODE = "HmacSHA512";
     String APP_ID = "wxa65d8bad62a982e1";
@@ -271,6 +278,8 @@ public interface Constants {
     int EVENT_DATA_AUTH_SUC = 0x28;
     int EVENT_DATA_DEPLOY_MAP = 0x31;
     int EVENT_DATA_ALARM_TOTAL_COUNT = 0x32;
+    int EVENT_DATA_ALARM_FRESH_ALARM_DATA = 0x34;
+    int EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS = 0x35;
 
     int EVENT_DATA_ALARM_POP_IMAGES = 0x33;
 

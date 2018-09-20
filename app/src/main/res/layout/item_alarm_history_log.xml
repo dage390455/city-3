@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:orientation="horizontal">
+
+    <TextView
+        android:id="@+id/tv_alarm_history_log_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:gravity="left"
+        android:text="今天12：36 发生报警"
+        android:textColor="@color/c_252525"
+        android:textSize="14dp" />
+
+    <TextView
+        android:id="@+id/tv_alarm_history_log_confirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/shape_btn_corner_29c_bg"
+        android:padding="5dp"
+        android:paddingBottom="10dp"
+        android:paddingTop="10dp"
+        android:text="预警确认"
+        android:textColor="@color/white"
+        android:textSize="12dp" />
+
+</LinearLayout>

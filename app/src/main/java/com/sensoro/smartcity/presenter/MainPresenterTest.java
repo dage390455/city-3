@@ -23,12 +23,16 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.DeviceAlarmCount;
+import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
+import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.NetWorkUtils;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
@@ -46,6 +50,8 @@ import java.util.List;
 import io.socket.client.IO;
 import io.socket.client.Socket;
 import io.socket.emitter.Emitter;
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
 
 import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
@@ -58,7 +64,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
     private volatile Socket mSocket = null;
     private final MainPresenterTest.DeviceInfoListener mInfoListener = new MainPresenterTest.DeviceInfoListener();
     private final MainPresenterTest.DeviceAlarmCountListener mAlarmCountListener = new MainPresenterTest.DeviceAlarmCountListener();
-
+    private final DeviceAlarmDisplayStatusListener mAlarmDisplayStatusListener = new DeviceAlarmDisplayStatusListener();
     private final Handler mHandler = new Handler();
     private final MainPresenterTest.TaskRunnable mRunnable = new MainPresenterTest.TaskRunnable();
     //
@@ -98,6 +104,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
                 PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
             }
             mHandler.postDelayed(mRunnable, 3000L);
+            freshAlarmCount();
         } else {
             openLogin();
         }
@@ -185,6 +192,63 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
         }
     }
 
+    private final class DeviceAlarmDisplayStatusListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (MainPresenterTest.DeviceInfoListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            LogUtils.loge(this, "DeviceAlarmDisplayStatusListener json = " + json);
+                            if (!isSupperAccount()) {
+                                try {
+                                    DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmLogInfo.class);
+                                    String event = deviceAlarmLogInfo.getEvent();
+                                    EventAlarmStatusModel eventAlarmStatusModel = new EventAlarmStatusModel();
+                                    eventAlarmStatusModel.deviceAlarmLogInfo = deviceAlarmLogInfo;
+                                    switch (event) {
+                                        case "create":
+                                            // 做一些预警发生的逻辑
+                                            eventAlarmStatusModel.status = MODEL_ALARM_STATUS_EVENT_CODE_CREATE;
+                                            break;
+                                        case "recovery":
+                                            // 做一些预警恢复的逻辑
+                                            eventAlarmStatusModel.status = MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY;
+                                            break;
+                                        case "confirm":
+                                            // 做一些预警被确认的逻辑
+                                            eventAlarmStatusModel.status = MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM;
+                                            break;
+                                        case "reconfirm":
+                                            // 做一些预警被再次确认的逻辑
+                                            eventAlarmStatusModel.status = MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM;
+                                            break;
+                                        default:
+                                            // 未知逻辑 可以联系我确认 有可能是bug
+                                            break;
+                                    }
+                                    EventData eventData = new EventData();
+                                    eventData.code = EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS;
+                                    eventData.data = eventAlarmStatusModel;
+                                    EventBus.getDefault().post(eventData);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+
+                            }
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     private final class TaskRunnable implements Runnable {
 
         @Override
@@ -221,6 +285,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
             mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
             mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
             mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+            mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             mSocket.connect();
         } catch (URISyntaxException e) {
             e.printStackTrace();
@@ -285,6 +350,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
                 mSocket.disconnect();
                 mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
                 mSocket = null;
             }
             String sessionId = RetrofitServiceHelper.INSTANCE.getSessionId();
@@ -294,6 +360,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
             mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
             mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
             mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+            mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             mSocket.connect();
 
         } catch (URISyntaxException e) {
@@ -312,6 +379,7 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
             mSocket.disconnect();
             mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
             mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+            mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
             mSocket = null;
         }
         mFragmentList.clear();
@@ -341,12 +409,45 @@ public class MainPresenterTest extends BasePresenter<IMainViewTest> implements C
                 EventLoginData eventLoginData = (EventLoginData) data;
                 changeAccount(eventLoginData);
             }
-        } else if (code == EVENT_DATA_ALARM_TOTAL_COUNT) {
-            if (data != null && data instanceof Integer) {
-                getView().setAlarmWarnCount((Integer) data);
+        }
+//        else if (code == EVENT_DATA_ALARM_TOTAL_COUNT) {
+//            if (data != null && data instanceof Integer) {
+//                getView().setAlarmWarnCount((Integer) data);
+//            }
+//        }
+        else if (code == EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS) {
+            if (data != null && data instanceof EventAlarmStatusModel) {
+                switch (((EventAlarmStatusModel) data).status) {
+                    case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                    case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                        freshAlarmCount();
+                        break;
+                    default:
+                        break;
+                }
+
             }
         }
 //        LogUtils.loge(this, eventData.toString());
+    }
+
+    private void freshAlarmCount() {
+        //TODO 半年累计报警次数
+        String[] str = {"0"};
+        RetrofitServiceHelper.INSTANCE.getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>() {
+            @Override
+            public void onCompleted(AlarmCountRsp alarmCountRsp) {
+                int count = alarmCountRsp.getCount();
+                getView().setAlarmWarnCount(count);
+                getView().dismissProgressDialog();
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
     }
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {

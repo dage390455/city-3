@@ -107,6 +107,7 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
         includeImvTitleImvSubtitle.setOnClickListener(this);
         acMonitoringPointClAlertContact.setOnClickListener(this);
         acMonitoringPointClLocationNavigation.setOnClickListener(this);
+        acMonitoringPointImvDetail.setOnClickListener(this);
 
 
     }
@@ -224,6 +225,9 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
             case R.id.ac_monitoring_point_cl_location_navigation:
 //                toastShort("位置导航");
                 mPresenter.doNavigation();
+                break;
+            case R.id.ac_monitoring_point_imv_detail:
+                mPresenter.doMonitorHistory();
                 break;
 
         }

@@ -28,6 +28,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
@@ -162,6 +163,22 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                 }
             }
         }
+        long current = System.currentTimeMillis();
+        mProgressUtils.showProgress();
+        RetrofitServiceHelper.INSTANCE.getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, mDeviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>() {
+            @Override
+            public void onCompleted(AlarmCountRsp alarmCountRsp) {
+                int count = alarmCountRsp.getCount();
+                acAlertTvAlertCount.setText(count + "");
+                mProgressUtils.dismissProgress();
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                SensoroToast.INSTANCE.makeText(errorMsg, Toast.LENGTH_SHORT).show();
+                mProgressUtils.dismissProgress();
+            }
+        });
         updateAlertLogContentAdapter(mList);
     }
 
@@ -285,7 +302,6 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
 
     private void doConfirm() {
         mAlarmPopUtils = new AlarmPopUtils(mActivity);
-        mAlarmPopUtils.setDialog(mActivity);
         mAlarmPopUtils.setOnPopupCallbackListener(this);
         mAlarmPopUtils.show();
     }

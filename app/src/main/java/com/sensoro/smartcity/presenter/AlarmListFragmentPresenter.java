@@ -147,7 +147,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
         switch (SensoroCityApplication.getInstance().saveSearchType) {
             case Constants.TYPE_DEVICE_NAME:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, searchType, null, startTime,
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, searchType, null,null, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -167,7 +167,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                 break;
             case Constants.TYPE_DEVICE_SN:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, searchType, null, null, startTime,
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, searchType, null, null,null, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -188,7 +188,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, searchType, startTime,
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null,null, searchType, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -216,7 +216,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
         switch (SensoroCityApplication.getInstance().saveSearchType) {
             case Constants.TYPE_DEVICE_NAME:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, searchType, null, startTime,
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, searchType, null,null, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -242,7 +242,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                 break;
             case Constants.TYPE_DEVICE_SN:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, searchType, null, null, startTime,
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, searchType, null,null, null, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -268,7 +268,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, searchType, startTime,
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null,null, searchType, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -337,7 +337,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
             case DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, null, temp_startTime,
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null,null, null, temp_startTime,
                         temp_endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -362,7 +362,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
             case DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, null, temp_startTime,
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null,null, null, temp_startTime,
                         temp_endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
@@ -407,7 +407,7 @@ public class AlarmListFragmentPresenter extends BasePresenter<IAlarmListFragment
                         (endTime));
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, startTime, endTime,
+        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null,null, null, startTime, endTime,
                 null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
             @Override

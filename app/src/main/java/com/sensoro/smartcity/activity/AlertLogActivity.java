@@ -79,7 +79,6 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mAlarmPopUtils = new AlarmPopUtils(mActivity);
-        mAlarmPopUtils.setDialog(mActivity);
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
         initRcContent();
     }
@@ -155,7 +154,7 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
         switch (view.getId()) {
             case R.id.include_text_title_tv_subtitle:
                 //历史日志
-
+                mPresenter.doAlarmHistory();
                 break;
             case R.id.ac_alert_tv_contact_owner:
                 mPresenter.doContactOwner();
@@ -185,6 +184,14 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
 
     @Override
     public void setCurrentAlarmState(int state, String time) {
+        switch (state){
+            case 0:
+                acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_29c_shadow);
+                break;
+            case 1:
+                acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_f34_shadow);
+                break;
+        }
 //        acAlertLlAlertTime.setBackground();
         acAlertTvAlertTime.setText(time);
     }
@@ -213,6 +220,11 @@ public class AlertLogActivity extends BaseActivity<IAlertLogActivityView, AlertL
     @Override
     public void setUpdateButtonClickable(boolean canClick) {
         mAlarmPopUtils.setUpdateButtonClickable(canClick);
+    }
+
+    @Override
+    public void setConfirmText(String text) {
+        acAlertTvAlertConfirm.setText(text);
     }
 
     @Override

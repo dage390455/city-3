@@ -31,11 +31,10 @@ import butterknife.ButterKnife;
 public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcContentAdapter.AlertLogRcContentHolder> implements Constants {
     private final Context mContext;
     private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
-    private AlarmDetailPhotoAdapter adapter;
 
     public AlertLogRcContentAdapter(Context context) {
         mContext = context;
-        adapter = new AlarmDetailPhotoAdapter(mContext);
+
     }
 
     private TimerShaftAdapter.OnPhotoClickListener onPhotoClickListener;
@@ -130,6 +129,11 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             }
             final List<ScenesData> scenes = recordInfo.getScenes();
             if (scenes != null && scenes.size() > 0) {
+                //TODO 防止数据错误清除
+                if (holder.rvAlarmPhoto.getTag() instanceof AlarmDetailPhotoAdapter) {
+                    holder.rvAlarmPhoto.removeAllViews();
+                }
+                //
                 final GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4) {
                     @Override
                     public RecyclerView.LayoutParams generateDefaultLayoutParams() {
@@ -139,6 +143,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 };
                 holder.rvAlarmPhoto.setLayoutManager(layoutManager);
                 holder.rvAlarmPhoto.setHasFixedSize(true);
+                AlarmDetailPhotoAdapter adapter = new AlarmDetailPhotoAdapter(mContext);
                 adapter.setOnItemClickListener(new AlarmDetailPhotoAdapter.OnRecyclerViewItemClickListener() {
                     @Override
                     public void onItemClick(View view, int position) {
@@ -151,6 +156,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 //设置包裹不允许滑动，套一层父布局解决最后一项可能不显示的问题
                 holder.rvAlarmPhoto.setNestedScrollingEnabled(false);
                 adapter.setImages(scenes);
+                //TODO 防止数据错误打标签
+                holder.rvAlarmPhoto.setTag(adapter);
             }
 
 
