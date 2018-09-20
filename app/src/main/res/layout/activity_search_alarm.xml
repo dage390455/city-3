@@ -3,7 +3,6 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
@@ -132,7 +131,6 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/search_alarm_top_rl"
         android:layout_marginTop="@dimen/y30"
-        android:background="@color/white"
         android:orientation="vertical"
         android:visibility="visible">
 

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
+import android.view.inputmethod.InputMethodManager;
 
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
@@ -85,6 +86,15 @@ public class SearchDeviceActivityPresenterTest extends BasePresenter<ISearchDevi
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+        hideSoftInput();
+    }
+
+    private void hideSoftInput() {
+        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm!=null) {
+            imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
