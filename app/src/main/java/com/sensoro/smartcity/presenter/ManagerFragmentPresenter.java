@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.activity.ContractManagerActivity;
+import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivityTest;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
@@ -144,7 +145,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doPollingMission() {
-        getView().toastShort("此功能暂未开放");
+        getView().startAC(new Intent(mContext, InspectionTaskListActivity.class));
     }
 
     public void doMaintenanceMission() {
