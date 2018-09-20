@@ -36,4 +36,6 @@ public interface IDeployDeviceDetailActivityView extends IToast, IProgressDialog
     void setDeployPhotoText(String text);
 
     void showWarnDialog();
+
+    void updateUploadTvText(String text);
 }

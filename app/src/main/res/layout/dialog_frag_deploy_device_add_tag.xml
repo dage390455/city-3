@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/c_fafafa"
+    android:background="@drawable/shape_bg_solid_ff_corner"
     >
     <TextView
         android:layout_width="wrap_content"
@@ -22,7 +22,7 @@
     android:layout_marginStart="24dp"
     android:layout_marginEnd="24dp"
     android:layout_marginTop="12dp"
-    android:background="@drawable/shape_bg_soid_ff_stroke_df_corner"
+    android:background="@drawable/shape_bg_solid_ff_stroke_df_corner"
     >
     <EditText
         android:id="@+id/dialog_add_tag_et_input"

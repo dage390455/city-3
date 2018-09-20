@@ -64,6 +64,9 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                 getView().updateTitleText("扫码登录");
                 getView().updateQrTipText("对准登录用二维码，即可自动扫描");
                 getView().setBottomVisible(false);
+            }else{
+                getView().updateTitleText("设备部署");
+                getView().updateQrTipText("对准传感器上的二维码，即可自动扫描");
             }
         }
     }
@@ -123,7 +126,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     getView().startScan();
                 } else {
                     if (scanSerialNumber.length() == 16) {
-                        scanDeviceFinish(scanSerialNumber);
+                        scanDeviceFinish(scanSerialNumber,false);
                     } else {
                         getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
                         getView().startScan();
@@ -132,6 +135,19 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
             } else if (Constants.TYPE_SCAN_LOGIN == scanType) {
                 LogUtils.loge("result = " + result);
                 scanLoginFinish(result);
+            }else if(Constants.TYPE_SCAN_CHANGE_DEVICE == scanType){
+                String scanSerialNumber = parseResultMac(result);
+                if (scanSerialNumber == null) {
+                    getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
+                    getView().startScan();
+                } else {
+                    if (scanSerialNumber.length() == 16) {
+                        scanDeviceFinish(scanSerialNumber,true);
+                    } else {
+                        getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
+                        getView().startScan();
+                    }
+                }
             }
         }
 
@@ -188,7 +204,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
         return serialNumber;
     }
 
-    private void scanDeviceFinish(final String scanSerialNumber) {
+    private void scanDeviceFinish(final String scanSerialNumber, final boolean isChangeDevice) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
@@ -218,6 +234,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                         intent.putExtra(EXTRA_DEVICE_INFO, deviceInfoListRsp.getData().get(0));
                         intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
                         intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
+                        intent.putExtra(EXTRA_IS_CHANGE_DEVICE,isChangeDevice);
                         getView().startAC(intent);
                     } else {
                         scanStationFinish(scanSerialNumber);

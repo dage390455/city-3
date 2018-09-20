@@ -74,19 +74,18 @@
                 android:id="@+id/ac_deploy_device_detail_rl_tag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
-                >
+                android:background="@color/white">
 
                 <TextView
                     android:id="@+id/ac_deploy_device_detail_tv_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="16dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="16dp"
                     android:text="标签"
-                    android:layout_centerVertical="true"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
@@ -94,33 +93,30 @@
                     android:id="@+id/ac_deploy_device_detail_imv_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="20dp"
                     android:layout_marginStart="8dp"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
 
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
                     android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
                     android:layout_toEndOf="@id/ac_deploy_device_detail_tv_tag"
-                    android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag"
-                    >
+                    android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag">
+
                     <com.sensoro.smartcity.widget.TouchRecyclerview
                         android:id="@+id/ac_deploy_device_detail_rc_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        >
+                        android:layout_alignParentEnd="true">
 
                     </com.sensoro.smartcity.widget.TouchRecyclerview>
                 </RelativeLayout>
-
-
 
 
             </RelativeLayout>
@@ -130,8 +126,8 @@
                 android:id="@+id/ac_deploy_device_detail_ll_alarm_contact"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:layout_marginTop="12dp"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
                 <TextView
@@ -145,20 +141,20 @@
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
-                    <RelativeLayout
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content">
-                        <com.sensoro.smartcity.widget.TouchRecyclerview
-                            android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
-                            android:layout_width="match_parent"
-                            android:layout_gravity="center_vertical"
-                            android:layout_height="match_parent"
-                            android:layout_marginBottom="8dp"
-                            >
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1">
 
-                        </com.sensoro.smartcity.widget.TouchRecyclerview>
-                    </RelativeLayout>
+                    <com.sensoro.smartcity.widget.TouchRecyclerview
+                        android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginBottom="8dp">
+
+                    </com.sensoro.smartcity.widget.TouchRecyclerview>
+                </RelativeLayout>
 
 
                 <ImageView
@@ -166,8 +162,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="20dp"
-                    android:contentDescription="@null"
                     android:layout_marginStart="8dp"
+                    android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
 
             </LinearLayout>
@@ -176,18 +172,18 @@
                 android:id="@+id/ac_deploy_device_detail_ll_deploy_pic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
                 android:background="@color/white"
-                android:orientation="horizontal"
-                android:layout_marginTop="12dp">
+                android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="0dp"
-                    android:layout_weight="1"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginBottom="12dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="12dp"
+                    android:layout_weight="1"
                     android:text="部署照片"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
@@ -196,11 +192,10 @@
                     android:id="@+id/ac_deploy_device_detail_tv_deploy_pic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="未添加"
                     android:layout_gravity="center_vertical"
-                    android:textColor="@color/c_252525"
                     android:layout_marginStart="8dp"
-                    />
+                    android:text="未添加"
+                    android:textColor="@color/c_252525" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -247,11 +242,11 @@
                     android:layout_marginBottom="12dp"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="12dp"
-                    android:background="@drawable/shape_bg_soid_b6_full_corner"
+                    android:background="@drawable/shape_bg_solid_b6_full_corner"
+                    android:paddingBottom="4dp"
                     android:paddingEnd="10dp"
                     android:paddingStart="10dp"
                     android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
                     android:text="信号 无"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
@@ -282,6 +277,7 @@
     </ScrollView>
 
     <TextView
+        android:id="@+id/ac_deploy_device_detail_tv_upload"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
@@ -294,6 +290,5 @@
         android:paddingTop="10dp"
         android:text="上传"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        android:id="@+id/ac_deploy_device_detail_tv_upload" />
+        android:textSize="16sp" />
 </RelativeLayout>

@@ -63,8 +63,12 @@ public class DeployDeviceDetailActivityPresenter extends BasePresenter<IDeployDe
         mContext = (Activity) context;
         onCreate();
         mHandler = new Handler(Looper.getMainLooper());
-        deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
-        deployMapModel.hasStation = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
+        Intent intent = mContext.getIntent();
+        deviceInfo = (DeviceInfo) intent.getSerializableExtra(EXTRA_DEVICE_INFO);
+        deployMapModel.hasStation = intent.getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
+        if (intent.getBooleanExtra(EXTRA_IS_CHANGE_DEVICE,false)) {
+            getView().updateUploadTvText("更换设备");
+        }
         getView().setDeployContactRelativeLayoutVisible(!deployMapModel.hasStation);
         getView().setDeployDeviceRlSignalVisible(!deployMapModel.hasStation);
         getView().setDeployPhotoVisible(!deployMapModel.hasStation);

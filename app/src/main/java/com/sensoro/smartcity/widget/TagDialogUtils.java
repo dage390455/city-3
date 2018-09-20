@@ -2,8 +2,11 @@ package com.sensoro.smartcity.widget;
 
 import android.app.Activity;
 import android.content.DialogInterface;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.support.v7.app.AlertDialog;
 import android.view.View;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +52,11 @@ public class TagDialogUtils implements View.OnClickListener {
             }
         });
         mAddTagDialog = builder.create();
+        Window window = mAddTagDialog.getWindow();
+        if (window != null) {
+            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+        }
+
 
     }
 

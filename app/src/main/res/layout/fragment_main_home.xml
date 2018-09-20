@@ -4,9 +4,10 @@
     android:id="@+id/fg_main_home_ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
     android:fitsSystemWindows="true"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/white"
+    >
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -74,7 +75,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
-        android:background="@drawable/shape_bg_soid_fa_stroke_df_full_corner"
+        android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
         android:drawableEnd="@drawable/main_smal_triangle"
         android:drawablePadding="8dp"
         android:paddingStart="14dp"

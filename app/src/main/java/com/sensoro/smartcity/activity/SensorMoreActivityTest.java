@@ -3,17 +3,14 @@ package com.sensoro.smartcity.activity;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.widget.LinearLayoutManager;
-import android.util.Log;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.DeployDeviceDetailTagAdapter;
+import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.ISensorMoreActivityView;
 import com.sensoro.smartcity.imainviews.ISensorMoreActivityViewTest;
-import com.sensoro.smartcity.presenter.SensorMoreActivityPresenter;
 import com.sensoro.smartcity.presenter.SensorMoreActivityPresenterTest;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
@@ -24,7 +21,6 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import mabbas007.tagsedittext.TagsEditText;
 
 /**
  * Created by sensoro on 17/7/31.
@@ -64,7 +60,7 @@ public class SensorMoreActivityTest extends BaseActivity<ISensorMoreActivityView
     @BindView(R.id.sensor_more_rc_tag)
     TouchRecyclerview sensorMoreRcTag;
     private ProgressUtils mProgressUtils;
-    private DeployDeviceDetailTagAdapter mTagAdapter;
+    private TagAdapter mTagAdapter;
 
 
     @Override
@@ -78,7 +74,7 @@ public class SensorMoreActivityTest extends BaseActivity<ISensorMoreActivityView
 
     private void initRcTag() {
         sensorMoreRcTag.setIntercept(false);
-        mTagAdapter = new DeployDeviceDetailTagAdapter(mActivity);
+        mTagAdapter = new TagAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         sensorMoreRcTag.setLayoutManager(manager);

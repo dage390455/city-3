@@ -252,7 +252,6 @@
             android:launchMode="singleInstance" />
         <activity android:name=".activity.DeployDeviceDetailActivity" />
         <activity android:name=".activity.DeployDeviceTagActivity" />
-        <activity android:name=".activity.DeployPicActivity" />
         <activity android:name=".activity.AlertLogActivity" />
         <activity android:name=".activity.ScanActivity" />
         <activity android:name=".activity.MonitoringPointDetailActivity" />
@@ -269,7 +268,14 @@
         <activity android:name=".activity.AuthActivityTest" />
         <activity android:name=".activity.DeployMapActivity" />
         <activity android:name=".activity.SensorMoreActivityTest" />
+        <activity android:name=".activity.MonitorPointMapActivity" />
         <activity android:name=".activity.InspectionTaskListActivity" />
+        <activity android:name=".activity.InspectionTaskDetailActivity" />
+        <activity android:name=".activity.InspectionInstructionActivity" />
+        <activity android:name=".activity.InspectionTaskActivity" />
+        <activity android:name=".activity.InspectionActivity" />
+        <activity android:name=".activity.InspectionExceptionDetailActivity" />
+        <activity android:name=".activity.InspectionUploadExceptionActivity" />
 
         <service
             android:name="com.igexin.download.DownloadService"

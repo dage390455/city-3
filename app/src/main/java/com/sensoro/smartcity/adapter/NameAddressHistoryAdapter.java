@@ -50,7 +50,7 @@ public class NameAddressHistoryAdapter extends RecyclerView.Adapter<NameAddressH
     @Override
     public void onBindViewHolder(NameAddressHistoryHolder holder, final int position) {
         //一定要设置，因为是通用的，所以要设置这个
-        holder.itemAdapterTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_soid_ee_full_corner));
+        holder.itemAdapterTv.setBackground(mContext.getResources().getDrawable(R.drawable.shape_bg_solid_ee_full_corner));
         holder.itemAdapterTv.setText(mList.get(position));
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override

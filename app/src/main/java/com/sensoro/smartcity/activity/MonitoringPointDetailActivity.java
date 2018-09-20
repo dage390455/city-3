@@ -7,7 +7,6 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,8 +23,6 @@ import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SENSOR_SN;
 
 public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPointDetailActivityView,
         MonitoringPointDetailActivityPresenter> implements IMonitoringPointDetailActivityView, View.OnClickListener {
@@ -78,11 +75,23 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
         mPresenter.initData(mActivity);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleTvTitle.setText("监控点详情");
         includeImvTitleImvSubtitle.setImageResource(R.mipmap.ic_detail);
-        includeImvTitleImvSubtitle.setPadding(0, DpUtils.dp2px(mActivity,20),0,DpUtils.dp2px(mActivity,20));
+        includeImvTitleImvSubtitle.setPadding(0, DpUtils.dp2px(mActivity, 20), 0, DpUtils.dp2px(mActivity, 20));
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity) {
             @Override
@@ -204,17 +213,17 @@ public class MonitoringPointDetailActivity extends BaseActivity<IMonitoringPoint
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.ac_monitoring_point_imv_location:
-                mPresenter.doNavigation();
-                break;
             case R.id.include_imv_title_imv_subtitle:
                 mPresenter.doMore();
                 break;
             case R.id.ac_monitoring_point_cl_alert_contact:
-               toastShort("预警联系人");
+//               toastShort("预警联系人");
+                mPresenter.doContact();
                 break;
+            case R.id.ac_monitoring_point_imv_location:
             case R.id.ac_monitoring_point_cl_location_navigation:
-                toastShort("位置导航");
+//                toastShort("位置导航");
+                mPresenter.doNavigation();
                 break;
 
         }

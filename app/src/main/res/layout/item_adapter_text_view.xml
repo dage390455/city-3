@@ -5,7 +5,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:text="大上海，夜上海"
-    android:background="@drawable/shape_bg_soid_ff_stroke_df_full_corner"
+    android:background="@drawable/shape_bg_solid_ff_stroke_df_full_corner"
     android:textSize="12sp"
     android:layout_marginStart="8dp"
     android:textColor="@color/c_252525"

@@ -15,7 +15,7 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
-import com.sensoro.smartcity.adapter.DeployDeviceDetailTagAdapter;
+import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployDeviceDetailActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
@@ -67,7 +67,7 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
     @BindView(R.id.ac_deploy_device_detail_tv_upload)
     TextView acDeployDeviceDetailTvUpload;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
-    private DeployDeviceDetailTagAdapter mTagAdapter;
+    private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
     private TextView mDialogTvCancel;
     private TextView mDialogTvTitle;
@@ -97,7 +97,7 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
 
     private void initRcDeployDeviceTag() {
         acDeployDeviceDetailRcTag.setIntercept(false);
-        mTagAdapter = new DeployDeviceDetailTagAdapter(mActivity);
+        mTagAdapter = new TagAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         acDeployDeviceDetailRcTag.setLayoutManager(manager);
@@ -326,6 +326,11 @@ public class DeployDeviceDetailActivity extends BaseActivity<IDeployDeviceDetail
         } else {
             mUploadDialog.show();
         }
+    }
+
+    @Override
+    public void updateUploadTvText(String text) {
+        acDeployDeviceDetailTvUpload.setText(text);
     }
 
     @Override

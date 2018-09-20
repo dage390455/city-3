@@ -164,6 +164,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_IS_STATION_DEPLOY = "extra_is_station_deploy";
+    String EXTRA_IS_CHANGE_DEVICE = "extra_is_change_device";
     String EXTRA_SENSOR_SN = "extra_sn";
     String EXTRA_SENSOR_NAME = "extra_name";
     String EXTRA_SENSOR_TYPES = "extra_types";
@@ -277,4 +278,5 @@ public interface Constants {
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_LOGIN = 0x30;
+    int TYPE_SCAN_CHANGE_DEVICE = 0X34;
 }

@@ -14,7 +14,7 @@
         android:layout_marginEnd="20dp"
         android:layout_marginTop="10dp"
         android:layout_marginBottom="10dp"
-        android:background="@drawable/shape_bg_soid_f7_full_corner"
+        android:background="@drawable/shape_bg_solid_f7_full_corner"
         android:gravity="center_vertical"
         >
 

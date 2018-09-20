@@ -31,7 +31,7 @@
                 android:paddingEnd="20dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="当前任务"
+                android:text="未完成"
                 android:textColor="@drawable/selector_contract_title_text_select"
                 android:textSize="14sp"/>
 
@@ -46,7 +46,7 @@
                 android:paddingEnd="20dp"
                 android:paddingTop="8dp"
                 android:paddingBottom="8dp"
-                android:text="历史记录"
+                android:text="已完成"
                 android:textColor="@drawable/selector_contract_title_text_select"
                 android:textSize="14sp"/>
         </RadioGroup>
@@ -62,18 +62,49 @@
             android:layout_centerVertical="true"
             />
     </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/ac_inspection_task_list_rl_date_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/ac_inspection_task_list_tv_date_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/y30"
+            android:layout_marginEnd="@dimen/x45"
+            android:layout_marginTop="@dimen/y30"
+            android:layout_marginStart="20dp"
+            android:textSize="@dimen/x54" />
+
+        <ImageView
+            android:id="@+id/ac_inspection_task_list_imv_date_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/fg_main_warn_tv_date_edit"
+            android:contentDescription="@null"
+            android:scaleType="centerInside"
+            android:layout_marginEnd="10dp"
+            android:padding="8dp"
+            android:src="@mipmap/ic_close" />
+    </RelativeLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/refreshLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_marginStart="20dp" >
+        android:background="@color/white"
+        >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/ac_inspection_task_list_rc_content"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
 
             />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
