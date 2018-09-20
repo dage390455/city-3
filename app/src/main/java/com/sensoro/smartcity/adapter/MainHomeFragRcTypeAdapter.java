@@ -2,6 +2,10 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Handler;
+import android.os.Looper;
+import android.support.v7.util.DiffUtil;
+import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -11,9 +15,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.HomeTopModel;
+import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -23,11 +30,12 @@ import butterknife.ButterKnife;
  * 设置卡片背景色：holder.mainRcTypeCv.setCardBackgroundColor(Color.WHITE);
  * 改变阴影颜色，目前cardview 不支持，有其他解决方案，如第三库，再研究吧
  */
-public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFragRcTypeAdapter.MyViewHolder> {
+public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFragRcTypeAdapter.MyViewHolder> implements IOnDestroy {
 
     private final Context mContext;
     private final List<HomeTopModel> mData = new ArrayList<>();
     private OnTopClickListener onTopClickListener;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public MainHomeFragRcTypeAdapter(Context context) {
         mContext = context;
@@ -37,13 +45,92 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         this.onTopClickListener = onTopClickListener;
     }
 
-    public void setData(List<HomeTopModel> data) {
+    public void updateData(final RecyclerView recyclerView, final List<HomeTopModel> data) {
+        TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mData, data);
+        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, true);
+//        diffResult.dispatchUpdatesTo(this);
+        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
+            @Override
+            public void onInserted(final int position, final int count) {
+                LogUtils.loge("updateData-----onInserted-->>position = " + position + ", count = " + count);
+                notifyItemRangeInserted(position, count);
+                try {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.smoothScrollToPosition(position);
+                        }
+                    }, 50);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onRemoved(final int position, final int count) {
+                notifyItemRangeRemoved(position, count);
+                LogUtils.loge("updateData-----onRemoved-->>position = " + position + ", count = " + count);
+                try {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.smoothScrollToPosition(position);
+                        }
+                    }, 50);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onMoved(final int fromPosition, final int toPosition) {
+                notifyItemMoved(fromPosition, toPosition);
+                LogUtils.loge("updateData-----onMoved-->>fromPosition = " + fromPosition + ", toPosition = " + toPosition);
+                try {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.smoothScrollToPosition(toPosition);
+                        }
+                    }, 50);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onChanged(final int position, final int count, final Object payload) {
+                notifyItemRangeChanged(position, count, payload);
+                LogUtils.loge("updateData-----onChanged-->>position = " + position + ", count = " + count);
+                try {
+                    mHandler.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            recyclerView.smoothScrollToPosition(position);
+                        }
+                    }, 50);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         mData.clear();
         mData.addAll(data);
     }
 
     public List<HomeTopModel> getData() {
         return mData;
+    }
+
+    @Override
+    public void onDestroy() {
+        if (mHandler != null) {
+            mHandler.removeCallbacksAndMessages(null);
+        }
+        mData.clear();
     }
 
     public interface OnTopClickListener {
@@ -59,7 +146,31 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
         HomeTopModel homeTopModel = mData.get(position);
-        switch (homeTopModel.type) {
+        int type = homeTopModel.type;
+        freshType(holder, type);
+        int value = homeTopModel.value;
+        freshValue(holder, value);
+        if (position == 0) {
+//            holder.mainRcTypeCv.setCardBackgroundColor(Color.WHITE);
+        } else {
+//            holder.mainRcTypeCv.setCardBackgroundColor(Color.WHITE);
+        }
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onTopClickListener != null) {
+                    onTopClickListener.onStatusChange(mData.get(position).type);
+                }
+            }
+        });
+    }
+
+    private void freshValue(MyViewHolder holder, int value) {
+        holder.mainRcTypeTvCount.setText(String.valueOf(value));
+    }
+
+    private void freshType(MyViewHolder holder, int type) {
+        switch (type) {
             case 0:
                 holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_f34a4a));
                 holder.mainRcTypeTvStateTxt.setTextColor(Color.WHITE);
@@ -93,20 +204,24 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
                 holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
                 break;
         }
-        holder.mainRcTypeTvCount.setText(String.valueOf(homeTopModel.value));
-        if (position == 0) {
-//            holder.mainRcTypeCv.setCardBackgroundColor(Color.WHITE);
+    }
+
+    @Override
+    public void onBindViewHolder(MyViewHolder holder, int position, List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
         } else {
-//            holder.mainRcTypeCv.setCardBackgroundColor(Color.WHITE);
-        }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onTopClickListener != null) {
-                    onTopClickListener.onStatusChange(mData.get(position).type);
-                }
+            HashMap map = (HashMap) payloads.get(0);
+            Integer type = (Integer) map.get("type");
+            if (type != null) {
+                freshType(holder, type);
             }
-        });
+            Integer value = (Integer) map.get("value");
+            if (value != null) {
+                freshValue(holder, value);
+            }
+        }
+//        super.onBindViewHolder(holder, position, payloads);
     }
 
     @Override

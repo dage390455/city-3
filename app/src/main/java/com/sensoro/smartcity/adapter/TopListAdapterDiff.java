@@ -26,8 +26,8 @@ public class TopListAdapterDiff extends DiffCallBack<HomeTopModel> {
         if (oldData.type != newData.type) {
             payload.put("type", newData.type);
         }
-        long oldDataValue = oldData.value;
-        long newDataValue = newData.value;
+        int oldDataValue = oldData.value;
+        int newDataValue = newData.value;
         if (oldDataValue != newDataValue) {
             payload.put("value", newDataValue);
         }
@@ -35,6 +35,8 @@ public class TopListAdapterDiff extends DiffCallBack<HomeTopModel> {
             return null;
         } else {
             return payload;
+//            return null;
         }
+
     }
 }

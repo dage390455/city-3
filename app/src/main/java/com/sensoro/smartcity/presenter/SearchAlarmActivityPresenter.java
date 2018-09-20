@@ -100,7 +100,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
         switch (searchType) {
             case Constants.TYPE_DEVICE_NAME:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, text, null, mStartTime, mEndTime, null)
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, text, null,null, mStartTime, mEndTime, null)
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
                     @Override
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
@@ -135,7 +135,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                 break;
             case Constants.TYPE_DEVICE_SN:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, text, null, null, mStartTime, mEndTime, null)
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, text, null, null, null, mStartTime, mEndTime, null)
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
                     @Override
@@ -167,7 +167,7 @@ public class SearchAlarmActivityPresenter extends BasePresenter<ISearchAlarmActi
                 break;
             case Constants.TYPE_DEVICE_PHONE_NUM:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, text, mStartTime, mEndTime, null)
+                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null,null, text, mStartTime, mEndTime, null)
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
                     @Override
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {

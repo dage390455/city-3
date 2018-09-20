@@ -49,16 +49,45 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, AdapterView
                 .OnItemSelectedListener, SelectDialog.SelectDialogListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
     private final FixHeightBottomSheetDialog bottomSheetDialog;
-    private Activity mContext;
+    private Activity mActivity;
     private final View mRoot;
+    //
+    private OnPopupCallbackListener mListener;
+    private EditText remarkEditText;
+    private Button mButton;
+    private final List<String> alarmType = new ArrayList<String>();
+    private final List<String> alarmPlace = new ArrayList<String>();
+    private final List<String> alarmResult = new ArrayList<String>();
+    private final List<String> alarmResultInfo = new ArrayList<String>();
+    //
+    private final int[] resultArr = {-1, 1, 4, 2, 3};
+    private final int[] typeArr = {-1, 1, 2, 3, 4, 5, 6, 7, 8, 0};
+    private final int[] placeArr = {-1, 1, 7, 2, 3, 4, 5, 6, 0};
+    private int selectType;
+    private int selectPlace;
+    private int selectResult;
+    //
+    private Spinner spinnerType;
+    private Spinner spinnerPlace;
+    private Spinner spinnerResult;
+    //
 
-    public AlarmPopUtils(Activity context) {
-        mContext = context;
-        bottomSheetDialog = new FixHeightBottomSheetDialog(context);
+    private ImagePickerAdapter adapter;
+    private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
+    private int maxImgCount = 9;               //允许选择图片最大数
+    //    private ArrayList<ImageItem> tempImages = null;
+    private TextView tvSpinnerResultInfo;
+    private ProgressDialog progressDialog;
+    private UpLoadPhotosUtils upLoadPhotosUtils;
+    private String mRemark;
+
+    public AlarmPopUtils(Activity activity) {
+        mActivity = activity;
+        bottomSheetDialog = new FixHeightBottomSheetDialog(activity);
         bottomSheetDialog.setCanceledOnTouchOutside(true);
         bottomSheetDialog.setOnDismissListener(this);
         bottomSheetDialog.setOnCancelListener(this);
-        mRoot = View.inflate(mContext, R.layout.layout_alarm_popup, null);
+        mRoot = View.inflate(mActivity, R.layout.layout_alarm_popup, null);
         intData();
         init();
         initWidget();
@@ -85,41 +114,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                 System.out.println("onSlide = [" + bottomSheet + "], slideOffset = [" + slideOffset + "]");
             }
         });
-
     }
-
-
-    //
-    private OnPopupCallbackListener mListener;
-    private EditText remarkEditText;
-    private Button mButton;
-    private final List<String> alarmType = new ArrayList<String>();
-    private final List<String> alarmPlace = new ArrayList<String>();
-    private final List<String> alarmResult = new ArrayList<String>();
-    private final List<String> alarmResultInfo = new ArrayList<String>();
-    //
-    private final int[] resultArr = {-1, 1, 4, 2, 3};
-    private final int[] typeArr = {-1, 1, 2, 3, 4, 5, 6, 7, 8, 0};
-    private final int[] placeArr = {-1, 1, 7, 2, 3, 4, 5, 6, 0};
-    private int selectType;
-    private int selectPlace;
-    private int selectResult;
-    //
-    private Spinner spinnerType;
-    private Spinner spinnerPlace;
-    private Spinner spinnerResult;
-    //
-
-    private ImagePickerAdapter adapter;
-    private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
-    private int maxImgCount = 9;               //允许选择图片最大数
-    //    private ArrayList<ImageItem> tempImages = null;
-    private Activity mActivity;
-    private TextView tvSpinnerResultInfo;
-    private ProgressDialog progressDialog;
-    private UpLoadPhotosUtils upLoadPhotosUtils;
-    private String mRemark;
-
 
     public void onDestroyPop() {
         if (bottomSheetDialog != null) {
@@ -138,10 +133,10 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
     private void initWidget() {
         RecyclerView recyclerView = mRoot.findViewById(R.id.recyclerView);
-        adapter = new ImagePickerAdapter(mContext, selImageList, maxImgCount);
+        adapter = new ImagePickerAdapter(mActivity, selImageList, maxImgCount);
         adapter.setOnItemClickListener(this);
         adapter.canVideo(true);
-        GridLayoutManager layoutManager = new GridLayoutManager(mContext, 4);
+        GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(adapter);
@@ -182,8 +177,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         }
     }
 
-    public void setDialog(Activity activity) {
-        mActivity = activity;
+    private void setProgressDialog() {
         progressDialog = new ProgressDialog(mActivity);
         progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progressDialog.setMax(100);
@@ -237,19 +231,19 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         mButton.setOnClickListener(this);
         closeImageView.setOnClickListener(this);
         //
-        ArrayAdapter<String> alarmResultAdapter = new ArrayAdapter<String>(mContext, android.R.layout
+        ArrayAdapter<String> alarmResultAdapter = new ArrayAdapter<String>(mActivity, android.R.layout
                 .simple_spinner_item, alarmResult);
-        ArrayAdapter<String> alarmTypeAdapter = new ArrayAdapter<String>(mContext, android.R.layout
+        ArrayAdapter<String> alarmTypeAdapter = new ArrayAdapter<String>(mActivity, android.R.layout
                 .simple_spinner_item, alarmType);
-        ArrayAdapter<String> alarmPlaceAdapter = new ArrayAdapter<String>(mContext, android.R.layout
+        ArrayAdapter<String> alarmPlaceAdapter = new ArrayAdapter<String>(mActivity, android.R.layout
                 .simple_spinner_item, alarmPlace);
         //
         spinnerResult.setAdapter(new NothingSelectedSpinnerAdapter(alarmResultAdapter, R.layout
-                .spinner_nothing_selected_result, mContext));
+                .spinner_nothing_selected_result, mActivity));
         spinnerType.setAdapter(new NothingSelectedSpinnerAdapter(alarmTypeAdapter, R.layout
-                .spinner_nothing_selected_type, mContext));
+                .spinner_nothing_selected_type, mActivity));
         spinnerPlace.setAdapter(new NothingSelectedSpinnerAdapter(alarmPlaceAdapter, R.layout
-                .spinner_nothing_selected_place, mContext));
+                .spinner_nothing_selected_place, mActivity));
         //
         alarmTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         alarmPlaceAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -260,7 +254,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         spinnerType.setOnItemSelectedListener(this);
         spinnerPlace.setOnItemSelectedListener(this);
         //
-        upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, this);
+        upLoadPhotosUtils = new UpLoadPhotosUtils(mActivity, this);
         bottomSheetDialog.setContentView(mRoot);
     }
 
@@ -273,7 +267,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         this.remarkEditText.getText().clear();
         mRemark = null;
 //        mButton.setBackground(getResources().getDrawable(R.drawable.shape_button_normal));
-        mButton.setBackground(mContext.getResources().getDrawable(R.drawable.shape_button));
+        mButton.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
         setUpdateButtonClickable(true);
         if (progressDialog != null) {
             progressDialog.setProgress(0);
@@ -326,6 +320,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         }
         if (mListener != null) {
             if (selImageList.size() > 0) {
+                setProgressDialog();
                 upLoadPhotosUtils.doUploadPhoto(selImageList);
             } else {
                 //
@@ -341,7 +336,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     }
 
     private void dismissInputMethodManager(View view) {
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null) {
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
         }
@@ -588,9 +583,9 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
     public void setUpdateButtonClickable(boolean canClick) {
         if (canClick) {
-            mButton.setBackground(mContext.getResources().getDrawable(R.drawable.shape_button));
+            mButton.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button));
         } else {
-            mButton.setBackground(mContext.getResources().getDrawable(R.drawable.shape_button_normal));
+            mButton.setBackground(mActivity.getResources().getDrawable(R.drawable.shape_button_normal));
         }
         mButton.setEnabled(canClick);
         mButton.setClickable(canClick);

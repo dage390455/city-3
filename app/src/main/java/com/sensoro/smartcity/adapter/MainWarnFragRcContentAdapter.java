@@ -16,7 +16,6 @@ import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,19 +28,9 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
     private final Context mContext;
     private AlarmConfirmStatusClickListener mListener;
     private final List<DeviceAlarmLogInfo> mList = new ArrayList<>();
-    private RecycleViewItemClickListener recycleViewItemClickListener;
-    private OnPlayPhoneListener onPlayPhoneListener;
 
     public MainWarnFragRcContentAdapter(Context context) {
         mContext = context;
-    }
-
-    public interface OnPlayPhoneListener {
-        void onCallPhone(View v, int position);
-    }
-
-    public void setOnPlayPhoneListener(OnPlayPhoneListener onPlayPhoneListener) {
-        this.onPlayPhoneListener = onPlayPhoneListener;
     }
 
     @Override
@@ -54,16 +43,13 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
         mListener = listener;
     }
 
-    public void setOnItemClickListener(RecycleViewItemClickListener recycleViewItemClickListener) {
-        this.recycleViewItemClickListener = recycleViewItemClickListener;
-    }
-
     @Override
     public void onBindViewHolder(MyViewHolder holder, final int position) {
 //        if(position==1){
 //            changeStrokeColor(holder.mainWarnRcContentTvTag,R.color.c_ff8d34);
 //            holder.mainWarnRcContentTvTag.setText("误报");
 //        }
+        boolean isReConfirm = false;
         DeviceAlarmLogInfo alarmLogInfo = mList.get(position);
         if (alarmLogInfo != null) {
             String deviceName = alarmLogInfo.getDeviceName();
@@ -83,17 +69,18 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             //
             switch (alarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
+                    isReConfirm = false;
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming);
-                    holder.mainWarnRcContentTvTag.setVisibility(View.GONE);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             mListener.onConfirmStatusClick(v, position, false);
                         }
                     });
+                    holder.mainWarnRcContentTvTag.setVisibility(View.GONE);
                     break;
                 case DISPLAY_STATUS_ALARM:
-                    holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
+                    isReConfirm = true;
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming_again);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -101,13 +88,13 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                             mListener.onConfirmStatusClick(v, position, true);
                         }
                     });
-
+                    holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
-                    //TODO 确认预警类型
                     holder.mainWarnRcContentTvTag.setText("真实预警");
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_f34a4a);
                     break;
                 case DISPLAY_STATUS_MIS_DESCRIPTION:
+                    isReConfirm = true;
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming_again);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -115,13 +102,13 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                             mListener.onConfirmStatusClick(v, position, true);
                         }
                     });
-//
+                    holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
-                    //TODO 确认预警类型
                     holder.mainWarnRcContentTvTag.setText("误报");
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_f34a4a);
                     break;
                 case DISPLAY_STATUS_TEST:
+                    isReConfirm = true;
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming_again);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -129,13 +116,13 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                             mListener.onConfirmStatusClick(v, position, true);
                         }
                     });
-//
+                    holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
-                    //TODO 确认预警类型
                     holder.mainWarnRcContentTvTag.setText("测试/巡检");
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_f34a4a);
                     break;
                 case DISPLAY_STATUS_RISKS:
+                    isReConfirm = true;
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming_again);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -143,9 +130,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                             mListener.onConfirmStatusClick(v, position, true);
                         }
                     });
-//
+                    holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
-                    //TODO 确认预警类型
                     holder.mainWarnRcContentTvTag.setText("安全隐患");
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_f34a4a);
                     break;
@@ -170,19 +156,20 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             holder.mainWarnRcContentTvState.setText("正常");
             holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
         }
+        final Boolean finalIsReConfirm = isReConfirm;
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (recycleViewItemClickListener != null) {
-                    recycleViewItemClickListener.onItemClick(v, position);
+                if (mListener != null) {
+                    mListener.onItemClick(v, position, finalIsReConfirm);
                 }
             }
         });
         holder.mainWarnRcContentBtnContactLandlord.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (onPlayPhoneListener != null) {
-                    onPlayPhoneListener.onCallPhone(v, position);
+                if (mListener != null) {
+                    mListener.onCallPhone(v, position);
                 }
             }
         });
@@ -234,6 +221,10 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
 
     public interface AlarmConfirmStatusClickListener {
         void onConfirmStatusClick(View view, int position, boolean isReConfirm);
+
+        void onCallPhone(View v, int position);
+
+        void onItemClick(View view, int position, boolean isReConfirm);
     }
 
 }

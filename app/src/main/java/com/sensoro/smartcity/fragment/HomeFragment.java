@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
@@ -30,14 +29,12 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
-import com.sensoro.smartcity.adapter.TopListAdapterDiff;
 import com.sensoro.smartcity.adapter.TypeSelectAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
-import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -119,6 +116,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
         mPopupWindow.setFocusable(true);
     }
 
@@ -168,7 +166,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
                 mPresenter.requestWithDirection(DIRECTION_DOWN);
-                mPresenter.requestTopData(false);
+                mPresenter.requestTopData();
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
@@ -274,27 +272,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void refreshTop(boolean isFirstInit, final List<HomeTopModel> data) {
-        ThreadPoolManager.getInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mMainHomeFragRcTypeAdapter.getData(), data);
-                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, false);
-                mRootFragment.getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        diffResult.dispatchUpdatesTo(mMainHomeFragRcTypeAdapter);
-                    }
-                });
-
-            }
-        });
-//        TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mMainHomeFragRcTypeAdapter.getData(), data);
-//        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, false);
-//        diffResult.dispatchUpdatesTo(mMainHomeFragRcTypeAdapter);
-//            mListRecyclerView.refreshComplete();
-        //
-        mMainHomeFragRcTypeAdapter.setData(data);
-        mMainHomeFragRcTypeAdapter.notifyDataSetChanged();
+        mMainHomeFragRcTypeAdapter.updateData(fgMainHomeRcType, data);
     }
 
     @Override
@@ -428,6 +406,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 //        if (mGridRecyclerView != null) {
 //            mGridRecyclerView.destroy();
 //        }
+        if (mMainHomeFragRcTypeAdapter != null) {
+            mMainHomeFragRcTypeAdapter.onDestroy();
+        }
         super.onDestroyView();
     }
 

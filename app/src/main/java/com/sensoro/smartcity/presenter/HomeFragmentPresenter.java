@@ -14,7 +14,6 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractIndexActivity;
 import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.smartcity.activity.SearchDeviceActivity;
 import com.sensoro.smartcity.activity.SearchDeviceActivityTest;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -27,15 +26,14 @@ import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,6 +45,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
@@ -60,13 +59,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private volatile boolean needAlarmPlay = false;
     private volatile boolean needRefresh = false;
     private volatile boolean needRefreshTop = false;
+    private volatile boolean needRefreshAll = false;
     private int mSoundId;
     private SoundPool mSoundPool;
     //TODO 联动类型选择
     private int mTypeSelectedIndex = 0;
     private int mStatusSelectedIndex = 0;
     //
-    private volatile int tempAlarmCount;
+    private volatile int tempAlarmCount = 0;
+    private volatile int tempNormalCount = 0;
     private volatile int tempTotalCount;
     private final List<HomeTopModel> homeTopModels = new ArrayList<>();
     /**
@@ -99,8 +100,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                requestTopData(true);
-                requestWithDirection(DIRECTION_DOWN);
+                requestInitData(true);
             }
         };
         mSoundPool.setOnLoadCompleteListener(listener);
@@ -108,11 +108,119 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mHandler.postDelayed(mTask, 3000);
     }
 
+    private void requestInitData(boolean isInit) {
+        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+            return;
+        }
+        if (isInit) {
+            getView().showProgressDialog();
+        }
+        LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
+        RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
+                .io()).flatMap(new Func1<DeviceTypeCountRsp, Observable<DeviceInfoListRsp>>() {
+            @Override
+            public Observable<DeviceInfoListRsp> call(DeviceTypeCountRsp deviceTypeCountRsp) {
+                homeTopModels.clear();
+                int alarmCount = deviceTypeCountRsp.getData().getAlarm();
+                int normal = deviceTypeCountRsp.getData().getNormal();
+                int lostCount = deviceTypeCountRsp.getData().getOffline();
+                int inactiveCount = deviceTypeCountRsp.getData().getInactive();
+                //
+                if (alarmCount > 0) {
+                    HomeTopModel alrmModel = new HomeTopModel();
+                    alrmModel.type = 0;
+                    alrmModel.value = alarmCount;
+                    homeTopModels.add(alrmModel);
+                }
+//                HomeTopModel errorModel = new HomeTopModel();
+                if (normal > 0) {
+                    HomeTopModel normalModel = new HomeTopModel();
+                    normalModel.type = 1;
+                    normalModel.value = normal;
+                    homeTopModels.add(normalModel);
+                }
+                if (lostCount > 0) {
+                    HomeTopModel lostModel = new HomeTopModel();
+                    lostModel.type = 2;
+                    lostModel.value = lostCount;
+                    homeTopModels.add(lostModel);
+                }
+                if (inactiveCount > 0) {
+                    HomeTopModel inactiveModel = new HomeTopModel();
+                    inactiveModel.type = 3;
+                    inactiveModel.value = inactiveCount;
+                    homeTopModels.add(inactiveModel);
+                }
+                final int total = alarmCount + normal + lostCount + inactiveCount;
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getView().setDetectionPoints(String.valueOf(total));
+                        getView().refreshTop(false, homeTopModels);
+                    }
+                });
+                if (alarmCount > 0) {
+                    mStatusSelectedIndex = 1;
+                } else if (normal > 0) {
+                    mStatusSelectedIndex = 2;
+                } else if (lostCount > 0) {
+                    mStatusSelectedIndex = 3;
+                } else if (inactiveCount > 0) {
+                    mStatusSelectedIndex = 4;
+                }
+                Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
+                page = 1;
+                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, status, null).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                    @Override
+                    public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
+                        //去除rfid类型
+                        List<DeviceInfo> list = deviceInfoListRsp.getData();
+                        Iterator<DeviceInfo> iterator = list.iterator();
+                        while (iterator.hasNext()) {
+                            DeviceInfo next = iterator.next();
+                            String[] sensorTypes = next.getSensorTypes();
+                            if (sensorTypes != null && sensorTypes.length > 0) {
+                                final List<String> sensorTypesList = Arrays.asList(sensorTypes);
+                                if (sensorTypesList.contains("rfid")) {
+                                    iterator.remove();
+                                }
+                            }
+                        }
+                        return deviceInfoListRsp;
+                    }
+                }).doOnNext(new Action1<DeviceInfoListRsp>() {
+                    @Override
+                    public void call(DeviceInfoListRsp deviceInfoListRsp) {
+                        SensoroCityApplication.getInstance().setData(deviceInfoListRsp.getData());
+                        organizeDataList();
+                    }
+                });
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+            @Override
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                getView().refreshData(mDataList);
+                getView().recycleViewRefreshComplete();
+                getView().dismissProgressDialog();
+                needRefreshAll = false;
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().recycleViewRefreshComplete();
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+                needRefreshAll = false;
+            }
+        });
+    }
+
     private void scheduleRefresh() {
         List<DeviceInfo> deviceInfoList = SensoroCityApplication.getInstance().getData();
         for (int i = 0; i < deviceInfoList.size(); i++) {
             DeviceInfo deviceInfo = deviceInfoList.get(i);
-            switch (deviceInfo.getStatus()) {
+            int status = deviceInfo.getStatus();
+            switch (status) {
                 case SENSOR_STATUS_ALARM:
                     deviceInfo.setSort(1);
                     break;
@@ -128,13 +236,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 default:
                     break;
             }
+            //TODO 过滤设备信息
+            int tempStatus = mStatusSelectedIndex - 1;
             for (int j = 0; j < mDataList.size(); j++) {
                 DeviceInfo currentDeviceInfo = mDataList.get(j);
-                if (currentDeviceInfo.getSn().equals(deviceInfo.getSn())) {
+                if (tempStatus == status && currentDeviceInfo.getSn().equals(deviceInfo.getSn())) {
                     mDataList.set(j, deviceInfo);
                 }
             }
-            if (deviceInfo.isNewDevice() && isMatcher(deviceInfo)) {
+            if (tempStatus == status && deviceInfo.isNewDevice() && isMatcher(deviceInfo)) {
                 deviceInfo.setNewDevice(false);
                 mDataList.add(deviceInfo);
             }
@@ -149,11 +259,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void run() {
                 //TODO 去掉只在主页可见出现的时候刷新
-                getView().refreshData(mDataList);
-                if (needRefreshTop) {
-                    getView().refreshTop(false, homeTopModels);
-                    getView().setDetectionPoints(String.valueOf(tempTotalCount));
-                    needRefreshTop = false;
+                if (needRefreshAll) {
+                    requestInitData(false);
+                } else {
+                    getView().refreshData(mDataList);
+                    if (needRefreshTop) {
+                        getView().refreshTop(false, homeTopModels);
+                        getView().setDetectionPoints(String.valueOf(tempTotalCount));
+                        needRefreshTop = false;
+                    }
                 }
                 if (needAlarmPlay) {
                     playSound();
@@ -206,18 +320,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void clickItem(int position) {
-        int index = position;
-        if (index >= 0) {
-            DeviceInfo deviceInfo = mDataList.get(index);
-            Intent intent = new Intent(mContext, MonitoringPointDetailActivity.class);
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
-            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
-            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
-            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
-            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
-            getView().startAC(intent);
-        }
+        DeviceInfo deviceInfo = mDataList.get(position);
+        Intent intent = new Intent(mContext, MonitoringPointDetailActivity.class);
+        intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
+        intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
+        intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
+        intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
+        intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
+        intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
+        getView().startAC(intent);
     }
 
     @Override
@@ -232,11 +343,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
         mHandler.removeCallbacksAndMessages(null);
         mDataList.clear();
-    }
-
-    public void toSearchAc() {
-        Intent intent = new Intent(mContext, SearchDeviceActivity.class);
-        getView().startAC(intent);
     }
 
     //子线程处理
@@ -256,14 +362,25 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 AlarmDeviceCountsBean alarmDeviceCountsBean = (AlarmDeviceCountsBean) data;
                 LogUtils.loge(this, alarmDeviceCountsBean.toString());
                 int currentAlarmCount = alarmDeviceCountsBean.get_$0();
-                if (tempAlarmCount == 0 && currentAlarmCount > 0) {
-                    needAlarmPlay = true;
-                }
-                tempAlarmCount = currentAlarmCount;
                 int normalCount = alarmDeviceCountsBean.get_$1();
                 int lostCount = alarmDeviceCountsBean.get_$2();
                 int inactiveCount = alarmDeviceCountsBean.get_$3();
+                //
+                if (tempAlarmCount == 0 && currentAlarmCount > 0) {
+                    needAlarmPlay = true;
+                }
+                //
                 needRefresh = true;
+                //TODO 暂时刷新
+                if (currentAlarmCount != tempAlarmCount || normalCount != tempNormalCount) {
+                    needRefreshAll = true;
+                    tempAlarmCount = currentAlarmCount;
+                    tempNormalCount = normalCount;
+                    return;
+                }
+                tempAlarmCount = currentAlarmCount;
+                tempNormalCount = normalCount;
+                //
                 needRefreshTop = true;
                 //
                 homeTopModels.clear();
@@ -298,8 +415,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             mContext.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    requestTopData(true);
-                    requestWithDirection(DIRECTION_DOWN);
+                    requestInitData(true);
                 }
             });
 
@@ -447,12 +563,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
     }
 
-    public void requestTopData(final boolean isFirstInit) {
+    public void requestTopData() {
         if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
             return;
-        }
-        if (isFirstInit) {
-            getView().showProgressDialog();
         }
         LogUtils.loge(this, "刷新Top信息： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
@@ -499,12 +612,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 int total = alarmCount + normal + lostCount + inactiveCount;
                 getView().setDetectionPoints(String.valueOf(total));
                 getView().refreshTop(false, homeTopModels);
-                getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
             }
         });
     }
@@ -541,22 +652,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void requestDataByStatus(int position) {
-        String statusText = INDEX_STATUS_ARRAY[position];
-//        getView().setStatusView(statusText);
-        //
-        requestTopData(false);
+        requestTopData();
         this.mStatusSelectedIndex = position;
         requestWithDirection(DIRECTION_DOWN);
     }
 
     public void requestDataByTypes(int position) {
-        //选择的类型：
-        String selectTypeValue = Constants.SELECT_TYPE_VALUES[position];
-        //
-        String typeText = SELECT_TYPE[position];
-//        getView().setTypeView(typeText);
-        //
-        requestTopData(false);
+        requestTopData();
         this.mTypeSelectedIndex = position;
         requestWithDirection(DIRECTION_DOWN);
     }
@@ -580,39 +682,33 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void clickAlarmInfo(int position) {
         DeviceInfo deviceInfo = mDataList.get(position);
-        getView().showProgressDialog();
         requestAlarmInfo(deviceInfo);
 
     }
 
     private void requestAlarmInfo(DeviceInfo deviceInfo) {
-        Long temp_startTime = null;
-        Long temp_endTime = null;
-        Log.e("hcs", ":devce::" + deviceInfo.getSn());
-        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, temp_startTime,
-                temp_endTime,
-                null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
+        //
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, deviceInfo.getSn(), null, null, null, null, null, null)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
 
             @Override
             public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                DeviceAlarmLogInfo deviceAlarmLogInfo = null;
-                if (deviceAlarmLogRsp.getData().size() == 0) {
-                    getView().toastShort("获取失败");
-                } else {
-                    deviceAlarmLogInfo = handleDeviceAlarmLogs(deviceAlarmLogRsp);
-                }
                 getView().dismissProgressDialog();
-                enterAlarmLogPop(deviceAlarmLogInfo);
+                if (deviceAlarmLogRsp.getData().size() == 0) {
+                    getView().toastShort("未获取到预警日志信息");
+                } else {
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
+                    enterAlarmLogPop(deviceAlarmLogInfo);
+                }
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
-                Log.e("hcs", ":醋味::" + errorMsg);
             }
         });
-
     }
 
     private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
@@ -621,57 +717,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
         mAlarmLogPop.show();
 
-    }
-
-    private DeviceAlarmLogInfo handleDeviceAlarmLogs(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-        List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
-        DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(0);
-        AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-        boolean isHaveRecovery = false;
-        for (int j = 0; j < recordInfoArray.length; j++) {
-            AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
-            if (recordInfo.getType().equals("recovery")) {
-                deviceAlarmLogInfo.setSort(4);
-                isHaveRecovery = true;
-                break;
-            } else {
-                deviceAlarmLogInfo.setSort(1);
-            }
-        }
-        switch (deviceAlarmLogInfo.getDisplayStatus()) {
-            case DISPLAY_STATUS_CONFIRM:
-                if (isHaveRecovery) {
-                    deviceAlarmLogInfo.setSort(2);
-                } else {
-                    deviceAlarmLogInfo.setSort(1);
-                }
-                break;
-            case DISPLAY_STATUS_ALARM:
-                if (isHaveRecovery) {
-                    deviceAlarmLogInfo.setSort(2);
-                } else {
-                    deviceAlarmLogInfo.setSort(1);
-                }
-                break;
-            case DISPLAY_STATUS_MIS_DESCRIPTION:
-                if (isHaveRecovery) {
-                    deviceAlarmLogInfo.setSort(3);
-                } else {
-                    deviceAlarmLogInfo.setSort(1);
-                }
-                break;
-            case DISPLAY_STATUS_TEST:
-                if (isHaveRecovery) {
-                    deviceAlarmLogInfo.setSort(4);
-                } else {
-                    deviceAlarmLogInfo.setSort(1);
-                }
-                break;
-            default:
-                break;
-        }
-        return deviceAlarmLogInfo;
-        //            Collections.sort(mDeviceAlarmLogInfoList);
     }
 
     public void doScanDeploy() {

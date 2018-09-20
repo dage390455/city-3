@@ -11,6 +11,7 @@ import com.amap.api.services.geocoder.GeocodeSearch;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
 import com.sensoro.smartcity.activity.SensorMoreActivityTest;
@@ -298,5 +299,12 @@ public class MonitoringPointDetailActivityPresenter extends BasePresenter<IMonit
             return;
         }
         AppUtils.diallPhone(content, mContext);
+    }
+
+    public void doMonitorHistory() {
+        String sn = mDeviceInfo.getSn();
+        Intent intent = new Intent(mContext, AlarmHistoryLogActivity.class);
+        intent.putExtra(EXTRA_SENSOR_SN, sn);
+        getView().startAC(intent);
     }
 }

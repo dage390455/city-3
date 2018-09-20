@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
@@ -350,9 +351,9 @@ public enum RetrofitServiceHelper {
      * @param unionTypes
      * @return
      */
-    public Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(int page, String sn, String deviceName, String phone,
-                                                               Long beginTime, Long endTime, String unionTypes) {
-        Observable<DeviceAlarmLogRsp> deviceAlarmLogList = retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, beginTime, endTime, unionTypes);
+    public Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(int page, String sn, String deviceName, String phone
+            , String search, Long beginTime, Long endTime, String unionTypes) {
+        Observable<DeviceAlarmLogRsp> deviceAlarmLogList = retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
         RxApiManager.getInstance().add("getDeviceAlarmLogList", deviceAlarmLogList.subscribe());
         return deviceAlarmLogList;
     }
@@ -826,5 +827,32 @@ public enum RetrofitServiceHelper {
      */
     public Observable<AuthRsp> doubleCheck(String code) {
         return retrofitService.doubleCheck(code);
+    }
+
+    /**
+     * 获取报警次数
+     *
+     * @param startTime
+     * @param endTime
+     * @param displayStatus
+     * @param sn
+     * @return
+     */
+    public Observable<AlarmCountRsp> getAlarmCount(Long startTime, Long endTime, String[] displayStatus, String sn) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (displayStatus != null && displayStatus.length > 0) {
+            for (int i = 0; i < displayStatus.length; i++) {
+                if (i == displayStatus.length - 1) {
+                    stringBuilder.append(displayStatus[i]);
+                } else {
+                    stringBuilder.append(displayStatus[i]).append(",");
+                }
+            }
+        }
+        if (TextUtils.isEmpty(stringBuilder)) {
+            return retrofitService.getAlarmCount(startTime, endTime, null, sn);
+        } else {
+            return retrofitService.getAlarmCount(startTime, endTime, stringBuilder.toString(), sn);
+        }
     }
 }

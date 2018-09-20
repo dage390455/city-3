@@ -21,4 +21,6 @@ public interface IAlertLogActivityView extends IToast, IProgressDialog, IActivit
     void dismissAlarmPopupView();
 
     void setUpdateButtonClickable(boolean canClick);
+
+    void setConfirmText(String text);
 }
