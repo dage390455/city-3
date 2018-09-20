@@ -1,61 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/c_fafafa"
-    android:orientation="vertical">
-
-    <include
-        android:id="@+id/fg_history_log_title_bar"
-        layout="@layout/item_include_imv_title" />
-
-    <RelativeLayout
-        android:id="@+id/rl_alarm_log_date_edit"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
-        android:background="@color/white"
-        android:gravity="center_vertical"
-        android:paddingBottom="5dp"
-        android:paddingEnd="20dp"
-        android:paddingStart="20dp"
-        android:paddingTop="5dp"
-        android:visibility="gone">
-
-        <TextView
-            android:id="@+id/tv_alarm_log_date_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/x54" />
-
-        <ImageView
-            android:id="@+id/iv_alarm_log_date_close"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignTop="@+id/tv_alarm_log_date_edit"
-            android:contentDescription="@null"
-            android:padding="8dp"
-            android:scaleType="centerInside"
-            android:src="@mipmap/ic_close" />
-    </RelativeLayout>
-
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
+    android:layout_height="match_parent">
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="12dp"
-        android:background="@color/white"
         android:orientation="vertical">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/fg_history_log_rc_content"
+        <include
+            android:id="@+id/fg_history_log_title_bar"
+            layout="@layout/item_include_imv_title" />
+
+        <RelativeLayout
+            android:id="@+id/rl_alarm_log_date_edit"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@color/white"
+            android:gravity="center_vertical"
+            android:paddingBottom="5dp"
+            android:paddingEnd="20dp"
+            android:paddingStart="20dp"
+            android:paddingTop="5dp"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/tv_alarm_log_date_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/x54" />
+
+            <ImageView
+                android:id="@+id/iv_alarm_log_date_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/tv_alarm_log_date_edit"
+                android:contentDescription="@null"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_close" />
+        </RelativeLayout>
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginEnd="20dp"
-            android:layout_marginStart="20dp" />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            android:layout_marginTop="12dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/fg_history_log_rc_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp" />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 
-</LinearLayout>
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/alarm_return_top"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentEnd="true"
+        android:contentDescription="@null"
+        android:src="@mipmap/ic_return_top"
+        android:visibility="gone"/>
+</RelativeLayout>

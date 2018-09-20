@@ -10,11 +10,14 @@ import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -45,7 +48,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
         IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener {
     @BindView(R.id.fg_main_warn_title_root)
-    CardView fgMainWarnTitleRoot;
+    LinearLayout fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_warn_frame_search)
     FrameLayout fgMainWarnFrameSearch;
     @BindView(R.id.fg_main_warn_et_search)
@@ -64,10 +67,13 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     ImageView fgMainWarnImvDateClose;
     @BindView(R.id.fg_main_warn_rl_date_edit)
     RelativeLayout fgMainWarnRlDateEdit;
+    @BindView(R.id.alarm_return_top)
+    ImageView mReturnTopImageView;
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
     private AlarmPopUtils mAlarmPopUtils;
+    private Animation returnTopAnimation;
 
     @Override
     protected void initData(Context activity) {
@@ -81,6 +87,10 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
+
+        returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
+        mReturnTopImageView.setAnimation(returnTopAnimation);
+        mReturnTopImageView.setVisibility(View.GONE);
         fgMainWarnEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -227,15 +237,15 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 //                }
                 if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
-//                        mReturnTopImageView.setVisibility(VISIBLE);
-//                        if (returnTopAnimation.hasEnded()) {
-//                            mReturnTopImageView.startAnimation(returnTopAnimation);
-//                        }
+                        mReturnTopImageView.setVisibility(View.VISIBLE);
+                        if (returnTopAnimation.hasEnded()) {
+                            mReturnTopImageView.startAnimation(returnTopAnimation);
+                        }
                     } else {
-//                        mReturnTopImageView.setVisibility(View.GONE);
+                        mReturnTopImageView.setVisibility(View.GONE);
                     }
                 } else {
-//                    mReturnTopImageView.setVisibility(View.GONE);
+                    mReturnTopImageView.setVisibility(View.GONE);
                 }
             }
 
@@ -249,6 +259,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void onDestroyView() {
+        if (returnTopAnimation != null) {
+            returnTopAnimation.cancel();
+            returnTopAnimation = null;
+        }
+
         if (mRootView != null) {
             ((ViewGroup) mRootView.getParent()).removeView(mRootView);
         }
@@ -269,10 +284,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 //        if (mGridRecyclerView != null) {
 //            mGridRecyclerView.destroy();
 //        }
+
         super.onDestroyView();
     }
 
-    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_imv_calendar, R.id.fg_main_warn_imv_date_close, R.id.tv_warn_alarm_search_cancel})
+    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_imv_calendar, R.id.fg_main_warn_imv_date_close,
+            R.id.tv_warn_alarm_search_cancel,R.id.alarm_return_top})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_warn_frame_search:
@@ -290,8 +307,13 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             case R.id.tv_warn_alarm_search_cancel:
                 doCancelSearch();
                 break;
+            case R.id.alarm_return_top:
+                fgMainWarnRcContent.smoothScrollToPosition(0);
+                mReturnTopImageView.setVisibility(View.GONE);
+                break;
         }
     }
+
 
     private void doCancelSearch() {
         if (getSearchTextVisible()) {
