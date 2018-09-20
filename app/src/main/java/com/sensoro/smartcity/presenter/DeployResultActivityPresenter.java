@@ -35,12 +35,13 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     private void init() {
         try {
             if (resultCode == -1) {
-                getView().setResultImageView(R.mipmap.ic_deploy_failed);
+                getView().setResultImageView(R.drawable.deploy_fail);
+                getView().setStateTextView("失败");
                 //
                 if (!TextUtils.isEmpty(sn)) {
-                    getView().setSnTextView(mContext.getString(R.string.sensor_detail_sn) + "：" + sn);
+                    getView().setSnTextView(sn);
                 }
-                if (is_station) {
+//                if (is_station) {
                     if (!TextUtils.isEmpty(errorInfo)) {
                         getView().setTipsTextView(mContext.getResources().getString(R.string
                                 .tips_deploy_station_failed));
@@ -49,14 +50,14 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setTipsTextView(mContext.getResources().getString(R.string
                                 .tips_deploy_station_not_exist));
                     }
-                } else {
-                    if (!TextUtils.isEmpty(errorInfo)) {
-                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
-                        getView().setDeployResultErrorInfo("错误：" + errorInfo);
-                    } else {
-                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_not_exist));
-                    }
-                }
+//                } else {
+//                    if (!TextUtils.isEmpty(errorInfo)) {
+//                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
+//                        getView().setDeployResultErrorInfo("错误：" + errorInfo);
+//                    } else {
+//                        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_not_exist));
+//                    }
+//                }
 
 
             } else {
@@ -65,7 +66,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 String name = deviceInfo.getName();
                 String address = deviceInfo.getAddress();
                 if (!TextUtils.isEmpty(address)) {
-                    getView().setAddressTextView("位置：" + address);
+                    getView().setAddressTextView(address);
                 }
                 long updatedTime = deviceInfo.getUpdatedTime();
                 if (!is_station) {
@@ -73,7 +74,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     String contact = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
                     String content = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
 
-                    getView().setContentTextView("联系人：" + (TextUtils.isEmpty(contact) ?
+                    getView().setContactTextView((TextUtils.isEmpty(contact) ?
                             "无" : contact) + "(" + (TextUtils.isEmpty
                             (contact) ?
                             "无" : content) + ")");
@@ -83,7 +84,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 }
 
                 if (resultCode == 1) {
-                    getView().setResultImageView(R.mipmap.ic_deploy_success);
+                    getView().setResultImageView(R.drawable.deploy_succeed);
+                    getView().setStateTextView("成功");
                     if (is_station) {
                         getView().setTipsTextView(mContext.getResources().getString(R.string
                                 .tips_deploy_station_success));
@@ -99,23 +101,21 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
                     }
                 }
-                getView().setSnTextView(mContext.getString(R.string.sensor_detail_sn) + "：" + sn);
-                getView().setNameTextView(mContext.getString(R.string.sensor_detail_name) + "：" + name);
+                getView().setSnTextView(sn);
+                getView().setNameTextView(name);
 //                getView().setLonLanTextView(mContext.getString(R.string.sensor_detail_lon) + "：" + lon, mContext
 //                        .getString(R.string.sensor_detail_lan) + "：" + lan);
                 if (is_station) {
-                    getView().setStatusTextView(mContext.getString(R.string.sensor_detail_status) + "：" + Constants
-                            .STATION_STATUS_ARRAY[deviceInfo.getStatus() + 1]);
+                    getView().setStatusTextView(Constants.STATION_STATUS_ARRAY[deviceInfo.getStatus() + 1]);
                 } else {
-                    getView().setStatusTextView(mContext.getString(R.string.sensor_detail_status) + "：" + Constants
-                            .DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
+                    getView().setStatusTextView(Constants.DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
                 }
 //                // 修改长传时间
 //                String lastUpdatedTime = deviceInfo.getLastUpdatedTime();
                 if (updatedTime == -1) {
                     getView().setUpdateTextViewVisible(false);
                 } else {
-                    getView().setUpdateTextView(mContext.getString(R.string.update_time) + "：" + DateUtil
+                    getView().setUpdateTextView(DateUtil
                             .getFullParseDate(updatedTime));
                 }
 //                if (lastUpdatedTime != null) {

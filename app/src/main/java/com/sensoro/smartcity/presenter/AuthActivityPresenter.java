@@ -13,7 +13,6 @@ import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.AuthRsp;
-import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -35,12 +34,8 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
 
     }
 
-    public void doAuthCheck(int textCount, String code) {
-        if (textCount == 6) {
+    public void doAuthCheck(String code) {
             doSecondAuth(code);
-        } else {
-            getView().toastShort("请选择6位数字");
-        }
     }
 
     private void doSecondAuth(String code) {
@@ -66,8 +61,6 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
     }
 
     private void saveLoginDataOpenMain(EventLoginData eventLoginData) {
-        //
-        PreferencesHelper.getInstance().saveUserData(eventLoginData);
         //
         EventData eventData = new EventData();
         eventData.code = EVENT_DATA_AUTH_SUC;

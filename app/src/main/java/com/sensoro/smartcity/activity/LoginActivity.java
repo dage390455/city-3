@@ -7,10 +7,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.SystemClock;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
@@ -22,7 +27,6 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PermissionUtils;
 import com.sensoro.smartcity.util.PermissionsResultObserve;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroImageView;
 import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.util.ArrayList;
@@ -37,16 +41,28 @@ import butterknife.OnClick;
 
 public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView, PermissionsResultObserve {
 
-    @BindView(R.id.login_email)
-    EditText accountEt;
-    @BindView(R.id.login_pwd)
-    EditText pwdEt;
-    @BindView(R.id.login_bg_iv)
-    SensoroImageView bgImageView;
-    @BindView(R.id.login_cover)
-    View coverView;
     @BindView(R.id.login_btn)
     Button login_btn;
+    @BindView(R.id.ac_login_imv_account_icon)
+    ImageView acLoginImvAccountIcon;
+    @BindView(R.id.ac_login_et_account)
+    EditText acLoginEtAccount;
+    @BindView(R.id.ac_login_imv_account_clear)
+    ImageView acLoginImvAccountClear;
+    @BindView(R.id.ac_login_imv_psd_icon)
+    ImageView acLoginImvPsdIcon;
+    @BindView(R.id.ac_login_et_psd)
+    EditText acLoginEtPsd;
+    @BindView(R.id.ac_login_imv_psd_clear)
+    ImageView acLoginImvPsdClear;
+    @BindView(R.id.ac_login_tv_logo_bottom)
+    TextView acLoginTvLogoBottom;
+    @BindView(R.id.ac_login_tv_logo)
+    TextView acLoginTvLogo;
+    @BindView(R.id.ac_login_tv_logo_description)
+    TextView acLoginTvLogoDescription;
+    @BindView(R.id.ac_login_root)
+    FrameLayout acLoginRoot;
     private ProgressUtils mProgressUtils;
     private static final int MY_REQUEST_PERMISSION_CODE = 0x14;
     private static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
@@ -67,12 +83,108 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_login);
+        setContentView(R.layout.activity_login_test);
         ButterKnife.bind(mActivity);
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);
-        mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        mPresenter.onCreate();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE);
+    }
+
+    private void initView() {
+
+        if (acLoginEtAccount.getText().length() > 0 || acLoginEtPsd.getText().length() > 0) {
+            updateLogoDescriptionState(false);
+        }
+        if (acLoginEtAccount.getText().length() > 0 && acLoginEtPsd.getText().length() > 0) {
+            updateLoginBtnState(true);
+        } else {
+            updateLoginBtnState(false);
+        }
+
+
+        acLoginEtAccount.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    acLoginImvAccountIcon.setImageResource(R.drawable.login_account_high_light);
+                    acLoginImvAccountClear.setVisibility(View.VISIBLE);
+                    if (acLoginEtPsd.getText().length() > 0) {
+                        updateLoginBtnState(true);
+                    } else {
+                        updateLoginBtnState(false);
+                    }
+
+                } else {
+                    acLoginImvAccountIcon.setImageResource(R.drawable.login_account);
+                    acLoginImvAccountClear.setVisibility(View.GONE);
+                    if (acLoginEtPsd.getText().length() == 0) {
+                        updateLogoDescriptionState(true);
+                    }
+                }
+            }
+        });
+        acLoginEtPsd.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                if (s.length() > 0) {
+                    acLoginImvPsdIcon.setImageResource(R.drawable.login_account_high_light);
+                    acLoginImvPsdClear.setVisibility(View.VISIBLE);
+                    if (acLoginEtAccount.getText().length() > 0) {
+                        updateLoginBtnState(true);
+                    } else {
+                        updateLoginBtnState(false);
+                    }
+                } else {
+                    acLoginImvPsdIcon.setImageResource(R.drawable.login_account);
+                    acLoginImvPsdClear.setVisibility(View.GONE);
+                    if (acLoginEtAccount.getText().length() == 0) {
+                        updateLogoDescriptionState(true);
+                    }
+                }
+            }
+        });
+    }
+
+    private void updateLoginBtnState(boolean isEnable) {
+        login_btn.setEnabled(isEnable);
+        if (isEnable) {
+            setLogButtonState(RetrofitServiceHelper.INSTANCE.getBaseUrlType());
+        } else {
+            login_btn.setBackgroundResource(R.drawable.shape_bg_corner_dfdf_shadow);
+        }
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
     }
 
     @Override
@@ -175,14 +287,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     }
 
 
-    @OnClick(R.id.login_btn)
-    public void doForwardMain() {
-        String account = accountEt.getText().toString();
-        String pwd = pwdEt.getText().toString();
-        mPresenter.login(account, pwd);
-    }
-
-
     @Override
     protected void onDestroy() {
         mPermissionUtils.unregisterObserver(this);
@@ -213,17 +317,32 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     @Override
     public void showAccountName(String name) {
         if (!TextUtils.isEmpty(name)) {
-            accountEt.setText(name);
-            accountEt.setSelection(name.length());
+            acLoginEtAccount.setText(name);
+            acLoginEtAccount.setSelection(name.length());
+
         }
+
+        updateAccountIcon(TextUtils.isEmpty(name));
+    }
+
+    private void updateAccountIcon(boolean isEmpty) {
+        acLoginImvAccountIcon.setImageResource(isEmpty ? R.drawable.login_account : R.drawable.login_account_high_light);
+        acLoginImvAccountClear.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
     @Override
     public void showAccountPwd(String pwd) {
         if (!TextUtils.isEmpty(pwd)) {
-            pwdEt.setText(pwd);
-            pwdEt.setSelection(pwd.length());
+            acLoginEtPsd.setText(pwd);
+            acLoginEtPsd.setSelection(pwd.length());
         }
+
+        updatePsdIcon(TextUtils.isEmpty(pwd));
+    }
+
+    private void updatePsdIcon(boolean isEmpty) {
+        acLoginImvPsdIcon.setImageResource(isEmpty ? R.drawable.login_psd : R.drawable.login_psd_high_light);
+        acLoginImvPsdClear.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -276,10 +395,40 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     @Override
     public void onPermissionGranted() {
         mPresenter.initData(mActivity);
+        initView();
     }
 
     @Override
     public void onPermissionDenied() {
 
+    }
+
+
+    @OnClick({R.id.ac_login_et_account, R.id.ac_login_et_psd, R.id.ac_login_imv_account_clear,
+            R.id.ac_login_imv_psd_clear, R.id.login_btn})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ac_login_et_account:
+            case R.id.ac_login_et_psd:
+                updateLogoDescriptionState(false);
+                break;
+            case R.id.ac_login_imv_account_clear:
+                acLoginEtAccount.getText().clear();
+                break;
+            case R.id.ac_login_imv_psd_clear:
+                acLoginEtPsd.getText().clear();
+                break;
+            case R.id.login_btn:
+                String account = acLoginEtAccount.getText().toString();
+                String pwd = acLoginEtPsd.getText().toString();
+                mPresenter.login(account, pwd);
+                break;
+
+        }
+    }
+
+    private void updateLogoDescriptionState(boolean isVisible) {
+        acLoginTvLogo.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acLoginTvLogoDescription.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }

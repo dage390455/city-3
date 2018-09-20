@@ -10,9 +10,9 @@ import android.os.Vibrator;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployDeviceDetailActivity;
+import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
 import com.sensoro.smartcity.activity.DeployManualActivity;
-import com.sensoro.smartcity.activity.DeployResultActivityTest;
+import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.ScanLoginResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -230,7 +230,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                 try {
                     if (deviceInfoListRsp.getData().size() > 0) {
                         Intent intent = new Intent();
-                        intent.setClass(mContext, DeployDeviceDetailActivity.class);
+                        intent.setClass(mContext, DeployMonitorDetailActivity.class);
                         intent.putExtra(EXTRA_DEVICE_INFO, deviceInfoListRsp.getData().get(0));
                         intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
                         intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
@@ -283,7 +283,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                         deviceInfo.setName(name);
                     }
                     Intent intent = new Intent();
-                    intent.setClass(mContext, DeployDeviceDetailActivity.class);
+                    intent.setClass(mContext, DeployMonitorDetailActivity.class);
                     intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
                     intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
                     intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
@@ -299,7 +299,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     private void freshError(String scanSN, String errorInfo, boolean isStation) {
         //
         Intent intent = new Intent();
-        intent.setClass(mContext, DeployResultActivityTest.class);
+        intent.setClass(mContext, DeployResultActivity.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, -1);
         intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
         intent.putExtra(EXTRA_IS_STATION_DEPLOY, isStation);

@@ -3,12 +3,11 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.widget.CardView;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.AlertLogActivity;
+import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
@@ -303,7 +302,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
     public void clickItem(int position, boolean isReConfirm) {
         this.isReConfirm = isReConfirm;
-        Intent intent = new Intent(mContext, AlertLogActivity.class);
+        Intent intent = new Intent(mContext, AlarmDetailLogActivity.class);
         intent.putExtra(EXTRA_ALARM_INFO, mDeviceAlarmLogInfoList.get(position));
         getView().startAC(intent);
     }

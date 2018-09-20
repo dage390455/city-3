@@ -15,11 +15,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sensoro.smartcity.constant.Constants.IMAGE_ITEM_ADD;
 
 /**
  * ================================================
@@ -171,7 +172,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                 ll_add.setVisibility(View.VISIBLE);
                 iv_img.setVisibility(View.GONE);
 //                iv_img.setImageResource(R.drawable.selector_image_add);
-                clickPosition = SensoroPopupAlarmView.IMAGE_ITEM_ADD;
+                clickPosition = IMAGE_ITEM_ADD;
                 image_delete.setVisibility(View.GONE);
                 iv_record_play.setVisibility(View.GONE);
             } else {

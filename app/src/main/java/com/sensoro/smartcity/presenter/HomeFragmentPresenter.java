@@ -12,9 +12,9 @@ import android.util.Log;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractIndexActivity;
-import com.sensoro.smartcity.activity.MonitoringPointDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
-import com.sensoro.smartcity.activity.SearchDeviceActivityTest;
+import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
@@ -321,7 +321,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void clickItem(int position) {
         DeviceInfo deviceInfo = mDataList.get(position);
-        Intent intent = new Intent(mContext, MonitoringPointDetailActivity.class);
+        Intent intent = new Intent(mContext, MonitorPointDetailActivity.class);
         intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
         intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
         intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
@@ -726,7 +726,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void doSearch() {
-        Intent intent = new Intent(mContext, SearchDeviceActivityTest.class);
+        Intent intent = new Intent(mContext, SearchMonitorActivity.class);
         getView().startAC(intent);
     }
 

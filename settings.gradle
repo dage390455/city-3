@@ -1,1 +1,1 @@
-include ':app', ':cosmocalendar', ':ocr_ui', ':pulltorefresh', 'menudrawer', 'MPChartLib', ':imagepicker', ':TagsEditText'
+include ':app', ':cosmocalendar', ':ocr_ui', ':pulltorefresh', ':imagepicker'

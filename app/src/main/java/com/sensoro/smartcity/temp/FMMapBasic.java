@@ -25,9 +25,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.ViewHelper;
 
-import java.util.Collection;
-
-import mabbas007.tagsedittext.TagsEditText;
 
 /**
  * 基础地图显示
@@ -36,14 +33,12 @@ import mabbas007.tagsedittext.TagsEditText;
  * @author hezutao@fengmap.com
  * @version 2.0.0
  */
-public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener, OnFMMapClickListener, TagsEditText
-        .TagsEditListener {
+public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener, OnFMMapClickListener {
 
     private FMMap mMap;
     private FMLocationLayer mLocationLayer;
     private FMLocationMarker mLocationMarker;
     private FMImageLayer mImageLayer;
-    private TagsEditText tagsEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,11 +69,6 @@ public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener
     private void openMapByPath() {
 
         FMMapView mapView = (FMMapView) findViewById(R.id.map_view);
-        tagsEditText = (TagsEditText) findViewById(R.id.tet);
-//        tagsEditText.setTags();
-        tagsEditText.getTags();
-        tagsEditText.setTagsListener(this);
-        tagsEditText.onSaveInstanceState();
         mMap = mapView.getFMMap();
         mMap.setOnFMMapInitListener(this);
         //加载离线数据
@@ -222,18 +212,4 @@ public class FMMapBasic extends AppCompatActivity implements OnFMMapInitListener
         }
     }
 
-    @Override
-    public void onTagsChanged(Collection<String> tags) {
-
-    }
-
-    @Override
-    public void onEditingFinished() {
-
-    }
-
-    @Override
-    public void onTagDuplicate() {
-
-    }
 }

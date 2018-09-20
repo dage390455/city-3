@@ -9,11 +9,12 @@ import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
-import com.sensoro.smartcity.activity.MainActivityTest;
+import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
@@ -34,13 +35,12 @@ import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 
-public class LoginPresenter extends BasePresenter<ILoginView> implements Constants {
+public class LoginPresenter extends BasePresenter<ILoginView> implements Constants, IOnCreate {
     private Activity mContext;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        EventBus.getDefault().register(this);
         readLoginData();
         initSeverUrl();
     }
@@ -126,12 +126,14 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         LogUtils.loge("logPresenter", "phoneId = " + phoneId);
                         //TODO 处理Character信息
 //                      mCharacter = userInfo.getCharacter();
-                        eventLoginData.roles = userInfo.getRoles();
+                        String roles = userInfo.getRoles();
+                        eventLoginData.roles = roles;
                         String isSpecific = userInfo.getIsSpecific();
                         eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
                         eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
                         eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                         eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
+                        eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
                         //
                         UserInfo.Account account1 = userInfo.getAccount();
                         if (account1 != null) {
@@ -143,8 +145,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                                 return;
                             }
                         }
-                        //
-                        PreferencesHelper.getInstance().saveUserData(eventLoginData);
                         //
                         openMain(eventLoginData);
                         //                    getView().dismissProgressDialog();
@@ -166,7 +166,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
     private void openMain(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
-        mainIntent.setClass(mContext, MainActivityTest.class);
+        mainIntent.setClass(mContext, MainActivity.class);
         mainIntent.putExtra("eventLoginData", eventLoginData);
         getView().startAC(mainIntent);
         getView().finishAc();
@@ -196,5 +196,10 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

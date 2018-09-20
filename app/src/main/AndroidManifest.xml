@@ -105,64 +105,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".activity.LoginActivity"
-            android:launchMode="singleInstance"
-            android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.MainActivity"
-            android:configChanges="orientation|keyboardHidden"
-            android:launchMode="singleTask"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme"
-            android:windowSoftInputMode="adjustResize">
-
-        </activity>
-        <activity
-            android:name=".activity.SearchDeviceActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.SensorMoreActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.CalendarActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.DeployActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.DeployResultActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.SearchAlarmActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
             android:name=".activity.DeployManualActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.DeploySettingNameActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.DeploySettingTagActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.AlarmDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.SensorDetailActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.DeploySettingContactActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LauncherTheme" />
         <activity
@@ -243,34 +186,33 @@
         <activity android:name=".activity.ContractInfoActivity" />
         <activity android:name=".activity.ContractResultActivity" />
         <activity android:name=".activity.ScanLoginResultActivity" />
-        <activity android:name=".activity.DeploySettingPhotoActivity" />
-        <activity android:name=".activity.AuthActivity" />
+        <activity android:name=".activity.DeployMonitorSettingPhotoActivity" />
         <activity android:name=".activity.TakeRecordActivity" />
         <activity android:name=".activity.VideoPlayActivity" />
         <activity
-            android:name=".activity.MainActivityTest"
+            android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:launchMode="singleInstance" />
-        <activity android:name=".activity.DeployDeviceDetailActivity" />
+        <activity android:name=".activity.DeployMonitorDetailActivity" />
         <activity android:name=".activity.DeployDeviceTagActivity" />
-        <activity android:name=".activity.AlertLogActivity" />
+        <activity android:name=".activity.AlarmDetailLogActivity" />
         <activity android:name=".activity.ScanActivity" />
-        <activity android:name=".activity.MonitoringPointDetailActivity" />
+        <activity android:name=".activity.MonitorPointDetailActivity" />
         <activity android:name=".activity.ContractManagerActivity" />
         <activity android:name=".activity.MerchantSwitchActivity" />
-        <activity android:name=".activity.AlarmContactActivity" />
-        <activity android:name=".activity.NameAddressActivity" />
-        <activity android:name=".activity.DeployResultActivityTest" />
-        <activity android:name=".activity.SearchDeviceActivityTest" />
+        <activity android:name=".activity.DeployMonitorAlarmContactActivity" />
+        <activity android:name=".activity.DeployMonitorNameAddressActivity" />
+        <activity android:name=".activity.DeployResultActivity" />
+        <activity android:name=".activity.SearchMonitorActivity" />
         <activity
-            android:name=".activity.LoginActivityTest"
+            android:name=".activity.LoginActivity"
             android:launchMode="singleInstance"
             android:windowSoftInputMode="stateAlwaysHidden" />
-        <activity android:name=".activity.AuthActivityTest" />
+        <activity android:name=".activity.AuthActivity" />
         <activity android:name=".activity.DeployMapActivity" />
-        <activity android:name=".activity.SensorMoreActivityTest" />
+        <activity android:name=".activity.MonitorMoreActivity" />
         <activity android:name=".activity.MonitorPointMapActivity" />
         <activity android:name=".activity.InspectionTaskListActivity" />
         <activity android:name=".activity.InspectionTaskDetailActivity" />

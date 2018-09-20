@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
-    def verName = "2.2.2"
+    def verName = "3.1.0"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
@@ -155,11 +155,9 @@ dependencies {
     compile 'com.android.support:design:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     //
-    compile project(':MPChartLib')
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     compile 'com.jcodecraeer:xrecyclerview:1.5.9'
     compile project(':cosmocalendar')
-    compile project(':menudrawer')
     compile files('libs/Baidu_Mtj_3.8.2.1.jar')
     //    annotationProcessor 'com.github.jokermonn:permissions4m:1.0.2-processor'
     compile 'com.jakewharton:butterknife:8.7.0'
@@ -179,7 +177,6 @@ dependencies {
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     //
     compile files('libs/GetuiSDK2.12.4.0.jar')
-    compile project(':TagsEditText')
     //  更改扫描二维码为maven库
     compile 'cn.bingoogolapple:bga-qrcode-zxing:1.2.4'
     //
