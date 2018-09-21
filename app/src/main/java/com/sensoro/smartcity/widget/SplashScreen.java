@@ -14,7 +14,6 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.activity.LoginActivityTest;
 
 public class SplashScreen {
     private Dialog splashDialog;
@@ -63,7 +62,7 @@ public class SplashScreen {
                 handler.postDelayed(new Runnable() {
                     public void run() {
                         removeSplash();
-                        activity.startActivity(new Intent(activity, LoginActivityTest.class));
+                        activity.startActivity(new Intent(activity, LoginActivity.class));
                         activity.finish();
                     }
                 }, millis);

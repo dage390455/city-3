@@ -9,6 +9,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.util.ResourceUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -16,7 +17,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import mabbas007.tagsedittext.utils.ResourceUtils;
 
 public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDeviceTagActivityView> implements Constants {
     private final List<String> mHistoryKeywords = new ArrayList<>();

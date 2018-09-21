@@ -6,7 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployActivity;
+import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -143,7 +143,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                 deviceInfo.setName(name);
             }
             Intent intent = new Intent();
-            intent.setClass(mContext, DeployActivity.class);
+            intent.setClass(mContext, DeployMonitorDetailActivity.class);
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
             intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
@@ -162,7 +162,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
             Intent intent = new Intent();
             if (response.getData().size() > 0) {
 
-                intent.setClass(mContext, DeployActivity.class);
+                intent.setClass(mContext, DeployMonitorDetailActivity.class);
                 intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
                 intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
                 intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));

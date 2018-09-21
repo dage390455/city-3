@@ -21,7 +21,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.adapter.AlertLogRcContentAdapter;
-import com.sensoro.smartcity.adapter.TimerShaftAdapter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -50,7 +49,7 @@ import rx.schedulers.Schedulers;
 import static com.sensoro.smartcity.util.AppUtils.isAppInstalled;
 
 public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
-        TimerShaftAdapter.OnPhotoClickListener, Constants {
+        AlertLogRcContentAdapter.OnPhotoClickListener, Constants {
 
     private final FixHeightBottomSheetDialog mAlarmLogDialog;
     private final Activity mActivity;

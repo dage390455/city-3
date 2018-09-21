@@ -8,8 +8,7 @@ import android.text.TextUtils;
 import com.igexin.sdk.PushManager;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
-import com.sensoro.smartcity.activity.LoginActivityTest;
-import com.sensoro.smartcity.activity.MainActivityTest;
+import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
@@ -58,14 +57,14 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     //没有登录跳转登录界面
     private void openLogin() {
         Intent loginIntent = new Intent();
-        loginIntent.setClass(mContext, LoginActivityTest.class);
+        loginIntent.setClass(mContext, LoginActivity.class);
         getView().startAC(loginIntent);
         getView().finishAc();
     }
 
     private void openMain(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
-        mainIntent.setClass(mContext, MainActivityTest.class);
+        mainIntent.setClass(mContext, MainActivity.class);
         mainIntent.putExtra("eventLoginData", eventLoginData);
         getView().startAC(mainIntent);
         getView().finishAc();

@@ -37,14 +37,16 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
     }
 
-    private TimerShaftAdapter.OnPhotoClickListener onPhotoClickListener;
+    private OnPhotoClickListener onPhotoClickListener;
 
     public void setData(List<AlarmInfo.RecordInfo> recordInfoList) {
         this.timeShaftParentBeans.clear();
         this.timeShaftParentBeans.addAll(recordInfoList);
     }
-
-    public void setOnPhotoClickListener(TimerShaftAdapter.OnPhotoClickListener onPhotoClickListener) {
+    public interface OnPhotoClickListener {
+        void onPhotoItemClick(int position, List<ScenesData> scenesDataList);
+    }
+    public void setOnPhotoClickListener(OnPhotoClickListener onPhotoClickListener) {
         this.onPhotoClickListener = onPhotoClickListener;
     }
 

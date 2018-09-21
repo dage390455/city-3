@@ -7,7 +7,7 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.InspectionTaskListActivity;
-import com.sensoro.smartcity.activity.LoginActivityTest;
+import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -52,7 +52,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 public void onCompleted(ResponseBase responseBase) {
                     if (responseBase.getErrcode() == ResponseBase.CODE_SUCCESS) {
                         RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
-                        Intent intent = new Intent(mContext, LoginActivityTest.class);
+                        Intent intent = new Intent(mContext, LoginActivity.class);
                         getView().startAC(intent);
                     }
                     getView().dismissProgressDialog();
