@@ -175,6 +175,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
+                finishAc();
                 break;
             case R.id.bt_deploy_map_signal:
                 mPresenter.refreshSignal();

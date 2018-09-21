@@ -301,6 +301,9 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         if (progressDialog != null) {
             progressDialog.cancel();
         }
+        if (rb_start != null) {
+            rb_start.onDestroy();
+        }
         myHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
@@ -343,4 +346,5 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
         vv_play.setLooping(true);
         vv_play.start();
     }
+
 }
