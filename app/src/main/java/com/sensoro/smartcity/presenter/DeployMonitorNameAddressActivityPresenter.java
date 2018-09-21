@@ -25,6 +25,11 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+
+        String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
+        if (!TextUtils.isEmpty(sn)) {
+            getView().updateTvTitle(sn);
+        }
         String name = mContext.getIntent().getStringExtra(EXTRA_SETTING_NAME_ADDRESS);
         String history = PreferencesHelper.getInstance().getDeployNameAddressHistory();
         if (!TextUtils.isEmpty(history)) {

@@ -35,8 +35,6 @@ public class InspectionTaskStatePopUtils {
 
         mSelectStateAdapter = new InspectionTaskStateSelectAdapter(activity);
         GridLayoutManager manager = new GridLayoutManager(activity, 3);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(activity, DividerItemDecoration.VERTICAL);
-        mRcStateSelect.addItemDecoration(dividerItemDecoration);
         mRcStateSelect.setLayoutManager(manager);
         mRcStateSelect.setAdapter(mSelectStateAdapter);
         mSelectStateAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
@@ -50,7 +48,7 @@ public class InspectionTaskStatePopUtils {
         mPopupWindow.setContentView(view);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
         mPopupWindow.setFocusable(true);
 
@@ -92,6 +90,10 @@ public class InspectionTaskStatePopUtils {
     }
     public void setUpAnimation() {
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentUpAnim);
+    }
+
+    public InspectionStatusCountModel getItem(int position) {
+        return mSelectStateAdapter.getItem(position);
     }
 
     public interface SelectDeviceTypeItemClickListener{

@@ -3,6 +3,7 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,9 +46,10 @@ public class InspectionTaskStateSelectAdapter extends RecyclerView.Adapter<Inspe
     @Override
     public void onBindViewHolder(InspectionTaskStateSelectHolder holder, int position) {
         Resources resources = mContext.getResources();
-        InspectionStatusCountModel inspectionStatusCountModel = mStateCountList.get(position);
-        holder.itemPopTvSelectCount.setText(inspectionStatusCountModel.count+"");
-        holder.itemPopTvSelectState.setText(inspectionStatusCountModel.state);
+        InspectionStatusCountModel ic = mStateCountList.get(position);
+        Log.e("hcs","ic:::"+ic.count+":  "+ic.state);
+        holder.itemPopTvSelectCount.setText(ic.count+"");
+        holder.itemPopTvSelectState.setText(ic.state);
 
         holder.itemPopSelectLlRoot.setBackgroundResource(position != selectPosition ? R.drawable.shape_bg_solid_ff_stroke_df_corner
         : R.drawable.shape_bg_corner_29c_shadow);

@@ -74,7 +74,7 @@ public interface Constants {
             R.drawable.type_flame, R.drawable.type_water_monitoring, R.drawable.type_leak,
             R.drawable.type_gas, R.drawable.type_emergency_call, R.drawable.type_tracking_device,
             R.drawable.type_fire_hydraulic, R.drawable.type_geomagnetic, R.drawable.type_lock_monitoring,
-            R.drawable.type_tempature_humidity, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
+            R.drawable.type_tempature, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
             , R.mipmap.ic_sensor_electric_alarm, R.mipmap.ic_sensor_infrared,
             R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
     };
@@ -198,6 +198,8 @@ public interface Constants {
     String EXTRA_DEPLOY_PHOTO = "extra_deploy_photo";
     String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
     String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
+    String EXTRA_DEPLOY_TO_SN = "extra_deploy_to_sn";
+
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     //

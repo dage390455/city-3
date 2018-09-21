@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -39,6 +40,12 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     RecyclerView acNamAddressRcHistory;
     @BindView(R.id.ac_nam_address_tv_save)
     TextView acNamAddressTvSave;
+    @BindView(R.id.include_text_title_imv_arrows_left)
+    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_title)
+    TextView includeTextTitleTvTitle;
+    @BindView(R.id.include_text_title_tv_subtitle)
+    TextView includeTextTitleTvSubtitle;
     private NameAddressHistoryAdapter mHistoryAdapter;
 
     @Override
@@ -50,6 +57,8 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     }
 
     private void initView() {
+        includeTextTitleTvTitle.setText("名称/地址");
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
         initRcHistory();
     }
 
@@ -92,6 +101,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     public void setIntentResult(int resultCode, Intent data) {
 
     }
+
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
@@ -123,6 +133,11 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     @Override
     public void updateSearchHistoryData(List<String> searchStr) {
         mHistoryAdapter.updateSearchHistoryAdapter(searchStr);
+    }
+
+    @Override
+    public void updateTvTitle(String sn) {
+        includeTextTitleTvTitle.setText(sn);
     }
 
     @Override

@@ -9,4 +9,6 @@ public interface IDeployMonitorNameAddressActivityView extends IToast, IActivity
     void setEditText(String text);
 
     void updateSearchHistoryData(List<String> searchStr);
+
+    void updateTvTitle(String sn);
 }
