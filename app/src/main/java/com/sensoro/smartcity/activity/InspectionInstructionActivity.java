@@ -90,7 +90,7 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -131,5 +131,6 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
 
     @OnClick(R.id.include_text_title_imv_arrows_left)
     public void onViewClicked() {
+        finishAc();
     }
 }

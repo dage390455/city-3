@@ -122,7 +122,7 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     @Override
     public void finishAc() {
-
+        mActivity.finish();
     }
 
     @Override
@@ -165,6 +165,7 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
+                finishAc();
                 break;
         }
     }

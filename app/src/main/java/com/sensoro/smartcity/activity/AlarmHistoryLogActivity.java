@@ -138,6 +138,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
         includeImvTitleImvSubtitle.setOnClickListener(this);
         ivAlarmLogDateClose.setOnClickListener(this);
+        includeImvTitleImvArrowsLeft.setOnClickListener(this);
     }
 
     @Override
@@ -255,6 +256,9 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
             case R.id.alarm_return_top:
                 acHistoryLogRcContent.smoothScrollToPosition(0);
                 mReturnTopImageView.setVisibility(View.GONE);
+                break;
+            case R.id.include_imv_title_imv_arrows_left:
+                finishAc();
                 break;
         }
     }

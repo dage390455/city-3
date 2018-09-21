@@ -108,6 +108,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         acMonitoringPointClAlertContact.setOnClickListener(this);
         acMonitoringPointClLocationNavigation.setOnClickListener(this);
         acMonitoringPointImvDetail.setOnClickListener(this);
+        includeImvTitleImvArrowsLeft.setOnClickListener(this);
 
 
     }
@@ -229,7 +230,9 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
             case R.id.ac_monitoring_point_imv_detail:
                 mPresenter.doMonitorHistory();
                 break;
-
+            case R.id.include_imv_title_imv_arrows_left:
+                finishAc();
+                break;
         }
     }
 
