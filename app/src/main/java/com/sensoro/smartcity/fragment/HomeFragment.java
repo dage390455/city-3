@@ -27,6 +27,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
 import com.sensoro.smartcity.adapter.TypeSelectAdapter;
@@ -40,6 +41,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
+import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
 
 import java.util.List;
 
@@ -75,7 +77,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeAdapter;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
-    private PopupWindow mPopupWindow;
+    private SelectDeviceTypePopUtils mSelectDeviceTypePop;
 
     @Override
     protected void initData(Context activity) {
@@ -92,32 +94,18 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     private void initPop() {
-        View view = LayoutInflater.from(mRootFragment.getActivity()).inflate(R.layout.item_pop_type_select, null);
-        RecyclerView mRcTypeSelect = view.findViewById(R.id.pop_type_select_rc);
-        final TextView tvSelectType = view.findViewById(R.id.pop_type_tv_select_type);
-        TypeSelectAdapter mTypeSelectAdapter = new TypeSelectAdapter(mRootFragment.getActivity());
-        GridLayoutManager manager = new GridLayoutManager(mRootFragment.getActivity(), 4);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mRootFragment.getActivity(), DividerItemDecoration.VERTICAL);
-        mRcTypeSelect.addItemDecoration(dividerItemDecoration);
-        mRcTypeSelect.setLayoutManager(manager);
-        mRcTypeSelect.setAdapter(mTypeSelectAdapter);
-        mTypeSelectAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
+        mSelectDeviceTypePop = new SelectDeviceTypePopUtils(mRootFragment.getActivity());
+        mSelectDeviceTypePop.updateSelectDeviceTypeList(SensoroCityApplication.getInstance().mDeviceTypeList);
+        mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
-            public void onItemClick(View view, int position) {
+            public void onSelectDeviceTypeItemClick(View view, int position) {
                 mPresenter.requestDataByTypes(position);
                 //选择类型的pop点击事件
                 fgMainHomeTvSelectType.setText(Constants.SELECT_TYPE[position]);
-                tvSelectType.setText(Constants.SELECT_TYPE[position]);
-                mPopupWindow.dismiss();
+                mSelectDeviceTypePop.dismiss();
             }
         });
-        mPopupWindow = new PopupWindow(mRootFragment.getActivity());
-        mPopupWindow.setContentView(view);
-        mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
-        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
-        mPopupWindow.setFocusable(true);
+
     }
 
     private void initRcContent() {
@@ -292,7 +280,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
 
     public void showTypePopupView() {
-        mPopupWindow.showAtLocation(fgMainHomeLlRoot, Gravity.TOP, 0, 0);
+        mSelectDeviceTypePop.showAtLocation(fgMainHomeLlRoot,Gravity.TOP);
     }
 
     @Override
@@ -329,25 +317,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         }
     }
 
-    /**
-     * poup 展示在某个控件下
-     */
-    private void showSelectTypePop() {
-//        if (Build.VERSION.SDK_INT < 24) {
-//            mPopupWindow.showAsDropDown(fgMainHomeTvSelectType);
-//        } else {  // 适配 android 7.0
-//            int[] location = new int[2];
-//            fgMainHomeTvSelectType.getLocationOnScreen(location);
-//            Point point = new Point();
-//            mRootFragment.getActivity().getWindowManager().getDefaultDisplay().getSize(point);
-//            int tempheight = mPopupWindow.getHeight();
-//            if (tempheight == WindowManager.LayoutParams.MATCH_PARENT || point.y <= tempheight) {
-//                mPopupWindow.setHeight(point.y - location[1] - fgMainHomeTvSelectType.getHeight());
-//            }
-//            mPopupWindow.showAtLocation(fgMainHomeTvSelectType, Gravity.NO_GRAVITY, location[0], location[1] + fgMainHomeTvSelectType.getHeight());
-//        }
-//        mPopupWindow.showAsDropDown();
-    }
+
 
     private void addImbRotate() {
         RotateAnimation rotateAnimation = new RotateAnimation(0, 45, Animation.RELATIVE_TO_SELF, 0.5f,

@@ -33,6 +33,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
@@ -55,6 +56,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE;
+import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE_RESOURCE;
+import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE_VALUES;
+import static com.sensoro.smartcity.constant.Constants.SENSOR_MENU_MATCHER_ARRAY;
+
 /**
  * Created by sensoro on 17/7/24.
  */
@@ -72,6 +78,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     public volatile boolean hasGotToken = false;
     public static String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
     public AMapLocationClient mLocationClient;
+    public ArrayList<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
 
     static {
         //启用矢量图兼容
@@ -399,11 +406,19 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         api.registerApp(Constants.APP_ID);
 //        FMMapSDK.init(this);
         //
+        initDeviceType();
         initImagePicker();
         initUploadManager();
         initBugLy();
         locate();
         initVc();
+    }
+
+    private void initDeviceType() {
+        for (int i = 0; i < SELECT_TYPE_VALUES.length; i++) {
+            mDeviceTypeList.add(new DeviceTypeModel(SELECT_TYPE[i],SELECT_TYPE_RESOURCE[i],SELECT_TYPE_VALUES[i]
+                    ,SENSOR_MENU_MATCHER_ARRAY[i]));
+        }
     }
 
     /**
