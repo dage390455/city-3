@@ -26,6 +26,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PermissionUtils;
 import com.sensoro.smartcity.util.PermissionsResultObserve;
+import com.sensoro.smartcity.util.RxPermissionUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -39,7 +40,8 @@ import butterknife.OnClick;
  * Created by sensoro on 17/7/24.
  */
 
-public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView, PermissionsResultObserve {
+public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView,
+        PermissionsResultObserve, RxPermissionUtils.OnRxPermissionsResultObserve {
 
     @BindView(R.id.login_btn)
     Button login_btn;
@@ -67,28 +69,38 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private static final int MY_REQUEST_PERMISSION_CODE = 0x14;
     private static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
         {
-            add(Manifest.permission.INTERNET);
-            add(Manifest.permission.READ_EXTERNAL_STORAGE);
-            add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
-            add(Manifest.permission.ACCESS_FINE_LOCATION);
+            add(Manifest.permission_group.STORAGE);
+            add(Manifest.permission_group.LOCATION);
+            add(Manifest.permission_group.CAMERA);
+            add(Manifest.permission.RECORD_AUDIO);
             add(Manifest.permission.ACCESS_COARSE_LOCATION);
             add(Manifest.permission.READ_PHONE_STATE);
-            add(Manifest.permission.CAMERA);
-            add(Manifest.permission.VIBRATE);
-            add(Manifest.permission.RECORD_AUDIO);
             add(Manifest.permission.CALL_PHONE);
         }
     };
+    private static final String[] REQUIRE_PERMISSIONS = {
+            Manifest.permission_group.STORAGE,
+            Manifest.permission_group.LOCATION,
+            Manifest.permission_group.CAMERA,
+            Manifest.permission.RECORD_AUDIO,
+            Manifest.permission.READ_PHONE_STATE,
+            Manifest.permission.CALL_PHONE
+    };
     private PermissionUtils mPermissionUtils;
+//    private RxPermissionUtils rxPermissionUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_login_test);
         ButterKnife.bind(mActivity);
         mPermissionUtils = new PermissionUtils(mActivity);
+//        rxPermissionUtils = new RxPermissionUtils(mActivity);
+//        rxPermissionUtils.registerObserver(this);
+
         mPermissionUtils.registerObserver(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPresenter.onCreate();
+//        rxPermissionUtils.requestRxPermissions(REQUIRE_PERMISSIONS);
     }
 
     @Override
@@ -289,6 +301,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     @Override
     protected void onDestroy() {
+//        rxPermissionUtils.unregisterObserver(this);
         mPermissionUtils.unregisterObserver(this);
         mProgressUtils.destroyProgress();
         LogUtils.loge("onDestroy");
@@ -326,7 +339,8 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     }
 
     private void updateAccountIcon(boolean isEmpty) {
-        acLoginImvAccountIcon.setImageResource(isEmpty ? R.drawable.login_account : R.drawable.login_account_high_light);
+        acLoginImvAccountIcon.setImageResource(isEmpty ? R.drawable.login_account : R.drawable
+                .login_account_high_light);
         acLoginImvAccountClear.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
@@ -430,5 +444,11 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private void updateLogoDescriptionState(boolean isVisible) {
         acLoginTvLogo.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         acLoginTvLogoDescription.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onRxPermissionGranted() {
+        mPresenter.initData(mActivity);
+        initView();
     }
 }

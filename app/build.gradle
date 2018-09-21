@@ -26,8 +26,8 @@ android {
             storePassword 'sensoro'
         }
     }
-    compileSdkVersion 26
-    buildToolsVersion '25.0.0'
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
 //    useLibrary 'org.apache.http.legacy'
     defaultConfig {
         applicationId "com.sensoro.smartcity"
@@ -152,11 +152,11 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     //
-    compile 'com.android.support:design:25.3.1'
+    compile 'com.android.support:design:27.1.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     //
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
-    compile 'com.jcodecraeer:xrecyclerview:1.5.9'
+//    compile 'com.jcodecraeer:xrecyclerview:1.5.9'
     compile project(':cosmocalendar')
     compile files('libs/Baidu_Mtj_3.8.2.1.jar')
     //    annotationProcessor 'com.github.jokermonn:permissions4m:1.0.2-processor'
@@ -200,8 +200,8 @@ dependencies {
     //消息组件
     compile 'org.greenrobot:eventbus:3.1.1'
     compile 'com.github.franmontiel:PersistentCookieJar:v1.0.1'
-    compile 'com.android.support:cardview-v7:25.3.1'
+    compile 'com.android.support:cardview-v7:27.1.1'
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     compile files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
-//    implementation 'com.github.tbruyelle:rxpermissions:0.10.2'
+    compile 'com.github.tbruyelle:rxpermissions:0.10.2'
 }
