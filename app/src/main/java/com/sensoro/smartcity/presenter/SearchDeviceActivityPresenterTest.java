@@ -177,7 +177,7 @@ public class SearchDeviceActivityPresenterTest extends BasePresenter<ISearchDevi
             if (unionType != null) {
                 String[] unionTypeArray = unionType.split("\\|");
                 List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                String[] menuTypeArray = SENSOR_MENU_ARRAY[mTypeSelectedIndex].split("\\|");
+                String[] menuTypeArray = SELECT_TYPE_VALUES[mTypeSelectedIndex].split("\\|");
                 if (mTypeSelectedIndex == 0) {
                     isMatcherType = true;
                 } else {
@@ -332,7 +332,7 @@ public class SearchDeviceActivityPresenterTest extends BasePresenter<ISearchDevi
         getView().setSearchHistoryLayoutVisible(false);
         getView().setRelationLayoutVisible(false);
         getView().setIndexListLayoutVisible(true);
-        String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
+        String type = mTypeSelectedIndex == 0 ? null : SELECT_TYPE_VALUES[mTypeSelectedIndex];
         Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
         getView().showProgressDialog();
         if (direction == DIRECTION_DOWN) {
@@ -478,7 +478,7 @@ public class SearchDeviceActivityPresenterTest extends BasePresenter<ISearchDevi
     }
 
     public void filterByTypeWithRequest(int position, String text) {
-        String statusText = INDEX_TYPE_ARRAY[position];
+        String statusText = SELECT_TYPE_VALUES[position];
         getView().setTypeView(statusText);
         this.mTypeSelectedIndex = position;
         requestWithDirection(DIRECTION_DOWN, text);

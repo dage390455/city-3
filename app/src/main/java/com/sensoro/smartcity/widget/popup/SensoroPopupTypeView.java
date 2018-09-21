@@ -53,7 +53,7 @@ public class SensoroPopupTypeView extends LinearLayout implements RecycleViewIte
 
     private void init() {
         View rootView = LayoutInflater.from(mContext).inflate(R.layout.layout_type_popup, this);
-        List<String> tempList = Arrays.asList(Constants.INDEX_TYPE_ARRAY);
+        List<String> tempList = Arrays.asList(Constants.SELECT_TYPE_VALUES);
         mAdapter = new IndexFilterTypeAdapter(mContext, tempList, this);
         mRecyclerView = (RecyclerView) rootView.findViewById(R.id.index_type_popup_rv);
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mContext, 4);

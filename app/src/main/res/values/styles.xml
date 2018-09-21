@@ -109,9 +109,15 @@
     </style>
     
     <style name="DialogFragmentDropDownAnim" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/anim_pop_show</item>
-        <item name="android:windowExitAnimation">@anim/anim_pop_dismiss</item>
+        <item name="android:windowEnterAnimation">@anim/anim_pop_down_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_pop_down_dismiss</item>
     </style>
+
+    <style name="DialogFragmentUpAnim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/anim_pop_up_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_pop_up_dismiss</item>
+    </style>
+
     <!--Theme_Holo_Light_NoActionBar-->
     <style name="DialogFragmentThem" parent="@android:style/Theme.Holo.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/DialogFragmentDropDownAnim</item>

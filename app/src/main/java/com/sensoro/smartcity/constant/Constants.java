@@ -48,15 +48,15 @@ public interface Constants {
     String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
-    String[] INDEX_TYPE_ARRAY = {
-            "全部类型",
-            "紧急呼叫", "追踪器", "甲烷",
-            "一氧化碳", "二氧化碳", "倾角",
-            "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
-            "火焰", "光线", "液化石油气", "二氧化氮",
-            "PM2.5/10", "烟感", "温湿度",
-            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
-    };
+//    String[] INDEX_TYPE_ARRAY = {
+//            "全部类型",
+//            "紧急呼叫", "追踪器", "甲烷",
+//            "一氧化碳", "二氧化碳", "倾角",
+//            "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
+//            "火焰", "光线", "液化石油气", "二氧化氮",
+//            "PM2.5/10", "烟感", "温湿度",
+//            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
+//    };
     String[] SELECT_TYPE = {
             "全部类型",
             "甲烷", "一氧化碳", "二氧化碳",
@@ -96,31 +96,31 @@ public interface Constants {
             "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
             "manual_alarm", "sound_light_alarm"
     };
-    String INDEX_TYPE_VALUES[] = {
-            "all",
-            "alarm", "altitude,latitude,longitude", "ch4",
-            "co", "co2", "collision,pitch,roll",
-            "cover,level", "distance", "magnetic", "door", "drop",
-            "flame", "light", "lpg", "no2",
-            "pm10,pm2_5", "smoke", "humidity,temperature",
-            "waterPressure", "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
-            "TOTAL_POWER,VOLTAGE_A," +
-            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
-            "manual_alarm", "sound_light_alarm"
-
-    };
-    String SENSOR_MENU_ARRAY[] = {
-            "all",
-            "alarm", "latitude|longitude|altitude", "ch4",
-            "co", "co2", "collision|pitch|roll",
-            "cover|level", "distance", "magnetic", "door", "drop",
-            "flame", "light", "lpg", "no2",
-            "pm10|pm2_5", "smoke", "humidity|temperature",
-            "waterPressure", "temp1", "connection",
-            "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
-            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
-            "manual_alarm", "sound_light_alarm"
-    };
+//    String INDEX_TYPE_VALUES[] = {
+//            "all",
+//            "alarm", "altitude,latitude,longitude", "ch4",
+//            "co", "co2", "collision,pitch,roll",
+//            "cover,level", "distance", "magnetic", "door", "drop",
+//            "flame", "light", "lpg", "no2",
+//            "pm10,pm2_5", "smoke", "humidity,temperature",
+//            "waterPressure", "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+//            "TOTAL_POWER,VOLTAGE_A," +
+//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//
+//    };
+//    String SENSOR_MENU_ARRAY[] = {
+//            "all",
+//            "alarm", "latitude|longitude|altitude", "ch4",
+//            "co", "co2", "collision|pitch|roll",
+//            "cover|level", "distance", "magnetic", "door", "drop",
+//            "flame", "light", "lpg", "no2",
+//            "pm10|pm2_5", "smoke", "humidity|temperature",
+//            "waterPressure", "temp1", "connection",
+//            "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
     Integer[] TYPE_MENU_RESOURCE = {
             R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
             R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,

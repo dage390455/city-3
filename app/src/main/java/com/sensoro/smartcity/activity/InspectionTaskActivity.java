@@ -18,12 +18,18 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.InspectionTaskRcContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
+import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.presenter.InspectionTaskActivityPresenter;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
+import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,7 +57,15 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     TextView acInspectionTaskTvInspectionCount;
     @BindView(R.id.ac_inspection_task_tv_not_inspection_count)
     TextView acInspectionTaskTvNotInspectionCount;
+    @BindView(R.id.ac_inspection_task_tv_state)
+    TextView acInspectionTaskTvState;
+    @BindView(R.id.ac_inspection_task_tv_type)
+    TextView acInspectionTaskTvType;
+    @BindView(R.id.ac_inspection_task_ll_select)
+    LinearLayout acInspectionTaskLlSelect;
     private InspectionTaskRcContentAdapter mContentAdapter;
+    private SelectDeviceTypePopUtils mSelectDeviceTypePop;
+    private InspectionTaskStatePopUtils mSelectStatePop;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -65,6 +79,52 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     private void initView() {
 //地图模式切换，图片 map_list_mode map_mode,已经准备好了
         initRcContent();
+
+        initSelectDeviceTypePop();
+
+        initSelectStatePop();
+    }
+
+    private void initSelectDeviceTypePop() {
+        mSelectDeviceTypePop = new SelectDeviceTypePopUtils(mActivity);
+        mSelectDeviceTypePop.updateSelectDeviceTypeList(SensoroCityApplication.getInstance().mDeviceTypeList);
+        mSelectDeviceTypePop.setTitleVisible(false);
+        mSelectDeviceTypePop.setUpAnimation();
+        mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
+            @Override
+            public void onSelectDeviceTypeItemClick(View view, int position) {
+                //选择类型的pop点击事件
+                acInspectionTaskTvType.setText(Constants.SELECT_TYPE[position]);
+                mSelectDeviceTypePop.dismiss();
+            }
+        });
+    }
+
+    private void initSelectStatePop() {
+        mSelectStatePop = new InspectionTaskStatePopUtils(mActivity);
+        //临时数据
+        ArrayList<InspectionStatusCountModel> list = new ArrayList<>();
+        InspectionStatusCountModel sc1 = new InspectionStatusCountModel();
+        sc1.count = 218363;
+        sc1.state ="全部类型";
+        list.add(sc1);
+        InspectionStatusCountModel sc2 = new InspectionStatusCountModel();
+        sc1.count = 32;
+        sc1.state ="未巡检";
+        list.add(sc1);
+        InspectionStatusCountModel sc3 = new InspectionStatusCountModel();
+        sc1.count = 21333444;
+        sc1.state ="已巡检";
+        list.add(sc1);
+        mSelectStatePop.updateSelectDeviceTypeList(list);
+        mSelectStatePop.setUpAnimation();
+        mSelectStatePop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
+            @Override
+            public void onSelectDeviceTypeItemClick(View view, int position) {
+                //选择类型的pop点击事件
+                mSelectStatePop.dismiss();
+            }
+        });
     }
 
     private void initRcContent() {
@@ -194,8 +254,10 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
             case R.id.ac_inspection_task_ll_search:
                 break;
             case R.id.ac_inspection_task_fl_state:
+                mSelectStatePop.showAsDropDown(acInspectionTaskLlSelect);
                 break;
             case R.id.ac_inspection_task_fl_type:
+                mSelectDeviceTypePop.showAsDropDown(acInspectionTaskLlSelect);
                 break;
             case R.id.ac_inspection_task_imv_scan:
                 toastShort("扫描");

@@ -15,8 +15,10 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,10 +31,12 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     private int selectPosition = 0;
     private int oldSelectPosition = 0;
     private RecycleViewItemClickListener mListener;
+    private List<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
 
     public TypeSelectAdapter(Context context) {
         mContext = context;
     }
+
 
     @Override
     public TypeSelectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -44,8 +48,9 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
     @Override
     public void onBindViewHolder(TypeSelectHolder holder, int position) {
-        holder.itemPopSelectImvTypeIcon.setImageResource(typeIcons[position]);
-        holder.itemPopSelectTvTypeName.setText(types[position]);
+        DeviceTypeModel deviceTypeModel = mDeviceTypeList.get(position);
+        holder.itemPopSelectImvTypeIcon.setImageResource(deviceTypeModel.iconRes);
+        holder.itemPopSelectTvTypeName.setText(deviceTypeModel.name);
         holder.itemPopSelectTvTypeName.setTextColor(position != selectPosition ? Color.WHITE :
                 mContext.getResources().getColor(R.color.c_252525));
         changeIconColor(holder, position != selectPosition);
@@ -65,8 +70,18 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
     }
 
+    public DeviceTypeModel getItem(int position){
+        return mDeviceTypeList.get(position);
+    }
+
     public void setOnItemClickListener(RecycleViewItemClickListener listener) {
         mListener = listener;
+    }
+
+    public void updateDeviceTypList(List<DeviceTypeModel> list){
+        mDeviceTypeList.clear();
+        mDeviceTypeList.addAll(list);
+        notifyDataSetChanged();
     }
 
     @Override
@@ -96,7 +111,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
     @Override
     public int getItemCount() {
-        return typeIcons.length;
+        return mDeviceTypeList.size();
     }
 
 

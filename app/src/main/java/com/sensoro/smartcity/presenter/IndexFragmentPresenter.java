@@ -112,7 +112,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             return;
         }
         try {
-            String type = mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex];
+            String type = ""/*mTypeSelectedIndex == 0 ? null : INDEX_TYPE_VALUES[mTypeSelectedIndex]*/;
             Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
             getView().showProgressDialog();
             if (direction == DIRECTION_DOWN) {
@@ -294,7 +294,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
             if (unionType != null) {
                 String[] unionTypeArray = unionType.split("\\|");
                 List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                String[] menuTypeArray = SENSOR_MENU_ARRAY[mTypeSelectedIndex].split("\\|");
+                String[] menuTypeArray = SENSOR_MENU_MATCHER_ARRAY[mTypeSelectedIndex].split("\\|");
                 if (mTypeSelectedIndex == 0) {
                     isMatcherType = true;
                 } else {
@@ -494,7 +494,7 @@ public class IndexFragmentPresenter extends BasePresenter<IIndexFragmentView> im
     }
 
     public void requestDataByTypes(int position) {
-        String typeText = INDEX_TYPE_ARRAY[position];
+        String typeText = SENSOR_MENU_MATCHER_ARRAY[position];
         getView().setTypeView(typeText);
         //
         requestTopData(false);

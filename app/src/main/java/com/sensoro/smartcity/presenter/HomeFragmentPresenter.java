@@ -95,6 +95,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+
         onCreate();
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
@@ -107,6 +108,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mSoundId = mSoundPool.load(context, R.raw.alarm, 1);
         mHandler.postDelayed(mTask, 3000);
     }
+
 
     private void requestInitData(boolean isInit) {
         if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
