@@ -2,6 +2,7 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.graphics.drawable.DrawableCompat;
@@ -102,10 +103,12 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
         holder.itemPopSelectLlRoot.setBackgroundResource(isWhite ? 0 : R.drawable.shape_bg_corner_29c_shadow);
         holder.itemPopSelectTvTypeName.setTextColor(isWhite ? mContext.getResources().getColor(R.color.c_252525) : Color.WHITE);
         Drawable drawable = holder.itemPopSelectImvTypeIcon.getDrawable();
-        Drawable.ConstantState state = drawable.getConstantState();
-        DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
-        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
-        DrawableCompat.setTint(drawable, isWhite ? mContext.getResources().getColor(R.color.c_b6b6b6) : Color.WHITE);
+//        Drawable.ConstantState state = drawable.getConstantState();
+//        DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+//        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
+//        DrawableCompat.setTint(drawable, isWhite ? mContext.getResources().getColor(R.color.c_b6b6b6) : Color.WHITE);
+        int color = isWhite ? mContext.getResources().getColor(R.color.c_b6b6b6) : Color.WHITE;
+        drawable.setColorFilter(color, PorterDuff.Mode.SRC_ATOP);
         holder.itemPopSelectImvTypeIcon.setImageDrawable(drawable);
     }
 

@@ -79,7 +79,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.actvity_deploy_device_detail);
+        setContentView(R.layout.actvity_deploy_device_detail_h);
         // todo 这个界面的标签要能滑动啊
         ButterKnife.bind(this);
         initView();
@@ -87,6 +87,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     private void initView() {
+        includeTextTitleImvArrowsLeft = (ImageView) findViewById(R.id.include_text_title_imv_arrows_left);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         updateUploadState(true);
@@ -150,6 +151,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
                 break;
         }
     }
+
 
     private void initConfirmDialog() {
         View view = View.inflate(mActivity, R.layout.dialog_frag_deploy_device_upload, null);

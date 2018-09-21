@@ -80,7 +80,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     private void initView() {
-        includeTextTitleImvArrowsLeft.setVisibility(View.INVISIBLE);
+        includeTextTitleImvArrowsLeft.setVisibility(View.VISIBLE);
         includeTextTitleTvTitle.setText("确认信息");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
     }

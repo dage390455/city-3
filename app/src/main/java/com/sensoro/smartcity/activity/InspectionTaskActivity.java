@@ -94,7 +94,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
                 //选择类型的pop点击事件
-                acInspectionTaskTvType.setText(Constants.SELECT_TYPE[position]);
+                acInspectionTaskTvType.setText(mSelectDeviceTypePop.getItem(position).name);
                 mSelectDeviceTypePop.dismiss();
             }
         });
@@ -106,22 +106,23 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         ArrayList<InspectionStatusCountModel> list = new ArrayList<>();
         InspectionStatusCountModel sc1 = new InspectionStatusCountModel();
         sc1.count = 218363;
-        sc1.state ="全部类型";
+        sc1.state ="全部状态";
         list.add(sc1);
         InspectionStatusCountModel sc2 = new InspectionStatusCountModel();
-        sc1.count = 32;
-        sc1.state ="未巡检";
-        list.add(sc1);
+        sc2.count = 32;
+        sc2.state ="未巡检";
+        list.add(sc2);
         InspectionStatusCountModel sc3 = new InspectionStatusCountModel();
-        sc1.count = 21333444;
-        sc1.state ="已巡检";
-        list.add(sc1);
+        sc3.count = 21333444;
+        sc3.state ="已巡检";
+        list.add(sc3);
         mSelectStatePop.updateSelectDeviceTypeList(list);
         mSelectStatePop.setUpAnimation();
         mSelectStatePop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
                 //选择类型的pop点击事件
+                acInspectionTaskTvState.setText(mSelectStatePop.getItem(position).state);
                 mSelectStatePop.dismiss();
             }
         });

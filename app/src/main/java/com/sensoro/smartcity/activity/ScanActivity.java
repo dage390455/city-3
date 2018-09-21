@@ -69,9 +69,9 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     private void changeIconArrowsColor() {
-        Drawable drawable = includeTextTitleImvArrowsLeft.getDrawable();
+        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.arrows_left_scan);
         Drawable.ConstantState state = drawable.getConstantState();
-        DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+        DrawableCompat.wrap(state == null ? drawable : state.newDrawable());
         drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
         DrawableCompat.setTint(drawable, Color.WHITE);
         includeTextTitleImvArrowsLeft.setImageDrawable(drawable);

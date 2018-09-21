@@ -322,6 +322,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (!TextUtils.isEmpty(mNameAndAddress)) {
             intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, mNameAndAddress);
         }
+        if (deviceInfo != null) {
+            intent.putExtra(EXTRA_DEPLOY_TO_SN,deviceInfo.getSn());
+        }
         getView().startAC(intent);
     }
 

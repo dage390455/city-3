@@ -109,6 +109,10 @@ public class SelectDeviceTypePopUtils {
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentUpAnim);
     }
 
+    public DeviceTypeModel getItem(int position) {
+        return mTypeSelectAdapter.getItem(position);
+    }
+
     public interface SelectDeviceTypeItemClickListener{
         void onSelectDeviceTypeItemClick(View view, int position);
     }
