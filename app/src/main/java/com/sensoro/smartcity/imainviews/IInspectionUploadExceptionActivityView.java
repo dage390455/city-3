@@ -10,4 +10,10 @@ public interface IInspectionUploadExceptionActivityView extends IToast,IProgress
     void updateExceptionTagAdapter(List<String> exceptionTags);
 
     void updateWordCount(int count);
+
+    void dismissExceptionDialog();
+
+    List<Integer> getSelectTags();
+
+    String getRemarkMessage();
 }

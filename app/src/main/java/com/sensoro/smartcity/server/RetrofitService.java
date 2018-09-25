@@ -23,6 +23,7 @@ import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -189,4 +190,8 @@ public interface RetrofitService {
     @GET(ALARM_COUNT)
     Observable<AlarmCountRsp> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
                                             @Query("displayStatus") String displayStatus, @Query("sn") String sn);
+
+    @PUT("inspect/device")
+    Observable<ResponseBase> uploadInspectionResult(@Body RequestBody responseBody);
+
 }
