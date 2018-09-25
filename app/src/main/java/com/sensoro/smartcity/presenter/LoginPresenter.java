@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
+import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
@@ -37,6 +38,7 @@ import rx.schedulers.Schedulers;
 
 public class LoginPresenter extends BasePresenter<ILoginView> implements Constants, IOnCreate {
     private Activity mContext;
+    private BLEDeviceManager bleDeviceManager;
 
     @Override
     public void initData(Context context) {
@@ -55,6 +57,8 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             getView().showAccountPwd(pwd);
         }
     }
+
+
 
     private void initSeverUrl() {
         //去除从用户安装渠道设置登录环境
@@ -202,4 +206,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     public void onCreate() {
         EventBus.getDefault().register(this);
     }
+
+
 }

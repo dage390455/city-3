@@ -62,6 +62,8 @@ public interface RetrofitService {
     String APP_UPDATE = "http://api.fir" +
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
     String ALARM_COUNT = "prov1/alarms/count";
+    String INSPECT_TASK_LIST = "inspect/task/list";
+    String INSPECT_TASK_DETAIL = "inspect/task/list";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -105,12 +107,14 @@ public interface RetrofitService {
     @GET(DEVICE_ALARM_LOG)
     Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(@Query("count") int count, @Query("page") int page, @Query
             ("sn") String sn, @Query("deviceName") String deviceName, @Query("phone")
-                                                                String phone, @Query("search") String search, @Query("beginTime") Long beginTime,
+                                                                String phone, @Query("search") String search, @Query
+                                                                ("beginTime") Long beginTime,
                                                         @Query("endTime") Long endTime
             , @Query("unionTypes") String unionTypes);
 
     @GET(USER_ACCOUNT_LIST)
-    Observable<UserAccountRsp> getUserAccountList(@Query("search") String search, @Query("page") Integer page, @Query("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
+    Observable<UserAccountRsp> getUserAccountList(@Query("search") String search, @Query("page") Integer page, @Query
+            ("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
 
     @GET(APP_UPDATE)
     Observable<UpdateRsp> getUpdateInfo();
@@ -189,4 +193,13 @@ public interface RetrofitService {
     @GET(ALARM_COUNT)
     Observable<AlarmCountRsp> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
                                             @Query("displayStatus") String displayStatus, @Query("sn") String sn);
+
+    @GET(INSPECT_TASK_LIST)
+    Observable<AlarmCountRsp> getInspectTaskList(@Query("search") String search, @Query("page") Integer page, @Query
+            ("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
+
+    @GET(INSPECT_TASK_DETAIL)
+    Observable<AlarmCountRsp> getInspectTaskDetail(@Query("search") String search, @Query("page") Integer page,
+                                                   @Query("count") Integer count, @Query("offset") Integer offset,
+                                                   @Query("limit") Integer limit);
 }

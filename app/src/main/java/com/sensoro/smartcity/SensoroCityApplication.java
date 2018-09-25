@@ -1,6 +1,7 @@
 package com.sensoro.smartcity;
 
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
@@ -31,6 +32,7 @@ import com.scwang.smartrefresh.layout.api.RefreshHeader;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.DeviceTypeModel;
@@ -118,6 +120,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         });
     }
 
+    public BLEDeviceManager bleDeviceManager;
+
     //    public static String VIDEO_PATH =  "/sdcard/SensroroCity/";
     @Override
     public void onCreate() {
@@ -168,6 +172,27 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     }
 
+    private void initSensoroSDK() {
+        try {
+            bleDeviceManager = BLEDeviceManager.getInstance(this);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                bleDeviceManager.setForegroundScanPeriod(7000);
+                bleDeviceManager.setOutOfRangeDelay(15000);
+            }
+//            else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+//                bleDeviceManager.setForegroundScanPeriod(5000);
+//                bleDeviceManager.setOutOfRangeDelay(15000);
+//            }
+            else {
+                bleDeviceManager.setOutOfRangeDelay(10000);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }//yangzhiqiang@sensoro.com 123456
+    }
+
     private void locate() {
         mLocationClient = new AMapLocationClient(this);
         //设置定位回调监听
@@ -210,6 +235,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
+        initSensoroSDK();
         ThreadPoolManager.getInstance().execute(this);
     }
 
@@ -416,8 +442,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     private void initDeviceType() {
         for (int i = 0; i < SELECT_TYPE_VALUES.length; i++) {
-            mDeviceTypeList.add(new DeviceTypeModel(SELECT_TYPE[i],SELECT_TYPE_RESOURCE[i],SELECT_TYPE_VALUES[i]
-                    ,SENSOR_MENU_MATCHER_ARRAY[i]));
+            mDeviceTypeList.add(new DeviceTypeModel(SELECT_TYPE[i], SELECT_TYPE_RESOURCE[i], SELECT_TYPE_VALUES[i]
+                    , SENSOR_MENU_MATCHER_ARRAY[i]));
         }
     }
 
