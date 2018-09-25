@@ -24,6 +24,7 @@ import com.sensoro.smartcity.adapter.InspectionUploadExceptionTagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.smartcity.presenter.InspectionUploadExceptionActivityPresenter;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -34,8 +35,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionUploadExceptionActivityView,
-        InspectionUploadExceptionActivityPresenter> implements IInspectionUploadExceptionActivityView ,
-        View.OnClickListener{
+        InspectionUploadExceptionActivityPresenter> implements IInspectionUploadExceptionActivityView {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -60,6 +60,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     private TextView dialogTvWaite;
     private TextView dialogTvUpload;
     private AlertDialog mExceptionDialog;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -70,14 +71,12 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     }
 
     private void initView() {
+
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText("异常上报");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
-        acInspectionUploadExceptionEtRemark.setText("艾欧尼亚人创建出了符文之地上最令人叹为观止的致命武艺，但这仅仅只是他们追求极致的表现之一。" +
-                "他们最卓越的剑术却是诞生于防御外敌入侵时的副产物。里托大师是一位声名远扬的剑客，他受邀担任过几乎所有城邦的剑术教练。他的剑据说会呼吸吐纳，" +
-                "而他的剑术更是受到了高度的保密。谁也没想到，天降奇瘟，" +
-                "所有大夫都对此手足无措，大师身染此病，遽然仙逝了。里托大师死后留下一双儿女，泽洛斯和艾瑞莉娅，此外还有他那把传奇的独门");
-        acInspectionUploadExceptionTvWordCount.setText("200/200");
+        acInspectionUploadExceptionTvWordCount.setText("0/200");
 
         initRcTag();
 
@@ -111,9 +110,9 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
         dialogTvUpload = view.findViewById(R.id.dialog_tv_upload_change_device);
         dialogTvWaite = view.findViewById(R.id.dialog_tv_waite);
 
-        dialogTvException.setOnClickListener(this);
-        dialogTvUpload.setOnClickListener(this);
-        dialogTvWaite.setOnClickListener(this);
+        dialogTvException.setOnClickListener(mPresenter);
+        dialogTvUpload.setOnClickListener(mPresenter);
+        dialogTvWaite.setOnClickListener(mPresenter);
         builder.setView(view);
 
         mExceptionDialog = builder.create();
@@ -181,12 +180,12 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
     @Override
     public void showProgressDialog() {
-
+        mProgressUtils.showProgress();
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        mProgressUtils.dismissProgress();
     }
 
     @Override
@@ -204,6 +203,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
         super.onDestroy();
         mExceptionDialog.cancel();
         mExceptionDialog = null;
+        mProgressUtils.destroyProgress();
     }
 
 
@@ -232,25 +232,20 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     }
 
 
-
-    /**
-     * dialog点击事件
-     */
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.dialog_tv_exception:
-                toastShort("点击了");
-                mExceptionDialog.dismiss();
-                break;
-            case R.id.dialog_tv_upload_change_device:
-                toastShort("一二三");
-                mExceptionDialog.dismiss();
-                mPresenter.doUploadAndChange();
-                break;
-            case R.id.dialog_tv_waite:
-                mExceptionDialog.dismiss();
-                break;
-        }
+    public void dismissExceptionDialog() {
+        mExceptionDialog.dismiss();
     }
+
+    @Override
+    public List<Integer> getSelectTags() {
+        return mRcExceptionTagAdapter.getSelectTag();
+    }
+
+    @Override
+    public String getRemarkMessage() {
+       return acInspectionUploadExceptionEtRemark.getText().toString();
+    }
+
+
 }

@@ -855,4 +855,51 @@ public enum RetrofitServiceHelper {
             return retrofitService.getAlarmCount(startTime, endTime, stringBuilder.toString(), sn);
         }
     }
+
+    public Observable<ResponseBase> doUploadInspectionResult(String condition, Integer status,
+                                                             Long startTime, Long finishTime, String remark, List imgAndVideos, List<Integer> tags) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (condition != null) {
+                JSONObject jsonObject1 = new JSONObject();
+                jsonObject1.put("_id", condition);
+                jsonObject.put("condition", jsonObject1);
+
+            }
+
+            JSONObject jsonObject1 = new JSONObject();
+            if (status != null) {
+                jsonObject1.put("status", status);
+            }
+            if (startTime != null && startTime != 0) {
+                jsonObject1.put("startTime", startTime);
+            }
+            if (finishTime != null && finishTime != 0) {
+                jsonObject1.put("finishTime", finishTime);
+            }
+            if (remark != null) {
+                jsonObject1.put("remark", remark);
+            }
+
+            JSONObject jsonObject2 = new JSONObject();
+
+            if (tags != null && tags.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (Integer tag : tags) {
+                    jsonArray.put(tag);
+                }
+                jsonObject1.put("tags", jsonArray);
+            }
+
+            jsonObject.put("doc", jsonObject1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ResponseBase> uploadInspectionResult = retrofitService.uploadInspectionResult(body);
+        RxApiManager.getInstance().add("uploadInspectionResult", uploadInspectionResult.subscribe());
+        return uploadInspectionResult;
+    }
 }

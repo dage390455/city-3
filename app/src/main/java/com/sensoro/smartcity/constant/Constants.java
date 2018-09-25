@@ -200,6 +200,9 @@ public interface Constants {
     String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
     String EXTRA_DEPLOY_TO_SN = "extra_deploy_to_sn";
 
+    //巡检相关
+    String EXTRA_INSPECTION_START_TIME = "extra_inspection_start_time";
+
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     //

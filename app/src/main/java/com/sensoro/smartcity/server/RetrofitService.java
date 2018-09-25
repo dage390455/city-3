@@ -23,6 +23,7 @@ import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
 import okhttp3.RequestBody;
+import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -191,15 +192,18 @@ public interface RetrofitService {
     Observable<AuthRsp> doubleCheck(@Field("code") String code);
 
     @GET(ALARM_COUNT)
-    Observable<AlarmCountRsp> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
+    Observable<ResponseBase> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
                                             @Query("displayStatus") String displayStatus, @Query("sn") String sn);
 
     @GET(INSPECT_TASK_LIST)
-    Observable<AlarmCountRsp> getInspectTaskList(@Query("search") String search, @Query("page") Integer page, @Query
+    Observable<ResponseBase> getInspectTaskList(@Query("search") String search, @Query("page") Integer page, @Query
             ("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
 
     @GET(INSPECT_TASK_DETAIL)
-    Observable<AlarmCountRsp> getInspectTaskDetail(@Query("search") String search, @Query("page") Integer page,
+    Observable<ResponseBase> getInspectTaskDetail(@Query("search") String search, @Query("page") Integer page,
                                                    @Query("count") Integer count, @Query("offset") Integer offset,
                                                    @Query("limit") Integer limit);
+
+    @PUT("inspect/device")
+    Observable<ResponseBase> uploadInspectionResult(@Body RequestBody responseBody);
 }

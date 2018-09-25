@@ -80,6 +80,13 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+
+
+    }
+
+    @Override
     protected InspectionActivityPresenter createPresenter() {
         return new InspectionActivityPresenter();
     }

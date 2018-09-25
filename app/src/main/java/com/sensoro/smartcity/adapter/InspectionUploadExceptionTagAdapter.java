@@ -3,10 +3,8 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.v7.widget.RecyclerView;
-import android.util.ArraySet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -72,6 +70,10 @@ public class InspectionUploadExceptionTagAdapter extends RecyclerView.Adapter<In
     @Override
     public int getItemCount() {
         return tags.size();
+    }
+
+    public List<Integer> getSelectTag() {
+        return selectedTags;
     }
 
     class InspectionUploadExceptionTagHolder extends RecyclerView.ViewHolder {
