@@ -2,7 +2,7 @@ package com.sensoro.smartcity.server.bean;
 
 import java.util.List;
 
-public class InspectionTaskDeviceModel {
+public class InspectionTaskDeviceDetailModel {
 
     /**
      * count : 4

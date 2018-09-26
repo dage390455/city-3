@@ -37,6 +37,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -64,13 +65,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     }
 
     private void initExceptionTag() {
-        exceptionTags.add("指示灯不亮");
-        exceptionTags.add("蜂鸣器不响");
-        exceptionTags.add("外观损坏");
-        exceptionTags.add("安置位置不对");
-        exceptionTags.add("设备丢失");
-        exceptionTags.add("按键故障");
-        exceptionTags.add("蓝牙无效");
+        Collections.addAll(exceptionTags, INSPECTION_EXCEPTION_TASGS);
         getView().updateExceptionTagAdapter(exceptionTags);
     }
 

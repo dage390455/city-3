@@ -1,11 +1,13 @@
 package com.sensoro.smartcity.activity;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
+import android.support.annotation.DrawableRes;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -19,6 +21,9 @@ import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
 import com.sensoro.smartcity.presenter.InspectionTaskDetailActivityPresenter;
+import com.sensoro.smartcity.util.Util;
+import com.sensoro.smartcity.util.ViewHelper;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.util.List;
@@ -50,6 +55,7 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
     @BindView(R.id.ac_inspection_detail_task_rc_device_count_tag)
     RecyclerView acInspectionDetailTaskRcDeviceCountTag;
     private TagAdapter mTagAdapter;
+    private ProgressUtils mProgressDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -61,36 +67,22 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
     }
 
     private void initView() {
+        mProgressDialog = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText("巡检任务");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-
-        acInspectionDetailTaskNumber.setText("XT20180723");
-        acInspectionDetailTaskTvTime.setText("2018.05.02-2018.05.05");
-
-        initTvState(R.color.c_8058a5,"待执行");
 
         initRcDeviceCountTag();
 
     }
 
     private void initRcDeviceCountTag() {
-        mTagAdapter = new TagAdapter(mActivity);
+        mTagAdapter = new TagAdapter(mActivity,R.color.c_252525,R.color.c_dfdfdf);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         acInspectionDetailTaskRcDeviceCountTag.setLayoutManager(manager);
         acInspectionDetailTaskRcDeviceCountTag.setAdapter(mTagAdapter);
     }
 
-    private void initTvState(@ColorRes int colorId,String text) {
-        Resources resources = mActivity.getResources();
-        GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_small_oval_29c);
-        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
-        int color = resources.getColor(colorId);
-        gd.setColor(color);
-        acInspectionDetailTaskTvState.setCompoundDrawables(gd,null,null,null);
-        acInspectionDetailTaskTvState.setTextColor(color);
-        acInspectionDetailTaskTvState.setText(text);
-    }
 
     @Override
     protected InspectionTaskDetailActivityPresenter createPresenter() {
@@ -124,12 +116,21 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
 
     @Override
     public void showProgressDialog() {
-
+        mProgressDialog.showProgress();
     }
 
     @Override
     public void dismissProgressDialog() {
+        mProgressDialog.destroyProgress();
+    }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mProgressDialog != null) {
+            mProgressDialog.destroyProgress();
+            mProgressDialog = null;
+        }
     }
 
     @Override
@@ -161,5 +162,30 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
     @Override
     public void updateTagsData(List<String> tagList) {
         mTagAdapter.updateTags(tagList);
+    }
+
+    @Override
+    public void setTvState(int colorId, String text) {
+        ViewHelper.changeTvState(mActivity,acInspectionDetailTaskTvState,colorId, text);
+
+    }
+
+
+
+    @Override
+    public void setTvTaskNumber(String id) {
+        acInspectionDetailTaskNumber.setText(id);
+    }
+
+    @Override
+    public void setTvTaskTime(String time) {
+        acInspectionDetailTaskTvTime.setText(time);
+    }
+
+    @Override
+    public void setTvbtnStartState(@DrawableRes int drawableRes, @ColorRes int color, String text) {
+        acInspectionDetailBtnStart.setBackgroundResource(drawableRes);
+        acInspectionDetailBtnStart.setText(text);
+        acInspectionDetailBtnStart.setTextColor(mActivity.getResources().getColor(color));
     }
 }

@@ -7,7 +7,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RadioButton;
@@ -23,8 +22,11 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionTaskAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
+import com.sensoro.smartcity.server.bean.InspectionTaskModel;
 import com.sensoro.smartcity.presenter.InspectionTaskListActivityPresenter;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
@@ -32,12 +34,14 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskListActivityView, InspectionTaskListActivityPresenter>
-        implements IInspectionTaskListActivityView, CalendarPopUtils.OnCalendarPopupCallbackListener {
+        implements IInspectionTaskListActivityView, CalendarPopUtils.OnCalendarPopupCallbackListener,Constants {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -69,6 +73,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     private long startTime = -1;
     private long endTime = -1;
     private ProgressUtils mProgressUtils;
+    private boolean isShowProgressDialog = true;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -104,7 +109,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
         mTaskAdapter.setOnRecycleViewItemClickListener(new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-               mPresenter.doItemClick();
+               mPresenter.doItemClick(mTaskAdapter.getItem(position));
 
             }
         });
@@ -142,13 +147,15 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-
+                isShowProgressDialog = false;
+                mPresenter.LoadMore(DIRECTION_DOWN);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
-
+                isShowProgressDialog = false;
+                mPresenter.LoadMore(Constants.DIRECTION_UP);
             }
         });
 
@@ -198,7 +205,10 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
 
     @Override
     public void showProgressDialog() {
-        mProgressUtils.showProgress();
+        if (isShowProgressDialog) {
+            mProgressUtils.showProgress();
+        }
+        isShowProgressDialog = true;
     }
 
     @Override
@@ -227,14 +237,24 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
                 break;
             case R.id.ac_inspection_task_list_rb_current:
                 acInspectionTaskListImvCalendar.setVisibility(View.GONE);
+                if (getRlDateEditIsVisible()) {
+                    acInspectionTaskListRlDateEdit.setVisibility(View.GONE);
+                }
+                mPresenter.doUndone();
                 break;
             case R.id.ac_inspection_task_list_rb_history:
+                if (getRlDateEditIsVisible()) {
+                    acInspectionTaskListRlDateEdit.setVisibility(View.GONE);
+                }
                 acInspectionTaskListImvCalendar.setVisibility(View.VISIBLE);
+                mPresenter.doDone();
                 break;
             case R.id.ac_inspection_task_list_imv_calendar:
                 doCalendar();
+                break;
             case R.id.ac_inspection_task_list_imv_date_close:
                 acInspectionTaskListRlDateEdit.setVisibility(View.GONE);
+                mPresenter.doDone();
                 break;
         }
     }
@@ -258,7 +278,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
         setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
                 .getMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
-
+        mPresenter.requestDataByDate(startTime,endTime);
 
     }
 
@@ -276,5 +296,21 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     @Override
     public void setSelectedDateSearchText(String time) {
         acInspectionTaskListTvDateEdit.setText(time);
+    }
+
+    @Override
+    public void updateRcContent(List<InspectionIndexTaskInfo> tasks) {
+        mTaskAdapter.updateTaskList(tasks);
+    }
+
+    @Override
+    public void onPullRefreshCompleted() {
+        refreshLayout.finishRefresh();
+        refreshLayout.finishLoadMore();
+    }
+
+    @Override
+    public void recycleViewRefreshCompleteNoMoreData() {
+        refreshLayout.finishLoadMoreWithNoMoreData();
     }
 }

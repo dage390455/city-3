@@ -138,7 +138,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
-                    acLoginImvPsdIcon.setImageResource(R.drawable.login_account_high_light);
+                    acLoginImvPsdIcon.setImageResource(R.drawable.login_psd_high_light);
                     acLoginImvPsdClear.setVisibility(View.VISIBLE);
                     if (acLoginEtAccount.getText().length() > 0) {
                         updateLoginBtnState(true);

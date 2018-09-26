@@ -26,8 +26,10 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
-import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -931,7 +933,7 @@ public enum RetrofitServiceHelper {
         return retrofitService.getInspectTaskExecution(taskId);
     }
 
-    public Observable<InspectionTaskDeviceRsp> getInspectionDeviceList(String taskId, String search, String sn, Integer finish, String deviceTypes, Integer offset, Integer limit) {
+    public Observable<InspectionTaskDeviceDetailRsp> getInspectionDeviceList(String taskId, String search, String sn, Integer finish, String deviceTypes, Integer offset, Integer limit) {
 //        String deviceTypeStr =null;
 //        StringBuilder stringBuilder = new StringBuilder();
 //        if (deviceTypes!=null&&deviceTypes.size()>0){
@@ -939,8 +941,104 @@ public enum RetrofitServiceHelper {
 //                stringBuilder.append(deviceType);
 //            }
 //        }
-        Observable<InspectionTaskDeviceRsp> inspectionDeviceList = retrofitService.getInspectionDeviceList(taskId, search, sn, finish, deviceTypes, offset, limit);
+        Observable<InspectionTaskDeviceDetailRsp> inspectionDeviceList = retrofitService.getInspectionDeviceList(taskId, search, sn, finish, deviceTypes, offset, limit);
         RxApiManager.getInstance().add("inspectionDeviceList", inspectionDeviceList.subscribe());
         return inspectionDeviceList;
+    }
+
+    /**
+     * 获取巡检任务列表
+     *
+     * @param search
+     * @param finish
+     * @param offset
+     * @param limit
+     * @param startTime
+     * @param finishTime
+     * @return
+     */
+    public Observable<InspectionTaskModelRsp> getInspectTaskList(String search, Integer finish, Integer offset, Integer
+            limit, Long startTime, Long finishTime) {
+        Observable<InspectionTaskModelRsp> inspectTaskList = retrofitService.getInspectTaskList(search, finish, offset, limit,
+                startTime, finishTime);
+        RxApiManager.getInstance().add("getInspectTaskList", inspectTaskList.subscribe());
+        return inspectTaskList;
+    }
+
+    /**
+     * 改变巡检任务状态，目前只能改为1，执行中
+     *
+     * @param id
+     * @param identifier
+     * @param status
+     * @return
+     */
+    public Observable<ResponseBase> doChangeInspectionTaskState(String id, String identifier, Integer status) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONObject jsonObject1 = new JSONObject();
+            if (id != null) {
+                jsonObject1.put("_id", id);
+            }
+            if (identifier != null) {
+                jsonObject1.put("identifier", identifier);
+            }
+            jsonObject.put("condition", jsonObject1);
+
+            JSONObject jsonObject2 = new JSONObject();
+            if (status != null) {
+                jsonObject2.put("status", status);
+            }
+            jsonObject.put("doc", jsonObject2);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ResponseBase> changeInspectionTaskState = retrofitService.changeInspectionTaskState(body);
+        RxApiManager.getInstance().add("doChangeInspectionTaskState", changeInspectionTaskState.subscribe());
+        return changeInspectionTaskState;
+    }
+
+    /**
+     * 获取单个巡检设备
+     *
+     * @param id
+     * @param sn
+     * @param taskId
+     * @param device
+     * @return
+     */
+    public Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(String id, String sn, String taskId, Integer device) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONObject jsonObject1 = new JSONObject();
+            if (id != null) {
+                jsonObject1.put("_id", id);
+            }
+            if (sn != null) {
+                jsonObject1.put("sn", sn);
+            }
+            if (taskId != null) {
+                jsonObject1.put("taskId", taskId);
+            }
+            if (device != null) {
+                jsonObject1.put("device", device);
+            }
+
+
+            jsonObject.put("condition", jsonObject1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail = retrofitService.getInspectionDeviceDetail(body);
+        RxApiManager.getInstance().add("getInspectionDeviceDetail", getInspectionDeviceDetail.subscribe());
+        return getInspectionDeviceDetail;
     }
 }

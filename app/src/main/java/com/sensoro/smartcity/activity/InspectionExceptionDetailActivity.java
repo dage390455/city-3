@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionExceptionThumbnailAdapter;
@@ -15,8 +16,12 @@ import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.presenter.InspectionExceptionDetailActivityPresenter;
+import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroToast;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -50,6 +55,7 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
     private TagAdapter mExceptionTagAdapter;
     private InspectionExceptionThumbnailAdapter mPhotoAdapter;
     private InspectionExceptionThumbnailAdapter mCameraAdapter;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -60,15 +66,9 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText("监测点异常详情");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-
-        acInspectionExceptionDetailTvName.setText("小刘是个鬼啊");
-        acInspectionExceptionDetailTvSn.setText("小刘的温度 97987");
-
-        acInspectionExceptionDetailTvRemark.setText("在她生命垂危之际，“众星之子”索拉卡试图将她那灵魂从消散的边缘稳定下来。" +
-                "在不愿放弃家园的强大意志支撑下，艾瑞莉娅苏醒了过来。就在此时，她父亲的传世神兵竟凌空悬立于她身旁。艾瑞莉娅对传世神兵的异举并不为奇，转身投入战场。" +
-                "传世神兵环绕着她轻灵起舞，在诺克萨斯人的惊恐中将他们一一斩杀。伤亡惨重的入侵者被迫从普雷希典撤军。经此一役，艾瑞莉娅被任命为艾欧尼亚护卫队长");
 
        initRcTag();
 
@@ -81,21 +81,50 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     private void initRcCamera() {
         mCameraAdapter = new InspectionExceptionThumbnailAdapter(mActivity);
-        GridLayoutManager manager = new GridLayoutManager(mActivity, 3);
-        acInspectionExceptionDetailRcPhoto.setLayoutManager(manager);
-        acInspectionExceptionDetailRcPhoto.setAdapter(mCameraAdapter);
+        GridLayoutManager manager = new GridLayoutManager(mActivity, 3){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        acInspectionExceptionDetailRcCamera.setLayoutManager(manager);
+        acInspectionExceptionDetailRcCamera.setAdapter(mCameraAdapter);
+        acInspectionExceptionDetailRcCamera.setHasFixedSize(true);
+        acInspectionExceptionDetailRcCamera.setNestedScrollingEnabled(false);
+
+        mCameraAdapter.setOnExceptionThumbnailItemClickListener(new InspectionExceptionThumbnailAdapter.ExceptionThumbnailItemClickListener() {
+            @Override
+            public void onExceptionThumbnailItemClickListener(int position) {
+                mPresenter.doPreviewCamera(mCameraAdapter.getItem(position));
+            }
+        });
     }
 
     private void initRcPhoto() {
         mPhotoAdapter = new InspectionExceptionThumbnailAdapter(mActivity);
-        GridLayoutManager manager = new GridLayoutManager(mActivity, 3);
-        acInspectionExceptionDetailRcCamera.setLayoutManager(manager);
-        acInspectionExceptionDetailRcCamera.setAdapter(mPhotoAdapter);
+        GridLayoutManager manager = new GridLayoutManager(mActivity, 3){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+
+        };
+        acInspectionExceptionDetailRcPhoto.setLayoutManager(manager);
+        acInspectionExceptionDetailRcPhoto.setAdapter(mPhotoAdapter);
+        acInspectionExceptionDetailRcPhoto.setHasFixedSize(true);
+        acInspectionExceptionDetailRcPhoto.setNestedScrollingEnabled(false);
+
+        mPhotoAdapter.setOnExceptionThumbnailItemClickListener(new InspectionExceptionThumbnailAdapter.ExceptionThumbnailItemClickListener() {
+            @Override
+            public void onExceptionThumbnailItemClickListener(int position) {
+                mPresenter.doPreviewPhoto(mPhotoAdapter.getDataList(),position);
+            }
+        });
 
     }
 
     private void initRcExceptionTag() {
-        mExceptionTagAdapter = new TagAdapter(mActivity,R.color.c_ff8d34);
+        mExceptionTagAdapter = new TagAdapter(mActivity,R.color.c_ff8d34,R.color.c_ff8d34);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         acInspectionExceptionDetailRcExceptionTag.setLayoutManager(manager);
@@ -103,7 +132,7 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
     }
 
     private void initRcTag() {
-        mTagAdapter = new TagAdapter(mActivity);
+        mTagAdapter = new TagAdapter(mActivity,R.color.c_252525,R.color.c_dfdfdf);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         acInspectionExceptionDetailRcTag.setLayoutManager(manager);
@@ -117,7 +146,7 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     @Override
     public void startAC(Intent intent) {
-
+        startActivity(intent);
     }
 
     @Override
@@ -142,22 +171,22 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     @Override
     public void showProgressDialog() {
-
+        mProgressUtils.showProgress();
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        mProgressUtils.dismissProgress();
     }
 
     @Override
     public void toastShort(String msg) {
-
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_LONG).show();
     }
 
 
@@ -171,12 +200,51 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
     }
 
     @Override
-    public void updateTagsData(ArrayList<String> list) {
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+        }
+        mProgressUtils = null;
+    }
+
+    @Override
+    public void updateTagsData(List<String> list) {
         mTagAdapter.updateTags(list);
     }
 
     @Override
-    public void updateExceptionTagsData(ArrayList<String> list) {
+    public void updateExceptionTagsData(List<String> list) {
         mExceptionTagAdapter.updateTags(list);
+    }
+
+    @Override
+    public void setTvName(String name) {
+        acInspectionExceptionDetailTvName.setText(name);
+    }
+
+    @Override
+    public void setTvSn(String sn) {
+        acInspectionExceptionDetailTvSn.setText(sn);
+    }
+
+    @Override
+    public void setTvStatus(int colorRes, String text) {
+        WidgetUtil.changeTvState(mActivity,acInspectionExceptionDetailTvState,colorRes,text);
+    }
+
+    @Override
+    public void setTvReamrk(String remark) {
+        acInspectionExceptionDetailTvRemark.setText(remark);
+    }
+
+    @Override
+    public void updateRcPhotoAdapter(List<ScenesData> imageUrls) {
+        mPhotoAdapter.updateDataList(imageUrls);
+    }
+
+    @Override
+    public void updateRcCameraAdapter(List<ScenesData> videoThumbUrls) {
+        mCameraAdapter.updateDataList(videoThumbUrls);
     }
 }

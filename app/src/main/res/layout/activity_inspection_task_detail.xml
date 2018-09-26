@@ -206,7 +206,7 @@
                     android:layout_height="wrap_content"
                     android:textSize="12sp"
                     android:textColor="@color/c_a6a6a6"
-                    android:drawablePadding="4dp"
+                    android:drawablePadding="6dp"
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     />

@@ -24,7 +24,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.InspectionTaskExecutionModel;
-import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -277,10 +277,10 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 cur_page = 0;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getInspectionDeviceList("5bab5d34e51f3a4c850d0435", tempSearch, null, finish, null, cur_page * 15, 15).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceRsp>() {
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>() {
                     @Override
-                    public void onCompleted(InspectionTaskDeviceRsp inspectionTaskDeviceRsp) {
-                        freshUI(direction, inspectionTaskDeviceRsp);
+                    public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
+                        freshUI(direction, inspectionTaskDeviceDetailRsp);
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                     }
@@ -298,15 +298,15 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 cur_page++;
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getInspectionDeviceList("5bab5d34e51f3a4c850d0435", tempSearch, null, finish, null, cur_page * 15, 15).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceRsp>() {
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>() {
                     @Override
-                    public void onCompleted(InspectionTaskDeviceRsp inspectionTaskDeviceRsp) {
-                        if (inspectionTaskDeviceRsp.getData().getDevices().size() == 0) {
+                    public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
+                        if (inspectionTaskDeviceDetailRsp.getData().getDevices().size() == 0) {
                             getView().toastShort("没有更多数据了");
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
-                            freshUI(direction, inspectionTaskDeviceRsp);
+                            freshUI(direction, inspectionTaskDeviceDetailRsp);
                             getView().onPullRefreshComplete();
                         }
                         getView().dismissProgressDialog();
@@ -331,12 +331,12 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         requestSearchData(DIRECTION_DOWN, null);
     }
 
-    private void freshUI(int direction, InspectionTaskDeviceRsp inspectionTaskDeviceRsp) {
+    private void freshUI(int direction, InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
         if (direction == DIRECTION_DOWN) {
             mDevices.clear();
         }
 //        handleDeviceAlarmLogs(deviceAlarmLogRsp);
-        List<InspectionTaskDeviceDetail> devices = inspectionTaskDeviceRsp.getData().getDevices();
+        List<InspectionTaskDeviceDetail> devices = inspectionTaskDeviceDetailRsp.getData().getDevices();
         if (devices!=null){
             mDevices.addAll(devices);
             if (!TextUtils.isEmpty(tempSearch)) {
