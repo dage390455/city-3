@@ -86,6 +86,7 @@ implements Constants{
     }
 
     public void doBtnStart() {
+        //TODO 检查巡检
         if(mTaskInfo.getStatus() == 0){
             changeTaskState();
         }else{
