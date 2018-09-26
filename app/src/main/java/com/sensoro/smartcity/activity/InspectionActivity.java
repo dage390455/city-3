@@ -72,7 +72,7 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
     }
 
     private void initRcTag() {
-        mTagAdapter = new TagAdapter(mActivity);
+        mTagAdapter = new TagAdapter(mActivity,R.color.c_252525,R.color.c_dfdfdf);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         acInspectionRcTag.setLayoutManager(manager);

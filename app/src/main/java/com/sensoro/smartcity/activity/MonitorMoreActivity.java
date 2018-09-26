@@ -74,7 +74,7 @@ public class MonitorMoreActivity extends BaseActivity<IMonitorMoreActivityView, 
 
     private void initRcTag() {
         sensorMoreRcTag.setIntercept(false);
-        mTagAdapter = new TagAdapter(mActivity);
+        mTagAdapter = new TagAdapter(mActivity,R.color.c_252525,R.color.c_dfdfdf);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         sensorMoreRcTag.setLayoutManager(manager);

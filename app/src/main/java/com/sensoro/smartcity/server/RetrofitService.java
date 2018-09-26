@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server;
 
 
+import com.sensoro.smartcity.server.bean.InspectionTaskModel;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
@@ -14,6 +15,8 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -23,7 +26,6 @@ import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 
 import okhttp3.RequestBody;
-import okhttp3.ResponseBody;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
@@ -64,7 +66,8 @@ public interface RetrofitService {
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
     String ALARM_COUNT = "prov1/alarms/count";
     String INSPECT_TASK_LIST = "inspect/task/list";
-    String INSPECT_TASK_DETAIL = "inspect/task/list";
+    String INSPECT_TASK_CHANGE_STATE = "inspect/task/status";
+    String INSPECT_TASK_EXCEPTION_DETAIL = "inspect/device/_search";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -192,18 +195,21 @@ public interface RetrofitService {
     Observable<AuthRsp> doubleCheck(@Field("code") String code);
 
     @GET(ALARM_COUNT)
-    Observable<ResponseBase> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
+    Observable<AlarmCountRsp> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
                                             @Query("displayStatus") String displayStatus, @Query("sn") String sn);
 
     @GET(INSPECT_TASK_LIST)
-    Observable<ResponseBase> getInspectTaskList(@Query("search") String search, @Query("page") Integer page, @Query
-            ("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
-
-    @GET(INSPECT_TASK_DETAIL)
-    Observable<ResponseBase> getInspectTaskDetail(@Query("search") String search, @Query("page") Integer page,
-                                                   @Query("count") Integer count, @Query("offset") Integer offset,
-                                                   @Query("limit") Integer limit);
+    Observable<InspectionTaskModelRsp> getInspectTaskList(@Query("search") String search, @Query("finish") Integer finish, @Query
+            ("offset") Integer offset, @Query("limit") Integer limit, @Query("startTime") Long startTime, @Query("finishTime") Long finishTime);
 
     @PUT("inspect/device")
     Observable<ResponseBase> uploadInspectionResult(@Body RequestBody responseBody);
+
+    @PUT(INSPECT_TASK_CHANGE_STATE)
+    Observable<ResponseBase> changeInspectionTaskState(@Body RequestBody requestBody);
+
+    @POST(INSPECT_TASK_EXCEPTION_DETAIL)
+    Observable<InspectionTaskDeviceRsp> getInspectionDeviceDetail(@Body RequestBody requestBody);
+
 }
+

@@ -1,6 +1,7 @@
-package com.sensoro.smartcity.model;
+package com.sensoro.smartcity.server.bean;
 
 import com.google.gson.annotations.SerializedName;
+import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 
 import java.util.List;
 

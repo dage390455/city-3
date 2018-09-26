@@ -69,13 +69,15 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     private static final int MY_REQUEST_PERMISSION_CODE = 0x14;
     private static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
         {
-            add(Manifest.permission_group.STORAGE);
-            add(Manifest.permission_group.LOCATION);
-            add(Manifest.permission_group.CAMERA);
             add(Manifest.permission.RECORD_AUDIO);
+            add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            add(Manifest.permission.ACCESS_FINE_LOCATION);
             add(Manifest.permission.ACCESS_COARSE_LOCATION);
             add(Manifest.permission.READ_PHONE_STATE);
             add(Manifest.permission.CALL_PHONE);
+            add(Manifest.permission.CAMERA);
+            add(Manifest.permission.VIBRATE);
         }
     };
     private static final String[] REQUIRE_PERMISSIONS = {
@@ -166,7 +168,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
-                    acLoginImvPsdIcon.setImageResource(R.drawable.login_account_high_light);
+                    acLoginImvPsdIcon.setImageResource(R.drawable.login_psd_high_light);
                     acLoginImvPsdClear.setVisibility(View.VISIBLE);
                     if (acLoginEtAccount.getText().length() > 0) {
                         updateLoginBtnState(true);

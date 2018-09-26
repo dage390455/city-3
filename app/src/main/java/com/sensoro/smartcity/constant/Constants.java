@@ -149,6 +149,13 @@ public interface Constants {
     //    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房",};
     String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房"};
     String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+
+    //巡检任务异常标签
+    String[] INSPECTION_EXCEPTION_TASGS = {"指示灯不亮","蜂鸣器不响","外观损坏","安装位置不对","设备丢失","按键故障","蓝牙无效"};
+    //巡检任务状态颜色值及对应文本
+    int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5,R.color.c_3aa7f0,R.color.c_ff8d34,R.color.c_29c093,R.color.c_a6a6a6};
+    String[] INSPECTION_STATUS_TEXTS = {"待执行","执行中","超时未完成","已完成","超时完成"};
+    //
     String EXTRA_USER_ID = "extra_user_id";
     //
     String EXTRA_SAVE_NAME = "extra_save_name";
@@ -202,6 +209,7 @@ public interface Constants {
 
     //巡检相关
     String EXTRA_INSPECTION_START_TIME = "extra_inspection_start_time";
+    String EXTRA_INSPECTION_INDEX_TASK_INFO = "extra_inspection_index_task_info";
 
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
@@ -293,4 +301,5 @@ public interface Constants {
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_LOGIN = 0x30;
     int TYPE_SCAN_CHANGE_DEVICE = 0X34;
+
 }

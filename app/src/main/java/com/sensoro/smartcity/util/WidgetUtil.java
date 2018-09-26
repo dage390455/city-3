@@ -2,6 +2,7 @@ package com.sensoro.smartcity.util;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +14,7 @@ import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.graphics.drawable.GradientDrawable;
 import android.media.MediaMetadataRetriever;
 import android.os.Build;
 import android.provider.Settings;
@@ -1363,6 +1365,24 @@ public class WidgetUtil {
         int displayWidth = displayMetrics.widthPixels;
 
         return (realWidth - displayWidth) > 0 || (realHeight - displayHeight) > 0;
+    }
+
+    /**
+     * 改变文字的颜色，及startDrawable的颜色，主要用于巡检任务，任务状态文本的改变
+     * @param context
+     * @param tv
+     * @param colorId
+     * @param text
+     */
+    public static void changeTvState(Context context, TextView tv, int colorId, String text) {
+        Resources resources = context.getResources();
+        GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_small_oval_29c);
+        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
+        int color = resources.getColor(colorId);
+        gd.setColor(color);
+        tv.setCompoundDrawables(gd,null,null,null);
+        tv.setTextColor(color);
+        tv.setText(text);
     }
     //TODO dont del
 

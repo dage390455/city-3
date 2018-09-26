@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.widget.NestedScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:scrollbars="none"
-    >
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:scrollbars="none">
 <LinearLayout
 
     android:layout_width="match_parent"
@@ -74,6 +73,8 @@
                     android:id="@+id/ac_inspection_exception_detail_rc_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:layout_alignParentEnd="true">
 
                 </android.support.v7.widget.RecyclerView>
@@ -118,6 +119,7 @@
             <TextView
                 android:id="@+id/ac_inspection_exception_detail_tv_state"
                 android:layout_width="wrap_content"
+                android:drawablePadding="6dp"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
                 />
@@ -155,6 +157,8 @@
                     android:id="@+id/ac_inspection_exception_detail_rc_exception_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp"
                     android:layout_alignParentEnd="true">
 
                 </android.support.v7.widget.RecyclerView>
@@ -189,6 +193,7 @@
                 android:layout_marginStart="60dp"
                 android:layout_height="wrap_content"
                 android:textSize="12sp"
+                android:gravity="end"
                 android:lineSpacingMultiplier="1.5"
                 android:textColor="@color/c_a6a6a6"
                 />
@@ -222,13 +227,13 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/ac_inspection_exception_detail_rc_photo"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true">
+                    <android.support.v7.widget.RecyclerView
+                        android:id="@+id/ac_inspection_exception_detail_rc_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true">
+                    </android.support.v7.widget.RecyclerView>
 
-            </android.support.v7.widget.RecyclerView>
             </RelativeLayout>
         </LinearLayout>
         <View

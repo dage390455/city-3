@@ -30,14 +30,10 @@ public class TagAdapter extends RecyclerView.
     private  int mStrokeColor = -1;
     private int mStrokeWidth;
 
-    public TagAdapter(Context context) {
+    public TagAdapter(Context context, @ColorRes int textColorId,@ColorRes int strokeColorId) {
         mContext = context;
-    }
-
-    public TagAdapter(Context context, @ColorRes int colorId) {
-        this(context);
-        mTextColor = colorId;
-        mStrokeColor = colorId;
+        mTextColor = textColorId;
+        mStrokeColor = strokeColorId;
         mStrokeWidth = DpUtils.dp2px(context, 1);
     }
 
@@ -62,15 +58,11 @@ public class TagAdapter extends RecyclerView.
 
     private void changeColor(TagHolder holder) {
         Resources resources = mContext.getResources();
-        if (mTextColor != -1) {
-            holder.itemAdapterTv.setTextColor(resources.getColor(mTextColor));
-        }
-        if (mStrokeColor != -1) {
-            GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_bg_solid_ff_stroke_df_full_corner);
-            gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
-            gd.setStroke(mStrokeWidth,resources.getColor(mStrokeColor));
-            holder.itemAdapterTv.setBackground(gd);
-        }
+        holder.itemAdapterTv.setTextColor(resources.getColor(mTextColor));
+        GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_bg_solid_ff_stroke_df_full_corner);
+        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
+        gd.setStroke(mStrokeWidth,resources.getColor(mStrokeColor));
+        holder.itemAdapterTv.setBackground(gd);
 
 
     }
