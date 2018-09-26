@@ -45,6 +45,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+
 public class AlarmPopUtils implements View.OnClickListener, Constants,
         ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, AdapterView
                 .OnItemSelectedListener, SelectDialog.SelectDialogListener, DialogInterface.OnDismissListener, DialogInterface.OnCancelListener {
@@ -74,7 +76,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
     private ImagePickerAdapter adapter;
     private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
-    private int maxImgCount = 9;               //允许选择图片最大数
+    private static final int maxImgCount = 9;               //允许选择图片最大数
     //    private ArrayList<ImageItem> tempImages = null;
     private TextView tvSpinnerResultInfo;
     private ProgressDialog progressDialog;
@@ -133,9 +135,9 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
     private void initWidget() {
         RecyclerView recyclerView = mRoot.findViewById(R.id.recyclerView);
-        adapter = new ImagePickerAdapter(mActivity, selImageList, maxImgCount);
+        adapter = new ImagePickerAdapter(mActivity, selImageList);
         adapter.setOnItemClickListener(this);
-        adapter.canVideo(true);
+//        adapter.canVideo(true);
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
@@ -154,19 +156,19 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         return dialog;
     }
 
-    private void showProgressDialogByPhoto(int count, double percent) {
+    private void showProgressDialog(String content, double percent) {
         if (progressDialog != null) {
-            if (count == -1) {
-                String title = "正在上传视频";
-                progressDialog.setProgress((int) (percent * 100));
-                progressDialog.setTitle(title);
-                progressDialog.show();
-            } else {
-                String title = "正在上传第" + count + "张，总共" + selImageList.size() + "张";
-                progressDialog.setProgress((int) (percent * 100));
-                progressDialog.setTitle(title);
-                progressDialog.show();
-            }
+//            if (count == -1) {
+//                String title = "正在上传视频";
+//                progressDialog.setProgress((int) (percent * 100));
+//                progressDialog.setTitle(title);
+//                progressDialog.show();
+//            } else {
+//                String title = "正在上传第" + count + "张，总共" + selImageList.size() + "张";
+            progressDialog.setProgress((int) (percent * 100));
+            progressDialog.setTitle(content);
+            progressDialog.show();
+//            }
 
         }
     }
@@ -378,17 +380,18 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
             List<String> names = new ArrayList<>();
             names.add("拍照");
             names.add("相册");
-            boolean needRecord = true;
-            for (ImageItem imageItem : selImageList) {
-                if (!imageItem.isRecord) {
-                    //只要有一个是照片
-                    needRecord = false;
-                    break;
-                }
-            }
-            if (needRecord) {
-                names.add("拍摄视频");
-            }
+//            boolean needRecord = true;
+//            for (ImageItem imageItem : selImageList) {
+//                if (!imageItem.isRecord) {
+//                    //只要有一个是照片
+//                    needRecord = false;
+//                    break;
+//                }
+//            }
+//            if (needRecord) {
+//                names.add("拍摄视频");
+//            }
+            names.add("拍摄视频");
             showDialog(this, names);
         } else {
             //打开预览
@@ -438,8 +441,8 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     }
 
     @Override
-    public void onProgress(int index, double percent) {
-        showProgressDialogByPhoto(index, percent);
+    public void onProgress(String content, double percent) {
+        showProgressDialog(content, percent);
     }
 
     @Override
@@ -483,9 +486,10 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                  */
                 //打开选择,本次允许选择的数量
                 ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
-                Intent intent = new Intent(mActivity, ImageGridActivity.class);
+                final Intent intent = new Intent(mActivity, ImageGridActivity.class);
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
                 mActivity.startActivityForResult(intent, REQUEST_CODE_SELECT);
+                //
                 break;
             case 1:
                 //打开选择,本次允许选择的数量
@@ -565,15 +569,14 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                     //拍视频
                     if (alarmPopModel.requestCode == REQUEST_CODE_RECORD) {
                         if (alarmPopModel.imageItems != null) {
-                            adapter.setMaxImgCount(1);
-                            selImageList.clear();
+                            adapter.setMaxImgCount(9);
                             selImageList.addAll(alarmPopModel.imageItems);
                             adapter.setImages(selImageList);
                         }
                     } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
                         adapter.setMaxImgCount(9);
-                        selImageList.clear();
-                        adapter.setImages(selImageList);
+//                        selImageList.clear();
+//                        adapter.setImages(selImageList);
                     }
 
                 }
@@ -589,5 +592,70 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         }
         mButton.setEnabled(canClick);
         mButton.setClickable(canClick);
+    }
+
+    public static void handlePhotoIntent(int requestCode, int resultCode, Intent data) {
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+            //添加图片返回
+            if (data != null && requestCode == REQUEST_CODE_SELECT) {
+                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                if (tempImages != null) {
+                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.fromTakePhoto = fromTakePhoto;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
+            }
+        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
+            //预览图片返回
+            if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
+                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
+                if (tempImages != null) {
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
+            }
+        } else if (resultCode == RESULT_CODE_RECORD) {
+            //拍视频
+            if (data != null && requestCode == REQUEST_CODE_RECORD) {
+                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
+                if (imageItem != null) {
+                    LogUtils.loge("--- 从视频返回  path = " + imageItem.recordPath);
+                    ArrayList<ImageItem> tempImages = new ArrayList<>();
+                    tempImages.add(imageItem);
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
+            } else if (requestCode == REQUEST_CODE_PLAY_RECORD) {
+                EventData eventData = new EventData();
+                eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                AlarmPopModel alarmPopModel = new AlarmPopModel();
+                alarmPopModel.requestCode = requestCode;
+                alarmPopModel.resultCode = resultCode;
+                eventData.data = alarmPopModel;
+                EventBus.getDefault().post(eventData);
+            }
+
+        }
+        //
+        LogUtils.loge("handlerActivityResult requestCode = " + requestCode + ",resultCode = " + resultCode + ",data = " + data);
     }
 }

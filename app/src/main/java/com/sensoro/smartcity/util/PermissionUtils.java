@@ -1,11 +1,16 @@
 package com.sensoro.smartcity.util;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.hardware.Camera;
+import android.media.AudioFormat;
+import android.media.AudioRecord;
+import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.Settings;
@@ -25,48 +30,57 @@ import java.util.ArrayList;
 import static android.content.Context.ACTIVITY_SERVICE;
 
 public final class PermissionUtils {
-
+    private static final int MY_REQUEST_PERMISSION_CODE = 0x114;
+    private static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
+        {
+            add(Manifest.permission.WRITE_EXTERNAL_STORAGE);
+            add(Manifest.permission.ACCESS_COARSE_LOCATION);
+            add(Manifest.permission.CAMERA);
+            add(Manifest.permission.RECORD_AUDIO);
+            add(Manifest.permission.ACCESS_FINE_LOCATION);
+            add(Manifest.permission.READ_EXTERNAL_STORAGE);
+            add(Manifest.permission.READ_PHONE_STATE);
+            add(Manifest.permission.CALL_PHONE);
+        }
+    };
     private volatile PermissionsResultObserve mListener;
-    private volatile boolean mNeedFinish = false;
-    //界面传递过来的权限列表,用于二次申请
-    private ArrayList<String> mPermissionsList = new ArrayList<>();
     private SoftReference<Activity> mContext;
 
     public PermissionUtils(Activity activity) {
         mContext = new SoftReference<>(activity);
     }
 
-
     /**
      * 权限允许或拒绝对话框
      *
-     * @param permissions 需要申请的权限
-     * @param needFinish  如果必须的权限没有允许的话，是否需要finish当前 Activity
+     * @param
      */
-    public void requestPermission(final ArrayList<String> permissions, final boolean needFinish,
-                                  final int myRequestPermissionCode) {
-        if (permissions == null || permissions.size() == 0) {
-            return;
-        }
+    public void requestPermission() {
         if (mListener == null) {
             throw new NullPointerException("请先注册监听!");
         }
-        mNeedFinish = needFinish;
-        mPermissionsList = permissions;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             //获取未通过的权限列表
-            ArrayList<String> newPermissions = checkEachSelfPermission(permissions);
+            ArrayList<String> newPermissions = checkEachSelfPermission(FORCE_REQUIRE_PERMISSIONS);
             if (newPermissions.size() > 0) {// 是否有未通过的权限
                 requestEachPermissions(newPermissions.toArray(new String[newPermissions.size()]),
-                        myRequestPermissionCode);
+                        MY_REQUEST_PERMISSION_CODE);
             } else {// 权限已经都申请通过了
                 if (mListener != null) {
-                    mListener.onPermissionGranted();
+                    if (checkRecord() && checkPhoto()) {
+                        mListener.onPermissionGranted();
+                    } else {
+                        showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
+                    }
                 }
             }
         } else {
             if (mListener != null) {
-                mListener.onPermissionGranted();
+                if (checkRecord() && checkPhoto()) {
+                    mListener.onPermissionGranted();
+                } else {
+                    showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
+                }
             }
         }
     }
@@ -114,10 +128,8 @@ public final class PermissionUtils {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    if (mNeedFinish) {
-                                        SensoroToast.INSTANCE.makeText(mContext.get(), "需要权限！请重新打开应用", Toast.LENGTH_SHORT).show();
-                                        mContext.get().finish();
-                                    }
+                                    SensoroToast.INSTANCE.makeText(mContext.get(), "需要权限！请重新打开应用", Toast.LENGTH_SHORT).show();
+                                    mContext.get().finish();
                                 }
                             })
                     .setCancelable(false)
@@ -165,15 +177,18 @@ public final class PermissionUtils {
      * @param permissions
      * @param grantResults
      */
-    public void onRequestPermissionsResult(final int myRequestPermissioncode, int requestCode, @NonNull String[]
-            permissions,
-                                           @NonNull int[] grantResults, ArrayList<String> permissionsList) {
-        if (requestCode == myRequestPermissioncode && permissions != null) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MY_REQUEST_PERMISSION_CODE && permissions != null) {
             // 获取被拒绝的权限列表
             ArrayList<String> deniedPermissions = new ArrayList<>();
             if (checkEachPermissionsGranted(grantResults)) {
                 if (mListener != null) {
-                    mListener.onPermissionGranted();
+                    if (checkRecord() && checkPhoto()) {
+                        mListener.onPermissionGranted();
+                    } else {
+                        showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
+                    }
+//                    mListener.onPermissionGranted();
                 }
             } else {
                 for (String permission : permissions) {
@@ -184,20 +199,18 @@ public final class PermissionUtils {
                 }
                 // 判断被拒绝的权限中是否有包含必须具备的权限
                 ArrayList<String> forceRequirePermissionsDenied =
-                        checkForceRequirePermissionDenied(permissionsList, deniedPermissions);
+                        checkForceRequirePermissionDenied(FORCE_REQUIRE_PERMISSIONS, deniedPermissions);
                 if (forceRequirePermissionsDenied != null && forceRequirePermissionsDenied.size() > 0) {
                     // 必备的权限被拒绝，
-                    if (mNeedFinish) {
-                        showPermissionSettingDialog(myRequestPermissioncode);
-                    } else {
-                        if (mListener != null) {
-                            mListener.onPermissionDenied();
-                        }
-                    }
+                    showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
                 } else {
                     // 不存在必备的权限被拒绝，可以进首页
                     if (mListener != null) {
-                        mListener.onPermissionGranted();
+                        if (checkRecord() && checkPhoto()) {
+                            mListener.onPermissionGranted();
+                        } else {
+                            showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
+                        }
                     }
                 }
             }
@@ -255,9 +268,7 @@ public final class PermissionUtils {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
-                            if (mNeedFinish) {
-                                restart(mContext.get());
-                            }
+                            restart(mContext.get());
                         }
                     })
                     .setCancelable(false)
@@ -270,7 +281,16 @@ public final class PermissionUtils {
             myRequestPermissionCode) {
         //如果需要跳转系统设置页后返回自动再次检查和执行业务 如果不需要则不需要重写onActivityResult
         if (requestCode == myRequestPermissionCode) {
-            requestPermission(mPermissionsList, mNeedFinish, myRequestPermissionCode);
+//            requestPermission(mPermissionsList, mNeedFinish, myRequestPermissionCode);
+            requestPermission();
+        }
+    }
+
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        //如果需要跳转系统设置页后返回自动再次检查和执行业务 如果不需要则不需要重写onActivityResult
+        if (requestCode == MY_REQUEST_PERMISSION_CODE) {
+//            requestPermission(mPermissionsList, mNeedFinish, MY_REQUEST_PERMISSION_CODE);
+            requestPermission();
         }
     }
 
@@ -342,6 +362,91 @@ public final class PermissionUtils {
         if (mContext != null) {
             mContext.clear();
             mContext = null;
+        }
+    }
+
+    private boolean voicePermission() {
+        return (PackageManager.PERMISSION_GRANTED == ContextCompat.
+                checkSelfPermission(mContext.get(), android.Manifest.permission.RECORD_AUDIO));
+    }
+
+    public boolean checkPhoto() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            //大于23但是系统返回的授权标识是错误的，这里返回的null，在异常的时候给出提示
+            Camera camera = null;
+            try {
+                camera = Camera.open(0);
+                Camera.Parameters param = camera.getParameters();
+                if (param != null) {
+                    return true;
+                } else {
+                    SensoroToast.INSTANCE.makeText("请打开拍照权限", Toast.LENGTH_SHORT).show();
+                }
+
+            } catch (Exception e) {
+                e.printStackTrace();
+            } finally {
+                if (camera != null) {
+                    camera.release();
+                }
+
+            }
+            return false;
+        }
+        return true;
+    }
+
+    public boolean checkRecord() {
+        return hasRecordPermission();
+    }
+
+    private boolean hasRecordPermission() {
+        int minBufferSize = AudioRecord.getMinBufferSize(8000, AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT);
+        int bufferSizeInBytes = 640;
+        byte[] audioData = new byte[bufferSizeInBytes];
+        int readSize = 0;
+        AudioRecord audioRecord = null;
+        try {
+            audioRecord = new AudioRecord(MediaRecorder.AudioSource.DEFAULT, 8000,
+                    AudioFormat.CHANNEL_IN_MONO, AudioFormat.ENCODING_PCM_16BIT, minBufferSize);
+            // 开始录音
+            audioRecord.startRecording();
+        } catch (Exception e) {
+            //可能情况一
+            if (audioRecord != null) {
+                audioRecord.release();
+                audioRecord = null;
+            }
+            return false;
+        }
+        // 检测是否在录音中,6.0以下会返回此状态
+        if (audioRecord.getRecordingState() != AudioRecord.RECORDSTATE_RECORDING) {
+            //可能情况二
+            if (audioRecord != null) {
+                audioRecord.stop();
+                audioRecord.release();
+                audioRecord = null;
+            }
+            return false;
+        } else {// 正在录音
+            readSize = audioRecord.read(audioData, 0, bufferSizeInBytes);
+            // 检测是否可以获取录音结果
+            if (readSize <= 0) {
+                //可能情况三
+                if (audioRecord != null) {
+                    audioRecord.stop();
+                    audioRecord.release();
+                    audioRecord = null;
+                }
+                return false;
+            } else {                //有权限，正常启动录音并有数据
+                if (audioRecord != null) {
+                    audioRecord.stop();
+                    audioRecord.release();
+                    audioRecord = null;
+                }
+                return true;
+            }
         }
     }
 

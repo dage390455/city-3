@@ -1,74 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools"
 
-          package="com.sensoro.smartcity">
+    package="com.sensoro.smartcity">
 
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS"/>
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
-    <uses-permission android:name="android.permission.VIBRATE"/>
-    <uses-permission android:name="android.permission.GET_TASKS"/>
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/>
-    <uses-permission android:name="android.permission.RESTART_PACKAGES"/>
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
-    <uses-permission android:name="android.permission.CALL_PHONE"/>
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.GET_TASKS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission
         android:name="android.permission.CHANGE_CONFIGURATION"
-        tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.BLUETOOTH"/>
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
-        tools:ignore="ProtectedPermissions"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.CAMERA"/>
-    <uses-permission android:name="android.permission.INTERNET"/>
+        tools:ignore="ProtectedPermissions" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
-        tools:ignore="ProtectedPermissions"/>
+        tools:ignore="ProtectedPermissions" />
+
+    <permission-group android:name="android.permission-group.STORAGE" />
+
     <!--新添加微信分享小程序权限-->
     <!--<uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS"/>-->
     <!-- 调用硬件相机权限 -->
-    <uses-permission android:name="android.permission.FLASHLIGHT"/>
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
 
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false"/>
+        android:required="false" />
     <uses-feature
         android:name="android.hardware.camera.autofocus"
-        android:required="false"/>
+        android:required="false" />
     <!--<uses-feature-->
     <!--android:name="android.hardware.camera"-->
     <!--android:required="false"/>-->
     <uses-feature
         android:name="android.hardware.camera.front"
-        android:required="false"/>
+        android:required="false" />
     <!--<uses-feature-->
     <!--android:name="android.hardware.camera.autofocus"-->
     <!--android:required="false"/>-->
     <uses-feature
         android:name="android.hardware.camera.flash"
-        android:required="false"/>
-    <uses-feature android:name="android.hardware.camera.any"/>
-    <uses-feature android:name="android.hardware.screen.portrait"/>
+        android:required="false" />
+    <uses-feature android:name="android.hardware.camera.any" />
+    <uses-feature android:name="android.hardware.screen.portrait" />
     <uses-feature
         android:name="android.hardware.wifi"
-        android:required="false"/>
+        android:required="false" />
 
-    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW"/>
-    <uses-permission android:name="getui.permission.GetuiService.${applicationId}"/>
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="getui.permission.GetuiService.${applicationId}" />
 
     <permission
         android:name="getui.permission.GetuiService.${applicationId}"
-        android:protectionLevel="normal"/>
+        android:protectionLevel="normal" />
 
     <application
         android:name=".SensoroCityApplication"
@@ -81,16 +84,16 @@
         tools:replace="android:theme">
         <meta-data
             android:name="com.amap.api.v2.apikey"
-            android:value="feb394e9f7754ae572cc77a0bfc723e5"/>
+            android:value="feb394e9f7754ae572cc77a0bfc723e5" />
         <!--android:value="6e1be3076c19f3cf3d148223a2873733"/>-->
         <!--feb394e9f7754ae572cc77a0bfc723e5-->
         <!-- 如果您项目中的所有页面都只需要以高或宽中的一个作为基准进行适配的话, 那就只需要填写高或宽中的一个设计图尺寸即可 -->
         <meta-data
             android:name="design_width_in_dp"
-            android:value="375"/>
+            android:value="375" />
         <meta-data
             android:name="design_height_in_dp"
-            android:value="667"/>
+            android:value="667" />
 
         <activity
             android:name=".activity.SplashActivity"
@@ -99,31 +102,31 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme.Splash">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".activity.DeployManualActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme"/>
+            android:theme="@style/LauncherTheme" />
         <activity
             android:name=".activity.SearchMerchantActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme"/>
+            android:theme="@style/LauncherTheme" />
 
-        <service android:name="com.amap.api.location.APSService"/>
+        <service android:name="com.amap.api.location.APSService" />
 
         <meta-data
             android:name="PUSH_APPID"
-            android:value="${GETUI_APP_ID}"/>
+            android:value="${GETUI_APP_ID}" />
         <meta-data
             android:name="PUSH_APPKEY"
-            android:value="${GETUI_APP_KEY}"/>
+            android:value="${GETUI_APP_KEY}" />
         <meta-data
             android:name="PUSH_APPSECRET"
-            android:value="${GETUI_APP_SECRET}"/>
+            android:value="${GETUI_APP_SECRET}" />
 
         <!-- 配置SDK核心服务 -->
         <service
@@ -132,19 +135,19 @@
             android:label="NotificationCenter"
             android:process=":pushservice">
             <intent-filter>
-                <action android:name="com.igexin.sdk.action.service.message"/>
+                <action android:name="com.igexin.sdk.action.service.message" />
             </intent-filter>
         </service>
 
         <receiver android:name="com.igexin.sdk.PushReceiver">
             <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
-                <action android:name="android.intent.action.USER_PRESENT"/>
-                <action android:name="com.igexin.sdk.action.refreshls"/>
-                <action android:name="android.intent.action.MEDIA_MOUNTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_CONNECTED"/>
-                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED"/>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="com.igexin.sdk.action.refreshls" />
+                <action android:name="android.intent.action.MEDIA_MOUNTED" />
+                <action android:name="android.intent.action.ACTION_POWER_CONNECTED" />
+                <action android:name="android.intent.action.ACTION_POWER_DISCONNECTED" />
             </intent-filter>
         </receiver>
 
@@ -154,14 +157,14 @@
             android:exported="false"
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name="com.igexin.sdk.GActivity"
             android:excludeFromRecents="true"
             android:exported="true"
             android:process=":pushservice"
             android:taskAffinity="com.igexin.sdk.PushActivityTask"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"/>
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
         <activity
             android:name=".wxapi.WXEntryActivity"
 
@@ -170,126 +173,130 @@
             android:launchMode="singleTop"
             android:theme="@android:style/Theme.Translucent.NoTitleBar">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="wxa65d8bad62a982e1"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <data android:scheme="wxa65d8bad62a982e1" />
             </intent-filter>
 
         </activity>
         <activity
             android:name=".temp.FMMapBasic"
-            android:configChanges="orientation|keyboardHidden"/>
-        <activity android:name=".activity.ContractIndexActivity"/>
+            android:configChanges="orientation|keyboardHidden" />
+        <activity android:name=".activity.ContractIndexActivity" />
         <activity
             android:name=".activity.ContractServiceActivity"
-            android:windowSoftInputMode="stateHidden|stateUnchanged"/>
-        <activity android:name=".activity.ContractInfoActivity"/>
-        <activity android:name=".activity.ContractResultActivity"/>
-        <activity android:name=".activity.ScanLoginResultActivity"/>
-        <activity android:name=".activity.DeployMonitorSettingPhotoActivity"/>
-        <activity android:name=".activity.TakeRecordActivity"/>
-        <activity android:name=".activity.VideoPlayActivity"/>
+            android:windowSoftInputMode="stateHidden|stateUnchanged" />
+        <activity android:name=".activity.ContractInfoActivity" />
+        <activity android:name=".activity.ContractResultActivity" />
+        <activity android:name=".activity.ScanLoginResultActivity" />
+        <activity android:name=".activity.DeployMonitorSettingPhotoActivity" />
+        <activity android:name=".activity.TakeRecordActivity" />
+        <activity android:name=".activity.VideoPlayActivity" />
         <activity
             android:name=".activity.MainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:launchMode="singleInstance"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustPan|stateHidden"/>
-        <activity android:name=".activity.DeployMonitorDetailActivity"/>
-        <activity android:name=".activity.DeployDeviceTagActivity"/>
-        <activity android:name=".activity.AlarmDetailLogActivity"/>
-        <activity android:name=".activity.ScanActivity"/>
-        <activity android:name=".activity.MonitorPointDetailActivity"/>
-        <activity android:name=".activity.ContractManagerActivity"/>
-        <activity android:name=".activity.MerchantSwitchActivity"/>
-        <activity android:name=".activity.DeployMonitorAlarmContactActivity"/>
-        <activity android:name=".activity.DeployMonitorNameAddressActivity"/>
-        <activity android:name=".activity.DeployResultActivity"/>
-        <activity android:name=".activity.SearchMonitorActivity"/>
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".activity.DeployMonitorDetailActivity" />
+        <activity android:name=".activity.DeployDeviceTagActivity" />
+        <activity android:name=".activity.AlarmDetailLogActivity" />
+        <activity android:name=".activity.ScanActivity" />
+        <activity android:name=".activity.MonitorPointDetailActivity" />
+        <activity android:name=".activity.ContractManagerActivity" />
+        <activity android:name=".activity.MerchantSwitchActivity" />
+        <activity android:name=".activity.DeployMonitorAlarmContactActivity" />
+        <activity android:name=".activity.DeployMonitorNameAddressActivity" />
+        <activity android:name=".activity.DeployResultActivity" />
+        <activity android:name=".activity.SearchMonitorActivity" />
         <activity
             android:name=".activity.LoginActivity"
             android:launchMode="singleInstance"
-            android:windowSoftInputMode="stateAlwaysHidden"/>
-        <activity android:name=".activity.AuthActivity"/>
-        <activity android:name=".activity.DeployMapActivity"/>
-        <activity android:name=".activity.MonitorMoreActivity"/>
-        <activity android:name=".activity.MonitorPointMapActivity"/>
-        <activity android:name=".activity.InspectionTaskListActivity"/>
-        <activity android:name=".activity.InspectionTaskDetailActivity"/>
-        <activity android:name=".activity.InspectionInstructionActivity"/>
-        <activity android:name=".activity.InspectionTaskActivity"/>
-        <activity android:name=".activity.InspectionActivity"/>
-        <activity android:name=".activity.InspectionExceptionDetailActivity"/>
-        <activity android:name=".activity.InspectionUploadExceptionActivity"/>
-        <activity android:name=".activity.AlarmHistoryLogActivity"/>
+            android:windowSoftInputMode="stateAlwaysHidden" />
+        <activity android:name=".activity.AuthActivity" />
+        <activity android:name=".activity.DeployMapActivity" />
+        <activity android:name=".activity.MonitorMoreActivity" />
+        <activity android:name=".activity.MonitorPointMapActivity" />
+        <activity android:name=".activity.InspectionTaskListActivity" />
+        <activity android:name=".activity.InspectionTaskDetailActivity" />
+        <activity android:name=".activity.InspectionInstructionActivity" />
+        <activity
+            android:name=".activity.InspectionTaskActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan|stateHidden" />
+        <activity android:name=".activity.InspectionActivity" />
+        <activity android:name=".activity.InspectionExceptionDetailActivity" />
+        <activity android:name=".activity.InspectionUploadExceptionActivity" />
+        <activity android:name=".activity.AlarmHistoryLogActivity" />
 
-        <service android:name="com.sensoro.libbleserver.ble.scanner.BLEDeviceService"/>
-        <service android:name="com.sensoro.libbleserver.ble.scanner.IntentProcessorService"/>
+        <service android:name="com.sensoro.libbleserver.ble.scanner.BLEDeviceService" />
+        <service android:name="com.sensoro.libbleserver.ble.scanner.IntentProcessorService" />
         <service
             android:name="com.igexin.download.DownloadService"
-            android:process=":pushservice"/>
+            android:process=":pushservice" />
 
         <receiver android:name="com.igexin.download.DownloadReceiver">
             <intent-filter>
-                <action android:name="android.net.conn.CONNECTIVITY_CHANGE"/>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
         <provider
             android:name="com.igexin.download.DownloadProvider"
             android:authorities="downloads.${applicationId}"
             android:exported="true"
-            android:process=":pushservice"/>
+            android:process=":pushservice" />
 
         <!-- 用户自定义服务继承自GTIntentService,作为SDK与APP桥梁服务,用来接收各种消息和命令回复 -->
-        <service android:name=".push.SensoroPushIntentService"/>
+        <service android:name=".push.SensoroPushIntentService" />
 
         <!-- 用户自定义服务名 -->
         <service
             android:name=".push.SensoroPushService"
             android:exported="true"
             android:label="PushService"
-            android:process=":pushservice"/>
+            android:process=":pushservice" />
         <meta-data
             android:name="InstallChannel"
-            android:value="${AVOS_CHANNEL_VALUE}"/>
+            android:value="${AVOS_CHANNEL_VALUE}" />
         <!-- 您从百度网站获取的APP KEY -->
         <meta-data
             android:name="BaiduMobAd_STAT_ID"
-            android:value="bb510e227a"/> <!-- abcd1234 -->
+            android:value="bb510e227a" /> <!-- abcd1234 -->
         <!-- 渠道商编号 -->
         <meta-data
             android:name="BaiduMobAd_CHANNEL"
-            android:value="Baidu Market"/>
+            android:value="Baidu Market" />
 
         <!-- 是否开启错误日志统计，默认为false -->
         <meta-data
             android:name="BaiduMobAd_EXCEPTION_LOG"
-            android:value="true"/>
+            android:value="true" />
         <!-- 日志发送策略，可选值：APP_START、ONCE_A_DAY、SET_TIME_INTERVAL，默认为APP_START -->
         <meta-data
             android:name="BaiduMobAd_SEND_STRATEGY"
-            android:value="APP_START"/>
+            android:value="APP_START" />
         <!-- 日志发送策略 为SET_TIME_INTERVAL时，需设定时间间隔(取消下行注释)。取值为1-24的整数，默认为1 -->
         <!-- <meta-data android:name="BaiduMobAd_TIME_INTERVAL" android:value="2" /> -->
         <!-- 日志仅在wifi网络下发送，默认为false -->
         <meta-data
             android:name="BaiduMobAd_ONLY_WIFI"
-            android:value="false"/>
+            android:value="false" />
         <!-- 是否获取基站位置信息 ,默认为true -->
         <meta-data
             android:name="BaiduMobAd_CELL_LOCATION"
-            android:value="true"/>
+            android:value="true" />
         <!-- 是否获取GPS位置信息，默认为true -->
         <meta-data
             android:name="BaiduMobAd_GPS_LOCATION"
-            android:value="true"/>
+            android:value="true" />
         <!-- 是否获取WIFI位置信息，默认为true -->
         <meta-data
             android:name="BaiduMobAd_WIFI_LOCATION"
-            android:value="true"/>
+            android:value="true" />
         <meta-data
             android:name="com.fengmap.mapapi.appkey"
-            android:value="7b11a3fcdc47cdacf522976dd5ca4c61"/>
+            android:value="7b11a3fcdc47cdacf522976dd5ca4c61" />
         <!--<receiver-->
         <!--android:name=".push.AppRegister"-->
         <!--android:permission="com.tencent.mm.plugin.permission.SEND" >-->

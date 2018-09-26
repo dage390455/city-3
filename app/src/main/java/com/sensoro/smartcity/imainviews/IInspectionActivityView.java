@@ -10,4 +10,7 @@ public interface IInspectionActivityView extends IToast,IProgressDialog,IActivit
      void updateTagsData(List<String> tagList);
 
     void showNormalDialog();
+    void setMonitorTitle(String title);
+    void setMonitorSn(String sn);
+    void setConfirmState(boolean hasBle);
 }

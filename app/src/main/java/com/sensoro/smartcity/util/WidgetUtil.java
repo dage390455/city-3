@@ -522,8 +522,8 @@ public class WidgetUtil {
 
     private static void changeColor(Context context, ImageView srcImageView, int imageResId, int resColor) {
 //        Drawable drawable = ContextCompat.getDrawable(context, imageResId);
-//        Drawable.ConstantState state = drawable.getConstantState();
-//        Drawable drawableNew = DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+//        Drawable.ConstantState statusTitle = drawable.getConstantState();
+//        Drawable drawableNew = DrawableCompat.wrap(statusTitle == null ? drawable : statusTitle.newDrawable()).mutate();
 //        drawableNew.setBounds(0, 0, drawable.getIntrinsicWidth(), drawable.getIntrinsicHeight());
 //        DrawableCompat.setTint(drawable, ContextCompat.getColor(context, resColor));
 ////            srcImageView.setImageDrawable(drawable);

@@ -19,7 +19,7 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
 
     void updateTagsData(List<String> tagList);
 
-    void refreshSignal(boolean hasStation,String signal, int resSignalId, String locationInfo);
+    void refreshSignal(boolean hasStation, String signal, int resSignalId, String locationInfo);
 
     void setDeployDeviceRlSignalVisible(boolean isVisible);
 
@@ -27,7 +27,7 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
 
     void setDeployPhotoVisible(boolean isVisible);
 
-    void showUploadProgressDialog(int currentNum, int count, double percent);
+    void showUploadProgressDialog(String content, double percent);
 
     void dismissUploadProgressDialog();
 

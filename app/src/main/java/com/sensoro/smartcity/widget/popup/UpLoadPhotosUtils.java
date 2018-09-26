@@ -65,12 +65,12 @@ public class UpLoadPhotosUtils {
                 String upToken = qiNiuToken.getUptoken();
                 String domain = qiNiuToken.getDomain();
                 baseUrl = domain;
-                doUpLoadPhoto(upToken);
+                doUpLoadImages(upToken);
             }
         });
     }
 
-    private void doUpLoadPhoto(final String token) {
+    private void doUpLoadImages(final String token) {
         if (imageItems.size() == 0) {
             pictureNum = 0;
             return;
@@ -80,15 +80,16 @@ public class UpLoadPhotosUtils {
             upLoadPhotoListener.onComplete(mScenesDataList);
             pictureNum = 0;
         } else {
-            if (imageItems.size() == 1 && imageItems.get(0).isRecord) {
-                String thumbPath = imageItems.get(0).path;
+            //TODO 上传类型判断
+            final ImageItem imageItem = imageItems.get(pictureNum);
+            //
+            String thumbPath = imageItem.path;
+            String recordPath = imageItem.recordPath;
+            if (imageItem.isRecord) {
                 final File thumbFile = new File(thumbPath);
                 final String thumbKey = AESUtil.stringToMD5(thumbFile.getName());
-                //
-                String recordPath = imageItems.get(0).recordPath;
                 final File recordFile = new File(recordPath);
                 final String recordKey = AESUtil.stringToMD5(recordFile.getName());
-                //
                 Luban.with(mContext).ignoreBy(200).load(thumbPath).filter(new CompressionPredicate() {
                     @Override
                     public boolean apply(String path) {
@@ -97,7 +98,8 @@ public class UpLoadPhotosUtils {
                 }).setCompressListener(new OnCompressListener() {
                     @Override
                     public void onStart() {
-                        upLoadPhotoListener.onProgress(-1, 0);
+                        String title = "正在上传第" + (pictureNum + 1) + "文件，总共" + imageItems.size() + "个";
+                        upLoadPhotoListener.onProgress(title, 0);
                     }
 
                     @Override
@@ -121,13 +123,14 @@ public class UpLoadPhotosUtils {
                                                                 scenesData.url = baseUrl + recordKey;
                                                                 LogUtils.loge(this, "视频文件路径-->> " + baseUrl + recordKey);
                                                                 mScenesDataList.add(scenesData);
-                                                                upLoadPhotoListener.onComplete(mScenesDataList);
+                                                                pictureNum++;
+                                                                doUpLoadImages(token);
                                                             } else {
                                                                 //TODO 可以添加重试获取token机制
-                                                                LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】张-" +
-                                                                        imageItems.get
-                                                                                (pictureNum).name + "-->" + responseInfo.error);
+                                                                LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】文件-" +
+                                                                        imageItem.name + "-->" + responseInfo.error);
                                                                 upLoadPhotoListener.onError("上传视频失败");
+                                                                pictureNum = 0;
                                                             }
 
                                                         }
@@ -135,15 +138,16 @@ public class UpLoadPhotosUtils {
                                                 @Override
                                                 public void progress(String key, double percent) {
                                                     LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                                    upLoadPhotoListener.onProgress(-1, percent);
+                                                    String title = "正在上传第" + (pictureNum + 1) + "个文件，总共" + imageItems.size() + "个";
+                                                    upLoadPhotoListener.onProgress(title, percent);
                                                 }
                                             }, null));
                                         } else {
                                             //TODO 可以添加重试获取token机制
                                             LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】张-" +
-                                                    imageItems.get
-                                                            (pictureNum).name + "-->" + responseInfo.error);
+                                                    imageItem.name + "-->" + responseInfo.error);
                                             upLoadPhotoListener.onError("上传视频缩略图失败");
+                                            pictureNum = 0;
                                         }
 
                                     }
@@ -151,22 +155,21 @@ public class UpLoadPhotosUtils {
                             @Override
                             public void progress(String key, double percent) {
                                 LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                upLoadPhotoListener.onProgress(-1, percent);
+                                String title = "正在上传第" + (pictureNum + 1) + "个文件，总共" + imageItems.size() + "个";
+                                upLoadPhotoListener.onProgress(title, percent);
                             }
                         }, null));
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtils.loge(this, "压缩视频缩略图" + "第【" + (pictureNum + 1) + "】张-" + imageItems.get(pictureNum)
+                        LogUtils.loge(this, "压缩视频缩略图" + "第【" + (pictureNum + 1) + "】张-" + imageItem
                                 .name + "失败--->>" + e.getMessage());
                         upLoadPhotoListener.onError("上传视频缩略图失败");
                     }
                 }).launch();
-
-
             } else {
-                String currentPath = imageItems.get(pictureNum).path;
+                String currentPath = imageItem.path;
                 Luban.with(mContext).ignoreBy(200).load(currentPath).filter(new CompressionPredicate() {
                     @Override
                     public boolean apply(String path) {
@@ -180,7 +183,8 @@ public class UpLoadPhotosUtils {
                         () {
                     @Override
                     public void onStart() {
-                        upLoadPhotoListener.onProgress(pictureNum + 1, 0);
+                        String title = "正在上传第" + (pictureNum + 1 )+ "个文件，总共" + imageItems.size() + "个";
+                        upLoadPhotoListener.onProgress(title, 0);
                     }
 
                     @Override
@@ -199,12 +203,11 @@ public class UpLoadPhotosUtils {
 //                                        LogUtils.loge(this, "responseInfo -->" + responseInfo.toString());
                                             LogUtils.loge(this, "文件路径-->> " + baseUrl + key);
                                             pictureNum++;
-                                            doUpLoadPhoto(token);
+                                            doUpLoadImages(token);
                                         } else {
                                             //TODO 可以添加重试获取token机制
                                             LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + (pictureNum + 1) + "】张-" +
-                                                    imageItems.get
-                                                            (pictureNum).name + "-->" + responseInfo.error);
+                                                    imageItem.name + "-->" + responseInfo.error);
                                             upLoadPhotoListener.onError("上传 " + "第 " + (pictureNum + 1) + " 张失败");
                                             pictureNum = 0;
                                         }
@@ -214,14 +217,15 @@ public class UpLoadPhotosUtils {
                             @Override
                             public void progress(String key, double percent) {
                                 LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                upLoadPhotoListener.onProgress(pictureNum + 1, percent);
+                                String title = "正在上传第" + (pictureNum + 1 )+ "个文件，总共" + imageItems.size() + "个";
+                                upLoadPhotoListener.onProgress(title, percent);
                             }
                         }, null));
                     }
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtils.loge(this, "压缩 " + "第【" + (pictureNum + 1) + "】张-" + imageItems.get(pictureNum)
+                        LogUtils.loge(this, "压缩 " + "第【" + (pictureNum + 1) + "】张-" + imageItem
                                 .name + "失败--->>" + e.getMessage());
                         upLoadPhotoListener.onError("上传 " + "第 " + (pictureNum + 1) + " 张失败");
                         pictureNum = 0;
@@ -239,6 +243,6 @@ public class UpLoadPhotosUtils {
 
         void onError(String errMsg);
 
-        void onProgress(int index, double percent);
+        void onProgress(String content, double percent);
     }
 }

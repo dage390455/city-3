@@ -92,15 +92,26 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 //                .string.unname) : name);
         getView().setTitleNameTextView(TextUtils.isEmpty(name) ? sn : name);
         //
-        mDeviceInfo.getSensorTypes();
-        String contact = mDeviceInfo.getContact();
+        String contact = null;
+        String phone = null;
+        try {
+            contact = mDeviceInfo.getAlarms().getNotification().getContact();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            phone = mDeviceInfo.getAlarms().getNotification().getContent();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 //        String address = mDeviceInfo.getAddress();
-        content = mDeviceInfo.getContent();
         if (TextUtils.isEmpty(contact)) {
             contact = "未设定";
         }
-        if (TextUtils.isEmpty(content)) {
-            content = "未设定";
+        if (TextUtils.isEmpty(phone)) {
+            this.content = "未设定";
+        } else {
+            this.content = phone;
         }
         getView().setContractName(contact);
         getView().setContractPhone(content);

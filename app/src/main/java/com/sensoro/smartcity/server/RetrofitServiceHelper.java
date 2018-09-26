@@ -26,6 +26,8 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -856,42 +858,64 @@ public enum RetrofitServiceHelper {
         }
     }
 
-    public Observable<ResponseBase> doUploadInspectionResult(String condition, Integer status,
-                                                             Long startTime, Long finishTime, String remark, List imgAndVideos, List<Integer> tags) {
+    public Observable<ResponseBase> doUploadInspectionResult(String id, String sn, String taskId, Integer status,
+                                                             Integer malfunctionHandle,
+                                                             Long startTime, Long finishTime, String remark, List<ScenesData> scenesDataList, List<Integer> tags) {
         JSONObject jsonObject = new JSONObject();
         try {
-            if (condition != null) {
-                JSONObject jsonObject1 = new JSONObject();
-                jsonObject1.put("_id", condition);
-                jsonObject.put("condition", jsonObject1);
-
-            }
-
             JSONObject jsonObject1 = new JSONObject();
+            if (!TextUtils.isEmpty(id)) {
+                jsonObject1.put("_id", id);
+            }
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject1.put("sn", sn);
+            }
+            if (!TextUtils.isEmpty(taskId)) {
+                jsonObject1.put("taskId", taskId);
+            }
+            jsonObject.put("condition", jsonObject1);
+            //
+            JSONObject jsonObject2 = new JSONObject();
             if (status != null) {
-                jsonObject1.put("status", status);
+                jsonObject2.put("status", status);
+            }
+            if (malfunctionHandle != null) {
+                jsonObject2.put("malfunctionHandle", malfunctionHandle);
             }
             if (startTime != null && startTime != 0) {
-                jsonObject1.put("startTime", startTime);
+                jsonObject2.put("startTime", startTime);
             }
             if (finishTime != null && finishTime != 0) {
-                jsonObject1.put("finishTime", finishTime);
+                jsonObject2.put("finishTime", finishTime);
             }
             if (remark != null) {
-                jsonObject1.put("remark", remark);
+                jsonObject2.put("remark", remark);
             }
+            if (scenesDataList != null && scenesDataList.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (ScenesData scenesData : scenesDataList) {
+                    JSONObject jsonObject3 = new JSONObject();
+                    String type = scenesData.type;
+                    String url = scenesData.url;
+                    String thumbUrl = scenesData.thumbUrl;
+                    jsonObject3.put("type", type);
+                    jsonObject3.put("url", url);
+                    jsonObject3.put("thumbUrl", thumbUrl);
+                    jsonArray.put(jsonObject3);
+                }
+                jsonObject2.put("imgAndVideo", jsonArray);
 
-            JSONObject jsonObject2 = new JSONObject();
+            }
 
             if (tags != null && tags.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
                 for (Integer tag : tags) {
                     jsonArray.put(tag);
                 }
-                jsonObject1.put("tags", jsonArray);
+                jsonObject2.put("malfunctions", jsonArray);
             }
-
-            jsonObject.put("doc", jsonObject1);
+            jsonObject.put("doc", jsonObject2);
+            //
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -901,5 +925,22 @@ public enum RetrofitServiceHelper {
         Observable<ResponseBase> uploadInspectionResult = retrofitService.uploadInspectionResult(body);
         RxApiManager.getInstance().add("uploadInspectionResult", uploadInspectionResult.subscribe());
         return uploadInspectionResult;
+    }
+
+    public Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(String taskId) {
+        return retrofitService.getInspectTaskExecution(taskId);
+    }
+
+    public Observable<InspectionTaskDeviceRsp> getInspectionDeviceList(String taskId, String search, String sn, Integer finish, String deviceTypes, Integer offset, Integer limit) {
+//        String deviceTypeStr =null;
+//        StringBuilder stringBuilder = new StringBuilder();
+//        if (deviceTypes!=null&&deviceTypes.size()>0){
+//            for (String deviceType:deviceTypes){
+//                stringBuilder.append(deviceType);
+//            }
+//        }
+        Observable<InspectionTaskDeviceRsp> inspectionDeviceList = retrofitService.getInspectionDeviceList(taskId, search, sn, finish, deviceTypes, offset, limit);
+        RxApiManager.getInstance().add("inspectionDeviceList", inspectionDeviceList.subscribe());
+        return inspectionDeviceList;
     }
 }

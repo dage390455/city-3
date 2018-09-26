@@ -1,11 +1,9 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
@@ -54,7 +52,7 @@ public class InspectionTaskStatePopUtils {
 
     }
 
-    public void updateSelectDeviceTypeList(List<InspectionStatusCountModel> list){
+    public void updateSelectDeviceStatusList(List<InspectionStatusCountModel> list){
         mSelectStateAdapter.updateDeviceTypList(list);
     }
     public void setSelectDeviceTypeItemClickListener(InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener listener){

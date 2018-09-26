@@ -66,7 +66,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         Intent intent = mContext.getIntent();
         deviceInfo = (DeviceInfo) intent.getSerializableExtra(EXTRA_DEVICE_INFO);
         deployMapModel.hasStation = intent.getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
-        if (intent.getBooleanExtra(EXTRA_IS_CHANGE_DEVICE,false)) {
+        if (intent.getBooleanExtra(EXTRA_IS_CHANGE_DEVICE, false)) {
             getView().updateUploadTvText("更换设备");
         }
         getView().setDeployContactRelativeLayoutVisible(!deployMapModel.hasStation);
@@ -193,8 +193,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     }
 
                     @Override
-                    public void onProgress(int index, double percent) {
-                        getView().showUploadProgressDialog(index, images.size(), percent);
+                    public void onProgress(String content, double percent) {
+                        getView().showUploadProgressDialog(content, percent);
                     }
                 };
                 upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
@@ -323,7 +323,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, mNameAndAddress);
         }
         if (deviceInfo != null) {
-            intent.putExtra(EXTRA_DEPLOY_TO_SN,deviceInfo.getSn());
+            intent.putExtra(EXTRA_DEPLOY_TO_SN, deviceInfo.getSn());
         }
         getView().startAC(intent);
     }

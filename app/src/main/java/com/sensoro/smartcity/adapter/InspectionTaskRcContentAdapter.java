@@ -4,19 +4,24 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorRes;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.sensoro.smartcity.presenter.InspectionTaskActivityPresenter.BLE_DEVICE_SET;
 
 public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<InspectionTaskRcContentAdapter.InspectionTaskRcContentHolder> {
     private final Context mContext;
@@ -27,33 +32,63 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
         mContext = context;
     }
 
+    private final List<InspectionTaskDeviceDetail> mDevices = new ArrayList<>();
+
     @Override
     public InspectionTaskRcContentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_inspection_task_content, parent, false);
         return new InspectionTaskRcContentHolder(view);
     }
 
+    public void updateDevices(List<InspectionTaskDeviceDetail> devices) {
+        mDevices.clear();
+        mDevices.addAll(devices);
+        notifyDataSetChanged();
+    }
+
     @Override
     public void onBindViewHolder(InspectionTaskRcContentHolder holder, final int position) {
-        holder.itemAdapterInspectionTaskTvName.setText("费家村");
-        holder.itemAdapterInspectionTaskTvSn.setText("温度贴片 01A00134");
-        if (position == 0) {
-            //未巡检调用的函数跟其他的不一样，我们不一样，每个人都有不同的境遇
-            setState(holder);
-        } else if (position == 1) {
-            setState(holder, R.color.c_ff8d34, "巡检异常");
-        } else if (position == 2) {
-            setState(holder, R.color.c_29c093, "巡检正常");
-            holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.GONE);
-            holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.GONE);
+        InspectionTaskDeviceDetail deviceDetail = mDevices.get(position);
+        String name = deviceDetail.getName();
+        String sn = deviceDetail.getSn();
+        if (position == 1) {
+            sn = "02700017C6445B3B";
         }
-
+        if (!TextUtils.isEmpty(sn)) {
+            if (BLE_DEVICE_SET.contains(sn)) {
+                holder.itemAdapterInspectionTaskTvNear.setVisibility(View.VISIBLE);
+            } else {
+                holder.itemAdapterInspectionTaskTvNear.setVisibility(View.INVISIBLE);
+            }
+        }
+//        01621117C6A34D2A
+        String deviceType = deviceDetail.getDeviceType();
+        int status = deviceDetail.getStatus();
+        holder.itemAdapterInspectionTaskTvName.setText(name);
+        holder.itemAdapterInspectionTaskTvSn.setText(deviceType + " " + sn);
+        switch (status) {
+            case 0:
+                //未巡检调用的函数跟其他的不一样，我们不一样，每个人都有不同的境遇
+                setState(holder);
+                holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.VISIBLE);
+                holder.itemAdapterInspectionTaskTvInspection.setText("巡检");
+                break;
+            case 1:
+                setState(holder, R.color.c_29c093, "巡检正常");
+                holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.GONE);
+                break;
+            case 2:
+                setState(holder, R.color.c_ff8d34, "巡检异常");
+                holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.VISIBLE);
+                holder.itemAdapterInspectionTaskTvInspection.setText("详情");
+                break;
+        }
         holder.itemAdapterInspectionTaskTvInspection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (listener != null) {
                     //第二个参数为state 目前先用position，根据需要改
-                    listener.onInspectionTaskInspectionClick(position,position);
+                    listener.onInspectionTaskInspectionClick(position, mDevices.get(position).getStatus());
                 }
             }
         });
@@ -98,7 +133,7 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
 
     @Override
     public int getItemCount() {
-        return 3;
+        return mDevices.size();
     }
 
     class InspectionTaskRcContentHolder extends RecyclerView.ViewHolder {
@@ -126,7 +161,7 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
     }
 
     public interface InspectionTaskRcItemClickListener {
-        void onInspectionTaskInspectionClick(int position,int state);
+        void onInspectionTaskInspectionClick(int position, int status);
 
         void onInspectionTaskNavigationClick(int position);
     }

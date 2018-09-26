@@ -1,6 +1,5 @@
 package com.sensoro.smartcity.activity;
 
-import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -29,8 +28,6 @@ import com.sensoro.smartcity.util.PermissionsResultObserve;
 import com.sensoro.smartcity.util.RxPermissionUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-
-import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -66,47 +63,22 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     @BindView(R.id.ac_login_root)
     FrameLayout acLoginRoot;
     private ProgressUtils mProgressUtils;
-    private static final int MY_REQUEST_PERMISSION_CODE = 0x14;
-    private static final ArrayList<String> FORCE_REQUIRE_PERMISSIONS = new ArrayList<String>() {
-        {
-            add(Manifest.permission_group.STORAGE);
-            add(Manifest.permission_group.LOCATION);
-            add(Manifest.permission_group.CAMERA);
-            add(Manifest.permission.RECORD_AUDIO);
-            add(Manifest.permission.ACCESS_COARSE_LOCATION);
-            add(Manifest.permission.READ_PHONE_STATE);
-            add(Manifest.permission.CALL_PHONE);
-        }
-    };
-    private static final String[] REQUIRE_PERMISSIONS = {
-            Manifest.permission_group.STORAGE,
-            Manifest.permission_group.LOCATION,
-            Manifest.permission_group.CAMERA,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.READ_PHONE_STATE,
-            Manifest.permission.CALL_PHONE
-    };
     private PermissionUtils mPermissionUtils;
-//    private RxPermissionUtils rxPermissionUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_login_test);
         ButterKnife.bind(mActivity);
         mPermissionUtils = new PermissionUtils(mActivity);
-//        rxPermissionUtils = new RxPermissionUtils(mActivity);
-//        rxPermissionUtils.registerObserver(this);
-
         mPermissionUtils.registerObserver(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPresenter.onCreate();
-//        rxPermissionUtils.requestRxPermissions(REQUIRE_PERMISSIONS);
     }
 
     @Override
     protected void onStart() {
         super.onStart();
-        mPermissionUtils.requestPermission(FORCE_REQUIRE_PERMISSIONS, true, MY_REQUEST_PERMISSION_CODE);
+        mPermissionUtils.requestPermission();
     }
 
     private void initView() {
@@ -202,14 +174,13 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        mPermissionUtils.onRequestPermissionsResult(MY_REQUEST_PERMISSION_CODE, requestCode, permissions, grantResults,
-                FORCE_REQUIRE_PERMISSIONS);
+        mPermissionUtils.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPermissionUtils.onActivityResult(requestCode, resultCode, data, MY_REQUEST_PERMISSION_CODE);
+        mPermissionUtils.onActivityResult(requestCode, resultCode, data);
     }
 
 

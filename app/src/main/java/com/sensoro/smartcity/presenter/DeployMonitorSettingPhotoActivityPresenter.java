@@ -11,6 +11,7 @@ import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageGridActivity;
 import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorSettingPhotoActivityView;
@@ -137,7 +138,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
                 ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
                 Intent intent = new Intent(mContext, ImageGridActivity.class);
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
-                getView().startACForResult(intent, REQUEST_CODE_SELECT);
+                mContext.startActivityForResult(intent, REQUEST_CODE_SELECT);
                 break;
             case 1:
                 //打开选择,本次允许选择的数量
@@ -149,7 +150,12 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
                  * 详情请查看ImagePickerActivity
                  * */
                 intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
-                getView().startACForResult(intent1, REQUEST_CODE_SELECT);
+                mContext.startActivityForResult(intent1, REQUEST_CODE_SELECT);
+                break;
+            case 2:
+                Intent intent2 = new Intent(mContext, TakeRecordActivity.class);
+//                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
+                mContext.startActivityForResult(intent2, REQUEST_CODE_RECORD);
                 break;
             default:
                 break;
