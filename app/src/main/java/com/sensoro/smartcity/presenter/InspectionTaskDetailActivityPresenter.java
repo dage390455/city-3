@@ -47,10 +47,6 @@ implements Constants{
         List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary = mTaskInfo.getDeviceSummary();
         for (InspectionIndexTaskInfo.DeviceSummaryBean deviceSummaryBean : deviceSummary) {
             String tag = "泛海三江烟感（"+deviceSummaryBean.getNum()+")";
-            tags.add(tag);
-            tags.add(tag);
-            tags.add(tag);
-            tags.add(tag);
 
         }
 
@@ -85,6 +81,7 @@ implements Constants{
 
     public void doRlContent() {
         Intent intent = new Intent(mContext, InspectionInstructionActivity.class);
+        intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO,mTaskInfo);
         getView().startAC(intent);
     }
 

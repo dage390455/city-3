@@ -72,6 +72,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
 
     public void doInspectionDetail() {
         Intent intent = new Intent(mContext, InspectionTaskDetailActivity.class);
+        //todo 跳转巡检内容，加参数
         getView().startAC(intent);
     }
 

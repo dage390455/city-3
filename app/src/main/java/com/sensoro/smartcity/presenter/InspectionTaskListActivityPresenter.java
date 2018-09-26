@@ -41,7 +41,6 @@ implements Constants{
         tempStartTime = startTime;
         tempFinishTime = finishTime;
         tempFinish = finish;
-        Log.e("hcs","::direction:"+direction+"  finish"+finish+"  startTime"+startTime+"  finishTime"+finishTime);
         if(direction == DIRECTION_DOWN){
             cur_page = 0;
             RetrofitServiceHelper.INSTANCE.getInspectTaskList(null, finish, 0, 20, tempStartTime, tempFinishTime).subscribeOn(Schedulers

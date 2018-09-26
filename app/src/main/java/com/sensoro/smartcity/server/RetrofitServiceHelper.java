@@ -12,6 +12,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.server.bean.InspectionTaskModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
@@ -27,6 +28,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
@@ -1007,5 +1009,16 @@ public enum RetrofitServiceHelper {
         Observable<InspectionTaskDeviceRsp> getInspectionDeviceDetail = retrofitService.getInspectionDeviceDetail(body);
         RxApiManager.getInstance().add("getInspectionDeviceDetail", getInspectionDeviceDetail.subscribe());
         return getInspectionDeviceDetail;
+    }
+
+    /**
+     * 获取巡检内容模板
+     * @param deviceType
+     * @return
+     */
+    public Observable<InspectionTaskInstructionRsp> getInspectionTemplate(String deviceType){
+        Observable<InspectionTaskInstructionRsp> inspectionTemplate = retrofitService.getInspectionTemplate(deviceType);
+        RxApiManager.getInstance().add("inspectionTemplate",inspectionTemplate.subscribe());
+        return inspectionTemplate;
     }
 }

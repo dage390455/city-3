@@ -16,6 +16,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
@@ -68,6 +69,7 @@ public interface RetrofitService {
     String INSPECT_TASK_LIST = "inspect/task/list";
     String INSPECT_TASK_CHANGE_STATE = "inspect/task/status";
     String INSPECT_TASK_EXCEPTION_DETAIL = "inspect/device/_search";
+    String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -210,6 +212,9 @@ public interface RetrofitService {
 
     @POST(INSPECT_TASK_EXCEPTION_DETAIL)
     Observable<InspectionTaskDeviceRsp> getInspectionDeviceDetail(@Body RequestBody requestBody);
+
+    @GET(INSPECTION_TASK_GET_TEMPLATE)
+    Observable<InspectionTaskInstructionRsp> getInspectionTemplate(@Query("deviceType")String deviceType);
 
 }
 
