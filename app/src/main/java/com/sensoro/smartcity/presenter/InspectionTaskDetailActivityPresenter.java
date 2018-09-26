@@ -3,8 +3,6 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.support.annotation.MainThread;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
@@ -18,7 +16,6 @@ import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +83,7 @@ implements Constants{
     }
 
     public void doBtnStart() {
+        //TODO 检查巡检
         if(mTaskInfo.getStatus() == 0){
             changeTaskState();
         }else{
@@ -97,7 +95,7 @@ implements Constants{
 
     private void changeTaskState() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doChangeSpectionTaskState(mTaskInfo.getId(),null,1).
+        RetrofitServiceHelper.INSTANCE.doChangeInspectionTaskState(mTaskInfo.getId(),null,1).
                 subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>() {
             @Override
             public void onCompleted(ResponseBase responseBase) {

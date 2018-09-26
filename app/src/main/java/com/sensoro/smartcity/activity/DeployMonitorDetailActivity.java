@@ -294,11 +294,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void showUploadProgressDialog(int currentNum, int count, double percent) {
+    public void showUploadProgressDialog(String content ,double percent) {
         if (progressDialog != null) {
-            String title = "正在上传第" + currentNum + "张，总共" + count + "张";
+//            String title = "正在上传第" + currentNum + "张，总共" + count + "张";
             progressDialog.setProgress((int) (percent * 100));
-            progressDialog.setTitle(title);
+            progressDialog.setTitle(content);
             progressDialog.show();
         }
     }

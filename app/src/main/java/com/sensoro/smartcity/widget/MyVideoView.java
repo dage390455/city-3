@@ -324,8 +324,8 @@ public class MyVideoView extends TextureView implements TextureView.SurfaceTextu
 			//			if (mLooping)
 			//				mMediaPlayer.setLooping(true);//循环播放
 			mMediaPlayer.prepareAsync();
-			// we don't set the target state here either, but preserve the
-			// target state that was there before.
+			// we don't set the target statusTitle here either, but preserve the
+			// target statusTitle that was there before.
 			mCurrentState = STATE_PREPARING;
 		} catch (IOException ex) {
 			exception = ex;

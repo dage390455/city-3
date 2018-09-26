@@ -452,7 +452,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
     public void doCancelSearch() {
         tempSearch = null;
-        requestSearchData(DIRECTION_DOWN, null);
+        requestSearchData(DIRECTION_DOWN, tempSearch);
     }
 
     public void doCalendar(LinearLayout fgMainWarnTitleRoot) {

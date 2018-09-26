@@ -15,9 +15,9 @@ import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.InspectionTaskDeviceModel;
+import com.sensoro.smartcity.server.bean.InspectionTaskExceptionDeviceModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -42,10 +42,10 @@ implements Constants{
     private void requestExceptionDetail() {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getInspectionDeviceDetail("5ba9b3b2f11db9772ee33025",null,null,1)
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceRsp>() {
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExceptionDeviceRsp>() {
             @Override
-            public void onCompleted(InspectionTaskDeviceRsp response) {
-                InspectionTaskDeviceModel taskDevice = response.getData();
+            public void onCompleted(InspectionTaskExceptionDeviceRsp response) {
+                InspectionTaskExceptionDeviceModel taskDevice = response.getData();
                 getView().setTvName(taskDevice.getDevice().getName());
 
                 for (DeviceTypeModel deviceTypeModel : SensoroCityApplication.getInstance().mDeviceTypeList) {

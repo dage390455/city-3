@@ -103,8 +103,8 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
         holder.itemPopSelectLlRoot.setBackgroundResource(isWhite ? 0 : R.drawable.shape_bg_corner_29c_shadow);
         holder.itemPopSelectTvTypeName.setTextColor(isWhite ? mContext.getResources().getColor(R.color.c_252525) : Color.WHITE);
         Drawable drawable = holder.itemPopSelectImvTypeIcon.getDrawable();
-//        Drawable.ConstantState state = drawable.getConstantState();
-//        DrawableCompat.wrap(state == null ? drawable : state.newDrawable()).mutate();
+//        Drawable.ConstantState statusTitle = drawable.getConstantState();
+//        DrawableCompat.wrap(statusTitle == null ? drawable : statusTitle.newDrawable()).mutate();
 //        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
 //        DrawableCompat.setTint(drawable, isWhite ? mContext.getResources().getColor(R.color.c_b6b6b6) : Color.WHITE);
         int color = isWhite ? mContext.getResources().getColor(R.color.c_b6b6b6) : Color.WHITE;

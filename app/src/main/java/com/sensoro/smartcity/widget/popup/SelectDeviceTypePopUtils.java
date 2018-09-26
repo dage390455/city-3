@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
@@ -14,15 +13,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
-import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.TypeSelectAdapter;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 

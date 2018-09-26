@@ -37,7 +37,8 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
     }
 
     private void initView() {
-        adapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList(), 4);
+        adapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList());
+        adapter.setMaxImgCount(4);
         adapter.setOnItemClickListener(this);
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
         rvDeployPhoto.setLayoutManager(layoutManager);

@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,13 +33,14 @@ import static com.sensoro.smartcity.constant.Constants.IMAGE_ITEM_ADD;
  * ================================================
  */
 public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.SelectedPicViewHolder> {
-    private int maxImgCount;
+    private int maxImgCount = 9;
     private Context mContext;
     private List<ImageItem> mData;
     private LayoutInflater mInflater;
     private OnRecyclerViewItemClickListener listener;
     private boolean isAdded;   //是否额外添加了最后一个图片
-    private boolean canVideo;
+    private String tipText;
+//    private boolean canVideo;
 
     public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, int position);
@@ -59,9 +61,9 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         notifyDataSetChanged();
     }
 
-    public void canVideo(boolean canVideo) {
-        this.canVideo = canVideo;
-    }
+//    public void canVideo(boolean canVideo) {
+//        this.canVideo = canVideo;
+//    }
 //    public void removeImage(int position) {
 ////        mData = new ArrayList<>(data);
 //        ImageItem imageItem = mData.getInstance(position);
@@ -109,9 +111,8 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         else return mData;
     }
 
-    public ImagePickerAdapter(Context mContext, List<ImageItem> data, int maxImgCount) {
+    public ImagePickerAdapter(Context mContext, List<ImageItem> data) {
         this.mContext = mContext;
-        this.maxImgCount = maxImgCount;
         this.mInflater = LayoutInflater.from(mContext);
         setImages(data);
     }
@@ -135,6 +136,10 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         return mData.size();
     }
 
+    public void setAddTipText(String tipText) {
+        this.tipText = tipText;
+    }
+
     class SelectedPicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         private ImageView iv_record_play;
@@ -154,14 +159,17 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         }
 
         public void bind(int position) {
-            if (canVideo) {
-                if (isAdded) {
-                    if (getItemCount() > 1) {
-                        tv_add_content.setText("照片");
-                    } else {
-                        tv_add_content.setText("照片/视频");
-                    }
-                }
+//            if (canVideo) {
+//                if (isAdded) {
+//                    if (getItemCount() > 1) {
+//                        tv_add_content.setText("照片");
+//                    } else {
+//                        tv_add_content.setText("照片/视频");
+//                    }
+//                }
+//            }
+            if (!TextUtils.isEmpty(tipText)) {
+                tv_add_content.setText(tipText);
             }
             //设置条目的点击事件
             itemView.setOnClickListener(this);

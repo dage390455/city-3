@@ -206,6 +206,7 @@ public interface Constants {
     String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
     String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
     String EXTRA_DEPLOY_TO_SN = "extra_deploy_to_sn";
+    String EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL = "extra_inspection_task_item_device_detail";
 
     //巡检相关
     String EXTRA_INSPECTION_START_TIME = "extra_inspection_start_time";
@@ -291,7 +292,7 @@ public interface Constants {
     int EVENT_DATA_CANCEL_AUTH = 0x27;
     int EVENT_DATA_AUTH_SUC = 0x28;
     int EVENT_DATA_DEPLOY_MAP = 0x31;
-    int EVENT_DATA_ALARM_TOTAL_COUNT = 0x32;
+    int EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE = 0x32;
     int EVENT_DATA_ALARM_FRESH_ALARM_DATA = 0x34;
     int EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS = 0x35;
 

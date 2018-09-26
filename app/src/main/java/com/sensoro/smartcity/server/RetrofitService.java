@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.server;
 
 
-import com.sensoro.smartcity.server.bean.InspectionTaskModel;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
@@ -15,8 +14,10 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
-import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
@@ -67,6 +68,7 @@ public interface RetrofitService {
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
     String ALARM_COUNT = "prov1/alarms/count";
     String INSPECT_TASK_LIST = "inspect/task/list";
+    String INSPECT_TASK_EXECUTION = "/inspect/task/execution";
     String INSPECT_TASK_CHANGE_STATE = "inspect/task/status";
     String INSPECT_TASK_EXCEPTION_DETAIL = "inspect/device/_search";
     String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
@@ -207,11 +209,18 @@ public interface RetrofitService {
     @PUT("inspect/device")
     Observable<ResponseBase> uploadInspectionResult(@Body RequestBody responseBody);
 
+    @GET("inspect/task/device")
+    Observable<InspectionTaskDeviceDetailRsp> getInspectionDeviceList(@Query("taskId") String taskId, @Query("search") String search, @Query("sn") String sn, @Query("finish") Integer finish,
+                                                                      @Query("deviceTypes") String deviceTypes, @Query("offset") Integer offset, @Query("limit") Integer limit);
+
+    @GET(INSPECT_TASK_EXECUTION)
+    Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(@Query("taskId") String taskId);
+
     @PUT(INSPECT_TASK_CHANGE_STATE)
     Observable<ResponseBase> changeInspectionTaskState(@Body RequestBody requestBody);
 
     @POST(INSPECT_TASK_EXCEPTION_DETAIL)
-    Observable<InspectionTaskDeviceRsp> getInspectionDeviceDetail(@Body RequestBody requestBody);
+    Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(@Body RequestBody requestBody);
 
     @GET(INSPECTION_TASK_GET_TEMPLATE)
     Observable<InspectionTaskInstructionRsp> getInspectionTemplate(@Query("deviceType")String deviceType);

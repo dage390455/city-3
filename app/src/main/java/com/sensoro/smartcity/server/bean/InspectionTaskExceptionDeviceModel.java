@@ -2,7 +2,7 @@ package com.sensoro.smartcity.server.bean;
 
 import java.util.List;
 
-public class InspectionTaskDeviceModel {
+public class InspectionTaskExceptionDeviceModel {
 
 
     /**
@@ -14,7 +14,7 @@ public class InspectionTaskDeviceModel {
      * imgAndVedio : []
      * __v : 0
      * remark : zhnsjs
-
+     * <p>
      * finishTime : 2018-09-25T08:15:02.178Z
      * startTime : 2018-09-25T08:14:16.048Z
      * imgAndVideo : [{"_id":"5ba9f433b428a3795599a180","url":"https://resource-city.sensoro.com/69CE9436121526FCE5B5084FD64E6972","type":"image"}]
@@ -148,6 +148,7 @@ public class InspectionTaskDeviceModel {
     public void setImgAndVedio(List<ScenesData> imgAndVedio) {
         this.imgAndVideo = imgAndVedio;
     }
+
     public List<ScenesData> getImgAndVedio() {
         return imgAndVideo;
     }

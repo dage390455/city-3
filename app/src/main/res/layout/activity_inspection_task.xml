@@ -9,35 +9,36 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:background="@color/c_dfdfdf">
+
         <TextView
             android:id="@+id/ac_inspection_task_tv_not_inspection_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/c_252525"
+            android:layout_marginBottom="8dp"
             android:layout_marginStart="20dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"/>
+            android:textColor="@color/c_252525"
+            android:textSize="12sp" />
 
         <TextView
             android:id="@+id/ac_inspection_task_tv_inspection_count"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="12sp"
-            android:textColor="@color/c_252525"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="8dp"
             android:layout_marginEnd="20dp"
             android:layout_marginTop="8dp"
-            android:layout_marginBottom="8dp"
-            android:layout_alignParentEnd="true"/>
+            android:textColor="@color/c_252525"
+            android:textSize="12sp" />
 
     </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@id/ac_inspection_task_rl_bottom"
         android:background="@color/c_fafafa"
-        android:orientation="vertical"
-        android:layout_above="@id/ac_inspection_task_rl_bottom">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,25 +73,33 @@
                     android:background="@drawable/shape_bg_solid_f7_full_corner"
                     android:orientation="horizontal">
 
-                    <ImageView
-                        android:layout_width="wrap_content"
+                    <EditText
+                        android:id="@+id/ac_inspection_task_et_search"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
                         android:layout_marginBottom="8dp"
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="8dp"
-                        android:contentDescription="@null"
-                        android:src="@mipmap/main_search" />
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="8dp"
-                        android:text="设备名称/设备号/手机号"
-                        android:textColor="@color/c_a6a6a6"
+                        android:background="@null"
+                        android:drawablePadding="8dp"
+                        android:drawableStart="@drawable/main_search"
+                        android:hint="设备名称/设备号/手机号"
+                        android:imeOptions="actionSearch"
+                        android:singleLine="true"
+                        android:textColor="@color/c_252525"
+                        android:textColorHint="@color/c_a6a6a6"
                         android:textSize="12sp" />
                 </LinearLayout>
-
+                <TextView
+                    android:id="@+id/tv_inspection_task_search_cancel"
+                    android:layout_gravity="center_vertical"
+                    android:layout_width="wrap_content"
+                    android:padding="10dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/c_252525"
+                    android:visibility="gone"
+                    android:text="取消"/>
                 <ImageView
                     android:id="@+id/ac_inspection_task_imv_scan"
                     android:layout_width="wrap_content"

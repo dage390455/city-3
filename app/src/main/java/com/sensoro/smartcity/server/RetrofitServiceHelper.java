@@ -27,8 +27,10 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
-import com.sensoro.smartcity.server.response.InspectionTaskDeviceRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
@@ -860,53 +862,64 @@ public enum RetrofitServiceHelper {
         }
     }
 
-    /**
-     * 巡检任务异常上报
-     * @param condition
-     * @param status
-     * @param startTime
-     * @param finishTime
-     * @param remark
-     * @param imgAndVideos
-     * @param tags
-     * @return
-     */
-    public Observable<ResponseBase> doUploadInspectionResult(String condition, Integer status,
-                                                             Long startTime, Long finishTime, String remark, List imgAndVideos, List<Integer> tags) {
+    public Observable<ResponseBase> doUploadInspectionResult(String id, String sn, String taskId, Integer status,
+                                                             Integer malfunctionHandle,
+                                                             Long startTime, Long finishTime, String remark, List<ScenesData> scenesDataList, List<Integer> tags) {
         JSONObject jsonObject = new JSONObject();
         try {
-            if (condition != null) {
-                JSONObject jsonObject1 = new JSONObject();
-                jsonObject1.put("_id", condition);
-                jsonObject.put("condition", jsonObject1);
-
-            }
-
             JSONObject jsonObject1 = new JSONObject();
+            if (!TextUtils.isEmpty(id)) {
+                jsonObject1.put("_id", id);
+            }
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject1.put("sn", sn);
+            }
+            if (!TextUtils.isEmpty(taskId)) {
+                jsonObject1.put("taskId", taskId);
+            }
+            jsonObject.put("condition", jsonObject1);
+            //
+            JSONObject jsonObject2 = new JSONObject();
             if (status != null) {
-                jsonObject1.put("status", status);
+                jsonObject2.put("status", status);
+            }
+            if (malfunctionHandle != null) {
+                jsonObject2.put("malfunctionHandle", malfunctionHandle);
             }
             if (startTime != null && startTime != 0) {
-                jsonObject1.put("startTime", startTime);
+                jsonObject2.put("startTime", startTime);
             }
             if (finishTime != null && finishTime != 0) {
-                jsonObject1.put("finishTime", finishTime);
+                jsonObject2.put("finishTime", finishTime);
             }
             if (remark != null) {
-                jsonObject1.put("remark", remark);
+                jsonObject2.put("remark", remark);
             }
+            if (scenesDataList != null && scenesDataList.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (ScenesData scenesData : scenesDataList) {
+                    JSONObject jsonObject3 = new JSONObject();
+                    String type = scenesData.type;
+                    String url = scenesData.url;
+                    String thumbUrl = scenesData.thumbUrl;
+                    jsonObject3.put("type", type);
+                    jsonObject3.put("url", url);
+                    jsonObject3.put("thumbUrl", thumbUrl);
+                    jsonArray.put(jsonObject3);
+                }
+                jsonObject2.put("imgAndVideo", jsonArray);
 
-            JSONObject jsonObject2 = new JSONObject();
+            }
 
             if (tags != null && tags.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
                 for (Integer tag : tags) {
                     jsonArray.put(tag);
                 }
-                jsonObject1.put("tags", jsonArray);
+                jsonObject2.put("malfunctions", jsonArray);
             }
-
-            jsonObject.put("doc", jsonObject1);
+            jsonObject.put("doc", jsonObject2);
+            //
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -918,8 +931,26 @@ public enum RetrofitServiceHelper {
         return uploadInspectionResult;
     }
 
+    public Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(String taskId) {
+        return retrofitService.getInspectTaskExecution(taskId);
+    }
+
+    public Observable<InspectionTaskDeviceDetailRsp> getInspectionDeviceList(String taskId, String search, String sn, Integer finish, String deviceTypes, Integer offset, Integer limit) {
+//        String deviceTypeStr =null;
+//        StringBuilder stringBuilder = new StringBuilder();
+//        if (deviceTypes!=null&&deviceTypes.size()>0){
+//            for (String deviceType:deviceTypes){
+//                stringBuilder.append(deviceType);
+//            }
+//        }
+        Observable<InspectionTaskDeviceDetailRsp> inspectionDeviceList = retrofitService.getInspectionDeviceList(taskId, search, sn, finish, deviceTypes, offset, limit);
+        RxApiManager.getInstance().add("inspectionDeviceList", inspectionDeviceList.subscribe());
+        return inspectionDeviceList;
+    }
+
     /**
      * 获取巡检任务列表
+     *
      * @param search
      * @param finish
      * @param offset
@@ -938,29 +969,30 @@ public enum RetrofitServiceHelper {
 
     /**
      * 改变巡检任务状态，目前只能改为1，执行中
+     *
      * @param id
      * @param identifier
      * @param status
      * @return
      */
-    public Observable<ResponseBase> doChangeSpectionTaskState(String id,String identifier,Integer status){
+    public Observable<ResponseBase> doChangeInspectionTaskState(String id, String identifier, Integer status) {
         JSONObject jsonObject = new JSONObject();
 
         try {
             JSONObject jsonObject1 = new JSONObject();
-            if(id != null){
-                jsonObject1.put("_id",id);
+            if (id != null) {
+                jsonObject1.put("_id", id);
             }
             if (identifier != null) {
-                jsonObject1.put("identifier",identifier);
+                jsonObject1.put("identifier", identifier);
             }
-            jsonObject.put("condition",jsonObject1);
+            jsonObject.put("condition", jsonObject1);
 
             JSONObject jsonObject2 = new JSONObject();
-            if(status != null){
-                jsonObject2.put("status",status);
+            if (status != null) {
+                jsonObject2.put("status", status);
             }
-            jsonObject.put("doc",jsonObject2);
+            jsonObject.put("doc", jsonObject2);
 
         } catch (JSONException e) {
             e.printStackTrace();
@@ -968,45 +1000,46 @@ public enum RetrofitServiceHelper {
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         Observable<ResponseBase> changeInspectionTaskState = retrofitService.changeInspectionTaskState(body);
-        RxApiManager.getInstance().add("doChangeSpectionTaskState", changeInspectionTaskState.subscribe());
+        RxApiManager.getInstance().add("doChangeInspectionTaskState", changeInspectionTaskState.subscribe());
         return changeInspectionTaskState;
     }
 
     /**
      * 获取单个巡检设备
+     *
      * @param id
      * @param sn
      * @param taskId
      * @param device
      * @return
      */
-    public Observable<InspectionTaskDeviceRsp> getInspectionDeviceDetail(String id, String sn, String taskId, Integer device){
+    public Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(String id, String sn, String taskId, Integer device) {
         JSONObject jsonObject = new JSONObject();
 
         try {
             JSONObject jsonObject1 = new JSONObject();
-            if(id != null){
-                jsonObject1.put("_id",id);
+            if (id != null) {
+                jsonObject1.put("_id", id);
             }
-            if(sn != null){
-                jsonObject1.put("sn",sn);
+            if (sn != null) {
+                jsonObject1.put("sn", sn);
             }
-            if(taskId != null){
-                jsonObject1.put("taskId",taskId);
+            if (taskId != null) {
+                jsonObject1.put("taskId", taskId);
             }
-            if(device != null){
-                jsonObject1.put("device",device);
+            if (device != null) {
+                jsonObject1.put("device", device);
             }
 
 
-            jsonObject.put("condition",jsonObject1);
+            jsonObject.put("condition", jsonObject1);
 
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<InspectionTaskDeviceRsp> getInspectionDeviceDetail = retrofitService.getInspectionDeviceDetail(body);
+        Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail = retrofitService.getInspectionDeviceDetail(body);
         RxApiManager.getInstance().add("getInspectionDeviceDetail", getInspectionDeviceDetail.subscribe());
         return getInspectionDeviceDetail;
     }

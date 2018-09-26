@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -18,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.InspectionUploadExceptionTagAdapter;
@@ -27,7 +29,9 @@ import com.sensoro.smartcity.presenter.InspectionUploadExceptionActivityPresente
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.popup.SelectDialog;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -61,6 +65,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     private TextView dialogTvUpload;
     private AlertDialog mExceptionDialog;
     private ProgressUtils mProgressUtils;
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -73,6 +78,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     private void initView() {
 
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+
         includeTextTitleTvTitle.setText("异常上报");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
@@ -117,18 +123,21 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
         mExceptionDialog = builder.create();
         Window window = mExceptionDialog.getWindow();
-        if (window !=null) {
+        if (window != null) {
             window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         }
 
     }
 
     private void initRcPicTag() {
-        mRcExceptionPicAdapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList(), 4);
+        mRcExceptionPicAdapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList());
+        mRcExceptionPicAdapter.setMaxImgCount(9);
         mRcExceptionPicAdapter.setOnItemClickListener(new ImagePickerAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                int id = view.getId();
+                List<ImageItem> images = mRcExceptionPicAdapter.getImages();
+                mPresenter.clickItem(id, position, images);
             }
         });
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
@@ -155,17 +164,17 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
     @Override
     public void startAC(Intent intent) {
-        startActivity(intent);
+        mActivity.startActivity(intent);
     }
 
     @Override
     public void finishAc() {
-        finish();
+        mActivity.finish();
     }
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -200,10 +209,13 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if (progressDialog != null) {
+            progressDialog.cancel();
+        }
         mExceptionDialog.cancel();
         mExceptionDialog = null;
         mProgressUtils.destroyProgress();
+        super.onDestroy();
     }
 
 
@@ -219,7 +231,21 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
         }
     }
 
+    @Override
+    public void dismissUploadProgressDialog() {
+        if (progressDialog != null) {
+            progressDialog.dismiss();
+        }
+    }
 
+    @Override
+    public void initUploadProgressDialog() {
+        progressDialog = new ProgressDialog(mActivity);
+        progressDialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progressDialog.setMax(100);
+        progressDialog.setProgressNumberFormat("");
+        progressDialog.setCancelable(false);
+    }
 
     @Override
     public void updateExceptionTagAdapter(List<String> exceptionTags) {
@@ -244,8 +270,37 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
     @Override
     public String getRemarkMessage() {
-       return acInspectionUploadExceptionEtRemark.getText().toString();
+        return acInspectionUploadExceptionEtRemark.getText().toString();
+    }
+
+    @Override
+    public void updateImageList(ArrayList<ImageItem> imageList) {
+        mRcExceptionPicAdapter.setImages(imageList);
+    }
+
+    @Override
+    public void showDialog(SelectDialog.SelectDialogListener listener, List<String> names) {
+        SelectDialog dialog = new SelectDialog(mActivity, R.style
+                .transparentFrameWindowStyle,
+                listener, names);
+        if (!mActivity.isFinishing()) {
+            dialog.show();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
 
+    @Override
+    public void showUploadProgressDialog(String content, double percent) {
+        if (progressDialog != null) {
+            progressDialog.setProgress((int) (percent * 100));
+            progressDialog.setTitle(content);
+            progressDialog.show();
+        }
+    }
 }

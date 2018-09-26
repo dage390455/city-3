@@ -1,7 +1,5 @@
 package com.sensoro.smartcity.server.bean;
 
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-
 import java.util.List;
 
 public class InspectionTaskModel {

@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -54,12 +53,8 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
     private void initView() {
         includeTextTitleTvTitle.setText("巡检监测点");
         includeTextTitleTvSubtitle.setText("巡检内容");
-
-        acInspectionTvName.setText("谁在乎我的心里有多苦谁在意我的明天去何处");
-        acInspectionTvSn.setText("华安 123785");
-
         initRcTag();
-
+        acInspectionTvNormal.setEnabled(false);
         initNormalDialog();
     }
 
@@ -163,6 +158,29 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
     @Override
     public void showNormalDialog() {
         mNormalDialog.show();
+    }
+
+    @Override
+    public void setMonitorTitle(String title) {
+        acInspectionTvName.setText(title);
+    }
+
+    @Override
+    public void setMonitorSn(String sn) {
+        acInspectionTvSn.setText(sn);
+    }
+
+    @Override
+    public void setConfirmState(boolean hasBle) {
+        acInspectionTvNormal.setEnabled(hasBle);
+        if (hasBle){
+            acInspectionTvNormal.setTextColor(mActivity.getResources().getColor(R.color.white));
+            acInspectionTvNormal.setBackgroundResource(R.drawable.shape_bg_corner_29c_shadow);
+        }else {
+            acInspectionTvNormal.setTextColor(mActivity.getResources().getColor(R.color.white));
+            acInspectionTvNormal.setBackgroundResource(R.drawable.shape_bg_solid_df_corner);
+        }
+
     }
 
     @Override
