@@ -105,6 +105,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
 
     public void doUploadException() {
         Intent intent = new Intent(mContext, InspectionUploadExceptionActivity.class);
+        intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL,mDeviceDetail);
         intent.putExtra(EXTRA_INSPECTION_START_TIME, startTime);
         getView().startAC(intent);
     }
