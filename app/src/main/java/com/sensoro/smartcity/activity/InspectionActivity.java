@@ -139,7 +139,7 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
                 finishAc();
                 break;
             case R.id.include_text_title_tv_subtitle:
-                mPresenter.doInspectionDetail();
+                mPresenter.doInspectionInstruction();
                 break;
             case R.id.ac_inspection_tv_exception:
                 mPresenter.doUploadException();

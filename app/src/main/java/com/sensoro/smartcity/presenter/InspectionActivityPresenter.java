@@ -11,6 +11,7 @@ import android.widget.Toast;
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionTaskDetailActivity;
 import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -98,9 +99,9 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         mHandler.removeCallbacksAndMessages(null);
     }
 
-    public void doInspectionDetail() {
-        Intent intent = new Intent(mContext, InspectionTaskDetailActivity.class);
-        //todo 跳转巡检内容，加参数
+    public void doInspectionInstruction() {
+        Intent intent = new Intent(mContext, InspectionInstructionActivity.class);
+        intent.putExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE,mDeviceDetail.getDeviceType());
         getView().startAC(intent);
     }
 

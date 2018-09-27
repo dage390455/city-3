@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.lzy.imagepicker.ImagePicker;
@@ -35,10 +36,23 @@ implements Constants{
         mContext = context;
 
         InspectionIndexTaskInfo taskInfo = (InspectionIndexTaskInfo) ((Activity) mContext).getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
-        getView().updateRcTag(taskInfo.getDeviceSummary());
-        if (taskInfo.getDeviceSummary().size()>0) {
+        if (taskInfo != null && taskInfo.getDeviceSummary().size()>0) {
+            getView().updateRcTag(taskInfo.getDeviceSummary());
             requestContentData(taskInfo.getDeviceSummary().get(0).getType());
         }
+
+        String deviceType = ((Activity) mContext).getIntent().getStringExtra(EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE);
+        Log.e("hcs",":::"+deviceType);
+//        if (!TextUtils.isEmpty(deviceType)) {
+            //todo 这里要获取uniptype 映射传感器,根据传过来的创建一个bean
+//            String uniType = ((Activity) mContext).getIntent().getStringExtra(EXTRA_INSPECTION_INSTRUCTION_uni);
+            InspectionIndexTaskInfo.DeviceSummaryBean deviceSummaryBean = new InspectionIndexTaskInfo.DeviceSummaryBean();
+            deviceSummaryBean.setType("temp_humi_one");
+            ArrayList<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummaryBeans = new ArrayList<>();
+            deviceSummaryBeans.add(deviceSummaryBean);
+            getView().updateRcTag(deviceSummaryBeans);
+            requestContentData(deviceType);
+//        }
 
 
     }

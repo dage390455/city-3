@@ -211,6 +211,7 @@ public interface Constants {
     //巡检相关
     String EXTRA_INSPECTION_START_TIME = "extra_inspection_start_time";
     String EXTRA_INSPECTION_INDEX_TASK_INFO = "extra_inspection_index_task_info";
+    String EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE = "extra_inspection_instruction_device_type";
 
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
