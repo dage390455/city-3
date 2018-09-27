@@ -23,6 +23,7 @@ import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.LogUtils;
@@ -50,7 +51,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     private long startTime;
     private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
     private static final int maxImgCount = 9;
-
+    private InspectionTaskDeviceDetail mDeviceDetail;
     private ArrayList<ImageItem> tempImages = null;
     private UpLoadPhotosUtils upLoadPhotosUtils;
 
@@ -59,9 +60,9 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         mContext = (Activity) context;
         onCreate();
         upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, this);
-        startTime = mContext.getIntent().getLongExtra(EXTRA_INSPECTION_START_TIME, 0);
         initExceptionTag();
-
+        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
+        startTime = mContext.getIntent().getLongExtra(EXTRA_INSPECTION_START_TIME, 0);
     }
 
     private void initExceptionTag() {
@@ -173,7 +174,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             Log.e("hcs", ":selectTag::" + selectTag);
         }
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doUploadInspectionResult("5ba9b155f11db9772ee33014", null, null, 1, 0, startTime, finishTime, remarkMessage,
+        RetrofitServiceHelper.INSTANCE.doUploadInspectionResult(mDeviceDetail.getId(), null, null, 1, 0, startTime, finishTime, remarkMessage,
                 scenesDataList, selectTags).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<ResponseBase>(this) {
                     @Override
