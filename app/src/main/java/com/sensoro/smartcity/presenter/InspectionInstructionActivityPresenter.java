@@ -9,7 +9,6 @@ import android.util.Log;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageAlarmPhotoDetailActivity;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.CityObserver;
@@ -17,10 +16,9 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.bean.UnionSummaryBean;
 import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,30 +27,17 @@ import rx.schedulers.Schedulers;
 
 public class InspectionInstructionActivityPresenter extends BasePresenter<IInspectionInstructionActivityView>
 implements Constants{
-    private Context mContext;
+    private Activity mActivity;
 
     @Override
     public void initData(Context context) {
-        mContext = context;
-
-        InspectionIndexTaskInfo taskInfo = (InspectionIndexTaskInfo) ((Activity) mContext).getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
-        if (taskInfo != null && taskInfo.getDeviceSummary().size()>0) {
-            getView().updateRcTag(taskInfo.getDeviceSummary());
-            requestContentData(taskInfo.getDeviceSummary().get(0).getType());
+        mActivity = (Activity) context;
+        ArrayList<String> device = new ArrayList<>();
+        ArrayList<String> deviceTypes = mActivity.getIntent().getStringArrayListExtra(EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE);
+        if (deviceTypes != null && deviceTypes.size()>0) {
+            getView().updateRcTag(deviceTypes);
+            requestContentData(deviceTypes.get(0));
         }
-
-        String deviceType = ((Activity) mContext).getIntent().getStringExtra(EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE);
-        Log.e("hcs",":::"+deviceType);
-//        if (!TextUtils.isEmpty(deviceType)) {
-            //todo 这里要获取uniptype 映射传感器,根据传过来的创建一个bean
-//            String uniType = ((Activity) mContext).getIntent().getStringExtra(EXTRA_INSPECTION_INSTRUCTION_uni);
-            InspectionIndexTaskInfo.DeviceSummaryBean deviceSummaryBean = new InspectionIndexTaskInfo.DeviceSummaryBean();
-            deviceSummaryBean.setType("temp_humi_one");
-            ArrayList<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummaryBeans = new ArrayList<>();
-            deviceSummaryBeans.add(deviceSummaryBean);
-            getView().updateRcTag(deviceSummaryBeans);
-            requestContentData(deviceType);
-//        }
 
 
     }
@@ -90,7 +75,7 @@ implements Constants{
             imageItem.path = scenesData.url;
             imgs.add(imageItem);
         }
-        Intent intentPreview = new Intent(mContext, ImageAlarmPhotoDetailActivity.class);
+        Intent intentPreview = new Intent(mActivity, ImageAlarmPhotoDetailActivity.class);
         intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, imgs);
         intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
         intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);

@@ -147,6 +147,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     private void initSelectStatusPop() {
         mSelectStatusPop = new InspectionTaskStatePopUtils(mActivity);
         mSelectStatusPop.setUpAnimation();
+        mSelectStatusPop.clearAnimation();
         mSelectStatusPop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
@@ -349,7 +350,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     public void updateSelectDeviceTypeList(List<DeviceTypeModel> data) {
         if (mSelectDeviceTypePop != null) {
             mSelectDeviceTypePop.updateSelectDeviceTypeList(data);
-            mSelectDeviceTypePop.showAsDropDown(acInspectionTaskLlSelect);
+//            mSelectDeviceTypePop.showAsDropDown(acInspectionTaskLlSelect);
         }
 
     }
@@ -363,6 +364,23 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     public void setBottomInspectionStateTitle(String finish, String unFinish) {
         acInspectionTaskTvNotInspectionCount.setText(unFinish);
         acInspectionTaskTvInspectionCount.setText(finish);
+    }
+
+    @Override
+    public List<DeviceTypeModel> getSelectDeviceList() {
+        if (mSelectDeviceTypePop != null) {
+            return mSelectDeviceTypePop.getSelectDeviceTypeList();
+        }
+
+        return null;
+    }
+
+    @Override
+    public void showSelectDeviceTypePop() {
+        if (mSelectDeviceTypePop != null) {
+            mSelectDeviceTypePop.showAsDropDown(acInspectionTaskLlSelect);
+        }
+
     }
 
     @Override

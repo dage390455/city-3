@@ -1,6 +1,7 @@
 package com.sensoro.smartcity;
 
 import android.content.Context;
+import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -18,6 +19,7 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
+import com.google.gson.Gson;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.view.CropImageView;
 import com.qiniu.android.common.FixedZone;
@@ -36,6 +38,7 @@ import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
@@ -53,7 +56,11 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.yixia.camera.VCamera;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -121,6 +128,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     }
 
     public BLEDeviceManager bleDeviceManager;
+    public DeviceTypeMutualModel mDeviceTypeMutualModel;
 
     //    public static String VIDEO_PATH =  "/sdcard/SensroroCity/";
     @Override
@@ -433,6 +441,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 //        FMMapSDK.init(this);
         //
         initDeviceType();
+        parseDeviceTypeJson();
         initImagePicker();
         initUploadManager();
         initBugLy();
@@ -440,11 +449,52 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         initVc();
     }
 
+    private void parseDeviceTypeJson()  {
+        StringBuilder sb = new StringBuilder();
+        AssetManager assetManager = getAssets();
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open("deviceModel.json"), "utf-8"));
+            String line;
+            while ((line = bufferedReader.readLine())!=null){
+                sb.append(line);
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }finally {
+            try {
+                bufferedReader.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
+        Gson gson = new Gson();
+        mDeviceTypeMutualModel = gson.fromJson(sb.toString(), DeviceTypeMutualModel.class);
+
+
+    }
+
     private void initDeviceType() {
         for (int i = 0; i < SELECT_TYPE_VALUES.length; i++) {
             mDeviceTypeList.add(new DeviceTypeModel(SELECT_TYPE[i], SELECT_TYPE_RESOURCE[i], SELECT_TYPE_VALUES[i]
                     , SENSOR_MENU_MATCHER_ARRAY[i]));
         }
+    }
+
+    /**
+     * 根据unionType获取设备
+     * @param unionType
+     */
+    public DeviceTypeModel getDeviceTypeName(String unionType) {
+        for (DeviceTypeModel deviceTypeModel : mDeviceTypeList) {
+            if (deviceTypeModel.matcherType.equals(unionType)) {
+                return deviceTypeModel;
+            }
+        }
+        return null;
     }
 
     /**

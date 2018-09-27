@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Size;
 import android.widget.Toast;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
@@ -18,6 +19,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.server.CityObserver;
@@ -244,6 +246,12 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void doInspectionType() {
+        List<DeviceTypeModel> selectDeviceList = getView().getSelectDeviceList();
+        if (selectDeviceList!=null&&selectDeviceList.size()>0 ) {
+//            getView().updateSelectDeviceTypeList(selectDeviceList);
+            getView().showSelectDeviceTypePop();
+            return;
+        }
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>() {
             @Override
@@ -251,10 +259,25 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
                 List<InspectionTaskExecutionModel.DeviceTypesBean> deviceTypes = data.getDeviceTypes();
                 if (deviceTypes != null) {
+                    ArrayList<DeviceTypeModel> types = new ArrayList<>();
                     for (InspectionTaskExecutionModel.DeviceTypesBean deviceTypesBean : deviceTypes) {
                         String deviceType = deviceTypesBean.getDeviceType();
+                        List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
+                        for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
+                            if (mergeTypeInfo.getDeviceTypes().contains(deviceType)) {
+                                DeviceTypeModel deviceTypeModel = SensoroCityApplication.getInstance().getDeviceTypeName(mergeTypeInfo.getMergeType());
+                                if (deviceTypeModel != null) {
+                                    types.add(deviceTypeModel);
+                                }
+                                break;
+                            }
+                        }
+                        getView().updateSelectDeviceTypeList(types);
+                        getView().showSelectDeviceTypePop();
                         LogUtils.loge("doInspectionType --->>> " + deviceType);
                     }
+                }else{
+                    getView().toastShort("好像出问题了");
                 }
                 getView().dismissProgressDialog();
             }

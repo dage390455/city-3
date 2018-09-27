@@ -94,6 +94,10 @@ public class InspectionTaskStatePopUtils {
         return mSelectStateAdapter.getItem(position);
     }
 
+    public void clearAnimation() {
+        mPopupWindow.setAnimationStyle(-1);
+    }
+
     public interface SelectDeviceTypeItemClickListener{
         void onSelectDeviceTypeItemClick(View view, int position);
     }

@@ -27,6 +27,8 @@ public class InspectionIndexTaskInfo implements Serializable{
     private String name;
     private String id;
     private List<DeviceSummaryBean> deviceSummary;
+    private List<UnionSummaryBean> unionSummary;
+
     private List<String> inspectorIds;
 
     public String getIdentifier() {
@@ -109,21 +111,38 @@ public class InspectionIndexTaskInfo implements Serializable{
         this.inspectorIds = inspectorIds;
     }
 
+    public List<UnionSummaryBean> getUnionSummary() {
+        return unionSummary;
+    }
+
+    public void setUnionSummary(List<UnionSummaryBean> unionSummary) {
+        this.unionSummary = unionSummary;
+    }
+
     public static class DeviceSummaryBean implements Serializable{
         /**
          * type : fhsj_smoke
          * num : 1
          */
 
-        private String type;
+        private String deviceType;
         private int num;
+        private String _id;
 
-        public String getType() {
-            return type;
+        public String getDeviceType() {
+            return deviceType;
         }
 
-        public void setType(String type) {
-            this.type = type;
+        public void setDeviceType(String deviceType) {
+            this.deviceType = deviceType;
+        }
+
+        public String get_id() {
+            return _id;
+        }
+
+        public void set_id(String _id) {
+            this._id = _id;
         }
 
         public int getNum() {

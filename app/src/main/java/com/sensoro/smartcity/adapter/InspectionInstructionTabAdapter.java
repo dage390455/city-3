@@ -9,7 +9,11 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
+import com.sensoro.smartcity.server.bean.UnionSummaryBean;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -21,7 +25,7 @@ import butterknife.ButterKnife;
 public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<InspectionInstructionTabAdapter.InspectionInstructionTabHolder> {
     private final Context mContext;
     private int selectPosition;
-    private List<InspectionIndexTaskInfo.DeviceSummaryBean> tabs = new ArrayList<>();
+    private List<String> tabs = new ArrayList<>();
     private RecycleViewItemClickListener listener;
 
 
@@ -44,8 +48,6 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
             holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_solid_transparent_full_corner);
             holder.itemAdapterInspectionInstructionTv.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
         }
-        //这里的text应该是从tabs.get(position)中映射出来，现在没有映射关系，所以，先这么玩
-        holder.itemAdapterInspectionInstructionTv.setText("烟感"+position);
 
         holder.itemAdapterInspectionInstructionTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -57,6 +59,24 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
                 }
             }
         });
+        //查找巡检内容的时候，根据deviceType查找，所以tabs存的就是devicetype,后期这部分代码还是要改的
+        if (SensoroCityApplication.getInstance().mDeviceTypeMutualModel != null) {
+            List<DeviceTypeMutualModel.DeviceInfoBean> deviceInfo = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getDeviceInfo();
+            for (DeviceTypeMutualModel.DeviceInfoBean deviceInfoBean : deviceInfo) {
+                if (deviceInfoBean.getDeviceType().equals(tabs.get(position))) {
+                    for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfosBean : SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos()) {
+                        if (mergeTypeInfosBean.getMergeType().equals(deviceInfoBean.getMergeType())) {
+                            holder.itemAdapterInspectionInstructionTv.setText(mergeTypeInfosBean.getName());
+                            return;
+                        }
+                    }
+                }
+            }
+        }else{
+            LogUtils.loge("mDeviceTypeMutualModel 为null");
+        }
+
+
     }
 
     public void setRecycleViewItemClickListener(RecycleViewItemClickListener listener){
@@ -69,15 +89,15 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
         return tabs.size();
     }
 
-    public void updateTagDataList(List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary) {
+    public void updateTagDataList(List<String> deviceTypes) {
         tabs.clear();
-        tabs.addAll(deviceSummary);
+        tabs.addAll(deviceTypes);
         notifyDataSetChanged();
     }
 
     public String getItem(int position) {
 
-        return tabs.get(position).getType();
+        return tabs.get(position);
     }
 
     class InspectionInstructionTabHolder extends RecyclerView.ViewHolder {
