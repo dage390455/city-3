@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -20,7 +21,7 @@ import butterknife.ButterKnife;
 public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<InspectionInstructionTabAdapter.InspectionInstructionTabHolder> {
     private final Context mContext;
     private int selectPosition;
-    private List<String> tabs = new ArrayList<>();
+    private List<InspectionIndexTaskInfo.DeviceSummaryBean> tabs = new ArrayList<>();
     private RecycleViewItemClickListener listener;
 
 
@@ -39,12 +40,12 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
         if(position == selectPosition){
             holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_solid_29c_full_corner);
             holder.itemAdapterInspectionInstructionTv.setTextColor(Color.WHITE);
-            holder.itemAdapterInspectionInstructionTv.setText(tabs.get(position));
         }else{
             holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_solid_transparent_full_corner);
             holder.itemAdapterInspectionInstructionTv.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-            holder.itemAdapterInspectionInstructionTv.setText(tabs.get(position));
         }
+        //这里的text应该是从tabs.get(position)中映射出来，现在没有映射关系，所以，先这么玩
+        holder.itemAdapterInspectionInstructionTv.setText("烟感"+position);
 
         holder.itemAdapterInspectionInstructionTv.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -62,15 +63,21 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
         this.listener = listener;
     }
 
-    public  void settabs(List<String> list){
-        tabs.clear();
-        tabs.addAll(list);
-        notifyDataSetChanged();
-    }
 
     @Override
     public int getItemCount() {
         return tabs.size();
+    }
+
+    public void updateTagDataList(List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary) {
+        tabs.clear();
+        tabs.addAll(deviceSummary);
+        notifyDataSetChanged();
+    }
+
+    public String getItem(int position) {
+
+        return tabs.get(position).getType();
     }
 
     class InspectionInstructionTabHolder extends RecyclerView.ViewHolder {

@@ -5,6 +5,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,24 +49,12 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         holder.itemInspectionAdapterTvTitle.setText(tasksBean.getName());
         holder.itemInspectionAdapterTvTime.setText(DateUtil.getDateByOtherFormat(tasksBean.getBeginTime())+" - "+DateUtil.getDateByOtherFormat(tasksBean.getEndTime()));
 
-//        switch (tasksBean.getStatus()){
-//            case 0:
-//                setTvState(holder, R.color.c_8058a5, "待执行");
-//                break;
-//            case 1:
-//                setTvState(holder, R.color.c_3aa7f0, "执行中");
-//                break;
-//            case 2:
-//                setTvState(holder, R.color.c_ff8d34, "超时未完成");
-//                break;
-//            case 3:
-//                setTvState(holder, R.color.c_29c093, "已完成");
-//                break;
-//            case 4:
-//                setTvState(holder, R.color.c_a6a6a6, "超时完成");
-//                break;
-//        }
-        setTvState(holder,Constants.INSPECTION_STATUS_COLORS[tasksBean.getStatus()],Constants.INSPECTION_STATUS_TEXTS[tasksBean.getStatus()]);
+        //防止status 后台瞎给 造成崩溃，如status 给个6，索引越界
+        try {
+            setTvState(holder,Constants.INSPECTION_STATUS_COLORS[tasksBean.getStatus()],Constants.INSPECTION_STATUS_TEXTS[tasksBean.getStatus()]);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         holder.itemInspectionAdapterClRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

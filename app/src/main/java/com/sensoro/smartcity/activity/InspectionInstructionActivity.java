@@ -11,10 +11,15 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.InspectionInstructionContentAdapter;
 import com.sensoro.smartcity.adapter.InspectionInstructionTabAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.presenter.IInspectionInstructionActivityView;
 import com.sensoro.smartcity.presenter.InspectionInstructionActivityPresenter;
+import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
+import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
+import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -36,11 +41,13 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
     ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.ac_inspection_instruction_rc_tab)
     RecyclerView acInspectionInstructionRcTab;
-    @BindView(R.id.ac_inspection_instruction_web)
-    WebView acInspectionInstructionWeb;
+    @BindView(R.id.ac_inspection_instruction_rc_content)
+    RecyclerView acInspectionInstructionRcContent;
     private InspectionInstructionTabAdapter mTabAdapter;
+    private InspectionInstructionContentAdapter mContentAdapter;
 
     private List<String> tabs;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -53,8 +60,26 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
     private void iniView() {
         includeTextTitleTvTitle.setText("巡检内容");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         initRcTab();
+
+        initRcContent();
+    }
+
+    private void initRcContent() {
+        mContentAdapter = new InspectionInstructionContentAdapter(mActivity);
+        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
+        acInspectionInstructionRcContent.setLayoutManager(manager);
+        acInspectionInstructionRcContent.setAdapter(mContentAdapter);
+
+        mContentAdapter.setOnInspectionInstructionContentPicClickListenter(new InspectionInstructionContentAdapter.OnInspectionInstructionContentPicClickListenter() {
+            @Override
+            public void onInspectionInstructionContentPicClick(List<ScenesData> dataList, int position) {
+                mPresenter.doPreviewPhoto(dataList,position);
+            }
+        });
     }
 
     private void initRcTab() {
@@ -67,20 +92,24 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
         mTabAdapter.setRecycleViewItemClickListener(new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-
+                mPresenter.doRequestTemplate(mTabAdapter.getItem(position));
             }
         });
 
-        tabs = new ArrayList<>();
-        tabs.add("烟感");
-        tabs.add("电气火灾");
-        tabs.add("一氧化碳");
-        mTabAdapter.settabs(tabs);
     }
 
     @Override
     protected InspectionInstructionActivityPresenter createPresenter() {
         return new InspectionInstructionActivityPresenter();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mProgressUtils != null) {
+            mProgressUtils.destroyProgress();
+            mProgressUtils = null;
+        }
     }
 
     @Override
@@ -110,12 +139,12 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
 
     @Override
     public void showProgressDialog() {
-
+        mProgressUtils.showProgress();
     }
 
     @Override
     public void dismissProgressDialog() {
-
+        mProgressUtils.dismissProgress();
     }
 
     @Override
@@ -132,5 +161,15 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
     @OnClick(R.id.include_text_title_imv_arrows_left)
     public void onViewClicked() {
         finishAc();
+    }
+
+    @Override
+    public void updateRcContentData(List<InspectionTaskInstructionModel.DataBean> data) {
+        mContentAdapter.updateDataList(data);
+    }
+
+    @Override
+    public void updateRcTag(List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary) {
+        mTabAdapter.updateTagDataList(deviceSummary);
     }
 }
