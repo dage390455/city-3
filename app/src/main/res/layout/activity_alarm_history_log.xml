@@ -43,21 +43,36 @@
                 android:src="@mipmap/ic_close" />
         </RelativeLayout>
 
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="12dp"
-            android:background="@color/white"
-            android:orientation="vertical">
+            android:background="@color/white">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fg_history_log_rc_content"
+            <ImageView
+                android:id="@+id/no_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/no_content"
+                android:visibility="gone" />
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp" />
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                android:layout_marginTop="12dp"
+
+                android:orientation="vertical">
+
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/fg_history_log_rc_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginStart="20dp" />
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </RelativeLayout>
+
+
 
 
     </LinearLayout>
