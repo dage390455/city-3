@@ -298,8 +298,8 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                 imageItem.fromUrl = true;
                 if ("video".equals(scenesData.type)) {
                     imageItem.isRecord = true;
-                    imageItem.recordPath = scenesData.url;
-                    imageItem.path = scenesData.thumbUrl;
+                    imageItem.thumbPath = scenesData.thumbUrl;
+                    imageItem.path = scenesData.url;
                 } else {
                     imageItem.path = scenesData.url;
                     imageItem.isRecord = false;

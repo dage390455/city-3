@@ -172,8 +172,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 imageItem.fromUrl = true;
                 if ("video".equals(scenesData.type)) {
                     imageItem.isRecord = true;
-                    imageItem.recordPath = scenesData.url;
-                    imageItem.path = scenesData.thumbUrl;
+                    imageItem.thumbPath = scenesData.thumbUrl;
+                    imageItem.path = scenesData.url;
                 } else {
                     imageItem.path = scenesData.url;
                     imageItem.isRecord = false;
@@ -329,7 +329,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             if (data != null && requestCode == REQUEST_CODE_RECORD) {
                 ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
                 if (imageItem != null) {
-                    LogUtils.loge("--- 从视频返回  path = " + imageItem.recordPath);
+                    LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
                     ArrayList<ImageItem> tempImages = new ArrayList<>();
                     tempImages.add(imageItem);
                     EventData eventData = new EventData();

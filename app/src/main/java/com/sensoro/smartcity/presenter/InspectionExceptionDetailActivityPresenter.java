@@ -76,7 +76,7 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
                 }
                 getView().updateExceptionTagsData(exceptionTags);
 
-                getView().setTvReamrk(taskDevice.getRemark());
+                getView().setTvRemark(taskDevice.getRemark());
 
                 List<ScenesData> imgAndVedios = taskDevice.getImgAndVedio();
                 ArrayList<ScenesData> images = new ArrayList<>();
@@ -130,8 +130,8 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
     public void doPreviewCamera(ScenesData item) {
         ImageItem imageItem = new ImageItem();
         imageItem.isRecord = true;
-        imageItem.recordPath = item.url;
-        imageItem.path = item.thumbUrl;
+        imageItem.thumbPath = item.thumbUrl;
+        imageItem.path = item.url;
         Intent intent = new Intent();
         intent.setClass(mContext, VideoPlayActivity.class);
         intent.putExtra("path_record", (Serializable) imageItem);

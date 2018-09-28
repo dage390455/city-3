@@ -84,14 +84,14 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         mImageItem = (ImageItem) intent.getSerializableExtra("path_record");
         if (mImageItem != null) {
             mProgressUtils.showProgress();
-            Log.e("VideoPlayActivity", "path = " + mImageItem.recordPath);
-            vv_play.setVideoPath(mImageItem.recordPath);
+            Log.e("VideoPlayActivity", "path = " + mImageItem.path);
+            vv_play.setVideoPath(mImageItem.path);
             vv_play.setOnPreparedListener(this);
             vv_play.setOnErrorListener(this);
             if (!mImageItem.fromUrl) {
-                File file = new File(mImageItem.recordPath);
+                File file = new File(mImageItem.path);
                 Log.e("VideoPlayActivity", "path size = " + file.length());
-//            vv_play.setVideoPath(mImageItem.recordPath);
+//            vv_play.setVideoPath(mImageItem.thumbPath);
             }
         }
 
@@ -148,12 +148,14 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void deleteFile() {
-        //删除视频
+
         try {
-            File file = new File(mImageItem.recordPath);
+            //删除视频缩略图
+            File file = new File(mImageItem.thumbPath);
             if (file.exists()) {
                 file.delete();
             }
+            //删除视频
             File file1 = new File(mImageItem.path);
             if (file1.exists()) {
                 file1.delete();

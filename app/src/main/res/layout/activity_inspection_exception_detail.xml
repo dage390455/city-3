@@ -225,8 +225,8 @@
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:gravity="right"
                 android:layout_weight="1">
-
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/ac_inspection_exception_detail_rc_photo"
                         android:layout_width="wrap_content"

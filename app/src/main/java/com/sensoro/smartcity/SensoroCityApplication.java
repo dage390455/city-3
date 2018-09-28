@@ -60,7 +60,6 @@ import com.yixia.camera.VCamera;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -259,7 +258,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
         // 开启log输出,ffmpeg输出到logcat
         VCamera.setDebugMode(false);
-
         // 初始化拍摄SDK，必须
         VCamera.initialize(this);
     }

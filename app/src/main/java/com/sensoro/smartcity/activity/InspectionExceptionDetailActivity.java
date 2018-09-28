@@ -56,6 +56,8 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
     private InspectionExceptionThumbnailAdapter mPhotoAdapter;
     private InspectionExceptionThumbnailAdapter mCameraAdapter;
     private ProgressUtils mProgressUtils;
+    private GridLayoutManager mPhotoGridLayoutManager;
+    private GridLayoutManager mVideoGridLayoutManager;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -69,29 +71,34 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText("监测点异常详情");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-
-       initRcTag();
-
-       initRcExceptionTag();
-
-       initRcPhoto();
-
-       initRcCamera();
-    }
-
-    private void initRcCamera() {
-        mCameraAdapter = new InspectionExceptionThumbnailAdapter(mActivity);
-        GridLayoutManager manager = new GridLayoutManager(mActivity, 3){
+        mPhotoGridLayoutManager = new GridLayoutManager(mActivity, 3) {
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
         };
-        acInspectionExceptionDetailRcCamera.setLayoutManager(manager);
+        mVideoGridLayoutManager = new GridLayoutManager(mActivity, 3) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        initRcTag();
+
+        initRcExceptionTag();
+
+        initRcPhoto();
+
+        initRcCamera();
+    }
+
+    private void initRcCamera() {
+        mCameraAdapter = new InspectionExceptionThumbnailAdapter(mActivity);
+        mCameraAdapter.setPhotoType(true);
+        acInspectionExceptionDetailRcCamera.setLayoutManager(mVideoGridLayoutManager);
         acInspectionExceptionDetailRcCamera.setAdapter(mCameraAdapter);
         acInspectionExceptionDetailRcCamera.setHasFixedSize(true);
         acInspectionExceptionDetailRcCamera.setNestedScrollingEnabled(false);
-
         mCameraAdapter.setOnExceptionThumbnailItemClickListener(new InspectionExceptionThumbnailAdapter.ExceptionThumbnailItemClickListener() {
             @Override
             public void onExceptionThumbnailItemClickListener(int position) {
@@ -102,29 +109,21 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     private void initRcPhoto() {
         mPhotoAdapter = new InspectionExceptionThumbnailAdapter(mActivity);
-        GridLayoutManager manager = new GridLayoutManager(mActivity, 3){
-            @Override
-            public boolean canScrollVertically() {
-                return false;
-            }
-
-        };
-        acInspectionExceptionDetailRcPhoto.setLayoutManager(manager);
+        acInspectionExceptionDetailRcPhoto.setLayoutManager(mPhotoGridLayoutManager);
         acInspectionExceptionDetailRcPhoto.setAdapter(mPhotoAdapter);
         acInspectionExceptionDetailRcPhoto.setHasFixedSize(true);
         acInspectionExceptionDetailRcPhoto.setNestedScrollingEnabled(false);
-
         mPhotoAdapter.setOnExceptionThumbnailItemClickListener(new InspectionExceptionThumbnailAdapter.ExceptionThumbnailItemClickListener() {
             @Override
             public void onExceptionThumbnailItemClickListener(int position) {
-                mPresenter.doPreviewPhoto(mPhotoAdapter.getDataList(),position);
+                mPresenter.doPreviewPhoto(mPhotoAdapter.getDataList(), position);
             }
         });
 
     }
 
     private void initRcExceptionTag() {
-        mExceptionTagAdapter = new TagAdapter(mActivity,R.color.c_ff8d34,R.color.c_ff8d34);
+        mExceptionTagAdapter = new TagAdapter(mActivity, R.color.c_ff8d34, R.color.c_ff8d34);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         acInspectionExceptionDetailRcExceptionTag.setLayoutManager(manager);
@@ -132,7 +131,7 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
     }
 
     private void initRcTag() {
-        mTagAdapter = new TagAdapter(mActivity,R.color.c_252525,R.color.c_dfdfdf);
+        mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         acInspectionExceptionDetailRcTag.setLayoutManager(manager);
@@ -230,21 +229,29 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     @Override
     public void setTvStatus(int colorRes, String text) {
-        WidgetUtil.changeTvState(mActivity,acInspectionExceptionDetailTvState,colorRes,text);
+        WidgetUtil.changeTvState(mActivity, acInspectionExceptionDetailTvState, colorRes, text);
     }
 
     @Override
-    public void setTvReamrk(String remark) {
+    public void setTvRemark(String remark) {
         acInspectionExceptionDetailTvRemark.setText(remark);
     }
 
     @Override
     public void updateRcPhotoAdapter(List<ScenesData> imageUrls) {
+        int size = imageUrls.size();
+        if (size != 0 && size < 3) {
+            mPhotoGridLayoutManager.setSpanCount(size);
+        }
         mPhotoAdapter.updateDataList(imageUrls);
     }
 
     @Override
     public void updateRcCameraAdapter(List<ScenesData> videoThumbUrls) {
+        int size = videoThumbUrls.size();
+        if (size != 0 && size < 3) {
+            mVideoGridLayoutManager.setSpanCount(size);
+        }
         mCameraAdapter.updateDataList(videoThumbUrls);
     }
 }

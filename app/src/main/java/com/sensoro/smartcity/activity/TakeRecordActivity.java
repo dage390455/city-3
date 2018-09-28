@@ -194,22 +194,31 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK) {
-            if (requestCode == REQUEST_KEY) {
-                LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
-                for (MediaObject.MediaPart part : medaParts) {
-                    mMediaObject.removePart(part, true);
-                }
-                deleteDir(SensoroCityApplication.VIDEO_PATH);
+        if (resultCode == RESULT_CODE_RECORD) {
+            LinkedList<MediaObject.MediaPart> medaParts = mMediaObject.getMedaParts();
+            for (MediaObject.MediaPart part : medaParts) {
+                mMediaObject.removePart(part, true);
             }
+            deleteDir(SensoroCityApplication.VIDEO_PATH);
         }
     }
 
     /**
      * 删除文件夹下所有文件
      */
-    public static void deleteDir(String dirPath) {
+    public void deleteDir(String dirPath) {
 
+//        File dir = new File(dirPath);
+////        if (dir.exists() && dir.isDirectory()) {
+////            File[] files = dir.listFiles();
+////            for (File f : files) {
+////                deleteDir(f.getAbsolutePath());
+////            }
+////        } else if (dir.exists()) {
+////            if (!dir.getAbsolutePath().endsWith(".jpg") && !dir.getAbsolutePath().endsWith("mp4")) {
+////                dir.delete();
+////            }
+////        }
         File dir = new File(dirPath);
         if (dir.exists() && dir.isDirectory()) {
             File[] files = dir.listFiles();
@@ -217,7 +226,9 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
                 deleteDir(f.getAbsolutePath());
             }
         } else if (dir.exists()) {
-            if (!dir.getAbsolutePath().endsWith(".jpg")) {
+            if (dir.getAbsolutePath().endsWith(".jpg") || dir.getAbsolutePath().endsWith("mp4")) {
+                LogUtils.loge("视频图片缓存文件路径--->> " + dir.getAbsolutePath());
+            } else {
                 dir.delete();
             }
         }
@@ -258,11 +269,11 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
     public void onEncodeComplete() {
         //TODO
         dismissProgress();
-        final String path = mMediaObject.getOutputTempVideoPath();
-        final String outputVideoThumbPath = WidgetUtil.bitmap2File(WidgetUtil.getVideoThumbnail(path), path);
+        final String videoPath = mMediaObject.getOutputTempVideoPath();
+        final String videoThumbPath = WidgetUtil.bitmap2File(WidgetUtil.getVideoThumbnail(videoPath), videoPath);
         final long endTime = mMediaObject.getCurrentPart().endTime;
-        LogUtils.loge("outputVideoThumbPath = " + outputVideoThumbPath);
-        if (!TextUtils.isEmpty(path)) {
+        LogUtils.loge("videoThumbPath = " + videoThumbPath);
+        if (!TextUtils.isEmpty(videoPath)) {
             iv_finish.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -271,9 +282,9 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
                     final ImageItem imageItem = new ImageItem();
                     imageItem.isRecord = true;
                     imageItem.addTime = endTime;
-                    imageItem.path = outputVideoThumbPath;
-                    imageItem.recordPath = path;
-                    imageItem.name = path.substring(path.lastIndexOf("/") + 1);
+                    imageItem.path = videoPath;
+                    imageItem.thumbPath = videoThumbPath;
+                    imageItem.name = videoPath.substring(videoPath.lastIndexOf("/") + 1);
                     intent.putExtra("path_record", (Serializable) imageItem);
                     setResult(RESULT_CODE_RECORD, intent);
                     finish();
@@ -281,7 +292,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
             });
 
             vv_play.setVisibility(View.VISIBLE);
-            vv_play.setVideoPath(path);
+            vv_play.setVideoPath(videoPath);
             vv_play.setOnPreparedListener(this);
             vv_play.start();
 

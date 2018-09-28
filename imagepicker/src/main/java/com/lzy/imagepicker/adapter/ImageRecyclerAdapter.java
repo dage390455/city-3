@@ -210,7 +210,12 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
             //显示图片
             if (needReLoad) {
-                imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize);
+                if (imageItem.isRecord) {
+                    imagePicker.getImageLoader().displayImage(mActivity, imageItem.thumbPath, ivThumb, mImageSize, mImageSize);
+                } else {
+                    imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize);
+                }
+
             }
         }
 
