@@ -2,14 +2,12 @@ package com.sensoro.smartcity.presenter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.sensoro.smartcity.activity.InspectionTaskDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.smartcity.server.bean.InspectionTaskModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
@@ -50,11 +48,14 @@ implements Constants{
                     tempTasks.clear();
                     List<InspectionIndexTaskInfo> tasks = inspectionTaskModel.getData().getTasks();
                     if(tasks.size()>0){
-                        getView().updateRcContent(tasks);
+                        tempTasks.addAll(tasks);
+                        getView().updateRcContent(tempTasks);
                     }else{
                         getView().toastShort("没有更多数据了");
                     }
+                    getView().rcSmoothScrollToTop();
                     getView().onPullRefreshCompleted();
+                    getView().closeRefreshHeaderOrFooter();
                     getView().dismissProgressDialog();
 
                 }

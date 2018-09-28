@@ -2,6 +2,8 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -13,6 +15,10 @@ import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.scwang.smartrefresh.layout.api.RefreshFooter;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContractListAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
@@ -41,9 +47,14 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     @BindView(R.id.rg_contract_select)
     RadioGroup rgContractSelect;
     @BindView(R.id.contract_ptr_list)
-    PullToRefreshListView contractPtrList;
+    ListView contractPtrList;
     @BindView(R.id.contract_return_top)
     ImageView contractReturnTop;
+    @BindView(R.id.refreshLayout)
+    RefreshLayout refreshLayout;
+    @BindView(R.id.no_content)
+    ImageView imvNoContent;
+
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private ContractListAdapter mContractListAdapter;
@@ -52,21 +63,38 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         rgContractSelect.setOnCheckedChangeListener(this);
-        contractPtrList.setRefreshing(false);
-        contractPtrList.setMode(PullToRefreshBase.Mode.BOTH);
-        contractPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+
+        refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
                 requestDataByDirection(DIRECTION_DOWN, false);
+//                mPresenter.requestTopData();
             }
-
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
                 requestDataByDirection(DIRECTION_UP, false);
             }
         });
+//        contractPtrList.setRefreshing(false);
+//        contractPtrList.setMode(PullToRefreshBase.Mode.BOTH);
+//        contractPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                isShowDialog = false;
+//                requestDataByDirection(DIRECTION_DOWN, false);
+//            }
+//
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                isShowDialog = false;
+//                requestDataByDirection(DIRECTION_UP, false);
+//            }
+//        });
         mContractListAdapter = new ContractListAdapter(mActivity);
         contractPtrList.setOnScrollListener(this);
         contractPtrList.setAdapter(mContractListAdapter);
@@ -80,13 +108,15 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void onPullRefreshComplete() {
-        contractPtrList.onRefreshComplete();
+        refreshLayout.finishLoadMore();
+        refreshLayout.finishRefresh();
+//        contractPtrList.onRefreshComplete();
     }
 
-    @Override
-    public PullToRefreshBase.State getPullRefreshState() {
-        return contractPtrList.getState();
-    }
+//    @Override
+//    public PullToRefreshBase.State getPullRefreshState() {
+//        return contractPtrList.getState();
+//    }
 
     @Override
     public void requestDataByDirection(int direction, boolean isFirst) {
@@ -95,8 +125,32 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void updateContractList(List<ContractListInfo> data) {
-        mContractListAdapter.setData(data);
-        mContractListAdapter.notifyDataSetChanged();
+        if(data != null && data.size() > 0){
+            contractPtrList.setVisibility(View.VISIBLE);
+            imvNoContent.setVisibility(View.GONE);
+            mContractListAdapter.setData(data);
+            mContractListAdapter.notifyDataSetChanged();
+        }else{
+            contractPtrList.setVisibility(View.GONE);
+            imvNoContent.setVisibility(View.VISIBLE);
+        }
+
+    }
+
+    @Override
+    public void showSmartRefreshNoMoreData() {
+        refreshLayout.finishLoadMoreWithNoMoreData();
+    }
+
+    @Override
+    public void smoothScrollToPosition(int position) {
+        contractPtrList.smoothScrollToPosition(position);
+
+    }
+
+    @Override
+    public void closeRefreshHeaderOrFooter() {
+        refreshLayout.closeHeaderOrFooter();
     }
 
     @Override
@@ -161,7 +215,8 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 finishAc();
                 break;
             case R.id.contract_return_top:
-                contractPtrList.getRefreshableView().smoothScrollToPosition(0);
+                contractPtrList.smoothScrollToPosition(0);
+                closeRefreshHeaderOrFooter();
                 break;
         }
     }
@@ -173,7 +228,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-        int tempPos = contractPtrList.getRefreshableView().getFirstVisiblePosition();
+        int tempPos = contractPtrList.getFirstVisiblePosition();
         if (tempPos > 0) {
             contractReturnTop.setVisibility(View.VISIBLE);
         } else {
@@ -189,11 +244,14 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 //        // 获取这个RadioButton的text内容
 //        String output = choise.getText().toString();
 //        Toast.makeText(MainActivity.this, "你的性别为：" + output, Toast.LENGTH_SHORT).show();
+        //恢复没有数据的状态
+        refreshLayout.setNoMoreData(false);
         switch (id) {
             case R.id.rb_contract_all:
                 mPresenter.requestContractDataAll();
                 break;
             case R.id.rb_contract_business:
+
                 mPresenter.requestContractDataBusiness();
                 break;
             case R.id.rb_contract_person:
@@ -202,6 +260,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
             default:
                 break;
         }
+
     }
 
     @Override

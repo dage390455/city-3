@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -28,6 +29,7 @@ import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
+import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -94,7 +96,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mSelectDeviceTypePop.updateSelectDeviceTypeList(SensoroCityApplication.getInstance().mDeviceTypeList);
         mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
-            public void onSelectDeviceTypeItemClick(View view, int position) {
+            public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel item) {
                 mPresenter.requestDataByTypes(position);
                 //选择类型的pop点击事件
                 fgMainHomeTvSelectType.setText(Constants.SELECT_TYPE[position]);
@@ -267,12 +269,12 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
-        if (dataList.size()>0) {
+        if (dataList.size() > 0) {
             imvNoContent.setVisibility(View.GONE);
             fgMainHomeRcContent.setVisibility(View.VISIBLE);
             mMainHomeFragRcContentAdapter.setData(dataList);
             mMainHomeFragRcContentAdapter.notifyDataSetChanged();
-        }else{
+        } else {
             imvNoContent.setVisibility(View.VISIBLE);
             fgMainHomeRcContent.setVisibility(View.GONE);
         }
@@ -284,7 +286,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
 
     public void showTypePopupView() {
-        mSelectDeviceTypePop.showAtLocation(fgMainHomeLlRoot,Gravity.TOP);
+        mSelectDeviceTypePop.showAtLocation(fgMainHomeLlRoot, Gravity.TOP);
     }
 
     @Override
@@ -322,7 +324,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
 
-
     private void addImbRotate() {
         RotateAnimation rotateAnimation = new RotateAnimation(0, 45, Animation.RELATIVE_TO_SELF, 0.5f,
                 Animation.RELATIVE_TO_SELF, 0.5f);
@@ -356,6 +357,16 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         menuDialogFragment.show(getActivity().getSupportFragmentManager(), "mainMenuDialog");
         setImvAddVisible(false);
         setImvSearchVisible(false);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        InputMethodManager imm = (InputMethodManager) mRootFragment.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+
+
+
     }
 
     @Override

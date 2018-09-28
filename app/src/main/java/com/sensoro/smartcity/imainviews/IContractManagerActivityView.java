@@ -12,9 +12,16 @@ public interface IContractManagerActivityView extends IProgressDialog, IToast, I
     //    void updateContractListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList);
     void onPullRefreshComplete();
 
-    PullToRefreshBase.State getPullRefreshState();
+//    PullToRefreshBase.State getPullRefreshState();
 
     void requestDataByDirection(int direction, boolean isFirst);
 
     void updateContractList(List<ContractListInfo> data);
+
+    void showSmartRefreshNoMoreData();
+
+    void smoothScrollToPosition(int position);
+
+    void closeRefreshHeaderOrFooter();
+
 }

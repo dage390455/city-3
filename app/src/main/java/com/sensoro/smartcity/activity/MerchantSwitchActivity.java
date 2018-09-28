@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -13,6 +14,9 @@ import android.widget.Toast;
 
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MerchantAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
@@ -29,7 +33,7 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
         , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
-    private PullToRefreshListView mPullListView;
+    private ListView mPullListView;
     private ImageView mMenuListImageView;
     private ImageView mSearchImageView;
     private View seperatorView;
@@ -43,6 +47,8 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     //
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
+    private RefreshLayout refreshLayout;
+    private ImageView imvNoContent;
 
 
     @Override
@@ -55,29 +61,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     private void initView() {
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mPullListView = (PullToRefreshListView) findViewById(R.id.fragment_merchant_list);
-        //
-        mPullListView.setRefreshing(false);
-        mPullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-            @Override
-            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-                isShowDialog = false;
-                mPresenter.requestDataByDirection(DIRECTION_DOWN, false);
-            }
-
-            @Override
-            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-                isShowDialog = false;
-                mPresenter.requestDataByDirection(DIRECTION_UP, false);
-            }
-        });
-        mPullListView.setMode(PullToRefreshBase.Mode.BOTH);
-        mPullListView.setOnScrollListener(this);
-        mMerchantAdapter = new MerchantAdapter(mActivity);
-        mPullListView.setAdapter(mMerchantAdapter);
-        mPullListView.setOnItemClickListener(this);
-
         mReturnTopImageView = (ImageView) findViewById(R.id.merchant_return_top);
         mReturnTopImageView.setOnClickListener(this);
         mMenuListImageView = (ImageView) findViewById(R.id.merchant_iv_menu_list);
@@ -90,6 +73,48 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         seperatorView = findViewById(R.id.merchant_list_sep);
         seperatorBottomView = findViewById(R.id.merchant_list_bottom_sep);
         rlTitleAccount = (RelativeLayout) findViewById(R.id.rl_title_account);
+        refreshLayout = findViewById(R.id.refreshLayout);
+        imvNoContent = findViewById(R.id.no_content);
+
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        mPullListView =  findViewById(R.id.fragment_merchant_list);
+        refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
+        refreshLayout.setOnRefreshListener(new OnRefreshListener() {
+            @Override
+            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+                isShowDialog = false;
+                mPresenter.requestDataByDirection(DIRECTION_DOWN, false);
+            }
+        });
+        refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
+                isShowDialog = false;
+                mPresenter.requestDataByDirection(DIRECTION_UP,false);
+            }
+        });
+        //
+//        mPullListView.setRefreshing(false);
+//        mPullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
+//            @Override
+//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                isShowDialog = false;
+//                mPresenter.requestDataByDirection(DIRECTION_DOWN, false);
+//            }
+//
+//            @Override
+//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
+//                isShowDialog = false;
+//                mPresenter.requestDataByDirection(DIRECTION_UP, false);
+//            }
+//        });
+//        mPullListView.setMode(PullToRefreshBase.Mode.BOTH);
+        mPullListView.setOnScrollListener(this);
+        mMerchantAdapter = new MerchantAdapter(mActivity);
+        mPullListView.setAdapter(mMerchantAdapter);
+        mPullListView.setOnItemClickListener(this);
+
+
 
     }
 
@@ -109,7 +134,8 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                 mPresenter.startToSearchAC();
                 break;
             case R.id.merchant_return_top:
-                mPullListView.getRefreshableView().smoothScrollToPosition(0);
+//                mPullListView.getRefreshableView().smoothScrollToPosition(0);
+                mPullListView.smoothScrollToPosition(0);
                 break;
         }
     }
@@ -174,12 +200,15 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     public void showSeperatorView(boolean isShow) {
-        if (isShow) {
-            seperatorView.setVisibility(View.VISIBLE);
-        } else {
-            seperatorView.setVisibility(View.GONE);
-            seperatorBottomView.setVisibility(View.GONE);
+        if(isShow){
+            refreshLayout.finishLoadMoreWithNoMoreData();
         }
+//        if (isShow) {
+//            seperatorView.setVisibility(View.VISIBLE);
+//        } else {
+//            seperatorView.setVisibility(View.GONE);
+//            seperatorBottomView.setVisibility(View.GONE);
+//        }
     }
 
     @Override
@@ -189,8 +218,16 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     public void updateAdapterUserInfo(List<UserInfo> data) {
-        mMerchantAdapter.setDataList(data);
-        mMerchantAdapter.notifyDataSetChanged();
+        if (data != null && data.size() > 0) {
+            mPullListView.setVisibility(View.VISIBLE);
+            imvNoContent.setVisibility(View.GONE);
+            mMerchantAdapter.setDataList(data);
+            mMerchantAdapter.notifyDataSetChanged();
+        }else{
+            mPullListView.setVisibility(View.GONE);
+            imvNoContent.setVisibility(View.VISIBLE);
+        }
+
 //        ViewParent parent = mPullListView.getParent();
 //        if (parent instanceof LinearLayout) {
 //            if (data.size() == 0) {
@@ -203,7 +240,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     public void onPullRefreshComplete() {
-        mPullListView.onRefreshComplete();
+//        mPullListView.onRefreshComplete();
+        refreshLayout.finishLoadMore();
+        refreshLayout.finishRefresh();
     }
 
 
@@ -215,7 +254,8 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     @Override
     public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
                          int totalItemCount) {
-        int tempPos = mPullListView.getRefreshableView().getFirstVisiblePosition();
+//        int tempPos = mPullListView.getRefreshableView().getFirstVisiblePosition();
+        int tempPos = mPullListView.getFirstVisiblePosition();
         if (tempPos > 0) {
             mReturnTopImageView.setVisibility(View.VISIBLE);
         } else {

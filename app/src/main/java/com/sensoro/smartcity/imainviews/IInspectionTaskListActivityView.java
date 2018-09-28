@@ -20,4 +20,8 @@ public interface IInspectionTaskListActivityView extends IToast,IProgressDialog,
     void onPullRefreshCompleted();
 
     void recycleViewRefreshCompleteNoMoreData();
+
+    void rcSmoothScrollToTop();
+
+    void closeRefreshHeaderOrFooter();
 }

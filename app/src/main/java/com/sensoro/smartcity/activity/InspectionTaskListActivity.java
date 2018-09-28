@@ -67,6 +67,8 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     ImageView acInspectionTaskListImvDateClose;
     @BindView(R.id.ac_inspection_task_list_rl_date_edit)
     RelativeLayout acInspectionTaskListRlDateEdit;
+    @BindView(R.id.no_content)
+    ImageView imvNoContent;
     private InspectionTaskAdapter mTaskAdapter;
     private CalendarPopUtils mCalendarPopUtils;
     private long startTime = -1;
@@ -236,6 +238,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
                 finishAc();
                 break;
             case R.id.ac_inspection_task_list_rb_current:
+                refreshLayout.setNoMoreData(false);
                 acInspectionTaskListImvCalendar.setVisibility(View.GONE);
                 if (getRlDateEditIsVisible()) {
                     acInspectionTaskListRlDateEdit.setVisibility(View.GONE);
@@ -243,6 +246,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
                 mPresenter.doUndone();
                 break;
             case R.id.ac_inspection_task_list_rb_history:
+                refreshLayout.setNoMoreData(false);
                 if (getRlDateEditIsVisible()) {
                     acInspectionTaskListRlDateEdit.setVisibility(View.GONE);
                 }
@@ -300,7 +304,15 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
 
     @Override
     public void updateRcContent(List<InspectionIndexTaskInfo> tasks) {
-        mTaskAdapter.updateTaskList(tasks);
+        if(tasks != null && tasks.size() > 0){
+            acInspectionTaskListRcContent.setVisibility(View.VISIBLE);
+            imvNoContent.setVisibility(View.GONE);
+            mTaskAdapter.updateTaskList(tasks);
+        }else{
+            acInspectionTaskListRcContent.setVisibility(View.GONE);
+            imvNoContent.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -312,5 +324,15 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     @Override
     public void recycleViewRefreshCompleteNoMoreData() {
         refreshLayout.finishLoadMoreWithNoMoreData();
+    }
+
+    @Override
+    public void rcSmoothScrollToTop() {
+        acInspectionTaskListRcContent.smoothScrollToPosition(0);
+    }
+
+    @Override
+    public void closeRefreshHeaderOrFooter() {
+        refreshLayout.closeHeaderOrFooter();
     }
 }

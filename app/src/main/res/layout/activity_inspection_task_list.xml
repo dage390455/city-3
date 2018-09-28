@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/c_fafafa">
-    <include
-        layout="@layout/item_include_text_title"/>
+    android:background="@color/c_fafafa"
+    android:orientation="vertical">
+
+    <include layout="@layout/item_include_text_title" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <RadioGroup
             android:id="@+id/ac_inspection_task_list_rg"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginStart="20dp"
             android:layout_marginBottom="16dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="16dp"
             android:orientation="horizontal">
 
             <RadioButton
@@ -27,13 +28,13 @@
                 android:button="@null"
                 android:checked="true"
                 android:gravity="center"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:paddingTop="8dp"
                 android:text="未完成"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
 
             <RadioButton
                 android:id="@+id/ac_inspection_task_list_rb_history"
@@ -42,26 +43,27 @@
                 android:background="@drawable/selector_contract_title_bg_select"
                 android:button="@null"
                 android:gravity="center"
-                android:paddingStart="20dp"
-                android:paddingEnd="20dp"
-                android:paddingTop="8dp"
                 android:paddingBottom="8dp"
+                android:paddingEnd="20dp"
+                android:paddingStart="20dp"
+                android:paddingTop="8dp"
                 android:text="已完成"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="14sp"/>
+                android:textSize="14sp" />
         </RadioGroup>
+
         <ImageView
             android:id="@+id/ac_inspection_task_list_imv_calendar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/calendar"
-            android:padding="8dp"
-            android:layout_marginEnd="8dp"
-            android:contentDescription="@null"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            />
+            android:layout_marginEnd="8dp"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:src="@drawable/calendar" />
     </RelativeLayout>
+
     <RelativeLayout
         android:id="@+id/ac_inspection_task_list_rl_date_edit"
         android:layout_width="match_parent"
@@ -74,8 +76,8 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/y30"
             android:layout_marginEnd="@dimen/x45"
-            android:layout_marginTop="@dimen/y30"
             android:layout_marginStart="20dp"
+            android:layout_marginTop="@dimen/y30"
             android:textSize="@dimen/x54" />
 
         <ImageView
@@ -84,30 +86,43 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_alignTop="@+id/fg_main_warn_tv_date_edit"
-            android:contentDescription="@null"
-            android:scaleType="centerInside"
             android:layout_marginEnd="10dp"
+            android:contentDescription="@null"
             android:padding="8dp"
+            android:scaleType="centerInside"
             android:src="@mipmap/ic_close" />
     </RelativeLayout>
 
-    <com.scwang.smartrefresh.layout.SmartRefreshLayout
-        android:id="@+id/refreshLayout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="@color/white"
-        >
+        android:background="@color/white">
 
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/ac_inspection_task_list_rc_content"
+        <ImageView
+            android:id="@+id/no_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:src="@drawable/no_content"
+            android:visibility="gone" />
+
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
+            android:orientation="vertical">
 
-            />
-    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ac_inspection_task_list_rc_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="20dp"
+                android:layout_marginStart="20dp"
+
+                />
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+    </RelativeLayout>
 
 
 </LinearLayout>
