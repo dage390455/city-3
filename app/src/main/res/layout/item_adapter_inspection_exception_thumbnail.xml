@@ -2,14 +2,23 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android" 
     android:layout_width="wrap_content"
+    android:layout_margin="5dp"
     android:layout_height="wrap_content">
     <ImageView
         android:id="@+id/item_adapter_inspection_exception_imv_thumbnail"
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:scaleType="fitXY"
+        android:layout_centerInParent="true"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:contentDescription="@null"
         />
+    <ImageView
+        android:id="@+id/iv_record_play"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_centerInParent="true"
+        android:src="@mipmap/item_icon_play"
+        android:visibility="gone" />
 </RelativeLayout>

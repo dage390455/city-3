@@ -194,14 +194,25 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                     }
                 }
                 //替换压缩0.01
-                Glide.with((Activity) mContext)                             //配置上下文
-                        .load(Uri.fromFile(new File(item.path)))    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                        .error(R.drawable.ic_default_image)           //设置错误图片
-                        .placeholder(R.drawable.ic_default_image)//设置占位图片
-                        .thumbnail(0.01f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
-                        .into(iv_img);
+                if (item.isRecord) {
+                    Glide.with((Activity) mContext)                             //配置上下文
+                            .load(Uri.fromFile(new File(item.thumbPath)))    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                            .error(R.drawable.ic_default_image)           //设置错误图片
+                            .placeholder(R.drawable.ic_default_image)//设置占位图片
+                            .thumbnail(0.01f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                            .into(iv_img);
 //                ImagePicker.getInstance().getImageLoader().displayImage(, , iv_img, 0, 0);
+                } else {
+                    Glide.with((Activity) mContext)                             //配置上下文
+                            .load(Uri.fromFile(new File(item.path)))    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                            .error(R.drawable.ic_default_image)           //设置错误图片
+                            .placeholder(R.drawable.ic_default_image)//设置占位图片
+                            .thumbnail(0.01f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                            .into(iv_img);
+//                ImagePicker.getInstance().getImageLoader().displayImage(, , iv_img, 0, 0);
+                }
                 clickPosition = position;
             }
         }

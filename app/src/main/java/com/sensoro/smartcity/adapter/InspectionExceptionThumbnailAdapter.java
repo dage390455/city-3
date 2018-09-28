@@ -23,7 +23,7 @@ public class InspectionExceptionThumbnailAdapter extends RecyclerView.Adapter<In
     private final Context mContext;
     private List<ScenesData> datas = new ArrayList<>();
     private ExceptionThumbnailItemClickListener listener;
-
+    private boolean hasVideo = false;
 
     public InspectionExceptionThumbnailAdapter(Context context) {
         mContext = context;
@@ -36,13 +36,20 @@ public class InspectionExceptionThumbnailAdapter extends RecyclerView.Adapter<In
         return new InspectionExceptionThumbnailHolder(view);
     }
 
+    public void setPhotoType(boolean hasVideo) {
+        this.hasVideo = hasVideo;
+    }
+
     @Override
     public void onBindViewHolder(InspectionExceptionThumbnailHolder holder, final int position) {
         String url;
         if ("image".equals(datas.get(position).type)) {
             url = datas.get(position).url;
-        }else{
+        } else {
             url = datas.get(position).thumbUrl;
+        }
+        if (hasVideo) {
+            holder.ivRecordPlay.setVisibility(View.VISIBLE);
         }
 
         Glide.with((Activity) mContext)
@@ -74,7 +81,8 @@ public class InspectionExceptionThumbnailAdapter extends RecyclerView.Adapter<In
         datas.addAll(picUrls);
         notifyDataSetChanged();
     }
-    public void setOnExceptionThumbnailItemClickListener(ExceptionThumbnailItemClickListener listener){
+
+    public void setOnExceptionThumbnailItemClickListener(ExceptionThumbnailItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -89,14 +97,16 @@ public class InspectionExceptionThumbnailAdapter extends RecyclerView.Adapter<In
     class InspectionExceptionThumbnailHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.item_adapter_inspection_exception_imv_thumbnail)
         ImageView itemAdapterInspectionExceptionImvThumbnail;
+        @BindView(R.id.iv_record_play)
+        ImageView ivRecordPlay;
 
-        public InspectionExceptionThumbnailHolder(View itemView) {
+        InspectionExceptionThumbnailHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 
-    public interface ExceptionThumbnailItemClickListener{
+    public interface ExceptionThumbnailItemClickListener {
         void onExceptionThumbnailItemClickListener(int position);
     }
 

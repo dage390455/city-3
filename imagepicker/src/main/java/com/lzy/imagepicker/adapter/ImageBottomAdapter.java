@@ -93,7 +93,11 @@ public class ImageBottomAdapter extends RecyclerView.Adapter<ImageBottomAdapter.
             //根据条目位置设置图片
             ImageItem item = mData.get(position);
 //            image_delete.setVisibility(View.VISIBLE);
-            ImagePicker.getInstance().getImageLoader().displayImage((Activity) mContext, item.path, iv_img, 0, 0);
+            if (item.isRecord) {
+                ImagePicker.getInstance().getImageLoader().displayImage((Activity) mContext, item.thumbPath, iv_img, 0, 0);
+            } else {
+                ImagePicker.getInstance().getImageLoader().displayImage((Activity) mContext, item.path, iv_img, 0, 0);
+            }
             clickPosition = position;
             iv_img_bg.setVisibility(currentPositon == position ? View.VISIBLE : View.GONE);
         }

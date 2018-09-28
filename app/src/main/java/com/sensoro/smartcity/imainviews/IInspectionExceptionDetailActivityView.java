@@ -21,7 +21,7 @@ public interface IInspectionExceptionDetailActivityView extends IToast,IActivity
 
     void setTvStatus(@ColorRes int colorRes,String text);
 
-    void setTvReamrk(String remark);
+    void setTvRemark(String remark);
 
     void updateRcPhotoAdapter(List<ScenesData> imageUrls);
 
