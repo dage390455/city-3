@@ -57,6 +57,8 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     ImageView ivAlarmLogDateClose;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
+    @BindView(R.id.no_content)
+    ImageView imv_content;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private CalendarPopUtils mCalendarPopUtils;
@@ -220,7 +222,15 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
 
     @Override
     public void updateAlarmListAdapter(List<DeviceAlarmLogInfo> data) {
-        mAlarmHistoryLogRcContentAdapter.updateAdapter(data);
+        if(data != null && data.size() >0){
+            acHistoryLogRcContent.setVisibility(View.VISIBLE);
+            imv_content.setVisibility(View.GONE);
+            mAlarmHistoryLogRcContentAdapter.updateAdapter(data);
+        }else{
+            acHistoryLogRcContent.setVisibility(View.GONE);
+            imv_content.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override
@@ -256,6 +266,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
             case R.id.alarm_return_top:
                 acHistoryLogRcContent.smoothScrollToPosition(0);
                 mReturnTopImageView.setVisibility(View.GONE);
+                refreshLayout.closeHeaderOrFooter();
                 break;
             case R.id.include_imv_title_imv_arrows_left:
                 finishAc();
