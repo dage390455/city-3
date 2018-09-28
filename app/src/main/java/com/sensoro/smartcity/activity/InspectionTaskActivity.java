@@ -74,6 +74,8 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     TextView acInspectionTaskTvType;
     @BindView(R.id.ac_inspection_task_ll_select)
     LinearLayout acInspectionTaskLlSelect;
+    @BindView(R.id.no_content)
+    ImageView imvNoContent;
     private InspectionTaskRcContentAdapter mContentAdapter;
     private SelectDeviceTypePopUtils mSelectDeviceTypePop;
     private InspectionTaskStatePopUtils mSelectStatusPop;
@@ -147,7 +149,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         mSelectDeviceTypePop.setUpAnimation();
         mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
-            public void onSelectDeviceTypeItemClick(View view, int position) {
+            public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel deviceTypeModel) {
                 //选择类型的pop点击事件
                 acInspectionTaskTvType.setText(mSelectDeviceTypePop.getItem(position).name);
                 mSelectDeviceTypePop.dismiss();
@@ -405,6 +407,14 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     public void updateInspectionTaskDeviceItem(List<InspectionTaskDeviceDetail> data) {
-        mContentAdapter.updateDevices(data);
+        if(data!=null && data.size() > 0){
+            acInspectionTaskRcContent.setVisibility(View.VISIBLE);
+            imvNoContent.setVisibility(View.GONE);
+            mContentAdapter.updateDevices(data);
+        }else{
+            acInspectionTaskRcContent.setVisibility(View.GONE);
+            imvNoContent.setVisibility(View.VISIBLE);
+        }
+
     }
 }

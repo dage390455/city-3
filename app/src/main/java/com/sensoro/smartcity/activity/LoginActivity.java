@@ -146,7 +146,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                         updateLoginBtnState(false);
                     }
                 } else {
-                    acLoginImvPsdIcon.setImageResource(R.drawable.login_account);
+                    acLoginImvPsdIcon.setImageResource(R.drawable.login_psd);
                     acLoginImvPsdClear.setVisibility(View.GONE);
                     if (acLoginEtAccount.getText().length() == 0) {
                         updateLogoDescriptionState(true);

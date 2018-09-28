@@ -262,6 +262,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         }
                         LogUtils.loge("doInspectionType --->>> " + deviceType);
                     }
+                    types.add(0,SensoroCityApplication.getInstance().mDeviceTypeList.get(0));
                     getView().updateSelectDeviceTypeList(types);
                     if (needPop) {
                         getView().showSelectDeviceTypePop();

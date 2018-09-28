@@ -48,7 +48,7 @@ public class SelectDeviceTypePopUtils {
             @Override
             public void onItemClick(View view, int position) {
                 tvSelectType.setText(mTypeSelectAdapter.getItem(position).name);
-                listener.onSelectDeviceTypeItemClick(view,position);
+                listener.onSelectDeviceTypeItemClick(view,position,mTypeSelectAdapter.getItem(position));
 
             }
         });
@@ -117,6 +117,6 @@ public class SelectDeviceTypePopUtils {
     }
 
     public interface SelectDeviceTypeItemClickListener{
-        void onSelectDeviceTypeItemClick(View view, int position);
+        void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel deviceTypeModel);
     }
 }

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -23,7 +23,7 @@
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
                 android:padding="18dp"
-                android:src="@mipmap/ic_back"/>
+                android:src="@mipmap/ic_back" />
 
             <TextView
                 android:id="@+id/contract_title"
@@ -32,7 +32,7 @@
                 android:layout_centerInParent="true"
                 android:text="@string/contract_list"
                 android:textColor="@color/c_252525"
-                android:textSize="@dimen/x60"/>
+                android:textSize="@dimen/x60" />
 
 
             <ImageView
@@ -45,15 +45,14 @@
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
                 android:padding="8dp"
-                android:src="@mipmap/ic_contract_index_add"
-                />
+                android:src="@mipmap/ic_contract_index_add" />
         </RelativeLayout>
 
 
         <View
             android:layout_width="match_parent"
             android:layout_height="@dimen/y1"
-            android:background="@color/c_e7e7e7"/>
+            android:background="@color/c_e7e7e7" />
 
         <RadioGroup
             android:id="@+id/rg_contract_select"
@@ -73,7 +72,7 @@
                 android:padding="@dimen/px20dp"
                 android:text="全部合同"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <RadioButton
                 android:id="@+id/rb_contract_business"
@@ -85,7 +84,7 @@
                 android:padding="@dimen/px20dp"
                 android:text="企业合同"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
 
             <RadioButton
                 android:id="@+id/rb_contract_person"
@@ -97,28 +96,41 @@
                 android:padding="@dimen/px20dp"
                 android:text="个人合同"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="16sp"/>
+                android:textSize="16sp" />
         </RadioGroup>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="@dimen/x30"
             android:layout_marginRight="@dimen/x30"
-            android:background="@color/list_sep_color"
-            android:orientation="vertical">
+            android:background="@color/list_sep_color">
 
-            <com.handmark.pulltorefresh.library.PullToRefreshListView
-                android:id="@+id/contract_ptr_list"
+            <ImageView
+                android:id="@+id/no_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:src="@drawable/no_content"
+                android:visibility="gone" />
+
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/y10"
-                android:divider="@color/list_sep_color"
-                android:dividerHeight="@dimen/y30"
-                android:fadingEdge="none"
-                android:scrollbars="vertical"
-                />
-        </LinearLayout>
+                android:orientation="vertical">
+
+                <ListView
+                    android:id="@+id/contract_ptr_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="@dimen/y10"
+                    android:divider="@color/list_sep_color"
+                    android:dividerHeight="@dimen/y30"
+                    android:fadingEdge="none"
+                    android:scrollbars="vertical" />
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
@@ -136,7 +148,7 @@
             android:layout_marginBottom="@dimen/y30"
             android:layout_marginRight="@dimen/x30"
             android:src="@mipmap/ic_return_top"
-            android:visibility="gone"/>
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>

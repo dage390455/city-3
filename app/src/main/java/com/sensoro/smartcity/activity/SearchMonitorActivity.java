@@ -86,6 +86,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     RecyclerView acSearchDeviceRcContent;
     @BindView(R.id.index_layout_list)
     RelativeLayout indexLayoutList;
+    @BindView(R.id.no_content)
+    ImageView imvNoContent;
 
     private Animation returnTopAnimation;
     private ProgressUtils mProgressUtils;
@@ -99,6 +101,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
+        //todo 点击取消，会弹起键盘，这个坑
         setContentView(R.layout.activity_search_device_test);
         ButterKnife.bind(mActivity);
         initView();
@@ -226,9 +229,17 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 //    }
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
-        Collections.sort(dataList);
-        mSearchRcContentAdapter.setData(dataList);
-        mSearchRcContentAdapter.notifyDataSetChanged();
+        if(dataList != null && dataList.size() > 0){
+            acSearchDeviceRcContent.setVisibility(VISIBLE);
+            imvNoContent.setVisibility(View.GONE);
+            Collections.sort(dataList);
+            mSearchRcContentAdapter.setData(dataList);
+            mSearchRcContentAdapter.notifyDataSetChanged();
+        }else{
+            acSearchDeviceRcContent.setVisibility(View.GONE);
+            imvNoContent.setVisibility(VISIBLE);
+        }
+
     }
 
     @Override
