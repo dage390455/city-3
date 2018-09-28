@@ -34,7 +34,7 @@ public class BLEDeviceManager {
     static volatile long BACKGROUND_BETWEEN_SCAN_PERIOD = DEFAULT_BACKGROUND_BETWEEN_SCAN_PERIOD;
     static volatile long UPDATE_DEVICE_PERIOD = DEFAULT_UPDATE_DEVICE_PERIOD;
     static volatile long OUT_OF_RANGE_DELAY = 15 * 1000; // 如果在该时间间隔内没有扫描到已经发现的beacon，则认为这个beacon已经离开
-    static final String BLUETOOTH_IS_NOT_ENABLED = "BluetoothIsNotEnabled";// 异常字符串蓝牙没有开启
+    public static final String BLUETOOTH_IS_NOT_ENABLED = "BluetoothIsNotEnabled";// 异常字符串蓝牙没有开启
     static final String BLUETOOTH_IS_NOT_SUPPORT = "BluetoothIsNotSupport";// 异常字符串不支持 ble
     public static final String MONITORED_DEVICE = "MONITORED_DEVICE";
     public static final String UPDATE_DEVICES = "UPDATE_DEVICES";
@@ -47,6 +47,7 @@ public class BLEDeviceManager {
     private BLEDeviceListener mListener;
     private SensoroDeviceServiceBoundListener mBoundListener;
     private boolean isBackgroundMode;   // 是否开启后台模式
+    private BluetoothAdapter bluetoothAdapter;
 
     private BLEDeviceManager() {
         mBoundListener = new SensoroDeviceServiceBoundListener() {
@@ -98,7 +99,7 @@ public class BLEDeviceManager {
 //            if (Build.VERSION.SDK_INT >= 26) {
 //                mContext.startForegroundService(intent);
 //            } else {
-                mContext.startService(intent);
+            mContext.startService(intent);
 //            }
         }
     }
@@ -111,7 +112,8 @@ public class BLEDeviceManager {
         isBleEnabled = isBluetoothEnabled();// 获取当前蓝牙状态
 
         if (!isBleEnabled) {
-            throw new Exception(BLUETOOTH_IS_NOT_ENABLED);// 抛出蓝牙关闭异常
+//            throw new Exception(BLUETOOTH_IS_NOT_ENABLED);// 抛出蓝牙关闭异常
+            return false;
         }
 
         bind(mBoundListener);
@@ -192,7 +194,7 @@ public class BLEDeviceManager {
     public boolean isBluetoothEnabled() {
         if (mContext != null) {
             BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
-            BluetoothAdapter bluetoothAdapter = bluetoothManager.getAdapter();
+            bluetoothAdapter = bluetoothManager.getAdapter();
             if (bluetoothAdapter.isEnabled()) {// 蓝牙开启
                 return true;
             } else {// 蓝牙关闭
@@ -201,6 +203,13 @@ public class BLEDeviceManager {
         } else {
             return false;
         }
+    }
+
+    public boolean enEnableBle() {
+        if (bluetoothAdapter != null) {
+            return bluetoothAdapter.enable();
+        }
+        return false;
     }
 
     /**
