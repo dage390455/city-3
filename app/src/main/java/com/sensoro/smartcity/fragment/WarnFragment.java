@@ -69,6 +69,8 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     RelativeLayout fgMainWarnRlDateEdit;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
+    @BindView(R.id.no_content)
+    ImageView imvNoContent;
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
@@ -324,8 +326,16 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList) {
-        mRcContentAdapter.setData(deviceAlarmLogInfoList);
-        mRcContentAdapter.notifyDataSetChanged();
+        if(deviceAlarmLogInfoList.size()>0){
+            fgMainWarnRcContent.setVisibility(View.VISIBLE);
+            imvNoContent.setVisibility(View.GONE);
+            mRcContentAdapter.setData(deviceAlarmLogInfoList);
+            mRcContentAdapter.notifyDataSetChanged();
+        }else{
+            fgMainWarnRcContent.setVisibility(View.GONE);
+            imvNoContent.setVisibility(View.VISIBLE);
+        }
+
     }
 
     @Override

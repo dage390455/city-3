@@ -103,20 +103,31 @@
                     android:src="@mipmap/ic_close" />
             </RelativeLayout>
         </LinearLayout>
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fg_main_warn_rc_content"
+            android:layout_height="match_parent">
+            <ImageView
+                android:id="@+id/no_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/no_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
+            <com.scwang.smartrefresh.layout.SmartRefreshLayout
+                android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent">
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-            </android.support.v7.widget.RecyclerView>
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/fg_main_warn_rc_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v7.widget.RecyclerView>
+            </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+        </RelativeLayout>
+
 
 
     </LinearLayout>
