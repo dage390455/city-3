@@ -114,7 +114,7 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
 
     @Override
     public void startAC(Intent intent) {
-
+        startActivity(intent);
     }
 
     @Override
@@ -169,7 +169,7 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
     }
 
     @Override
-    public void updateRcTag(List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary) {
-        mTabAdapter.updateTagDataList(deviceSummary);
+    public void updateRcTag(List<String> deviceTypes) {
+        mTabAdapter.updateTagDataList(deviceTypes);
     }
 }

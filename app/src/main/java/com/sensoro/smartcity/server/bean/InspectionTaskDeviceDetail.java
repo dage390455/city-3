@@ -22,6 +22,7 @@ public class InspectionTaskDeviceDetail implements Serializable {
     private String taskId;
     private String sn;
     private String deviceType;
+    private String unionType;
     private int status;
     private String timecost;
     private MalfunctionBean malfunction;
@@ -106,6 +107,14 @@ public class InspectionTaskDeviceDetail implements Serializable {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
+    }
+
+    public String getUnionType() {
+        return unionType;
+    }
+
+    public void setUnionType(String unionType) {
+        this.unionType = unionType;
     }
 
     public static class MalfunctionBean implements Serializable{

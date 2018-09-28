@@ -15,6 +15,7 @@ public class InspectionTaskExecutionModel {
     private List<InspectorsBean> inspectors;
     private List<DeviceTypesBean> deviceTypes;
     private List<DeviceStatusBean> deviceStatus;
+    private List<UnionSummaryBean> unionTypes;
 
     public BaseInfoBean getBaseInfo() {
         return baseInfo;

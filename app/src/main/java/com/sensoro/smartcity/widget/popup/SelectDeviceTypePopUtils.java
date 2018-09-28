@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
-import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -57,7 +56,7 @@ public class SelectDeviceTypePopUtils {
         mPopupWindow.setContentView(view);
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
-        mPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
         mPopupWindow.setFocusable(true);
     }
@@ -107,6 +106,14 @@ public class SelectDeviceTypePopUtils {
 
     public DeviceTypeModel getItem(int position) {
         return mTypeSelectAdapter.getItem(position);
+    }
+
+    public List<DeviceTypeModel> getSelectDeviceTypeList() {
+        return mTypeSelectAdapter.getDataList();
+    }
+
+    public void clearAnimation() {
+        mPopupWindow.setAnimationStyle(-1);
     }
 
     public interface SelectDeviceTypeItemClickListener{

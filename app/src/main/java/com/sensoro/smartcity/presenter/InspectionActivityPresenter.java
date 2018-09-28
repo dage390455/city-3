@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -17,6 +18,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -55,12 +57,17 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
             getView().updateTagsData(tags);
             String name = mDeviceDetail.getName();
             String sn = mDeviceDetail.getSn();
-            String deviceType = mDeviceDetail.getDeviceType();
+            DeviceTypeModel model = SensoroCityApplication.getInstance().getDeviceTypeName(mDeviceDetail.getUnionType());
             if (!TextUtils.isEmpty(name)) {
                 getView().setMonitorTitle(name);
             }
             if (!TextUtils.isEmpty(sn)) {
-                getView().setMonitorSn(deviceType + " " + sn);
+                if (model != null) {
+                    getView().setMonitorSn(model.name + " " + sn);
+                } else {
+                    getView().setMonitorSn("未知 " + sn);
+                }
+
             }
             mHandler.post(this);
         }
@@ -75,7 +82,9 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
 
     public void doInspectionInstruction() {
         Intent intent = new Intent(mContext, InspectionInstructionActivity.class);
-        intent.putExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE, mDeviceDetail.getDeviceType());
+        ArrayList<String> deviceTypes = new ArrayList<>();
+        deviceTypes.add(mDeviceDetail.getDeviceType());
+        intent.putExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE, deviceTypes);
         getView().startAC(intent);
     }
 

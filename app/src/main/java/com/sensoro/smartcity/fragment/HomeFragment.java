@@ -12,6 +12,7 @@ import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -66,6 +67,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     LinearLayout fgMainHomeLlRoot;
     @BindView(R.id.tv_detection_point)
     TextView tvDetectionPoint;
+    @BindView(R.id.no_content)
+    ImageView imvNoContent;
     private MainHomeFragRcContentAdapter mMainHomeFragRcContentAdapter;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeAdapter;
     private ProgressUtils mProgressUtils;
@@ -264,8 +267,16 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
-        mMainHomeFragRcContentAdapter.setData(dataList);
-        mMainHomeFragRcContentAdapter.notifyDataSetChanged();
+        if (dataList.size()>0) {
+            imvNoContent.setVisibility(View.GONE);
+            fgMainHomeRcContent.setVisibility(View.VISIBLE);
+            mMainHomeFragRcContentAdapter.setData(dataList);
+            mMainHomeFragRcContentAdapter.notifyDataSetChanged();
+        }else{
+            imvNoContent.setVisibility(View.VISIBLE);
+            fgMainHomeRcContent.setVisibility(View.GONE);
+        }
+
 //        if (dataList.size() < 5) {
 //            mReturnTopImageView.setVisibility(View.GONE);
 //        }

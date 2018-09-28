@@ -11,5 +11,5 @@ import java.util.List;
 public interface IInspectionInstructionActivityView extends IToast,IProgressDialog,IActivityIntent{
     void updateRcContentData(List<InspectionTaskInstructionModel.DataBean> data);
 
-    void updateRcTag(List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary);
+    void updateRcTag(List<String> deviceTypes);
 }

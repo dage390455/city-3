@@ -201,6 +201,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                if(mDataList.size()>0){}
+
                 getView().refreshData(mDataList);
                 getView().recycleViewRefreshComplete();
                 getView().dismissProgressDialog();

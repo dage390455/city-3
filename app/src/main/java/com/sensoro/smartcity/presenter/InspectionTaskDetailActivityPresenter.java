@@ -3,16 +3,21 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionTaskActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
+import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
+import com.sensoro.smartcity.server.bean.UnionSummaryBean;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 
@@ -41,10 +46,18 @@ implements Constants{
 
     private void initDeviceTag() {
         ArrayList<String> tags = new ArrayList<>();
+
         List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary = mTaskInfo.getDeviceSummary();
         for (InspectionIndexTaskInfo.DeviceSummaryBean deviceSummaryBean : deviceSummary) {
-            String tag = "泛海三江烟感（"+deviceSummaryBean.getNum()+")";
-
+            Log.e("hcs",":devs::"+deviceSummaryBean.getDeviceType());
+            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
+            for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
+                List<String> deviceTypes = mergeTypeInfo.getDeviceTypes();
+                if (deviceTypes.contains(deviceSummaryBean.getDeviceType())) {
+                    tags.add(mergeTypeInfo.getName()+"("+deviceSummaryBean.getNum()+")");
+                    break;
+                }
+            }
         }
 
         getView().updateTagsData(tags);
@@ -78,7 +91,12 @@ implements Constants{
 
     public void doRlContent() {
         Intent intent = new Intent(mContext, InspectionInstructionActivity.class);
-        intent.putExtra(Constants.EXTRA_INSPECTION_INDEX_TASK_INFO,mTaskInfo);
+        List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary = mTaskInfo.getDeviceSummary();
+        ArrayList<String> deviceTypes = new ArrayList<>();
+        for (InspectionIndexTaskInfo.DeviceSummaryBean deviceSummaryBean : deviceSummary) {
+            deviceTypes.add(deviceSummaryBean.getDeviceType());
+        }
+        intent.putExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE,deviceTypes);
         getView().startAC(intent);
     }
 

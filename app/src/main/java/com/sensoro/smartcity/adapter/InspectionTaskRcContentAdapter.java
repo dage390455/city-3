@@ -13,6 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 
 import java.util.ArrayList;
@@ -62,10 +64,14 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
             }
         }
 //        01621117C6A34D2A
-        String deviceType = deviceDetail.getDeviceType();
+        DeviceTypeModel deviceTypeModel = SensoroCityApplication.getInstance().getDeviceTypeName(deviceDetail.getUnionType());
         int status = deviceDetail.getStatus();
         holder.itemAdapterInspectionTaskTvName.setText(name);
-        holder.itemAdapterInspectionTaskTvSn.setText(deviceType + " " + sn);
+        if (deviceTypeModel != null) {
+            holder.itemAdapterInspectionTaskTvSn.setText(deviceTypeModel.name + " " + sn);
+        }else{
+            holder.itemAdapterInspectionTaskTvSn.setText("未知 " + sn);
+        }
         switch (status) {
             case 0:
                 //未巡检调用的函数跟其他的不一样，我们不一样，每个人都有不同的境遇
