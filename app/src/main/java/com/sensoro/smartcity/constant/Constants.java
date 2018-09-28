@@ -48,7 +48,7 @@ public interface Constants {
     String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
-//    String[] INDEX_TYPE_ARRAY = {
+    //    String[] INDEX_TYPE_ARRAY = {
 //            "全部类型",
 //            "紧急呼叫", "追踪器", "甲烷",
 //            "一氧化碳", "二氧化碳", "倾角",
@@ -96,7 +96,7 @@ public interface Constants {
             "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
             "manual_alarm", "sound_light_alarm"
     };
-//    String INDEX_TYPE_VALUES[] = {
+    //    String INDEX_TYPE_VALUES[] = {
 //            "all",
 //            "alarm", "altitude,latitude,longitude", "ch4",
 //            "co", "co2", "collision,pitch,roll",
@@ -151,10 +151,10 @@ public interface Constants {
     String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
 
     //巡检任务异常标签
-    String[] INSPECTION_EXCEPTION_TASGS = {"指示灯不亮","蜂鸣器不响","外观损坏","安装位置不对","设备丢失","按键故障","蓝牙无效"};
+    String[] INSPECTION_EXCEPTION_TASGS = {"指示灯不亮", "蜂鸣器不响", "外观损坏", "安装位置不对", "设备丢失", "按键故障", "蓝牙无效"};
     //巡检任务状态颜色值及对应文本
-    int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5,R.color.c_3aa7f0,R.color.c_ff8d34,R.color.c_29c093,R.color.c_a6a6a6};
-    String[] INSPECTION_STATUS_TEXTS = {"待执行","执行中","超时未完成","已完成","超时完成"};
+    int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5, R.color.c_3aa7f0, R.color.c_ff8d34, R.color.c_29c093, R.color.c_a6a6a6};
+    String[] INSPECTION_STATUS_TEXTS = {"待执行", "执行中", "超时未完成", "已完成", "超时完成"};
     //
     String EXTRA_USER_ID = "extra_user_id";
     //
@@ -171,8 +171,10 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
     String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
     String EXTRA_DEVICE_INFO = "extra_device_info";
-    String EXTRA_IS_STATION_DEPLOY = "extra_is_station_deploy";
-    String EXTRA_IS_CHANGE_DEVICE = "extra_is_change_device";
+    String EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO = "extra_inspection_deploy_old_device_info";
+    //扫描来源
+    String EXTRA_SCAN_ORIGIN_TYPE = "extra_scan_origin_type";
+    //
     String EXTRA_SENSOR_SN = "extra_sn";
     String EXTRA_SENSOR_NAME = "extra_name";
     String EXTRA_SENSOR_TYPES = "extra_types";
@@ -294,6 +296,7 @@ public interface Constants {
     int EVENT_DATA_AUTH_SUC = 0x28;
     int EVENT_DATA_DEPLOY_MAP = 0x31;
     int EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE = 0x32;
+    int EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE = 0x36;
     int EVENT_DATA_ALARM_FRESH_ALARM_DATA = 0x34;
     int EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS = 0x35;
 
@@ -301,7 +304,9 @@ public interface Constants {
 
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
+    int TYPE_SCAN_DEPLOY_STATION = 0x39;
     int TYPE_SCAN_LOGIN = 0x30;
-    int TYPE_SCAN_CHANGE_DEVICE = 0X34;
+    int TYPE_SCAN_DEPLOY_DEVICE_CHANGE = 0X37;
+    int TYPE_SCAN_INSPECTION = 0X38;
 
 }

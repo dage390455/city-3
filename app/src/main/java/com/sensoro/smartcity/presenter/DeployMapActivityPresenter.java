@@ -65,7 +65,26 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     public void initData(Context context) {
         mContext = (Activity) context;
         deployMapModel = (DeployMapModel) mContext.getIntent().getParcelableExtra(EXTRA_DEPLOY_TO_MAP);
-        getView().setSignalVisible(!deployMapModel.hasStation);
+        switch (deployMapModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                //基站部署
+                getView().setSignalVisible(false);
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                //巡检设备更换
+            case TYPE_SCAN_DEPLOY_DEVICE:
+                //设备部署
+                getView().setSignalVisible(true);
+                break;
+            case TYPE_SCAN_LOGIN:
+                break;
+            case TYPE_SCAN_INSPECTION:
+                //扫描巡检设备
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override
@@ -280,9 +299,24 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         getCurrentLocation();
-        if (!deployMapModel.hasStation) {
-            getView().refreshSignal(deployMapModel.updatedTime, deployMapModel.signal);
-            refreshSignal();
+        switch (deployMapModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                //基站部署
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                //巡检设备更换
+            case TYPE_SCAN_DEPLOY_DEVICE:
+                //设备部署
+                getView().refreshSignal(deployMapModel.updatedTime, deployMapModel.signal);
+                refreshSignal();
+                break;
+            case TYPE_SCAN_LOGIN:
+                break;
+            case TYPE_SCAN_INSPECTION:
+                //扫描巡检设备
+                break;
+            default:
+                break;
         }
     }
 

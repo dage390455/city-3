@@ -3,7 +3,9 @@ package com.sensoro.libbleserver.ble.scanner;
 import android.app.Service;
 import android.content.Intent;
 import android.os.Binder;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.BLEDeviceFactory;
@@ -26,6 +28,7 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
     private ArrayList<BLEDevice> updateDevices = new ArrayList<BLEDevice>();
     private BLEScanner bleScanner;
     private ExecutorService executorService;
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void onCreate() {
@@ -52,6 +55,7 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
     public void onDestroy() {
         bleScanner.stop();
         executorService.shutdown();
+        mainHandler.removeCallbacksAndMessages(null);
         super.onDestroy();
     }
 
@@ -90,21 +94,23 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
         }
     }
 
-    private void enterDevice(BLEDevice device) {
+    private void enterDevice(final BLEDevice device) {
         try {
-            BLEDevice newDevice = device.clone();
-            Intent intent = new Intent();
-            intent.setClass(BLEDeviceService.this, IntentProcessorService.class);
-            intent.putExtra(BLEDeviceManager.MONITORED_DEVICE, new MonitoredBLEDevice(newDevice, true));
-//            if (Build.VERSION.SDK_INT >= 26) {
-//                startForegroundService(intent);
-//                startForeground(1,new Notification());
-//            } else {
-            startService(intent);
-//            }
+            final BLEDevice newDevice = device.clone();
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                BLEDeviceManager.getInstance(getApplication()).getBLEDeviceListener().onNewDevice(newDevice);
+            } else {
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        BLEDeviceManager.getInstance(getApplication()).getBLEDeviceListener().onNewDevice(newDevice);
+                    }
+                });
+            }
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
+
 
     }
 
@@ -122,16 +128,17 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
 
     private void updateDevices() {
         try {
-            ArrayList<BLEDevice> updateDevicesClone = (ArrayList<BLEDevice>) updateDevices.clone();
-            Intent intent = new Intent();
-            intent.setClass(BLEDeviceService.this, IntentProcessorService.class);
-            intent.putParcelableArrayListExtra(BLEDeviceManager.UPDATE_DEVICES, updateDevicesClone);
-//            if (Build.VERSION.SDK_INT >= 26) {
-//                startForegroundService(intent);
-//                startForeground(1, new Notification());
-//            } else {
-                startService(intent);
-//            }
+            final ArrayList<BLEDevice> updateDevicesClone = (ArrayList<BLEDevice>) updateDevices.clone();
+            if (Looper.myLooper() == Looper.getMainLooper()) {
+                BLEDeviceManager.getInstance(getApplication()).getBLEDeviceListener().onUpdateDevices(updateDevicesClone);
+            } else {
+                mainHandler.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        BLEDeviceManager.getInstance(getApplication()).getBLEDeviceListener().onUpdateDevices(updateDevicesClone);
+                    }
+                });
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -148,16 +155,17 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
                 BLEDevice monitoredDevice = (BLEDevice) entry.getValue();
                 if (System.currentTimeMillis() - monitoredDevice.lastFoundTime > BLEDeviceManager.OUT_OF_RANGE_DELAY) {
                     final BLEDevice goneDevice = monitoredDevice.clone();
-                    Intent intent = new Intent();
-                    intent.setClass(BLEDeviceService.this, IntentProcessorService.class);
-                    intent.putExtra(BLEDeviceManager.MONITORED_DEVICE, new MonitoredBLEDevice(goneDevice, false));
-//                    if (Build.VERSION.SDK_INT >= 26) {
-//                        startForegroundService(intent);
-//                        startForeground(1, new Notification());
-//                    } else {
-                        startService(intent);
-//                    }
-
+                    //
+                    if (Looper.myLooper() == Looper.getMainLooper()) {
+                        BLEDeviceManager.getInstance(getApplication()).getBLEDeviceListener().onGoneDevice(goneDevice);
+                    } else {
+                        mainHandler.post(new Runnable() {
+                            @Override
+                            public void run() {
+                                BLEDeviceManager.getInstance(getApplication()).getBLEDeviceListener().onGoneDevice(goneDevice);
+                            }
+                        });
+                    }
                     scanDeviceHashMap.remove(monitoredDevice.getMacAddress());
                 } else {
                     updateDevices.add(monitoredDevice);

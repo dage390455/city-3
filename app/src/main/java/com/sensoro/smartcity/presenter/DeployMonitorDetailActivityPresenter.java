@@ -9,9 +9,9 @@ import android.text.TextUtils;
 
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
+import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
@@ -26,6 +26,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -53,10 +54,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private final List<String> tagList = new ArrayList<>();
     private final List<DeployContactModel> deployContactModelList = new ArrayList<>();
     private Handler mHandler;
-    private DeviceInfo deviceInfo;
+    //新设备
+    private DeviceInfo mDeviceInfo;
     private final ArrayList<ImageItem> images = new ArrayList<>();
-    private UpLoadPhotosUtils upLoadPhotosUtils;
     private String mNameAndAddress;
+    //旧设备
+    private InspectionTaskDeviceDetail mDeviceDetail;
+
 
     @Override
     public void initData(Context context) {
@@ -64,60 +68,93 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         onCreate();
         mHandler = new Handler(Looper.getMainLooper());
         Intent intent = mContext.getIntent();
-        deviceInfo = (DeviceInfo) intent.getSerializableExtra(EXTRA_DEVICE_INFO);
-        deployMapModel.hasStation = intent.getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
-        if (intent.getBooleanExtra(EXTRA_IS_CHANGE_DEVICE, false)) {
-            getView().updateUploadTvText("更换设备");
-        }
-        getView().setDeployContactRelativeLayoutVisible(!deployMapModel.hasStation);
-        getView().setDeployDeviceRlSignalVisible(!deployMapModel.hasStation);
-        getView().setDeployPhotoVisible(!deployMapModel.hasStation);
+        mDeviceInfo = (DeviceInfo) intent.getSerializableExtra(EXTRA_DEVICE_INFO);
+        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO);
+        deployMapModel.deployType = intent.getIntExtra(EXTRA_SCAN_ORIGIN_TYPE, -1);
         init();
+
+    }
+
+    private void getOldDeviceInfo() {
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(mDeviceDetail.getSn(), null, 1).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    getView().toastShort(errorMsg);
+                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                    getView().toastShort(errorMsg);
+                } else {
+                    getView().toastShort(errorMsg);
+                }
+            }
+
+            @Override
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                getView().dismissProgressDialog();
+                try {
+                    if (deviceInfoListRsp.getData().size() > 0) {
+                        DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(0);
+                        if (deviceInfo != null) {
+                            mDeviceInfo = deviceInfo;
+                        }
+                        freshDevice();
+                    } else {
+                        getView().toastShort("未查找到旧设备信息");
+                        freshDevice();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void init() {
-        if (deviceInfo == null) {
+        if (mDeviceInfo == null) {
             Intent intent = new Intent();
             intent.setClass(mContext, DeployResultActivity.class);
-            intent.putExtra(EXTRA_IS_STATION_DEPLOY, deployMapModel.hasStation);
+            intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, deployMapModel.deployType);
             intent.putExtra(EXTRA_SENSOR_RESULT, -1);
             getView().startAC(intent);
         } else {
-            deployMapModel.sn = deviceInfo.getSn();
-            getView().setDeviceTitleName(deployMapModel.sn);
-            mNameAndAddress = deviceInfo.getName();
-            if (!TextUtils.isEmpty(mNameAndAddress)) {
-//                不为空设置地址
-                getView().setNameAddressText(mNameAndAddress);
-//                name = mContext.getResources().getString(R.string.tips_hint_name_address_set);
-            }
-            if (!deployMapModel.hasStation) {
-                if (deviceInfo.getAlarms() != null) {
-                    AlarmInfo alarmInfo = deviceInfo.getAlarms();
-                    AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
-                    if (notification != null) {
-                        //TODO 设置多个联系人
-                        String contact = notification.getContact();
-                        String content = notification.getContent();
-                        if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
-//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                        } else {
-                            deployContactModelList.clear();
-                            DeployContactModel deployContactModel = new DeployContactModel();
-                            deployContactModel.name = contact;
-                            deployContactModel.phone = content;
-                            deployContactModelList.add(deployContactModel);
-                            getView().updateContactData(deployContactModelList);
-                        }
-
+            switch (deployMapModel.deployType) {
+                case TYPE_SCAN_DEPLOY_STATION:
+                    //基站部署
+                    getView().setDeployContactRelativeLayoutVisible(false);
+                    getView().setDeployDeviceRlSignalVisible(false);
+                    getView().setDeployPhotoVisible(false);
+                    break;
+                case TYPE_SCAN_DEPLOY_DEVICE:
+                    //设备部署
+                    getView().setDeployContactRelativeLayoutVisible(true);
+                    getView().setDeployDeviceRlSignalVisible(true);
+                    getView().setDeployPhotoVisible(true);
+                    deployMapModel.sn = mDeviceInfo.getSn();
+                    freshDevice();
+                    break;
+                case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                    //巡检设备更换
+                    getView().setDeployContactRelativeLayoutVisible(true);
+                    getView().setDeployDeviceRlSignalVisible(true);
+                    getView().setDeployPhotoVisible(true);
+                    deployMapModel.sn = mDeviceInfo.getSn();
+                    getView().updateUploadTvText("更换设备");
+                    if (mDeviceDetail == null) {
+                        freshDevice();
+                    } else {
+                        getOldDeviceInfo();
                     }
-                }
-                freshSignalInfo();
-                deployMapModel.signal = deviceInfo.getSignal();
-                deployMapModel.updatedTime = deviceInfo.getUpdatedTime();
-                mHandler.post(this);
+                    break;
+                case TYPE_SCAN_INSPECTION:
+                    //扫描巡检设备
+                    break;
+                default:
+                    break;
             }
-            String tags[] = deviceInfo.getTags();
+            String tags[] = mDeviceInfo.getTags();
             if (tags != null) {
                 for (String tag : tags) {
                     if (!TextUtils.isEmpty(tag)) {
@@ -131,88 +168,170 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
     }
 
+    private void freshDevice() {
+        getView().setDeviceTitleName(deployMapModel.sn);
+        mNameAndAddress = mDeviceInfo.getName();
+        if (!TextUtils.isEmpty(mNameAndAddress)) {
+//                不为空设置地址
+            getView().setNameAddressText(mNameAndAddress);
+//                name = mContext.getResources().getString(R.string.tips_hint_name_address_set);
+        }
+        if (mDeviceInfo.getAlarms() != null) {
+            AlarmInfo alarmInfo = mDeviceInfo.getAlarms();
+            AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+            if (notification != null) {
+                //TODO 设置多个联系人
+                String contact = notification.getContact();
+                String content = notification.getContent();
+                if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
+//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
+                } else {
+                    deployContactModelList.clear();
+                    DeployContactModel deployContactModel = new DeployContactModel();
+                    deployContactModel.name = contact;
+                    deployContactModel.phone = content;
+                    deployContactModelList.add(deployContactModel);
+                    getView().updateContactData(deployContactModelList);
+                }
+
+            }
+        }
+        freshSignalInfo();
+        deployMapModel.signal = mDeviceInfo.getSignal();
+        deployMapModel.updatedTime = mDeviceInfo.getUpdatedTime();
+        mHandler.post(this);
+    }
+
     //
     public void requestUpload() {
         final double lon = deployMapModel.latLng.longitude;
         final double lan = deployMapModel.latLng.latitude;
-        if (deployMapModel.hasStation) {
-            getView().showProgressDialog();
-            RetrofitServiceHelper.INSTANCE.doStationDeploy(deployMapModel.sn, lon, lan, tagList, mNameAndAddress).subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(new CityObserver<StationInfoRsp>(this) {
+        switch (deployMapModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                //基站部署
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doStationDeploy(deployMapModel.sn, lon, lan, tagList, mNameAndAddress).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CityObserver<StationInfoRsp>(this) {
 
-                        @Override
-                        public void onErrorMsg(int errorCode, String errorMsg) {
-                            getView().dismissProgressDialog();
-                            getView().updateUploadState(true);
-                            if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                                getView().toastShort(errorMsg);
-                            } else if (errorCode == 4013101 || errorCode == 4000013) {
-                                freshError(deployMapModel.sn, null);
-                            } else {
-                                freshError(deployMapModel.sn, errorMsg);
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().dismissProgressDialog();
+                                getView().updateUploadState(true);
+                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    getView().toastShort(errorMsg);
+                                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                                    freshError(deployMapModel.sn, null);
+                                } else {
+                                    freshError(deployMapModel.sn, errorMsg);
+                                }
                             }
+
+                            @Override
+                            public void onCompleted(StationInfoRsp stationInfoRsp) {
+                                freshStation(stationInfoRsp);
+                                getView().dismissProgressDialog();
+                                getView().finishAc();
+                            }
+                        });
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE:
+                //设备部署
+            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                //巡检设备更换
+                if (images.size() > 0) {
+                    //TODO 图片提交
+                    final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
+                            .UpLoadPhotoListener() {
+
+                        @Override
+                        public void onStart() {
+                            getView().showStartUploadProgressDialog();
                         }
 
                         @Override
-                        public void onCompleted(StationInfoRsp stationInfoRsp) {
-                            freshStation(stationInfoRsp);
-                            getView().dismissProgressDialog();
-                            getView().finishAc();
+                        public void onComplete(List<ScenesData> scenesDataList) {
+                            ArrayList<String> strings = new ArrayList<>();
+                            for (ScenesData scenesData : scenesDataList) {
+                                scenesData.type = "image";
+                                strings.add(scenesData.url);
+                            }
+                            getView().dismissUploadProgressDialog();
+                            LogUtils.loge(this, "上传成功--- size = " + strings.size());
+                            //TODO 上传结果
+                            doDeployResult(lon, lan, strings);
                         }
-                    });
-        } else {
-            if (images.size() > 0) {
-                //TODO 图片提交
-                final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
-                        .UpLoadPhotoListener() {
 
-                    @Override
-                    public void onStart() {
-                        getView().showStartUploadProgressDialog();
-                    }
-
-                    @Override
-                    public void onComplete(List<ScenesData> scenesDataList) {
-                        ArrayList<String> strings = new ArrayList<>();
-                        for (ScenesData scenesData : scenesDataList) {
-                            scenesData.type = "image";
-                            strings.add(scenesData.url);
+                        @Override
+                        public void onError(String errMsg) {
+                            getView().updateUploadState(true);
+                            getView().dismissUploadProgressDialog();
+                            getView().toastShort(errMsg);
                         }
-                        getView().dismissUploadProgressDialog();
-                        LogUtils.loge(this, "上传成功--- size = " + strings.size());
-                        //TODO 上传结果
-                        doDeployResult(lon, lan, strings);
-                    }
 
-                    @Override
-                    public void onError(String errMsg) {
-                        getView().updateUploadState(true);
-                        getView().dismissUploadProgressDialog();
-                        getView().toastShort(errMsg);
-                    }
-
-                    @Override
-                    public void onProgress(String content, double percent) {
-                        getView().showUploadProgressDialog(content, percent);
-                    }
-                };
-                upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
-                upLoadPhotosUtils.doUploadPhoto(images);
-            } else {
-                doDeployResult(lon, lan, null);
-            }
+                        @Override
+                        public void onProgress(String content, double percent) {
+                            getView().showUploadProgressDialog(content, percent);
+                        }
+                    };
+                    UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
+                    upLoadPhotosUtils.doUploadPhoto(images);
+                } else {
+                    doDeployResult(lon, lan, null);
+                }
+                break;
+            case TYPE_SCAN_INSPECTION:
+                //扫描巡检设备
+                break;
+            default:
+                break;
         }
-
     }
 
     private void doDeployResult(double lon, double lan, List<String> imgUrls) {
         DeployContactModel deployContactModel = deployContactModelList.get(0);
-        getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployMapModel.sn, lon, lan, tagList, mNameAndAddress,
-                deployContactModel.name, deployContactModel.phone, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<DeviceDeployRsp>(this) {
+        switch (deployMapModel.deployType) {
+            case TYPE_SCAN_DEPLOY_DEVICE:
+                //设备部署
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployMapModel.sn, lon, lan, tagList, mNameAndAddress,
+                        deployContactModel.name, deployContactModel.phone, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(new CityObserver<DeviceDeployRsp>(this) {
 
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().dismissProgressDialog();
+                                getView().updateUploadState(true);
+                                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                                    getView().toastShort(errorMsg);
+                                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                                    freshError(deployMapModel.sn, null);
+                                } else {
+                                    freshError(deployMapModel.sn, errorMsg);
+                                }
+                            }
+
+                            @Override
+                            public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                                freshPoint(deviceDeployRsp);
+                                getView().dismissProgressDialog();
+                                getView().finishAc();
+                            }
+                        });
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                //TODO 巡检设备更换
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(mDeviceDetail.getSn(), deployMapModel.sn,
+                        mDeviceDetail.getTaskId(), 1, lon, lan, tagList, mNameAndAddress, deployContactModel.name, deployContactModel.phone, imgUrls).
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                    @Override
+                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                        freshPoint(deviceDeployRsp);
+                        getView().dismissProgressDialog();
+                        getView().finishAc();
+                    }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
@@ -226,14 +345,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             freshError(deployMapModel.sn, errorMsg);
                         }
                     }
-
-                    @Override
-                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
-                        freshPoint(deviceDeployRsp);
-                        getView().dismissProgressDialog();
-                        getView().finishAc();
-                    }
                 });
+                break;
+            case TYPE_SCAN_INSPECTION:
+                //扫描巡检设备
+                break;
+            default:
+                break;
+        }
+
     }
 
     private void freshError(String scanSN, String errorInfo) {
@@ -242,7 +362,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         intent.setClass(mContext, DeployResultActivity.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, -1);
         intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, deployMapModel.hasStation);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, deployMapModel.deployType);
         if (!TextUtils.isEmpty(errorInfo)) {
             intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
         }
@@ -268,7 +388,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             intent.putExtra(EXTRA_SETTING_CONTACT, deployContactModel.name);
             intent.putExtra(EXTRA_SETTING_CONTENT, deployContactModel.phone);
         }
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, deployMapModel.deployType);
         getView().startAC(intent);
     }
 
@@ -301,7 +421,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         Intent intent = new Intent(mContext, DeployResultActivity.class);
         intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
         intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, deployMapModel.deployType);
         intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
         getView().startAC(intent);
     }
@@ -322,8 +442,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (!TextUtils.isEmpty(mNameAndAddress)) {
             intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, mNameAndAddress);
         }
-        if (deviceInfo != null) {
-            intent.putExtra(EXTRA_DEPLOY_TO_SN, deviceInfo.getSn());
+        if (mDeviceInfo != null) {
+            intent.putExtra(EXTRA_DEPLOY_TO_SN, mDeviceInfo.getSn());
         }
         getView().startAC(intent);
     }
@@ -459,35 +579,43 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             getView().updateUploadState(true);
         } else {
             //TODO 背景选择器
-            if (deployMapModel.hasStation) {
-                requestUpload();
-            } else {
-                //TODO 联系人上传
-                //联系人校验
-                if (deployContactModelList.size() > 0) {
-                    DeployContactModel deployContactModel = deployContactModelList.get(0);
-                    if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
+            switch (deployMapModel.deployType) {
+                case TYPE_SCAN_DEPLOY_STATION:
+                    requestUpload();
+                    break;
+                case TYPE_SCAN_DEPLOY_DEVICE:
+                case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                    //TODO 联系人上传
+                    //联系人校验
+                    if (deployContactModelList.size() > 0) {
+                        DeployContactModel deployContactModel = deployContactModelList.get(0);
+                        if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
+                            getView().toastShort("请输入联系人名称和电话号码");
+                            getView().updateUploadState(true);
+                            return;
+                        }
+                        if (!RegexUtils.checkPhone(deployContactModel.phone)) {
+                            getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                            getView().updateUploadState(true);
+                            return;
+                        }
+                    } else {
                         getView().toastShort("请输入联系人名称和电话号码");
                         getView().updateUploadState(true);
                         return;
                     }
-                    if (!RegexUtils.checkPhone(deployContactModel.phone)) {
-                        getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
-                        getView().updateUploadState(true);
-                        return;
+                    if (needRefreshSignal()) {
+                        getView().showWarnDialog();
+                    } else {
+                        requestUpload();
                     }
-                } else {
-                    getView().toastShort("请输入联系人名称和电话号码");
-                    getView().updateUploadState(true);
-                    return;
-                }
-                if (needRefreshSignal()) {
-                    getView().showWarnDialog();
-                } else {
-                    requestUpload();
-                }
+                    break;
+                case TYPE_SCAN_INSPECTION:
+                    //扫描巡检设备
+                    break;
+                default:
+                    break;
             }
-
         }
 
     }
@@ -515,11 +643,29 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             signal_text = "无信号";
             resId = R.drawable.shape_signal_none;
         }
-        if (deployMapModel.latLng == null) {
-            getView().refreshSignal(deployMapModel.hasStation, signal_text, resId, "未定位");
-        } else {
-            getView().refreshSignal(deployMapModel.hasStation, signal_text, resId, "已定位");
+        switch (deployMapModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                if (deployMapModel.latLng == null) {
+                    getView().refreshSignal(true, signal_text, resId, "未定位");
+                } else {
+                    getView().refreshSignal(true, signal_text, resId, "已定位");
+                }
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE:
+            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                if (deployMapModel.latLng == null) {
+                    getView().refreshSignal(false, signal_text, resId, "未定位");
+                } else {
+                    getView().refreshSignal(false, signal_text, resId, "已定位");
+                }
+                break;
+            case TYPE_SCAN_INSPECTION:
+                //扫描巡检设备
+                break;
+            default:
+                break;
         }
+
 
     }
 

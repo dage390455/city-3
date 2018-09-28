@@ -674,7 +674,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasScanLogin) {
                 Intent intent = new Intent(mContext, ScanActivity.class);
-                intent.putExtra("type", Constants.TYPE_SCAN_LOGIN);
+                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
                 getView().startAC(intent);
                 return;
             }
@@ -723,7 +723,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void doScanDeploy() {
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra("type", Constants.TYPE_SCAN_DEPLOY_DEVICE);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
         getView().startAC(intent);
     }
 

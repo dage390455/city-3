@@ -129,6 +129,18 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         super.onDestroy();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
+    }
+
     private void initSelectDeviceTypePop() {
         mSelectDeviceTypePop = new SelectDeviceTypePopUtils(mActivity);
         mSelectDeviceTypePop.setTitleVisible(false);
@@ -171,7 +183,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         mContentAdapter.setOnRecycleViewItemClickListener(new InspectionTaskRcContentAdapter.InspectionTaskRcItemClickListener() {
             @Override
             public void onInspectionTaskInspectionClick(int position, int status) {
-                mPresenter.doItemClick(position,status);
+                mPresenter.doItemClick(position, status);
             }
 
             @Override
@@ -311,7 +323,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 mPresenter.doInspectionType();
                 break;
             case R.id.ac_inspection_task_imv_scan:
-                toastShort("扫描");
+                mPresenter.doInspectionScan();
                 break;
             case R.id.tv_inspection_task_search_cancel:
                 doCancelSearch();

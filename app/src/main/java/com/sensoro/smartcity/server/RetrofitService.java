@@ -46,6 +46,7 @@ public interface RetrofitService {
     String SCOPE_TEST = "https://city-test-api.sensoro.com/";
     //摩卡环境
     String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
+//    String SCOPE_MOCHA = "http://xiaolai.ngrok.gkzyk.com/";
     //正式环境
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
 
@@ -224,6 +225,7 @@ public interface RetrofitService {
 
     @GET(INSPECTION_TASK_GET_TEMPLATE)
     Observable<InspectionTaskInstructionRsp> getInspectionTemplate(@Query("deviceType")String deviceType);
-
+    @POST("devices/change/{sn}")
+    Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 }
 

@@ -25,9 +25,8 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.smartcity.server.bean.InspectionTaskModel;
 import com.sensoro.smartcity.presenter.InspectionTaskListActivityPresenter;
+import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -82,6 +81,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
         initView();
         mPresenter.initData(mActivity);
     }
+
 
     private void initView() {
         includeTextTitleTvTitle.setText("巡检任务");
