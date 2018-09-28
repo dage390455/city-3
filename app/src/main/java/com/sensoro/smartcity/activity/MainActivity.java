@@ -57,6 +57,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         return mPresenter.onKeyDown(keyCode, event);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
     private void initView() {
         initViewPager();
         acMainRlGuide.setOnCheckedChangeListener(this);

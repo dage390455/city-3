@@ -6,4 +6,6 @@ import com.sensoro.smartcity.iwidget.IToast;
 
 public interface IManagerFragmentView extends IToast, IActivityIntent, IProgressDialog {
     void setMerchantName(String name);
+
+    void setAppUpdateVisible(boolean isVisible);
 }

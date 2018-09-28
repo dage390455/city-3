@@ -185,7 +185,7 @@ dependencies {
     compile 'com.qiniu:qiniu-android-sdk:7.3.+'
     compile files('libs/ocr-sdk.jar')
     compile project(':ocr_ui')
-    compile project(':pulltorefresh')
+//    compile project(':pulltorefresh')
     compile 'me.jessyan:autosize:0.7.0'
     compile 'com.tencent.bugly:nativecrashreport:latest.release'
     compile 'com.tencent.bugly:crashreport_upgrade:latest.release'

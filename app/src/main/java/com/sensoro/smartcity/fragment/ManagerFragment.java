@@ -173,4 +173,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void setMerchantName(String name) {
         fgMainManageTvMerchantName.setText(name);
     }
+
+    @Override
+    public void setAppUpdateVisible(boolean isVisible) {
+        fgMainManageTvIsUpgrade.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
 }

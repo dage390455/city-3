@@ -46,13 +46,11 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.sensoro.libbleserver.ble.scanner.BLEDeviceManager.BLUETOOTH_IS_NOT_ENABLED;
-
 public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTaskActivityView> implements
         BLEDeviceListener<BLEDevice>, IOnCreate, IOnStart, Constants, Runnable {
     private Activity mContext;
-    private DeviceTypeModel typeModel;
     private String tempSearch;
+    private String tempDeviceType = null;
     private int cur_page = 0;
     private int finish = 2;
     private final List<InspectionTaskDeviceDetail> mDevices = new ArrayList<>();
@@ -70,7 +68,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
         if (mTaskInfo != null) {
             requestSearchData(DIRECTION_DOWN, null);
-            doInspectionType(false);
             mHandler.post(this);
         }
 
@@ -83,21 +80,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         stopScan();
         mDevices.clear();
         BLE_DEVICE_SET.clear();
-
-    }
-
-    private void startScan() {
-        try {
-            boolean isEnable = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-            if (!isEnable) {
-                getView().toastShort("未开启蓝牙");
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-            if (BLUETOOTH_IS_NOT_ENABLED.equals(e.getMessage())) {
-                getView().toastShort("未开启蓝牙");
-            }
-        }
 
     }
 
@@ -161,8 +143,15 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         //上报异常结果成功
         if (code == EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE) {
             //TODO 刷新上报异常结果
+            requestSearchData(DIRECTION_DOWN, tempSearch);
         } else if (code == EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE) {
             //TODO 正常上报结果
+            requestSearchData(DIRECTION_DOWN, tempSearch);
+        } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
+            getView().finishAc();
+        } else if (code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
+            //TODO 设备更换结果
+            requestSearchData(DIRECTION_DOWN, tempSearch);
         }
     }
 
@@ -173,7 +162,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     public void doInspectionStatus(final boolean needPop) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>() {
+        RetrofitServiceHelper.INSTANCE.getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>(this) {
             @Override
             public void onCompleted(InspectionTaskExecutionRsp inspectionTaskExecutionRsp) {
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
@@ -241,7 +230,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         if (needPop) {
             getView().showProgressDialog();
         }
-        RetrofitServiceHelper.INSTANCE.getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>() {
+        RetrofitServiceHelper.INSTANCE.getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>(this) {
             @Override
             public void onCompleted(InspectionTaskExecutionRsp inspectionTaskExecutionRsp) {
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
@@ -254,6 +243,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
                             if (mergeTypeInfo.getDeviceTypes().contains(deviceType)) {
                                 DeviceTypeModel deviceTypeModel = SensoroCityApplication.getInstance().getDeviceTypeName(mergeTypeInfo.getMergeType());
+                                deviceTypeModel.deviceTypes = mergeTypeInfo.getDeviceTypes();
                                 if (deviceTypeModel != null) {
                                     types.add(deviceTypeModel);
                                 }
@@ -262,7 +252,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         }
                         LogUtils.loge("doInspectionType --->>> " + deviceType);
                     }
-                    types.add(0,SensoroCityApplication.getInstance().mDeviceTypeList.get(0));
+                    types.add(0, SensoroCityApplication.getInstance().mDeviceTypeList.get(0));
                     getView().updateSelectDeviceTypeList(types);
                     if (needPop) {
                         getView().showSelectDeviceTypePop();
@@ -300,8 +290,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             case DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, null, cur_page * 15, 15).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>() {
+                RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * 15, 15).
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
                     @Override
                     public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
                         freshUI(direction, inspectionTaskDeviceDetailRsp);
@@ -321,8 +311,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             case DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, null, cur_page * 15, 15).
-                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>() {
+                RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * 15, 15).
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
                     @Override
                     public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
                         if (inspectionTaskDeviceDetailRsp.getData().getDevices().size() == 0) {
@@ -428,5 +418,25 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
         intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
         getView().startAC(intent);
+    }
+
+    public void doSelectTypeDevice(DeviceTypeModel deviceTypeModel) {
+        StringBuilder stringBuilder = new StringBuilder();
+        List<String> deviceTypes = deviceTypeModel.deviceTypes;
+        if (deviceTypes != null && deviceTypes.size() > 0) {
+            for (int i = 0; i < deviceTypes.size(); i++) {
+                if (i + 1 == deviceTypes.size()) {
+                    stringBuilder.append(deviceTypes.get(i));
+                } else {
+                    stringBuilder.append(deviceTypes.get(i)).append(",");
+                }
+            }
+        }
+        if (TextUtils.isEmpty(stringBuilder)) {
+            tempDeviceType = null;
+        } else {
+            tempDeviceType = stringBuilder.toString();
+        }
+        requestSearchData(DIRECTION_DOWN, tempSearch);
     }
 }

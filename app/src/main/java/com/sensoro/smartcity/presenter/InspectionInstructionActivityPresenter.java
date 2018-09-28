@@ -3,8 +3,6 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.text.TextUtils;
-import android.util.Log;
 
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -13,10 +11,8 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
-import com.sensoro.smartcity.server.bean.UnionSummaryBean;
 import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 
 import java.util.ArrayList;
@@ -45,7 +41,7 @@ implements Constants{
     private void requestContentData(String type) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getInspectionTemplate(type).subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskInstructionRsp>() {
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskInstructionRsp>(this) {
             @Override
             public void onCompleted(InspectionTaskInstructionRsp instructionRsp) {
                 List<InspectionTaskInstructionModel.DataBean> data = instructionRsp.getData().getData();

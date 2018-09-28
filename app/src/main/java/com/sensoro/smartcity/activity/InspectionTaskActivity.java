@@ -151,9 +151,11 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel deviceTypeModel) {
                 //选择类型的pop点击事件
+                mPresenter.doSelectTypeDevice(deviceTypeModel);
                 acInspectionTaskTvType.setText(mSelectDeviceTypePop.getItem(position).name);
                 mSelectDeviceTypePop.dismiss();
 //                mPresenter.requestDataByDirection(DIRECTION_DOWN);
+
             }
         });
     }

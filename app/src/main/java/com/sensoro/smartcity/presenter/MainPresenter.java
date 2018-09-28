@@ -329,6 +329,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         } else {
             getView().setSuperAccount(false);
             getView().setRbChecked(R.id.ac_main_rb_main);
+            freshAlarmCount();
         }
 //            merchantSwitchFragment.refreshData(mEventLoginData.userName, mEventLoginData.phone, mEventLoginData.phoneId);
         //
@@ -428,9 +429,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     }
 
     private void freshAlarmCount() {
-        //TODO 半年累计报警次数
+        if (isSupperAccount()) {
+            return;
+        }
         String[] str = {"0"};
-        RetrofitServiceHelper.INSTANCE.getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>() {
+        RetrofitServiceHelper.INSTANCE.getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();

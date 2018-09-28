@@ -265,6 +265,10 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
                 }
             }
+        } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
+            getView().finishAc();
+        } else if (code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
+            getView().finishAc();
         }
     }
 

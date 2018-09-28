@@ -29,6 +29,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         scanType = mContext.getIntent().getIntExtra(EXTRA_SCAN_ORIGIN_TYPE, -1);
         errorInfo = mContext.getIntent().getStringExtra(EXTRA_SENSOR_RESULT_ERROR);
         sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN_RESULT);
+        if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType) {
+            getView().setDeployResultContinueText("返回巡检");
+        }
         init();
     }
 
@@ -79,6 +82,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                         break;
                     case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
                         //TODO 巡检设备更换
+                        deployDevice(sn, name, address, updatedTime);
                         break;
                     case TYPE_SCAN_INSPECTION:
                         //TODO 扫描巡检设备

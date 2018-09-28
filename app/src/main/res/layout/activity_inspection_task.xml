@@ -49,6 +49,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:gravity="center_vertical"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -68,8 +69,9 @@
                     android:layout_marginBottom="8dp"
                     android:layout_marginEnd="12dp"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="8dp"
                     android:layout_weight="1"
+                    android:layout_gravity="center_vertical"
                     android:background="@drawable/shape_bg_solid_f7_full_corner"
                     android:orientation="horizontal">
 

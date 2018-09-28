@@ -981,7 +981,6 @@ public enum RetrofitServiceHelper {
     }
 
     public Observable<InspectionTaskDeviceDetailRsp> getInspectionDeviceList(String taskId, String search, String sn, Integer finish, String deviceTypes, Integer offset, Integer limit) {
-//        String deviceTypeStr =null;
 //        StringBuilder stringBuilder = new StringBuilder();
 //        if (deviceTypes!=null&&deviceTypes.size()>0){
 //            for (String deviceType:deviceTypes){

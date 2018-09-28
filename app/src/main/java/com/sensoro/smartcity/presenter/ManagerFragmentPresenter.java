@@ -17,6 +17,8 @@ import com.sensoro.smartcity.iwidget.IOnFragmentStart;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
@@ -85,7 +87,14 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 //                getView().setMenuSelected(0);
             //TODO 版本信息
             UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
-//        upgradeInfo.
+            int versionCode = upgradeInfo.versionCode;
+            int currentVersionCode = AppUtils.getVersionCode(mContext);
+            LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
+            if (currentVersionCode != 0) {
+                if (versionCode > currentVersionCode) {
+                    getView().setAppUpdateVisible(true);
+                }
+            }
         }
 
     }

@@ -99,6 +99,12 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 //        Object data = eventData.data;
         if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
             getView().finishAc();
+        } else if (code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
+            if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType) {
+                getView().finishAc();
+            }
+        } else if (code == EVENT_DATA_SCAN_LOGIN_SUCCESS) {
+            getView().finishAc();
         }
 //        LogUtils.loge(this, eventData.toString());
     }
@@ -114,6 +120,8 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     public void openSNTextAc() {
         Intent intent = new Intent(mContext, DeployManualActivity.class);
+        intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+        intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
         intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, scanType);
         getView().startAC(intent);
     }
@@ -202,7 +210,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
         getView().showProgressDialog();
         //TODO 暂时处理
         RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), null, scanInspectionDevice, null, null, null, null).
-                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>() {
+                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
             @Override
             public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
                 getView().dismissProgressDialog();

@@ -12,14 +12,18 @@ import com.sensoro.smartcity.activity.InspectionTaskActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
-import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeviceTypeMutualModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.smartcity.server.bean.UnionSummaryBean;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,16 +32,17 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspectionTaskDetailActivityView>
-implements Constants{
+        implements Constants, IOnCreate {
     private Activity mContext;
     private InspectionIndexTaskInfo mTaskInfo;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
         getView().setTvTaskNumber(mTaskInfo.getIdentifier());
-        getView().setTvTaskTime(DateUtil.getDateByOtherFormat(mTaskInfo.getBeginTime())+" - "+DateUtil.getDateByOtherFormat(mTaskInfo.getEndTime()));
+        getView().setTvTaskTime(DateUtil.getDateByOtherFormat(mTaskInfo.getBeginTime()) + " - " + DateUtil.getDateByOtherFormat(mTaskInfo.getEndTime()));
 
         initTvState();
 
@@ -49,12 +54,12 @@ implements Constants{
 
         List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary = mTaskInfo.getDeviceSummary();
         for (InspectionIndexTaskInfo.DeviceSummaryBean deviceSummaryBean : deviceSummary) {
-            Log.e("hcs",":devs::"+deviceSummaryBean.getDeviceType());
+            Log.e("hcs", ":devs::" + deviceSummaryBean.getDeviceType());
             List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
             for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
                 List<String> deviceTypes = mergeTypeInfo.getDeviceTypes();
                 if (deviceTypes.contains(deviceSummaryBean.getDeviceType())) {
-                    tags.add(mergeTypeInfo.getName()+"("+deviceSummaryBean.getNum()+")");
+                    tags.add(mergeTypeInfo.getName() + " （" + deviceSummaryBean.getNum() + "） ");
                     break;
                 }
             }
@@ -64,21 +69,21 @@ implements Constants{
     }
 
     private void initTvState() {
-        switch (mTaskInfo.getStatus()){
+        switch (mTaskInfo.getStatus()) {
             case 0:
-                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow,R.color.white,"开始巡检");
+                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow, R.color.white, "开始巡检");
                 break;
             case 1:
-                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow,R.color.white,"继续巡检");
+                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow, R.color.white, "继续巡检");
                 break;
             case 2:
-                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow,R.color.white,"继续巡检");
+                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow, R.color.white, "继续巡检");
                 break;
             case 3:
-                getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner,R.color.c_252525,"详情");
+                getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner, R.color.c_252525, "详情");
                 break;
             case 4:
-                getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner,R.color.c_252525,"详情");
+                getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner, R.color.c_252525, "详情");
                 break;
         }
         getView().setTvState(INSPECTION_STATUS_COLORS[mTaskInfo.getStatus()], INSPECTION_STATUS_TEXTS[mTaskInfo.getStatus()]);
@@ -86,7 +91,18 @@ implements Constants{
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+    }
 
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        Object data = eventData.data;
+        //上报异常结果成功
+        if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
+            getView().finishAc();
+        }
     }
 
     public void doRlContent() {
@@ -96,30 +112,30 @@ implements Constants{
         for (InspectionIndexTaskInfo.DeviceSummaryBean deviceSummaryBean : deviceSummary) {
             deviceTypes.add(deviceSummaryBean.getDeviceType());
         }
-        intent.putExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE,deviceTypes);
+        intent.putExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE, deviceTypes);
         getView().startAC(intent);
     }
 
     public void doBtnStart() {
         //TODO 检查巡检
-        if(mTaskInfo.getStatus() == 0){
+        if (mTaskInfo.getStatus() == 0) {
             changeTaskState();
-        }else{
+        } else {
             Intent intent = new Intent(mContext, InspectionTaskActivity.class);
-            intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO,mTaskInfo);
+            intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
             getView().startAC(intent);
         }
     }
 
     private void changeTaskState() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doChangeInspectionTaskState(mTaskInfo.getId(),null,1).
-                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>() {
+        RetrofitServiceHelper.INSTANCE.doChangeInspectionTaskState(mTaskInfo.getId(), null, 1).
+                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
             @Override
             public void onCompleted(ResponseBase responseBase) {
                 getView().dismissProgressDialog();
                 Intent intent = new Intent(mContext, InspectionTaskActivity.class);
-                intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO,mTaskInfo);
+                intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
                 getView().startAC(intent);
             }
 
@@ -130,5 +146,10 @@ implements Constants{
 
             }
         });
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

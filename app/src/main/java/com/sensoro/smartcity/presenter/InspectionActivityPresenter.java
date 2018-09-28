@@ -158,6 +158,10 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         //上报异常结果成功
         if (code == EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE) {
             getView().finishAc();
+        } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
+            getView().finishAc();
+        } else if (code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
+            getView().finishAc();
         }
     }
 

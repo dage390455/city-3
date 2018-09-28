@@ -29,4 +29,6 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void setContactAndSignalVisible(boolean isVisible);
 
     void setStateTextView(String msg);
+
+    void setDeployResultContinueText(String text);
 }

@@ -790,6 +790,106 @@ public class WidgetUtil {
         } else if (sensorType.equalsIgnoreCase("connection")) {
             value = "通断检测";
         }
+        //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
+
+        return value;
+    }
+
+    public static String getSensorTypeSingleChinese(String sensorType) {
+        String value;
+        if (sensorType.equalsIgnoreCase("temperature")) {
+            value = "温度";
+        } else if (sensorType.equalsIgnoreCase("temp1")) {
+            value = "温度贴片";
+        } else if (sensorType.equalsIgnoreCase("humidity")) {
+            value = "湿度";
+        } else if (sensorType.equalsIgnoreCase("co")) {
+            value = "一氧化碳";
+        } else if (sensorType.equalsIgnoreCase("co2")) {
+            value = "二氧化碳";
+        } else if (sensorType.equalsIgnoreCase("pm10")) {
+            value = "PM10";
+        } else if (sensorType.equalsIgnoreCase("pm2_5")) {
+            value = "PM2.5";
+        } else if (sensorType.equalsIgnoreCase("ch4")) {
+            value = "甲烷";
+        } else if (sensorType.equalsIgnoreCase("so2")) {
+            value = "二氧化硫";
+        } else if (sensorType.equalsIgnoreCase("no2")) {
+            value = "二氧化氮";
+        } else if (sensorType.equalsIgnoreCase("yaw")) {
+            value = "偏航角";
+        } else if (sensorType.equalsIgnoreCase("roll")) {
+            value = "横滚角";
+        } else if (sensorType.equalsIgnoreCase("pitch")) {
+            value = "俯仰角";
+        } else if (sensorType.equalsIgnoreCase("collision")) {
+            value = "撞击";
+        } else if (sensorType.equalsIgnoreCase("distance")) {
+            value = "距离水位";
+        } else if (sensorType.equalsIgnoreCase("light")) {
+            value = "光线";
+        } else if (sensorType.equalsIgnoreCase("cover")) {
+            value = "井盖";
+        } else if (sensorType.equalsIgnoreCase("level")) {
+            value = "水位";
+        } else if (sensorType.equalsIgnoreCase("drop")) {
+            value = "滴漏";
+        } else if (sensorType.equalsIgnoreCase("smoke")) {
+            value = "烟感";
+        } else if (sensorType.equalsIgnoreCase("altitude")) {
+            value = "高度";
+        } else if (sensorType.equalsIgnoreCase("latitude")) {
+            value = "纬度";
+        } else if (sensorType.equalsIgnoreCase("longitude")) {
+            value = "经度";
+        } else if (sensorType.equalsIgnoreCase("alarm")) {
+            value = "紧急报警器";
+        } else if (sensorType.equalsIgnoreCase("lpg")) {
+            value = "液化石油气";
+        } else if (sensorType.equalsIgnoreCase("flame")) {
+            value = "火焰";
+        } else if (sensorType.equalsIgnoreCase("artificialGas")) {
+            value = "人工煤气";
+        } else if (sensorType.equalsIgnoreCase("waterPressure")) {
+            value = "消防液压";
+        } else if (sensorType.equalsIgnoreCase("magnetic")) {
+            value = "地磁";
+        } else if (sensorType.equalsIgnoreCase("door")) {
+            value = "门锁检测";
+        } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {
+            value = "电流A";
+        } else if (sensorType.equalsIgnoreCase("CURRENT_B")) {
+            value = "电流B";
+        } else if (sensorType.equalsIgnoreCase("CURRENT_C")) {
+            value = "电流C";
+        } else if (sensorType.equalsIgnoreCase("ID")) {
+            value = "电表ID";
+        } else if (sensorType.equalsIgnoreCase("TOTAL_POWER")) {
+            value = "总电量";
+        } else if (sensorType.equalsIgnoreCase("VOLTAGE_A")) {
+            value = "电压A";
+        } else if (sensorType.equalsIgnoreCase("VOLTAGE_B")) {
+            value = "电压B";
+        } else if (sensorType.equalsIgnoreCase("VOLTAGE_C")) {
+            value = "电压C";
+        } else if (sensorType.equalsIgnoreCase("installed")) {
+            value = "安装状态";
+        } else if (sensorType.equalsIgnoreCase("leakage_val")) {
+            value = "漏电流";
+        } else if (sensorType.equalsIgnoreCase("temp_val")) {
+            value = "电线温度";
+        } else if (sensorType.equalsIgnoreCase("infrared")) {
+            value = "红外线";
+        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+            value = "手动报警";
+        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+            value = "声光报警";
+        } else if (sensorType.equalsIgnoreCase("connection")) {
+            value = "通断检测";
+        } else {
+            value = "未知";
+        }
 
         //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
 
@@ -1369,6 +1469,7 @@ public class WidgetUtil {
 
     /**
      * 改变文字的颜色，及startDrawable的颜色，主要用于巡检任务，任务状态文本的改变
+     *
      * @param context
      * @param tv
      * @param colorId
@@ -1377,10 +1478,10 @@ public class WidgetUtil {
     public static void changeTvState(Context context, TextView tv, int colorId, String text) {
         Resources resources = context.getResources();
         GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_small_oval_29c);
-        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
+        gd.setBounds(0, 0, gd.getMinimumWidth(), gd.getMinimumHeight());
         int color = resources.getColor(colorId);
         gd.setColor(color);
-        tv.setCompoundDrawables(gd,null,null,null);
+        tv.setCompoundDrawables(gd, null, null, null);
         tv.setTextColor(color);
         tv.setText(text);
     }

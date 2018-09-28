@@ -89,11 +89,11 @@
             android:layout_marginBottom="20dp"
             android:layout_marginEnd="20dp"
             android:layout_marginStart="20dp"
-            android:layout_marginTop="10dp"
+            android:layout_marginTop="20dp"
             android:background="@drawable/shape_bg_corner_29c_shadow"
             android:gravity="center"
             android:paddingBottom="10dp"
-            android:paddingTop="20dp"
+            android:paddingTop="10dp"
             android:text="上报"
             android:textColor="@color/white"
             android:textSize="16sp" />

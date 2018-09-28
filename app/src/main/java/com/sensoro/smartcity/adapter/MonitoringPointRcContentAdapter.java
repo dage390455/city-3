@@ -49,7 +49,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
             if (sensoroDetails != null && sortSensorTypes.size() > 0) {
                 String type = sortSensorTypes.get(position);
                 if (!TextUtils.isEmpty(type)) {
-                    String sensorTypeChinese = WidgetUtil.getSensorTypeChinese(type);
+                    String sensorTypeChinese = WidgetUtil.getSensorTypeSingleChinese(type);
                     holder.itemMonitoringPointContentTvName.setText(sensorTypeChinese);
                     SensorStruct sensorStruct = sensoroDetails.get(type);
                     if (sensorStruct != null) {

@@ -186,6 +186,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         acDeployResultTvState.setText(msg);
     }
 
+    @Override
+    public void setDeployResultContinueText(String text) {
+        acDeployResultTvContinue.setText(text);
+    }
+
 
     @Override
     public void toastShort(String msg) {

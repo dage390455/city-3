@@ -1,1 +1,1 @@
-include ':app', ':cosmocalendar', ':ocr_ui', ':pulltorefresh', 'libbleserver',':imagepicker'
+include ':app', ':cosmocalendar', ':ocr_ui', 'libbleserver',':imagepicker'

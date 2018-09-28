@@ -185,7 +185,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     }
 
     public void clickItem(int position) {
-        position = position - 1;
         if (!mUserInfoList.get(position).isStop()) {
             getView().setAdapterSelectedIndex(position);
 //            mMerchantAdapter.setSelectedIndex(position);
