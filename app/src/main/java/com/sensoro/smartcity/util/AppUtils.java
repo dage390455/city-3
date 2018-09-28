@@ -8,6 +8,10 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.maps.model.LatLng;
+import com.sensoro.smartcity.SensoroCityApplication;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +47,60 @@ public class AppUtils {
         Intent intent = new Intent(Intent.ACTION_DIAL);
         Uri data = Uri.parse("tel:" + phoneNum);
         intent.setData(data);
+        activity.startActivity(intent);
+    }
+
+    public static boolean doNavigation(Activity activity, LatLng destPosition) {
+        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+        if (lastKnownLocation != null) {
+            double lat = lastKnownLocation.getLatitude();//获取纬度
+            double lon = lastKnownLocation.getLongitude();//获取经度
+            LatLng startPosition = new LatLng(lat, lon);
+            if (isAppInstalled(activity, "com.autonavi.minimap")) {
+                openGaoDeMap(activity, startPosition, destPosition);
+            } else if (isAppInstalled(activity, "com.baidu.BaiduMap")) {
+                openBaiDuMap(activity, startPosition, destPosition);
+            } else {
+                openOther(activity, startPosition, destPosition);
+            }
+            return true;
+        }
+        return false;
+
+    }
+
+    private static void openGaoDeMap(Activity activity, LatLng startPosition, LatLng destPosition) {
+
+        Intent intent = new Intent();
+        intent.setAction(Intent.ACTION_VIEW);
+        intent.addCategory(Intent.CATEGORY_DEFAULT);
+        Uri uri = Uri.parse("amapuri://route/plan/?sid=BGVIS1&slat=" + startPosition.latitude + "&slon=" +
+                startPosition.longitude + "&sname=当前位置" + "&did=BGVIS2&dlat=" + destPosition.latitude + "&dlon=" +
+                destPosition.longitude +
+                "&dname=设备部署位置" + "&dev=0&t=0");
+        intent.setData(uri);
+        //启动该页面即可
+        activity.startActivity(intent);
+    }
+
+    private static void openBaiDuMap(Activity activity, LatLng startPosition, LatLng destPosition) {
+        Intent intent = new Intent();
+        intent.setData(Uri.parse("baidumap://map/direction?origin=name:当前位置|latlng:" + startPosition.latitude + "," +
+                startPosition.longitude +
+                "&destination=name:设备部署位置|latlng:" + destPosition.latitude + "," + destPosition.longitude +
+                "&mode=driving&coord_type=gcj02"));
+        activity.startActivity(intent);
+    }
+
+    private static void openOther(Activity activity, LatLng startPosition, LatLng destPosition) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        String url = "http://uri.amap.com/navigation?from=" + startPosition.longitude + "," + startPosition.latitude
+                + ",当前位置" +
+                "&to=" + destPosition.longitude + "," + destPosition.latitude + "," +
+                "设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
+        Uri content_url = Uri.parse(url);
+        intent.setData(content_url);
         activity.startActivity(intent);
     }
 }

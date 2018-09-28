@@ -2,14 +2,11 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.SystemClock;
 import android.text.TextUtils;
 
-import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -44,7 +41,6 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.util.List;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
-import static com.sensoro.smartcity.util.AppUtils.isAppInstalled;
 
 public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements Constants, AMap.OnMapLoadedListener, IOnStart {
 
@@ -192,58 +188,11 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     public void doNavigation() {
-        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-        if (lastKnownLocation != null) {
-            double lat = lastKnownLocation.getLatitude();//获取纬度
-            double lon = lastKnownLocation.getLongitude();//获取经度
-            LatLng startPosition = new LatLng(lat, lon);
-            if (isAppInstalled(mContext, "com.autonavi.minimap")) {
-                openGaoDeMap(startPosition);
-            } else if (isAppInstalled(mContext, "com.baidu.BaiduMap")) {
-                openBaiDuMap(startPosition);
-            } else {
-                openOther(startPosition);
-            }
-            return;
+        if (!AppUtils.doNavigation(mContext, destPosition)) {
+            getView().toastShort("定位失败，请重试");
         }
-        getView().toastShort("定位失败，请重试");
-
     }
 
-    private void openGaoDeMap(LatLng startPosition) {
-
-        Intent intent = new Intent();
-        intent.setAction(Intent.ACTION_VIEW);
-        intent.addCategory(Intent.CATEGORY_DEFAULT);
-        Uri uri = Uri.parse("amapuri://route/plan/?sid=BGVIS1&slat=" + startPosition.latitude + "&slon=" +
-                startPosition.longitude + "&sname=当前位置" + "&did=BGVIS2&dlat=" + destPosition.latitude + "&dlon=" +
-                destPosition.longitude +
-                "&dname=设备部署位置" + "&dev=0&t=0");
-        intent.setData(uri);
-        //启动该页面即可
-        getView().startAC(intent);
-    }
-
-    private void openBaiDuMap(LatLng startPosition) {
-        Intent intent = new Intent();
-        intent.setData(Uri.parse("baidumap://map/direction?origin=name:当前位置|latlng:" + startPosition.latitude + "," +
-                startPosition.longitude +
-                "&destination=name:设备部署位置|latlng:" + destPosition.latitude + "," + destPosition.longitude +
-                "&mode=driving&coord_type=gcj02"));
-        getView().startAC(intent);
-    }
-
-    private void openOther(LatLng startPosition) {
-        Intent intent = new Intent();
-        intent.setAction("android.intent.action.VIEW");
-        String url = "http://uri.amap.com/navigation?from=" + startPosition.longitude + "," + startPosition.latitude
-                + ",当前位置" +
-                "&to=" + destPosition.longitude + "," + destPosition.latitude + "," +
-                "设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
-        Uri content_url = Uri.parse(url);
-        intent.setData(content_url);
-        getView().startAC(intent);
-    }
 
     public void doDetailShare() {
         boolean wxAppInstalled = SensoroCityApplication.getInstance().api.isWXAppInstalled();
@@ -329,5 +278,4 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     public void onStop() {
         EventBus.getDefault().unregister(this);
     }
-
 }

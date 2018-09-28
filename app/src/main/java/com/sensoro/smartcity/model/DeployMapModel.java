@@ -11,7 +11,7 @@ public class DeployMapModel implements Parcelable {
     public long updatedTime;
     public LatLng latLng;
     public String sn;
-    public boolean hasStation;
+    public int deployType;
 
     public DeployMapModel() {
 
@@ -23,7 +23,7 @@ public class DeployMapModel implements Parcelable {
         updatedTime = in.readLong();
         latLng = in.readParcelable(LatLng.class.getClassLoader());
         sn = in.readString();
-        hasStation = in.readInt() == 0;
+        deployType = in.readInt();
     }
 
     @Override
@@ -33,7 +33,7 @@ public class DeployMapModel implements Parcelable {
         dest.writeLong(updatedTime);
         dest.writeParcelable(latLng, flags);
         dest.writeString(sn);
-        dest.writeInt(hasStation ? 0 : 1);
+        dest.writeInt(deployType);
     }
 
     @Override

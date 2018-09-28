@@ -24,6 +24,8 @@ import com.tencent.bugly.beta.UpgradeInfo;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static com.sensoro.smartcity.constant.Constants.EXTRA_SCAN_ORIGIN_TYPE;
+
 public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnFragmentStart {
     private Activity mContext;
 
@@ -122,7 +124,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (!PreferencesHelper.getInstance().getUserData().isSupperAccount) {
                 Intent intent = new Intent(mContext, ScanActivity.class);
-                intent.putExtra("type", Constants.TYPE_SCAN_DEPLOY_DEVICE);
+                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
                 getView().startAC(intent);
                 return;
             }
@@ -135,7 +137,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasScanLogin) {
                 Intent intent = new Intent(mContext, ScanActivity.class);
-                intent.putExtra("type", Constants.TYPE_SCAN_LOGIN);
+                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_LOGIN);
                 getView().startAC(intent);
                 return;
             }

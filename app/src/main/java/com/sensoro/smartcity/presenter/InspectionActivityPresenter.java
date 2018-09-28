@@ -6,23 +6,25 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.widget.Toast;
+import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
-import com.sensoro.smartcity.activity.InspectionTaskDetailActivity;
 import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.server.CityObserver;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.util.BleObserver;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -32,8 +34,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
+import rx.android.schedulers.AndroidSchedulers;
+import rx.schedulers.Schedulers;
+
 public class InspectionActivityPresenter extends BasePresenter<IInspectionActivityView> implements
-        BLEDeviceListener<BLEDevice>, IOnCreate, Constants, Runnable {
+        BLEDeviceListener<BLEDevice>, IOnCreate, Constants, IOnStart, Runnable {
     private Activity mContext;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private long startTime;
@@ -46,7 +51,6 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         mContext = (Activity) context;
         onCreate();
         startTime = System.currentTimeMillis();
-        //临时数据
         mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
         if (mDeviceDetail != null) {
             List<String> tags = mDeviceDetail.getTags();
@@ -58,50 +62,21 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
                 getView().setMonitorTitle(name);
             }
             if (!TextUtils.isEmpty(sn)) {
-                if(model!=null){
+                if (model != null) {
                     getView().setMonitorSn(model.name + " " + sn);
-                }else{
+                } else {
                     getView().setMonitorSn("未知 " + sn);
                 }
 
             }
-            initBle();
-            startScan();
             mHandler.post(this);
         }
 
     }
 
-    private void initBle() {
-        SensoroCityApplication.getInstance().bleDeviceManager.setBLEDeviceListener(this);
-    }
-
-    public void startScan() {
-        try {
-            boolean isEnable = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-            if (!isEnable) {
-                SensoroToast.INSTANCE.makeText("未开启蓝牙", Toast.LENGTH_SHORT).show();
-            } else {
-                SensoroCityApplication.getInstance().bleDeviceManager.setBackgroundMode(false);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    public void stopScan() {
-        try {
-            SensoroCityApplication.getInstance().bleDeviceManager.stopService();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        stopScan();
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -109,55 +84,69 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         Intent intent = new Intent(mContext, InspectionInstructionActivity.class);
         ArrayList<String> deviceTypes = new ArrayList<>();
         deviceTypes.add(mDeviceDetail.getDeviceType());
-        intent.putExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE,deviceTypes);
+        intent.putExtra(Constants.EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE, deviceTypes);
         getView().startAC(intent);
     }
 
     public void doUploadException() {
         Intent intent = new Intent(mContext, InspectionUploadExceptionActivity.class);
-        intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL,mDeviceDetail);
+        intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, mDeviceDetail);
         intent.putExtra(EXTRA_INSPECTION_START_TIME, startTime);
         getView().startAC(intent);
     }
 
-    public void doNormal() {
-        getView().showNormalDialog();
+    public void doUploadNormal() {
+        getView().showProgressDialog();
+        long finishTime = System.currentTimeMillis();
+        RetrofitServiceHelper.INSTANCE.doUploadInspectionResult(mDeviceDetail.getId(), null, null, 1, null, startTime, finishTime, null,
+                null, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<ResponseBase>(this) {
+                    @Override
+                    public void onCompleted(ResponseBase responseBase) {
+                        if (responseBase.getErrcode() == 0) {
+                            getView().toastShort("上报成功");
+                            EventData eventData = new EventData();
+                            eventData.code = EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE;
+                            EventBus.getDefault().post(eventData);
+                            getView().finishAc();
+                        } else {
+                            getView().toastShort("上报失败");
+                        }
+                        getView().dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().toastShort(errorMsg);
+                        Log.e("hcs", ":错误了::" + errorMsg);
+                        getView().dismissProgressDialog();
+                    }
+                });
     }
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        if (bleDevice != null) {
-            LogUtils.loge("onNewDevice = " + bleDevice.getSn());
-            if (!tempBleDevice.contains(bleDevice.getSn())) {
-                tempBleDevice.add(bleDevice.getSn());
-            }
+        if (!tempBleDevice.contains(bleDevice.getSn())) {
+            tempBleDevice.add(bleDevice.getSn());
         }
     }
 
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
-        if (bleDevice != null) {
-            LogUtils.loge("onGoneDevice = " + bleDevice.getSn());
-            if (tempBleDevice.contains(bleDevice.getSn())) {
-                tempBleDevice.remove(bleDevice.getSn());
-            }
+        if (tempBleDevice.contains(bleDevice.getSn())) {
+            tempBleDevice.remove(bleDevice.getSn());
         }
     }
 
     @Override
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
-        String temp = "";
-        if (deviceList != null && deviceList.size() > 0) {
-            for (BLEDevice device : deviceList) {
-                if (device != null) {
-                    temp += device.getSn() + ",";
-                    if (!tempBleDevice.contains(device.getSn())) {
-                        tempBleDevice.add(device.getSn());
-                    }
+        for (BLEDevice device : deviceList) {
+            if (device != null) {
+                if (!tempBleDevice.contains(device.getSn())) {
+                    tempBleDevice.add(device.getSn());
                 }
             }
         }
-        LogUtils.loge("onUpdateDevices = " + temp);
 
     }
 
@@ -189,5 +178,15 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
             getView().setConfirmState(hasBleDevice);
         }
         mHandler.postDelayed(this, 2 * 1000);
+    }
+
+    @Override
+    public void onStart() {
+        BleObserver.getInstance().registerBleObserver(this);
+    }
+
+    @Override
+    public void onStop() {
+        BleObserver.getInstance().unregisterBleObserver(this);
     }
 }

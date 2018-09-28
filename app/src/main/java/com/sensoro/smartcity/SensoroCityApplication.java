@@ -43,6 +43,7 @@ import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DynamicTimeFormat;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
@@ -195,7 +196,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
             else {
                 bleDeviceManager.setOutOfRangeDelay(7 * 1000);
             }
-
+            bleDeviceManager.setBackgroundMode(false);
+            bleDeviceManager.setBLEDeviceListener(BleObserver.getInstance());
         } catch (Exception e) {
             e.printStackTrace();
         }//yangzhiqiang@sensoro.com 123456

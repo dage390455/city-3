@@ -12,7 +12,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
-import com.sensoro.smartcity.server.bean.InspectionTaskModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
@@ -27,10 +26,10 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
-import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
@@ -485,6 +484,53 @@ public enum RetrofitServiceHelper {
         return deviceDeployRspObservable;
     }
 
+    public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
+            name, String contact, String content, List<String> imgUrls) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(newSn)) {
+                jsonObject.put("newSn", newSn);
+            }
+            if (!TextUtils.isEmpty(taskId)) {
+                jsonObject.put("taskId", taskId);
+            }
+            if (reason != null) {
+                jsonObject.put("reason", reason);
+            }
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+            if (tags != null && tags.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String temp : tags) {
+                    jsonArray.put(temp);
+                }
+                jsonObject.put("tags", jsonArray);
+            }
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+            if (!TextUtils.isEmpty(contact)) {
+                jsonObject.put("contact", contact);
+            }
+            if (!TextUtils.isEmpty(content)) {
+                jsonObject.put("content", content);
+            }
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArray.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArray);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<DeviceDeployRsp> inspectionChangeDeviceDeployRspObservable = retrofitService.doInspectionChangeDeviceDeploy(oldSn, body);
+        RxApiManager.getInstance().add("doInspectionChangeDeviceDeploy", inspectionChangeDeviceDeployRspObservable.subscribe());
+        return inspectionChangeDeviceDeployRspObservable;
+    }
+
     /**
      * 基站部署
      *
@@ -892,7 +938,7 @@ public enum RetrofitServiceHelper {
             if (finishTime != null && finishTime != 0) {
                 jsonObject2.put("finishTime", finishTime);
             }
-            if (remark != null) {
+            if (!TextUtils.isEmpty(remark)) {
                 jsonObject2.put("remark", remark);
             }
             if (scenesDataList != null && scenesDataList.size() > 0) {
@@ -924,7 +970,6 @@ public enum RetrofitServiceHelper {
         } catch (JSONException e) {
             e.printStackTrace();
         }
-
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
         Observable<ResponseBase> uploadInspectionResult = retrofitService.uploadInspectionResult(body);
         RxApiManager.getInstance().add("uploadInspectionResult", uploadInspectionResult.subscribe());
@@ -1046,12 +1091,13 @@ public enum RetrofitServiceHelper {
 
     /**
      * 获取巡检内容模板
+     *
      * @param deviceType
      * @return
      */
-    public Observable<InspectionTaskInstructionRsp> getInspectionTemplate(String deviceType){
+    public Observable<InspectionTaskInstructionRsp> getInspectionTemplate(String deviceType) {
         Observable<InspectionTaskInstructionRsp> inspectionTemplate = retrofitService.getInspectionTemplate(deviceType);
-        RxApiManager.getInstance().add("inspectionTemplate",inspectionTemplate.subscribe());
+        RxApiManager.getInstance().add("inspectionTemplate", inspectionTemplate.subscribe());
         return inspectionTemplate;
     }
 }

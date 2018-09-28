@@ -54,6 +54,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     private InspectionTaskDeviceDetail mDeviceDetail;
     private ArrayList<ImageItem> tempImages = null;
     private UpLoadPhotosUtils upLoadPhotosUtils;
+    private boolean needChangeDevice = false;
 
     @Override
     public void initData(Context context) {
@@ -125,23 +126,14 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.dialog_tv_exception:
+                needChangeDevice = false;
                 getView().dismissExceptionDialog();
-                List<Integer> selectTags = getView().getSelectTags();
-                if (selectTags.size() == 0) {
-                    getView().toastShort("必须选择一个标签类型");
-                    return;
-                }
-                if (selImageList.size() > 0) {
-                    getView().initUploadProgressDialog();
-                    upLoadPhotosUtils.doUploadPhoto(selImageList);
-                } else {
-//                    doUploadInspectionException(null);
-                    getView().toastShort("现场照片/录像 必须选择一张");
-                }
+                doException();
                 break;
             case R.id.dialog_tv_upload_change_device:
+                needChangeDevice = true;
                 getView().dismissExceptionDialog();
-                doUploadAndChange();
+                doException();
                 break;
             case R.id.dialog_tv_waite:
                 getView().dismissExceptionDialog();
@@ -149,15 +141,30 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         }
     }
 
+    private void doException() {
+        List<Integer> selectTags = getView().getSelectTags();
+        if (selectTags.size() == 0) {
+            getView().toastShort("必须选择一个标签类型");
+            return;
+        }
+        if (selImageList.size() > 0) {
+            getView().initUploadProgressDialog();
+            upLoadPhotosUtils.doUploadPhoto(selImageList);
+        } else {
+            getView().toastShort("现场照片/录像 必须选择一张");
+        }
+    }
+
+
     public List<ImageItem> getSelImageList() {
         return selImageList;
     }
 
     private void doUploadAndChange() {
-        //上传异常
-
+        //TODO 更换设备 上传异常
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra("type", Constants.TYPE_SCAN_CHANGE_DEVICE);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE_CHANGE);
+        intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
         getView().startAC(intent);
     }
 
@@ -174,17 +181,22 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             Log.e("hcs", ":selectTag::" + selectTag);
         }
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doUploadInspectionResult(mDeviceDetail.getId(), null, null, 1, 0, startTime, finishTime, remarkMessage,
+        RetrofitServiceHelper.INSTANCE.doUploadInspectionResult(mDeviceDetail.getId(), null, null, 2, 0, startTime, finishTime, remarkMessage,
                 scenesDataList, selectTags).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<ResponseBase>(this) {
                     @Override
                     public void onCompleted(ResponseBase responseBase) {
                         if (responseBase.getErrcode() == 0) {
-                            getView().toastShort("异常上报成功");
-                            EventData eventData = new EventData();
-                            eventData.code = EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE;
-                            EventBus.getDefault().post(eventData);
-                            getView().finishAc();
+                            if (needChangeDevice) {
+                                doUploadAndChange();
+                            } else {
+                                getView().toastShort("异常上报成功");
+                                EventData eventData = new EventData();
+                                eventData.code = EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE;
+                                EventBus.getDefault().post(eventData);
+                                getView().finishAc();
+                            }
+
                         } else {
                             getView().toastShort("异常上报失败");
                         }

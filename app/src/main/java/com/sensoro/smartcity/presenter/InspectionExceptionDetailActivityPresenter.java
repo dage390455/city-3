@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.presenter;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -15,6 +16,7 @@ import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.InspectionTaskExceptionDeviceModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
@@ -27,22 +29,21 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class InspectionExceptionDetailActivityPresenter extends BasePresenter<IInspectionExceptionDetailActivityView>
-implements Constants{
-    private Context mContext;
+        implements Constants {
+    private Activity mContext;
+    private InspectionTaskDeviceDetail mDeviceDetail;
 
     @Override
     public void initData(Context context) {
-        mContext = context;
-
+        mContext = (Activity) context;
+        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL);
         requestExceptionDetail();
-
-
     }
 
     private void requestExceptionDetail() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getInspectionDeviceDetail("5ba9b3b2f11db9772ee33025",null,null,1)
-        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExceptionDeviceRsp>() {
+        RetrofitServiceHelper.INSTANCE.getInspectionDeviceDetail(mDeviceDetail.getId(), null, null, 1)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExceptionDeviceRsp>() {
             @Override
             public void onCompleted(InspectionTaskExceptionDeviceRsp response) {
                 InspectionTaskExceptionDeviceModel taskDevice = response.getData();
@@ -50,21 +51,21 @@ implements Constants{
 
                 for (DeviceTypeModel deviceTypeModel : SensoroCityApplication.getInstance().mDeviceTypeList) {
                     if (taskDevice.getDeviceType().equals(deviceTypeModel.matcherType)) {
-                        getView().setTvSn(deviceTypeModel.name+" "+taskDevice.getSn());
+                        getView().setTvSn(deviceTypeModel.name + " " + taskDevice.getSn());
                         break;
                     }
                 }
                 getView().updateTagsData(taskDevice.getDevice().getTags());
 
-                switch (taskDevice.getStatus()){
-                    case -1:
-                        getView().setTvStatus(R.color.c_a6a6a6,"未巡检");
-                        break;
-                    case 0:
-                        getView().setTvStatus(R.color.c_29c093,"巡检正常");
-                        break;
+                switch (taskDevice.getStatus()) {
                     case 1:
-                        getView().setTvStatus(R.color.c_ff8d34,"巡检异常");
+                        getView().setTvStatus(R.color.c_29c093, "巡检正常");
+                        break;
+                    case 2:
+                        getView().setTvStatus(R.color.c_ff8d34, "巡检异常");
+                        break;
+                    default:
+                        getView().setTvStatus(R.color.c_a6a6a6, "未巡检");
                         break;
                 }
 
@@ -81,10 +82,10 @@ implements Constants{
                 ArrayList<ScenesData> images = new ArrayList<>();
                 ArrayList<ScenesData> videoThumbs = new ArrayList<>();
                 for (ScenesData imgAndVedio : imgAndVedios) {
-                    if("image".equals(imgAndVedio.type)){
+                    if ("image".equals(imgAndVedio.type)) {
                         //图片资源的话后台没有thumb，所以是直接给url
                         images.add(imgAndVedio);
-                    }else if("video".equals(imgAndVedio.type)){
+                    } else if ("video".equals(imgAndVedio.type)) {
                         videoThumbs.add(imgAndVedio);
                     }
                 }

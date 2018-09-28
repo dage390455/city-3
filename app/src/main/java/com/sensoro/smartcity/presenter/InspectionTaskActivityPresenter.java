@@ -6,18 +6,19 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Size;
-import android.widget.Toast;
 
+import com.amap.api.maps.model.LatLng;
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
+import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.model.EventData;
@@ -29,9 +30,10 @@ import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.InspectionTaskExecutionModel;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.widget.SensoroToast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,7 +47,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTaskActivityView> implements
-        BLEDeviceListener<BLEDevice>, IOnCreate, Constants, Runnable {
+        BLEDeviceListener<BLEDevice>, IOnCreate, IOnStart, Constants, Runnable {
     private Activity mContext;
     private DeviceTypeModel typeModel;
     private String tempSearch;
@@ -64,8 +66,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         //TODO 筛选类型
         mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
         if (mTaskInfo != null) {
-            initBle();
             requestSearchData(DIRECTION_DOWN, null);
+            doInspectionType(false);
             mHandler.post(this);
         }
 
@@ -78,22 +80,14 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         stopScan();
         mDevices.clear();
         BLE_DEVICE_SET.clear();
-        SensoroCityApplication.getInstance().bleDeviceManager.setBLEDeviceListener(this);
 
     }
 
-    private void initBle() {
-        SensoroCityApplication.getInstance().bleDeviceManager.setBLEDeviceListener(this);
-        startScan();
-    }
-
-    public void startScan() {
+    private void startScan() {
         try {
             boolean isEnable = SensoroCityApplication.getInstance().bleDeviceManager.startService();
             if (!isEnable) {
-                SensoroToast.INSTANCE.makeText("未开启蓝牙", Toast.LENGTH_SHORT).show();
-            } else {
-                SensoroCityApplication.getInstance().bleDeviceManager.setBackgroundMode(false);
+                getView().toastShort("未开启蓝牙");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -101,7 +95,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     }
 
-    public void stopScan() {
+    private void stopScan() {
         try {
             SensoroCityApplication.getInstance().bleDeviceManager.stopService();
         } catch (Exception e) {
@@ -127,45 +121,30 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        if (bleDevice != null) {
-            LogUtils.loge("onNewDevice = " + bleDevice.getSn());
-            BLE_DEVICE_SET.add(bleDevice.getSn());
-        }
+        BLE_DEVICE_SET.add(bleDevice.getSn());
     }
 
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
-        if (bleDevice != null) {
-            LogUtils.loge("onGoneDevice = " + bleDevice.getSn());
-            try {
-                if (BLE_DEVICE_SET.contains(bleDevice.getSn())) {
-                    BLE_DEVICE_SET.remove(bleDevice.getSn());
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
+        try {
+            if (BLE_DEVICE_SET.contains(bleDevice.getSn())) {
+                BLE_DEVICE_SET.remove(bleDevice.getSn());
             }
-
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
-        String temp = "";
-        if (deviceList != null && deviceList.size() > 0) {
-            for (BLEDevice device : deviceList) {
-                if (device != null) {
-                    temp += device.getSn() + ",";
-                }
-            }
-        }
-        LogUtils.loge("onUpdateDevices = " + temp);
-        if (deviceList != null && deviceList.size() > 0) {
-            for (BLEDevice device : deviceList) {
+        StringBuilder stringBuilder = new StringBuilder();
+        for (BLEDevice device : deviceList) {
+            if (device != null) {
+                stringBuilder.append(device.getSn()).append(",");
                 BLE_DEVICE_SET.add(device.getSn());
             }
         }
-
+        LogUtils.loge("onUpdateDevices = " + stringBuilder.toString());
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -176,13 +155,15 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         //上报异常结果成功
         if (code == EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE) {
             //TODO 刷新上报异常结果
-//            getView().finishAc();
+        } else if (code == EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE) {
+            //TODO 正常上报结果
         }
     }
 
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+        startScan();
     }
 
     public void doInspectionStatus(final boolean needPop) {
@@ -245,14 +226,16 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         });
     }
 
-    public void doInspectionType() {
+    public void doInspectionType(final boolean needPop) {
         List<DeviceTypeModel> selectDeviceList = getView().getSelectDeviceList();
-        if (selectDeviceList!=null&&selectDeviceList.size()>0 ) {
+        if (selectDeviceList != null && selectDeviceList.size() > 0) {
 //            getView().updateSelectDeviceTypeList(selectDeviceList);
             getView().showSelectDeviceTypePop();
             return;
         }
-        getView().showProgressDialog();
+        if (needPop) {
+            getView().showProgressDialog();
+        }
         RetrofitServiceHelper.INSTANCE.getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>() {
             @Override
             public void onCompleted(InspectionTaskExecutionRsp inspectionTaskExecutionRsp) {
@@ -272,12 +255,17 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                                 break;
                             }
                         }
-                        getView().updateSelectDeviceTypeList(types);
-                        getView().showSelectDeviceTypePop();
                         LogUtils.loge("doInspectionType --->>> " + deviceType);
                     }
-                }else{
-                    getView().toastShort("好像出问题了");
+                    getView().updateSelectDeviceTypeList(types);
+                    if (needPop) {
+                        getView().showSelectDeviceTypePop();
+                    }
+                } else {
+                    if (needPop) {
+                        getView().toastShort("好像出问题了");
+                    }
+
                 }
                 getView().dismissProgressDialog();
             }
@@ -285,8 +273,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-
+                if (needPop) {
+                    getView().toastShort(errorMsg);
+                }
             }
         });
     }
@@ -394,6 +383,33 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void doNavigation(int position) {
+        InspectionTaskDeviceDetail deviceDetail = mDevices.get(position);
+        List<Double> lonlat = deviceDetail.getLonlat();
+        if (lonlat != null && lonlat.size() > 1) {
+            LatLng destPosition = new LatLng(lonlat.get(1), lonlat.get(0));
+            if (!AppUtils.doNavigation(mContext, destPosition)) {
+                getView().toastShort("定位失败，请重试");
+            }
+        } else {
+            getView().toastShort("未设置位置信息");
+        }
 
+    }
+
+    @Override
+    public void onStart() {
+        BleObserver.getInstance().registerBleObserver(this);
+    }
+
+    @Override
+    public void onStop() {
+        BleObserver.getInstance().unregisterBleObserver(this);
+    }
+
+    public void doInspectionScan() {
+        Intent intent = new Intent(mContext, ScanActivity.class);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_INSPECTION);
+        intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+        getView().startAC(intent);
     }
 }
