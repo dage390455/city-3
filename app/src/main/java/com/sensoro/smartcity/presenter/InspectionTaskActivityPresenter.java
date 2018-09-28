@@ -381,7 +381,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     @Override
     public void run() {
         try {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startgService();
+            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
             if (!bleHasOpen) {
                 if (!bleHasOpen) {
                     bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
