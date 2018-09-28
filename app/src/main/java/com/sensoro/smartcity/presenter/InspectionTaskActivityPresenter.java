@@ -46,6 +46,8 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static com.sensoro.libbleserver.ble.scanner.BLEDeviceManager.BLUETOOTH_IS_NOT_ENABLED;
+
 public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTaskActivityView> implements
         BLEDeviceListener<BLEDevice>, IOnCreate, IOnStart, Constants, Runnable {
     private Activity mContext;
@@ -58,6 +60,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private volatile boolean canFreshBle = true;
     private InspectionIndexTaskInfo mTaskInfo;
+    private volatile boolean bleHasOpen = false;
 
     @Override
     public void initData(Context context) {
@@ -91,6 +94,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             }
         } catch (Exception e) {
             e.printStackTrace();
+            if (BLUETOOTH_IS_NOT_ENABLED.equals(e.getMessage())) {
+                getView().toastShort("未开启蓝牙");
+            }
         }
 
     }
@@ -163,7 +169,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
-        startScan();
     }
 
     public void doInspectionStatus(final boolean needPop) {
@@ -375,6 +380,17 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Override
     public void run() {
+        try {
+            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startgService();
+            if (!bleHasOpen) {
+                if (!bleHasOpen) {
+                    bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            getView().toastShort("请检查蓝牙状态");
+        }
         if (canFreshBle) {
             getView().updateInspectionTaskDeviceItem(mDevices);
         }
