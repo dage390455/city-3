@@ -220,9 +220,10 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
                     @Override
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        getView().dismissProgressDialog();
                         freshUI(direction, deviceAlarmLogRsp);
                         getView().onPullRefreshComplete();
-                        getView().dismissProgressDialog();
+
                     }
                 });
                 break;
@@ -244,6 +245,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
                     @Override
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             getView().toastShort("没有更多数据了");
                             getView().onPullRefreshCompleteNoMoreData();
@@ -252,7 +254,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                             freshUI(direction, deviceAlarmLogRsp);
                             getView().onPullRefreshComplete();
                         }
-                        getView().dismissProgressDialog();
+
                     }
                 });
                 break;
@@ -282,12 +284,12 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
             @Override
             public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
                     getView().toastShort("没有更多数据了");
                 }
                 freshUI(DIRECTION_DOWN, deviceAlarmLogRsp);
                 getView().onPullRefreshComplete();
-                getView().dismissProgressDialog();
             }
 
             @Override
@@ -472,141 +474,4 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
         requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
     }
-
-    //    /**
-//     * 直接进入搜索界面
-//     */
-//    public void searchByImageView() {
-//        long temp_startTime = -1;
-//        long temp_endTime = -1;
-////        if (getView().isSelectedDateLayoutVisible()) {
-////            temp_startTime = startTime;
-////            temp_endTime = endTime;
-////        }
-//        Intent searchIntent = new Intent(mContext, SearchAlarmActivity.class);
-//        searchIntent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
-//        searchIntent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
-//        searchIntent.putExtra(EXTRA_FRAGMENT_INDEX, 2);
-//        getView().startAC(searchIntent);
-//
-//    }
-
-
-//    /**
-//     * 通过搜索内容搜索
-//     *
-//     * @param charSequence
-//     */
-//    public void searchByEditText(CharSequence charSequence) {
-//        long temp_startTime = -1;
-//        long temp_endTime = -1;
-////        if (getView().isSelectedDateLayoutVisible()) {
-////            temp_startTime = startTime;
-////            temp_endTime = endTime;
-////        }
-//        Intent searchIntent = new Intent(mContext, SearchAlarmActivity.class);
-////        if (!TextUtils.isEmpty(charSequence) && getView().isSearchLayoutVisible()) {
-////            searchIntent.putExtra(EXTRA_SEARCH_CONTENT, charSequence.toString().trim());
-////        } else {
-////            searchIntent.putExtra(EXTRA_SEARCH_CONTENT, "");
-////        }
-//        searchIntent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
-//        searchIntent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
-//        searchIntent.putExtra(EXTRA_FRAGMENT_INDEX, 2);
-//        getView().startAC(searchIntent);
-//    }
-
-//    /**
-//     * 单独点击日期
-//     */
-//    public void clickByDate() {
-//        long temp_startTime = -1;
-//        long temp_endTime = -1;
-////        if (getView().isSelectedDateLayoutVisible()) {
-////            temp_startTime = startTime;
-////            temp_endTime = endTime;
-////        }
-//        Intent intent = new Intent(mContext, CalendarActivity.class);
-////        if (getView().isSelectedDateLayoutVisible()) {
-////            intent.putExtra(PREFERENCE_KEY_START_TIME, temp_startTime);
-////            intent.putExtra(PREFERENCE_KEY_END_TIME, temp_endTime);
-////        }
-//        getView().startAC(intent);
-//    }
-
-    //    public void requestDataAll(final int direction, boolean isForce) {
-//        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-//            return;
-//        }
-////        if (getView().getPullRefreshState() == PullToRefreshBase.State.RESET && !isForce) {
-////            return;
-////        }
-//        Long temp_startTime = null;
-//        Long temp_endTime = null;
-//        if (getView().isSelectedDateLayoutVisible()) {
-//            temp_startTime = startTime;
-//            temp_endTime = endTime;
-//        }
-//        switch (direction) {
-//            case DIRECTION_DOWN:
-//                cur_page = 1;
-//                getView().showProgressDialog();
-//                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, null, null, temp_startTime,
-//                        temp_endTime,
-//                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
-//
-//                    @Override
-//                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-//                        if (deviceAlarmLogRsp.getData().size() == 0) {
-//                            getView().toastShort("没有更多数据了");
-//                            getView().onPullRefreshCompleteNoMoreData();
-//                        } else {
-//                            freshUI(direction, deviceAlarmLogRsp, null);
-//                            getView().onPullRefreshComplete();
-//                        }
-//                        getView().dismissProgressDialog();
-//                    }
-//
-//                    @Override
-//                    public void onErrorMsg(int errorCode, String errorMsg) {
-//                        getView().onPullRefreshComplete();
-//                        getView().dismissProgressDialog();
-//                        getView().toastShort(errorMsg);
-//                    }
-//                });
-//                break;
-//            case DIRECTION_UP:
-//                cur_page++;
-//                getView().showProgressDialog();
-//                RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, null, null, null, null, temp_startTime,
-//                        temp_endTime,
-//                        null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
-//
-//
-//                    @Override
-//                    public void onErrorMsg(int errorCode, String errorMsg) {
-//                        cur_page--;
-//                        getView().onPullRefreshComplete();
-//                        getView().dismissProgressDialog();
-//                        getView().toastShort(errorMsg);
-//                    }
-//
-//                    @Override
-//                    public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-//                        if (deviceAlarmLogRsp.getData().size() == 0) {
-//                            cur_page--;
-//                            getView().toastShort("没有更多数据了");
-//                            getView().onPullRefreshCompleteNoMoreData();
-//                        } else {
-//                            freshUI(direction, deviceAlarmLogRsp, null);
-//                            getView().onPullRefreshComplete();
-//                        }
-//                        getView().dismissProgressDialog();
-//                    }
-//                });
-//                break;
-//            default:
-//                break;
-//        }
-//    }
 }

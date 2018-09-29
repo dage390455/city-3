@@ -230,7 +230,6 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
             acHistoryLogRcContent.setVisibility(View.GONE);
             imv_content.setVisibility(View.VISIBLE);
         }
-
     }
 
     @Override

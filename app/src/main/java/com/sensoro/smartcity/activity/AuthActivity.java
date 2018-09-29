@@ -38,7 +38,7 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_auth_test);
+        setContentView(R.layout.activity_auth);
         ButterKnife.bind(mActivity);
         initView();
 

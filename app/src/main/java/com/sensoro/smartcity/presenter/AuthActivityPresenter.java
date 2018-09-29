@@ -26,7 +26,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        mEventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra("eventLoginData");
+        mEventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(EXTRA_EVENT_LOGIN_DATA);
     }
 
     @Override
@@ -67,7 +67,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
         EventBus.getDefault().post(eventData);
         Intent mainIntent = new Intent();
         mainIntent.setClass(mContext, MainActivity.class);
-        mainIntent.putExtra("eventLoginData", eventLoginData);
+        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
         getView().startAC(mainIntent);
         getView().finishAc();
     }

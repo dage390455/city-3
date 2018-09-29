@@ -3,23 +3,21 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionTaskActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
-import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -54,17 +52,10 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
 
         List<InspectionIndexTaskInfo.DeviceSummaryBean> deviceSummary = mTaskInfo.getDeviceSummary();
         for (InspectionIndexTaskInfo.DeviceSummaryBean deviceSummaryBean : deviceSummary) {
-            Log.e("hcs", ":devs::" + deviceSummaryBean.getDeviceType());
-            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
-            for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
-                List<String> deviceTypes = mergeTypeInfo.getDeviceTypes();
-                if (deviceTypes.contains(deviceSummaryBean.getDeviceType())) {
-                    tags.add(mergeTypeInfo.getName() + " （" + deviceSummaryBean.getNum() + "） ");
-                    break;
-                }
-            }
+            String deviceType = deviceSummaryBean.getDeviceType();
+            String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(deviceType);
+            tags.add(inspectionDeviceName + " （" + deviceSummaryBean.getNum() + "） ");
         }
-
         getView().updateTagsData(tags);
     }
 

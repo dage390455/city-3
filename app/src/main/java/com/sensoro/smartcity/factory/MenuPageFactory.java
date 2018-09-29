@@ -78,8 +78,34 @@ public class MenuPageFactory {
         return false;
     }
 
+    /**
+     * 判断是否有子账户权限
+     *
+     * @param roles
+     * @param isSupperAccountStr
+     * @return
+     */
     public static boolean getHasSubMerchant(String roles, String isSupperAccountStr) {
         return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr) || !"business".equalsIgnoreCase(roles);
+    }
+
+    /**
+     * 判断巡检权限
+     * @param grants
+     * @return
+     */
+    public static boolean getHasInspection(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> inspectTask = grants.getInspectTask();
+            if (inspectTask != null) {
+                for (String str : inspectTask) {
+                    if ("modify".equals(str)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
 }

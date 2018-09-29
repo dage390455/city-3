@@ -6,7 +6,6 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -16,13 +15,11 @@ import com.sensoro.smartcity.adapter.InspectionInstructionTabAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.presenter.IInspectionInstructionActivityView;
 import com.sensoro.smartcity.presenter.InspectionInstructionActivityPresenter;
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -46,7 +43,6 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
     private InspectionInstructionTabAdapter mTabAdapter;
     private InspectionInstructionContentAdapter mContentAdapter;
 
-    private List<String> tabs;
     private ProgressUtils mProgressUtils;
 
     @Override

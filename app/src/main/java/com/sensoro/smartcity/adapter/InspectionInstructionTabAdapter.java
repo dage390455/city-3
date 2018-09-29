@@ -9,11 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.model.DeviceTypeMutualModel;
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.smartcity.server.bean.UnionSummaryBean;
-import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -41,10 +37,10 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
 
     @Override
     public void onBindViewHolder(InspectionInstructionTabHolder holder, final int position) {
-        if(position == selectPosition){
+        if (position == selectPosition) {
             holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_solid_29c_full_corner);
             holder.itemAdapterInspectionInstructionTv.setTextColor(Color.WHITE);
-        }else{
+        } else {
             holder.itemAdapterInspectionInstructionTv.setBackgroundResource(R.drawable.shape_bg_solid_transparent_full_corner);
             holder.itemAdapterInspectionInstructionTv.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
         }
@@ -55,31 +51,16 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
                 selectPosition = position;
                 notifyDataSetChanged();
                 if (listener != null) {
-                    listener.onItemClick(v,position);
+                    listener.onItemClick(v, position);
                 }
             }
         });
         //查找巡检内容的时候，根据deviceType查找，所以tabs存的就是devicetype,后期这部分代码还是要改的
-        if (SensoroCityApplication.getInstance().mDeviceTypeMutualModel != null) {
-            List<DeviceTypeMutualModel.DeviceInfoBean> deviceInfo = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getDeviceInfo();
-            for (DeviceTypeMutualModel.DeviceInfoBean deviceInfoBean : deviceInfo) {
-                if (deviceInfoBean.getDeviceType().equals(tabs.get(position))) {
-                    for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfosBean : SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos()) {
-                        if (mergeTypeInfosBean.getMergeType().equals(deviceInfoBean.getMergeType())) {
-                            holder.itemAdapterInspectionInstructionTv.setText(mergeTypeInfosBean.getName());
-                            return;
-                        }
-                    }
-                }
-            }
-        }else{
-            LogUtils.loge("mDeviceTypeMutualModel 为null");
-        }
-
-
+        String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(tabs.get(position));
+        holder.itemAdapterInspectionInstructionTv.setText(inspectionDeviceName);
     }
 
-    public void setRecycleViewItemClickListener(RecycleViewItemClickListener listener){
+    public void setRecycleViewItemClickListener(RecycleViewItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -106,7 +87,7 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
 
         InspectionInstructionTabHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

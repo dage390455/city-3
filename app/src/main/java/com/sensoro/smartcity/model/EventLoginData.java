@@ -13,6 +13,7 @@ public final class EventLoginData implements Serializable {
     public boolean hasContract;
     public boolean hasScanLogin;
     public boolean hasSubMerchant = true;
+    public boolean hasInspection = false;
 
     @Override
     public String toString() {

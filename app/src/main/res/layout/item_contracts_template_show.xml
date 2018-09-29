@@ -40,7 +40,7 @@
                 android:cropToPadding="true"
                 android:inputType="number"
                 android:padding="10dp"
-                android:text="0"
+                android:text="6"
                 android:textColor="@color/c_252525"
                 android:textSize="@dimen/city_tiny_large_size"/>
 

@@ -104,6 +104,14 @@ public class AppUtils {
         activity.startActivity(intent);
     }
 
+    public static void openNetPage(Activity activity, String url) {
+        Intent intent = new Intent();
+        intent.setAction("android.intent.action.VIEW");
+        Uri content_url = Uri.parse(url);
+        intent.setData(content_url);
+        activity.startActivity(intent);
+    }
+
     //版本名称
     public static String getVersionName(Context context) {
         return getPackageInfo(context).versionName;

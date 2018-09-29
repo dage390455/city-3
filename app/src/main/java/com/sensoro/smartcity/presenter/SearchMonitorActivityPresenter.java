@@ -8,6 +8,8 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 import android.view.inputmethod.InputMethodManager;
 
+import com.lzy.imagepicker.ImagePicker;
+import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
@@ -15,11 +17,17 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.model.AlarmPopModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -34,6 +42,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
+
+import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitorActivityView> implements Constants,
         IOnStart {
@@ -89,8 +99,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
     private void hideSoftInput() {
         InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm!=null) {
-            imm.toggleSoftInput(0,InputMethodManager.HIDE_NOT_ALWAYS);
+        if (imm != null) {
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
         }
 
     }
@@ -119,7 +129,6 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
         }
     }
-
 
 
     private boolean isActivityTop() {
@@ -370,15 +379,12 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
                 @Override
                 public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                    getView().dismissProgressDialog();
                     try {
-                        if (deviceInfoListRsp.getData().size() == 0) {
-                            getView().toastShort("没有更多数据了");
-                        }
                         getView().refreshData(mDataList);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                    getView().dismissProgressDialog();
                     getView().recycleViewRefreshComplete();
                 }
 
@@ -465,7 +471,6 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     }
 
 
-
     @Override
     public void onDestroy() {
         mDataList.clear();
@@ -490,9 +495,101 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
     public void clickAlarmInfo(int position) {
         DeviceInfo deviceInfo = mDataList.get(position);
-        String sn = deviceInfo.getSn();
-        getView().toastShort("sn = "+sn);
-        //TODO 弹起预警记录的dialog
+        requestAlarmInfo(deviceInfo);
+    }
 
+    private void requestAlarmInfo(DeviceInfo deviceInfo) {
+        //
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, deviceInfo.getSn(), null, null, null, null, null, null)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
+
+            @Override
+            public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                getView().dismissProgressDialog();
+                if (deviceAlarmLogRsp.getData().size() == 0) {
+                    getView().toastShort("未获取到预警日志信息");
+                } else {
+                    DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
+                    enterAlarmLogPop(deviceAlarmLogInfo);
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+    }
+    private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        //TODO 弹起预警记录的dialog
+        AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext);
+        mAlarmLogPop.refreshData(deviceAlarmLogInfo);
+        mAlarmLogPop.show();
+
+    }
+    public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
+        //TODO 对照片信息统一处理
+        if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+            //添加图片返回
+            if (data != null && requestCode == REQUEST_CODE_SELECT) {
+                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
+                if (tempImages != null) {
+                    boolean fromTakePhoto = data.getBooleanExtra(EXTRA_RESULT_BY_TAKE_PHOTO, false);
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.fromTakePhoto = fromTakePhoto;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
+            }
+        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
+            //预览图片返回
+            if (requestCode == REQUEST_CODE_PREVIEW && data != null) {
+                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
+                if (tempImages != null) {
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
+            }
+        } else if (resultCode == RESULT_CODE_RECORD) {
+            //拍视频
+            if (data != null && requestCode == REQUEST_CODE_RECORD) {
+                ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
+                if (imageItem != null) {
+                    LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
+                    ArrayList<ImageItem> tempImages = new ArrayList<>();
+                    tempImages.add(imageItem);
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                    AlarmPopModel alarmPopModel = new AlarmPopModel();
+                    alarmPopModel.requestCode = requestCode;
+                    alarmPopModel.resultCode = resultCode;
+                    alarmPopModel.imageItems = tempImages;
+                    eventData.data = alarmPopModel;
+                    EventBus.getDefault().post(eventData);
+                }
+            } else if (requestCode == REQUEST_CODE_PLAY_RECORD) {
+                EventData eventData = new EventData();
+                eventData.code = EVENT_DATA_ALARM_POP_IMAGES;
+                AlarmPopModel alarmPopModel = new AlarmPopModel();
+                alarmPopModel.requestCode = requestCode;
+                alarmPopModel.resultCode = resultCode;
+                eventData.data = alarmPopModel;
+                EventBus.getDefault().post(eventData);
+            }
+
+        }
     }
 }

@@ -263,7 +263,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.fragment_merchant);
+        setContentView(R.layout.activity_merchant);
         initView();
         mPresenter.initData(mActivity);
     }

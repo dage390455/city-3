@@ -59,7 +59,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     }
 
 
-
     private void initSeverUrl() {
         //去除从用户安装渠道设置登录环境
 //        try {
@@ -138,6 +137,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                         eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
                         eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
+                        eventLoginData.hasInspection = MenuPageFactory.getHasInspection(grants);
                         //
                         UserInfo.Account account1 = userInfo.getAccount();
                         if (account1 != null) {
@@ -171,7 +171,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     private void openMain(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
         mainIntent.setClass(mContext, MainActivity.class);
-        mainIntent.putExtra("eventLoginData", eventLoginData);
+        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
         getView().startAC(mainIntent);
         getView().finishAc();
     }
@@ -179,7 +179,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     private void openAuth(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
         mainIntent.setClass(mContext, AuthActivity.class);
-        mainIntent.putExtra("eventLoginData", eventLoginData);
+        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
         getView().startAC(mainIntent);
     }
 

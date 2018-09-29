@@ -8,18 +8,17 @@ import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionExceptionDetailActivityView;
-import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.InspectionTaskExceptionDeviceModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -48,13 +47,8 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
             public void onCompleted(InspectionTaskExceptionDeviceRsp response) {
                 InspectionTaskExceptionDeviceModel taskDevice = response.getData();
                 getView().setTvName(taskDevice.getDevice().getName());
-
-                for (DeviceTypeModel deviceTypeModel : SensoroCityApplication.getInstance().mDeviceTypeList) {
-                    if (taskDevice.getDeviceType().equals(deviceTypeModel.matcherType)) {
-                        getView().setTvSn(deviceTypeModel.name + " " + taskDevice.getSn());
-                        break;
-                    }
-                }
+                String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(taskDevice.getDeviceType());
+                getView().setTvSn(inspectionDeviceName + " " + taskDevice.getSn());
                 getView().updateTagsData(taskDevice.getDevice().getTags());
 
                 switch (taskDevice.getStatus()) {

@@ -10,7 +10,6 @@ import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -18,13 +17,13 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnStart;
-import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.BleObserver;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -57,17 +56,12 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
             getView().updateTagsData(tags);
             String name = mDeviceDetail.getName();
             String sn = mDeviceDetail.getSn();
-            DeviceTypeModel model = SensoroCityApplication.getInstance().getDeviceTypeName(mDeviceDetail.getUnionType());
             if (!TextUtils.isEmpty(name)) {
                 getView().setMonitorTitle(name);
             }
             if (!TextUtils.isEmpty(sn)) {
-                if (model != null) {
-                    getView().setMonitorSn(model.name + " " + sn);
-                } else {
-                    getView().setMonitorSn("未知 " + sn);
-                }
-
+                String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(mDeviceDetail.getDeviceType());
+                getView().setMonitorSn(inspectionDeviceName + " " + sn);
             }
             mHandler.post(this);
         }

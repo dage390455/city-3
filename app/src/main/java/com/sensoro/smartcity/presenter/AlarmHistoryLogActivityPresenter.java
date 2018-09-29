@@ -75,7 +75,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         if (code == EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS) {
             if (data instanceof EventAlarmStatusModel) {
                 EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                if (mCurrentDeviceAlarmLogInfo.getDeviceSN().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.getDeviceSN())){
+                if (mCurrentDeviceAlarmLogInfo.getDeviceSN().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.getDeviceSN())) {
                     switch (tempEventAlarmStatusModel.status) {
                         case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
                             // 做一些预警发生的逻辑
@@ -159,13 +159,8 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
                     @Override
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        if (deviceAlarmLogRsp.getData().size() == 0) {
-                            getView().toastShort("没有更多数据了");
-                            getView().onPullRefreshCompleteNoMoreData();
-                        } else {
-                            freshUI(direction, deviceAlarmLogRsp);
-                            getView().onPullRefreshComplete();
-                        }
+                        freshUI(direction, deviceAlarmLogRsp);
+                        getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                     }
 
@@ -195,6 +190,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
                     @Override
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+                        getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             cur_page--;
                             getView().toastShort("没有更多数据了");
@@ -203,7 +199,6 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                             freshUI(direction, deviceAlarmLogRsp);
                             getView().onPullRefreshComplete();
                         }
-                        getView().dismissProgressDialog();
                     }
                 });
                 break;

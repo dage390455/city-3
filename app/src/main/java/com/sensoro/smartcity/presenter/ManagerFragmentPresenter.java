@@ -26,9 +26,7 @@ import com.tencent.bugly.beta.UpgradeInfo;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.EXTRA_SCAN_ORIGIN_TYPE;
-
-public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnFragmentStart {
+public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnFragmentStart, Constants {
     private Activity mContext;
 
     @Override
@@ -93,6 +91,8 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             if (currentVersionCode != 0) {
                 if (versionCode > currentVersionCode) {
                     getView().setAppUpdateVisible(true);
+                } else {
+                    getView().setAppUpdateVisible(false);
                 }
             }
         }
@@ -120,7 +120,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasSubMerchant) {
                 Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
-                intent.putExtra("login_data", PreferencesHelper.getInstance().getUserData());
+                intent.putExtra(EXTRA_EVENT_LOGIN_DATA, PreferencesHelper.getInstance().getUserData());
                 getView().startAC(intent);
                 return;
             }
@@ -155,8 +155,15 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 
     }
 
-    public void doPollingMission() {
-        getView().startAC(new Intent(mContext, InspectionTaskListActivity.class));
+    public void doInspection() {
+        if (PreferencesHelper.getInstance().getUserData() != null) {
+            if (PreferencesHelper.getInstance().getUserData().hasInspection) {
+                Intent intent = new Intent(mContext, InspectionTaskListActivity.class);
+                getView().startAC(intent);
+                return;
+            }
+        }
+        getView().toastShort("无此权限");
     }
 
     public void doMaintenanceMission() {
@@ -164,7 +171,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doAboutUs() {
-        getView().toastShort("关于我们");
+        AppUtils.openNetPage(mContext, "https://www.sensoro.com/zh/about.html");
     }
 
     public void doVersionInfo() {

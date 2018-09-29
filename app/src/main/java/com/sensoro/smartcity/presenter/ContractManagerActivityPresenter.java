@@ -50,7 +50,6 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 0;
-                dataList.clear();
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, null, null, null, null).subscribeOn
                         (Schedulers
@@ -59,12 +58,15 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
                     @Override
                     public void onCompleted(ContractsListRsp contractsListRsp) {
+                        getView().dismissProgressDialog();
+                        dataList.clear();
                         List<ContractListInfo> data = contractsListRsp.getData();
                         dataList.addAll(data);
+                        if (dataList.size() > 0) {
+                            getView().smoothScrollToPosition(0);
+                            getView().closeRefreshHeaderOrFooter();
+                        }
                         getView().updateContractList(dataList);
-                        getView().dismissProgressDialog();
-                        getView().smoothScrollToPosition(0);
-                        getView().closeRefreshHeaderOrFooter();
                         getView().onPullRefreshComplete();
                     }
 
@@ -87,6 +89,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
                     @Override
                     public void onCompleted(ContractsListRsp contractsListRsp) {
+                        getView().dismissProgressDialog();
                         List<ContractListInfo> data = contractsListRsp.getData();
                         if (data.size() == 0) {
                             getView().toastShort("没有更多数据了");
@@ -96,7 +99,6 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                             dataList.addAll(data);
                             getView().updateContractList(dataList);
                         }
-                        getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
                     }
 
@@ -116,7 +118,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     }
 
     public void clickItem(int position) {
-        ContractListInfo contractListInfo = dataList.get(position - 1);
+        ContractListInfo contractListInfo = dataList.get(position);
         int created_type = contractListInfo.getCreated_type();
         Intent intent = new Intent();
         intent.setClass(mContext, ContractInfoActivity.class);

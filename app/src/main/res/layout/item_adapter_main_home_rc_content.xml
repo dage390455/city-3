@@ -28,7 +28,7 @@
             android:layout_weight="1"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:text="死亡如花，亦如黎明的花朵，死亡如花，亦如黎明的花朵"
+            android:text="未知"
             android:textColor="@color/c_252525"
             android:textSize="16sp" />
 
@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
-            android:text="12:36"
+            android:text="未知"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp" />
 

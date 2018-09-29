@@ -87,7 +87,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         getView().updateMainPageAdapterData(mFragmentList);
         //
         Beta.init(mContext.getApplicationContext(), false);
-        final EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra("eventLoginData");
+        final EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(EXTRA_EVENT_LOGIN_DATA);
         //
         if (null != eventLoginData) {
             //赋值

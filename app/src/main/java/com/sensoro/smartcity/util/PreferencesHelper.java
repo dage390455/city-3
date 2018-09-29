@@ -57,6 +57,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT, eventLoginData.hasContract);
         editor.putBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, eventLoginData.hasScanLogin);
         editor.putBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, eventLoginData.hasSubMerchant);
+        editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK, eventLoginData.hasInspection);
         //
         editor.apply();
     }
@@ -76,6 +77,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
             boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
             boolean hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, true);
+            boolean hasInspection = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK, false);
             //
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
@@ -88,6 +90,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasStation = hasStation;
             eventLoginData.hasContract = hasContract;
             eventLoginData.hasScanLogin = hasScanLogin;
+            eventLoginData.hasInspection = hasInspection;
             mEventLoginData = eventLoginData;
         }
 

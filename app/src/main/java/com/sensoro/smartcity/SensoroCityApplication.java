@@ -19,7 +19,6 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
-import com.google.gson.Gson;
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.view.CropImageView;
 import com.qiniu.android.common.FixedZone;
@@ -42,6 +41,7 @@ import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DynamicTimeFormat;
@@ -79,7 +79,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     private final List<DeviceInfo> mDeviceInfoList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
-    public int saveSearchType = Constants.TYPE_DEVICE_NAME;
     private NotificationUtils mNotificationUtils;
     private static boolean isAPPBack = true;
     private static PushHandler pushHandler;
@@ -88,6 +87,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     public static String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
     public AMapLocationClient mLocationClient;
     public ArrayList<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
+    public BLEDeviceManager bleDeviceManager;
+    public DeviceTypeMutualModel mDeviceTypeMutualModel;
 
     static {
         //启用矢量图兼容
@@ -127,10 +128,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         });
     }
 
-    public BLEDeviceManager bleDeviceManager;
-    public DeviceTypeMutualModel mDeviceTypeMutualModel;
-
-    //    public static String VIDEO_PATH =  "/sdcard/SensroroCity/";
     @Override
     public void onCreate() {
         super.onCreate();
@@ -449,32 +446,30 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         initVc();
     }
 
-    private void parseDeviceTypeJson()  {
+    private void parseDeviceTypeJson() {
         StringBuilder sb = new StringBuilder();
         AssetManager assetManager = getAssets();
         BufferedReader bufferedReader = null;
         try {
             bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open("deviceModel.json"), "utf-8"));
             String line;
-            while ((line = bufferedReader.readLine())!=null){
+            while ((line = bufferedReader.readLine()) != null) {
                 sb.append(line);
             }
             bufferedReader.close();
         } catch (IOException e) {
             e.printStackTrace();
 
-        }finally {
+        } finally {
             try {
-                bufferedReader.close();
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
-
-        Gson gson = new Gson();
-        mDeviceTypeMutualModel = gson.fromJson(sb.toString(), DeviceTypeMutualModel.class);
-
-
+        mDeviceTypeMutualModel = RetrofitServiceHelper.INSTANCE.getGson().fromJson(sb.toString(), DeviceTypeMutualModel.class);
     }
 
     private void initDeviceType() {
@@ -486,6 +481,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     /**
      * 根据unionType获取设备
+     *
      * @param unionType
      */
     public DeviceTypeModel getDeviceTypeName(String unionType) {

@@ -33,6 +33,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 
 import java.io.File;
@@ -246,10 +248,20 @@ public class WidgetUtil {
             fOut = new FileOutputStream(f);
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
             fOut.flush();
-            fOut.close();
-
         } catch (IOException e) {
+            e.printStackTrace();
             return null;
+        } finally {
+            try {
+                if (fOut != null) {
+                    fOut.close();
+                }
+                if (bitmap != null) {
+                    bitmap.recycle();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
         return f.getAbsolutePath();
     }
@@ -1432,6 +1444,22 @@ public class WidgetUtil {
         paint.setColorFilter(new PorterDuffColorFilter(tintColor, PorterDuff.Mode.SRC_IN));
         canvas.drawBitmap(inBitmap, 0, 0, paint);
         return outBitmap;
+    }
+
+    public static String getInspectionDeviceName(String deviceType) {
+        if (!TextUtils.isEmpty(deviceType)) {
+            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
+            if (mergeTypeInfos != null) {
+                for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfosBean : mergeTypeInfos) {
+                    List<String> deviceTypes = mergeTypeInfosBean.getDeviceTypes();
+                    if (deviceType != null && deviceTypes.contains(deviceType)) {
+                        return mergeTypeInfosBean.getName();
+                    }
+                }
+            }
+        }
+        return "未知";
+
     }
 
     /**

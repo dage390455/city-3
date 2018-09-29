@@ -8,7 +8,6 @@
         android:id="@+id/item_adapter_tv"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="大上海，夜上海"
         android:background="@drawable/shape_bg_solid_ff_stroke_df_full_corner"
         android:textSize="12sp"
         android:layout_marginStart="8dp"

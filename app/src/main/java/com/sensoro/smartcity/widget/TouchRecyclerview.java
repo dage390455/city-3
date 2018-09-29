@@ -24,7 +24,7 @@ public class TouchRecyclerview extends RecyclerView {
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
-        return false;
+        return super.dispatchTouchEvent(ev);
     }
 
 

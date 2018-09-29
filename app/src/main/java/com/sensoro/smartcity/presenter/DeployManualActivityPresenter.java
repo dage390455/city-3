@@ -69,7 +69,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                 case TYPE_SCAN_DEPLOY_STATION:
                 case TYPE_SCAN_DEPLOY_DEVICE:
                     getView().showProgressDialog();
-                    DeployAnalyzerUtils.INSTANCE.getDeployAnalyzerResult(scanSerialNumber, mContext, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                    DeployAnalyzerUtils.INSTANCE.getDeployAnalyzerResult(scanSerialNumber.toUpperCase(), mContext, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
                         @Override
                         public void onSuccess(Intent intent) {
                             getView().dismissProgressDialog();
@@ -158,7 +158,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
     private void scanInspectionDevice(String scanInspectionDevice) {
         getView().showProgressDialog();
         //TODO 暂时处理
-        RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), null, scanInspectionDevice, null, null, null, null).
+        RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), null, scanInspectionDevice.toUpperCase(), null, null, null, null).
                 subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
             @Override
             public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {

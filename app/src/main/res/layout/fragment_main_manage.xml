@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    >
+    android:layout_height="match_parent">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="@color/c_fafafa">
+        android:background="@color/c_fafafa"
+        android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="8dp"
             android:gravity="center_horizontal"
-            android:text="管理"
+            android:paddingBottom="8dp"
             android:paddingTop="8dp"
+            android:text="管理"
             android:textColor="@color/c_030303"
             android:textSize="18sp" />
 
@@ -266,8 +265,8 @@
                 android:id="@+id/fg_main_manage_ll_scan_login"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:layout_marginTop="12dp"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -312,8 +311,8 @@
                 android:id="@+id/fg_main_manage_ll_about_us"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:layout_marginTop="12dp"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -344,12 +343,14 @@
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:background="@color/c_dfdfdf" />
+
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_version_info"
                 android:layout_width="match_parent"
@@ -380,9 +381,9 @@
                     android:id="@+id/fg_main_manage_tv_is_upgrade"
                     android:layout_width="12dp"
                     android:layout_height="12dp"
-                    android:background="@drawable/shape_oval_29c"
                     android:layout_gravity="center_vertical"
-                    />
+                    android:background="@drawable/shape_oval_29c"
+                    android:visibility="gone" />
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -398,8 +399,8 @@
                 android:id="@+id/fg_main_manage_ll_exit"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@color/white"
                 android:layout_marginTop="12dp"
+                android:background="@color/white"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -425,4 +426,4 @@
 
         </LinearLayout>
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

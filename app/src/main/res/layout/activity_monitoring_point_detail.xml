@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -113,7 +113,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="12dp"
-                    android:text="齐哲"
+                    android:text="未知"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -135,7 +135,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="12dp"
-                    android:text="18623459876"
+                    android:text="未知"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_alert_contact_name"
@@ -261,4 +261,4 @@
                 app:layout_constraintStart_toEndOf="@id/ac_monitoring_point_tv_alarm_sound" />
         </android.support.constraint.ConstraintLayout>
     </LinearLayout>
-</ScrollView>
+</android.support.v4.widget.NestedScrollView>

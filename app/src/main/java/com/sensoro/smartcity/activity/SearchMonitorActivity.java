@@ -102,7 +102,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         //todo 点击取消，会弹起键盘，这个坑
-        setContentView(R.layout.activity_search_device_test);
+        setContentView(R.layout.activity_search_device);
         ButterKnife.bind(mActivity);
         initView();
         mPresenter.initData(mActivity);
@@ -229,13 +229,13 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 //    }
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
-        if(dataList != null && dataList.size() > 0){
+        if (dataList != null && dataList.size() > 0) {
             acSearchDeviceRcContent.setVisibility(VISIBLE);
             imvNoContent.setVisibility(View.GONE);
             Collections.sort(dataList);
             mSearchRcContentAdapter.setData(dataList);
             mSearchRcContentAdapter.notifyDataSetChanged();
-        }else{
+        } else {
             acSearchDeviceRcContent.setVisibility(View.GONE);
             imvNoContent.setVisibility(VISIBLE);
         }
@@ -530,5 +530,11 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void onAlarmInfoClick(View v, int position) {
         mPresenter.clickAlarmInfo(position);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.handlerActivityResult(requestCode, resultCode, data);
     }
 }

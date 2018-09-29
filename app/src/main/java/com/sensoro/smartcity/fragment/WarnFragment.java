@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
@@ -107,6 +106,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             }
         });
         initRcContent();
+        fgMainWarnEtSearch.setCursorVisible(false);
 
     }
 
@@ -126,6 +126,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         fgMainWarnEtSearch.setCursorVisible(false);
         InputMethodManager imm = (InputMethodManager) mRootFragment.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        fgMainWarnEtSearch.setCursorVisible(false);
     }
 
     public void forceOpenSoftKeyboard() {
@@ -290,13 +291,15 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         super.onDestroyView();
     }
 
-    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_imv_calendar, R.id.fg_main_warn_imv_date_close,
-            R.id.tv_warn_alarm_search_cancel,R.id.alarm_return_top})
+    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_et_search, R.id.fg_main_warn_imv_calendar, R.id.fg_main_warn_imv_date_close,
+            R.id.tv_warn_alarm_search_cancel, R.id.alarm_return_top})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_warn_frame_search:
+            case R.id.fg_main_warn_et_search:
                 fgMainWarnEtSearch.requestFocus();
-                forceOpenSoftKeyboard();
+                fgMainWarnEtSearch.setCursorVisible(true);
+//                forceOpenSoftKeyboard();
                 break;
             case R.id.fg_main_warn_imv_calendar:
                 mPresenter.doCalendar(fgMainWarnTitleRoot);
@@ -326,12 +329,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList) {
-        if(deviceAlarmLogInfoList.size()>0){
+        if (deviceAlarmLogInfoList.size() > 0) {
             fgMainWarnRcContent.setVisibility(View.VISIBLE);
             imvNoContent.setVisibility(View.GONE);
             mRcContentAdapter.setData(deviceAlarmLogInfoList);
             mRcContentAdapter.notifyDataSetChanged();
-        }else{
+        } else {
             fgMainWarnRcContent.setVisibility(View.GONE);
             imvNoContent.setVisibility(View.VISIBLE);
         }

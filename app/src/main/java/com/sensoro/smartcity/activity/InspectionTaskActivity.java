@@ -111,18 +111,19 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         initSelectDeviceTypePop();
 
         initSelectStatusPop();
+        acInspectionTaskEtSearch.setCursorVisible(false);
     }
 
     private void dismissInputMethodManager(View view) {
-        acInspectionTaskEtSearch.setCursorVisible(false);
         InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        acInspectionTaskEtSearch.setCursorVisible(false);
     }
 
     public void forceOpenSoftKeyboard() {
-        acInspectionTaskEtSearch.setCursorVisible(true);
-        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
+//        acInspectionTaskEtSearch.setCursorVisible(true);
+//        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
+//        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     @Override
@@ -319,7 +320,8 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
             case R.id.ac_inspection_task_et_search:
                 //TODO
                 acInspectionTaskEtSearch.requestFocus();
-                forceOpenSoftKeyboard();
+                acInspectionTaskEtSearch.setCursorVisible(true);
+//                forceOpenSoftKeyboard();
                 break;
             case R.id.ac_inspection_task_fl_state:
                 mPresenter.doInspectionStatus(true);
@@ -409,11 +411,11 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     public void updateInspectionTaskDeviceItem(List<InspectionTaskDeviceDetail> data) {
-        if(data!=null && data.size() > 0){
+        if (data != null && data.size() > 0) {
             acInspectionTaskRcContent.setVisibility(View.VISIBLE);
             imvNoContent.setVisibility(View.GONE);
             mContentAdapter.updateDevices(data);
-        }else{
+        } else {
             acInspectionTaskRcContent.setVisibility(View.GONE);
             imvNoContent.setVisibility(View.VISIBLE);
         }

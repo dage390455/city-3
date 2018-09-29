@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:gravity="left"
-        android:text="今天12：36 发生报警"
         android:textColor="@color/c_252525"
         android:textSize="14dp" />
 

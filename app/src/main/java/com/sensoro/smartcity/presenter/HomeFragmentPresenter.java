@@ -201,7 +201,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                if(mDataList.size()>0){}
+                if (mDataList.size() > 0) {
+                }
 
                 getView().refreshData(mDataList);
                 getView().recycleViewRefreshComplete();
@@ -434,110 +435,113 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             String type = mTypeSelectedIndex == 0 ? null : SELECT_TYPE_VALUES[mTypeSelectedIndex];
             Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
             getView().showProgressDialog();
-            if (direction == DIRECTION_DOWN) {
-                page = 1;
-                RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, null).subscribeOn(Schedulers
-                        .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
-                    @Override
-                    public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
-                        //去除rfid类型
-                        List<DeviceInfo> list = deviceInfoListRsp.getData();
-                        Iterator<DeviceInfo> iterator = list.iterator();
-                        while (iterator.hasNext()) {
-                            DeviceInfo next = iterator.next();
-                            String[] sensorTypes = next.getSensorTypes();
-                            if (sensorTypes != null && sensorTypes.length > 0) {
-                                final List<String> sensorTypesList = Arrays.asList(sensorTypes);
-                                if (sensorTypesList.contains("rfid")) {
-                                    iterator.remove();
+            switch (direction) {
+                case DIRECTION_DOWN:
+                    page = 1;
+                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, null).subscribeOn(Schedulers
+                            .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                        @Override
+                        public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
+                            //去除rfid类型
+                            List<DeviceInfo> list = deviceInfoListRsp.getData();
+                            Iterator<DeviceInfo> iterator = list.iterator();
+                            while (iterator.hasNext()) {
+                                DeviceInfo next = iterator.next();
+                                String[] sensorTypes = next.getSensorTypes();
+                                if (sensorTypes != null && sensorTypes.length > 0) {
+                                    final List<String> sensorTypesList = Arrays.asList(sensorTypes);
+                                    if (sensorTypesList.contains("rfid")) {
+                                        iterator.remove();
+                                    }
                                 }
                             }
+                            return deviceInfoListRsp;
                         }
-                        return deviceInfoListRsp;
-                    }
-                }).doOnNext(new Action1<DeviceInfoListRsp>() {
-                    @Override
-                    public void call(DeviceInfoListRsp deviceInfoListRsp) {
-                        SensoroCityApplication.getInstance().setData(deviceInfoListRsp.getData());
-                        organizeDataList();
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
-                    @Override
-                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                        getView().refreshData(mDataList);
-                        getView().recycleViewRefreshComplete();
-                        getView().dismissProgressDialog();
-                    }
+                    }).doOnNext(new Action1<DeviceInfoListRsp>() {
+                        @Override
+                        public void call(DeviceInfoListRsp deviceInfoListRsp) {
+                            SensoroCityApplication.getInstance().setData(deviceInfoListRsp.getData());
+                            organizeDataList();
+                        }
+                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+                        @Override
+                        public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                            getView().refreshData(mDataList);
+                            getView().recycleViewRefreshComplete();
+                            getView().dismissProgressDialog();
+                        }
 
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().recycleViewRefreshComplete();
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
-            } else {
-                page++;
-                RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, null).subscribeOn(Schedulers
-                        .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
-                    @Override
-                    public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
-                        //去除rfid类型
-                        List<DeviceInfo> list = deviceInfoListRsp.getData();
-                        Iterator<DeviceInfo> iterator = list.iterator();
-                        while (iterator.hasNext()) {
-                            DeviceInfo next = iterator.next();
-                            String[] sensorTypes = next.getSensorTypes();
-                            if (sensorTypes != null && sensorTypes.length > 0) {
-                                final List<String> sensorTypesList = Arrays.asList(sensorTypes);
-                                if (sensorTypesList.contains("rfid")) {
-                                    iterator.remove();
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            getView().recycleViewRefreshComplete();
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
+                        }
+                    });
+                    break;
+                case DIRECTION_UP:
+                    page++;
+                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, null).subscribeOn(Schedulers
+                            .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                        @Override
+                        public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
+                            //去除rfid类型
+                            List<DeviceInfo> list = deviceInfoListRsp.getData();
+                            Iterator<DeviceInfo> iterator = list.iterator();
+                            while (iterator.hasNext()) {
+                                DeviceInfo next = iterator.next();
+                                String[] sensorTypes = next.getSensorTypes();
+                                if (sensorTypes != null && sensorTypes.length > 0) {
+                                    final List<String> sensorTypesList = Arrays.asList(sensorTypes);
+                                    if (sensorTypesList.contains("rfid")) {
+                                        iterator.remove();
+                                    }
                                 }
                             }
+                            return deviceInfoListRsp;
                         }
-                        return deviceInfoListRsp;
-                    }
-                }).doOnNext(new Action1<DeviceInfoListRsp>() {
-                    @Override
-                    public void call(DeviceInfoListRsp deviceInfoListRsp) {
-                        try {
-                            List<DeviceInfo> data = deviceInfoListRsp.getData();
-                            if (data.size() == 0) {
+                    }).doOnNext(new Action1<DeviceInfoListRsp>() {
+                        @Override
+                        public void call(DeviceInfoListRsp deviceInfoListRsp) {
+                            try {
+                                List<DeviceInfo> data = deviceInfoListRsp.getData();
+                                if (data.size() == 0) {
+                                    page--;
+                                } else {
+                                    SensoroCityApplication.getInstance().addData(data);
+                                    organizeDataList();
+                                }
+                            } catch (Exception e) {
                                 page--;
-                            } else {
-                                SensoroCityApplication.getInstance().addData(data);
-                                organizeDataList();
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            page--;
-                            e.printStackTrace();
                         }
-                    }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
-                    @Override
-                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                        try {
-                            List<DeviceInfo> data = deviceInfoListRsp.getData();
-                            if (data.size() == 0) {
-                                getView().recycleViewRefreshCompleteNoMoreData();
-                                getView().toastShort("没有更多数据了");
-                            } else {
-                                getView().refreshData(mDataList);
+                    }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+                        @Override
+                        public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                            getView().dismissProgressDialog();
+                            try {
+                                List<DeviceInfo> data = deviceInfoListRsp.getData();
+                                if (data.size() == 0) {
+                                    getView().recycleViewRefreshCompleteNoMoreData();
+                                    getView().toastShort("没有更多数据了");
+                                } else {
+                                    getView().refreshData(mDataList);
+                                    getView().recycleViewRefreshComplete();
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        } catch (Exception e) {
-                            e.printStackTrace();
                         }
-                        getView().recycleViewRefreshComplete();
-                        getView().dismissProgressDialog();
-                    }
 
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().recycleViewRefreshComplete();
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            getView().recycleViewRefreshComplete();
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
+                        }
+                    });
+                    break;
             }
         } catch (Exception e) {
             e.printStackTrace();

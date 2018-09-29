@@ -32,7 +32,7 @@
 
     </RelativeLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -85,7 +85,6 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
                         android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
@@ -126,7 +125,6 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
                         android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
@@ -168,7 +166,6 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
                         android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
@@ -210,7 +207,6 @@
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
                         android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
@@ -251,7 +247,6 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
                         android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
@@ -292,7 +287,6 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
                         android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
@@ -335,7 +329,6 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
                         android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
@@ -422,7 +415,7 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:padding="10dp"
-                        android:text="0"
+                        android:text="6"
                         android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
@@ -487,7 +480,7 @@
             </RelativeLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 
     <Button

@@ -243,8 +243,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
                             if (mergeTypeInfo.getDeviceTypes().contains(deviceType)) {
                                 DeviceTypeModel deviceTypeModel = SensoroCityApplication.getInstance().getDeviceTypeName(mergeTypeInfo.getMergeType());
-                                deviceTypeModel.deviceTypes = mergeTypeInfo.getDeviceTypes();
                                 if (deviceTypeModel != null) {
+                                    deviceTypeModel.deviceTypes = mergeTypeInfo.getDeviceTypes();
                                     types.add(deviceTypeModel);
                                 }
                                 break;
@@ -294,9 +294,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
                     @Override
                     public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
+                        getView().dismissProgressDialog();
                         freshUI(direction, inspectionTaskDeviceDetailRsp);
                         getView().onPullRefreshComplete();
-                        getView().dismissProgressDialog();
                     }
 
                     @Override

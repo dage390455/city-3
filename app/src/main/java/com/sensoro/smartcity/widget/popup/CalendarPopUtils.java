@@ -174,7 +174,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
             if (startDate != null) {
                 CalendarDateModel calendarDateModel = new CalendarDateModel();
                 calendarDateModel.startDate = startDate;
-                calendarDateModel.endDate = endDate;
+                calendarDateModel.endDate = startDate;
                 listener.onCalendarPopupCallback(calendarDateModel);
                 mPopupWindow.dismiss();
             } else {

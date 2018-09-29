@@ -166,10 +166,12 @@ public interface Constants {
     String EXTRA_CHARACTER = "extra_character";
     String EXTRA_PHONE_ID = "extra_phone_id";
     String EXTRA_IS_SPECIFIC = "extra_is_specific";
+    String EXTRA_EVENT_LOGIN_DATA = "extra_event_login_data";
     String EXTRA_GRANTS_HAS_STATION = "extra_grants_has_station";
     String EXTRA_GRANTS_HAS_CONTRACT = "extra_grants_has_contract";
     String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
     String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
+    String EXTRA_GRANTS_HAS_INSPECTION_TASK = "extra_grants_has_inspection_task";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO = "extra_inspection_deploy_old_device_info";
     //扫描来源

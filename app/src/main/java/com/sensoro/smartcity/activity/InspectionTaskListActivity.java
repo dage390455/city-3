@@ -150,14 +150,14 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowProgressDialog = false;
-                mPresenter.LoadMore(DIRECTION_DOWN);
+                mPresenter.refreshData(DIRECTION_DOWN);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowProgressDialog = false;
-                mPresenter.LoadMore(Constants.DIRECTION_UP);
+                mPresenter.refreshData(Constants.DIRECTION_UP);
             }
         });
 

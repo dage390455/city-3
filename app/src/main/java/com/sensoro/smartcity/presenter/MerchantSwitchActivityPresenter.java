@@ -42,9 +42,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        EventLoginData login_data = (EventLoginData) mContext.getIntent().getSerializableExtra("login_data");
-        if (login_data != null) {
-            getView().setCurrentNameAndPhone(login_data.userName, login_data.phone);
+        EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(EXTRA_EVENT_LOGIN_DATA);
+        if (eventLoginData != null) {
+            getView().setCurrentNameAndPhone(eventLoginData.userName, eventLoginData.phone);
             getView().setCurrentStatusImageViewVisible(true);
             requestDataByDirection(DIRECTION_DOWN, true);
         }
@@ -161,6 +161,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                     eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
                     eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
+                    eventLoginData.hasInspection =MenuPageFactory.getHasInspection(grants);
 
 //                    String nickname = data.getNickname();
 //                    String phone = data.getContacts();

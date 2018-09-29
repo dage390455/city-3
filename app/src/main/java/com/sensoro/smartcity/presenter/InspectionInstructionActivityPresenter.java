@@ -28,7 +28,6 @@ implements Constants{
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        ArrayList<String> device = new ArrayList<>();
         ArrayList<String> deviceTypes = mActivity.getIntent().getStringArrayListExtra(EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE);
         if (deviceTypes != null && deviceTypes.size()>0) {
             getView().updateRcTag(deviceTypes);

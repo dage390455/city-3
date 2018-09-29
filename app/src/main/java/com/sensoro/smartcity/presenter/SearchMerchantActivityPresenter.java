@@ -181,6 +181,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                     eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
                     eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
                     eventLoginData.hasSubMerchant=MenuPageFactory.getHasSubMerchant(roles,isSpecific);
+                    eventLoginData.hasInspection=MenuPageFactory.getHasInspection(grants);
                     eventData.data = eventLoginData;
                     EventBus.getDefault().post(eventData);
                     //
