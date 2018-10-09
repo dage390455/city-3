@@ -73,6 +73,7 @@ public interface RetrofitService {
     String INSPECT_TASK_CHANGE_STATE = "inspect/task/status";
     String INSPECT_TASK_EXCEPTION_DETAIL = "inspect/device/_search";
     String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
+    String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -227,5 +228,9 @@ public interface RetrofitService {
     Observable<InspectionTaskInstructionRsp> getInspectionTemplate(@Query("deviceType")String deviceType);
     @POST("devices/change/{sn}")
     Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    @GET(GET_DEVICES_MERGE_TYPES)
+    Observable<ResponseBase> getDevicesMergeTypes();
+
 }
 

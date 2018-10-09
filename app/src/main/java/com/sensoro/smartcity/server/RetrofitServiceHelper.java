@@ -1099,4 +1099,14 @@ public enum RetrofitServiceHelper {
         RxApiManager.getInstance().add("inspectionTemplate", inspectionTemplate.subscribe());
         return inspectionTemplate;
     }
+
+    /**
+     * 获取deviceType 对应关系
+     * @return
+     */
+    public Observable<ResponseBase> getDevicesMergeTypes(){
+        Observable<ResponseBase> devicesMergeTypes = retrofitService.getDevicesMergeTypes();
+        RxApiManager.getInstance().add("devicesMergeTypes", devicesMergeTypes.subscribe());
+        return devicesMergeTypes;
+    }
 }
