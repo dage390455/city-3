@@ -14,10 +14,11 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
-import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
+import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
@@ -230,7 +231,7 @@ public interface RetrofitService {
     Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(GET_DEVICES_MERGE_TYPES)
-    Observable<ResponseBase> getDevicesMergeTypes();
+    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes();
 
 }
 

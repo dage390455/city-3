@@ -365,9 +365,9 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
     @Override
-    public void updateSelectDeviceTypeList(List<DeviceTypeModel> data) {
+    public void updateSelectDeviceTypeList(List<String> deviceTypes) {
         if (mSelectDeviceTypePop != null) {
-            mSelectDeviceTypePop.updateSelectDeviceTypeList(data);
+            mSelectDeviceTypePop.updateSelectDeviceTypeList(deviceTypes);
 //            mSelectDeviceTypePop.showAsDropDown(acInspectionTaskLlSelect);
         }
 
@@ -382,15 +382,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     public void setBottomInspectionStateTitle(String finish, String unFinish) {
         acInspectionTaskTvNotInspectionCount.setText(unFinish);
         acInspectionTaskTvInspectionCount.setText(finish);
-    }
-
-    @Override
-    public List<DeviceTypeModel> getSelectDeviceList() {
-        if (mSelectDeviceTypePop != null) {
-            return mSelectDeviceTypePop.getSelectDeviceTypeList();
-        }
-
-        return null;
     }
 
     @Override

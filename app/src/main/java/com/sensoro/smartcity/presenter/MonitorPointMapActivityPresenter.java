@@ -189,7 +189,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     public void doNavigation() {
         if (!AppUtils.doNavigation(mContext, destPosition)) {
-            getView().toastShort("定位失败，请重试");
+            getView().toastShort("未获取到位置信息");
         }
     }
 

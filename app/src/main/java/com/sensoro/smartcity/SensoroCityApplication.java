@@ -5,7 +5,6 @@ import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
@@ -42,11 +41,8 @@ import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitService;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DynamicTimeFormat;
 import com.sensoro.smartcity.util.LogUtils;
@@ -68,10 +64,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import rx.Scheduler;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE;
 import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE_RESOURCE;
@@ -251,7 +243,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         }
         initSensoroSDK();
         ThreadPoolManager.getInstance().execute(this);
-        parseDeviceTypeJson();
     }
 
     private void initVc() {
@@ -452,46 +443,34 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         initBugLy();
         locate();
         initVc();
+        paseDeviceJsonByAssets();
 
     }
 
-    private void parseDeviceTypeJson() {
-
-        RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes().subscribeOn(Schedulers.io()).subscribe(new CityObserver<ResponseBase>() {
-            @Override
-            public void onCompleted(ResponseBase responseBase) {
-                Log.e("hcs","获取:::"+Thread.currentThread().getName()+"   "+Thread.currentThread().getId());
+    private void paseDeviceJsonByAssets() {
+        StringBuilder sb = new StringBuilder();
+        AssetManager assetManager = getAssets();
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open("deviceModel.json"), "utf-8"));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
             }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
 
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                Log.e("hcs","失败:::");
-                StringBuilder sb = new StringBuilder();
-                AssetManager assetManager = getAssets();
-                BufferedReader bufferedReader = null;
-                try {
-                    bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open("deviceModel.json"), "utf-8"));
-                    String line;
-                    while ((line = bufferedReader.readLine()) != null) {
-                        sb.append(line);
-                    }
+        } finally {
+            try {
+                if (bufferedReader != null) {
                     bufferedReader.close();
-                } catch (IOException e) {
-                    e.printStackTrace();
-
-                } finally {
-                    try {
-                        if (bufferedReader != null) {
-                            bufferedReader.close();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
                 }
-                mDeviceTypeMutualModel = RetrofitServiceHelper.INSTANCE.getGson().fromJson(sb.toString(), DeviceTypeMutualModel.class);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-        });
-
+        }
+        mDeviceTypeMutualModel = RetrofitServiceHelper.INSTANCE.getGson().fromJson(sb.toString(), DeviceTypeMutualModel.class);
     }
 
     private void initDeviceType() {

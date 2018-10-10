@@ -33,8 +33,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.model.DeviceTypeMutualModel;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 
 import java.io.File;
@@ -43,6 +44,7 @@ import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -1447,19 +1449,29 @@ public class WidgetUtil {
     }
 
     public static String getInspectionDeviceName(String deviceType) {
-        if (!TextUtils.isEmpty(deviceType)) {
-            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
-            if (mergeTypeInfos != null) {
-                for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfosBean : mergeTypeInfos) {
-                    List<String> deviceTypes = mergeTypeInfosBean.getDeviceTypes();
-                    if (deviceType != null && deviceTypes.contains(deviceType)) {
-                        return mergeTypeInfosBean.getName();
-                    }
-                }
-            }
+        //
+        try {
+            DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            Map<String, DeviceTypeStyles> deviceTypeMap = config.getDeviceType();
+            DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
+            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+            MergeTypeStyles mergeTypeStyles = mergeType.get(deviceTypeStyles.getMergeType());
+            return mergeTypeStyles.getName();
+        } catch (Exception e) {
+            return "未知";
         }
-        return "未知";
-
+//        if (!TextUtils.isEmpty(deviceType)) {
+//            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
+//            if (mergeTypeInfos != null) {
+//                for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfosBean : mergeTypeInfos) {
+//                    List<String> deviceTypes = mergeTypeInfosBean.getDeviceTypes();
+//                    if (deviceType != null && deviceTypes.contains(deviceType)) {
+//                        return mergeTypeInfosBean.getName();
+//                    }
+//                }
+//            }
+//        }
     }
 
     /**

@@ -61,7 +61,7 @@ public class SelectDeviceTypePopUtils {
         mPopupWindow.setFocusable(true);
     }
 
-    public void updateSelectDeviceTypeList(List<DeviceTypeModel> list){
+    public void updateSelectDeviceTypeList(List<String> list){
         mTypeSelectAdapter.updateDeviceTypList(list);
     }
     public void setSelectDeviceTypeItemClickListener(SelectDeviceTypeItemClickListener listener){
@@ -108,7 +108,7 @@ public class SelectDeviceTypePopUtils {
         return mTypeSelectAdapter.getItem(position);
     }
 
-    public List<DeviceTypeModel> getSelectDeviceTypeList() {
+    public List<String> getSelectDeviceTypeList() {
         return mTypeSelectAdapter.getDataList();
     }
 

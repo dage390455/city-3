@@ -13,13 +13,23 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,10 +41,12 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     private int selectPosition = 0;
     private int oldSelectPosition = 0;
     private RecycleViewItemClickListener mListener;
-    private List<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
+    private List<String> mDeviceTypeList = new ArrayList<>();
+    private DeviceMergeTypesInfo localDevicesMergeTypes;
 
     public TypeSelectAdapter(Context context) {
         mContext = context;
+        localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
     }
 
 
@@ -47,13 +59,46 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     }
 
     @Override
-    public void onBindViewHolder(TypeSelectHolder holder, int position) {
-        DeviceTypeModel deviceTypeModel = mDeviceTypeList.get(position);
-        holder.itemPopSelectImvTypeIcon.setImageResource(deviceTypeModel.iconRes);
-        holder.itemPopSelectTvTypeName.setText(deviceTypeModel.name);
-        holder.itemPopSelectTvTypeName.setTextColor(position != selectPosition ? Color.WHITE :
-                mContext.getResources().getColor(R.color.c_252525));
-        changeIconColor(holder, position != selectPosition);
+    public void onBindViewHolder(final TypeSelectHolder holder, final int position) {
+        if (position == 0) {
+            holder.itemPopSelectTvTypeName.setText("全部");
+            changeIconColor(holder, position != selectPosition, mContext.getResources().getDrawable(R.drawable.type_all_test));
+        } else {
+            final int index = position - 1;
+            String deviceType = mDeviceTypeList.get(index);
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            Map<String, DeviceTypeStyles> deviceTypeMap = config.getDeviceType();
+            DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
+            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+            MergeTypeStyles mergeTypeStyles = mergeType.get(deviceTypeStyles.getMergeType());
+            String name = mergeTypeStyles.getName();
+            String image = mergeTypeStyles.getImage();
+//            int resId = mergeTypeStyles.getResId();
+            //
+            holder.itemPopSelectTvTypeName.setText(name);
+            Glide.with(mContext)                             //配置上下文
+                    .load(image)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            changeIconColor(holder, position != selectPosition, resource);
+                            return true;
+                        }
+                    }).centerCrop().into(holder.itemPopSelectImvTypeIcon);
+        }
+
+//        DeviceTypeModel deviceTypeModel = mDeviceTypeList.get(position);
+//        holder.itemPopSelectImvTypeIcon.setImageResource(deviceTypeModel.iconRes);
+//        holder.itemPopSelectTvTypeName.setText(deviceTypeModel.name);
+        //
+//        holder.itemPopSelectTvTypeName.setTextColor(position != selectPosition ? Color.WHITE :
+//                mContext.getResources().getColor(R.color.c_252525));
         holder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -70,15 +115,36 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
 
     }
 
-    public DeviceTypeModel getItem(int position){
-        return mDeviceTypeList.get(position);
+    public DeviceTypeModel getItem(int position) {
+        DeviceTypeModel deviceTypeModel = new DeviceTypeModel();
+        if (position == 0) {
+            deviceTypeModel.name = "全部";
+            deviceTypeModel.iconRes = R.mipmap.type_all;
+        } else {
+            final int index = position - 1;
+            String deviceType = mDeviceTypeList.get(index);
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            Map<String, DeviceTypeStyles> deviceTypeMap = config.getDeviceType();
+            DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
+            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+            MergeTypeStyles mergeTypeStyles = mergeType.get(deviceTypeStyles.getMergeType());
+            String name = mergeTypeStyles.getName();
+            String image = mergeTypeStyles.getImage();
+            deviceTypeModel.name = name;
+            ArrayList<String> strs = new ArrayList<>();
+            strs.add(deviceType);
+            deviceTypeModel.deviceTypes = strs;
+        }
+//        DeviceTypeModel deviceTypeModel = new DeviceTypeModel("", 0, "", "");
+//        return mDeviceTypeList.get(position);
+        return deviceTypeModel;
     }
 
     public void setOnItemClickListener(RecycleViewItemClickListener listener) {
         mListener = listener;
     }
 
-    public void updateDeviceTypList(List<DeviceTypeModel> list){
+    public void updateDeviceTypList(List<String> list) {
         mDeviceTypeList.clear();
         mDeviceTypeList.addAll(list);
         notifyDataSetChanged();
@@ -111,12 +177,20 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
         holder.itemPopSelectImvTypeIcon.setImageDrawable(drawable);
     }
 
-    @Override
-    public int getItemCount() {
-        return mDeviceTypeList.size();
+    private void changeIconColor(TypeSelectHolder holder, boolean isWhite, Drawable drawable) {
+        holder.itemPopSelectLlRoot.setBackgroundResource(isWhite ? 0 : R.drawable.shape_bg_corner_29c_shadow);
+        holder.itemPopSelectTvTypeName.setTextColor(isWhite ? mContext.getResources().getColor(R.color.c_252525) : Color.WHITE);
+        int color = isWhite ? mContext.getResources().getColor(R.color.c_b6b6b6) : Color.WHITE;
+        holder.itemPopSelectImvTypeIcon.setImageDrawable(drawable);
+        holder.itemPopSelectImvTypeIcon.setColorFilter(color);
     }
 
-    public List<DeviceTypeModel> getDataList() {
+    @Override
+    public int getItemCount() {
+        return mDeviceTypeList.size() + 1;
+    }
+
+    public List<String> getDataList() {
         return mDeviceTypeList;
     }
 
@@ -129,7 +203,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
         @BindView(R.id.item_pop_select_ll_root)
         LinearLayout itemPopSelectLlRoot;
 
-        public TypeSelectHolder(View itemView) {
+        TypeSelectHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

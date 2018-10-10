@@ -56,8 +56,8 @@ public class InspectionInstructionTabAdapter extends RecyclerView.Adapter<Inspec
             }
         });
         //查找巡检内容的时候，根据deviceType查找，所以tabs存的就是devicetype,后期这部分代码还是要改的
-        String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(tabs.get(position));
-        holder.itemAdapterInspectionInstructionTv.setText(inspectionDeviceName);
+        String deviceType = tabs.get(position);
+        holder.itemAdapterInspectionInstructionTv.setText(WidgetUtil.getInspectionDeviceName(deviceType));
     }
 
     public void setRecycleViewItemClickListener(RecycleViewItemClickListener listener) {

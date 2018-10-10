@@ -25,6 +25,7 @@ public interface Constants {
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
     String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
     String PREFERENCE_KEY_DEPLOY_TAG = "preference_key_deploy_tag";
+    String PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES = "preference_key_local_devices_mergetypes";
     //
     String PREFERENCE_KEY_DEPLOY_PHONE = "preference_key_deploy_phone";
     //
@@ -223,6 +224,7 @@ public interface Constants {
     String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";
     //
     String PREFERENCE_LOGIN_ID = "preference_login_id";
+    String PREFERENCE_LOCAL_DEVICES_MERGETYPES = "preference_local_devices_mergetypes";
     String PREFERENCE_LOGIN_NAME_PWD = "preference_login_name_pwd";
     String PREFERENCE_SPLASH_LOGIN_DATA = "preference_main_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
