@@ -63,7 +63,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         //
 
         AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(position);
-        String time = DateUtil.getFullParseDate(recordInfo.getUpdatedTime());
+        String time = DateUtil.getStrTimeToday(recordInfo.getUpdatedTime(),1);
         holder.itemAlertContentTvTime.setText(time);
         //
         if ("confirm".equals(recordInfo.getType())) {

@@ -199,5 +199,6 @@
     <string name="menu_page_station">Station Deployment</string>
     <string name="menu_page_contract">Contract management</string>
     <string name="menu_page_scan_login">ScanLogin Fragment</string>
+    <string name="no_find_contact_phone_number">未找到联系人电话</string>
 
 </resources>

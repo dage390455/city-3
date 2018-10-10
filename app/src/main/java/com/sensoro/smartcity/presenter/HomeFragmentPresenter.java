@@ -285,7 +285,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void playSound() {
-        if ("admin".equals(PreferencesHelper.getInstance().getUserData().roles)) {
+        if (!"admin".equals(PreferencesHelper.getInstance().getUserData().roles)) {
             mSoundPool.play(mSoundId, 1, 1, 0, 0, 1);
         }
     }

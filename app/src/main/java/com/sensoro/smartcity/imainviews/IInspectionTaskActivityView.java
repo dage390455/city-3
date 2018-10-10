@@ -29,4 +29,6 @@ public interface IInspectionTaskActivityView extends IToast, IProgressDialog, IA
     List<DeviceTypeModel> getSelectDeviceList();
 
     void showSelectDeviceTypePop();
+
+    void setNoContentVisible(boolean isVisible);
 }

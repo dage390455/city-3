@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -185,10 +186,16 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     public void setCurrentAlarmState(int state, String time) {
         switch (state){
             case 0:
-                acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_29c_shadow);
+                acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_fa_shadow);
+                acAlertImvAlertIcon.setImageResource(R.drawable.alert_time_normal);
+                acAlertTvAlertTime.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                acAlertTvAlertTimeText.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
                 break;
             case 1:
                 acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_f34_shadow);
+                acAlertImvAlertIcon.setImageResource(R.drawable.alert_time_white);
+                acAlertTvAlertTime.setTextColor(Color.WHITE);
+                acAlertTvAlertTimeText.setTextColor(Color.WHITE);
                 break;
         }
 //        acAlertLlAlertTime.setBackground();

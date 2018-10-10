@@ -86,11 +86,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         if (acLoginEtAccount.getText().length() > 0 || acLoginEtPsd.getText().length() > 0) {
             updateLogoDescriptionState(false);
         }
-        if (acLoginEtAccount.getText().length() > 0 && acLoginEtPsd.getText().length() > 0) {
-            updateLoginBtnState(true);
-        } else {
-            updateLoginBtnState(false);
-        }
+
 
 
         acLoginEtAccount.addTextChangedListener(new TextWatcher() {
@@ -109,11 +105,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                 if (s.length() > 0) {
                     acLoginImvAccountIcon.setImageResource(R.drawable.login_account_high_light);
                     acLoginImvAccountClear.setVisibility(View.VISIBLE);
-                    if (acLoginEtPsd.getText().length() > 0) {
-                        updateLoginBtnState(true);
-                    } else {
-                        updateLoginBtnState(false);
-                    }
 
                 } else {
                     acLoginImvAccountIcon.setImageResource(R.drawable.login_account);
@@ -140,11 +131,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                 if (s.length() > 0) {
                     acLoginImvPsdIcon.setImageResource(R.drawable.login_psd_high_light);
                     acLoginImvPsdClear.setVisibility(View.VISIBLE);
-                    if (acLoginEtAccount.getText().length() > 0) {
-                        updateLoginBtnState(true);
-                    } else {
-                        updateLoginBtnState(false);
-                    }
+
                 } else {
                     acLoginImvPsdIcon.setImageResource(R.drawable.login_psd);
                     acLoginImvPsdClear.setVisibility(View.GONE);
@@ -156,15 +143,6 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         });
     }
 
-    private void updateLoginBtnState(boolean isEnable) {
-        login_btn.setEnabled(isEnable);
-        if (isEnable) {
-            setLogButtonState(RetrofitServiceHelper.INSTANCE.getBaseUrlType());
-        } else {
-            login_btn.setBackgroundResource(R.drawable.shape_bg_corner_dfdf_shadow);
-        }
-
-    }
 
     @Override
     protected void onResume() {

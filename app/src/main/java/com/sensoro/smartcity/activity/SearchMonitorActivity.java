@@ -88,6 +88,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     RelativeLayout indexLayoutList;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
 
     private Animation returnTopAnimation;
     private ProgressUtils mProgressUtils;
@@ -230,16 +232,17 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
         if (dataList != null && dataList.size() > 0) {
-            acSearchDeviceRcContent.setVisibility(VISIBLE);
-            imvNoContent.setVisibility(View.GONE);
             Collections.sort(dataList);
             mSearchRcContentAdapter.setData(dataList);
             mSearchRcContentAdapter.notifyDataSetChanged();
-        } else {
-            acSearchDeviceRcContent.setVisibility(View.GONE);
-            imvNoContent.setVisibility(VISIBLE);
         }
+        setNoContentVisible(dataList == null || dataList.size() < 1);
+    }
 
+    @Override
+    public void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acSearchDeviceRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override

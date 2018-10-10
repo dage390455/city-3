@@ -27,4 +27,6 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 //    void recycleViewRefreshComplete();
 
     void setDetectionPoints(String count);
+
+    void  setNoContentVisible(boolean isVisible);
 }

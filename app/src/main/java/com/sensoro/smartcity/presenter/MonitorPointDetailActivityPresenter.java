@@ -84,7 +84,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             default:
                 break;
         }
-        getView().setAlarmStateColor(textColor);
+//        getView().setAlarmStateColor(textColor);
         String name = mDeviceInfo.getName();
         String sn = mDeviceInfo.getSn();
         //TODO 显示sn还是姓名等

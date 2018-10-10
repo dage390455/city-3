@@ -231,7 +231,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             }
         }
         if (TextUtils.isEmpty(tempNumber)) {
-            SensoroToast.INSTANCE.makeText("未找到电话联系人", Toast.LENGTH_SHORT).show();
+            SensoroToast.INSTANCE.makeText(mActivity.getString(R.string.no_find_contact_phone_number), Toast.LENGTH_SHORT).show();
         } else {
             AppUtils.diallPhone(tempNumber, mActivity);
         }

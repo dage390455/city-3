@@ -16,19 +16,19 @@
         android:scaleType="fitXY"
         android:src="@drawable/type_all"
         android:contentDescription="@null"
-        android:layout_gravity="center_horizontal"
         android:layout_marginTop="16dp"
+        android:layout_marginStart="8dp"
         />
     <TextView
         android:id="@+id/item_pop_select_tv_type_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="全部类型"
-        android:layout_gravity="center_horizontal"
         android:textSize="12sp"
         android:textColor="@color/c_252525"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
         />
 
 
