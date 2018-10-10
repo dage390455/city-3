@@ -25,7 +25,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainHomeFragRcTypeAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.HomeTopModel;
@@ -69,6 +68,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     TextView tvDetectionPoint;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
     private MainHomeFragRcContentAdapter mMainHomeFragRcContentAdapter;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeAdapter;
     private ProgressUtils mProgressUtils;
@@ -91,13 +92,12 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     private void initPop() {
         mSelectDeviceTypePop = new SelectDeviceTypePopUtils(mRootFragment.getActivity());
-//        mSelectDeviceTypePop.updateSelectDeviceTypeList(SensoroCityApplication.getInstance().mDeviceTypeList);
         mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel item) {
-                mPresenter.requestDataByTypes(position);
+                mPresenter.requestDataByTypes(position, item);
                 //选择类型的pop点击事件
-                fgMainHomeTvSelectType.setText(Constants.SELECT_TYPE[position]);
+                fgMainHomeTvSelectType.setText(item.name);
                 mSelectDeviceTypePop.dismiss();
             }
         });
@@ -269,24 +269,29 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
         if (dataList.size() > 0) {
-            imvNoContent.setVisibility(View.GONE);
-            fgMainHomeRcContent.setVisibility(View.VISIBLE);
             mMainHomeFragRcContentAdapter.setData(dataList);
             mMainHomeFragRcContentAdapter.notifyDataSetChanged();
-        } else {
-            imvNoContent.setVisibility(View.VISIBLE);
-            fgMainHomeRcContent.setVisibility(View.GONE);
         }
+
+        setNoContentVisible(dataList.size() < 1);
 
 //        if (dataList.size() < 5) {
 //            mReturnTopImageView.setVisibility(View.GONE);
 //        }
     }
 
+    @Override
+    public void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        fgMainHomeRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+    }
 
-    public void showTypePopupView() {
+    @Override
+    public void updateSelectDeviceTypePopAndShow(List<String> devicesTypes) {
+        mSelectDeviceTypePop.updateSelectDeviceTypeList(devicesTypes);
         mSelectDeviceTypePop.showAtLocation(fgMainHomeLlRoot, Gravity.TOP);
     }
+
 
     @Override
     public void recycleViewRefreshComplete() {
@@ -316,8 +321,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 mPresenter.doSearch();
                 break;
             case R.id.fg_main_home_tv_select_type:
-//                showSelectTypePop();
-                showTypePopupView();
+                mPresenter.updateSelectDeviceTypePopAndShow();
                 break;
         }
     }

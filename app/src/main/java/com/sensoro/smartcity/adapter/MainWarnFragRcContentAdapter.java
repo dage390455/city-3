@@ -65,7 +65,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             } else {
                 holder.mainWarnRcContentTvContent.setText(WidgetUtil.parseSensorTypes(mContext, strings) + " " + deviceName);
             }
-            holder.mainWarnRcContentTvTime.setText(DateUtil.getFullParseDate(alarmLogInfo.getUpdatedTime()));
+            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(alarmLogInfo.getUpdatedTime(),0));
             //
             switch (alarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
@@ -103,9 +103,9 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                         }
                     });
                     holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
-                    holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
+                    holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_8058a5));
                     holder.mainWarnRcContentTvTag.setText("误报");
-                    changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_f34a4a);
+                    changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_8058a5);
                     break;
                 case DISPLAY_STATUS_TEST:
                     isReConfirm = true;
@@ -117,9 +117,9 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                         }
                     });
                     holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
-                    holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
+                    holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_8058a5));
                     holder.mainWarnRcContentTvTag.setText("测试/巡检");
-                    changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_f34a4a);
+                    changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_8058a5);
                     break;
                 case DISPLAY_STATUS_RISKS:
                     isReConfirm = true;
@@ -131,9 +131,9 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                         }
                     });
                     holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
-                    holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
+                    holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_ff8d34));
                     holder.mainWarnRcContentTvTag.setText("安全隐患");
-                    changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_f34a4a);
+                    changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_ff8d34);
                     break;
             }
         }

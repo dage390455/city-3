@@ -76,6 +76,8 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     LinearLayout acInspectionTaskLlSelect;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
     private InspectionTaskRcContentAdapter mContentAdapter;
     private SelectDeviceTypePopUtils mSelectDeviceTypePop;
     private InspectionTaskStatePopUtils mSelectStatusPop;
@@ -403,13 +405,14 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     @Override
     public void updateInspectionTaskDeviceItem(List<InspectionTaskDeviceDetail> data) {
         if (data != null && data.size() > 0) {
-            acInspectionTaskRcContent.setVisibility(View.VISIBLE);
-            imvNoContent.setVisibility(View.GONE);
             mContentAdapter.updateDevices(data);
-        } else {
-            acInspectionTaskRcContent.setVisibility(View.GONE);
-            imvNoContent.setVisibility(View.VISIBLE);
         }
+        setNoContentVisible(data == null || data.size() < 1);
+    }
 
+    @Override
+    public void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acInspectionTaskRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 }

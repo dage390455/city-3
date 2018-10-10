@@ -108,7 +108,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
         getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        String alarmTime = DateUtil.getFullParseDate(deviceAlarmLogInfo.getUpdatedTime());
+        String alarmTime = DateUtil.getStrTimeToday(deviceAlarmLogInfo.getUpdatedTime(),2);
         //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {
@@ -238,7 +238,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             }
         }
         if (TextUtils.isEmpty(tempNumber)) {
-            getView().toastShort("未找到电话联系人");
+            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         } else {
             AppUtils.diallPhone(tempNumber, mContext);
         }

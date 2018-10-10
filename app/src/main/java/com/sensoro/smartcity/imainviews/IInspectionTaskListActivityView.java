@@ -24,4 +24,6 @@ public interface IInspectionTaskListActivityView extends IToast,IProgressDialog,
     void rcSmoothScrollToTop();
 
     void closeRefreshHeaderOrFooter();
+
+    void setNoContentVisible(boolean isVisible);
 }

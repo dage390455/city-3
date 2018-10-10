@@ -386,7 +386,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     @Override
     public void onPushCallBack(String message) {
-        LogUtils.loge(this, "pushNotification---isAPPBack = " + isAPPBack);
+        LogUtils.loge("hcs", "pushNotification---isAPPBack = " + isAPPBack);
         if (isAPPBack) {
             mNotificationUtils.sendNotification(message);
         }

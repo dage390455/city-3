@@ -13,6 +13,7 @@ import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
+import com.yixia.camera.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

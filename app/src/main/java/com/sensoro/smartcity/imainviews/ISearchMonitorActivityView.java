@@ -35,4 +35,6 @@ public interface ISearchMonitorActivityView extends IToast, IProgressDialog, IAc
 
 
     void setTypeView(String typesText);
+
+    void setNoContentVisible(boolean isVisible);
 }

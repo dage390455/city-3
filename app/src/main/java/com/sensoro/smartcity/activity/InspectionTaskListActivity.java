@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
@@ -69,6 +70,8 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     RelativeLayout acInspectionTaskListRlDateEdit;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
     private InspectionTaskAdapter mTaskAdapter;
     private CalendarPopUtils mCalendarPopUtils;
     private long startTime = -1;
@@ -305,14 +308,16 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
     @Override
     public void updateRcContent(List<InspectionIndexTaskInfo> tasks) {
         if(tasks != null && tasks.size() > 0){
-            acInspectionTaskListRcContent.setVisibility(View.VISIBLE);
-            imvNoContent.setVisibility(View.GONE);
             mTaskAdapter.updateTaskList(tasks);
-        }else{
-            acInspectionTaskListRcContent.setVisibility(View.GONE);
-            imvNoContent.setVisibility(View.VISIBLE);
         }
+        setNoContentVisible(tasks == null || tasks.size() < 1);
 
+    }
+
+    @Override
+    public void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acInspectionTaskListRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override

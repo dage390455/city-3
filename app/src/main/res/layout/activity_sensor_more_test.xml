@@ -6,11 +6,12 @@
     android:background="@color/sensor_detail_bg"
     android:orientation="vertical">
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/sensor_more_title_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y200"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:orientation="horizontal">
 
         <ImageView
             android:id="@+id/sensor_more_back"
@@ -21,18 +22,19 @@
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:padding="15dp"
+            android:layout_gravity="center_vertical"
             android:src="@mipmap/ic_back" />
 
         <TextView
             android:id="@+id/sensor_more_title_sn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="传感器详情"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/x60" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"

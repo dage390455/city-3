@@ -221,6 +221,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
+                android:visibility="gone"
                 android:orientation="horizontal">
 
                 <ImageView
@@ -364,7 +365,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="20dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/change_merchants" />
+                    android:src="@drawable/version_icon" />
 
                 <TextView
                     android:layout_width="0dp"

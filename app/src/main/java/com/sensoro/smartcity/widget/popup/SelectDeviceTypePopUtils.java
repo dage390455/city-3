@@ -47,7 +47,6 @@ public class SelectDeviceTypePopUtils {
         mTypeSelectAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                tvSelectType.setText(mTypeSelectAdapter.getItem(position).name);
                 listener.onSelectDeviceTypeItemClick(view,position,mTypeSelectAdapter.getItem(position));
 
             }

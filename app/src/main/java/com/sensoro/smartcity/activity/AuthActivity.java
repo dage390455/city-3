@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -18,6 +19,7 @@ import com.sensoro.smartcity.widget.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 
 /**
@@ -25,13 +27,17 @@ import butterknife.ButterKnife;
  */
 
 public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPresenter> implements IAuthActivityView,
-        Constants,NumKeyboard.OnKeyPressListener {
+        Constants, NumKeyboard.OnKeyPressListener {
 
 
     @BindView(R.id.ac_auth_tv_Verification)
     TextView acAuthTvVerification;
     @BindView(R.id.ac_auth_keyboard)
     NumKeyboard acAuthKeyboard;
+    @BindView(R.id.ac_auth_imv_finish)
+    ImageView acAuthImvFinish;
+    @BindView(R.id.ac_auth_imv_status)
+    ImageView acAuthImvStatus;
     private int textCount;
     private ProgressUtils mProgressUtils;
     private StringBuilder mInputCode;
@@ -63,8 +69,6 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
         }
         return super.onKeyDown(keyCode, event);
     }
-
-
 
 
     @Override
@@ -122,10 +126,10 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
 
     @Override
     public void onInertKey(String text) {
-        if(mInputCode.length()<6){
+        if (mInputCode.length() < 6) {
             mInputCode.append(text);
             acAuthTvVerification.setText(mInputCode.toString());
-            if(mInputCode.length()==6){
+            if (mInputCode.length() == 6) {
                 mPresenter.doAuthCheck(mInputCode.toString());
             }
 
@@ -135,16 +139,31 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
 
     @Override
     public void onDeleteKey() {
-        if (mInputCode.length()>0) {
-            mInputCode.deleteCharAt(mInputCode.length()-1);
+        if (mInputCode.length() > 0) {
+            mInputCode.deleteCharAt(mInputCode.length() - 1);
             acAuthTvVerification.setText(mInputCode.toString());
+        }
+        if (mInputCode.length() == 0) {
+            updateImvStatus(true);
         }
 
     }
 
     @Override
     public void onClearKey(String s) {
-        mInputCode.delete(0,mInputCode.length());
+        mInputCode.delete(0, mInputCode.length());
         acAuthTvVerification.setText(mInputCode.toString());
+        updateImvStatus(true);
+    }
+
+
+    @OnClick(R.id.ac_auth_imv_finish)
+    public void onViewClicked() {
+        finishAc();
+    }
+
+    @Override
+    public void updateImvStatus(boolean isSuccess) {
+        acAuthImvStatus.setImageResource(isSuccess ? R.drawable.deploy_succeed : R.drawable.deploy_fail);
     }
 }

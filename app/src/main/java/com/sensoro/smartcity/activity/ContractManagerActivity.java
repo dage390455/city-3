@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -50,6 +51,8 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     RefreshLayout refreshLayout;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
 
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
@@ -121,16 +124,17 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void updateContractList(List<ContractListInfo> data) {
-        if(data != null && data.size() > 0){
-            contractPtrList.setVisibility(View.VISIBLE);
-            imvNoContent.setVisibility(View.GONE);
+        if (data != null && data.size() > 0) {
             mContractListAdapter.setData(data);
             mContractListAdapter.notifyDataSetChanged();
-        }else{
-            contractPtrList.setVisibility(View.GONE);
-            imvNoContent.setVisibility(View.VISIBLE);
         }
+        setNoContentVisible(data == null || data.size() < 1);
+    }
 
+    @Override
+    public void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        contractPtrList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override

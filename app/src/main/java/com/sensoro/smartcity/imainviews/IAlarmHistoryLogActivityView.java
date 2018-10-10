@@ -19,4 +19,6 @@ public interface IAlarmHistoryLogActivityView extends IToast, IProgressDialog, I
     void setDateSelectVisible(boolean isVisible);
 
     void setDateSelectText(String text);
+
+    void setNoContentVisible(boolean isVisible);
 }

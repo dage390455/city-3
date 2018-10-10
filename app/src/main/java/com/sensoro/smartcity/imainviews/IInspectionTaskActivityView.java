@@ -26,4 +26,6 @@ public interface IInspectionTaskActivityView extends IToast, IProgressDialog, IA
     void setBottomInspectionStateTitle(String finish, String unFinish);
 
     void showSelectDeviceTypePop();
+
+    void setNoContentVisible(boolean isVisible);
 }

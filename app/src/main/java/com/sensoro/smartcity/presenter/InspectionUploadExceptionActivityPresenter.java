@@ -97,7 +97,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         } else if (IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
             names.add("拍照");
-            names.add("相册");
+//            names.add("相册");
             names.add("拍摄视频");
             getView().showDialog(this, names);
         } else {

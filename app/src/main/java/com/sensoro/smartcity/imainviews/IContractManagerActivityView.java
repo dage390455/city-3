@@ -23,4 +23,6 @@ public interface IContractManagerActivityView extends IProgressDialog, IToast, I
 
     void closeRefreshHeaderOrFooter();
 
+    void setNoContentVisible(boolean isVisible);
+
 }

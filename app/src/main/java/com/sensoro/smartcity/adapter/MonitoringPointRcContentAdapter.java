@@ -43,8 +43,29 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
     @Override
     public void onBindViewHolder(MonitoringPointRcContentHolder holder, int position) {
         if (mDeviceInfo != null) {
-            Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
             String[] sensorTypes = mDeviceInfo.getSensorTypes();
+            if(position == sensorTypes.length){
+                SensorStruct batteryStruct = mDeviceInfo.getSensoroDetails().get("battery");
+                if (batteryStruct != null) {
+                    holder.itemMonitoringPointContentTvName.setText("电量");
+                    String battery = batteryStruct.getValue().toString();
+                    if (battery.equals("-1.0") || battery.equals("-1")) {
+                        holder.itemMonitoringPointContentTvContent.setText("电源供电");
+                    } else {
+                        String batteryValue = WidgetUtil.subZeroAndDot(battery);
+                        holder.itemMonitoringPointContentTvContent.setText(batteryValue);
+                        if (Integer.valueOf(batteryValue)<10) {
+                            holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
+                            holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
+                        }
+
+                    }
+                }
+                return;
+            }
+
+            Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
+
             List<String> sortSensorTypes = Arrays.asList(sensorTypes);
             if (sensoroDetails != null && sortSensorTypes.size() > 0) {
                 String type = sortSensorTypes.get(position);
@@ -58,7 +79,6 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                     }
                 }
             }
-
             int color;
             int status = mDeviceInfo.getStatus();
             switch (status) {
@@ -91,7 +111,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
         if (mDeviceInfo == null) {
             return 0;
         }
-        return mDeviceInfo.getSensorTypes().length;
+        return mDeviceInfo.getSensorTypes().length+1;
     }
 
     class MonitoringPointRcContentHolder extends RecyclerView.ViewHolder {

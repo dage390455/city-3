@@ -213,6 +213,7 @@ public class DateUtil {
     public static String getYearDate(long time) {
         return new SimpleDateFormat("yyyy", Locale.ROOT).format(new Date(time));
     }
+
     public static String getMonth(long time) {
         return new SimpleDateFormat("MM", Locale.ROOT).format(new Date(time));
     }
@@ -246,7 +247,7 @@ public class DateUtil {
         String apm_text = apm == 0 ? "上午" : "下午";
         long now = System.currentTimeMillis();
         long diff = now - time;
-        long day = diff / 3600000 / 24;
+        float day = diff / 3600000 / 24;
         String formatTime = new SimpleDateFormat("hh:mm:ss", Locale.ROOT).format(new Date(time));
         String other_date = new SimpleDateFormat("MM/dd hh:mm:ss", Locale.ROOT).format(new Date(time));
         if (day < 1) {
@@ -257,13 +258,52 @@ public class DateUtil {
             } else {
                 return "昨天 " + apm_text + formatTime;
             }
-        } else if (day > 1 && day < 2) {
+        } else if (day < 2) {
             return "昨天 " + apm_text + formatTime;
         } else {
 
             return other_date.replace(" ", " " + apm_text);
         }
     }
+
+    public static String getStrTimeToday(long time, int status) {
+        final Calendar mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(time);
+        long now = System.currentTimeMillis();
+        long diff = now - time;
+        float day = diff / 3600000 / 24;
+        String pattern = "yyyy.MM.dd HH:mm:ss";
+        String formatPattern = "HH:mm:ss";
+        switch (status) {
+            case 0:
+                pattern = "yyyy.MM.dd HH:mm:ss";
+                break;
+            case 1:
+                pattern = "yyyy.MM.dd HH:mm:ss";
+                break;
+            case 2:
+                pattern = "MM.dd  HH:mm:ss";
+                break;
+
+        }
+        String formatTime = new SimpleDateFormat(formatPattern, Locale.ROOT).format(new Date(time));
+        String other_date = new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
+
+        if (day < 1) {
+            String nowString = DateUtil.getDayDate(now);
+            String dataString = DateUtil.getDayDate(time);
+            if (dataString.equalsIgnoreCase(nowString)) {
+                return "今天 " + formatTime;
+            } else {
+                return "昨天 " + formatTime;
+            }
+        } else if (day < 2) {
+            return "昨天 " + formatTime;
+        } else {
+            return other_date;
+        }
+    }
+
 
 
     public static String getHourFormatDate(long time) {
@@ -381,7 +421,6 @@ public class DateUtil {
             }
         }
     }
-
 
 
 }

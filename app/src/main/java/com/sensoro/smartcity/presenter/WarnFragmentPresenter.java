@@ -97,7 +97,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 }
             }
             if (TextUtils.isEmpty(tempNumber)) {
-                getView().toastShort("未找到电话联系人");
+                getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
             } else {
                 AppUtils.diallPhone(tempNumber, mContext);
             }

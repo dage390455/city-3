@@ -19,4 +19,6 @@ public interface IMerchantSwitchActivityView extends IProgressDialog, IActivityI
     void updateAdapterUserInfo(List<UserInfo> data);
 
     void onPullRefreshComplete();
+
+    void setNoContentVisible(boolean isVisible);
 }

@@ -70,6 +70,8 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     ImageView mReturnTopImageView;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
     private MainWarnFragRcContentAdapter mRcContentAdapter;
     private boolean isShowDialog = true;
     private ProgressUtils mProgressUtils;
@@ -330,14 +332,10 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @Override
     public void updateAlarmListAdapter(List<DeviceAlarmLogInfo> deviceAlarmLogInfoList) {
         if (deviceAlarmLogInfoList.size() > 0) {
-            fgMainWarnRcContent.setVisibility(View.VISIBLE);
-            imvNoContent.setVisibility(View.GONE);
             mRcContentAdapter.setData(deviceAlarmLogInfoList);
             mRcContentAdapter.notifyDataSetChanged();
-        } else {
-            fgMainWarnRcContent.setVisibility(View.GONE);
-            imvNoContent.setVisibility(View.VISIBLE);
         }
+        setNoContentVisible(deviceAlarmLogInfoList.size()<1);
 
     }
 
@@ -399,6 +397,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     @Override
     public boolean getSearchTextVisible() {
         return tvWarnAlarmSearchCancel.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void setNoContentVisible(boolean isVisible) {
+        fgMainWarnRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

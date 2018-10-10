@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -59,6 +60,8 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     ImageView mReturnTopImageView;
     @BindView(R.id.no_content)
     ImageView imv_content;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private CalendarPopUtils mCalendarPopUtils;
@@ -223,13 +226,15 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     @Override
     public void updateAlarmListAdapter(List<DeviceAlarmLogInfo> data) {
         if(data != null && data.size() >0){
-            acHistoryLogRcContent.setVisibility(View.VISIBLE);
-            imv_content.setVisibility(View.GONE);
             mAlarmHistoryLogRcContentAdapter.updateAdapter(data);
-        }else{
-            acHistoryLogRcContent.setVisibility(View.GONE);
-            imv_content.setVisibility(View.VISIBLE);
         }
+        setNoContentVisible(data == null || data.size() < 1);
+    }
+
+    @Override
+    public void setNoContentVisible(boolean isVisible) {
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acHistoryLogRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override

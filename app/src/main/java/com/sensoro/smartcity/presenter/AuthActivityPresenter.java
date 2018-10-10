@@ -49,6 +49,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
                 } else {
                     getView().dismissProgressDialog();
                     getView().toastShort("二次验证失败");
+                    getView().updateImvStatus(false);
                 }
             }
 

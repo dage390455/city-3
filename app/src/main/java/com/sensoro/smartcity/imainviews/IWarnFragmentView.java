@@ -30,4 +30,6 @@ public interface IWarnFragmentView extends IToast, IActivityIntent, IProgressDia
     void setSearchButtonTextVisible(boolean isVisible);
 
     boolean getSearchTextVisible();
+
+    void setNoContentVisible(boolean isVisible);
 }
