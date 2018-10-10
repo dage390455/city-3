@@ -13,9 +13,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,9 +52,10 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
         InspectionTaskDeviceDetail deviceDetail = mDevices.get(position);
         String name = deviceDetail.getName();
         String sn = deviceDetail.getSn();
-        if (position == 1) {
-            sn = "02700017C6445B3B";
-        }
+
+//        if (position == 1) {
+//            sn = "02700017C6445B3B";
+//        }
         if (!TextUtils.isEmpty(sn)) {
             if (BLE_DEVICE_SET.contains(sn)) {
                 holder.itemAdapterInspectionTaskTvNear.setVisibility(View.VISIBLE);
@@ -63,15 +63,10 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
                 holder.itemAdapterInspectionTaskTvNear.setVisibility(View.INVISIBLE);
             }
         }
-//        01621117C6A34D2A
-        DeviceTypeModel deviceTypeModel = SensoroCityApplication.getInstance().getDeviceTypeName(deviceDetail.getUnionType());
+        String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(deviceDetail.getDeviceType());
         int status = deviceDetail.getStatus();
         holder.itemAdapterInspectionTaskTvName.setText(name);
-        if (deviceTypeModel != null) {
-            holder.itemAdapterInspectionTaskTvSn.setText(deviceTypeModel.name + " " + sn);
-        }else{
-            holder.itemAdapterInspectionTaskTvSn.setText("未知 " + sn);
-        }
+        holder.itemAdapterInspectionTaskTvSn.setText(inspectionDeviceName + " " + sn);
         switch (status) {
             case 0:
                 //未巡检调用的函数跟其他的不一样，我们不一样，每个人都有不同的境遇

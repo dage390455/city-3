@@ -8,6 +8,8 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.EventLoginData;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +22,7 @@ public final class PreferencesHelper implements Constants {
 
     private volatile static PreferencesHelper instance;
     private volatile EventLoginData mEventLoginData;
+    private volatile DeviceMergeTypesInfo mDeviceMergeTypesInfo;
 
     //    private SharedPreferences splashLoginData;
     private PreferencesHelper() {
@@ -179,5 +182,49 @@ public final class PreferencesHelper implements Constants {
 
     public String getDeployTagsHistory() {
         return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_TAG, null);
+    }
+
+    public DeviceMergeTypesInfo getLocalDevicesMergeTypes() {
+        if (mDeviceMergeTypesInfo == null) {
+            String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+            if (!TextUtils.isEmpty(json)) {
+                mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
+            }
+        }
+//        if (mDeviceMergeTypesInfo != null) {
+//            //加入全部的类型数据
+//            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = mDeviceMergeTypesInfo.getConfig();
+//            Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
+//            if (!deviceType.containsKey("all")) {
+//                DeviceTypeStyles deviceTypeStyles = new DeviceTypeStyles();
+//                deviceTypeStyles.setMergeType("all");
+//                deviceType.put("all", deviceTypeStyles);
+//            }
+//            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+//            if (!mergeType.containsKey("all")) {
+//                MergeTypeStyles mergeTypeStyles = new MergeTypeStyles();
+//                mergeTypeStyles.setName("全部");
+//                mergeTypeStyles.setResId(R.drawable.type_all);
+//                mergeType.put("all", mergeTypeStyles);
+//            }
+//            Map<String, SensorTypeStyles> sensorType = config.getSensorType();
+//            if (!sensorType.containsKey("all")) {
+//                sensorType.put("all", new SensorTypeStyles());
+//            }
+//        }
+        return mDeviceMergeTypesInfo;
+    }
+
+    public void saveLocalDevicesMergeTypes(DeviceMergeTypesInfo deviceMergeTypesInfo) {
+        if (deviceMergeTypesInfo != null) {
+            mDeviceMergeTypesInfo = deviceMergeTypesInfo;
+            String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(mDeviceMergeTypesInfo);
+            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
+                    .MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
+            editor.apply();
+        }
+
     }
 }

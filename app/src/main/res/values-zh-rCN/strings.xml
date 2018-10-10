@@ -41,7 +41,7 @@
     <string name="confirm_info">确认信息</string>
     <string name="alarm_list">预警记录</string>
     <string name="contract_list">合同管理</string>
-    <string name="sensor_detail_sn">SN</string>
+    <string name="sensor_detail_sn">设备号</string>
     <string name="sensor_detail_name">名称</string>
     <string name="sensor_detail_type">类型</string>
     <string name="sensor_detail_status">状态</string>

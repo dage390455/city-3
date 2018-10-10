@@ -509,7 +509,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 images.clear();
                 images.addAll((ArrayList<ImageItem>) data);
                 if (images.size() > 0) {
-                    getView().setDeployPhotoText("已选择" + images.size() + "张图片");
+                    getView().setDeployPhotoText("已添加" + images.size() + "张图片");
                 } else {
                     getView().setDeployPhotoText("未添加");
                 }

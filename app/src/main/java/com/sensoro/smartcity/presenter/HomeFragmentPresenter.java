@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
-import android.text.TextUtils;
 import android.util.Log;
 
 import com.sensoro.smartcity.R;
@@ -20,6 +19,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IHomeFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
+import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.model.PushData;
@@ -28,6 +28,8 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
@@ -44,6 +46,8 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -63,13 +67,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private int mSoundId;
     private SoundPool mSoundPool;
     //TODO 联动类型选择
-    private int mTypeSelectedIndex = 0;
+    private String mTypeSelectedType = null;
     private int mStatusSelectedIndex = 0;
     //
     private volatile int tempAlarmCount = 0;
     private volatile int tempNormalCount = 0;
     private volatile int tempTotalCount;
     private final List<HomeTopModel> homeTopModels = new ArrayList<>();
+    private final ArrayList<String> mDeviceTypes = new ArrayList<>();
     /**
      * 推送轮训
      */
@@ -91,6 +96,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
         }
     };
+
 
     @Override
     public void initData(Context context) {
@@ -291,37 +297,38 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private boolean isMatcher(DeviceInfo deviceInfo) {
-        if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0) {
-            return true;
-        } else {
-            boolean isMatcherType = false;
-            boolean isMatcherStatus = false;
-            String unionType = deviceInfo.getUnionType();
-            if (mTypeSelectedIndex == 0) {
-                isMatcherType = true;
-            } else {
-                if (!TextUtils.isEmpty(unionType)) {
-                    String[] unionTypeArray = unionType.split("\\|");
-                    List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                    String[] menuTypeArray = SENSOR_MENU_MATCHER_ARRAY[mTypeSelectedIndex].split("\\|");
-                    for (String menuType : menuTypeArray) {
-                        if (unionTypeList.contains(menuType)) {
-                            isMatcherType = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (mStatusSelectedIndex != 0) {
-                int status = INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-                if (deviceInfo.getStatus() == status) {
-                    isMatcherStatus = true;
-                }
-            } else {
-                isMatcherStatus = true;
-            }
-            return isMatcherStatus && isMatcherType;
-        }
+//        if (mTypeSelectedType == null&& mStatusSelectedIndex == 0) {
+//            return true;
+//        } else {
+//            boolean isMatcherType = false;
+//            boolean isMatcherStatus = false;
+//            String unionType = deviceInfo.getUnionType();
+//            if (mTypeSelectedType == null) {
+//                isMatcherType = true;
+//            } else {
+//                if (!TextUtils.isEmpty(unionType)) {
+//                    String[] unionTypeArray = unionType.split("\\|");
+//                    List<String> unionTypeList = Arrays.asList(unionTypeArray);
+//                    String[] menuTypeArray = SENSOR_MENU_MATCHER_ARRAY[mTypeSelectedType].split("\\|");
+//                    for (String menuType : menuTypeArray) {
+//                        if (unionTypeList.contains(menuType)) {
+//                            isMatcherType = true;
+//                            break;
+//                        }
+//                    }
+//                }
+//            }
+//            if (mStatusSelectedIndex != 0) {
+//                int status = INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
+//                if (deviceInfo.getStatus() == status) {
+//                    isMatcherStatus = true;
+//                }
+//            } else {
+//                isMatcherStatus = true;
+//            }
+//            return isMatcherStatus && isMatcherType;
+//        }
+        return true;
     }
 
     public void clickItem(int position) {
@@ -432,13 +439,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             return;
         }
         try {
-            String type = mTypeSelectedIndex == 0 ? null : SELECT_TYPE_VALUES[mTypeSelectedIndex];
+//            String type = mTypeSelectedType == 0 ? null : SELECT_TYPE_VALUES[mTypeSelectedType];
             Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
             getView().showProgressDialog();
             switch (direction) {
                 case DIRECTION_DOWN:
                     page = 1;
-                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, null).subscribeOn(Schedulers
+                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, mTypeSelectedType, status, null).subscribeOn(Schedulers
                             .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
                         @Override
                         public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -481,7 +488,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     break;
                 case DIRECTION_UP:
                     page++;
-                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, null).subscribeOn(Schedulers
+                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, mTypeSelectedType, status, null).subscribeOn(Schedulers
                             .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
                         @Override
                         public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -665,9 +672,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         requestWithDirection(DIRECTION_DOWN);
     }
 
-    public void requestDataByTypes(int position) {
+    public void requestDataByTypes(int position, DeviceTypeModel item) {
         requestTopData();
-        this.mTypeSelectedIndex = position;
+        if (position == 0) {
+            mTypeSelectedType = null;
+        } else {
+            mTypeSelectedType = mDeviceTypes.get(position - 1);
+        }
         requestWithDirection(DIRECTION_DOWN);
     }
 
@@ -747,5 +758,19 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             }
         }
         getView().toastShort("无此权限");
+    }
+
+    public void updateSelectDeviceTypePopAndShow() {
+        mDeviceTypes.clear();
+        final DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
+        final Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
+        Set<Map.Entry<String, DeviceTypeStyles>> entries = deviceType.entrySet();
+        for (Map.Entry<String, DeviceTypeStyles> entry : entries) {
+            String key = entry.getKey();
+            mDeviceTypes.add(key);
+        }
+        Collections.sort(mDeviceTypes);
+//        mSelectDeviceTypePop.updateSelectDeviceTypeList(SensoroCityApplication.getInstance().mDeviceTypeList);
+        getView().updateSelectDeviceTypePopAndShow(mDeviceTypes);
     }
 }

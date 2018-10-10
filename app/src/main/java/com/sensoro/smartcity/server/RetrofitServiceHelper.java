@@ -26,6 +26,7 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
@@ -1104,8 +1105,8 @@ public enum RetrofitServiceHelper {
      * 获取deviceType 对应关系
      * @return
      */
-    public Observable<ResponseBase> getDevicesMergeTypes(){
-        Observable<ResponseBase> devicesMergeTypes = retrofitService.getDevicesMergeTypes();
+    public Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(){
+        Observable<DevicesMergeTypesRsp> devicesMergeTypes = retrofitService.getDevicesMergeTypes();
         RxApiManager.getInstance().add("devicesMergeTypes", devicesMergeTypes.subscribe());
         return devicesMergeTypes;
     }

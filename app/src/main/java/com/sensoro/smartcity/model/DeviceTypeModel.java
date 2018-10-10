@@ -21,4 +21,7 @@ public class DeviceTypeModel {
         this.requestType = requestType;
         this.matcherType = matcherType;
     }
+
+    public DeviceTypeModel() {
+    }
 }

@@ -169,13 +169,13 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         if (hasBleDevice) {
             return;
         }
-//        String sn = mDeviceDetail.getSn();
-        String sn = "02700017C6445B3B";
+        String sn = mDeviceDetail.getSn();
+//        String sn = "02700017C6445B3B";
         if (tempBleDevice.contains(sn)) {
             hasBleDevice = true;
             getView().setConfirmState(hasBleDevice);
         }
-        mHandler.postDelayed(this, 2 * 1000);
+        mHandler.postDelayed(this, 1 * 1000);
     }
 
     @Override

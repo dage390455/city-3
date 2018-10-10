@@ -14,6 +14,7 @@ public final class EventLoginData implements Serializable {
     public boolean hasScanLogin;
     public boolean hasSubMerchant = true;
     public boolean hasInspection = false;
+    public boolean needAuth = false;
 
     @Override
     public String toString() {
@@ -28,6 +29,7 @@ public final class EventLoginData implements Serializable {
                 ", hasContract=" + hasContract +
                 ", hasScanLogin=" + hasScanLogin +
                 ", hasSubMerchant=" + hasSubMerchant +
+                ", needAuth=" + needAuth +
                 '}';
     }
 }

@@ -20,7 +20,6 @@ import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.DeviceTypeModel;
-import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.server.CityObserver;
@@ -59,6 +58,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private volatile boolean canFreshBle = true;
     private InspectionIndexTaskInfo mTaskInfo;
     private volatile boolean bleHasOpen = false;
+    private final List<String> selectDeviceList = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
@@ -80,6 +80,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         stopScan();
         mDevices.clear();
         BLE_DEVICE_SET.clear();
+        selectDeviceList.clear();
 
     }
 
@@ -221,9 +222,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void doInspectionType(final boolean needPop) {
-        List<DeviceTypeModel> selectDeviceList = getView().getSelectDeviceList();
-        if (selectDeviceList != null && selectDeviceList.size() > 0) {
-//            getView().updateSelectDeviceTypeList(selectDeviceList);
+        if (selectDeviceList.size() > 0) {
+            getView().updateSelectDeviceTypeList(selectDeviceList);
             getView().showSelectDeviceTypePop();
             return;
         }
@@ -236,24 +236,26 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
                 List<InspectionTaskExecutionModel.DeviceTypesBean> deviceTypes = data.getDeviceTypes();
                 if (deviceTypes != null) {
-                    ArrayList<DeviceTypeModel> types = new ArrayList<>();
+//                    ArrayList<DeviceTypeModel> types = new ArrayList<>();
                     for (InspectionTaskExecutionModel.DeviceTypesBean deviceTypesBean : deviceTypes) {
-                        String deviceType = deviceTypesBean.getDeviceType();
-                        List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
-                        for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
-                            if (mergeTypeInfo.getDeviceTypes().contains(deviceType)) {
-                                DeviceTypeModel deviceTypeModel = SensoroCityApplication.getInstance().getDeviceTypeName(mergeTypeInfo.getMergeType());
-                                if (deviceTypeModel != null) {
-                                    deviceTypeModel.deviceTypes = mergeTypeInfo.getDeviceTypes();
-                                    types.add(deviceTypeModel);
-                                }
-                                break;
-                            }
-                        }
-                        LogUtils.loge("doInspectionType --->>> " + deviceType);
+//                        String deviceType = deviceTypesBean.getDeviceType();
+////
+////                        List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
+////                        for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
+////                            if (mergeTypeInfo.getDeviceTypes().contains(deviceType)) {
+////                                DeviceTypeModel deviceTypeModel = SensoroCityApplication.getInstance().getDeviceTypeName(mergeTypeInfo.getMergeType());
+////                                if (deviceTypeModel != null) {
+////                                    deviceTypeModel.deviceTypes = mergeTypeInfo.getDeviceTypes();
+////                                    types.add(deviceTypeModel);
+////                                }
+////                                break;
+////                            }
+////                        }
+//                        LogUtils.loge("doInspectionType --->>> " + deviceType);
+                        selectDeviceList.add(deviceTypesBean.getDeviceType());
                     }
-                    types.add(0, SensoroCityApplication.getInstance().mDeviceTypeList.get(0));
-                    getView().updateSelectDeviceTypeList(types);
+//                    types.add(0, SensoroCityApplication.getInstance().mDeviceTypeList.get(0));
+                    getView().updateSelectDeviceTypeList(selectDeviceList);
                     if (needPop) {
                         getView().showSelectDeviceTypePop();
                     }
@@ -394,13 +396,11 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         List<Double> lonlat = deviceDetail.getLonlat();
         if (lonlat != null && lonlat.size() > 1) {
             LatLng destPosition = new LatLng(lonlat.get(1), lonlat.get(0));
-            if (!AppUtils.doNavigation(mContext, destPosition)) {
-                getView().toastShort("定位失败，请重试");
+            if (AppUtils.doNavigation(mContext, destPosition)) {
+                return;
             }
-        } else {
-            getView().toastShort("未设置位置信息");
         }
-
+        getView().toastShort("未获取到位置信息");
     }
 
     @Override

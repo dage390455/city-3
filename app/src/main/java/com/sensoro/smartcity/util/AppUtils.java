@@ -51,6 +51,10 @@ public class AppUtils {
     }
 
     public static boolean doNavigation(Activity activity, LatLng destPosition) {
+        if (destPosition.latitude == 0 || destPosition.longitude == 0) {
+//            SensoroToast.INSTANCE.makeText("位置坐标信息错误", Toast.LENGTH_SHORT).show();
+            return false;
+        }
         AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
         if (lastKnownLocation != null) {
             double lat = lastKnownLocation.getLatitude();//获取纬度

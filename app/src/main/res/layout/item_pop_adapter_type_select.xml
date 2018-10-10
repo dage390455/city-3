@@ -11,10 +11,9 @@
     >
     <ImageView
         android:id="@+id/item_pop_select_imv_type_icon"
-        android:layout_width="20dp"
-        android:layout_height="20dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/type_all"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:src="@mipmap/type_all_test"
         android:contentDescription="@null"
         android:layout_marginTop="16dp"
         android:layout_marginStart="8dp"
