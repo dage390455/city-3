@@ -133,9 +133,16 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         super.onDestroy();
     }
 
-    @OnClick(R.id.ac_deploy_device_tag_commit)
-    public void onViewClicked() {
-        mPresenter.doFinish();
+    @OnClick({R.id.ac_deploy_device_tag_commit,R.id.include_text_title_imv_arrows_left})
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.ac_deploy_device_tag_commit:
+                mPresenter.doFinish();
+                break;
+            case R.id.include_text_title_imv_arrows_left:
+                finishAc();
+                break;
+        }
     }
 
     @Override

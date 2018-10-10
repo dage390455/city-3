@@ -42,7 +42,8 @@
             android:background="@color/white"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="预警联系人"
                 android:textSize="14sp"
@@ -53,14 +54,14 @@
                 android:layout_marginBottom="16dp"/>
             <EditText
                 android:id="@+id/ac_name_address_et_alarm_contact_name"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="例：某某"
                 android:textSize="14sp"
                 android:layout_gravity="center_vertical"
                 android:gravity="end"
+                android:textCursorDrawable="@null"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="8dp"
                 />
@@ -78,7 +79,8 @@
             android:background="@color/white"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:text="预警电话"
                 android:textSize="14sp"
@@ -89,14 +91,14 @@
                 android:layout_marginBottom="16dp"/>
             <EditText
                 android:id="@+id/ac_name_address_et_alarm_contact_phone"
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="例：18600000000"
+                android:textCursorDrawable="@null"
                 android:textSize="14sp"
-                android:layout_gravity="center_vertical"
                 android:gravity="end"
+                android:layout_gravity="center_vertical"
                 android:layout_marginEnd="20dp"
                 android:layout_marginStart="8dp"
                 />

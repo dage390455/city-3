@@ -40,6 +40,7 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
         adapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList());
         adapter.setMaxImgCount(4);
         adapter.setOnItemClickListener(this);
+        adapter.setAddTipText("现场照片");
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
         rvDeployPhoto.setLayoutManager(layoutManager);
         rvDeployPhoto.setHasFixedSize(true);

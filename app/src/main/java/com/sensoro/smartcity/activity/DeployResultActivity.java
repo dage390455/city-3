@@ -26,12 +26,6 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         implements IDeployResultActivityView {
 
 
-    @BindView(R.id.include_text_title_imv_arrows_left)
-    ImageView includeTextTitleImvArrowsLeft;
-    @BindView(R.id.include_text_title_tv_title)
-    TextView includeTextTitleTvTitle;
-    @BindView(R.id.include_text_title_tv_subtitle)
-    TextView includeTextTitleTvSubtitle;
     @BindView(R.id.ac_deploy_result_imv_icon)
     ImageView acDeployResultImvIcon;
     @BindView(R.id.ac_deploy_result_tv_state)
@@ -80,9 +74,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     private void initView() {
-        includeTextTitleImvArrowsLeft.setVisibility(View.VISIBLE);
-        includeTextTitleTvTitle.setText("确认信息");
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+
     }
 
 
@@ -227,12 +219,9 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue})
+    @OnClick({ R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.include_text_title_imv_arrows_left:
-                finishAc();
-                break;
             case R.id.ac_deploy_result_tv_back_home:
                 mPresenter.backHome();
                 break;

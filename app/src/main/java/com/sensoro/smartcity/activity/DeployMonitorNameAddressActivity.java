@@ -118,10 +118,18 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     }
 
 
-    @OnClick(R.id.ac_nam_address_tv_save)
-    public void onViewClicked() {
-        String text = acNameAddressEt.getText().toString();
-        mPresenter.doChoose(text);
+    @OnClick({R.id.ac_nam_address_tv_save,R.id.include_text_title_imv_arrows_left})
+    public void onViewClicked(View view) {
+        switch (view.getId()){
+            case R.id.ac_nam_address_tv_save:
+                String text = acNameAddressEt.getText().toString();
+                mPresenter.doChoose(text);
+                break;
+            case R.id.include_text_title_imv_arrows_left:
+                finishAc();
+                break;
+        }
+
     }
 
     @Override

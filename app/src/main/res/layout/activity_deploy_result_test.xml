@@ -2,17 +2,25 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white">
+    android:background="@color/white"
+    >
 
-    <include
+    <TextView
         android:id="@+id/ac_deploy_result_title"
-        layout="@layout/item_include_text_title" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="确认信息"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:textSize="18sp"
+        android:textColor="@color/c_030303"/>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/ac_deploy_result_title"
-        android:background="@color/c_fafafa" />
+        android:background="@color/c_dfdfdf"
+        android:layout_marginTop="16dp"/>
 
     <LinearLayout
         android:id="@+id/ac_deploy_result_bottom"
