@@ -56,11 +56,16 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
     }
 
     public void doFinish() {
-        EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_SETTING_PHOTO;
-        eventData.data = selImageList;
-        EventBus.getDefault().post(eventData);
-        getView().finishAc();
+        if (selImageList.size() > 0) {
+            EventData eventData = new EventData();
+            eventData.code = EVENT_DATA_DEPLOY_SETTING_PHOTO;
+            eventData.data = selImageList;
+            EventBus.getDefault().post(eventData);
+            getView().finishAc();
+        } else {
+            getView().toastShort("请至少添加一张图片");
+        }
+
     }
 
     public ArrayList<ImageItem> getSelImageList() {

@@ -47,7 +47,7 @@ public interface RetrofitService {
     String SCOPE_TEST = "https://city-test-api.sensoro.com/";
     //摩卡环境
     String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
-//    String SCOPE_MOCHA = "http://xiaolai.ngrok.gkzyk.com/";
+    //    String SCOPE_MOCHA = "http://xiaolai.ngrok.gkzyk.com/";
     //正式环境
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
 
@@ -103,11 +103,8 @@ public interface RetrofitService {
 
     @GET(DEVICE_BRIEF_LIST)
     Observable<DeviceInfoListRsp> getDeviceBriefInfoList(@Query("page") int page, @Query("count")
-            int count, @Query
-                                                                 ("all") int all,
-                                                         @Query("showIndoorDevice") int showIndoorDevice, @Query
-                                                                 ("sensorTypes") String sensorTypes, @Query("status")
-                                                                 Integer status, @Query("search") String search);
+            int count, @Query("all") int all, @Query("showIndoorDevice") int showIndoorDevice,
+                                                         @Query("sensorTypes") String sensorTypes, @Query("mergeTypes") String mergeTypes, @Query("status") Integer status, @Query("search") String search);
 
     @GET(DEVICE_TYPE_COUNT)
     Observable<DeviceTypeCountRsp> getDeviceTypeCount();
@@ -226,7 +223,8 @@ public interface RetrofitService {
     Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(@Body RequestBody requestBody);
 
     @GET(INSPECTION_TASK_GET_TEMPLATE)
-    Observable<InspectionTaskInstructionRsp> getInspectionTemplate(@Query("deviceType")String deviceType);
+    Observable<InspectionTaskInstructionRsp> getInspectionTemplate(@Query("deviceType") String deviceType);
+
     @POST("devices/change/{sn}")
     Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 

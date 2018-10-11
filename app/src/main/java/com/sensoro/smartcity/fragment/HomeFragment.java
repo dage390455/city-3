@@ -92,6 +92,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     private void initPop() {
         mSelectDeviceTypePop = new SelectDeviceTypePopUtils(mRootFragment.getActivity());
+        mSelectDeviceTypePop.setTypeStyle(2);
         mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel item) {

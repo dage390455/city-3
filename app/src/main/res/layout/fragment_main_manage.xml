@@ -81,6 +81,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/line1"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginEnd="20dp"
@@ -124,6 +125,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/line2"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginEnd="20dp"
@@ -167,6 +169,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/line3"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginEnd="20dp"
@@ -210,6 +213,7 @@
             </LinearLayout>
 
             <View
+                android:id="@+id/line4"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
                 android:layout_marginEnd="20dp"
@@ -221,8 +225,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:visibility="gone"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
 
                 <ImageView
                     android:layout_width="wrap_content"
@@ -253,51 +257,59 @@
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:text="监控大屏"
-                android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp" />
-
             <LinearLayout
-                android:id="@+id/fg_main_manage_ll_scan_login"
+                android:id="@+id/fg_main_manage_ll_scan_login_out"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
-                android:orientation="horizontal">
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/scan_login" />
+                android:orientation="vertical">
 
                 <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginStart="12dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_weight="1"
-                    android:text="扫码登录"
-                    android:textColor="@color/c_252525"
-                    android:textSize="16sp" />
-
-                <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="25dp"
-                    android:layout_marginStart="15dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/arrows_right" />
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:text="监控大屏"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12sp" />
+
+                <LinearLayout
+                    android:id="@+id/fg_main_manage_ll_scan_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/scan_login" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginTop="16dp"
+                        android:layout_weight="1"
+                        android:text="扫码登录"
+                        android:textColor="@color/c_252525"
+                        android:textSize="16sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginEnd="25dp"
+                        android:layout_marginStart="15dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+                </LinearLayout>
             </LinearLayout>
+
 
             <TextView
                 android:layout_width="wrap_content"

@@ -13,11 +13,14 @@ import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
-import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -25,7 +28,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
+import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMerchantActivityView> implements Constants {
@@ -37,6 +43,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
     private String phoneId = null;
     private String userName = null;
     private String phone = null;
+    private EventLoginData eventLoginData;
 
 
     @Override
@@ -156,42 +163,51 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
 
     private void doAccountSwitch(String uid) {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.doAccountControl(uid, phoneId).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountControlRsp>(this) {
-
+        eventLoginData = null;
+        RetrofitServiceHelper.INSTANCE.doAccountControl(uid, phoneId).subscribeOn(Schedulers.io()).flatMap(new Func1<UserAccountControlRsp, Observable<DevicesMergeTypesRsp>>() {
             @Override
-            public void onCompleted(UserAccountControlRsp userAccountControlRsp) {
-                if (userAccountControlRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                    UserInfo userInfo = userAccountControlRsp.getData();
-                    EventData eventData = new EventData();
-                    GrantsInfo grants = userInfo.getGrants();
-                    eventData.code = EVENT_DATA_SEARCH_MERCHANT;
-                    //修改loginData包装
-                    EventLoginData eventLoginData = new EventLoginData();
-                    eventLoginData.userId = userInfo.get_id();
-                    eventLoginData.userName = userInfo.getNickname();
-                    eventLoginData.phone = userInfo.getContacts();
-                    eventLoginData.phoneId = phoneId;
+            public Observable<DevicesMergeTypesRsp> call(UserAccountControlRsp userAccountControlRsp) {
+                UserInfo userInfo = userAccountControlRsp.getData();
+                RetrofitServiceHelper.INSTANCE.saveSessionId(userInfo.getSessionID());
+                GrantsInfo grants = userInfo.getGrants();
+                //修改loginData包装
+                eventLoginData = new EventLoginData();
+                eventLoginData.userId = userInfo.get_id();
+                eventLoginData.userName = userInfo.getNickname();
+                eventLoginData.phone = userInfo.getContacts();
+                eventLoginData.phoneId = phoneId;
 //            mCharacter = userInfo.getCharacter();
-                    String roles = userInfo.getRoles();
-                    eventLoginData.roles = roles;
-                    String isSpecific = userInfo.getIsSpecific();
-                    eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
-                    eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
-                    eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
-                    eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
-                    eventLoginData.hasSubMerchant=MenuPageFactory.getHasSubMerchant(roles,isSpecific);
-                    eventLoginData.hasInspection=MenuPageFactory.getHasInspection(grants);
-                    eventData.data = eventLoginData;
-                    EventBus.getDefault().post(eventData);
-                    //
-                    RetrofitServiceHelper.INSTANCE.saveSessionId(userInfo.getSessionID());
-                    getView().finishAc();
-                } else {
-                    getView().toastShort(userAccountControlRsp.getErrmsg());
-                }
+                String roles = userInfo.getRoles();
+                eventLoginData.roles = roles;
+                String isSpecific = userInfo.getIsSpecific();
+                eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
+                eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
+                eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
+                eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
+                eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
+                eventLoginData.hasInspection = MenuPageFactory.getHasInspection(grants);
+                //
+                return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
+            }
+        }).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+            @Override
+            public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
+                PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
+                //
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(this) {
+            @Override
+            public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                EventData eventData = new EventData();
+                eventData.code = EVENT_DATA_SEARCH_MERCHANT;
+                eventData.data = eventLoginData;
+                EventBus.getDefault().post(eventData);
+                getView().finishAc();
+                LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
                 getView().dismissProgressDialog();
             }
+
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {

@@ -30,10 +30,12 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlContractManagement;
     @BindView(R.id.fg_main_manage_ll_polling_mission)
     LinearLayout fgMainManageLlPollingMission;
-    @BindView(R.id.fg_main_manage_ll_maintenance_mission)
-    LinearLayout fgMainManageLlMaintenanceMission;
+    @BindView(R.id.fg_main_manage_ll_scan_login_out)
+    LinearLayout fgMainManageLlScanLoginOut;
     @BindView(R.id.fg_main_manage_ll_scan_login)
     LinearLayout fgMainManageLlScanLogin;
+    @BindView(R.id.fg_main_manage_ll_maintenance_mission)
+    LinearLayout fgMainManageLlMaintenanceMission;
     @BindView(R.id.fg_main_manage_ll_about_us)
     LinearLayout fgMainManageLlAboutUs;
     @BindView(R.id.fg_main_manage_tv_is_upgrade)
@@ -44,6 +46,14 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlExit;
     @BindView(R.id.fg_main_manage_ll_main_function)
     LinearLayout fgMainManageLlMainFunction;
+    @BindView(R.id.line1)
+    View line1;
+    @BindView(R.id.line2)
+    View line2;
+    @BindView(R.id.line3)
+    View line3;
+    @BindView(R.id.line4)
+    View line4;
     private ProgressUtils mProgressUtils;
 
     @Override
@@ -177,5 +187,22 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @Override
     public void setAppUpdateVisible(boolean isVisible) {
         fgMainManageTvIsUpgrade.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setContractVisible(boolean isVisible) {
+        fgMainManageLlContractManagement.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        line2.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setInspectionVisible(boolean isVisible) {
+        fgMainManageLlPollingMission.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        line3.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setScanLoginVisible(boolean isVisible) {
+        fgMainManageLlScanLoginOut.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }

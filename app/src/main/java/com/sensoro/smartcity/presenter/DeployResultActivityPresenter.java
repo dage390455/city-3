@@ -21,6 +21,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     private String errorInfo;
     private String sn;
     private int scanType = -1;
+    private String mAddress;
 
     @Override
     public void initData(Context context) {
@@ -29,6 +30,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         scanType = mContext.getIntent().getIntExtra(EXTRA_SCAN_ORIGIN_TYPE, -1);
         errorInfo = mContext.getIntent().getStringExtra(EXTRA_SENSOR_RESULT_ERROR);
         sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN_RESULT);
+        mAddress = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_SUCCESS_ADDRESS);
         if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType) {
             getView().setDeployResultContinueText("返回巡检");
         }
@@ -67,22 +69,22 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 deviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
                 String sn = deviceInfo.getSn().toUpperCase();
                 String name = deviceInfo.getName();
-                String address = deviceInfo.getAddress();
+//                String address = deviceInfo.getAddress();
                 long updatedTime = deviceInfo.getUpdatedTime();
                 switch (scanType) {
                     case TYPE_SCAN_DEPLOY_STATION:
                         //基站部署
-                        deployStation(sn, name, address, updatedTime);
+                        deployStation(sn, name, mAddress, updatedTime);
                         break;
                     case TYPE_SCAN_DEPLOY_DEVICE:
                         //设备部署
-                        deployDevice(sn, name, address, updatedTime);
+                        deployDevice(sn, name, mAddress, updatedTime);
                         break;
                     case TYPE_SCAN_LOGIN:
                         break;
                     case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
                         //TODO 巡检设备更换
-                        deployDevice(sn, name, address, updatedTime);
+                        deployDevice(sn, name, mAddress, updatedTime);
                         break;
                     case TYPE_SCAN_INSPECTION:
                         //TODO 扫描巡检设备

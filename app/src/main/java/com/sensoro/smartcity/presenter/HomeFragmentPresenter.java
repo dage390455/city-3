@@ -29,7 +29,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
@@ -74,7 +74,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private volatile int tempNormalCount = 0;
     private volatile int tempTotalCount;
     private final List<HomeTopModel> homeTopModels = new ArrayList<>();
-    private final ArrayList<String> mDeviceTypes = new ArrayList<>();
+    private final ArrayList<String> mMergeTypes = new ArrayList<>();
     /**
      * 推送轮训
      */
@@ -101,7 +101,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-
         onCreate();
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
@@ -178,7 +177,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
                 Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
                 page = 1;
-                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, status, null).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, null, status, null).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
                     @Override
                     public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
                         //去除rfid类型
@@ -445,7 +444,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             switch (direction) {
                 case DIRECTION_DOWN:
                     page = 1;
-                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, mTypeSelectedType, status, null).subscribeOn(Schedulers
+                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, status, null).subscribeOn(Schedulers
                             .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
                         @Override
                         public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -488,7 +487,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     break;
                 case DIRECTION_UP:
                     page++;
-                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, mTypeSelectedType, status, null).subscribeOn(Schedulers
+                    RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, status, null).subscribeOn(Schedulers
                             .io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
                         @Override
                         public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -677,7 +676,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         if (position == 0) {
             mTypeSelectedType = null;
         } else {
-            mTypeSelectedType = mDeviceTypes.get(position - 1);
+            mTypeSelectedType = mMergeTypes.get(position - 1);
         }
         requestWithDirection(DIRECTION_DOWN);
     }
@@ -761,16 +760,16 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void updateSelectDeviceTypePopAndShow() {
-        mDeviceTypes.clear();
+        mMergeTypes.clear();
         final DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-        final Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
-        Set<Map.Entry<String, DeviceTypeStyles>> entries = deviceType.entrySet();
-        for (Map.Entry<String, DeviceTypeStyles> entry : entries) {
+        Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+        Set<Map.Entry<String, MergeTypeStyles>> entries = mergeType.entrySet();
+        for (Map.Entry<String, MergeTypeStyles> entry : entries) {
             String key = entry.getKey();
-            mDeviceTypes.add(key);
+            mMergeTypes.add(key);
         }
-        Collections.sort(mDeviceTypes);
+        Collections.sort(mMergeTypes);
 //        mSelectDeviceTypePop.updateSelectDeviceTypeList(SensoroCityApplication.getInstance().mDeviceTypeList);
-        getView().updateSelectDeviceTypePopAndShow(mDeviceTypes);
+        getView().updateSelectDeviceTypePopAndShow(mMergeTypes);
     }
 }

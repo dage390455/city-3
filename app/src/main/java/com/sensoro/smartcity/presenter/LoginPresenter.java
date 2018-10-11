@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
+import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.AuthActivity;
@@ -160,26 +161,29 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                 public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                     DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
                     PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
-                    DeviceMergeTypesInfo.DeviceMergeTypeConfig config = data.getConfig();
-                    Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
-                    for (Map.Entry<String, DeviceTypeStyles> next : deviceType.entrySet()) {
-                        String key = next.getKey();
-                        DeviceTypeStyles value = next.getValue();
-//                        LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
+                    //测试信息
+                    if (BuildConfig.DEBUG) {
+                        DeviceMergeTypesInfo.DeviceMergeTypeConfig config = data.getConfig();
+                        Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
+                        for (Map.Entry<String, DeviceTypeStyles> next : deviceType.entrySet()) {
+                            String key = next.getKey();
+                            DeviceTypeStyles value = next.getValue();
+                            LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
+                        }
+                        Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+                        for (Map.Entry<String, MergeTypeStyles> next : mergeType.entrySet()) {
+                            String key = next.getKey();
+                            MergeTypeStyles value = next.getValue();
+                            LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
+                        }
+                        Map<String, SensorTypeStyles> sensorType = config.getSensorType();
+                        for (Map.Entry<String, SensorTypeStyles> next : sensorType.entrySet()) {
+                            String key = next.getKey();
+                            SensorTypeStyles value = next.getValue();
+                            LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> " + key + "," + value.toString());
+                        }
+                        LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
                     }
-                    Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-                    for (Map.Entry<String, MergeTypeStyles> next : mergeType.entrySet()) {
-                        String key = next.getKey();
-                        MergeTypeStyles value = next.getValue();
-//                        LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
-                    }
-                    Map<String, SensorTypeStyles> sensorType = config.getSensorType();
-                    for (Map.Entry<String, SensorTypeStyles> next : sensorType.entrySet()) {
-                        String key = next.getKey();
-                        SensorTypeStyles value = next.getValue();
-//                        LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> ");
-                    }
-                    LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
                 }
             }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(this) {
                 @Override

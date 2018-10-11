@@ -379,16 +379,16 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
 //        intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         DeviceInfo data = deviceDeployRsp.getData();
-        data.setAddress(deployMapModel.address);
         intent.putExtra(EXTRA_DEVICE_INFO, data);
         //TODO 新版联系人
-
         if (deployContactModelList.size() > 0) {
             DeployContactModel deployContactModel = deployContactModelList.get(0);
             intent.putExtra(EXTRA_SETTING_CONTACT, deployContactModel.name);
             intent.putExtra(EXTRA_SETTING_CONTENT, deployContactModel.phone);
         }
+        LogUtils.loge("deployMapModel", deployMapModel.address);
         intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, deployMapModel.deployType);
+        intent.putExtra(EXTRA_DEPLOY_SUCCESS_ADDRESS, deployMapModel.address);
         getView().startAC(intent);
     }
 
@@ -413,7 +413,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deviceInfo.setTags(tags);
         deviceInfo.setLonlat(lonLat);
         deviceInfo.setStatus(normalStatus);
-        deviceInfo.setAddress(deployMapModel.address);
         deviceInfo.setUpdatedTime(updatedTime);
         if (!TextUtils.isEmpty(name)) {
             deviceInfo.setName(name);
@@ -422,6 +421,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         intent.putExtra(EXTRA_SENSOR_RESULT, resultCode);
         intent.setFlags(Intent.FLAG_ACTIVITY_FORWARD_RESULT);
         intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, deployMapModel.deployType);
+        intent.putExtra(EXTRA_DEPLOY_SUCCESS_ADDRESS, deployMapModel.address);
+        LogUtils.loge("deployMapModel", deployMapModel.address);
         intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
         getView().startAC(intent);
     }
@@ -572,6 +573,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().updateUploadState(true);
                 return;
             }
+        }
+        if (images.size() == 0) {
+            getView().toastShort("请至少添加一张图片");
+            getView().updateUploadState(true);
+            return;
         }
         //经纬度校验
         if (deployMapModel.latLng == null) {

@@ -9,10 +9,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.model.EventLoginData;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -23,10 +26,16 @@ import butterknife.Unbinder;
 public class MenuDialogFragment extends DialogFragment {
     @BindView(R.id.dialog_main_home_menu_imv_close)
     ImageButton dialogMainHomeMenuImvClose;
+    @BindView(R.id.ll_fast_deploy)
+    LinearLayout llFastDeploy;
     @BindView(R.id.dialog_main_home_menu_tv_quick_deploy)
     TextView dialogMainHomeMenuTvQuickDeploy;
+    @BindView(R.id.ll_fast_contract)
+    LinearLayout llFastContract;
     @BindView(R.id.dialog_main_home_menu_new_tv_construction)
     TextView dialogMainHomeMenuNewTvConstruction;
+    @BindView(R.id.ll_fast_scan_login)
+    LinearLayout llFastScanLogin;
     @BindView(R.id.dialog_main_home_menu_tv_scan_login)
     TextView dialogMainHomeMenuTvScanLogin;
     @BindView(R.id.dialog_main_home_menu_rl_root)
@@ -58,6 +67,7 @@ public class MenuDialogFragment extends DialogFragment {
         }
         View view = inflater.inflate(R.layout.dialog_frag_main_menu, container);
         unbinder = ButterKnife.bind(this, view);
+        checkPermission();
         return view;
     }
 
@@ -90,5 +100,26 @@ public class MenuDialogFragment extends DialogFragment {
         if (onDismissListener != null) {
             onDismissListener.onMenuDialogFragmentDismiss(currentResId);
         }
+    }
+
+    private void checkPermission() {
+        try {
+            EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+            if (userData != null) {
+                if (userData.hasContract) {
+                    llFastContract.setVisibility(View.VISIBLE);
+                } else {
+                    llFastContract.setVisibility(View.GONE);
+                }
+                if (userData.hasScanLogin) {
+                    llFastScanLogin.setVisibility(View.VISIBLE);
+                } else {
+                    llFastScanLogin.setVisibility(View.GONE);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 }

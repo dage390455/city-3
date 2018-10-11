@@ -9,11 +9,20 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.load.resource.drawable.GlideDrawable;
+import com.bumptech.glide.request.RequestListener;
+import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
@@ -27,6 +36,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     private final List<DeviceInfo> mList = new ArrayList<>();
     private RecycleViewItemClickListener itemClickListener;
     private OnItemAlarmInfoClickListener onItemAlarmInfoClickListener;
+    private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
 
     public interface OnItemAlarmInfoClickListener {
         void onAlarmInfoClick(View v, int position);
@@ -46,6 +56,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 //        notifyItemRangeRemoved(1, list.size());
         this.mList.addAll(list);
 //        notifyItemRangeInserted(1, list.size());
+        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
     }
 
     public void setOnItemClickLisenter(RecycleViewItemClickListener itemClickListener) {
@@ -76,13 +87,24 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         //
         int status = deviceInfo.getStatus();
         //
-        String[] sensorTypes = deviceInfo.getSensorTypes();
-        if (sensorTypes != null && sensorTypes.length > 0) {
-            String sensorType = sensorTypes[0];
-            if (!TextUtils.isEmpty(sensorType)) {
-                WidgetUtil.judgeSensorTypeNew(holder.mainRcContentImvIcon, sensorType);
-            }
+        String image = null;
+        String deviceType = deviceInfo.getDeviceType();
+        try {
+            DeviceTypeStyles deviceTypeStyles = deviceMergeTypeConfig.getDeviceType().get(deviceType);
+            MergeTypeStyles mergeTypeStyles = deviceMergeTypeConfig.getMergeType().get(deviceTypeStyles.getMergeType());
+            image = mergeTypeStyles.getImage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.loge("MainHomeFragRcContentAdapter ----->>>deviceType = "+deviceType);
         }
+        //
+//        String[] sensorTypes = deviceInfo.getSensorTypes();
+//        if (sensorTypes != null && sensorTypes.length > 0) {
+//            String sensorType = sensorTypes[0];
+//            if (!TextUtils.isEmpty(sensorType)) {
+//                WidgetUtil.judgeSensorTypeNew(holder.mainRcContentImvIcon, sensorType);
+//            }
+//        }
         int color = 0;
         switch (status) {
             case SENSOR_STATUS_ALARM:
@@ -113,7 +135,24 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
         }
-        holder.mainRcContentImvIcon.setColorFilter(mContext.getResources().getColor(color));
+        final int colorResId = mContext.getResources().getColor(color);
+//        holder.mainRcContentImvIcon.setColorFilter(mContext.getResources().getColor(color));
+        Glide.with(mContext)                             //配置上下文
+                .load(image)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .listener(new RequestListener<String, GlideDrawable>() {
+                    @Override
+                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                        return false;
+                    }
+
+                    @Override
+                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                        holder.mainRcContentImvIcon.setImageDrawable(resource);
+                        holder.mainRcContentImvIcon.setColorFilter(colorResId);
+                        return true;
+                    }
+                }).centerCrop().into(holder.mainRcContentImvIcon);
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -123,6 +162,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
             }
         });
     }
+
 
     @Override
     public int getItemCount() {

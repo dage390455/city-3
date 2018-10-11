@@ -41,6 +41,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -64,6 +65,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        geocoderSearch = new GeocodeSearch(mContext);
+        geocoderSearch.setOnGeocodeSearchListener(this);
         deployMapModel = (DeployMapModel) mContext.getIntent().getParcelableExtra(EXTRA_DEPLOY_TO_MAP);
         switch (deployMapModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
@@ -149,7 +152,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             address = ts;
         }
         deployMapModel.address = address;
-        System.out.println(address);
+        LogUtils.loge("deployMapModel", "----" + deployMapModel.address);
         if (TextUtils.isEmpty(address)) {
             smoothMoveMarker.hideInfoWindow();
         } else {
@@ -296,8 +299,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 .anchor(0.5f, 0.5f)
                 .draggable(true);
         smoothMoveMarker = aMap.addMarker(markerOption);
-        geocoderSearch = new GeocodeSearch(mContext);
-        geocoderSearch.setOnGeocodeSearchListener(this);
         getCurrentLocation();
         switch (deployMapModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
