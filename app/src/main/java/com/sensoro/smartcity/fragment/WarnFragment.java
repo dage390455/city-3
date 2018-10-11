@@ -107,7 +107,9 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                 return false;
             }
         });
+
         initRcContent();
+
         fgMainWarnEtSearch.setCursorVisible(false);
 
     }

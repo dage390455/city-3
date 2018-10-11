@@ -73,8 +73,8 @@
                     android:id="@+id/ac_inspection_exception_detail_rc_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:layout_alignParentEnd="true">
 
                 </android.support.v7.widget.RecyclerView>
@@ -144,21 +144,22 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="异常标签"
+                android:text="异常类型"
                 android:textColor="@color/c_252525"
                 android:textSize="14sp" />
 
             <RelativeLayout
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
                 android:layout_weight="1">
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/ac_inspection_exception_detail_rc_exception_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:paddingTop="8dp"
-                    android:paddingBottom="8dp"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
                     android:layout_alignParentEnd="true">
 
                 </android.support.v7.widget.RecyclerView>

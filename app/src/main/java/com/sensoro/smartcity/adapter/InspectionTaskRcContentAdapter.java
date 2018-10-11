@@ -82,6 +82,8 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
                 setState(holder, R.color.c_ff8d34, "巡检异常");
                 holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.VISIBLE);
                 holder.itemAdapterInspectionTaskTvInspection.setText("详情");
+                holder.itemAdapterInspectionTaskTvInspection.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                holder.itemAdapterInspectionTaskTvInspection.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_2dp);
                 break;
         }
         holder.itemAdapterInspectionTaskTvInspection.setOnClickListener(new View.OnClickListener() {

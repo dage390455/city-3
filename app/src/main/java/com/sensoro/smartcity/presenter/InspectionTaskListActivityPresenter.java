@@ -105,17 +105,20 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功
-        if (code == EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE) {
-            //TODO 刷新上报异常结果
-            refreshData(DIRECTION_DOWN);
-        } else if (code == EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE) {
-            //TODO 正常上报结果
-            refreshData(DIRECTION_DOWN);
-        } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
-            getView().finishAc();
-        } else if (code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
-            //TODO 设备更换结果
-            refreshData(DIRECTION_DOWN);
+        switch (code) {
+                //刷新上报异常结果
+            case EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
+                //正常上报结果
+            case EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
+                //设备更换结果
+            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                //巡检任务状态改变
+            case EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE:
+                refreshData(DIRECTION_DOWN);
+                break;
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+                getView().finishAc();
+                break;
         }
     }
 

@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -44,6 +46,8 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     LinearLayout acScanLlBottom;
     @BindView(R.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
+    @BindView(R.id.ac_scan_imv_scan_line)
+    ImageView acScanImvScanLine;
     private boolean isFlashOn;
     private ProgressUtils mProgressUtils;
 
@@ -57,6 +61,8 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     private void initView() {
+        initScanLineAnimation();
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setTextColor(Color.WHITE);
         includeTextTitleTvSubTitle.setVisibility(View.GONE);
@@ -66,6 +72,15 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         acScanQrView.setDelegate(this);
         acScanQrView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
         acScanQrView.getCameraPreview().setAutoFocusFailureDelay(0);
+    }
+
+    private void initScanLineAnimation() {
+        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,0f,Animation.RELATIVE_TO_SELF,0f,
+                Animation.RELATIVE_TO_PARENT,-0.25f,Animation.RELATIVE_TO_PARENT,1f);
+        translateAnimation.setDuration(4000);
+        translateAnimation.setRepeatMode(Animation.RESTART);
+        translateAnimation.setRepeatCount(Animation.INFINITE);
+        acScanImvScanLine.startAnimation(translateAnimation);
     }
 
     private void changeIconArrowsColor() {

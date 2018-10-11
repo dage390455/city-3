@@ -131,7 +131,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
     private void initRcPicTag() {
         mRcExceptionPicAdapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList());
-        mRcExceptionPicAdapter.setMaxImgCount(9);
+        mRcExceptionPicAdapter.setMaxImgCount(4);
         mRcExceptionPicAdapter.setAddTipText("拍照/录像");
         mRcExceptionPicAdapter.setOnItemClickListener(new ImagePickerAdapter.OnRecyclerViewItemClickListener() {
             @Override

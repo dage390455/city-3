@@ -63,12 +63,7 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
                         break;
                 }
 
-
-                List<String> exceptionTags = new ArrayList<>();
-                for (Integer integer : taskDevice.getMalfunctions()) {
-                    exceptionTags.add(INSPECTION_EXCEPTION_TASGS[integer]);
-                }
-                getView().updateExceptionTagsData(exceptionTags);
+                getView().updateExceptionTagsData(taskDevice.getMalfunctions());
 
                 getView().setTvRemark(taskDevice.getRemark());
 

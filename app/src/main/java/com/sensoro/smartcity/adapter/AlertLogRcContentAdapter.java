@@ -85,11 +85,15 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                confirm_text = day + "小时无人确认，系统自动确认为测试/巡检";
-
-                holder.itemAlertContentTvContent.setText(confirm_text);
+                confirm_text = day + "小时 无人确认，系统自动确认为: 测试/巡检";
+                SpannableString spannableString = new SpannableString(confirm_text);
+                String temp = day+"小时";
+                changTextColor(confirm_text,temp,spannableString,R.color.c_252525);
+                temp = "测试/巡检";
+                changTextColor(confirm_text,temp,spannableString,R.color.c_8058a5);
+                holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("app".equals(source)) {
-                confirm_text = "联系人 [" + recordInfo.getName() + "] " + "通过App端确认本次预警类型为:\n" +
+                confirm_text = "联系人 [" + recordInfo.getName() + "] " + "通过 App端 确认本次预警类型为:\n" +
                         confirmStatusArray[recordInfo.getDisplayStatus()];
                 //用span改变字体颜色,换行 用\n
 //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
@@ -99,11 +103,11 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 changTextColor(confirm_text, temp, spannableString, R.color.c_131313);
                 //改变安全隐患颜色
                 temp = confirmStatusArray[recordInfo.getDisplayStatus()];
-                changTextColor(confirm_text, temp, spannableString, R.color.c_f34a4a);
+                changTextColor(confirm_text, temp, spannableString,confirmStatusTextColorArray[recordInfo.getDisplayStatus()]);
 
                 holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("platform".equals(source)) {
-                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过Web端确认本次预警类型为:\n" +
+                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过 Web端 确认本次预警类型为:\n" +
                         confirmStatusArray[recordInfo.getDisplayStatus()];
                 //用span改变字体颜色,换行 用\n
 //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
@@ -113,7 +117,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
                 //改变安全隐患颜色
                 temp = confirmStatusArray[recordInfo.getDisplayStatus()];
-                changTextColor(confirm_text, temp, spannableString, R.color.c_f34a4a);
+                changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[recordInfo.getDisplayStatus()]);
 
                 holder.itemAlertContentTvContent.setText(spannableString);
             }

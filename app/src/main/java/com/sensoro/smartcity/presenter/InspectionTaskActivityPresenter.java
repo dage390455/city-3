@@ -206,7 +206,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         getView().updateSelectDeviceStatusList(list);
                     }
                     getView().dismissProgressDialog();
-                    getView().setBottomInspectionStateTitle("未巡检： " + uncheck, "我已巡检： " + check);
+                    getView().setBottomInspectionStateTitle("我已巡检： " + check,"未巡检： " + uncheck);
                 }
 
 

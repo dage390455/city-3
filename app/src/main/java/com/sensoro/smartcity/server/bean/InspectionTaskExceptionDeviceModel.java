@@ -39,7 +39,7 @@ public class InspectionTaskExceptionDeviceModel {
     private int status;
     private DeviceBean device;
     private List<ScenesData> imgAndVideo;
-    private List<Integer> malfunctions;
+    private List<String> malfunctions;
 
     public String get_id() {
         return _id;
@@ -153,11 +153,11 @@ public class InspectionTaskExceptionDeviceModel {
         return imgAndVideo;
     }
 
-    public List<Integer> getMalfunctions() {
+    public List<String> getMalfunctions() {
         return malfunctions;
     }
 
-    public void setMalfunctions(List<Integer> malfunctions) {
+    public void setMalfunctions(List<String> malfunctions) {
         this.malfunctions = malfunctions;
     }
 
