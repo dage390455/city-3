@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.adapter;
 
-import android.content.Context;
+import android.app.Activity;
+import android.support.annotation.NonNull;
+import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
@@ -26,13 +29,14 @@ import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeFragRcContentAdapter.MyViewHolder> implements Constants {
-    private final Context mContext;
+    private final Activity mContext;
     private final List<DeviceInfo> mList = new ArrayList<>();
     private RecycleViewItemClickListener itemClickListener;
     private OnItemAlarmInfoClickListener onItemAlarmInfoClickListener;
@@ -46,20 +50,33 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         this.onItemAlarmInfoClickListener = onItemAlarmInfoClickListener;
     }
 
-    public MainHomeFragRcContentAdapter(Context context) {
+    public MainHomeFragRcContentAdapter(Activity context) {
         mContext = context;
     }
 
-    public void setData(List<DeviceInfo> list) {
-        this.mList.clear();
-        //去除动画效果
-//        notifyItemRangeRemoved(1, list.size());
-        this.mList.addAll(list);
-//        notifyItemRangeInserted(1, list.size());
+    public void updateData(final List<DeviceInfo> list) {
         deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
+        //
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                HomeContentListAdapterDiff homeContentListAdapterDiff = new HomeContentListAdapterDiff(mList, list);
+                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(homeContentListAdapterDiff, true);
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        diffResult.dispatchUpdatesTo(MainHomeFragRcContentAdapter.this);
+                        mList.clear();
+                        mList.addAll(list);
+                    }
+                });
+
+
+            }
+        });
     }
 
-    public void setOnItemClickLisenter(RecycleViewItemClickListener itemClickListener) {
+    public void setOnItemClickListener(RecycleViewItemClickListener itemClickListener) {
         this.itemClickListener = itemClickListener;
     }
 
@@ -78,25 +95,15 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         DeviceInfo deviceInfo = mList.get(position);
         //
         String deviceInfoName = deviceInfo.getName();
-        if (TextUtils.isEmpty(deviceInfoName)) {
-            holder.mainRcContentTvLocation.setText(deviceInfo.getSn());
-        } else {
-            holder.mainRcContentTvLocation.setText(deviceInfoName);
-        }
-        holder.mainRcContentTvTime.setText(DateUtil.getHourMmFormatDate(deviceInfo.getUpdatedTime()));
+        String sn = deviceInfo.getSn();
+        setContentName(holder, deviceInfoName, sn);
+        long updatedTime = deviceInfo.getUpdatedTime();
+        setContentTime(holder, updatedTime);
         //
         int status = deviceInfo.getStatus();
-        //
-        String image = null;
         String deviceType = deviceInfo.getDeviceType();
-        try {
-            DeviceTypeStyles deviceTypeStyles = deviceMergeTypeConfig.getDeviceType().get(deviceType);
-            MergeTypeStyles mergeTypeStyles = deviceMergeTypeConfig.getMergeType().get(deviceTypeStyles.getMergeType());
-            image = mergeTypeStyles.getImage();
-        } catch (Exception e) {
-            e.printStackTrace();
-            LogUtils.loge("MainHomeFragRcContentAdapter ----->>>deviceType = "+deviceType);
-        }
+        //
+
         //
 //        String[] sensorTypes = deviceInfo.getSensorTypes();
 //        if (sensorTypes != null && sensorTypes.length > 0) {
@@ -105,6 +112,32 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 //                WidgetUtil.judgeSensorTypeNew(holder.mainRcContentImvIcon, sensorType);
 //            }
 //        }
+        setContentStatus(holder, position, status, deviceType);
+
+        setListener(holder, position);
+    }
+
+    private void setListener(MyViewHolder holder, final int position) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(v, position);
+                }
+            }
+        });
+    }
+
+    private void setContentStatus(final MyViewHolder holder, final int position, int status, String deviceType) {
+        String image = null;
+        try {
+            DeviceTypeStyles deviceTypeStyles = deviceMergeTypeConfig.getDeviceType().get(deviceType);
+            MergeTypeStyles mergeTypeStyles = deviceMergeTypeConfig.getMergeType().get(deviceTypeStyles.getMergeType());
+            image = mergeTypeStyles.getImage();
+        } catch (Exception e) {
+            e.printStackTrace();
+            LogUtils.loge("MainHomeFragRcContentAdapter ----->>>deviceType = " + deviceType);
+        }
         int color = 0;
         switch (status) {
             case SENSOR_STATUS_ALARM:
@@ -136,10 +169,9 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 break;
         }
         final int colorResId = mContext.getResources().getColor(color);
-//        holder.mainRcContentImvIcon.setColorFilter(mContext.getResources().getColor(color));
         Glide.with(mContext)                             //配置上下文
                 .load(image)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                .diskCacheStrategy(DiskCacheStrategy.ALL)
+                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
                 .listener(new RequestListener<String, GlideDrawable>() {
                     @Override
                     public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
@@ -153,16 +185,46 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                         return true;
                     }
                 }).centerCrop().into(holder.mainRcContentImvIcon);
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (itemClickListener != null) {
-                    itemClickListener.onItemClick(v, position);
-                }
-            }
-        });
     }
 
+    private void setContentTime(MyViewHolder holder, long updatedTime) {
+        holder.mainRcContentTvTime.setText(DateUtil.getHourFormatDate(updatedTime));
+    }
+
+    private void setContentName(MyViewHolder holder, String deviceInfoName, String sn) {
+        if (TextUtils.isEmpty(deviceInfoName)) {
+            holder.mainRcContentTvLocation.setText(sn);
+        } else {
+            holder.mainRcContentTvLocation.setText(deviceInfoName);
+        }
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            DeviceInfo deviceInfo = mList.get(position);
+            HashMap map = (HashMap) payloads.get(0);
+            LogUtils.loge(this, "----------------->>>>" + map.toString());
+            Integer status = (Integer) map.get("status");
+            if (status != null) {
+                LogUtils.loge(this, "status change -->> " + status);
+                setContentStatus(holder, position, status, deviceInfo.getDeviceType());
+            }
+            Long updateTime = (Long) map.get("updateTime");
+            if (updateTime != null) {
+                LogUtils.loge(this, "updateTime change -->> " + updateTime);
+                setContentTime(holder, updateTime);
+            }
+            String name = (String) map.get("name");
+            if (!TextUtils.isEmpty(name)) {
+                LogUtils.loge(this, "updateTime name -->> " + name);
+                setContentName(holder, name, deviceInfo.getSn());
+            }
+            setListener(holder, position);
+        }
+    }
 
     @Override
     public int getItemCount() {

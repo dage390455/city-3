@@ -55,6 +55,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setContractVisible(userData.hasContract);
             getView().setInspectionVisible(userData.hasInspection);
             getView().setScanLoginVisible(userData.hasScanLogin);
+            getView().setMerchantVisible(userData.hasSubMerchant);
         }
     }
 
@@ -151,10 +152,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
                 intent.putExtra(EXTRA_EVENT_LOGIN_DATA, PreferencesHelper.getInstance().getUserData());
                 getView().startAC(intent);
-                return;
+//                return;
             }
         }
-        getView().toastShort("无此权限");
+//        getView().toastShort("无此权限");
 
     }
 

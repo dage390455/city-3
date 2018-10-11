@@ -106,8 +106,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
         LogUtils.loge(this, "refreshData");
         //提前获取一次
-        String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
-        LogUtils.loge("main ---->> " + log);
+        try {
+            String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
+            LogUtils.loge("main ---->> " + log);
+        } catch (Exception e) {
+            e.printStackTrace();
+            openLogin();
+        }
+
     }
 
     /**

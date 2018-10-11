@@ -153,7 +153,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     private void initListView() {
 
         mSearchRcContentAdapter = new MainHomeFragRcContentAdapter(mActivity);
-        mSearchRcContentAdapter.setOnItemClickLisenter(this);
+        mSearchRcContentAdapter.setOnItemClickListener(this);
         mSearchRcContentAdapter.setOnItemAlarmInfoClickListener(this);
         //
         xLinearLayoutManager = new SensoroXLinearLayoutManager(mActivity);
@@ -233,8 +233,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void refreshData(List<DeviceInfo> dataList) {
         if (dataList != null && dataList.size() > 0) {
             Collections.sort(dataList);
-            mSearchRcContentAdapter.setData(dataList);
-            mSearchRcContentAdapter.notifyDataSetChanged();
+            mSearchRcContentAdapter.updateData(dataList);
         }
         setNoContentVisible(dataList == null || dataList.size() < 1);
     }

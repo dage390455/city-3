@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.HomeTopModel;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.ArrayList;
@@ -32,12 +33,12 @@ import butterknife.ButterKnife;
  */
 public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFragRcTypeAdapter.MyViewHolder> implements IOnDestroy {
 
-    private final Context mContext;
+    private final Activity mContext;
     private final List<HomeTopModel> mData = new ArrayList<>();
     private OnTopClickListener onTopClickListener;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
-    public MainHomeFragRcTypeAdapter(Context context) {
+    public MainHomeFragRcTypeAdapter(Activity context) {
         mContext = context;
     }
 
@@ -46,79 +47,89 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
     }
 
     public void updateData(final RecyclerView recyclerView, final List<HomeTopModel> data) {
-        TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mData, data);
-        final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, true);
-//        diffResult.dispatchUpdatesTo(this);
-        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
-            public void onInserted(final int position, final int count) {
-                LogUtils.loge("updateData-----onInserted-->>position = " + position + ", count = " + count);
-                notifyItemRangeInserted(position, count);
-                try {
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.smoothScrollToPosition(position);
-                        }
-                    }, 50);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            public void run() {
+                TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mData, data);
+                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, true);
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
+                            @Override
+                            public void onInserted(final int position, final int count) {
+                                LogUtils.loge("updateData-----onInserted-->>position = " + position + ", count = " + count);
+                                notifyItemRangeInserted(position, count);
+                                try {
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            recyclerView.smoothScrollToPosition(position);
+                                        }
+                                    }, 50);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
-            }
+                            }
 
-            @Override
-            public void onRemoved(final int position, final int count) {
-                notifyItemRangeRemoved(position, count);
-                LogUtils.loge("updateData-----onRemoved-->>position = " + position + ", count = " + count);
-                try {
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.smoothScrollToPosition(position);
-                        }
-                    }, 50);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                            @Override
+                            public void onRemoved(final int position, final int count) {
+                                notifyItemRangeRemoved(position, count);
+                                LogUtils.loge("updateData-----onRemoved-->>position = " + position + ", count = " + count);
+                                try {
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            recyclerView.smoothScrollToPosition(position);
+                                        }
+                                    }, 50);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
-            }
+                            }
 
-            @Override
-            public void onMoved(final int fromPosition, final int toPosition) {
-                notifyItemMoved(fromPosition, toPosition);
-                LogUtils.loge("updateData-----onMoved-->>fromPosition = " + fromPosition + ", toPosition = " + toPosition);
-                try {
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.smoothScrollToPosition(toPosition);
-                        }
-                    }, 50);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                            @Override
+                            public void onMoved(final int fromPosition, final int toPosition) {
+                                notifyItemMoved(fromPosition, toPosition);
+                                LogUtils.loge("updateData-----onMoved-->>fromPosition = " + fromPosition + ", toPosition = " + toPosition);
+                                try {
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            recyclerView.smoothScrollToPosition(toPosition);
+                                        }
+                                    }, 50);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
 
-            }
+                            }
 
-            @Override
-            public void onChanged(final int position, final int count, final Object payload) {
-                notifyItemRangeChanged(position, count, payload);
-                LogUtils.loge("updateData-----onChanged-->>position = " + position + ", count = " + count);
-                try {
-                    mHandler.postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            recyclerView.smoothScrollToPosition(position);
-                        }
-                    }, 50);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                            @Override
+                            public void onChanged(final int position, final int count, final Object payload) {
+                                notifyItemRangeChanged(position, count, payload);
+                                LogUtils.loge("updateData-----onChanged-->>position = " + position + ", count = " + count);
+                                try {
+                                    mHandler.postDelayed(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            recyclerView.smoothScrollToPosition(position);
+                                        }
+                                    }, 50);
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                        });
+                        mData.clear();
+                        mData.addAll(data);
+                    }
+                });
+
             }
         });
-        mData.clear();
-        mData.addAll(data);
     }
 
     public List<HomeTopModel> getData() {
@@ -155,14 +166,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         } else {
 //            holder.mainRcTypeCv.setCardBackgroundColor(Color.WHITE);
         }
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onTopClickListener != null) {
-                    onTopClickListener.onStatusChange(mData.get(position).type);
-                }
-            }
-        });
+        setListener(holder, position);
     }
 
     private void freshValue(MyViewHolder holder, int value) {
@@ -207,7 +211,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
     }
 
     @Override
-    public void onBindViewHolder(MyViewHolder holder, int position, List<Object> payloads) {
+    public void onBindViewHolder(MyViewHolder holder, final int position, List<Object> payloads) {
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position);
         } else {
@@ -220,8 +224,20 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
             if (value != null) {
                 freshValue(holder, value);
             }
+            setListener(holder, position);
+
         }
-//        super.onBindViewHolder(holder, position, payloads);
+    }
+
+    private void setListener(MyViewHolder holder, final int position) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (onTopClickListener != null) {
+                    onTopClickListener.onStatusChange(mData.get(position).type);
+                }
+            }
+        });
     }
 
     @Override

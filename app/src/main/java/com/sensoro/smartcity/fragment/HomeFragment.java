@@ -108,7 +108,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private void initRcContent() {
         //
         mMainHomeFragRcContentAdapter = new MainHomeFragRcContentAdapter(mRootFragment.getActivity());
-        mMainHomeFragRcContentAdapter.setOnItemClickLisenter(this);
+        mMainHomeFragRcContentAdapter.setOnItemClickListener(this);
         mMainHomeFragRcContentAdapter.setOnItemAlarmInfoClickListener(this);
         //
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
@@ -270,8 +270,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
         if (dataList.size() > 0) {
-            mMainHomeFragRcContentAdapter.setData(dataList);
-            mMainHomeFragRcContentAdapter.notifyDataSetChanged();
+            mMainHomeFragRcContentAdapter.updateData(dataList);
         }
 
         setNoContentVisible(dataList.size() < 1);
@@ -419,7 +418,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void onStatusChange(int status) {
-        mPresenter.requestDataByStatus(status + 1);
+        mPresenter.requestDataByStatus(status);
     }
 
     @Override

@@ -14,4 +14,6 @@ public interface IManagerFragmentView extends IToast, IActivityIntent, IProgress
     void setInspectionVisible(boolean isVisible);
 
     void setScanLoginVisible(boolean isVisible);
+
+    void setMerchantVisible(boolean isVisible);
 }

@@ -42,6 +42,7 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
 //        return mOldList.getInstance(oldItemPosition).getName().equals(mNewList.getInstance(newItemPosition).getName());
         //用来判断 两个对象是否是相同的Item。
         return getItemsTheSame(oldItemPosition, newItemPosition);
+
     }
 
     abstract boolean getItemsTheSame(int oldItemPosition, int newItemPosition);
@@ -72,13 +73,6 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
     public boolean areContentsTheSame(int oldItemPosition, int newItemPosition) {
         T oldData = mOldList.get(oldItemPosition);
         T newData = mNewList.get(newItemPosition);
-//        if (!beanOld.getDesc().equals(beanNew.getDesc())) {
-//            return false;//如果有内容不同，就返回false
-//        }
-//        if (beanOld.getPic() != beanNew.getPic()) {
-//            return false;//如果有内容不同，就返回false
-//        }
-        //默认两个data内容是相同的
         return getContentsTheSame(oldData, newData);
     }
 
@@ -111,50 +105,10 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
     @Nullable
     @Override
     public Object getChangePayload(int oldItemPosition, int newItemPosition) {
-        //实现这个方法 就能成为文艺青年中的文艺青年
-        // 定向刷新中的部分更新
-        // 效率最高
-        //只是没有了ItemChange的白光一闪动画，（反正我也觉得不太重要）
         T oldData = mOldList.get(oldItemPosition);
         T newData = mNewList.get(newItemPosition);
-
-        //这里就不用比较核心字段了,一定相等
-//        Bundle payload = new Bundle();
-//        if (!oldBean.getDesc().equals(newBean.getDesc())) {
-//            payload.putString("KEY_DESC", newBean.getDesc());
-//        }
-//        if (oldBean.getPic() != newBean.getPic()) {
-//            payload.putInt("KEY_PIC", newBean.getPic());
-//        }
-
-//        if (payload.size() == 0)//如果没有变化 就传空
-//            return null;
-//        return payload;//
         return getChangePayload(oldData, newData);
     }
 
     abstract Object getChangePayload(T oldData, T newData);
-//    @Override example
-//    public void onBindViewHolder(DiffVH holder, int position, List<Object> payloads) {
-//        if (payloads.isEmpty()) {
-//            onBindViewHolder(holder, position);
-//        } else {
-//            //文艺青年中的文青
-//            Bundle payload = (Bundle) payloads.getInstance(0);//取出我们在getChangePayload（）方法返回的bundle
-//            TestBean bean = mDatas.getInstance(position);//取出新数据源，（可以不用）
-//            for (String key : payload.keySet()) {
-//                switch (key) {
-//                    case "KEY_DESC":
-//                        //这里可以用payload里的数据，不过data也是新的 也可以用
-//                        holder.tv2.setText(bean.getDesc());
-//                        break;
-//                    case "KEY_PIC":
-//                        holder.iv.setImageResource(payload.getInt(key));
-//                        break;
-//                    default:
-//                        break;
-//                }
-//            }
-//        }
-//    }
 }
