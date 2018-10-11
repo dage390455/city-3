@@ -14,12 +14,13 @@ import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.TipDialogUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerFragmentPresenter> implements
-        IManagerFragmentView {
+        IManagerFragmentView ,TipDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.fg_main_manage_tv_merchant_name)
     TextView fgMainManageTvMerchantName;
     @BindView(R.id.fg_main_manage_ll_change_merchants)
@@ -45,6 +46,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @BindView(R.id.fg_main_manage_ll_main_function)
     LinearLayout fgMainManageLlMainFunction;
     private ProgressUtils mProgressUtils;
+    private TipDialogUtils mExitDialog;
 
     @Override
     protected void initData(Context activity) {
@@ -54,6 +56,15 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
+        initExitDialog();
+    }
+
+    private void initExitDialog() {
+        mExitDialog = new TipDialogUtils(mRootFragment.getActivity());
+        mExitDialog.setTipMessageText("确定要退出登录吗？");
+        mExitDialog.setTipCacnleText("取消", mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
+        mExitDialog.setTipConfirmText("退出", mRootFragment.getActivity().getResources().getColor(R.color.c_f34a4a));
+        mExitDialog.setTipDialogUtilsClickListener(this);
     }
 
     @Override
@@ -126,6 +137,10 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
         if (mRootView != null) {
             ((ViewGroup) mRootView.getParent()).removeView(mRootView);
         }
+
+        if (mExitDialog != null) {
+            mExitDialog.destory();
+        }
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
@@ -164,7 +179,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 mPresenter.doVersionInfo();
                 break;
             case R.id.fg_main_manage_ll_exit:
-                mPresenter.doExitAccount();
+                mExitDialog.show();
                 break;
         }
     }
@@ -177,5 +192,16 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @Override
     public void setAppUpdateVisible(boolean isVisible) {
         fgMainManageTvIsUpgrade.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onCancelClick() {
+        mExitDialog.dismiss();
+    }
+
+    @Override
+    public void onConfirmClick() {
+        mExitDialog.dismiss();
+        mPresenter.doExitAccount();
     }
 }

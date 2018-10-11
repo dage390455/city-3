@@ -72,7 +72,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         } else {
             holder.mainRcContentTvLocation.setText(deviceInfoName);
         }
-        holder.mainRcContentTvTime.setText(DateUtil.getHourMmFormatDate(deviceInfo.getUpdatedTime()));
+        holder.mainRcContentTvTime.setText(DateUtil.getHourFormatDate(deviceInfo.getUpdatedTime()));
         //
         int status = deviceInfo.getStatus();
         //

@@ -31,6 +31,10 @@ import butterknife.ButterKnife;
 public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcContentAdapter.AlertLogRcContentHolder> implements Constants {
     private final Context mContext;
     private final List<AlarmInfo.RecordInfo> timeShaftParentBeans = new ArrayList<>();
+    private List<AlarmInfo.RecordInfo.Event> receiveStautus0 = new ArrayList<>();
+    private List<AlarmInfo.RecordInfo.Event> receiveStautus1 = new ArrayList<>();
+    private List<AlarmInfo.RecordInfo.Event> receiveStautus2 = new ArrayList<>();
+    private List<AlarmInfo.RecordInfo.Event> receiveStautus3 = new ArrayList<>();
 
     public AlertLogRcContentAdapter(Context context) {
         mContext = context;
@@ -43,9 +47,11 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         this.timeShaftParentBeans.clear();
         this.timeShaftParentBeans.addAll(recordInfoList);
     }
+
     public interface OnPhotoClickListener {
         void onPhotoItemClick(int position, List<ScenesData> scenesDataList);
     }
+
     public void setOnPhotoClickListener(OnPhotoClickListener onPhotoClickListener) {
         this.onPhotoClickListener = onPhotoClickListener;
     }
@@ -63,7 +69,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         //
 
         AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(position);
-        String time = DateUtil.getStrTimeToday(recordInfo.getUpdatedTime(),1);
+        String time = DateUtil.getStrTimeToday(recordInfo.getUpdatedTime(), 1);
         holder.itemAlertContentTvTime.setText(time);
         //
         if ("confirm".equals(recordInfo.getType())) {
@@ -83,7 +89,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
                 holder.itemAlertContentTvContent.setText(confirm_text);
             } else if ("app".equals(source)) {
-                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过App端确认本次预警类型为:\n" +
+                confirm_text = "联系人 [" + recordInfo.getName() + "] " + "通过App端确认本次预警类型为:\n" +
                         confirmStatusArray[recordInfo.getDisplayStatus()];
                 //用span改变字体颜色,换行 用\n
 //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
@@ -104,7 +110,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 SpannableString spannableString = new SpannableString(confirm_text);
                 // 改变高鹏 颜色
                 String temp = "[" + recordInfo.getName() + "]";
-                changTextColor(confirm_text, temp, spannableString, R.color.c_131313);
+                changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
                 //改变安全隐患颜色
                 temp = confirmStatusArray[recordInfo.getDisplayStatus()];
                 changTextColor(confirm_text, temp, spannableString, R.color.c_f34a4a);
@@ -172,19 +178,10 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         } else if ("sendVoice".equals(recordInfo.getType())) {
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.phone_icon);
-            StringBuffer stringBuffer = new StringBuffer();
+            StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append("系统拨打电话至:");
-            int count = recordInfo.getPhoneList().length > 3 ? 3 : recordInfo.getPhoneList().length;
-            for (int i = 0; i < count; i++) {
-                AlarmInfo.RecordInfo.Event event = recordInfo.getPhoneList()[i];
-                if (i == (count - 1)) {
-                    stringBuffer.append(event.getName() + "等" + recordInfo.getPhoneList().length + "人");
-                } else {
-                    stringBuffer.append(event.getName() + ",");
-                }
-            }
-            stringBuffer.append(" 电话接收成功");
-            holder.itemAlertContentTvContent.setText(stringBuffer);
+
+            holder.itemAlertContentTvContent.setText(appendResult(stringBuffer,0,recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
 //            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer);
 //            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
@@ -220,17 +217,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.msg_icon);
             final StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("系统发送短信至:");
-            int count = recordInfo.getPhoneList().length > 3 ? 3 : recordInfo.getPhoneList().length;
-            for (int i = 0; i < count; i++) {
-                AlarmInfo.RecordInfo.Event event = recordInfo.getPhoneList()[i];
-                if (i == (count - 1)) {
-                    stringBuilder.append(event.getName()).append("等").append(recordInfo.getPhoneList().length).append("人");
-                } else {
-                    stringBuilder.append(event.getName()).append(",");
-                }
-            }
-            stringBuilder.append(" 短信接收成功 ");
-            holder.itemAlertContentTvContent.setText(stringBuilder);
+            holder.itemAlertContentTvContent.setText(appendResult(stringBuilder,1,recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
 //            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder.toString());
 //            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
@@ -263,9 +250,9 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         } else if ("alarm".equals(recordInfo.getType())) {
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.smoke_icon);
-            holder.itemAlertContentTvContent.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(),
-                    recordInfo
-                            .getThresholds(), 1));
+            String alarmDetailInfo = WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo.getThresholds(), 1);
+            SpannableString spannableString = new SpannableString(alarmDetailInfo);
+            holder.itemAlertContentTvContent.setText(changTextColor(alarmDetailInfo, alarmDetailInfo, spannableString, R.color.c_252525));
             holder.llConfirm.setVisibility(View.GONE);
 //            groupHolder.lineView.setVisibility(View.GONE);
 //            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_alarm));
@@ -282,10 +269,107 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
     }
 
-    private void changTextColor(String content, String temp, SpannableString spannableString, @ColorRes int color) {
+    /**
+     *
+     * @param receiveStautus
+     * @param stringBuffer
+     * @param type 0表示 系统拨打电话至 1表示 系统发送短信至
+     * @param phoneList
+     * @return
+     */
+    private SpannableString appendResult(StringBuilder stringBuffer, int type, AlarmInfo.RecordInfo.Event[] phoneList) {
+        //情况集合
+        receiveStatusListClear();
+        for (int i = 0; i < phoneList.length; i++) {
+            AlarmInfo.RecordInfo.Event event = phoneList[i];
+            switch (event.getReciveStatus()) {
+                case 0:
+                    receiveStautus0.add(event);
+                    break;
+                case 1:
+                    receiveStautus1.add(event);
+                    break;
+                case 2:
+                    receiveStautus2.add(event);
+                    break;
+                default:
+                    receiveStautus3.add(event);
+                    break;
+            }
+
+        }
+        List[] receiveStautus = {receiveStautus0, receiveStautus1, receiveStautus2, receiveStautus3};
+        StringBuilder temp = null;
+        ArrayList<StringBuilder> tempList = new ArrayList<>();
+        for (List stautus : receiveStautus) {
+            if (stautus.size() > 0) {
+                temp = new StringBuilder();
+                for (int i = 0; i < stautus.size(); i++) {
+                    String number = ((AlarmInfo.RecordInfo.Event)stautus.get(i)).getNumber();
+                    if (i != (stautus.size() - 1)) {
+                        temp.append(" "+number + " ;");
+                    } else {
+                        temp.append(" "+number + " ");
+                    }
+                }
+                if(type == 0){
+                    switch (((AlarmInfo.RecordInfo.Event)stautus.get(0)).getReciveStatus()){
+                        case 0:
+                            stringBuffer.append(temp).append(" 电话拨打中");
+                            break;
+                        case 1:
+                            stringBuffer.append(temp).append(" 电话接听成功");
+                            break;
+                        case 2:
+                            stringBuffer.append(temp).append(" 电话接听失败");
+                            break;
+                        default:
+                            stringBuffer.append(temp).append(" 电话接听结果未知");
+                            break;
+                    }
+                }else if (type == 1){
+                    switch (((AlarmInfo.RecordInfo.Event)stautus.get(0)).getReciveStatus()){
+                        case 0:
+                            stringBuffer.append(temp).append(" 短信发送中");
+                            break;
+                        case 1:
+                            stringBuffer.append(temp).append(" 短信接收成功");
+                            break;
+                        case 2:
+                            stringBuffer.append(temp).append(" 短信接收失败");
+                            break;
+                        default:
+                            stringBuffer.append(temp).append(" 短信接收结果未知");
+                            break;
+                    }
+                }
+               tempList.add(temp);
+            }
+        }
+        SpannableString spannableString = new SpannableString(stringBuffer);
+
+        for (StringBuilder sb : tempList) {
+            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R.color.c_252525));
+            int i = stringBuffer.indexOf(sb.toString());
+            spannableString.setSpan(foregroundColorSpan, i, i + sb.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        }
+
+        return spannableString;
+    }
+
+    private void receiveStatusListClear() {
+        receiveStautus0.clear();
+        receiveStautus1.clear();
+        receiveStautus2.clear();
+        receiveStautus3.clear();
+    }
+
+    private SpannableString changTextColor(String content, String temp, SpannableString spannableString, @ColorRes int color) {
+
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(color));
         int i = content.indexOf(temp);
         spannableString.setSpan(foregroundColorSpan, i, i + temp.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
+        return spannableString;
     }
 
     @Override

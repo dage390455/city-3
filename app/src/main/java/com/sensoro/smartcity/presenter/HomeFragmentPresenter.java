@@ -141,24 +141,22 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     homeTopModels.add(alrmModel);
                 }
 //                HomeTopModel errorModel = new HomeTopModel();
-                if (normal > 0) {
-                    HomeTopModel normalModel = new HomeTopModel();
-                    normalModel.type = 1;
-                    normalModel.value = normal;
-                    homeTopModels.add(normalModel);
-                }
-                if (lostCount > 0) {
-                    HomeTopModel lostModel = new HomeTopModel();
-                    lostModel.type = 2;
-                    lostModel.value = lostCount;
-                    homeTopModels.add(lostModel);
-                }
-                if (inactiveCount > 0) {
-                    HomeTopModel inactiveModel = new HomeTopModel();
-                    inactiveModel.type = 3;
-                    inactiveModel.value = inactiveCount;
-                    homeTopModels.add(inactiveModel);
-                }
+
+                HomeTopModel normalModel = new HomeTopModel();
+                normalModel.type = 1;
+                normalModel.value = normal;
+                homeTopModels.add(normalModel);
+
+                HomeTopModel lostModel = new HomeTopModel();
+                lostModel.type = 2;
+                lostModel.value = lostCount;
+                homeTopModels.add(lostModel);
+
+                HomeTopModel inactiveModel = new HomeTopModel();
+                inactiveModel.type = 3;
+                inactiveModel.value = inactiveCount;
+                homeTopModels.add(inactiveModel);
+
                 final int total = alarmCount + normal + lostCount + inactiveCount;
                 mContext.runOnUiThread(new Runnable() {
                     @Override

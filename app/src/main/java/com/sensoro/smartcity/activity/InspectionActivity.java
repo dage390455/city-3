@@ -149,6 +149,9 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
     @Override
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
+        if (mNormalDialog != null) {
+            mNormalDialog.destory();
+        }
         super.onDestroy();
     }
 
