@@ -22,7 +22,8 @@
         app:qrcv_isShowDefaultScanLineDrawable="true"
         app:qrcv_isShowTipBackground="false"
         app:qrcv_isShowTipTextAsSingleLine="true"
-        app:qrcv_customGridScanLineDrawable="@drawable/grid_scan_line"
+        app:qrcv_customGridScanLineDrawable="@drawable/clear_scan_line"
+
         app:qrcv_isTipTextBelowRect="true"
         app:qrcv_maskColor="#7e000000"
         app:qrcv_qrCodeTipText="对准二维码，即可自动扫描"
@@ -112,6 +113,11 @@
                 android:textSize="12sp"/>
         </LinearLayout>-->
     </LinearLayout>
-
+<ImageView
+    android:id="@+id/ac_scan_imv_scan_line"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:src="@drawable/grid_scan_line"
+    android:scaleType="fitXY"/>
 
 </RelativeLayout>

@@ -206,7 +206,6 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().toastShort(errorMsg);
-                        Log.e("hcs", ":错误了::" + errorMsg);
                         getView().dismissProgressDialog();
                     }
                 });
@@ -289,19 +288,19 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                 intent.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
                 mContext.startActivityForResult(intent, REQUEST_CODE_SELECT);
                 break;
+//            case 1:
+//                //打开选择,本次允许选择的数量
+//                //修改选择逻辑
+////              ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
+//                ImagePicker.getInstance().setSelectLimit(maxImgCount);
+//                Intent intent1 = new Intent(mContext, ImageGridActivity.class);
+//                /* 如果需要进入选择的时候显示已经选中的图片，
+//                 * 详情请查看ImagePickerActivity
+//                 * */
+//                intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
+//                mContext.startActivityForResult(intent1, REQUEST_CODE_SELECT);
+//                break;
             case 1:
-                //打开选择,本次允许选择的数量
-                //修改选择逻辑
-//              ImagePicker.getInstance().setSelectLimit(maxImgCount - selImageList.size());
-                ImagePicker.getInstance().setSelectLimit(maxImgCount);
-                Intent intent1 = new Intent(mContext, ImageGridActivity.class);
-                /* 如果需要进入选择的时候显示已经选中的图片，
-                 * 详情请查看ImagePickerActivity
-                 * */
-                intent1.putExtra(ImageGridActivity.EXTRAS_IMAGES, selImageList);
-                mContext.startActivityForResult(intent1, REQUEST_CODE_SELECT);
-                break;
-            case 2:
                 Intent intent2 = new Intent(mContext, TakeRecordActivity.class);
 //                                    intent2.putExtra(ImageGridActivity.EXTRAS_TAKE_PICKERS, true); // 是否是直接打开相机
                 mContext.startActivityForResult(intent2, REQUEST_CODE_RECORD);

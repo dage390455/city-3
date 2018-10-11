@@ -99,7 +99,7 @@ public class MenuPageFactory {
             List<String> inspectTask = grants.getInspectTask();
             if (inspectTask != null) {
                 for (String str : inspectTask) {
-                    if ("modify".equals(str)) {
+                    if ("modifyStatus".equals(str)) {
                         return true;
                     }
                 }

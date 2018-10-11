@@ -225,6 +225,8 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                             intent.setClass(mContext, InspectionActivity.class);
                             break;
                         case 1:
+                            getView().toastShort("此设备已巡检完毕，且状态正常");
+                            break;
                         case 2:
                             intent.setClass(mContext, InspectionExceptionDetailActivity.class);
                             break;
@@ -232,7 +234,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
                     getView().startAC(intent);
                 } else {
-                    getView().toastShort("未查找到此巡检设备");
+                    getView().toastShort("此设备未在巡检任务中");
                     getView().startScan();
                 }
 

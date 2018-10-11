@@ -128,6 +128,11 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
                 Intent intent = new Intent(mContext, InspectionTaskActivity.class);
                 intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
                 getView().startAC(intent);
+                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow, R.color.white, "继续巡检");
+                getView().setTvState(R.color.c_3aa7f0,"执行中");
+                EventData eventData = new EventData();
+                eventData.code = EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE;
+                EventBus.getDefault().post(eventData);
             }
 
             @Override
