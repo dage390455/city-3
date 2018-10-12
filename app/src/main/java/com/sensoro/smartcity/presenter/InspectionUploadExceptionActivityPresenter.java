@@ -151,7 +151,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             getView().initUploadProgressDialog();
             upLoadPhotosUtils.doUploadPhoto(selImageList);
         } else {
-            getView().toastShort("现场照片/录像 必须选择一张");
+            getView().toastShort("至少上传一张照片或一段视频");
         }
     }
 

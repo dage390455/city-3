@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -36,6 +38,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.presenter.SearchMonitorActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
@@ -92,6 +95,9 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     TextView tvNoContentTip;
     @BindView(R.id.ic_no_content)
     LinearLayout icNoContent;
+    @BindView(R.id.search_device_ll_root)
+    LinearLayout searchDeviceLlRoot;
+
 
     private Animation returnTopAnimation;
     private ProgressUtils mProgressUtils;
@@ -119,6 +125,18 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         mKeywordEt.addTextChangedListener(this);
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
+        AppUtils.getInputSoftStatus(searchDeviceLlRoot, new AppUtils.InputSoftStatusListener() {
+            @Override
+            public void onKeyBoardClose() {
+                mKeywordEt.setCursorVisible(false);
+            }
+
+            @Override
+            public void onKeyBoardOpen() {
+                mKeywordEt.setCursorVisible(true);
+            }
+        });
+
         initSearchHistory();
         initRelation();
         initIndex();
@@ -518,6 +536,14 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void finishAc() {
         mActivity.finish();
+    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            finishAc();
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override

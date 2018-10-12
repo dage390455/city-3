@@ -122,6 +122,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     getView().setDeployContactRelativeLayoutVisible(false);
                     getView().setDeployDeviceRlSignalVisible(false);
                     getView().setDeployPhotoVisible(false);
+
+                    deployMapModel.sn = mDeviceInfo.getSn();
+                    getView().setDeviceTitleName(deployMapModel.sn);
+                    mNameAndAddress = mDeviceInfo.getName();
+                    if (!TextUtils.isEmpty(mNameAndAddress)) {
+//                不为空设置地址
+                        getView().setNameAddressText(mNameAndAddress);
+//                name = mContext.getResources().getString(R.string.tips_hint_name_address_set);
+                    }
                     break;
                 case TYPE_SCAN_DEPLOY_DEVICE:
                     //设备部署
@@ -568,14 +577,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 return;
             }
         }
-        if (images.size() == 0) {
+        if (images.size() == 0 && deployMapModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
             getView().toastShort("请至少添加一张图片");
             getView().updateUploadState(true);
             return;
         }
         //经纬度校验
         if (deployMapModel.latLng == null) {
-            getView().toastShort("请选择部署设备位置");
+            getView().toastShort("请指定部署位置");
             getView().updateUploadState(true);
         } else {
             //TODO 背景选择器

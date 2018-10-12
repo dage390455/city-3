@@ -3,12 +3,14 @@ package com.sensoro.smartcity.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -31,6 +33,7 @@ import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
@@ -90,7 +93,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         mAlarmPopUtils = new AlarmPopUtils(mRootFragment.getActivity());
         mAlarmPopUtils.setOnPopupCallbackListener(mPresenter);
-
         returnTopAnimation = AnimationUtils.loadAnimation(mRootFragment.getContext(), R.anim.return_top_in_anim);
         mReturnTopImageView.setAnimation(returnTopAnimation);
         mReturnTopImageView.setVisibility(View.GONE);
@@ -110,8 +112,18 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
         initRcContent();
 
-        fgMainWarnEtSearch.setCursorVisible(false);
 
+        AppUtils.getInputSoftStatus(mRootView, new AppUtils.InputSoftStatusListener() {
+            @Override
+            public void onKeyBoardClose() {
+                fgMainWarnEtSearch.setCursorVisible(false);
+            }
+
+            @Override
+            public void onKeyBoardOpen() {
+                fgMainWarnEtSearch.setCursorVisible(true);
+            }
+        });
     }
 
     private void setEditTextState(boolean canEdit) {

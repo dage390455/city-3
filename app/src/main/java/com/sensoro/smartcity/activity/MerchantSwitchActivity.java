@@ -47,8 +47,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private RefreshLayout refreshLayout;
-    private ImageView imvNoContent;
-    private LinearLayout icNoContent;
 
 
     @Override
@@ -74,8 +72,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         seperatorBottomView = findViewById(R.id.merchant_list_bottom_sep);
         rlTitleAccount = (RelativeLayout) findViewById(R.id.rl_title_account);
         refreshLayout = findViewById(R.id.refreshLayout);
-        imvNoContent = findViewById(R.id.no_content);
-        icNoContent = findViewById(R.id.ic_no_content);
 
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPullListView = findViewById(R.id.fragment_merchant_list);
@@ -222,7 +218,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             mMerchantAdapter.setDataList(data);
             mMerchantAdapter.notifyDataSetChanged();
         }
-        setNoContentVisible(data == null || data.size() < 1);
 
 //        ViewParent parent = mPullListView.getParent();
 //        if (parent instanceof LinearLayout) {
@@ -234,11 +229,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 //        }
     }
 
-    @Override
-    public void setNoContentVisible(boolean isVisible) {
-        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        mPullListView.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-    }
+
 
     @Override
     public void onPullRefreshComplete() {

@@ -141,6 +141,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             getView().updateMerchantInfo(mUserInfoList);
             getView().setSearchHistoryLayoutVisible(false);
             getView().setLlMerchantItemViewVisible(true);
+            getView().setTipsLinearLayoutVisible(false);
         } else {
             getView().setTipsLinearLayoutVisible(true);
             getView().setLlMerchantItemViewVisible(false);

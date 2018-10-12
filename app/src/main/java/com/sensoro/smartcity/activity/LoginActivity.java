@@ -4,12 +4,14 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.FrameLayout;
@@ -28,6 +30,7 @@ import com.sensoro.smartcity.util.PermissionsResultObserve;
 import com.sensoro.smartcity.util.RxPermissionUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.yixia.camera.util.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -87,7 +90,21 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
             updateLogoDescriptionState(false);
         }
 
+        acLoginRoot.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                acLoginRoot.getWindowVisibleDisplayFrame(rect);
+                int height = acLoginRoot.getRootView().getHeight();
+                int i = height - rect.bottom;
+                if(i>200){
+                    updateLogoDescriptionState(false);
+                }else{
+                    updateLogoDescriptionState(true);
+                }
 
+            }
+        });
 
         acLoginEtAccount.addTextChangedListener(new TextWatcher() {
             @Override
@@ -103,11 +120,11 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
-                    acLoginImvAccountIcon.setImageResource(R.drawable.login_account_high_light);
+                    acLoginImvAccountIcon.setImageResource(R.drawable.login_account_person_high_light);
                     acLoginImvAccountClear.setVisibility(View.VISIBLE);
 
                 } else {
-                    acLoginImvAccountIcon.setImageResource(R.drawable.login_account);
+                    acLoginImvAccountIcon.setImageResource(R.drawable.login_account_person_normal);
                     acLoginImvAccountClear.setVisibility(View.GONE);
                     if (acLoginEtPsd.getText().length() == 0) {
                         updateLogoDescriptionState(true);
@@ -288,8 +305,8 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     }
 
     private void updateAccountIcon(boolean isEmpty) {
-        acLoginImvAccountIcon.setImageResource(isEmpty ? R.drawable.login_account : R.drawable
-                .login_account_high_light);
+        acLoginImvAccountIcon.setImageResource(isEmpty ? R.drawable.login_account_person_normal : R.drawable
+                .login_account_person_high_light);
         acLoginImvAccountClear.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
@@ -373,7 +390,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         switch (view.getId()) {
             case R.id.ac_login_et_account:
             case R.id.ac_login_et_psd:
-                updateLogoDescriptionState(false);
+//                updateLogoDescriptionState(false);
                 break;
             case R.id.ac_login_imv_account_clear:
                 acLoginEtAccount.getText().clear();

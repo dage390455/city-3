@@ -6,7 +6,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Rect;
 import android.net.Uri;
+import android.view.View;
+import android.view.ViewTreeObserver;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
@@ -139,6 +142,27 @@ public class AppUtils {
         }
         return pi;
     }
+    public static void getInputSoftStatus(final View view, final InputSoftStatusListener listener) {
+        view.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+                Rect rect = new Rect();
+                view.getWindowVisibleDisplayFrame(rect);
+                int height = view.getRootView().getHeight();
+                int i = height - rect.bottom;
+                if(i<200){
+                    listener.onKeyBoardClose();
+                }else{
+                    listener.onKeyBoardOpen();
+                }
 
+            }
+        });
+    }
 
+    public interface InputSoftStatusListener {
+        void onKeyBoardClose();
+
+        void onKeyBoardOpen();
+    }
 }

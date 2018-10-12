@@ -31,6 +31,7 @@ import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.presenter.InspectionTaskActivityPresenter;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
@@ -78,6 +79,9 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     ImageView imvNoContent;
     @BindView(R.id.ic_no_content)
     LinearLayout icNoContent;
+    @BindView(R.id.ac_inspection_task_rl_root)
+    LinearLayout acInspectionTaskRlRoot;
+
     private InspectionTaskRcContentAdapter mContentAdapter;
     private SelectDeviceTypePopUtils mSelectDeviceTypePop;
     private InspectionTaskStatePopUtils mSelectStatusPop;
@@ -106,6 +110,18 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                     return true;
                 }
                 return false;
+            }
+        });
+
+        AppUtils.getInputSoftStatus(acInspectionTaskRlRoot, new AppUtils.InputSoftStatusListener() {
+            @Override
+            public void onKeyBoardClose() {
+                acInspectionTaskEtSearch.setCursorVisible(false);
+            }
+
+            @Override
+            public void onKeyBoardOpen() {
+                acInspectionTaskEtSearch.setCursorVisible(true);
             }
         });
         initRcContent();

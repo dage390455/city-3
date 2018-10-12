@@ -26,6 +26,10 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
         IManagerFragmentView, TipDialogUtils.TipDialogUtilsClickListener, VersionDialogUtils.VersionDialogUtilsClickListener {
     @BindView(R.id.fg_main_manage_tv_merchant_name)
     TextView fgMainManageTvMerchantName;
+    @BindView(R.id.fg_main_manage_imv_merchant_icon)
+    ImageView fgMainManageimvMerchantIcon;
+    @BindView(R.id.fg_main_manage_tv_merchant_title)
+    TextView fgMainManageTvMerchantTitle;
     @BindView(R.id.fg_main_manage_ll_change_merchants)
     LinearLayout fgMainManageLlChangeMerchants;
     @BindView(R.id.iv_merchant_arrow)
@@ -247,6 +251,14 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @Override
     public void setMerchantVisible(boolean isVisible) {
         ivMerchantArrow.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void changeMerchantTitle(boolean hasSubMerchant) {
+        if (!hasSubMerchant) {
+            fgMainManageimvMerchantIcon.setImageResource(R.drawable.single_merchant);
+            fgMainManageTvMerchantTitle.setText("商户名称");
+        }
     }
 
     @Override
