@@ -35,7 +35,6 @@ import rx.schedulers.Schedulers;
 
 public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnCreate, IOnFragmentStart, Constants {
     private Activity mContext;
-//    private boolean needUpdate = true;
 
     @Override
     public void initData(Context context) {
@@ -109,26 +108,6 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 //                merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
 //                getView().setMenuSelected(0);
             getView().setAppUpdateVisible(hasNewVersion());
-
-//=======
-//            //TODO 版本信息
-//            UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
-//            if (upgradeInfo == null) {
-//                needUpdate = false;
-//                return;
-//            }
-//            int versionCode = upgradeInfo.versionCode;
-//            int currentVersionCode = AppUtils.getVersionCode(mContext);
-//            LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
-//            if (currentVersionCode != 0) {
-//                needUpdate = versionCode > currentVersionCode;
-//                if (needUpdate) {
-//                    getView().setAppUpdateVisible(true);
-//                } else {
-//                    getView().setAppUpdateVisible(false);
-//                }
-//            }
-//>>>>>>> 57f5d53e1afc1c55ca64e2f1ae8d38fdb78dfd01
         }
 
     }
@@ -136,22 +115,13 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     private boolean hasNewVersion() {
         //TODO 版本信息
         UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
-        if(upgradeInfo == null){
+        if (upgradeInfo == null) {
             return false;
         }
-
         int versionCode = upgradeInfo.versionCode;
         int currentVersionCode = AppUtils.getVersionCode(mContext);
         LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
-        if (currentVersionCode != 0) {
-            if (versionCode > currentVersionCode) {
-
-                return true;
-            } else {
-                return false;
-            }
-        }
-        return false;
+        return currentVersionCode != 0 && versionCode > currentVersionCode;
     }
 
     @Override
@@ -232,18 +202,9 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doVersionInfo() {
         if (hasNewVersion()) {
             Beta.checkUpgrade();
-        }else{
+        } else {
             getView().showVersionDialog();
         }
-
-
-//=======
-//        if (needUpdate) {
-//            Beta.checkUpgrade();
-//        } else {
-//            getView().toastShort("你已经是最新版本了");
-//        }
-//>>>>>>> 57f5d53e1afc1c55ca64e2f1ae8d38fdb78dfd01
     }
 
     @Override

@@ -2,7 +2,6 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -24,7 +23,7 @@ import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerFragmentPresenter> implements
-        IManagerFragmentView ,TipDialogUtils.TipDialogUtilsClickListener,VersionDialogUtils.VersionDialogUtilsClickListener {
+        IManagerFragmentView, TipDialogUtils.TipDialogUtilsClickListener, VersionDialogUtils.VersionDialogUtilsClickListener {
     @BindView(R.id.fg_main_manage_tv_merchant_name)
     TextView fgMainManageTvMerchantName;
     @BindView(R.id.fg_main_manage_ll_change_merchants)
@@ -79,7 +78,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     private void initVersionDialog() {
         mVersionDialog = new VersionDialogUtils(mRootFragment.getActivity());
-        mVersionDialog.setTipMessageText("现在 App 版本为 "+ AppUtils.getVersionName(mRootFragment.getActivity()));
+        mVersionDialog.setTipMessageText("现在 App 版本为 " + AppUtils.getVersionName(mRootFragment.getActivity()));
         mVersionDialog.setTipCacnleText("取消", mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
         mVersionDialog.setVersionDialogUtilsClickListener(this);
     }
@@ -226,6 +225,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void showVersionDialog() {
         mVersionDialog.show();
     }
+
     @Override
     public void setContractVisible(boolean isVisible) {
         fgMainManageLlContractManagement.setVisibility(isVisible ? View.VISIBLE : View.GONE);
