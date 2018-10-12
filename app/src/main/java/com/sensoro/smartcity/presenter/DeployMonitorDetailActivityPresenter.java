@@ -3,8 +3,6 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Looper;
 import android.text.TextUtils;
 
 import com.lzy.imagepicker.bean.ImageItem;
@@ -48,12 +46,11 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants, Runnable {
+public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants {
     private Activity mContext;
     private DeployMapModel deployMapModel = new DeployMapModel();
     private final List<String> tagList = new ArrayList<>();
     private final List<DeployContactModel> deployContactModelList = new ArrayList<>();
-    private Handler mHandler;
     //新设备
     private DeviceInfo mDeviceInfo;
     private final ArrayList<ImageItem> images = new ArrayList<>();
@@ -66,7 +63,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        mHandler = new Handler(Looper.getMainLooper());
         Intent intent = mContext.getIntent();
         mDeviceInfo = (DeviceInfo) intent.getSerializableExtra(EXTRA_DEVICE_INFO);
         mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO);
@@ -196,10 +192,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
             }
         }
-        freshSignalInfo();
         deployMapModel.signal = mDeviceInfo.getSignal();
         deployMapModel.updatedTime = mDeviceInfo.getUpdatedTime();
-        mHandler.post(this);
+        freshSignalInfo();
     }
 
     //
@@ -430,10 +425,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     @Override
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-            mHandler = null;
-        }
         tagList.clear();
         images.clear();
     }
@@ -485,41 +476,67 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
-        if (code == EVENT_DATA_DEPLOY_RESULT_FINISH || code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
-            getView().finishAc();
-        } else if (code == EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS) {
-            if (data instanceof String) {
-                mNameAndAddress = (String) data;
-                getView().setNameAddressText(mNameAndAddress);
-            }
-        } else if (code == EVENT_DATA_DEPLOY_SETTING_TAG) {
-            if (data instanceof List) {
-                tagList.clear();
-                tagList.addAll((List<String>) data);
-                getView().updateTagsData(tagList);
-            }
-        } else if (code == EVENT_DATA_DEPLOY_SETTING_CONTACT) {
-            if (data instanceof List) {
-                //TODO 联系人
-                deployContactModelList.clear();
-                deployContactModelList.addAll((List<DeployContactModel>) data);
-                getView().updateContactData(deployContactModelList);
-            }
-        } else if (code == EVENT_DATA_DEPLOY_SETTING_PHOTO) {
-            if (data instanceof List) {
-                images.clear();
-                images.addAll((ArrayList<ImageItem>) data);
-                if (images.size() > 0) {
-                    getView().setDeployPhotoText("已添加" + images.size() + "张图片");
-                } else {
-                    getView().setDeployPhotoText("未添加");
+        switch (code) {
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                getView().finishAc();
+                break;
+            case EVENT_DATA_DEPLOY_SETTING_NAME_ADDRESS:
+                if (data instanceof String) {
+                    mNameAndAddress = (String) data;
+                    getView().setNameAddressText(mNameAndAddress);
                 }
-            }
-        } else if (code == EVENT_DATA_DEPLOY_MAP) {
-            if (data instanceof DeployMapModel) {
-                deployMapModel = (DeployMapModel) data;
-                freshSignalInfo();
-            }
+                break;
+            case EVENT_DATA_DEPLOY_SETTING_TAG:
+                if (data instanceof List) {
+                    tagList.clear();
+                    tagList.addAll((List<String>) data);
+                    getView().updateTagsData(tagList);
+                }
+                break;
+            case EVENT_DATA_DEPLOY_SETTING_CONTACT:
+                if (data instanceof List) {
+                    //TODO 联系人
+                    deployContactModelList.clear();
+                    deployContactModelList.addAll((List<DeployContactModel>) data);
+                    getView().updateContactData(deployContactModelList);
+                }
+                break;
+            case EVENT_DATA_DEPLOY_SETTING_PHOTO:
+                if (data instanceof List) {
+                    images.clear();
+                    images.addAll((ArrayList<ImageItem>) data);
+                    if (images.size() > 0) {
+                        getView().setDeployPhotoText("已添加" + images.size() + "张图片");
+                    } else {
+                        getView().setDeployPhotoText("未添加");
+                    }
+                }
+                break;
+            case EVENT_DATA_DEPLOY_MAP:
+                if (data instanceof DeployMapModel) {
+                    deployMapModel = (DeployMapModel) data;
+                    freshSignalInfo();
+                }
+                break;
+            case EVENT_DATA_SOCKET_DATA_INFO:
+                if (data instanceof DeviceInfo) {
+                    DeviceInfo deviceInfo = (DeviceInfo) data;
+                    String sn = deviceInfo.getSn();
+                    try {
+                        if (deployMapModel.sn.equalsIgnoreCase(sn)) {
+                            deployMapModel.updatedTime = deviceInfo.getUpdatedTime();
+                            deployMapModel.signal = deviceInfo.getSignal();
+                            freshSignalInfo();
+                            LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployMapModel.updatedTime + ",deployMapModel.signal = " + deployMapModel.signal);
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            default:
+                break;
         }
 //        LogUtils.loge(this, eventData.toString());
     }
@@ -527,29 +544,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void run() {
-        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(deployMapModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
-
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-            }
-
-            @Override
-            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                if (deviceInfoListRsp.getData().size() > 0) {
-                    DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(0);
-                    deployMapModel.signal = deviceInfo.getSignal();
-                    deployMapModel.updatedTime = deviceInfo.getUpdatedTime();
-                    freshSignalInfo();
-                }
-            }
-        });
-        mHandler.postDelayed(this, 5 * 1000);
     }
 
     public void doConfirm() {

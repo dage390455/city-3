@@ -35,6 +35,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMapActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeployMapModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
@@ -44,6 +45,8 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -54,7 +57,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivityView> implements AMap.OnMapClickListener, AMap.OnCameraChangeListener, AMap.OnMarkerClickListener, AMap.OnMapLoadedListener, AMap.OnMapTouchListener, AMap.InfoWindowAdapter, GeocodeSearch.OnGeocodeSearchListener, Constants {
+public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivityView> implements IOnCreate, AMap.OnMapClickListener, AMap.OnCameraChangeListener, AMap.OnMarkerClickListener, AMap.OnMapLoadedListener, AMap.OnMapTouchListener, AMap.InfoWindowAdapter, GeocodeSearch.OnGeocodeSearchListener, Constants {
     private AMap aMap;
     private Marker smoothMoveMarker;
     private GeocodeSearch geocoderSearch;
@@ -65,6 +68,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         deployMapModel = (DeployMapModel) mContext.getIntent().getParcelableExtra(EXTRA_DEPLOY_TO_MAP);
@@ -92,6 +96,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -373,5 +378,38 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             Log.e("地图错误", "定位失败, 错误码:" + lastKnownLocation.getErrorCode() + ", 错误信息:"
                     + lastKnownLocation.getErrorInfo());
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        Object data = eventData.data;
+        //上报异常结果成功
+        switch (code) {
+            case EVENT_DATA_SOCKET_DATA_INFO:
+                if (data instanceof DeviceInfo) {
+                    DeviceInfo deviceInfo = (DeviceInfo) data;
+                    String sn = deviceInfo.getSn();
+                    try {
+                        if (deployMapModel.sn.equalsIgnoreCase(sn)) {
+                            deployMapModel.updatedTime = deviceInfo.getUpdatedTime();
+                            deployMapModel.signal = deviceInfo.getSignal();
+                            LogUtils.loge(this, "地图也刷新信号 -->> deployMapModel.updatedTime = " + deployMapModel.updatedTime + ",deployMapModel.signal = " + deployMapModel.signal);
+                            getView().refreshSignal(deployMapModel.updatedTime, deployMapModel.signal);
+                        }
+                    } catch (NullPointerException e) {
+                        e.printStackTrace();
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }
