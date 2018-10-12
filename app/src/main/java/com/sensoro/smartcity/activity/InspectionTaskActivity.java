@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -80,7 +81,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     @BindView(R.id.ic_no_content)
     LinearLayout icNoContent;
     @BindView(R.id.ac_inspection_task_rl_root)
-    LinearLayout acInspectionTaskRlRoot;
+    RelativeLayout acInspectionTaskRlRoot;
 
     private InspectionTaskRcContentAdapter mContentAdapter;
     private SelectDeviceTypePopUtils mSelectDeviceTypePop;
