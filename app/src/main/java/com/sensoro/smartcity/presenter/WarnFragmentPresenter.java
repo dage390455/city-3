@@ -303,10 +303,15 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
 
     public void clickItem(int position, boolean isReConfirm) {
-        this.isReConfirm = isReConfirm;
-        Intent intent = new Intent(mContext, AlarmDetailLogActivity.class);
-        intent.putExtra(EXTRA_ALARM_INFO, mDeviceAlarmLogInfoList.get(position));
-        getView().startAC(intent);
+        try {
+            this.isReConfirm = isReConfirm;
+            Intent intent = new Intent(mContext, AlarmDetailLogActivity.class);
+            intent.putExtra(EXTRA_ALARM_INFO, mDeviceAlarmLogInfoList.get(position));
+            getView().startAC(intent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     public void clickItemByConfirmStatus(int position, boolean isReConfirm) {

@@ -15,11 +15,14 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,6 +31,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -102,62 +106,52 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
                 String lat = "" + deviceInfo.getLonlat()[1];
                 getView().setLongitudeLatitude(WidgetUtil.subZeroAndDot(lon), WidgetUtil.subZeroAndDot(lat));
                 //
-//                deviceInfo.getSensorTypes();
                 AlarmInfo.RuleInfo rules[] = deviceInfo.getAlarms().getRules();
-
-                String alarm = null;
+                DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
+                Map<String, SensorTypeStyles> sensorTypeMap = localDevicesMergeTypes.getConfig().getSensorType();
+                //
                 StringBuilder stringBuilder = new StringBuilder();
                 for (AlarmInfo.RuleInfo ruleInfo : rules) {
                     String sensorType = ruleInfo.getSensorTypes();
-                    alarm = WidgetUtil.getBooleanAlarm(sensorType);
-                    if (!TextUtils.isEmpty(alarm)) {
-                        stringBuilder.append(alarm);
-                        break;
-                    }
-                }
-                if (TextUtils.isEmpty(alarm)) {
-                    for (AlarmInfo.RuleInfo ruleInfo : rules) {
-                        String sensorType = ruleInfo.getSensorTypes();
-                        sensorType = WidgetUtil.getSensorTypeChinese(sensorType);
+                    SensorTypeStyles sensorTypeStyles = sensorTypeMap.get(sensorType);
+                    boolean bool = sensorTypeStyles.isBool();
+
+                    if (bool) {
+                        String alarmStr = sensorTypeStyles.getAlarm();
+                        stringBuilder.append(alarmStr).append(" ");
+                    } else {
                         String value = String.valueOf(ruleInfo.getThresholds());
                         value = WidgetUtil.subZeroAndDot(value);
                         String conditionType = ruleInfo.getConditionType();
-                        String rule = null;
                         if (conditionType != null) {
                             if (!TextUtils.isEmpty(sensorType)) {
+                                String name = sensorTypeStyles.getName();
                                 switch (conditionType) {
                                     case "gt":
-                                        rule = sensorType + ">" + value;
+                                        stringBuilder.append(name).append(">").append(value);
                                         break;
                                     case "lt":
-                                        rule = sensorType + "<" + value;
+                                        stringBuilder.append(name).append("<").append(value);
                                         break;
                                     case "gte":
-                                        rule = sensorType + ">=" + value;
+                                        stringBuilder.append(name).append(">=").append(value);
                                         break;
                                     case "lte":
-                                        rule = sensorType + "<=" + value;
+                                        stringBuilder.append(name).append("<=").append(value);
+//                                        rule = sensorType + "<=" + value;
                                         break;
                                 }
-                                stringBuilder.append(" ").append(rule);
+                                stringBuilder.append(" ");
                             }
 
                         }
-
                     }
-                    if (!TextUtils.isEmpty(stringBuilder)) {
-                        getView().setAlarmSetting(stringBuilder.append("时报警").toString());
-                    }
-                } else {
-                    getView().setAlarmSetting(stringBuilder.toString());
                 }
-                //
-
-
-                //
+                if (!TextUtils.isEmpty(stringBuilder)) {
+                    getView().setAlarmSetting(stringBuilder.append("时报警").toString());
+                }
                 int interval = deviceInfo.getInterval();
                 getView().setInterval(DateUtil.secToTimeBefore(interval));
-                //
 
                 String name = deviceInfo.getName();
                 if (TextUtils.isEmpty(name)) {

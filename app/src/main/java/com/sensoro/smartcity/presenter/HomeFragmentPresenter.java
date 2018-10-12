@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.sensoro.smartcity.R;
@@ -240,15 +241,36 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             }
             //TODO 过滤设备信息
             int tempStatus = mStatusSelectedIndex;
+            String mergeType = null;
+            try {
+                mergeType = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig().getDeviceType().get(deviceInfo.getDeviceType()).getMergeType();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             for (int j = 0; j < mDataList.size(); j++) {
                 DeviceInfo currentDeviceInfo = mDataList.get(j);
-                if (tempStatus == status && currentDeviceInfo.getSn().equals(deviceInfo.getSn())) {
-                    mDataList.set(j, deviceInfo);
+                if (currentDeviceInfo.getSn().equals(deviceInfo.getSn()) && tempStatus == status) {
+                    if (TextUtils.isEmpty(mTypeSelectedType)) {
+                        mDataList.set(j, deviceInfo);
+                    } else {
+                        if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
+                            mDataList.set(j, deviceInfo);
+                        }
+                    }
+
                 }
             }
             if (tempStatus == status && deviceInfo.isNewDevice()) {
-                deviceInfo.setNewDevice(false);
-                mDataList.add(deviceInfo);
+                if (TextUtils.isEmpty(mTypeSelectedType)) {
+                    deviceInfo.setNewDevice(false);
+                    mDataList.add(deviceInfo);
+                } else {
+                    if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
+                        deviceInfo.setNewDevice(false);
+                        mDataList.add(deviceInfo);
+                    }
+                }
+
             }
         }
         //排序
@@ -289,15 +311,19 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     public void clickItem(int position) {
-        DeviceInfo deviceInfo = mDataList.get(position);
-        Intent intent = new Intent(mContext, MonitorPointDetailActivity.class);
-        intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-        intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
-        intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
-        intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
-        intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
-        intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
-        getView().startAC(intent);
+        try {
+            DeviceInfo deviceInfo = mDataList.get(position);
+            Intent intent = new Intent(mContext, MonitorPointDetailActivity.class);
+            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
+            intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
+            intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
+            intent.putExtra(EXTRA_SENSOR_STATUS, deviceInfo.getStatus());
+            intent.putExtra(EXTRA_SENSOR_TIME, deviceInfo.getUpdatedTime());
+            intent.putExtra(EXTRA_SENSOR_LOCATION, deviceInfo.getLonlat());
+            getView().startAC(intent);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

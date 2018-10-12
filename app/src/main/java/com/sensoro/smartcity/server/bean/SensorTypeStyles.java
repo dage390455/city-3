@@ -8,7 +8,10 @@ public class SensorTypeStyles {
     private int min;
     private String alarm;
     private String recovery;
+    private String trueMean;
+    private String falseMean;
     private int max;
+
     //
     @Override
     public String toString() {
@@ -20,6 +23,8 @@ public class SensorTypeStyles {
                 ", min=" + min +
                 ", alarm='" + alarm + '\'' +
                 ", recovery='" + recovery + '\'' +
+                ", trueMean='" + trueMean + '\'' +
+                ", falseMean='" + falseMean + '\'' +
                 ", max=" + max +
                 '}';
     }
@@ -87,7 +92,21 @@ public class SensorTypeStyles {
     public void setMax(int max) {
         this.max = max;
     }
+    public String getTrueMean() {
+        return trueMean;
+    }
 
+    public void setTrueMean(String trueMean) {
+        this.trueMean = trueMean;
+    }
+
+    public String getFalseMean() {
+        return falseMean;
+    }
+
+    public void setFalseMean(String falseMean) {
+        this.falseMean = falseMean;
+    }
 
 
 }

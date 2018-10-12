@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.adapter;
+package com.sensoro.smartcity.adapter.DiffUtils;
 
 import android.support.annotation.Nullable;
 import android.support.v7.util.DiffUtil;
@@ -7,9 +7,9 @@ import android.support.v7.widget.RecyclerView;
 import java.util.List;
 
 public abstract class DiffCallBack<T> extends DiffUtil.Callback {
-    List<T> mOldList, mNewList;//看名字
+    protected List<T> mOldList, mNewList;//看名字
 
-    DiffCallBack(List<T> oldList, List<T> newList) {
+    protected DiffCallBack(List<T> oldList, List<T> newList) {
         this.mOldList = oldList;
         this.mNewList = newList;
     }
@@ -45,7 +45,7 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
 
     }
 
-    abstract boolean getItemsTheSame(int oldItemPosition, int newItemPosition);
+    protected abstract boolean getItemsTheSame(int oldItemPosition, int newItemPosition);
 
     /**
      * Called by the DiffUtil when it wants to check whether two items have the same data.
@@ -76,7 +76,7 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
         return getContentsTheSame(oldData, newData);
     }
 
-    abstract boolean getContentsTheSame(T oldData, T newData);
+    protected abstract boolean getContentsTheSame(T oldData, T newData);
 
     /**
      * When {@link #areItemsTheSame(int, int)} returns {@code true} for two items and
@@ -110,5 +110,5 @@ public abstract class DiffCallBack<T> extends DiffUtil.Callback {
         return getChangePayload(oldData, newData);
     }
 
-    abstract Object getChangePayload(T oldData, T newData);
+    abstract protected Object getChangePayload(T oldData, T newData);
 }

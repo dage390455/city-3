@@ -207,7 +207,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         getView().updateSelectDeviceStatusList(list);
                     }
                     getView().dismissProgressDialog();
-                    getView().setBottomInspectionStateTitle("我已巡检： " + check,"未巡检： " + uncheck);
+                    getView().setBottomInspectionStateTitle("我已巡检： " + check, "未巡检： " + uncheck);
                 }
 
 
@@ -375,6 +375,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         //处理排序
         for (InspectionTaskDeviceDetail inspectionTaskDeviceDetail : mDevices) {
             int status = inspectionTaskDeviceDetail.getStatus();
+
             if (status == 0) {
                 if (isNearBy(inspectionTaskDeviceDetail)) {
                     inspectionTaskDeviceDetail.setNearBy_local(true);
@@ -392,7 +393,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                     inspectionTaskDeviceDetail.setSort_local(1);
                 }
             }
-
+            String sn = inspectionTaskDeviceDetail.getSn();
+            boolean nearBy_local = inspectionTaskDeviceDetail.isNearBy_local();
+            LogUtils.loge(this, "handlerInspectionTaskDevice -->> sn = " + sn + ",isNear = " + nearBy_local);
         }
         Collections.sort(mDevices);
     }

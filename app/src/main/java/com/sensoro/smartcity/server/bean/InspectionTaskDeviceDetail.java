@@ -31,7 +31,7 @@ public class InspectionTaskDeviceDetail implements Serializable, Comparable<Insp
     private MalfunctionBean malfunction;
     private List<Double> lonlat;
     private List<String> tags;
-
+    private boolean isNearBy_local = false;
     public boolean isNearBy_local() {
         return isNearBy_local;
     }
@@ -40,7 +40,6 @@ public class InspectionTaskDeviceDetail implements Serializable, Comparable<Insp
         isNearBy_local = nearBy_local;
     }
 
-    private boolean isNearBy_local = false;
 
     public int getSort_local() {
         return sort_local;

@@ -84,8 +84,9 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
 
     @Override
     public void onBindViewHolder(@NonNull InspectionTaskRcContentHolder holder, int position, @NonNull List<Object> payloads) {
+        LogUtils.loge(this, "onBindViewHolder-->>> payloads.size = " + payloads.size());
         if (payloads.isEmpty()) {
-            onBindViewHolder(holder, position);
+            super.onBindViewHolder(holder, position, payloads);
         } else {
             HashMap map = (HashMap) payloads.get(0);
             Integer status = (Integer) map.get("status");

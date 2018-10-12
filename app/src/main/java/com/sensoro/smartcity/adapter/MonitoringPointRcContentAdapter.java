@@ -56,11 +56,13 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                     String battery = batteryStruct.getValue().toString();
                     if (battery.equals("-1.0") || battery.equals("-1")) {
                         holder.itemMonitoringPointContentTvContent.setText("电源供电");
+                        holder.itemMonitoringPointContentTvUnit.setVisibility(View.GONE);
                     } else {
                         String batteryValue = WidgetUtil.subZeroAndDot(battery);
                         holder.itemMonitoringPointContentTvContent.setText(batteryValue);
                         if (Integer.valueOf(batteryValue) < 10) {
                             holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
+                            holder.itemMonitoringPointContentTvUnit.setText("%");
                             holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                         }
 
@@ -90,24 +92,18 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                             if (value != null) {
                                 if (bool) {
                                     if (value instanceof Boolean) {
-                                        String alarm = sensorTypeStyles.getAlarm();
-                                        String recovery = sensorTypeStyles.getRecovery();
-                                        if (alarm != null) {
-                                            alarm = alarm.trim();
-                                        }
-                                        if (recovery != null) {
-                                            recovery = recovery.trim();
-                                        }
+                                        String trueMean = sensorTypeStyles.getTrueMean();
+                                        String falseMean = sensorTypeStyles.getFalseMean();
                                         if ((Boolean) value) {
-                                            if (!TextUtils.isEmpty(alarm)) {
-                                                holder.itemMonitoringPointContentTvContent.setText(alarm);
+                                            if (!TextUtils.isEmpty(trueMean)) {
+                                                holder.itemMonitoringPointContentTvContent.setText(trueMean);
                                             } else {
                                                 WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, type,
                                                         true, sensorStruct);
                                             }
                                         } else {
-                                            if (!TextUtils.isEmpty(recovery)) {
-                                                holder.itemMonitoringPointContentTvContent.setText(recovery);
+                                            if (!TextUtils.isEmpty(falseMean)) {
+                                                holder.itemMonitoringPointContentTvContent.setText(falseMean);
                                             } else {
                                                 WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, type,
                                                         true, sensorStruct);
@@ -129,31 +125,10 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
 
                     }
 
-
-//                    String sensorTypeChinese = WidgetUtil.getSensorTypeSingleChinese(type);
-//                    holder.itemMonitoringPointContentTvName.setText(sensorTypeChinese);
-//                    SensorStruct sensorStruct = sensoroDetails.get(type);
-//                    if (sensorStruct != null) {
-
-//                    }
                 }
             }
             //
 
-
-//            List<String> sortSensorTypes = Arrays.asList(sensorTypes);
-////            if (sensoroDetails != null && sortSensorTypes.size() > 0) {
-////                String type = sortSensorTypes.get(position);
-////                if (!TextUtils.isEmpty(type)) {
-////                    String sensorTypeChinese = WidgetUtil.getSensorTypeSingleChinese(type);
-////                    holder.itemMonitoringPointContentTvName.setText(sensorTypeChinese);
-////                    SensorStruct sensorStruct = sensoroDetails.get(type);
-////                    if (sensorStruct != null) {
-////                        WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, holder.itemMonitoringPointContentTvUnit, type,
-////                                sensorStruct);
-////                    }
-////                }
-////            }
             int color;
             int status = mDeviceInfo.getStatus();
             switch (status) {
