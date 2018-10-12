@@ -1,9 +1,12 @@
 package com.sensoro.smartcity.server.bean;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
+import java.util.Objects;
 
-public class InspectionTaskDeviceDetail implements Serializable {
+public class InspectionTaskDeviceDetail implements Serializable, Comparable<InspectionTaskDeviceDetail> {
     /**
      * id : 5ba9b3b2f11db9772ee33026
      * name : 一个有节操的传感器
@@ -28,6 +31,26 @@ public class InspectionTaskDeviceDetail implements Serializable {
     private MalfunctionBean malfunction;
     private List<Double> lonlat;
     private List<String> tags;
+
+    public boolean isNearBy_local() {
+        return isNearBy_local;
+    }
+
+    public void setNearBy_local(boolean nearBy_local) {
+        isNearBy_local = nearBy_local;
+    }
+
+    private boolean isNearBy_local = false;
+
+    public int getSort_local() {
+        return sort_local;
+    }
+
+    public void setSort_local(int sort_local) {
+        this.sort_local = sort_local;
+    }
+
+    private int sort_local;
 
     public String getId() {
         return id;
@@ -117,7 +140,18 @@ public class InspectionTaskDeviceDetail implements Serializable {
         this.unionType = unionType;
     }
 
-    public static class MalfunctionBean implements Serializable{
+    @Override
+    public int compareTo(@NonNull InspectionTaskDeviceDetail o) {
+        if (this.sort_local > o.sort_local) {
+            return -1;
+        } else if (this.sort_local == o.sort_local) {
+            return 0;
+        } else {
+            return 1;
+        }
+    }
+
+    public static class MalfunctionBean implements Serializable {
         /**
          * tags : []
          * remark :
@@ -151,5 +185,20 @@ public class InspectionTaskDeviceDetail implements Serializable {
         public void setTags(List<String> tags) {
             this.tags = tags;
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        InspectionTaskDeviceDetail that = (InspectionTaskDeviceDetail) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(sn, that.sn);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(id, sn);
     }
 }

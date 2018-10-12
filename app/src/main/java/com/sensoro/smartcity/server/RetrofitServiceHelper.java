@@ -382,10 +382,10 @@ public enum RetrofitServiceHelper {
      * @param search
      * @return
      */
-    public Observable<DeviceInfoListRsp> getDeviceBriefInfoList(int page, String sensorTypes, Integer status, String
+    public Observable<DeviceInfoListRsp> getDeviceBriefInfoList(int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
         Observable<DeviceInfoListRsp> deviceBriefInfoList = retrofitService.getDeviceBriefInfoList(page, 20, 1, 1,
-                sensorTypes, status, search);
+                sensorTypes, mergeTypes, status, search);
         RxApiManager.getInstance().add("getDeviceBriefInfoList", deviceBriefInfoList.subscribe());
         return deviceBriefInfoList;
     }
@@ -1103,9 +1103,10 @@ public enum RetrofitServiceHelper {
 
     /**
      * 获取deviceType 对应关系
+     *
      * @return
      */
-    public Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(){
+    public Observable<DevicesMergeTypesRsp> getDevicesMergeTypes() {
         Observable<DevicesMergeTypesRsp> devicesMergeTypes = retrofitService.getDevicesMergeTypes();
         RxApiManager.getInstance().add("devicesMergeTypes", devicesMergeTypes.subscribe());
         return devicesMergeTypes;

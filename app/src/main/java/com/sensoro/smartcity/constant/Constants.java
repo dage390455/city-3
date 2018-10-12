@@ -179,6 +179,7 @@ public interface Constants {
     String EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO = "extra_inspection_deploy_old_device_info";
     //扫描来源
     String EXTRA_SCAN_ORIGIN_TYPE = "extra_scan_origin_type";
+    String EXTRA_DEPLOY_SUCCESS_ADDRESS = "extra_deploy_success_address";
     //
     String EXTRA_SENSOR_SN = "extra_sn";
     String EXTRA_SENSOR_NAME = "extra_name";

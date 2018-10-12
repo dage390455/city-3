@@ -1,9 +1,10 @@
 package com.sensoro.smartcity.adapter;
 
-import android.content.Context;
+import android.app.Activity;
 import android.content.res.Resources;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorRes;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -14,22 +15,22 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-import static com.sensoro.smartcity.presenter.InspectionTaskActivityPresenter.BLE_DEVICE_SET;
-
 public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<InspectionTaskRcContentAdapter.InspectionTaskRcContentHolder> {
-    private final Context mContext;
+    private final Activity mContext;
 
     private InspectionTaskRcItemClickListener listener;
 
-    public InspectionTaskRcContentAdapter(Context context) {
+    public InspectionTaskRcContentAdapter(Activity context) {
         mContext = context;
     }
 
@@ -41,7 +42,25 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
         return new InspectionTaskRcContentHolder(view);
     }
 
-    public void updateDevices(List<InspectionTaskDeviceDetail> devices) {
+    public void updateDevices(final List<InspectionTaskDeviceDetail> devices) {
+        //TODO 采用动态刷新 数据错位，暂时放弃
+//        ThreadPoolManager.getInstance().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                InspectionTaskContentAdapterDiff inspectionTaskContentAdapterDiff = new InspectionTaskContentAdapterDiff(mDevices, devices);
+//                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(inspectionTaskContentAdapterDiff, true);
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        diffResult.dispatchUpdatesTo(InspectionTaskRcContentAdapter.this);
+//                        mDevices.clear();
+//                        mDevices.addAll(devices);
+//                    }
+//                });
+//
+//
+//            }
+//        });
         mDevices.clear();
         mDevices.addAll(devices);
         notifyDataSetChanged();
@@ -51,22 +70,62 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
     public void onBindViewHolder(InspectionTaskRcContentHolder holder, final int position) {
         InspectionTaskDeviceDetail deviceDetail = mDevices.get(position);
         String name = deviceDetail.getName();
+        setName(holder, name);
         String sn = deviceDetail.getSn();
-
-//        if (position == 1) {
-//            sn = "02700017C6445B3B";
-//        }
-        if (!TextUtils.isEmpty(sn)) {
-            if (BLE_DEVICE_SET.contains(sn)) {
-                holder.itemAdapterInspectionTaskTvNear.setVisibility(View.VISIBLE);
-            } else {
-                holder.itemAdapterInspectionTaskTvNear.setVisibility(View.INVISIBLE);
-            }
-        }
-        String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(deviceDetail.getDeviceType());
+        boolean nearBy_local = deviceDetail.isNearBy_local();
+        setIsNearBy(holder, nearBy_local);
         int status = deviceDetail.getStatus();
-        holder.itemAdapterInspectionTaskTvName.setText(name);
-        holder.itemAdapterInspectionTaskTvSn.setText(inspectionDeviceName + " " + sn);
+        String deviceType = deviceDetail.getDeviceType();
+        setSnType(holder, sn, deviceType);
+        setStatus(holder, status);
+        setListener(holder, position);
+
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull InspectionTaskRcContentHolder holder, int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            HashMap map = (HashMap) payloads.get(0);
+            Integer status = (Integer) map.get("status");
+            if (status != null) {
+                LogUtils.loge(this, "status change -->> " + status);
+                setStatus(holder, status);
+            }
+            Boolean bNear = (Boolean) map.get("bNear");
+            if (bNear != null) {
+                setIsNearBy(holder, bNear);
+            }
+            String name = (String) map.get("name");
+            if (!TextUtils.isEmpty(name)) {
+                setName(holder, name);
+            }
+            LogUtils.loge(this, "onBindViewHolder-->>> status = " + status + ",bNear = " + bNear + ",name = " + name);
+            setListener(holder, position);
+        }
+    }
+
+    private void setListener(InspectionTaskRcContentHolder holder, final int position) {
+        holder.itemAdapterInspectionTaskTvInspection.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    //第二个参数为state 目前先用position，根据需要改
+                    listener.onInspectionTaskInspectionClick(position, mDevices.get(position).getStatus());
+                }
+            }
+        });
+
+        holder.itemAdapterInspectionTaskTvNavigation.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                listener.onInspectionTaskNavigationClick(position);
+            }
+        });
+    }
+
+    private void setStatus(InspectionTaskRcContentHolder holder, int status) {
         switch (status) {
             case 0:
                 //未巡检调用的函数跟其他的不一样，我们不一样，每个人都有不同的境遇
@@ -86,23 +145,23 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
                 holder.itemAdapterInspectionTaskTvInspection.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_2dp);
                 break;
         }
-        holder.itemAdapterInspectionTaskTvInspection.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (listener != null) {
-                    //第二个参数为state 目前先用position，根据需要改
-                    listener.onInspectionTaskInspectionClick(position, mDevices.get(position).getStatus());
-                }
-            }
-        });
+    }
 
-        holder.itemAdapterInspectionTaskTvNavigation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                listener.onInspectionTaskNavigationClick(position);
-            }
-        });
+    private void setSnType(InspectionTaskRcContentHolder holder, String sn, String deviceType) {
+        String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(deviceType);
+        holder.itemAdapterInspectionTaskTvSn.setText(inspectionDeviceName + " " + sn);
+    }
 
+    private void setName(InspectionTaskRcContentHolder holder, String name) {
+        holder.itemAdapterInspectionTaskTvName.setText(name);
+    }
+
+    private void setIsNearBy(InspectionTaskRcContentHolder holder, boolean nearBy_local) {
+        if (nearBy_local) {
+            holder.itemAdapterInspectionTaskTvNear.setVisibility(View.VISIBLE);
+        } else {
+            holder.itemAdapterInspectionTaskTvNear.setVisibility(View.INVISIBLE);
+        }
     }
 
     private void setState(InspectionTaskRcContentHolder holder, @ColorRes int colorId, String text) {

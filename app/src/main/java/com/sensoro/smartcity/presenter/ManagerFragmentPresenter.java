@@ -13,7 +13,10 @@ import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
+import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -23,20 +26,42 @@ import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnFragmentStart, Constants {
+public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView> implements IOnCreate, IOnFragmentStart, Constants {
     private Activity mContext;
+//    private boolean needUpdate = true;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
+        checkPermission(PreferencesHelper.getInstance().getUserData());
+
+    }
+
+    /**
+     * 权限检查
+     *
+     * @param userData
+     */
+    private void checkPermission(EventLoginData userData) {
+        if (userData != null) {
+            getView().setContractVisible(userData.hasContract);
+            getView().setInspectionVisible(userData.hasInspection);
+            getView().setScanLoginVisible(userData.hasScanLogin);
+            getView().setMerchantVisible(userData.hasSubMerchant);
+        }
     }
 
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 
     public void doExitAccount() {
@@ -83,8 +108,27 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             }
 //                merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
 //                getView().setMenuSelected(0);
-            hasNewVersion();
+            getView().setAppUpdateVisible(hasNewVersion());
 
+//=======
+//            //TODO 版本信息
+//            UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+//            if (upgradeInfo == null) {
+//                needUpdate = false;
+//                return;
+//            }
+//            int versionCode = upgradeInfo.versionCode;
+//            int currentVersionCode = AppUtils.getVersionCode(mContext);
+//            LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
+//            if (currentVersionCode != 0) {
+//                needUpdate = versionCode > currentVersionCode;
+//                if (needUpdate) {
+//                    getView().setAppUpdateVisible(true);
+//                } else {
+//                    getView().setAppUpdateVisible(false);
+//                }
+//            }
+//>>>>>>> 57f5d53e1afc1c55ca64e2f1ae8d38fdb78dfd01
         }
 
     }
@@ -101,10 +145,9 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
         if (currentVersionCode != 0) {
             if (versionCode > currentVersionCode) {
-                getView().setAppUpdateVisible(true);
+
                 return true;
             } else {
-                getView().setAppUpdateVisible(false);
                 return false;
             }
         }
@@ -134,10 +177,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 Intent intent = new Intent(mContext, MerchantSwitchActivity.class);
                 intent.putExtra(EXTRA_EVENT_LOGIN_DATA, PreferencesHelper.getInstance().getUserData());
                 getView().startAC(intent);
-                return;
+//                return;
             }
         }
-        getView().toastShort("无此权限");
+//        getView().toastShort("无此权限");
 
     }
 
@@ -194,5 +237,31 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         }
 
 
+//=======
+//        if (needUpdate) {
+//            Beta.checkUpgrade();
+//        } else {
+//            getView().toastShort("你已经是最新版本了");
+//        }
+//>>>>>>> 57f5d53e1afc1c55ca64e2f1ae8d38fdb78dfd01
     }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        Object data = eventData.data;
+        if (code == EVENT_DATA_SEARCH_MERCHANT) {
+            if (data != null && data instanceof EventLoginData) {
+                checkPermission((EventLoginData) data);
+            }
+        }
+        LogUtils.loge(this, eventData.toString());
+    }
+
 }

@@ -27,7 +27,7 @@ public class SelectDeviceTypePopUtils {
     private final PopupWindow mPopupWindow;
     private final Activity mActivity;
     private SelectDeviceTypeItemClickListener listener;
-    private  TypeSelectAdapter mTypeSelectAdapter;
+    private TypeSelectAdapter mTypeSelectAdapter;
     private final RelativeLayout mRlTitle;
 
 
@@ -47,7 +47,7 @@ public class SelectDeviceTypePopUtils {
         mTypeSelectAdapter.setOnItemClickListener(new RecycleViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                listener.onSelectDeviceTypeItemClick(view,position,mTypeSelectAdapter.getItem(position));
+                listener.onSelectDeviceTypeItemClick(view, position, mTypeSelectAdapter.getItem(position));
 
             }
         });
@@ -60,10 +60,15 @@ public class SelectDeviceTypePopUtils {
         mPopupWindow.setFocusable(true);
     }
 
-    public void updateSelectDeviceTypeList(List<String> list){
+    public void updateSelectDeviceTypeList(List<String> list) {
         mTypeSelectAdapter.updateDeviceTypList(list);
     }
-    public void setSelectDeviceTypeItemClickListener(SelectDeviceTypeItemClickListener listener){
+
+    public void setTypeStyle(int style) {
+        mTypeSelectAdapter.setTypeStyle(style);
+    }
+
+    public void setSelectDeviceTypeItemClickListener(SelectDeviceTypeItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -71,8 +76,8 @@ public class SelectDeviceTypePopUtils {
         mPopupWindow.dismiss();
     }
 
-    public void showAtLocation(View view,int gravity) {
-        mPopupWindow.showAtLocation(view, gravity,0,0);
+    public void showAtLocation(View view, int gravity) {
+        mPopupWindow.showAtLocation(view, gravity, 0, 0);
     }
 
     /**
@@ -96,7 +101,7 @@ public class SelectDeviceTypePopUtils {
     }
 
     public void setTitleVisible(boolean isVisible) {
-        mRlTitle.setVisibility(isVisible ? View.VISIBLE:View.GONE);
+        mRlTitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     public void setUpAnimation() {
@@ -115,7 +120,7 @@ public class SelectDeviceTypePopUtils {
         mPopupWindow.setAnimationStyle(-1);
     }
 
-    public interface SelectDeviceTypeItemClickListener{
+    public interface SelectDeviceTypeItemClickListener {
         void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel deviceTypeModel);
     }
 }

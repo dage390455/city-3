@@ -11,7 +11,10 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.Arrays;
@@ -25,6 +28,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
         <MonitoringPointRcContentAdapter.MonitoringPointRcContentHolder> implements Constants {
     private final Context mContext;
     private DeviceInfo mDeviceInfo;
+    private DeviceMergeTypesInfo.DeviceMergeTypeConfig typeConfig;
 
     public MonitoringPointRcContentAdapter(Context context) {
         mContext = context;
@@ -32,6 +36,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
 
     public void setDeviceInfo(DeviceInfo deviceInfo) {
         mDeviceInfo = deviceInfo;
+        typeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
     }
 
     @Override
@@ -44,7 +49,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
     public void onBindViewHolder(MonitoringPointRcContentHolder holder, int position) {
         if (mDeviceInfo != null) {
             String[] sensorTypes = mDeviceInfo.getSensorTypes();
-            if(position == sensorTypes.length){
+            if (position == sensorTypes.length) {
                 SensorStruct batteryStruct = mDeviceInfo.getSensoroDetails().get("battery");
                 if (batteryStruct != null) {
                     holder.itemMonitoringPointContentTvName.setText("电量");
@@ -54,7 +59,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                     } else {
                         String batteryValue = WidgetUtil.subZeroAndDot(battery);
                         holder.itemMonitoringPointContentTvContent.setText(batteryValue);
-                        if (Integer.valueOf(batteryValue)<10) {
+                        if (Integer.valueOf(batteryValue) < 10) {
                             holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                             holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                         }
@@ -63,22 +68,92 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                 }
                 return;
             }
-
-            Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
-
+            //
+            Map<String, SensorTypeStyles> sensorTypeMap = typeConfig.getSensorType();
             List<String> sortSensorTypes = Arrays.asList(sensorTypes);
-            if (sensoroDetails != null && sortSensorTypes.size() > 0) {
+            Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
+            if (sensorTypeMap != null && sensoroDetails != null && sortSensorTypes.size() > 0) {
                 String type = sortSensorTypes.get(position);
                 if (!TextUtils.isEmpty(type)) {
-                    String sensorTypeChinese = WidgetUtil.getSensorTypeSingleChinese(type);
-                    holder.itemMonitoringPointContentTvName.setText(sensorTypeChinese);
-                    SensorStruct sensorStruct = sensoroDetails.get(type);
-                    if (sensorStruct != null) {
-                        WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, holder.itemMonitoringPointContentTvUnit, type,
-                                sensorStruct);
+                    SensorTypeStyles sensorTypeStyles = sensorTypeMap.get(type);
+                    if (sensorTypeStyles != null) {
+                        String name = sensorTypeStyles.getName();
+                        if (TextUtils.isEmpty(name)) {
+                            holder.itemMonitoringPointContentTvName.setText("未知");
+                        } else {
+                            holder.itemMonitoringPointContentTvName.setText(name);
+                        }
+                        boolean bool = sensorTypeStyles.isBool();
+                        SensorStruct sensorStruct = sensoroDetails.get(type);
+                        if (sensorStruct != null) {
+                            Object value = sensorStruct.getValue();
+                            if (value != null) {
+                                if (bool) {
+                                    if (value instanceof Boolean) {
+                                        String alarm = sensorTypeStyles.getAlarm();
+                                        String recovery = sensorTypeStyles.getRecovery();
+                                        if (alarm != null) {
+                                            alarm = alarm.trim();
+                                        }
+                                        if (recovery != null) {
+                                            recovery = recovery.trim();
+                                        }
+                                        if ((Boolean) value) {
+                                            if (!TextUtils.isEmpty(alarm)) {
+                                                holder.itemMonitoringPointContentTvContent.setText(alarm);
+                                            } else {
+                                                WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, type,
+                                                        true, sensorStruct);
+                                            }
+                                        } else {
+                                            if (!TextUtils.isEmpty(recovery)) {
+                                                holder.itemMonitoringPointContentTvContent.setText(recovery);
+                                            } else {
+                                                WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, type,
+                                                        true, sensorStruct);
+                                            }
+                                        }
+                                    }
+                                    holder.itemMonitoringPointContentTvUnit.setVisibility(View.GONE);
+                                } else {
+                                    String unit = sensorTypeStyles.getUnit();
+                                    if (!TextUtils.isEmpty(unit)) {
+                                        holder.itemMonitoringPointContentTvUnit.setText(unit);
+                                    }
+                                    WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, type,
+                                            false, sensorStruct);
+                                }
+                            }
+                        }
+
+
                     }
+
+
+//                    String sensorTypeChinese = WidgetUtil.getSensorTypeSingleChinese(type);
+//                    holder.itemMonitoringPointContentTvName.setText(sensorTypeChinese);
+//                    SensorStruct sensorStruct = sensoroDetails.get(type);
+//                    if (sensorStruct != null) {
+
+//                    }
                 }
             }
+            //
+
+
+//            List<String> sortSensorTypes = Arrays.asList(sensorTypes);
+////            if (sensoroDetails != null && sortSensorTypes.size() > 0) {
+////                String type = sortSensorTypes.get(position);
+////                if (!TextUtils.isEmpty(type)) {
+////                    String sensorTypeChinese = WidgetUtil.getSensorTypeSingleChinese(type);
+////                    holder.itemMonitoringPointContentTvName.setText(sensorTypeChinese);
+////                    SensorStruct sensorStruct = sensoroDetails.get(type);
+////                    if (sensorStruct != null) {
+////                        WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, holder.itemMonitoringPointContentTvUnit, type,
+////                                sensorStruct);
+////                    }
+////                }
+////            }
             int color;
             int status = mDeviceInfo.getStatus();
             switch (status) {
@@ -111,7 +186,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
         if (mDeviceInfo == null) {
             return 0;
         }
-        return mDeviceInfo.getSensorTypes().length+1;
+        return mDeviceInfo.getSensorTypes().length + 1;
     }
 
     class MonitoringPointRcContentHolder extends RecyclerView.ViewHolder {

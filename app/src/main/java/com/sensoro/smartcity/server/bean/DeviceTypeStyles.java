@@ -5,6 +5,16 @@ import java.util.List;
 public class DeviceTypeStyles {
     private String id;
 
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    private String category;
+
     @Override
     public String toString() {
         return "DeviceTypeStyles{" +
@@ -15,6 +25,7 @@ public class DeviceTypeStyles {
                 ", intervalSupported='" + intervalSupported + '\'' +
                 ", sensorTypes=" + sensorTypes +
                 ", alarmReceive=" + alarmReceive +
+                ", category=" + category +
                 '}';
     }
 

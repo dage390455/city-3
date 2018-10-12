@@ -39,6 +39,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 
@@ -53,7 +54,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private int cur_page = 0;
     private int finish = 2;
     private final List<InspectionTaskDeviceDetail> mDevices = new ArrayList<>();
-    public static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
+    private static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private volatile boolean canFreshBle = true;
     private InspectionIndexTaskInfo mTaskInfo;
@@ -299,6 +300,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         getView().dismissProgressDialog();
                         freshUI(direction, inspectionTaskDeviceDetailRsp);
                         getView().onPullRefreshComplete();
+                        canFreshBle = true;
                     }
 
                     @Override
@@ -306,6 +308,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
+                        canFreshBle = true;
                     }
                 });
                 doInspectionStatus(false);
@@ -326,6 +329,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                             getView().onPullRefreshComplete();
                         }
                         getView().dismissProgressDialog();
+                        canFreshBle = true;
                     }
 
                     @Override
@@ -334,6 +338,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         getView().onPullRefreshComplete();
                         getView().dismissProgressDialog();
                         getView().toastShort(errorMsg);
+                        canFreshBle = true;
                     }
                 });
                 break;
@@ -361,9 +366,39 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             } else {
                 getView().setSearchButtonTextVisible(false);
             }
+            handlerInspectionTaskDevice();
             getView().updateInspectionTaskDeviceItem(mDevices);
         }
-        canFreshBle = true;
+    }
+
+    private void handlerInspectionTaskDevice() {
+        //处理排序
+        for (InspectionTaskDeviceDetail inspectionTaskDeviceDetail : mDevices) {
+            int status = inspectionTaskDeviceDetail.getStatus();
+            if (status == 0) {
+                if (isNearBy(inspectionTaskDeviceDetail)) {
+                    inspectionTaskDeviceDetail.setNearBy_local(true);
+                    inspectionTaskDeviceDetail.setSort_local(4);
+                } else {
+                    inspectionTaskDeviceDetail.setNearBy_local(false);
+                    inspectionTaskDeviceDetail.setSort_local(3);
+                }
+            } else {
+                if (isNearBy(inspectionTaskDeviceDetail)) {
+                    inspectionTaskDeviceDetail.setNearBy_local(true);
+                    inspectionTaskDeviceDetail.setSort_local(2);
+                } else {
+                    inspectionTaskDeviceDetail.setNearBy_local(false);
+                    inspectionTaskDeviceDetail.setSort_local(1);
+                }
+            }
+
+        }
+        Collections.sort(mDevices);
+    }
+
+    private boolean isNearBy(InspectionTaskDeviceDetail inspectionTaskDeviceDetail) {
+        return BLE_DEVICE_SET.contains(inspectionTaskDeviceDetail.getSn());
     }
 
     public void doSelectStatusDevice(InspectionStatusCountModel item) {
@@ -385,10 +420,11 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             getView().toastShort("请检查蓝牙状态");
         }
         if (canFreshBle) {
+            handlerInspectionTaskDevice();
             getView().updateInspectionTaskDeviceItem(mDevices);
         }
         LogUtils.loge("run canFreshBle ----->> " + canFreshBle);
-        mHandler.postDelayed(this, 3 * 1000);
+        mHandler.postDelayed(this, 2 * 1000);
     }
 
     public void doNavigation(int position) {

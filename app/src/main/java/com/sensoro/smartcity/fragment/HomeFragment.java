@@ -92,6 +92,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     private void initPop() {
         mSelectDeviceTypePop = new SelectDeviceTypePopUtils(mRootFragment.getActivity());
+        mSelectDeviceTypePop.setTypeStyle(2);
         mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel item) {
@@ -107,7 +108,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private void initRcContent() {
         //
         mMainHomeFragRcContentAdapter = new MainHomeFragRcContentAdapter(mRootFragment.getActivity());
-        mMainHomeFragRcContentAdapter.setOnItemClickLisenter(this);
+        mMainHomeFragRcContentAdapter.setOnItemClickListener(this);
         mMainHomeFragRcContentAdapter.setOnItemAlarmInfoClickListener(this);
         //
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
@@ -269,8 +270,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
         if (dataList.size() > 0) {
-            mMainHomeFragRcContentAdapter.setData(dataList);
-            mMainHomeFragRcContentAdapter.notifyDataSetChanged();
+            mMainHomeFragRcContentAdapter.updateData(dataList);
         }
 
         setNoContentVisible(dataList.size() < 1);
@@ -418,7 +418,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     @Override
     public void onStatusChange(int status) {
-        mPresenter.requestDataByStatus(status + 1);
+        mPresenter.requestDataByStatus(status);
     }
 
     @Override

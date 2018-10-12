@@ -18,6 +18,7 @@ public class DeviceInfo implements Serializable, Comparable {
     private String unionType;
     private String contact;
     private String content;
+    private String deviceType;
     private long updatedTime;
     private long createTime;
     private double lonlat[];
@@ -242,6 +243,14 @@ public class DeviceInfo implements Serializable, Comparable {
 
     public void setPushDevice(boolean pushDevice) {
         isPushDevice = pushDevice;
+    }
+
+    public String getDeviceType() {
+        return deviceType;
+    }
+
+    public void setDeviceType(String deviceType) {
+        this.deviceType = deviceType;
     }
 
     @Override

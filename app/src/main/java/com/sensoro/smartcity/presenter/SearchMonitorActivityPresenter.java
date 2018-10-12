@@ -344,7 +344,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         getView().showProgressDialog();
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, null,status, searchText).subscribeOn
                     (Schedulers.io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
                 @Override
                 public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -397,7 +397,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             });
         } else {
             page++;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, status, searchText).subscribeOn
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type,null, status, searchText).subscribeOn
                     (Schedulers.io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
                 @Override
                 public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {

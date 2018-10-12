@@ -6,6 +6,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,13 +43,17 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     private int oldSelectPosition = 0;
     private RecycleViewItemClickListener mListener;
     private List<String> mDeviceTypeList = new ArrayList<>();
-    private DeviceMergeTypesInfo localDevicesMergeTypes;
+
+    private int typeStyle = 1;
+    private DeviceMergeTypesInfo.DeviceMergeTypeConfig typesConfig;
 
     public TypeSelectAdapter(Context context) {
         mContext = context;
-        localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
     }
 
+    public void setTypeStyle(int style) {
+        typeStyle = style;
+    }
 
     @Override
     public TypeSelectHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -65,16 +70,32 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
             changeIconColor(holder, position != selectPosition, mContext.getResources().getDrawable(R.drawable.type_all_test));
         } else {
             final int index = position - 1;
-            String deviceType = mDeviceTypeList.get(index);
-            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
-            Map<String, DeviceTypeStyles> deviceTypeMap = config.getDeviceType();
-            DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
-            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-            MergeTypeStyles mergeTypeStyles = mergeType.get(deviceTypeStyles.getMergeType());
-            String name = mergeTypeStyles.getName();
-            String image = mergeTypeStyles.getImage();
+            String name = "";
+            String image = "";
+            Map<String, MergeTypeStyles> mergeTypeMap = typesConfig.getMergeType();
+            Map<String, DeviceTypeStyles> deviceTypeMap = typesConfig.getDeviceType();
+            switch (typeStyle) {
+                case 1:
+                    String deviceType = mDeviceTypeList.get(index);
+                    DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
+                    String category = deviceTypeStyles.getCategory();
+                    MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(deviceTypeStyles.getMergeType());
+                    if (TextUtils.isEmpty(category)) {
+                        name = mergeTypeStyles.getName();
+                    } else {
+                        name = mergeTypeStyles.getName() + category;
+                    }
+                    image = mergeTypeStyles.getImage();
 //            int resId = mergeTypeStyles.getResId();
-            //
+                    //
+                    break;
+                case 2:
+                    String mergeType = mDeviceTypeList.get(index);
+                    MergeTypeStyles mergeTypeStyles1 = mergeTypeMap.get(mergeType);
+                    name = mergeTypeStyles1.getName();
+                    image = mergeTypeStyles1.getImage();
+                    break;
+            }
             holder.itemPopSelectTvTypeName.setText(name);
             Glide.with(mContext)                             //配置上下文
                     .load(image)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
@@ -91,8 +112,8 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
                             return true;
                         }
                     }).centerCrop().into(holder.itemPopSelectImvTypeIcon);
-        }
 
+        }
 //        DeviceTypeModel deviceTypeModel = mDeviceTypeList.get(position);
 //        holder.itemPopSelectImvTypeIcon.setImageResource(deviceTypeModel.iconRes);
 //        holder.itemPopSelectTvTypeName.setText(deviceTypeModel.name);
@@ -121,19 +142,34 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
             deviceTypeModel.name = "全部";
             deviceTypeModel.iconRes = R.mipmap.type_all;
         } else {
+            Map<String, DeviceTypeStyles> deviceTypeMap = typesConfig.getDeviceType();
+            Map<String, MergeTypeStyles> mergeTypeMap = typesConfig.getMergeType();
             final int index = position - 1;
-            String deviceType = mDeviceTypeList.get(index);
-            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
-            Map<String, DeviceTypeStyles> deviceTypeMap = config.getDeviceType();
-            DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
-            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-            MergeTypeStyles mergeTypeStyles = mergeType.get(deviceTypeStyles.getMergeType());
-            String name = mergeTypeStyles.getName();
-            String image = mergeTypeStyles.getImage();
-            deviceTypeModel.name = name;
             ArrayList<String> strs = new ArrayList<>();
-            strs.add(deviceType);
-            deviceTypeModel.deviceTypes = strs;
+            switch (typeStyle) {
+                case 1:
+                    String deviceType = mDeviceTypeList.get(index);
+                    DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
+                    String category = deviceTypeStyles.getCategory();
+                    MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(deviceTypeStyles.getMergeType());
+                    String name = mergeTypeStyles.getName();
+//                    String image = mergeTypeStyles.getImage();
+                    if (TextUtils.isEmpty(category)) {
+                        deviceTypeModel.name = name;
+                    } else {
+                        deviceTypeModel.name = name + category;
+                    }
+                    strs.add(deviceType);
+                    deviceTypeModel.deviceTypes = strs;
+                    break;
+                case 2:
+                    String mergeType = mDeviceTypeList.get(index);
+                    MergeTypeStyles mergeTypeStyles1 = mergeTypeMap.get(mergeType);
+                    deviceTypeModel.name = mergeTypeStyles1.getName();
+                    deviceTypeModel.deviceTypes = mergeTypeStyles1.getDeviceTypes();
+                    break;
+            }
+
         }
 //        DeviceTypeModel deviceTypeModel = new DeviceTypeModel("", 0, "", "");
 //        return mDeviceTypeList.get(position);
@@ -147,6 +183,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     public void updateDeviceTypList(List<String> list) {
         mDeviceTypeList.clear();
         mDeviceTypeList.addAll(list);
+        typesConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
         notifyDataSetChanged();
     }
 

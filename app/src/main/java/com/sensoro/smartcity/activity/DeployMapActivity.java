@@ -182,6 +182,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
                 break;
             case R.id.tv_deploy_map_save:
                 mPresenter.doSaveLocation();
+                break;
             case R.id.iv_deploy_map_location:
                 mPresenter.backToCurrentLocation();
                 break;

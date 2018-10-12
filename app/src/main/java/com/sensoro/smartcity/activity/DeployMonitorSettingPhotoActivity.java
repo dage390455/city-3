@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
@@ -13,6 +14,7 @@ import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorSettingPhotoActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorSettingPhotoActivityPresenter;
+import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.util.ArrayList;
@@ -116,5 +118,15 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
     @Override
     public void updateImageList(ArrayList<ImageItem> imageList) {
         adapter.setImages(imageList);
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
     }
 }

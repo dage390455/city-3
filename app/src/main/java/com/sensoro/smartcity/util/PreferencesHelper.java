@@ -96,7 +96,6 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasInspection = hasInspection;
             mEventLoginData = eventLoginData;
         }
-
         return mEventLoginData;
     }
 
