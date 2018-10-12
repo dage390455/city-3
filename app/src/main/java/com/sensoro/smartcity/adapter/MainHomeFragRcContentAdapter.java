@@ -17,6 +17,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.DiffUtils.HomeContentListAdapterDiff;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -102,16 +103,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         //
         int status = deviceInfo.getStatus();
         String deviceType = deviceInfo.getDeviceType();
-        //
 
-        //
-//        String[] sensorTypes = deviceInfo.getSensorTypes();
-//        if (sensorTypes != null && sensorTypes.length > 0) {
-//            String sensorType = sensorTypes[0];
-//            if (!TextUtils.isEmpty(sensorType)) {
-//                WidgetUtil.judgeSensorTypeNew(holder.mainRcContentImvIcon, sensorType);
-//            }
-//        }
         setContentStatus(holder, position, status, deviceType);
 
         setListener(holder, position);

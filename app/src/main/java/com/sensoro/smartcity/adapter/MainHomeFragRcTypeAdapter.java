@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.DiffUtils.TopListAdapterDiff;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.push.ThreadPoolManager;
