@@ -83,20 +83,32 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             }
 //                merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
 //                getView().setMenuSelected(0);
-            //TODO 版本信息
-            UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
-            int versionCode = upgradeInfo.versionCode;
-            int currentVersionCode = AppUtils.getVersionCode(mContext);
-            LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
-            if (currentVersionCode != 0) {
-                if (versionCode > currentVersionCode) {
-                    getView().setAppUpdateVisible(true);
-                } else {
-                    getView().setAppUpdateVisible(false);
-                }
-            }
+            hasNewVersion();
+
         }
 
+    }
+
+    private boolean hasNewVersion() {
+        //TODO 版本信息
+        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+        if(upgradeInfo == null){
+            return false;
+        }
+
+        int versionCode = upgradeInfo.versionCode;
+        int currentVersionCode = AppUtils.getVersionCode(mContext);
+        LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
+        if (currentVersionCode != 0) {
+            if (versionCode > currentVersionCode) {
+                getView().setAppUpdateVisible(true);
+                return true;
+            } else {
+                getView().setAppUpdateVisible(false);
+                return false;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -175,6 +187,12 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doVersionInfo() {
-        Beta.checkUpgrade();
+        if (hasNewVersion()) {
+            Beta.checkUpgrade();
+        }else{
+            getView().showVersionDialog();
+        }
+
+
     }
 }

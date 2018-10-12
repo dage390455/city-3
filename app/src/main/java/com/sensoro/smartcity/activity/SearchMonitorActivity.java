@@ -88,6 +88,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     RelativeLayout indexLayoutList;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
+    @BindView(R.id.no_content_tip)
+    TextView tvNoContentTip;
     @BindView(R.id.ic_no_content)
     LinearLayout icNoContent;
 
@@ -120,6 +122,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         initSearchHistory();
         initRelation();
         initIndex();
+
+        tvNoContentTip.setText("搜索不到相关内容");
     }
 
 
@@ -237,12 +241,14 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
             mSearchRcContentAdapter.notifyDataSetChanged();
         }
         setNoContentVisible(dataList == null || dataList.size() < 1);
+
     }
 
     @Override
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         acSearchDeviceRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
     }
 
     @Override

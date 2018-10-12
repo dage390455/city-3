@@ -2,6 +2,7 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -12,15 +13,17 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.TipDialogUtils;
+import com.sensoro.smartcity.widget.VersionDialogUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerFragmentPresenter> implements
-        IManagerFragmentView ,TipDialogUtils.TipDialogUtilsClickListener {
+        IManagerFragmentView ,TipDialogUtils.TipDialogUtilsClickListener,VersionDialogUtils.VersionDialogUtilsClickListener {
     @BindView(R.id.fg_main_manage_tv_merchant_name)
     TextView fgMainManageTvMerchantName;
     @BindView(R.id.fg_main_manage_ll_change_merchants)
@@ -47,6 +50,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlMainFunction;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
+    private VersionDialogUtils mVersionDialog;
 
     @Override
     protected void initData(Context activity) {
@@ -57,6 +61,14 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         initExitDialog();
+        initVersionDialog();
+    }
+
+    private void initVersionDialog() {
+        mVersionDialog = new VersionDialogUtils(mRootFragment.getActivity());
+        mVersionDialog.setTipMessageText("现在 App 版本为 "+ AppUtils.getVersionName(mRootFragment.getActivity()));
+        mVersionDialog.setTipCacnleText("取消", mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
+        mVersionDialog.setVersionDialogUtilsClickListener(this);
     }
 
     private void initExitDialog() {
@@ -141,6 +153,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
         if (mExitDialog != null) {
             mExitDialog.destory();
         }
+        if (mVersionDialog != null) {
+            mVersionDialog.destory();
+        }
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
@@ -195,6 +210,11 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     }
 
     @Override
+    public void showVersionDialog() {
+        mVersionDialog.show();
+    }
+
+    @Override
     public void onCancelClick() {
         mExitDialog.dismiss();
     }
@@ -203,5 +223,15 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void onConfirmClick() {
         mExitDialog.dismiss();
         mPresenter.doExitAccount();
+    }
+
+    @Override
+    public void onVersionCancelClick() {
+        mVersionDialog.dismiss();
+    }
+
+    @Override
+    public void onVersionConfirmClick() {
+
     }
 }

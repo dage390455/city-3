@@ -29,7 +29,7 @@
             android:id="@+id/sensor_more_title_sn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="传感器详情"
+            android:text="更多详情"
             android:layout_gravity="center_vertical"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/x60" />
