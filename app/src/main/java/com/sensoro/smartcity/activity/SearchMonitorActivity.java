@@ -420,7 +420,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
                 mKeywordEt.getText().clear();
                 mClearKeywordIv.setVisibility(View.GONE);
                 setTipsLinearLayoutVisible(false);
-//                updateSearchHistoryData();
+                mPresenter.updateSearchHistoryData();
                 break;
             case R.id.index_return_top:
                 returnTop();

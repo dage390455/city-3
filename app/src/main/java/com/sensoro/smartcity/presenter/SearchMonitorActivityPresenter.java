@@ -592,4 +592,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
         }
     }
+
+    public void updateSearchHistoryData() {
+        getView().updateSearchHistoryData(mHistoryKeywords);
+    }
 }
