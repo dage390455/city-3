@@ -20,6 +20,7 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     private String deviceType;
     private String _updatedTime;
     private long updatedTime;
+    private long createdTime;
     private AlarmInfo.RuleInfo[] rules;
     private AlarmInfo.RecordInfo[] records;
     private double[] deviceLonlat;
@@ -164,6 +165,13 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 
     public void setUpdatedTime(long updatedTime) {
         this.updatedTime = updatedTime;
+    }
+    public long getCreatedTime() {
+        return createdTime;
+    }
+
+    public void setCreatedTime(long createdTime) {
+        this.createdTime = createdTime;
     }
 
     public int getSort() {

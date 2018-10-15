@@ -19,7 +19,7 @@
         />
 <TextView
     android:id="@+id/ac_alert_log_tv_name"
-    android:layout_width="match_parent"
+    android:layout_width="0dp"
     android:layout_height="wrap_content"
     android:text="未知"
     android:textSize="20sp"
@@ -44,7 +44,7 @@
         android:layout_marginTop="10dp"/>
     <LinearLayout
         android:id="@+id/ac_alert_ll_card"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
@@ -135,7 +135,7 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ac_alert_rc_content"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="220dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -147,7 +147,7 @@
 
     <LinearLayout
         android:id="@+id/ac_alert_ll_bottom"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -207,7 +207,7 @@
 
 
 <View
-    android:layout_width="match_parent"
+    android:layout_width="0dp"
     android:layout_height="1dp"
     android:background="@color/c_dfdfdf"
     app:layout_constraintStart_toStartOf="parent"

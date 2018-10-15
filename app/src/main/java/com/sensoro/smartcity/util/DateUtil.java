@@ -279,9 +279,6 @@ public class DateUtil {
                 pattern = "yyyy.MM.dd HH:mm:ss";
                 break;
             case 1:
-                pattern = "yyyy.MM.dd HH:mm:ss";
-                break;
-            case 2:
                 pattern = "MM.dd  HH:mm:ss";
                 break;
 

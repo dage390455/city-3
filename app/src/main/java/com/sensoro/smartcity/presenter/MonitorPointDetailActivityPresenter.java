@@ -115,7 +115,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         }
         getView().setContractName(contact);
         getView().setContractPhone(content);
-        getView().setUpdateTime(DateUtil.getFullParseDate(mDeviceInfo.getUpdatedTime()));
+        getView().setUpdateTime(DateUtil.getStrTimeToday(mDeviceInfo.getUpdatedTime(),0));
     }
 
     private void freshDestPosition() {

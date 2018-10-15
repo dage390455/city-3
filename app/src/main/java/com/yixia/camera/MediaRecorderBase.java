@@ -623,6 +623,8 @@ public abstract class MediaRecorderBase implements Callback, PreviewCallback, IM
             mParameters = camera.getParameters();
             mSupportedPreviewSizes = mParameters.getSupportedPreviewSizes();//	获取支持的尺寸
             prepareCameraParaments();
+
+
             camera.setParameters(mParameters);
             setPreviewCallback();
             camera.startPreview();

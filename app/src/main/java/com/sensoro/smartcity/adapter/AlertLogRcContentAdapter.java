@@ -69,7 +69,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         //
 
         AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(position);
-        String time = DateUtil.getStrTimeToday(recordInfo.getUpdatedTime(), 1);
+        String time = DateUtil.getStrTimeToday(recordInfo.getUpdatedTime(), 0);
         holder.itemAlertContentTvTime.setText(time);
         //
         if ("confirm".equals(recordInfo.getType())) {
@@ -93,7 +93,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 changTextColor(confirm_text,temp,spannableString,R.color.c_8058a5);
                 holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("app".equals(source)) {
-                confirm_text = "联系人 [" + recordInfo.getName() + "] " + "通过 App端 确认本次预警类型为:\n" +
+                confirm_text = "联系人 [" + recordInfo.getName() + "] " + "通过 App 确认本次预警类型为:\n" +
                         confirmStatusArray[recordInfo.getDisplayStatus()];
                 //用span改变字体颜色,换行 用\n
 //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";
@@ -107,7 +107,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
 
                 holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("platform".equals(source)) {
-                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过 Web端 确认本次预警类型为:\n" +
+                confirm_text = "联系人[" + recordInfo.getName() + "]" + "通过 Web 确认本次预警类型为:\n" +
                         confirmStatusArray[recordInfo.getDisplayStatus()];
                 //用span改变字体颜色,换行 用\n
 //            String content = "联系人[高鹏]通过 平台 确认本次预警类型为：\n安全隐患";

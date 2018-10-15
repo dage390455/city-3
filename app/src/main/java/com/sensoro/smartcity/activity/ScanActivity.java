@@ -21,6 +21,7 @@ import com.sensoro.smartcity.presenter.ScanActivityPresenter;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.yixia.camera.util.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

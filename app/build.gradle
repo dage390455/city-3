@@ -153,7 +153,7 @@ dependencies {
     })
     //
     compile 'com.android.support:design:27.1.1'
-    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
+//    compile 'com.android.support.constraint:constraint-layout:1.0.0-alpha9'
     //
     //    compile 'com.github.PhilJay:MPAndroidChart:v3.0.3'
     compile project(':cosmocalendar')
@@ -201,4 +201,5 @@ dependencies {
     compile files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
     compile 'com.github.tbruyelle:rxpermissions:0.10.2'
     compile project(':libbleserver')
+    compile 'com.android.support.constraint:constraint-layout:1.1.3'
 }

@@ -17,9 +17,8 @@
 
         <LinearLayout
             android:id="@+id/item_adapter_inspection_task_ll_top"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-
             android:orientation="horizontal">
 
             <TextView
@@ -28,7 +27,6 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/c_252525"
                 android:textSize="16sp"
-
                 />
 
             <TextView
@@ -66,7 +64,7 @@
 
         <View
             android:id="@+id/item_adapter_inspection_task_view"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="1dp"
             android:layout_marginTop="16dp"
             android:background="@color/c_dfdfdf"

@@ -293,17 +293,18 @@ public class WidgetUtil {
 
     private static void setIndexTextStyle(String text, TextView textView) {
         if (!TextUtils.isEmpty(text)) {
-            if (text.contains(".")) {
-                SpannableString styledText = new SpannableString(text);
-                styledText.setSpan(new TextAppearanceSpan(textView.getContext(), R.style.text_index_integer), 0,
-                        text.lastIndexOf("."), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-                styledText.setSpan(new TextAppearanceSpan(textView.getContext(), R.style.text_index_decimal), text
-                        .lastIndexOf("."), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-
-                textView.setText(styledText, TextView.BufferType.SPANNABLE);
-            } else {
-                textView.setText(text);
-            }
+//            if (text.contains(".")) {
+//                SpannableString styledText = new SpannableString(text);
+//                styledText.setSpan(new TextAppearanceSpan(textView.getContext(), R.style.text_index_integer), 0,
+//                        text.lastIndexOf("."), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//                styledText.setSpan(new TextAppearanceSpan(textView.getContext(), R.style.text_index_decimal), text
+//                        .lastIndexOf("."), text.length(), Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+//
+//                textView.setText(styledText, TextView.BufferType.SPANNABLE);
+//            } else {
+//                textView.setText(text);
+//            }
+            textView.setText(text);
         }
 
     }
