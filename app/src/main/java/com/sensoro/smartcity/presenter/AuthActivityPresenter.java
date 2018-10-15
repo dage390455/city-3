@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
+import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -12,11 +13,21 @@ import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.Map;
+
 import rx.android.schedulers.AndroidSchedulers;
+import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> implements Constants {
@@ -35,7 +46,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
     }
 
     public void doAuthCheck(String code) {
-            doSecondAuth(code);
+        doSecondAuth(code);
     }
 
     private void doSecondAuth(String code) {
@@ -45,7 +56,8 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
             @Override
             public void onCompleted(AuthRsp authRsp) {
                 if (authRsp.isData()) {
-                    saveLoginDataOpenMain(mEventLoginData);
+                    //请求mergetypes字段
+                    getMergeType();
                 } else {
                     getView().dismissProgressDialog();
                     getView().toastShort("二次验证失败");
@@ -57,6 +69,52 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().toastShort(errorMsg);
                 getView().dismissProgressDialog();
+            }
+        });
+    }
+
+    private void getMergeType() {
+        RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+            @Override
+            public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
+                PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
+                //测试信息
+                if (BuildConfig.DEBUG) {
+                    DeviceMergeTypesInfo.DeviceMergeTypeConfig config = data.getConfig();
+                    Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
+                    for (Map.Entry<String, DeviceTypeStyles> next : deviceType.entrySet()) {
+                        String key = next.getKey();
+                        DeviceTypeStyles value = next.getValue();
+                        LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
+                    }
+                    Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+                    for (Map.Entry<String, MergeTypeStyles> next : mergeType.entrySet()) {
+                        String key = next.getKey();
+                        MergeTypeStyles value = next.getValue();
+                        LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
+                    }
+                    Map<String, SensorTypeStyles> sensorType = config.getSensorType();
+                    for (Map.Entry<String, SensorTypeStyles> next : sensorType.entrySet()) {
+                        String key = next.getKey();
+                        SensorTypeStyles value = next.getValue();
+                        LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> " + key + "," + value.toString());
+                    }
+                    LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
+                }
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(AuthActivityPresenter.this) {
+            @Override
+            public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                saveLoginDataOpenMain(mEventLoginData);
+                LogUtils.loge("DevicesMergeTypesRsp ....." + mEventLoginData.toString());
+            }
+
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
             }
         });
     }

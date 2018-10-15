@@ -332,7 +332,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         //关闭热更新
         Beta.enableHotfix = false;
         // 统一初始化Bugly产品，包含Beta
-        Bugly.init(getApplicationContext(), "ab6c4abe4f", true, strategy);
+        Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
 //        Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
     }
 
@@ -437,14 +437,13 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         api.registerApp(Constants.APP_ID);
 //        FMMapSDK.init(this);
         //
+        initVc();
         initDeviceType();
         initImagePicker();
         initUploadManager();
-        initBugLy();
         locate();
-        initVc();
         paseDeviceJsonByAssets();
-
+        initBugLy();
     }
 
     private void paseDeviceJsonByAssets() {

@@ -67,7 +67,7 @@ public final class PermissionUtils {
                         MY_REQUEST_PERMISSION_CODE);
             } else {// 权限已经都申请通过了
                 if (mListener != null) {
-                    if (checkRecord() && checkPhoto()) {
+                    if (hasRecordPermission() && checkPhoto()) {
                         mListener.onPermissionGranted();
                     } else {
                         showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
@@ -76,7 +76,7 @@ public final class PermissionUtils {
             }
         } else {
             if (mListener != null) {
-                if (checkRecord() && checkPhoto()) {
+                if (hasRecordPermission() && checkPhoto()) {
                     mListener.onPermissionGranted();
                 } else {
                     showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
@@ -183,7 +183,7 @@ public final class PermissionUtils {
             ArrayList<String> deniedPermissions = new ArrayList<>();
             if (checkEachPermissionsGranted(grantResults)) {
                 if (mListener != null) {
-                    if (checkRecord() && checkPhoto()) {
+                    if (hasRecordPermission() && checkPhoto()) {
                         mListener.onPermissionGranted();
                     } else {
                         showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
@@ -206,7 +206,7 @@ public final class PermissionUtils {
                 } else {
                     // 不存在必备的权限被拒绝，可以进首页
                     if (mListener != null) {
-                        if (checkRecord() && checkPhoto()) {
+                        if (hasRecordPermission() && checkPhoto()) {
                             mListener.onPermissionGranted();
                         } else {
                             showPermissionSettingDialog(MY_REQUEST_PERMISSION_CODE);
@@ -394,10 +394,6 @@ public final class PermissionUtils {
             return false;
         }
         return true;
-    }
-
-    public boolean checkRecord() {
-        return hasRecordPermission();
     }
 
     private boolean hasRecordPermission() {

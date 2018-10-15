@@ -37,16 +37,13 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Map;
 
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 
 public class LoginPresenter extends BasePresenter<ILoginView> implements Constants, IOnCreate {
     private Activity mContext;
-    private EventLoginData eventLoginData;
 
     @Override
     public void initData(Context context) {
@@ -114,18 +111,16 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             final String phoneId = PushManager.getInstance().getClientid(SensoroCityApplication.getInstance());
             getView().showProgressDialog();
             //
-            eventLoginData = null;
             RetrofitServiceHelper.INSTANCE.login(account, pwd, phoneId).subscribeOn
-                    (Schedulers.io()).flatMap(new Func1<LoginRsp, Observable<DevicesMergeTypesRsp>>() {
+                    (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<LoginRsp>(this) {
                 @Override
-                public Observable<DevicesMergeTypesRsp> call(LoginRsp loginRsp) {
-                    //
+                public void onCompleted(LoginRsp loginRsp) {
                     String sessionID = loginRsp.getData().getSessionID();
                     RetrofitServiceHelper.INSTANCE.saveSessionId(sessionID);
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                     //
                     UserInfo userInfo = loginRsp.getData();
-                    eventLoginData = new EventLoginData();
+                    final EventLoginData eventLoginData = new EventLoginData();
                     GrantsInfo grants = userInfo.getGrants();
                     //
                     eventLoginData.userId = userInfo.get_id();
@@ -152,47 +147,12 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                         LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
                         if (totpEnable) {
                             eventLoginData.needAuth = true;
+                            openMain(eventLoginData);
+                            return;
                         }
                     }
-                    return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
+                    getMergeType(eventLoginData);
                 }
-            }).doOnNext(new Action1<DevicesMergeTypesRsp>() {
-                @Override
-                public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
-                    DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
-                    PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
-                    //测试信息
-                    if (BuildConfig.DEBUG) {
-                        DeviceMergeTypesInfo.DeviceMergeTypeConfig config = data.getConfig();
-                        Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
-                        for (Map.Entry<String, DeviceTypeStyles> next : deviceType.entrySet()) {
-                            String key = next.getKey();
-                            DeviceTypeStyles value = next.getValue();
-                            LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
-                        }
-                        Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-                        for (Map.Entry<String, MergeTypeStyles> next : mergeType.entrySet()) {
-                            String key = next.getKey();
-                            MergeTypeStyles value = next.getValue();
-                            LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
-                        }
-                        Map<String, SensorTypeStyles> sensorType = config.getSensorType();
-                        for (Map.Entry<String, SensorTypeStyles> next : sensorType.entrySet()) {
-                            String key = next.getKey();
-                            SensorTypeStyles value = next.getValue();
-                            LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> " + key + "," + value.toString());
-                        }
-                        LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
-                    }
-                }
-            }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(this) {
-                @Override
-                public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
-                    openMain(eventLoginData);
-                    LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
-                    getView().dismissProgressDialog();
-                }
-
 
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
@@ -204,16 +164,64 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
     }
 
+    private void getMergeType(final EventLoginData eventLoginData) {
+        RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes().subscribeOn(Schedulers.io()).doOnNext(new Action1<DevicesMergeTypesRsp>() {
+            @Override
+            public void call(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                DeviceMergeTypesInfo data = devicesMergeTypesRsp.getData();
+                PreferencesHelper.getInstance().saveLocalDevicesMergeTypes(data);
+                //测试信息
+                if (BuildConfig.DEBUG) {
+                    DeviceMergeTypesInfo.DeviceMergeTypeConfig config = data.getConfig();
+                    Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
+                    for (Map.Entry<String, DeviceTypeStyles> next : deviceType.entrySet()) {
+                        String key = next.getKey();
+                        DeviceTypeStyles value = next.getValue();
+                        LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
+                    }
+                    Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+                    for (Map.Entry<String, MergeTypeStyles> next : mergeType.entrySet()) {
+                        String key = next.getKey();
+                        MergeTypeStyles value = next.getValue();
+                        LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
+                    }
+                    Map<String, SensorTypeStyles> sensorType = config.getSensorType();
+                    for (Map.Entry<String, SensorTypeStyles> next : sensorType.entrySet()) {
+                        String key = next.getKey();
+                        SensorTypeStyles value = next.getValue();
+                        LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> " + key + "," + value.toString());
+                    }
+                    LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
+                }
+            }
+        }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(LoginPresenter.this) {
+            @Override
+            public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
+                openMain(eventLoginData);
+                LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
+            }
+
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+    }
+
     private void openMain(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
+        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
         if (eventLoginData.needAuth) {
             mainIntent.setClass(mContext, AuthActivity.class);
+            getView().startAC(mainIntent);
         } else {
             mainIntent.setClass(mContext, MainActivity.class);
+            getView().startAC(mainIntent);
+            getView().finishAc();
         }
-        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
-        getView().startAC(mainIntent);
-        getView().finishAc();
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -65,6 +65,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                             holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                             holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                         }
+                        holder.itemMonitoringPointContentTvUnit.setText("%");
 
                     }
                 }

@@ -18,8 +18,11 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
@@ -35,6 +38,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
     private List<AlarmInfo.RecordInfo.Event> receiveStautus1 = new ArrayList<>();
     private List<AlarmInfo.RecordInfo.Event> receiveStautus2 = new ArrayList<>();
     private List<AlarmInfo.RecordInfo.Event> receiveStautus3 = new ArrayList<>();
+    private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
 
     public AlertLogRcContentAdapter(Context context) {
         mContext = context;
@@ -46,6 +50,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
     public void setData(List<AlarmInfo.RecordInfo> recordInfoList) {
         this.timeShaftParentBeans.clear();
         this.timeShaftParentBeans.addAll(recordInfoList);
+        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
     }
 
     public interface OnPhotoClickListener {
@@ -87,10 +92,10 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 }
                 confirm_text = day + "小时 无人确认，系统自动确认为: 测试/巡检";
                 SpannableString spannableString = new SpannableString(confirm_text);
-                String temp = day+"小时";
-                changTextColor(confirm_text,temp,spannableString,R.color.c_252525);
+                String temp = day + "小时";
+                changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
                 temp = "测试/巡检";
-                changTextColor(confirm_text,temp,spannableString,R.color.c_8058a5);
+                changTextColor(confirm_text, temp, spannableString, R.color.c_8058a5);
                 holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("app".equals(source)) {
                 confirm_text = "联系人 [" + recordInfo.getName() + "] " + "通过 App 确认本次预警类型为:\n" +
@@ -103,7 +108,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 changTextColor(confirm_text, temp, spannableString, R.color.c_131313);
                 //改变安全隐患颜色
                 temp = confirmStatusArray[recordInfo.getDisplayStatus()];
-                changTextColor(confirm_text, temp, spannableString,confirmStatusTextColorArray[recordInfo.getDisplayStatus()]);
+                changTextColor(confirm_text, temp, spannableString, confirmStatusTextColorArray[recordInfo.getDisplayStatus()]);
 
                 holder.itemAlertContentTvContent.setText(spannableString);
             } else if ("platform".equals(source)) {
@@ -176,8 +181,28 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         } else if ("recovery".equals(recordInfo.getType())) {
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.no_smoke_icon);
-            holder.itemAlertContentTvContent.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo
-                    .getThresholds(), 0));
+            //
+            String sensorType = recordInfo.getSensorType();
+            try {
+                StringBuilder stringBuilder = new StringBuilder();
+                SensorTypeStyles sensorTypeStyles = deviceMergeTypeConfig.getSensorType().get(sensorType);
+                String trueMean = sensorTypeStyles.getTrueMean();
+                boolean bool = sensorTypeStyles.isBool();
+                if (bool) {
+                    stringBuilder.append(trueMean).append("，恢复正常");
+                } else {
+//                    "电量低于预警值, 恢复正常";
+////                    info = "温度 值为 " + thresholds + "°C 达到预警值";
+                    String name = sensorTypeStyles.getName();
+                    stringBuilder.append(name);
+                    stringBuilder.append("低于预警值").append("，恢复正常");
+                    holder.itemAlertContentTvContent.setText(stringBuilder.toString());
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                holder.itemAlertContentTvContent.setText(WidgetUtil.getAlarmDetailInfo(sensorType, recordInfo
+                        .getThresholds(), 0));
+            }
             holder.llConfirm.setVisibility(View.GONE);
         } else if ("sendVoice".equals(recordInfo.getType())) {
             //TODO 设置图标
@@ -185,99 +210,65 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             StringBuilder stringBuffer = new StringBuilder();
             stringBuffer.append("系统拨打电话至:");
 
-            holder.itemAlertContentTvContent.setText(appendResult(stringBuffer,0,recordInfo.getPhoneList()));
+            holder.itemAlertContentTvContent.setText(appendResult(stringBuffer, 0, recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
-//            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuffer);
-//            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
-//                    .color.popup_selected_text_color));
-//            int start = stringBuffer.length() - 9;
-//            int end = stringBuffer.length();
-//            spannableStringBuilder.setSpan(new ClickableSpan() {
-//                @Override
-//                public void onClick(View widget) {
-//                    itemClickListener.onGroupItemClick(groupPosition, isExpanded);
-//                }
-//
-//                @Override
-//                public void updateDrawState(TextPaint ds) {
-//                    super.updateDrawState(ds);
-//                    ds.setUnderlineText(false);
-//                }
-//            }, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//
-//            spannableStringBuilder.setSpan(foregroundColorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            int drawableId = R.mipmap.ic_pack_down;
-//            if (isExpanded) {
-//                drawableId = R.mipmap.ic_pack_up;
-//            }
-//            spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end, Spanned
-//                    .SPAN_EXCLUSIVE_EXCLUSIVE);
-//            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
-//                    .shape_status_progress));
-//            groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
-//            groupHolder.tvTitle.setText(spannableStringBuilder);
         } else if ("sendSMS".equals(recordInfo.getType())) {
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.msg_icon);
             final StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append("系统发送短信至:");
-            holder.itemAlertContentTvContent.setText(appendResult(stringBuilder,1,recordInfo.getPhoneList()));
+            holder.itemAlertContentTvContent.setText(appendResult(stringBuilder, 1, recordInfo.getPhoneList()));
             holder.llConfirm.setVisibility(View.GONE);
-//            SpannableStringBuilder spannableStringBuilder = new SpannableStringBuilder(stringBuilder.toString());
-//            ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(R
-//                    .color.popup_selected_text_color));
-//            int start = stringBuilder.length() - 9;
-//            int end = stringBuilder.length();
-//            spannableStringBuilder.setSpan(new ClickableSpan() {
-//                @Override
-//                public void onClick(View widget) {
-//                    itemClickListener.onGroupItemClick(groupPosition, isExpanded);
-//                }
-//
-//                @Override
-//                public void updateDrawState(TextPaint ds) {
-//                    super.updateDrawState(ds);
-//                    ds.setUnderlineText(false);
-//                }
-//            }, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            spannableStringBuilder.setSpan(foregroundColorSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-//            int drawableId = R.mipmap.ic_pack_down;
-//            if (isExpanded) {
-//                drawableId = R.mipmap.ic_pack_up;
-//            }
-//            spannableStringBuilder.setSpan(new ImageSpan(mContext, drawableId, ALIGN_BASELINE), end - 1, end, Spanned
-//                    .SPAN_EXCLUSIVE_EXCLUSIVE);
-//            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable
-//                    .shape_status_progress));
-//            groupHolder.tvTitle.setMovementMethod(LinkMovementMethod.getInstance());
-//            groupHolder.tvTitle.setText(spannableStringBuilder);
         } else if ("alarm".equals(recordInfo.getType())) {
             //TODO 设置图标
             holder.itemAlertContentImvIcon.setImageResource(R.drawable.smoke_icon);
-            String alarmDetailInfo = WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo.getThresholds(), 1);
+            //
+            String sensorType = recordInfo.getSensorType();
+            StringBuilder stringBuilder = new StringBuilder();
+            try {
+                SensorTypeStyles sensorTypeStyles = deviceMergeTypeConfig.getSensorType().get(sensorType);
+                boolean bool = sensorTypeStyles.isBool();
+                if (bool) {
+//                    info = "烟雾浓度高，设备预警";
+                    int thresholds = recordInfo.getThresholds();
+                    switch (thresholds) {
+                        case 1:
+                            //true
+                            String trueMean = sensorTypeStyles.getTrueMean();
+                            stringBuilder.append(trueMean).append("，设备预警");
+                            break;
+                        case 0:
+                            //false
+                            String falseMean = sensorTypeStyles.getFalseMean();
+                            stringBuilder.append(falseMean).append("，设备预警");
+                            break;
+                    }
+
+                } else {
+                    String name = sensorTypeStyles.getName();
+                    stringBuilder.append(name);
+////                    info = "温度 值为 " + thresholds + "°C 达到预警值";
+                    int thresholds = recordInfo.getThresholds();
+                    String unit = sensorTypeStyles.getUnit();
+                    stringBuilder.append(" 值为 ").append(thresholds).append(unit).append(" 达到预警值");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+                stringBuilder.append(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo.getThresholds(), 1));
+            }
+            //
+
+            String alarmDetailInfo = stringBuilder.toString();
             SpannableString spannableString = new SpannableString(alarmDetailInfo);
             holder.itemAlertContentTvContent.setText(changTextColor(alarmDetailInfo, alarmDetailInfo, spannableString, R.color.c_252525));
             holder.llConfirm.setVisibility(View.GONE);
-//            groupHolder.lineView.setVisibility(View.GONE);
-//            groupHolder.ivStatus.setImageDrawable(mContext.getResources().getDrawable(R.drawable.shape_status_alarm));
-////            if (WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(),recordInfo.getThresholds(), 1) == null) {
-////                groupHolder.tvAlarmResult.setEditText("未知传感器 值为 " + recordInfo.getThresholds() + " 达到预警值");
-////            } else {
-////            }
-//            groupHolder.tvTitle.setText(WidgetUtil.getAlarmDetailInfo(recordInfo.getSensorType(), recordInfo
-//                    .getThresholds(), 1));
-
-
         }
-        //
 
     }
 
     /**
-     *
-     * @param receiveStautus
      * @param stringBuffer
-     * @param type 0表示 系统拨打电话至 1表示 系统发送短信至
+     * @param type         0表示 系统拨打电话至 1表示 系统发送短信至
      * @param phoneList
      * @return
      */
@@ -309,15 +300,15 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             if (stautus.size() > 0) {
                 temp = new StringBuilder();
                 for (int i = 0; i < stautus.size(); i++) {
-                    String number = ((AlarmInfo.RecordInfo.Event)stautus.get(i)).getNumber();
+                    String number = ((AlarmInfo.RecordInfo.Event) stautus.get(i)).getNumber();
                     if (i != (stautus.size() - 1)) {
-                        temp.append(" "+number + " ;");
+                        temp.append(" " + number + " ;");
                     } else {
-                        temp.append(" "+number + " ");
+                        temp.append(" " + number + " ");
                     }
                 }
-                if(type == 0){
-                    switch (((AlarmInfo.RecordInfo.Event)stautus.get(0)).getReciveStatus()){
+                if (type == 0) {
+                    switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
                         case 0:
                             stringBuffer.append(temp).append(" 电话拨打中");
                             break;
@@ -331,8 +322,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                             stringBuffer.append(temp).append(" 电话接听结果未知");
                             break;
                     }
-                }else if (type == 1){
-                    switch (((AlarmInfo.RecordInfo.Event)stautus.get(0)).getReciveStatus()){
+                } else if (type == 1) {
+                    switch (((AlarmInfo.RecordInfo.Event) stautus.get(0)).getReciveStatus()) {
                         case 0:
                             stringBuffer.append(temp).append(" 短信发送中");
                             break;
@@ -347,7 +338,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                             break;
                     }
                 }
-               tempList.add(temp);
+                tempList.add(temp);
             }
         }
         SpannableString spannableString = new SpannableString(stringBuffer);

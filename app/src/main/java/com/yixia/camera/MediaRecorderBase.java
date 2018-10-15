@@ -556,12 +556,24 @@ public abstract class MediaRecorderBase implements Callback, PreviewCallback, IM
                 flag = true;
             }
         }
-
         if (flag) {
+            LogUtils.loge(this, "视频拍摄分辨率设置---->> 支持原始值 width = " + MediaRecorderBase.VIDEO_WIDTH + ",height = " + MediaRecorderBase.VIDEO_HEIGHT);
             mParameters.setPreviewSize(MediaRecorderBase.VIDEO_WIDTH, MediaRecorderBase.VIDEO_HEIGHT);
         } else {
-            MediaRecorderBase.VIDEO_WIDTH = 1280;
-            MediaRecorderBase.VIDEO_WIDTH = 720;
+            int tempWidth = 6000;
+            Size tempSize = null;
+            for (int x = 0; x < mSupportedPreviewSizes.size(); x++) {
+                Size size = mSupportedPreviewSizes.get(x);
+                if (tempWidth > size.width && tempWidth > 800) {
+                    tempSize = size;
+                    tempWidth = size.width;
+                }
+            }
+            if (tempSize != null) {
+                MediaRecorderBase.VIDEO_WIDTH = tempSize.width;
+                MediaRecorderBase.VIDEO_HEIGHT = tempSize.height;
+            }
+            LogUtils.loge(this, "视频拍摄分辨率设置---->> 不支持原始值！！ width = " + MediaRecorderBase.VIDEO_WIDTH + ",height = " + MediaRecorderBase.VIDEO_HEIGHT);
             mParameters.setPreviewSize(MediaRecorderBase.VIDEO_WIDTH, MediaRecorderBase.VIDEO_HEIGHT);
         }
 
