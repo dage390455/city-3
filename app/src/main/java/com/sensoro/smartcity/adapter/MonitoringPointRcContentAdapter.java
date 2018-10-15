@@ -62,9 +62,9 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                         holder.itemMonitoringPointContentTvContent.setText(batteryValue);
                         if (Integer.valueOf(batteryValue) < 10) {
                             holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
-                            holder.itemMonitoringPointContentTvUnit.setText("%");
                             holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
                         }
+                        holder.itemMonitoringPointContentTvUnit.setText("%");
 
                     }
                 }

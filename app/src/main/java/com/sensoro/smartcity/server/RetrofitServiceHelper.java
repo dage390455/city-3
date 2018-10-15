@@ -214,12 +214,12 @@ public enum RetrofitServiceHelper {
                 Request.Builder builder = original.newBuilder();
                 //header
                 builder.headers(original.headers())
-                        .addHeader(HEADER_USER_AGENT, "Android/" +
+                        .header(HEADER_USER_AGENT, "Android/" +
                                 Build.VERSION.RELEASE);
 //                        .addHeader(HEADER_ACCEPT, "application/json")
 //                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
                 if (!TextUtils.isEmpty(getSessionId())) {
-                    builder.addHeader(HEADER_SESSION_ID, getSessionId());
+                    builder.header(HEADER_SESSION_ID, getSessionId());
                 }
                 //
                 builder.method(original.method(), original.body());

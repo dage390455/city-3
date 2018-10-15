@@ -169,11 +169,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }
                 });
                 page = 1;
-                Integer type = null;
                 if (homeTopModels.get(0) != null) {
-                    type = homeTopModels.get(0).type;
+                    mStatusSelectedIndex = homeTopModels.get(0).type;
                 }
-                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, type, null).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
+                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, mStatusSelectedIndex, null).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
                     @Override
                     public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
                         //去除rfid类型
@@ -381,7 +380,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     needRefreshTop = true;
                     //
                     homeTopModels.clear();
-                    if (tempAlarmCount > 0) {
+                    if (currentAlarmCount > 0) {
                         HomeTopModel alrmModel = new HomeTopModel();
                         alrmModel.type = 0;
                         alrmModel.value = tempAlarmCount;
@@ -406,7 +405,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     inactiveModel.value = inactiveCount;
                     homeTopModels.add(inactiveModel);
 //                    }
-                    tempTotalCount = tempAlarmCount + normalCount + lostCount + inactiveCount;
+                    tempTotalCount = currentAlarmCount + normalCount + lostCount + inactiveCount;
                 }
                 break;
             case EVENT_DATA_SEARCH_MERCHANT:

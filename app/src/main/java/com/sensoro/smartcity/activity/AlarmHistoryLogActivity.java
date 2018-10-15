@@ -77,6 +77,12 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
         mPresenter.initData(mActivity);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.handlerActivityResult(requestCode,resultCode,data);
+    }
+
     private void initView() {
         includeImvTitleTvTitle.setText("历史日志");
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());

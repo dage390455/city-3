@@ -184,7 +184,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
 
     @Override
     public void setCurrentAlarmState(int state, String time) {
-        switch (state){
+        switch (state) {
             case 0:
                 acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_fa_shadow);
                 acAlertImvAlertIcon.setImageResource(R.drawable.alert_time_normal);

@@ -229,6 +229,7 @@ public interface RetrofitService {
     Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(GET_DEVICES_MERGE_TYPES)
+//    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
     Observable<DevicesMergeTypesRsp> getDevicesMergeTypes();
 
 }

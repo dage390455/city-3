@@ -27,10 +27,8 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PermissionUtils;
 import com.sensoro.smartcity.util.PermissionsResultObserve;
-import com.sensoro.smartcity.util.RxPermissionUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.yixia.camera.util.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -41,7 +39,7 @@ import butterknife.OnClick;
  */
 
 public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> implements ILoginView,
-        PermissionsResultObserve, RxPermissionUtils.OnRxPermissionsResultObserve {
+        PermissionsResultObserve {
 
     @BindView(R.id.login_btn)
     Button login_btn;
@@ -72,15 +70,10 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(mActivity);
+        mPresenter.onCreate();
         mPermissionUtils = new PermissionUtils(mActivity);
         mPermissionUtils.registerObserver(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mPresenter.onCreate();
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
         mPermissionUtils.requestPermission();
     }
 
@@ -97,9 +90,9 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                 acLoginRoot.getWindowVisibleDisplayFrame(rect);
                 int height = acLoginRoot.getRootView().getHeight();
                 int i = height - rect.bottom;
-                if(i>200){
+                if (i > 200) {
                     updateLogoDescriptionState(false);
-                }else{
+                } else {
                     updateLogoDescriptionState(true);
                 }
 
@@ -412,9 +405,4 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         acLoginTvLogoDescription.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public void onRxPermissionGranted() {
-        mPresenter.initData(mActivity);
-        initView();
-    }
 }

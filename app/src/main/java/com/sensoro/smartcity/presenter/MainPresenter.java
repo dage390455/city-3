@@ -8,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
 import com.igexin.sdk.PushManager;
+import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
@@ -86,7 +87,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);
         //
-        Beta.init(mContext.getApplicationContext(), false);
+        try {
+            Beta.init(mContext.getApplicationContext(), BuildConfig.DEBUG);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         final EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(EXTRA_EVENT_LOGIN_DATA);
         //
         if (null != eventLoginData) {
