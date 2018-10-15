@@ -266,6 +266,12 @@ public class DateUtil {
         }
     }
 
+    /**
+     * status 0 表示含有年月日， 1表示含有月日
+     * @param time
+     * @param status
+     * @return
+     */
     public static String getStrTimeToday(long time, int status) {
         final Calendar mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(time);

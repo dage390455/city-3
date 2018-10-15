@@ -224,19 +224,17 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     switch (status) {
                         case 0:
                             intent.setClass(mContext, InspectionActivity.class);
-                            intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
-                            getView().startAC(intent);
+
                             break;
                         case 1:
                             getView().toastShort("此设备已巡检完毕，且状态正常");
-                            break;
+                            return;
                         case 2:
                             intent.setClass(mContext, InspectionExceptionDetailActivity.class);
-                            intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
-                            getView().startAC(intent);
                             break;
                     }
-
+                    intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
+                    getView().startAC(intent);
                 } else {
                     getView().toastShort("此设备未在巡检任务中");
                     getView().startScan();

@@ -297,8 +297,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
                     @Override
                     public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
-                        getView().dismissProgressDialog();
                         freshUI(direction, inspectionTaskDeviceDetailRsp);
+                        getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
                         canFreshBle = true;
                     }
