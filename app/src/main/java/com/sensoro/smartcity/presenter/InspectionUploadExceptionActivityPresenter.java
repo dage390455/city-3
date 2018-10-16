@@ -49,11 +49,11 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     private Activity mContext;
     private List<String> exceptionTags = new ArrayList<>();
     private long startTime;
-    private final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
+    public final ArrayList<ImageItem> selImageList = new ArrayList<>(); //当前选择的所有图片
     private static final int maxImgCount = 9;
     private InspectionTaskDeviceDetail mDeviceDetail;
     private ArrayList<ImageItem> tempImages = null;
-    private UpLoadPhotosUtils upLoadPhotosUtils;
+    public UpLoadPhotosUtils upLoadPhotosUtils;
     private boolean needChangeDevice = false;
 
     @Override
@@ -142,17 +142,8 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     }
 
     private void doException() {
-        List<Integer> selectTags = getView().getSelectTags();
-        if (selectTags.size() == 0) {
-            getView().toastShort("必须选择一个标签类型");
-            return;
-        }
-        if (selImageList.size() > 0) {
-            getView().initUploadProgressDialog();
-            upLoadPhotosUtils.doUploadPhoto(selImageList);
-        } else {
-            getView().toastShort("至少上传一张照片或一段视频");
-        }
+        getView().initUploadProgressDialog();
+        upLoadPhotosUtils.doUploadPhoto(selImageList);
     }
 
 

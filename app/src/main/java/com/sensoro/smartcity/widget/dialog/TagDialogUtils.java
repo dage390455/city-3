@@ -1,12 +1,8 @@
-package com.sensoro.smartcity.widget;
+package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
 import android.content.DialogInterface;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -14,7 +10,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 
 public class TagDialogUtils implements View.OnClickListener {
-    private final AlertDialog mAddTagDialog;
+    private CustomCornerDialog mAddTagDialog;
     private EditText mDialogEtInput;
     private ImageView mDialogImvClear;
     private TextView mDialogTvCancel;
@@ -34,28 +30,29 @@ public class TagDialogUtils implements View.OnClickListener {
         mDialogTvConfirm.setOnClickListener(this);
         mDialogTvCancel.setOnClickListener(this);
         mDialogImvClear.setOnClickListener(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setView(view);
-        builder.setCancelable(false);
-        builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+        mAddTagDialog = new CustomCornerDialog(activity,R.style.CustomCornerDialogStyle,view);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+//        builder.setView(view);
+//        builder.setCancelable(false);
+        mAddTagDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
             @Override
             public void onCancel(DialogInterface dialog) {
                 currentPosition = -1;
                 mDialogEtInput.getText().clear();
             }
         });
-        builder.setOnDismissListener(new DialogInterface.OnDismissListener() {
+        mAddTagDialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
             @Override
             public void onDismiss(DialogInterface dialog) {
                 currentPosition = -1;
                 mDialogEtInput.getText().clear();
             }
         });
-        mAddTagDialog = builder.create();
-        Window window = mAddTagDialog.getWindow();
-        if (window != null) {
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
+//        mAddTagDialog = builder.create();
+//        Window window = mAddTagDialog.getWindow();
+//        if (window != null) {
+//            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        }
 
 
     }

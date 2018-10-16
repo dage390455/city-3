@@ -18,7 +18,7 @@ import com.sensoro.smartcity.presenter.DeployDeviceTagActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.TagDialogUtils;
+import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
 
 import java.util.List;
 
@@ -26,8 +26,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-import static com.sensoro.smartcity.widget.TagDialogUtils.DIALOG_TAG_ADD;
-import static com.sensoro.smartcity.widget.TagDialogUtils.DIALOG_TAG_EDIT;
+import static com.sensoro.smartcity.widget.dialog.TagDialogUtils.DIALOG_TAG_ADD;
+import static com.sensoro.smartcity.widget.dialog.TagDialogUtils.DIALOG_TAG_EDIT;
 
 public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivityView, DeployDeviceTagActivityPresenter>
         implements IDeployDeviceTagActivityView, DeployDeviceTagAddTagAdapter.DeployDeviceTagAddTagItemClickListener, RecycleViewItemClickListener, TagDialogUtils.OnTagDialogListener {

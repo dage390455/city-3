@@ -143,8 +143,11 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
 
 
     public void doEditTag(int position) {
-        String tag = mTagList.get(position);
-        getView().showDialogWithEdit(tag, position);
+        if(position<mTagList.size()){
+            String tag = mTagList.get(position);
+            getView().showDialogWithEdit(tag, position);
+        }
+
     }
 
     public void updateEditTag(int position, String text) {

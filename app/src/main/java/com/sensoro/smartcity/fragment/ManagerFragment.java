@@ -16,8 +16,8 @@ import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.TipDialogUtils;
-import com.sensoro.smartcity.widget.VersionDialogUtils;
+import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
+import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -82,8 +82,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     private void initVersionDialog() {
         mVersionDialog = new VersionDialogUtils(mRootFragment.getActivity());
-        mVersionDialog.setTipMessageText("现在 App 版本为 " + AppUtils.getVersionName(mRootFragment.getActivity()));
-        mVersionDialog.setTipCacnleText("取消", mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
+        mVersionDialog.setTipMessageText("现在App版本为最新版  " + AppUtils.getVersionName(mRootFragment.getActivity()));
+        mVersionDialog.setTipCacnleText("好的", mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
         mVersionDialog.setVersionDialogUtilsClickListener(this);
     }
 

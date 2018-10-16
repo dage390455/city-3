@@ -65,7 +65,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             } else {
                 holder.mainWarnRcContentTvContent.setText(WidgetUtil.parseSensorTypes(mContext, strings) + " " + deviceName);
             }
-            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(alarmLogInfo.getUpdatedTime(),0));
+            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(alarmLogInfo.getCreatedTime(),0));
             //
             switch (alarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:

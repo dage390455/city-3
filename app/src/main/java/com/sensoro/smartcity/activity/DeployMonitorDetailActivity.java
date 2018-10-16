@@ -23,6 +23,7 @@ import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.TouchRecyclerview;
+import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
 
 import java.util.List;
 
@@ -72,7 +73,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     private TextView mDialogTvCancel;
     private TextView mDialogTvTitle;
     private TextView mDialogTvMsg;
-    private AlertDialog mUploadDialog;
+    private CustomCornerDialog mUploadDialog;
 
     private ProgressUtils mProgressUtils;
     private ProgressDialog progressDialog;
@@ -120,7 +121,9 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_title, R.id.include_text_title_tv_subtitle, R.id.ac_deploy_device_detail_ll_name_location, R.id.ac_deploy_device_detail_rl_tag, R.id.ac_deploy_device_detail_ll_alarm_contact, R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_title, R.id.include_text_title_tv_subtitle,
+            R.id.ac_deploy_device_detail_ll_name_location, R.id.ac_deploy_device_detail_rl_tag, R.id.ac_deploy_device_detail_ll_alarm_contact,
+            R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -162,10 +165,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
         mDialogTvConfirm.setOnClickListener(this);
         mDialogTvCancel.setOnClickListener(this);
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setView(view);
-        builder.setCancelable(false);
-        mUploadDialog = builder.create();
+//        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+//        builder.setView(view);
+//        builder.setCancelable(false);
+//        mUploadDialog = builder.create();
+        mUploadDialog = new CustomCornerDialog(mActivity,R.style.CustomCornerDialogStyle,view);
     }
 
     @Override

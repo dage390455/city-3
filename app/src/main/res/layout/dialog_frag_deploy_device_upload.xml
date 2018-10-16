@@ -2,9 +2,9 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:background="@color/c_fafafa"
+    android:background="@drawable/shape_bg_solid_ff_corner"
     >
     <TextView
         android:id="@+id/dialog_deploy_device_upload_tv_title"
@@ -31,7 +31,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="24dp"
-        android:background="@color/c_b6b6b6"/>
+        android:background="@color/c_dfdfdf"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -43,15 +43,15 @@
             android:layout_height="wrap_content"
             android:text="强制上传"
             android:textSize="16sp"
-            android:padding="8dp"
             android:textColor="@color/c_a6a6a6"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/selector_item_white_ee_corner_left"
             android:gravity="center"/>
         <View
             android:layout_width="1dp"
             android:layout_height="match_parent"
-            android:background="@color/c_b6b6b6"/>
+            android:background="@color/c_dfdfdf"/>
 
 
         <TextView
@@ -61,9 +61,9 @@
             android:layout_height="wrap_content"
             android:text="好的"
             android:textSize="16sp"
-            android:padding="8dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginBottom="12dp"
+            android:paddingTop="12dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/selector_item_white_ee_corner_right"
             android:textColor="@color/c_29c093"
             android:gravity="center"/>
 

@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    android:background="@drawable/shape_bg_solid_ff_corner"
     android:orientation="vertical">
 
     <TextView
@@ -18,7 +18,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_marginTop="24dp"
-        android:background="@color/c_afb4bb" />
+        android:background="@color/c_dfdfdf" />
 
     <TextView
         android:id="@+id/dialog_tv_exception"
@@ -35,7 +35,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/c_afb4bb" />
+        android:background="@color/c_dfdfdf" />
 
     <TextView
         android:id="@+id/dialog_tv_upload_change_device"
@@ -52,15 +52,15 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/c_afb4bb" />
+        android:background="@color/c_dfdfdf" />
 
     <TextView
         android:id="@+id/dialog_tv_waite"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/selector_item_white_ee"
-        android:gravity="center"
+        android:background="@drawable/selector_item_white_ee_corner_left_right"
         android:paddingBottom="14dp"
+        android:gravity="center"
         android:paddingTop="14dp"
         android:text="我再看看"
         android:textColor="@color/c_a6a6a6"

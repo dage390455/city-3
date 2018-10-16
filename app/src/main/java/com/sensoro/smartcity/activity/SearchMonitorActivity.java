@@ -108,6 +108,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     private boolean isShowDialog = true;
     private MainHomeFragRcContentAdapter mSearchRcContentAdapter;
     private SensoroXLinearLayoutManager xLinearLayoutManager;
+    private boolean isKeyBoardOpen = false;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -128,11 +129,13 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         AppUtils.getInputSoftStatus(searchDeviceLlRoot, new AppUtils.InputSoftStatusListener() {
             @Override
             public void onKeyBoardClose() {
+                isKeyBoardOpen = false;
                 mKeywordEt.setCursorVisible(false);
             }
 
             @Override
             public void onKeyBoardOpen() {
+                isKeyBoardOpen = true;
                 mKeywordEt.setCursorVisible(true);
             }
         });
@@ -266,6 +269,14 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         acSearchDeviceRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
 
+    }
+
+    @Override
+    public void hideSoftInput() {
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && isKeyBoardOpen) {
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
     }
 
     @Override

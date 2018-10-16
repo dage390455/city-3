@@ -108,7 +108,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
         getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        String alarmTime = DateUtil.getStrTimeToday(deviceAlarmLogInfo.getUpdatedTime(),1);
+        String alarmTime = DateUtil.getStrTimeToday(deviceAlarmLogInfo.getCreatedTime(),1);
         //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {

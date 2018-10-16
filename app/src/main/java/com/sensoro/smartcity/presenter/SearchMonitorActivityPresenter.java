@@ -94,16 +94,17 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
-        hideSoftInput();
+        getView().hideSoftInput();
     }
 
-    private void hideSoftInput() {
-        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-        if (imm != null) {
-            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
-        }
-
-    }
+//    private void hideSoftInput() {
+//        InputMethodManager imm = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+//        if (imm != null) {
+//            boolean active = imm.isActive();
+//            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+//        }
+//
+//    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PushData data) {

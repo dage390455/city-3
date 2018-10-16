@@ -29,6 +29,7 @@ import com.sensoro.smartcity.presenter.InspectionUploadExceptionActivityPresente
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     private TextView dialogTvException;
     private TextView dialogTvWaite;
     private TextView dialogTvUpload;
-    private AlertDialog mExceptionDialog;
+    private CustomCornerDialog mExceptionDialog;
     private ProgressUtils mProgressUtils;
     private ProgressDialog progressDialog;
 
@@ -110,7 +111,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     }
 
     private void initExceptionUploadDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+//        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         View view = View.inflate(mActivity, R.layout.item_dialog_inspection_exception_upload, null);
         dialogTvException = view.findViewById(R.id.dialog_tv_exception);
         dialogTvUpload = view.findViewById(R.id.dialog_tv_upload_change_device);
@@ -119,13 +120,14 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
         dialogTvException.setOnClickListener(mPresenter);
         dialogTvUpload.setOnClickListener(mPresenter);
         dialogTvWaite.setOnClickListener(mPresenter);
-        builder.setView(view);
+//        builder.setView(view);
 
-        mExceptionDialog = builder.create();
-        Window window = mExceptionDialog.getWindow();
-        if (window != null) {
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
+//        mExceptionDialog = new ;
+        mExceptionDialog = new CustomCornerDialog(mActivity,R.style.CustomCornerDialogStyle,view);
+//        Window window = mExceptionDialog.getWindow();
+//        if (window != null) {
+//            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        }
 
     }
 
@@ -227,7 +229,17 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
                 finishAc();
                 break;
             case R.id.ac_inspection_upload_exception_tv_upload:
-                mExceptionDialog.show();
+                List<Integer> selectTags = getSelectTags();
+                if (selectTags.size() == 0) {
+                    toastShort("必须选择一个标签类型");
+                    return;
+                }
+                if (mPresenter.selImageList.size() > 0) {
+                    mExceptionDialog.show();
+                } else {
+                    toastShort("至少上传一张照片或一段视频");
+                }
+
                 break;
         }
     }

@@ -1,12 +1,8 @@
-package com.sensoro.smartcity.widget;
+package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.ColorInt;
-import android.support.v7.app.AlertDialog;
 import android.view.View;
-import android.view.Window;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -14,11 +10,12 @@ import com.sensoro.smartcity.R;
 public class VersionDialogUtils {
 
     private final TextView mTvTitle;
-    private AlertDialog mDialog;
+//    private AlertDialog mDialog;
     private final TextView mTvMessage;
     private final TextView mTvCancel;
 //    private final TextView mTvConfirm;
     private VersionDialogUtilsClickListener listener;
+    private CustomCornerDialog mDialog;
 
     public VersionDialogUtils(Activity activity) {
         View view = View.inflate(activity, R.layout.item_dialog_version, null);
@@ -26,14 +23,16 @@ public class VersionDialogUtils {
         mTvMessage = view.findViewById(R.id.dialog_tip_tv_message);
         mTvCancel = view.findViewById(R.id.dialog_tip_tv_cancel);
 //        mTvConfirm = view.findViewById(R.id.dialog_tip_tv_confirm);
-        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
-        builder.setView(view);
-        builder.setCancelable(false);
-        mDialog = builder.create();
-        Window window = mDialog.getWindow();
-        if (window != null) {
-            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        }
+//        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+//        builder.setView(view);
+//        builder.setCancelable(false);
+//        mDialog = builder.create();
+//        Window window = mDialog.getWindow();
+//        if (window != null) {
+//            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
+//        }
+
+        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
 
         mTvCancel.setOnClickListener(new View.OnClickListener() {
             @Override

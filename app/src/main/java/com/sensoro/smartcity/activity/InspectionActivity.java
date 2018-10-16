@@ -16,7 +16,7 @@ import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.smartcity.presenter.InspectionActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.TipDialogUtils;
+import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 
 import java.util.List;
 
