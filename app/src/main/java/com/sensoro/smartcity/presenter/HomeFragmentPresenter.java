@@ -201,6 +201,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                getView().updateMainTypeSelectStatus(mStatusSelectedIndex);
                 getView().refreshData(mDataList);
                 getView().recycleViewRefreshComplete();
                 getView().dismissProgressDialog();
@@ -239,7 +240,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     break;
             }
             //TODO 过滤设备信息
-            int tempStatus = mStatusSelectedIndex;
             String mergeType = null;
             try {
                 mergeType = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig().getDeviceType().get(deviceInfo.getDeviceType()).getMergeType();
@@ -248,7 +248,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             }
             for (int j = 0; j < mDataList.size(); j++) {
                 DeviceInfo currentDeviceInfo = mDataList.get(j);
-                if (currentDeviceInfo.getSn().equals(deviceInfo.getSn()) && tempStatus == status) {
+                if (currentDeviceInfo.getSn().equals(deviceInfo.getSn()) && mStatusSelectedIndex == status) {
                     if (TextUtils.isEmpty(mTypeSelectedType)) {
                         mDataList.set(j, deviceInfo);
                     } else {
@@ -259,7 +259,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
                 }
             }
-            if (tempStatus == status && deviceInfo.isNewDevice()) {
+            if (mStatusSelectedIndex == status && deviceInfo.isNewDevice()) {
                 if (TextUtils.isEmpty(mTypeSelectedType)) {
                     deviceInfo.setNewDevice(false);
                     mDataList.add(deviceInfo);

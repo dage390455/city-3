@@ -148,7 +148,7 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="20dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/contract_managemet" />
+                    android:src="@drawable/contract_management" />
 
                 <TextView
                     android:layout_width="0dp"

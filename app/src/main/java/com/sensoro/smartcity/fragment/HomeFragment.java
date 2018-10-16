@@ -292,6 +292,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mSelectDeviceTypePop.showAtLocation(fgMainHomeLlRoot, Gravity.TOP);
     }
 
+    @Override
+    public void updateMainTypeSelectStatus(int status) {
+        mMainHomeFragRcTypeAdapter.setStatus(status);
+    }
+
 
     @Override
     public void recycleViewRefreshComplete() {
@@ -357,7 +362,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         fgMainHomeImbAdd.clearAnimation();
         MenuDialogFragment menuDialogFragment = new MenuDialogFragment();
         menuDialogFragment.setOnDismissListener(this);
-        menuDialogFragment.show(getActivity().getSupportFragmentManager(), "mainMenuDialog");
+        menuDialogFragment.show(mRootFragment.getActivity().getSupportFragmentManager(), "mainMenuDialog");
         setImvAddVisible(false);
         setImvSearchVisible(false);
     }
@@ -400,13 +405,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         switch (resId) {
             case R.id.dialog_main_home_menu_imv_close:
                 break;
-            case R.id.dialog_main_home_menu_tv_quick_deploy:
+            case R.id.rl_fast_deploy:
                 mPresenter.doScanDeploy();
                 break;
-            case R.id.dialog_main_home_menu_new_tv_construction:
+            case R.id.rl_fast_contract:
                 mPresenter.doContract();
                 break;
-            case R.id.dialog_main_home_menu_tv_scan_login:
+            case R.id.rl_fast_scan_login:
                 mPresenter.doScanLogin();
                 break;
             case R.id.dialog_main_home_menu_rl_root:
