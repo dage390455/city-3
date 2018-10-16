@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server;
 
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
@@ -217,7 +218,7 @@ public interface RetrofitService {
     Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(@Query("taskId") String taskId);
 
     @PUT(INSPECT_TASK_CHANGE_STATE)
-    Observable<ResponseBase> changeInspectionTaskState(@Body RequestBody requestBody);
+    Observable<ChangeInspectionTaskStateRsp> changeInspectionTaskState(@Body RequestBody requestBody);
 
     @POST(INSPECT_TASK_EXCEPTION_DETAIL)
     Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(@Body RequestBody requestBody);

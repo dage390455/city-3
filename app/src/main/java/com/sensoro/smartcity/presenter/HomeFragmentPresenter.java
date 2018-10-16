@@ -749,7 +749,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         Set<Map.Entry<String, MergeTypeStyles>> entries = mergeType.entrySet();
         for (Map.Entry<String, MergeTypeStyles> entry : entries) {
             String key = entry.getKey();
-            mMergeTypes.add(key);
+            MergeTypeStyles mergeTypeStyles = entry.getValue();
+            if (mergeTypeStyles.isOwn()) {
+                mMergeTypes.add(key);
+            }
         }
         Collections.sort(mMergeTypes);
 //        mSelectDeviceTypePop.updateSelectDeviceTypeList(SensoroCityApplication.getInstance().mDeviceTypeList);

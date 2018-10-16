@@ -14,8 +14,9 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.ChangeInspectionTaskStateInfo;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -42,7 +43,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
         getView().setTvTaskNumber(mTaskInfo.getIdentifier());
         getView().setTvTaskTime(DateUtil.getDateByOtherFormat(mTaskInfo.getBeginTime()) + " - " + DateUtil.getDateByOtherFormat(mTaskInfo.getEndTime()));
 
-        initTvState();
+        freshTvState(mTaskInfo.getStatus());
 
         initDeviceTag();
     }
@@ -59,25 +60,21 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
         getView().updateTagsData(tags);
     }
 
-    private void initTvState() {
-        switch (mTaskInfo.getStatus()) {
+    private void freshTvState(int status) {
+        switch (status) {
             case 0:
                 getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow, R.color.white, "开始巡检");
                 break;
             case 1:
-                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow, R.color.white, "继续巡检");
-                break;
             case 2:
                 getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow, R.color.white, "继续巡检");
                 break;
             case 3:
-                getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner, R.color.c_252525, "详情");
-                break;
             case 4:
                 getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner, R.color.c_252525, "详情");
                 break;
         }
-        getView().setTvState(INSPECTION_STATUS_COLORS[mTaskInfo.getStatus()], INSPECTION_STATUS_TEXTS[mTaskInfo.getStatus()]);
+        getView().setTvState(INSPECTION_STATUS_COLORS[status], INSPECTION_STATUS_TEXTS[status]);
     }
 
     @Override
@@ -121,18 +118,19 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
     private void changeTaskState() {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doChangeInspectionTaskState(mTaskInfo.getId(), null, 1).
-                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ChangeInspectionTaskStateRsp>(this) {
             @Override
-            public void onCompleted(ResponseBase responseBase) {
-                getView().dismissProgressDialog();
+            public void onCompleted(ChangeInspectionTaskStateRsp changeInspectionTaskStateRsp) {
+                ChangeInspectionTaskStateInfo data = changeInspectionTaskStateRsp.getData();
+                int status = data.getStatus();
                 Intent intent = new Intent(mContext, InspectionTaskActivity.class);
                 intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
                 getView().startAC(intent);
-                getView().setTvbtnStartState(R.drawable.shape_bg_corner_29c_shadow, R.color.white, "继续巡检");
-                getView().setTvState(R.color.c_3aa7f0,"执行中");
+                freshTvState(status);
                 EventData eventData = new EventData();
                 eventData.code = EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE;
                 EventBus.getDefault().post(eventData);
+                getView().dismissProgressDialog();
             }
 
             @Override

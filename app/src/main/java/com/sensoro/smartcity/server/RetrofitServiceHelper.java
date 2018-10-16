@@ -15,6 +15,7 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
@@ -1020,7 +1021,7 @@ public enum RetrofitServiceHelper {
      * @param status
      * @return
      */
-    public Observable<ResponseBase> doChangeInspectionTaskState(String id, String identifier, Integer status) {
+    public Observable<ChangeInspectionTaskStateRsp> doChangeInspectionTaskState(String id, String identifier, Integer status) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1044,7 +1045,7 @@ public enum RetrofitServiceHelper {
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<ResponseBase> changeInspectionTaskState = retrofitService.changeInspectionTaskState(body);
+        Observable<ChangeInspectionTaskStateRsp> changeInspectionTaskState = retrofitService.changeInspectionTaskState(body);
         RxApiManager.getInstance().add("doChangeInspectionTaskState", changeInspectionTaskState.subscribe());
         return changeInspectionTaskState;
     }

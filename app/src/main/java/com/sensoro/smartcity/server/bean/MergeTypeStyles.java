@@ -7,6 +7,8 @@ public class MergeTypeStyles {
     private String name;
     private String image;
     private String icon;
+    private boolean isOwn;
+    private List<String> deviceTypes;
 
     public int getResId() {
         return resId;
@@ -27,7 +29,16 @@ public class MergeTypeStyles {
                 ", icon='" + icon + '\'' +
                 ", deviceTypes=" + deviceTypes +
                 ", resId=" + resId +
+                ", isOwn=" + isOwn +
                 '}';
+    }
+
+    public boolean isOwn() {
+        return isOwn;
+    }
+
+    public void setOwn(boolean own) {
+        isOwn = own;
     }
 
     public String getId() {
@@ -70,6 +81,5 @@ public class MergeTypeStyles {
         this.deviceTypes = deviceTypes;
     }
 
-    private List<String> deviceTypes;
 
 }
