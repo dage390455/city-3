@@ -30,4 +30,5 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     void  setNoContentVisible(boolean isVisible);
     void updateSelectDeviceTypePopAndShow(List<String> devicesTypes);
+    void updateMainTypeSelectStatus(int status);
 }

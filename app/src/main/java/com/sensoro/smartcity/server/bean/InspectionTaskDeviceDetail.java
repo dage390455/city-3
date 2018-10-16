@@ -32,6 +32,8 @@ public class InspectionTaskDeviceDetail implements Serializable, Comparable<Insp
     private List<Double> lonlat;
     private List<String> tags;
     private boolean isNearBy_local = false;
+    private double sort_local;
+
     public boolean isNearBy_local() {
         return isNearBy_local;
     }
@@ -41,16 +43,13 @@ public class InspectionTaskDeviceDetail implements Serializable, Comparable<Insp
     }
 
 
-    public int getSort_local() {
+    public double getSort_local() {
         return sort_local;
     }
 
-    public void setSort_local(int sort_local) {
+    public void setSort_local(double sort_local) {
         this.sort_local = sort_local;
     }
-
-    private int sort_local;
-
     public String getId() {
         return id;
     }

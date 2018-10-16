@@ -9,9 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.EventLoginData;
@@ -26,18 +24,12 @@ import butterknife.Unbinder;
 public class MenuDialogFragment extends DialogFragment {
     @BindView(R.id.dialog_main_home_menu_imv_close)
     ImageButton dialogMainHomeMenuImvClose;
-    @BindView(R.id.ll_fast_deploy)
-    LinearLayout llFastDeploy;
-    @BindView(R.id.dialog_main_home_menu_tv_quick_deploy)
-    TextView dialogMainHomeMenuTvQuickDeploy;
-    @BindView(R.id.ll_fast_contract)
-    LinearLayout llFastContract;
-    @BindView(R.id.dialog_main_home_menu_new_tv_construction)
-    TextView dialogMainHomeMenuNewTvConstruction;
-    @BindView(R.id.ll_fast_scan_login)
-    LinearLayout llFastScanLogin;
-    @BindView(R.id.dialog_main_home_menu_tv_scan_login)
-    TextView dialogMainHomeMenuTvScanLogin;
+    @BindView(R.id.rl_fast_deploy)
+    RelativeLayout rlFastDeploy;
+    @BindView(R.id.rl_fast_contract)
+    RelativeLayout rlFastContract;
+    @BindView(R.id.rl_fast_scan_login)
+    RelativeLayout rlFastScanLogin;
     @BindView(R.id.dialog_main_home_menu_rl_root)
     RelativeLayout dialogMainHomeMenuRlRoot;
     Unbinder unbinder;
@@ -88,7 +80,7 @@ public class MenuDialogFragment extends DialogFragment {
         unbinder.unbind();
     }
 
-    @OnClick({R.id.dialog_main_home_menu_imv_close, R.id.dialog_main_home_menu_tv_quick_deploy, R.id.dialog_main_home_menu_new_tv_construction, R.id.dialog_main_home_menu_tv_scan_login, R.id.dialog_main_home_menu_rl_root})
+    @OnClick({R.id.dialog_main_home_menu_imv_close, R.id.rl_fast_deploy, R.id.rl_fast_contract, R.id.rl_fast_scan_login, R.id.dialog_main_home_menu_rl_root})
     public void onViewClicked(View view) {
         currentResId = view.getId();
         getDialog().dismiss();
@@ -107,14 +99,14 @@ public class MenuDialogFragment extends DialogFragment {
             EventLoginData userData = PreferencesHelper.getInstance().getUserData();
             if (userData != null) {
                 if (userData.hasContract) {
-                    llFastContract.setVisibility(View.VISIBLE);
+                    rlFastContract.setVisibility(View.VISIBLE);
                 } else {
-                    llFastContract.setVisibility(View.GONE);
+                    rlFastContract.setVisibility(View.GONE);
                 }
                 if (userData.hasScanLogin) {
-                    llFastScanLogin.setVisibility(View.VISIBLE);
+                    rlFastScanLogin.setVisibility(View.VISIBLE);
                 } else {
-                    llFastScanLogin.setVisibility(View.GONE);
+                    rlFastScanLogin.setVisibility(View.GONE);
                 }
             }
         } catch (Exception e) {

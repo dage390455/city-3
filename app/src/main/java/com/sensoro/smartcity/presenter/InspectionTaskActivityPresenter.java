@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
 
+import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
@@ -69,7 +70,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
         if (mTaskInfo != null) {
             requestSearchData(DIRECTION_DOWN, null);
-            mHandler.post(this);
+            mHandler.postDelayed(this, 1000);
         }
 
     }
@@ -117,9 +118,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
         try {
-            if (BLE_DEVICE_SET.contains(bleDevice.getSn())) {
-                BLE_DEVICE_SET.remove(bleDevice.getSn());
-            }
+            BLE_DEVICE_SET.remove(bleDevice.getSn());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -237,32 +236,16 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
                 List<InspectionTaskExecutionModel.DeviceTypesBean> deviceTypes = data.getDeviceTypes();
                 if (deviceTypes != null) {
-//                    ArrayList<DeviceTypeModel> types = new ArrayList<>();
                     for (InspectionTaskExecutionModel.DeviceTypesBean deviceTypesBean : deviceTypes) {
-//                        String deviceType = deviceTypesBean.getDeviceType();
-////
-////                        List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
-////                        for (DeviceTypeMutualModel.MergeTypeInfosBean mergeTypeInfo : mergeTypeInfos) {
-////                            if (mergeTypeInfo.getDeviceTypes().contains(deviceType)) {
-////                                DeviceTypeModel deviceTypeModel = SensoroCityApplication.getInstance().getDeviceTypeName(mergeTypeInfo.getMergeType());
-////                                if (deviceTypeModel != null) {
-////                                    deviceTypeModel.deviceTypes = mergeTypeInfo.getDeviceTypes();
-////                                    types.add(deviceTypeModel);
-////                                }
-////                                break;
-////                            }
-////                        }
-//                        LogUtils.loge("doInspectionType --->>> " + deviceType);
                         selectDeviceList.add(deviceTypesBean.getDeviceType());
                     }
-//                    types.add(0, SensoroCityApplication.getInstance().mDeviceTypeList.get(0));
                     getView().updateSelectDeviceTypeList(selectDeviceList);
                     if (needPop) {
                         getView().showSelectDeviceTypePop();
                     }
                 } else {
                     if (needPop) {
-                        getView().toastShort("好像出问题了");
+                        getView().toastShort("服务器数据返回错误 deviceTypes");
                     }
 
                 }
@@ -373,16 +356,29 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     private void handlerInspectionTaskDevice() {
         //处理排序
+        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
         for (InspectionTaskDeviceDetail inspectionTaskDeviceDetail : mDevices) {
             int status = inspectionTaskDeviceDetail.getStatus();
-
+            List<Double> lonlat = inspectionTaskDeviceDetail.getLonlat();
+            double lance = 0;
+            if (lonlat != null && lonlat.size() > 1) {
+                if (lastKnownLocation != null) {
+                    double latitude = lastKnownLocation.getLatitude();
+                    double longitude = lastKnownLocation.getLongitude();
+                    double netLatitude = lonlat.get(1);
+                    double netLongitude = lonlat.get(0);
+                    if (netLatitude != 0 && netLongitude != 0) {
+                        lance = AppUtils.gps2m(latitude, longitude, netLatitude, netLongitude);
+                    }
+                }
+            }
             if (status == 0) {
                 if (isNearBy(inspectionTaskDeviceDetail)) {
                     inspectionTaskDeviceDetail.setNearBy_local(true);
                     inspectionTaskDeviceDetail.setSort_local(4);
                 } else {
                     inspectionTaskDeviceDetail.setNearBy_local(false);
-                    inspectionTaskDeviceDetail.setSort_local(3);
+                    inspectionTaskDeviceDetail.setSort_local(3 - lance);
                 }
             } else {
                 if (isNearBy(inspectionTaskDeviceDetail)) {
@@ -390,7 +386,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                     inspectionTaskDeviceDetail.setSort_local(2);
                 } else {
                     inspectionTaskDeviceDetail.setNearBy_local(false);
-                    inspectionTaskDeviceDetail.setSort_local(1);
+                    inspectionTaskDeviceDetail.setSort_local(1 - lance);
                 }
             }
             String sn = inspectionTaskDeviceDetail.getSn();

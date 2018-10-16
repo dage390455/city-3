@@ -133,6 +133,8 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
                 setState(holder);
                 holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.VISIBLE);
                 holder.itemAdapterInspectionTaskTvInspection.setText("巡检");
+                holder.itemAdapterInspectionTaskTvInspection.setTextColor(mContext.getResources().getColor(R.color.white));
+                holder.itemAdapterInspectionTaskTvInspection.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
                 break;
             case 1:
                 setState(holder, R.color.c_29c093, "巡检正常");
@@ -150,7 +152,7 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
 
     private void setSnType(InspectionTaskRcContentHolder holder, String sn, String deviceType) {
         String inspectionDeviceName = WidgetUtil.getInspectionDeviceName(deviceType);
-        holder.itemAdapterInspectionTaskTvSn.setText(inspectionDeviceName + " " + sn);
+        holder.itemAdapterInspectionTaskTvSn.setText(String.format("%s %s", inspectionDeviceName, sn));
     }
 
     private void setName(InspectionTaskRcContentHolder holder, String name) {
