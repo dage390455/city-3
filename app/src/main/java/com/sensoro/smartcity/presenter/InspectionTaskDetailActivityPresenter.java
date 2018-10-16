@@ -88,9 +88,18 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功
-        if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
-            getView().finishAc();
+        switch (code){
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+                getView().finishAc();
+                break;
+            case EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
+            case EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
+            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                // todo 刷新任务状态
+//                refreshTaskState();
+                break;
         }
+
     }
 
     public void doRlContent() {
@@ -137,6 +146,22 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+
+            }
+        });
+    }
+    private void refreshTaskState() {
+        RetrofitServiceHelper.INSTANCE.doChangeInspectionTaskState(mTaskInfo.getId(), null, 1).
+                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ChangeInspectionTaskStateRsp>(this) {
+            @Override
+            public void onCompleted(ChangeInspectionTaskStateRsp changeInspectionTaskStateRsp) {
+                ChangeInspectionTaskStateInfo data = changeInspectionTaskStateRsp.getData();
+                int status = data.getStatus();
+                freshTvState(status);
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
 
             }
         });
