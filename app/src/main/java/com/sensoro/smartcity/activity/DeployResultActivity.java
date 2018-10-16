@@ -183,6 +183,16 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         acDeployResultTvContinue.setText(text);
     }
 
+    @Override
+    public void setDeployResultBackHomeText(String text) {
+        acDeployResultTvBackHome.setText(text);
+    }
+
+    @Override
+    public void setDeployResultContinueVisible(boolean isVisible) {
+        acDeployResultTvContinue.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
 
     @Override
     public void toastShort(String msg) {

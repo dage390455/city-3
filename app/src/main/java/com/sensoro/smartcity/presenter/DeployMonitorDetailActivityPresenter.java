@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.amap.api.maps.model.LatLng;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
@@ -31,6 +32,7 @@ import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
+import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
@@ -41,6 +43,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -96,10 +100,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         if (deviceInfo != null) {
                             mDeviceInfo = deviceInfo;
                         }
-                        freshDevice();
+                        freshInspectionDevice();
                     } else {
                         getView().toastShort("未查找到旧设备信息");
-                        freshDevice();
+//                        freshDevice();
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -147,11 +151,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     getView().setDeployPhotoVisible(true);
                     deployMapModel.sn = mDeviceInfo.getSn();
                     getView().updateUploadTvText("更换设备");
-                    if (mDeviceDetail == null) {
-                        freshDevice();
-                    } else {
+//                    if (mDeviceDetail != null) {
+//                        freshInspectionDevice();
+//                    } else {
                         getOldDeviceInfo();
-                    }
+//                    }
                     break;
                 case TYPE_SCAN_INSPECTION:
                     //扫描巡检设备
@@ -200,6 +204,48 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
 
             }
+        }
+        deployMapModel.signal = mDeviceInfo.getSignal();
+        deployMapModel.updatedTime = mDeviceInfo.getUpdatedTime();
+        freshSignalInfo();
+    }
+    private void freshInspectionDevice() {
+        getView().setDeviceTitleName(deployMapModel.sn);
+        mNameAndAddress = mDeviceInfo.getName();
+        if (!TextUtils.isEmpty(mNameAndAddress)) {
+//                不为空设置地址
+            getView().setNameAddressText(mNameAndAddress);
+//                name = mContext.getResources().getString(R.string.tips_hint_name_address_set);
+        }
+        if (mDeviceInfo.getAlarms() != null) {
+            AlarmInfo alarmInfo = mDeviceInfo.getAlarms();
+            AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+            if (notification != null) {
+                //TODO 设置多个联系人
+                String contact = notification.getContact();
+                String content = notification.getContent();
+                if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
+//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
+                } else {
+                    deployContactModelList.clear();
+                    DeployContactModel deployContactModel = new DeployContactModel();
+                    deployContactModel.name = contact;
+                    deployContactModel.phone = content;
+                    deployContactModelList.add(deployContactModel);
+                    getView().updateContactData(deployContactModelList);
+                }
+
+            }
+        }
+        String[] tags = mDeviceInfo.getTags();
+        if(tags != null && tags.length > 0){
+            getView().updateTagsData(Arrays.asList(tags));
+        }
+
+        double[] lonlat = mDeviceInfo.getLonlat();
+        if (lonlat != null && lonlat[0] != 0 && lonlat[1] != 0) {
+            deployMapModel.latLng = new LatLng(lonlat[1],lonlat[0]);
+
         }
         deployMapModel.signal = mDeviceInfo.getSignal();
         deployMapModel.updatedTime = mDeviceInfo.getUpdatedTime();

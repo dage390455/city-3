@@ -36,7 +36,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:background="@drawable/shape_bg_corner_fa_shadow"
+            android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_6dp"
             android:gravity="center"
             android:padding="10dp"
             android:text="返回主页"
@@ -53,7 +53,7 @@
             android:gravity="center"
             android:padding="10dp"
             android:text="继续部署"
-            android:textColor="@color/c_252525"
+            android:textColor="@color/white"
             android:textSize="16sp" />
     </LinearLayout>
 

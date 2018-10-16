@@ -31,4 +31,8 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void setStateTextView(String msg);
 
     void setDeployResultContinueText(String text);
+
+    void setDeployResultBackHomeText(String text);
+
+    void setDeployResultContinueVisible(boolean isVisible);
 }

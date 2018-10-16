@@ -31,8 +31,15 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         errorInfo = mContext.getIntent().getStringExtra(EXTRA_SENSOR_RESULT_ERROR);
         sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN_RESULT);
         mAddress = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_SUCCESS_ADDRESS);
-        if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType) {
-            getView().setDeployResultContinueText("返回巡检");
+        if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType ) {
+            if (resultCode == -1) {
+                getView().setDeployResultContinueText("继续更换");
+                getView().setDeployResultBackHomeText("继续巡检");
+            }else{
+                getView().setDeployResultBackHomeText("继续巡检");
+                getView().setDeployResultContinueVisible(false);
+            }
+
         }
         init();
     }
@@ -162,8 +169,13 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     }
 
     public void gotoContinue() {
+        if(scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE && resultCode == -1){
+            getView().finishAc();
+            return;
+        }
+
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
+
         if (resultCode == 1 && deviceInfo != null) {
             eventData.data = deviceInfo;
         }
@@ -173,7 +185,13 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 
     public void backHome() {
         EventData eventData = new EventData();
-        eventData.code = EVENT_DATA_DEPLOY_RESULT_FINISH;
+        if(scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE && resultCode == -1){
+            //todo 部署失败，返回巡检
+            eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
+        }else{
+            eventData.code = EVENT_DATA_DEPLOY_RESULT_FINISH;
+        }
+
         if (resultCode == 1 && deviceInfo != null) {
             eventData.data = deviceInfo;
         }
