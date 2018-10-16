@@ -4,16 +4,14 @@ import java.util.List;
 
 public class DeviceTypeStyles {
     private String id;
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
     private String category;
+    private String unionType;
+    private String mergeType;
+    private String thresholdSupported;
+    private String intervalSupported;
+    private List<String> sensorTypes;
+    private boolean alarmReceive;
+    private boolean isOwn;
 
     @Override
     public String toString() {
@@ -26,7 +24,24 @@ public class DeviceTypeStyles {
                 ", sensorTypes=" + sensorTypes +
                 ", alarmReceive=" + alarmReceive +
                 ", category=" + category +
+                ", isOwn=" + isOwn +
                 '}';
+    }
+
+    public boolean isOwn() {
+        return isOwn;
+    }
+
+    public void setOwn(boolean own) {
+        isOwn = own;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
     }
 
     public String getId() {
@@ -84,12 +99,4 @@ public class DeviceTypeStyles {
     public void setAlarmReceive(boolean alarmReceive) {
         this.alarmReceive = alarmReceive;
     }
-
-    private String unionType;
-    private String mergeType;
-    private String thresholdSupported;
-    private String intervalSupported;
-    private List<String> sensorTypes;
-    private boolean alarmReceive;
-
 }
