@@ -109,6 +109,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             getView().toastShort(mContext.getResources().getString(R.string.tips_login_pwd_empty));
         } else {
             final String phoneId = PushManager.getInstance().getClientid(SensoroCityApplication.getInstance());
+            LogUtils.loge(this,"------phoneId = "+phoneId);
             getView().showProgressDialog();
             //
             RetrofitServiceHelper.INSTANCE.login(account, pwd, phoneId).subscribeOn

@@ -46,6 +46,7 @@ public interface Constants {
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
     String[] DEVICE_STATUS_ARRAY = {"预警", "正常", "失联", "未激活"};
+    String[] MONITOR_STATUS_ARRAY = {"预警中", "正常", "失联", "未激活"};
     String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};

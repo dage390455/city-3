@@ -16,7 +16,9 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ChangeInspectionTaskStateInfo;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
+import com.sensoro.smartcity.server.bean.InspectionTaskExecutionModel;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -88,7 +90,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功
-        switch (code){
+        switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
@@ -96,7 +98,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
             case EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE:
             case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 // todo 刷新任务状态
-//                refreshTaskState();
+                refreshTaskState();
                 break;
         }
 
@@ -150,14 +152,17 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
             }
         });
     }
+
     private void refreshTaskState() {
-        RetrofitServiceHelper.INSTANCE.doChangeInspectionTaskState(mTaskInfo.getId(), null, 1).
-                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ChangeInspectionTaskStateRsp>(this) {
+        RetrofitServiceHelper.INSTANCE.getInspectTaskExecution(mTaskInfo.getId()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExecutionRsp>(this) {
             @Override
-            public void onCompleted(ChangeInspectionTaskStateRsp changeInspectionTaskStateRsp) {
-                ChangeInspectionTaskStateInfo data = changeInspectionTaskStateRsp.getData();
-                int status = data.getStatus();
-                freshTvState(status);
+            public void onCompleted(InspectionTaskExecutionRsp inspectionTaskExecutionRsp) {
+                InspectionTaskExecutionModel data = inspectionTaskExecutionRsp.getData();
+                InspectionTaskExecutionModel.BaseInfoBean baseInfo = data.getBaseInfo();
+                if (baseInfo != null) {
+                    int status = baseInfo.getStatus();
+                    freshTvState(status);
+                }
             }
 
             @Override

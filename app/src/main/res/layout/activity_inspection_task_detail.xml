@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_fafafa"
+    android:background="@color/c_f4f4f4"
     >
     <include
         android:id="@+id/ac_inspection_detail_title"
@@ -211,13 +211,6 @@
                     android:layout_centerVertical="true"
                     />
             </RelativeLayout>
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="@color/c_dfdfdf"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                />
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
 

@@ -63,13 +63,14 @@
 
         <ImageView
             android:id="@+id/search_device_clear_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignRight="@id/search_device_et"
             android:layout_centerVertical="true"
-            android:padding="4dp"
-            android:src="@mipmap/ic_et_delete"
-            android:visibility="gone" />
+            android:padding="10dp"
+            android:src="@mipmap/ic_close"
+            android:scaleType="centerCrop"
+            android:visibility="visible" />
     </RelativeLayout>
 
     <View
@@ -80,6 +81,7 @@
     <RelativeLayout
         android:id="@+id/index_layout_list"
         android:layout_width="match_parent"
+        android:background="@color/c_f4f4f4"
         android:layout_height="match_parent">
 
         <include
@@ -89,7 +91,8 @@
         <com.scwang.smartrefresh.layout.SmartRefreshLayout
             android:id="@+id/ac_search_device_refreshLayout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
@@ -136,9 +139,10 @@
     <LinearLayout
         android:id="@+id/search_device_history_ll"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:layout_height="match_parent"
+        android:background="@color/c_f4f4f4"
         android:orientation="vertical"
+        android:paddingStart="20dp"
         android:visibility="visible">
 
         <RelativeLayout
@@ -150,10 +154,10 @@
                 android:id="@+id/search_device_clear_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/x45"
+
                 android:layout_marginTop="@dimen/y60"
                 android:text="@string/recent"
-                android:textColor="@color/c_626262"
+                android:textColor="@color/c_252525"
                 android:textSize="15sp" />
 
             <ImageView
