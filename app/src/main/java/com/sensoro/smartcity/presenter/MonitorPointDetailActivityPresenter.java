@@ -23,6 +23,7 @@ import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
@@ -31,6 +32,7 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -103,18 +105,31 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if (TextUtils.isEmpty(contact)) {
-            contact = "未设定";
+        if(TextUtils.isEmpty(contact) && TextUtils.isEmpty(phone)){
+            getView().setNoContact();
+            hasPhoneNumber = false;
+        }else{
+            if (TextUtils.isEmpty(contact)) {
+                contact = "未设定";
+            }
+            hasPhoneNumber = !TextUtils.isEmpty(phone);
+            getView().setContactPhoneIconVisible(hasPhoneNumber);
+            if (hasPhoneNumber) {
+                this.content = phone;
+            } else {
+                this.content = "未设定";
+            }
+            getView().setContractName(contact);
+            getView().setContractPhone(content);
         }
-        hasPhoneNumber = !TextUtils.isEmpty(phone);
-        getView().setContactPhoneIconVisible(hasPhoneNumber);
-        if (hasPhoneNumber) {
-            this.content = phone;
-        } else {
-            this.content = "未设定";
+        String typeName = "未知";
+        try {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
+            typeName = localDevicesMergeTypes.getMergeType().get(mDeviceInfo.getDeviceType()).getName();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        getView().setContractName(contact);
-        getView().setContractPhone(content);
+        getView().setDeviceTypeName(typeName);
         getView().setUpdateTime(DateUtil.getStrTimeToday(mDeviceInfo.getUpdatedTime(), 0));
         String tags[] = mDeviceInfo.getTags();
         if (tags != null && tags.length > 0) {
@@ -145,14 +160,16 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             double v = lonlat[1];
             double v1 = lonlat[0];
             if (v == 0 || v1 == 0) {
-                getView().setDeviceLocation("未设置位置信息");
+                getView().setDeviceLocation("未定位",false);
+                getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
                 return;
             }
             RegeocodeQuery query = new RegeocodeQuery(new LatLonPoint(v, v1), 200, GeocodeSearch.AMAP);
             geocoderSearch.getFromLocationAsyn(query);
         } catch (Exception e) {
             e.printStackTrace();
-            getView().setDeviceLocation("未设置位置信息");
+            getView().setDeviceLocation("未定位",false);
+
         }
 
     }
@@ -293,13 +310,13 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             address = "未知街道";
         }
         mDeviceInfo.setAddress(address);
-        getView().setDeviceLocation(address);
+        getView().setDeviceLocation(address,true);
     }
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
         LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
-        getView().setDeviceLocation("未知街道");
+        getView().setDeviceLocation("未知街道",true);
     }
 
     public void doMore() {

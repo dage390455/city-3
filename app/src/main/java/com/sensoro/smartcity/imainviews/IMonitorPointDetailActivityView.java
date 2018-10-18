@@ -18,7 +18,7 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void setContractPhone(String contractPhone);
 
-    void setDeviceLocation(String location);
+    void setDeviceLocation(String location,boolean isArrowsRight);
 
     void updateDeviceInfoAdapter(DeviceInfo deviceInfo);
 
@@ -34,4 +34,9 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void setContactPhoneIconVisible(boolean isVisible);
 
+    void setNoContact();
+
+    void setDeviceLocationTextColor(int color);
+
+    void setDeviceTypeName(String typeName);
 }
