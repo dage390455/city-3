@@ -2,17 +2,13 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.LinearInterpolator;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -182,11 +178,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     protected HomeFragmentPresenter createPresenter() {
         return new HomeFragmentPresenter();
-    }
-
-    @Override
-    protected int fragmentStatusBarColor() {
-        return R.color.white;
     }
 
     @Override
@@ -412,5 +403,16 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void onAlarmInfoClick(View v, int position) {
         mPresenter.clickAlarmInfo(position);
+    }
+
+
+    public boolean onBackPressed() {
+        if (mSelectDeviceTypePop.isShowing()) {
+            mSelectDeviceTypePop.dismiss();
+            return true;
+        }else{
+            return false;
+        }
+
     }
 }

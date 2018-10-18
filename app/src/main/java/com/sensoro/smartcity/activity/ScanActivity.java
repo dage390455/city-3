@@ -19,6 +19,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
 import com.sensoro.smartcity.presenter.ScanActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
@@ -76,8 +77,6 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         acScanQrView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
         acScanQrView.getCameraPreview().setAutoFocusFailureDelay(0);
 
-        immersionBar = ImmersionBar.with(mActivity);
-        immersionBar.transparentStatusBar().init();
     }
 
     private void initScanLineAnimation() {
@@ -101,6 +100,17 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     @Override
     protected ScanActivityPresenter createPresenter() {
         return new ScanActivityPresenter();
+    }
+
+    @Override
+    public boolean isActivityOverrideStatusBar() {
+        if(!AppUtils.getSystemModel().contains("Redmi")){
+            immersionBar = ImmersionBar.with(mActivity);
+            immersionBar
+                    .transparentStatusBar()
+                    .init();
+        }
+        return true;
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.PopupWindow;
@@ -178,6 +179,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         } else {
             acMainTvWarningCount.setVisibility(View.GONE);
         }
+    }
+
+    @Override
+    public boolean isHomeFragmentChecked() {
+        return acMainRbMain.isChecked();
     }
 
 

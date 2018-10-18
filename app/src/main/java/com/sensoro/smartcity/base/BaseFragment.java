@@ -13,6 +13,7 @@ import com.baidu.mobstat.StatService;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -47,14 +48,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
             mRootView = inflater.inflate(initRootViewId(), container, false);
         }
         unbinder = ButterKnife.bind(mPresenter.getView(), mRootView);
-        LogUtils.logd("onCreateView");
-//        if (fragmentStatusBarColor() != -1 && mRootFragment != null) {
-//            immersionBar = ImmersionBar.with(mRootFragment);
-//            immersionBar.fitsSystemWindows(true)
-//                    .statusBarColor(fragmentStatusBarColor())
-//                    .statusBarDarkFont(true)
-//                    .init();
-//        }
+
         return mRootView;
     }
 
@@ -130,6 +124,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
 
     protected abstract void initData(Context activity);
 
+
     @Override
     public void onDestroy() {
         super.onDestroy();
@@ -147,11 +142,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
 
     protected abstract P createPresenter();
 
-    /**
-     * 修改自己状态栏的颜色，必须翻一个颜色值
-     * @return
-     */
-    protected abstract int fragmentStatusBarColor();
 
     @Override
     public void onDestroyView() {
@@ -174,4 +164,6 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         SensoroToast.INSTANCE.cancelToast();
         super.onDestroyView();
     }
+
+
 }

@@ -16,6 +16,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -46,6 +47,7 @@ public class MenuDialogFragment extends DialogFragment {
     private AlphaAnimation showAlphaAnimation;
     private RotateAnimation dismissRotateAnimation;
     private AlphaAnimation dismissAlphaAnimation;
+    private ImmersionBar immersionBar;
 
     public interface OnDismissListener {
         void onMenuDialogFragmentDismiss(int resId);
@@ -73,6 +75,13 @@ public class MenuDialogFragment extends DialogFragment {
         checkPermission();
         initAnimation();
         return view;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        immersionBar = ImmersionBar.with(this);
+        immersionBar.transparentStatusBar().init();
     }
 
     private void initAnimation() {
@@ -156,6 +165,9 @@ public class MenuDialogFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if(immersionBar != null){
+            immersionBar.destroy();
+        }
         unbinder.unbind();
     }
 

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
-    <string name="search_tips">查询名称、设备号、标签</string>
+    <string name="search_tips">设备名称/设备号/标签</string>
     <string name="search_alarm_tips">设备名称</string>
     <string name="cancel">取消</string>
     <string name="recent">最近搜索</string>

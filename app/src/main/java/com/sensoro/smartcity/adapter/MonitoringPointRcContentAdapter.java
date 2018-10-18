@@ -3,9 +3,11 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -14,6 +16,8 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
+import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.DpUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
@@ -114,7 +118,18 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                                     holder.itemMonitoringPointContentTvUnit.setVisibility(View.GONE);
                                 } else {
                                     String unit = sensorTypeStyles.getUnit();
+                                    Log.e("hcs","单位:::"+unit);
                                     if (!TextUtils.isEmpty(unit)) {
+                                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.itemMonitoringPointContentTvUnit.getLayoutParams();
+                                        if ("°".equals(unit)) {
+                                            layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
+                                            layoutParams.bottomMargin = 0;
+                                            holder.itemMonitoringPointContentTvUnit.setLayoutParams(layoutParams);
+                                        }else{
+                                            layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT;
+                                            layoutParams.bottomMargin = DpUtils.dp2px(mContext,15);
+                                            holder.itemMonitoringPointContentTvUnit.setLayoutParams(layoutParams);
+                                        }
                                         holder.itemMonitoringPointContentTvUnit.setText(unit);
                                     }
                                     WidgetUtil.judgeIndexSensorType(holder.itemMonitoringPointContentTvContent, type,

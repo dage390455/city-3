@@ -271,6 +271,17 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
     @Override
+    public void onBackPressed() {
+        if(mSelectDeviceTypePop.isShowing()){
+            mSelectDeviceTypePop.dismiss();
+        }else{
+            super.onBackPressed();
+        }
+
+
+    }
+
+    @Override
     public void startAC(Intent intent) {
         startActivity(intent);
     }

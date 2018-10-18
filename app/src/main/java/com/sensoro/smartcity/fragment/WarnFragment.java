@@ -163,12 +163,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    protected int fragmentStatusBarColor() {
-        return R.color.white;
-    }
-
-
-    @Override
     public void startAC(Intent intent) {
         mRootFragment.getActivity().startActivity(intent);
     }
