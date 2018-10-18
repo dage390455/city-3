@@ -6,6 +6,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/c_f4f4f4"
         android:orientation="vertical">
 
         <include
@@ -16,7 +17,6 @@
             android:id="@+id/rl_alarm_log_date_edit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:background="@color/white"
             android:gravity="center_vertical"
             android:paddingBottom="5dp"
@@ -29,6 +29,7 @@
                 android:id="@+id/tv_alarm_log_date_edit"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
                 android:textSize="@dimen/x54" />
 
             <ImageView
@@ -39,6 +40,7 @@
                 android:layout_alignTop="@+id/tv_alarm_log_date_edit"
                 android:contentDescription="@null"
                 android:padding="8dp"
+                android:layout_centerVertical="true"
                 android:scaleType="centerInside"
                 android:src="@mipmap/ic_close" />
         </RelativeLayout>
@@ -46,6 +48,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
             android:background="@color/white">
 
             <include
@@ -55,8 +58,6 @@
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="12dp"
-
                 android:orientation="vertical">
 
                 <android.support.v7.widget.RecyclerView

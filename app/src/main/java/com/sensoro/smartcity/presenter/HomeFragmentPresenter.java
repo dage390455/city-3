@@ -37,6 +37,8 @@ import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
+import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.UpgradeInfo;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -757,5 +759,17 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         Collections.sort(mMergeTypes);
 //        mSelectDeviceTypePop.updateSelectDeviceTypeList(SensoroCityApplication.getInstance().mDeviceTypeList);
         getView().updateSelectDeviceTypePopAndShow(mMergeTypes);
+    }
+
+    public void checkUpgrade() {
+        UpgradeInfo upgradeInfo = Beta.getUpgradeInfo();
+        if (upgradeInfo == null) {
+            ThreadPoolManager.getInstance().execute(new Runnable() {
+                @Override
+                public void run() {
+                    Beta.checkUpgrade(false, true);
+                }
+            });
+        }
     }
 }

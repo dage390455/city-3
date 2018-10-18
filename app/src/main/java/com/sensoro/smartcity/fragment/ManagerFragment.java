@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -57,13 +58,13 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @BindView(R.id.fg_main_manage_ll_main_function)
     LinearLayout fgMainManageLlMainFunction;
     @BindView(R.id.line1)
-    View line1;
+    FrameLayout line1;
     @BindView(R.id.line2)
-    View line2;
+    FrameLayout line2;
     @BindView(R.id.line3)
-    View line3;
+    FrameLayout line3;
     @BindView(R.id.line4)
-    View line4;
+    FrameLayout line4;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;

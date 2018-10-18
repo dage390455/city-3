@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
-    <string name="search_tips">查询设备号、名称、标签</string>
+    <string name="search_tips">查询名称、设备号、标签</string>
     <string name="search_alarm_tips">设备名称</string>
     <string name="cancel">取消</string>
     <string name="recent">最近搜索</string>
@@ -114,7 +114,7 @@
     <string name="all_tag">历史记录</string>
     <string name="today_alarm">预警</string>
     <string name="alarm_type">预警类型</string>
-    <string name="remarks">备注</string>
+    <string name="remarks">备注说明</string>
     <string name="sun">日</string>
     <string name="mon">一</string>
     <string name="tue">二</string>

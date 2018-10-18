@@ -36,6 +36,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="24dp"
                 android:text="预警结果类型"
+                android:textColor="@color/c_a6a6a6"
                 android:textSize="@dimen/city_tiny_large_size" />
 
             <Spinner
@@ -65,6 +66,7 @@
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="12dp"
                 android:text="预警成因类型"
+                android:textColor="@color/c_a6a6a6"
                 android:textSize="@dimen/city_tiny_large_size" />
 
             <Spinner
@@ -86,6 +88,7 @@
                 android:layout_marginLeft="24dp"
                 android:layout_marginTop="12dp"
                 android:text="预警场所"
+                android:textColor="@color/c_a6a6a6"
                 android:textSize="@dimen/city_tiny_large_size" />
 
             <Spinner
@@ -113,6 +116,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/remarks"
+                    android:textColor="@color/c_a6a6a6"
                     android:textSize="@dimen/city_tiny_large_size" />
 
                 <EditText

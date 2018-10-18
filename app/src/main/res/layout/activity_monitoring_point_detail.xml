@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_fafafa"
@@ -15,7 +16,7 @@
 
         <include
             android:id="@+id/ac_monitoring_point_ic_title"
-            layout="@layout/item_include_imv_title" />
+            layout="@layout/item_include_text_title" />
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -27,9 +28,9 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -49,18 +50,37 @@
                     android:layout_gravity="center_vertical"
                     android:layout_marginStart="55dp"
                     android:contentDescription="@null"
+                    android:visibility="gone"
                     android:src="@drawable/monitoring_point" />
 
             </LinearLayout>
 
-            <TextView
-                android:id="@+id/ac_monitoring_point_tv_type_time"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="8dp"
-                android:textColor="@color/c_252525"
-                android:textSize="14sp" />
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/ac_monitoring_point_tv_type_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingTop="8dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ac_monitoring_point_tv_status"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingTop="8dp"
+                    android:textStyle="bold"
+                    android:textColor="@color/c_252525"
+                    android:textSize="14sp"/>
+            </LinearLayout>
 
             <TextView
                 android:layout_width="wrap_content"
@@ -75,8 +95,8 @@
                 android:id="@+id/ac_monitoring_point_rc_content"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp">
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp">
 
             </android.support.v7.widget.RecyclerView>
 
@@ -113,9 +133,11 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="12dp"
+                    android:layout_marginBottom="8dp"
                     android:text="未知"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@id/ac_monitoring_point_tv_alert_contact" />
 
@@ -145,21 +167,20 @@
                     android:id="@+id/ac_monitoring_point_imv_phone"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
                     android:contentDescription="@null"
                     android:src="@drawable/monitoring_phone"
                     app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_alert_contact_name"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_tv_alert_contact" />
+                    app:layout_constraintTop_toTopOf="@id/ac_monitoring_point_tv_alert_contact"
+                    tools:layout_editor_absoluteX="344dp" />
             </android.support.constraint.ConstraintLayout>
 
             <View
                 android:id="@+id/ac_monitoring_point_line"
                 android:layout_width="match_parent"
                 android:layout_height="1dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
+                android:layout_marginEnd="20dp"
                 android:background="@color/c_dfdfdf" />
 
             <android.support.constraint.ConstraintLayout
@@ -195,10 +216,10 @@
                     android:id="@+id/ac_monitoring_point_tv_location"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginEnd="8dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="12dp"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="16dp"
                     android:lineSpacingMultiplier="1.5"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp"
@@ -216,10 +237,10 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
             android:layout_marginTop="12dp"
-            android:visibility="gone"
-            android:background="@color/white">
+            android:layout_marginBottom="16dp"
+            android:background="@color/white"
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/ac_monitoring_point_tv_operation"
@@ -239,8 +260,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="16dp"
-                android:drawablePadding="10dp"
                 android:drawableTop="@drawable/alarm_sound"
+                android:drawablePadding="10dp"
                 android:text="发声报警"
                 android:textColor="@color/c_252525"
                 app:layout_constraintStart_toStartOf="parent"
@@ -253,12 +274,187 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="25dp"
-                android:drawablePadding="10dp"
                 android:drawableTop="@drawable/hardware_upgrade"
+                android:drawablePadding="10dp"
                 android:text="固件升级"
                 android:textColor="@color/c_252525"
                 app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_alarm_sound"
                 app:layout_constraintStart_toEndOf="@id/ac_monitoring_point_tv_alarm_sound" />
         </android.support.constraint.ConstraintLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:background="@color/white"
+            android:orientation="vertical">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="12dp"
+                android:text="基本信息"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="12sp"
+                app:layout_constraintStart_toStartOf="parent"
+
+                />
+
+            <RelativeLayout
+                android:id="@+id/monitor_detail_layout_sn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:background="@drawable/bg_item_selector"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:text="@string/sensor_detail_sn"
+                    android:textColor="@color/c_626262"
+                    android:textSize="@dimen/x50" />
+
+
+                <TextView
+                    android:id="@+id/monitor_detail_tv_sn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginRight="15dp"
+                    android:singleLine="true"
+                    android:textColor="#9b9b9b"
+                    android:textSize="@dimen/x50" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:layout_marginLeft="12dp"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_item_selector"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:id="@+id/monitor_detail_tv_tag"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/sensor_detail_tag"
+                    android:textColor="@color/c_626262"
+                    android:textSize="@dimen/x50" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toEndOf="@id/monitor_detail_tv_tag">
+
+                    <com.sensoro.smartcity.widget.TouchRecyclerview
+                        android:id="@+id/monitor_detail_rc_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true">
+
+                    </com.sensoro.smartcity.widget.TouchRecyclerview>
+
+                </RelativeLayout>
+
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:layout_marginLeft="12dp"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_item_selector"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/sensor_detail_battery"
+                    android:textColor="@color/c_626262"
+                    android:textSize="@dimen/x50" />
+
+
+                <TextView
+                    android:id="@+id/monitor_detail_tv_battery"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:ellipsize="end"
+                    android:maxEms="8"
+                    android:singleLine="true"
+                    android:textColor="#9b9b9b"
+                    android:textSize="@dimen/x50" />
+
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/y1"
+                android:layout_marginLeft="12dp"
+                android:background="@color/c_e7e7e7"
+                android:contentDescription="@null" />
+
+            <RelativeLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_item_selector"
+                android:paddingTop="10dp"
+                android:paddingBottom="10dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_marginStart="20dp"
+                    android:text="@string/sensor_detail_interval"
+                    android:textColor="@color/c_626262"
+                    android:textSize="@dimen/x50" />
+
+
+                <TextView
+                    android:id="@+id/monitor_detail_tv_interval"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_marginLeft="10dp"
+                    android:layout_marginRight="15dp"
+                    android:ellipsize="end"
+                    android:maxEms="8"
+                    android:singleLine="true"
+                    android:textColor="#9b9b9b"
+                    android:textSize="@dimen/x50" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
     </LinearLayout>
 </android.support.v4.widget.NestedScrollView>

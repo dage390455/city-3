@@ -146,6 +146,9 @@
         </receiver>
 
         <activity
+            android:name="com.tencent.bugly.beta.ui.BetaActivity"
+            android:theme="@android:style/Theme.Translucent" />
+        <activity
             android:name="com.igexin.sdk.PushActivity"
             android:excludeFromRecents="true"
             android:exported="false"

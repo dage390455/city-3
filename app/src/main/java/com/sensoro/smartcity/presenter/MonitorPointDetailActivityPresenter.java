@@ -24,12 +24,14 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
+import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -38,6 +40,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
@@ -54,42 +57,38 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     private final List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
     private int textColor;
     private String content;
+    private boolean hasPhoneNumber;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
-        freshDestPosition();
+        initCurrentDeviceInfo();
         requestDeviceRecentLog();
     }
 
     private void freshTopData() {
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
-//                getView().setStatusImageView(R.drawable.shape_status_alarm);
-                textColor = mContext.getResources().getColor(R.color.sensoro_alarm);
-                break;
-            case SENSOR_STATUS_INACTIVE:
-//                getView().setStatusImageView(R.drawable.shape_status_inactive);
-                textColor = mContext.getResources().getColor(R.color.sensoro_inactive);
-                break;
-            case SENSOR_STATUS_LOST:
-//                getView().setStatusImageView(R.drawable.shape_status_lost);
-                textColor = mContext.getResources().getColor(R.color.sensoro_lost);
+                textColor = mContext.getResources().getColor(R.color.c_f34a4a);
                 break;
             case SENSOR_STATUS_NORMAL:
-//                getView().setStatusImageView(R.drawable.shape_status_normal);
-                textColor = mContext.getResources().getColor(R.color.sensoro_normal);
+                textColor = mContext.getResources().getColor(R.color.c_29c093);
+                break;
+            case SENSOR_STATUS_LOST:
+                textColor = mContext.getResources().getColor(R.color.c_5d5d5d);
+                break;
+            case SENSOR_STATUS_INACTIVE:
+                textColor = mContext.getResources().getColor(R.color.c_b6b6b6);
                 break;
             default:
                 break;
         }
-//        getView().setAlarmStateColor(textColor);
         String name = mDeviceInfo.getName();
         String sn = mDeviceInfo.getSn();
+        //
+        getView().setStatusInfo(MONITOR_STATUS_ARRAY[mDeviceInfo.getStatus()], textColor);
         //TODO 显示sn还是姓名等
-//        getView().setTitleNameTextView(TextUtils.isEmpty(name) ? mContext.getResources().getString(R
-//                .string.unname) : name);
         getView().setTitleNameTextView(TextUtils.isEmpty(name) ? sn : name);
         //
         String contact = null;
@@ -104,21 +103,41 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         } catch (Exception e) {
             e.printStackTrace();
         }
-//        String address = mDeviceInfo.getAddress();
         if (TextUtils.isEmpty(contact)) {
             contact = "未设定";
         }
-        if (TextUtils.isEmpty(phone)) {
-            this.content = "未设定";
-        } else {
+        hasPhoneNumber = !TextUtils.isEmpty(phone);
+        getView().setContactPhoneIconVisible(hasPhoneNumber);
+        if (hasPhoneNumber) {
             this.content = phone;
+        } else {
+            this.content = "未设定";
         }
         getView().setContractName(contact);
         getView().setContractPhone(content);
-        getView().setUpdateTime(DateUtil.getStrTimeToday(mDeviceInfo.getUpdatedTime(),0));
+        getView().setUpdateTime(DateUtil.getStrTimeToday(mDeviceInfo.getUpdatedTime(), 0));
+        String tags[] = mDeviceInfo.getTags();
+        if (tags != null && tags.length > 0) {
+            List<String> list = Arrays.asList(tags);
+            getView().updateTags(list);
+
+        }
+        SensorStruct batteryStruct = mDeviceInfo.getSensoroDetails().get("battery");
+        if (batteryStruct != null) {
+            String battery = batteryStruct.getValue().toString();
+            if (battery.equals("-1.0") || battery.equals("-1")) {
+                getView().setBatteryInfo("电源供电");
+            } else {
+                getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
+            }
+        }
+        int interval = mDeviceInfo.getInterval();
+        getView().setInterval(DateUtil.secToTimeBefore(interval));
     }
 
-    private void freshDestPosition() {
+    private void initCurrentDeviceInfo() {
+        getView().setSNText(mDeviceInfo.getSn());
+
         GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         double[] lonlat = mDeviceInfo.getLonlat();
@@ -305,11 +324,14 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     public void doContact() {
-        if (TextUtils.isEmpty(content) || "未设定".equals(content)) {
-            getView().toastShort("未设置电话联系人");
-            return;
+        if (hasPhoneNumber) {
+            if (TextUtils.isEmpty(content) || "未设定".equals(content)) {
+                getView().toastShort("未设置电话联系人");
+                return;
+            }
+            AppUtils.diallPhone(content, mContext);
         }
-        AppUtils.diallPhone(content, mContext);
+
     }
 
     public void doMonitorHistory() {

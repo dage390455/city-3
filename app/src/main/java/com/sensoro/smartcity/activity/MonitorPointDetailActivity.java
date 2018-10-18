@@ -13,25 +13,28 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
+import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.util.DpUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.TouchRecyclerview;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetailActivityView,
         MonitorPointDetailActivityPresenter> implements IMonitorPointDetailActivityView, View.OnClickListener {
-    @BindView(R.id.include_imv_title_imv_arrows_left)
+    @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
-    @BindView(R.id.include_imv_title_tv_title)
+    @BindView(R.id.include_text_title_tv_title)
     TextView includeImvTitleTvTitle;
-    @BindView(R.id.include_imv_title_imv_subtitle)
-    ImageView includeImvTitleImvSubtitle;
+    @BindView(R.id.include_text_title_tv_subtitle)
+    TextView includeTextTitleTvSubtitle;
     @BindView(R.id.ac_monitoring_point_tv_name)
     TextView acMonitoringPointTvName;
     @BindView(R.id.ac_monitoring_point_imv_detail)
@@ -64,7 +67,20 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     ConstraintLayout acMonitoringPointClAlertContact;
     @BindView(R.id.ac_monitoring_point_cl_location_navigation)
     ConstraintLayout acMonitoringPointClLocationNavigation;
+    @BindView(R.id.monitor_detail_tv_sn)
+    TextView monitorDetailTvSn;
+    @BindView(R.id.monitor_detail_rc_tag)
+    TouchRecyclerview monitorDetailRcTag;
+    @BindView(R.id.monitor_detail_tv_battery)
+    TextView monitorDetailTvBattery;
+    @BindView(R.id.monitor_detail_tv_interval)
+    TextView monitorDetailTvInterval;
+    @BindView(R.id.ac_monitoring_point_tv_status)
+    TextView acMonitoringPointTvStatus;
+    @BindView(R.id.ac_monitoring_point_view)
+    View acMonitoringPointView;
     private MonitoringPointRcContentAdapter mContentAdapter;
+    private TagAdapter mTagAdapter;
     private ProgressUtils mProgressUtils;
 
     @Override
@@ -89,9 +105,15 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeImvTitleTvTitle.setText("监控点详情");
-        includeImvTitleImvSubtitle.setImageResource(R.mipmap.ic_detail);
-        includeImvTitleImvSubtitle.setPadding(0, DpUtils.dp2px(mActivity, 20), 0, DpUtils.dp2px(mActivity, 20));
+        includeImvTitleTvTitle.setText("检测点详情");
+        includeTextTitleTvSubtitle.setText("预警日志");
+        //
+        mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
+        LinearLayoutManager tagManager = new LinearLayoutManager(mActivity);
+        tagManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        monitorDetailRcTag.setLayoutManager(tagManager);
+        monitorDetailRcTag.setAdapter(mTagAdapter);
+        //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity) {
             @Override
@@ -103,8 +125,8 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         acMonitoringPointRcContent.setLayoutManager(manager);
         acMonitoringPointRcContent.addItemDecoration(dividerItemDecoration);
         acMonitoringPointRcContent.setAdapter(mContentAdapter);
+        includeTextTitleTvSubtitle.setOnClickListener(this);
         acMonitoringPointImvLocation.setOnClickListener(this);
-        includeImvTitleImvSubtitle.setOnClickListener(this);
         acMonitoringPointClAlertContact.setOnClickListener(this);
         acMonitoringPointClLocationNavigation.setOnClickListener(this);
         acMonitoringPointImvDetail.setOnClickListener(this);
@@ -201,6 +223,11 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     @Override
+    public void setSNText(String sn) {
+        monitorDetailTvSn.setText(sn);
+    }
+
+    @Override
     protected void onDestroy() {
 //        if (mAlarmPopupView != null) {
 //            mAlarmPopupView.onDestroyPop();
@@ -215,25 +242,48 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.include_imv_title_imv_subtitle:
-                mPresenter.doMore();
+            case R.id.include_text_title_tv_subtitle:
+                mPresenter.doMonitorHistory();
                 break;
             case R.id.ac_monitoring_point_cl_alert_contact:
-//               toastShort("预警联系人");
                 mPresenter.doContact();
                 break;
             case R.id.ac_monitoring_point_imv_location:
             case R.id.ac_monitoring_point_cl_location_navigation:
-//                toastShort("位置导航");
                 mPresenter.doNavigation();
                 break;
             case R.id.ac_monitoring_point_imv_detail:
-                mPresenter.doMonitorHistory();
+                //已删除
                 break;
-            case R.id.include_imv_title_imv_arrows_left:
+            case R.id.include_text_title_imv_arrows_left:
                 finishAc();
                 break;
         }
     }
 
+    @Override
+    public void updateTags(List<String> list) {
+        mTagAdapter.updateTags(list);
+    }
+
+    @Override
+    public void setBatteryInfo(String battery) {
+        monitorDetailTvBattery.setText(battery);
+    }
+
+    @Override
+    public void setInterval(String interval) {
+        monitorDetailTvInterval.setText(interval);
+    }
+
+    @Override
+    public void setStatusInfo(String statusInfo, int textColor) {
+        acMonitoringPointTvStatus.setText(statusInfo);
+        acMonitoringPointTvStatus.setTextColor(textColor);
+    }
+
+    @Override
+    public void setContactPhoneIconVisible(boolean isVisible) {
+        acMonitoringPointImvPhone.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
 }

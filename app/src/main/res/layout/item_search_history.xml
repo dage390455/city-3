@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/shape_bg_solid_ff_stroke_df_full_corner"
+    android:background="@drawable/shape_bg_solid_e7_full_corner"
     android:gravity="left|center_vertical">
 
     <TextView

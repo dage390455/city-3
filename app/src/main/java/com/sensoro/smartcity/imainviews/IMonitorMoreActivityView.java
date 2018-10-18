@@ -28,11 +28,11 @@ public interface IMonitorMoreActivityView extends IToast, IProgressDialog {
 
     void setBatteryInfo(String battery);
 
+    void updateTags(List<String> list);
+
     void setPhoneText(String phone);
 
     void setReportText(String report);
-
-    void updateTags(List<String> list);
 }
 
 

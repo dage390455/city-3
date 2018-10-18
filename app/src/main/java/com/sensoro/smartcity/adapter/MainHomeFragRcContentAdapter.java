@@ -93,6 +93,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 
     @Override
     public void onBindViewHolder(final MyViewHolder holder, final int position) {
+        setBottomVisible(holder, position);
         DeviceInfo deviceInfo = mList.get(position);
         //
         String deviceInfoName = deviceInfo.getName();
@@ -107,6 +108,14 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         setContentStatus(holder, position, status, deviceType);
 
         setListener(holder, position);
+    }
+
+    private void setBottomVisible(MyViewHolder holder, int position) {
+        if (getItemCount() - 1 == position) {
+            holder.lineBottom.setVisibility(View.INVISIBLE);
+        } else {
+            holder.lineBottom.setVisibility(View.VISIBLE);
+        }
     }
 
     private void setListener(MyViewHolder holder, final int position) {
@@ -196,6 +205,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position);
         } else {
+            setBottomVisible(holder, position);
             DeviceInfo deviceInfo = mList.get(position);
             HashMap map = (HashMap) payloads.get(0);
             LogUtils.loge(this, "----------------->>>>" + map.toString());
@@ -233,6 +243,8 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         TextView mainRcContentTvLocation;
         @BindView(R.id.main_rc_content_tv_time)
         TextView mainRcContentTvTime;
+        @BindView(R.id.line_bottom)
+        View lineBottom;
 
         MyViewHolder(View itemView) {
             super(itemView);

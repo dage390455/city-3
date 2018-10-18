@@ -6,15 +6,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/c_fafafa"
+        android:background="@color/c_f4f4f4"
         android:orientation="vertical">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
-            android:paddingBottom="8dp"
             android:paddingTop="8dp"
+            android:paddingBottom="8dp"
             android:text="管理"
             android:textColor="@color/c_030303"
             android:textSize="18sp" />
@@ -39,9 +39,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:paddingEnd="25dp"
                 android:background="@color/white"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:paddingEnd="25dp">
 
                 <ImageView
                     android:id="@+id/fg_main_manage_imv_merchant_icon"
@@ -56,9 +56,9 @@
                     android:id="@+id/fg_main_manage_tv_merchant_title"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:text="商户切换"
                     android:textColor="@color/c_252525"
@@ -77,19 +77,25 @@
                     android:id="@+id/iv_merchant_arrow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
                     android:layout_gravity="center_vertical"
+                    android:layout_marginStart="15dp"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
 
-            <View
+            <FrameLayout
                 android:id="@+id/line1"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:background="@color/c_dfdfdf" />
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+            </FrameLayout>
+
 
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_deploy_device"
@@ -109,9 +115,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:text="设备部署"
                     android:textColor="@color/c_252525"
@@ -121,19 +127,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="25dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
 
-            <View
+            <FrameLayout
                 android:id="@+id/line2"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:background="@color/c_dfdfdf" />
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_contract_management"
@@ -153,9 +165,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:text="合同管理"
                     android:textColor="@color/c_252525"
@@ -165,19 +177,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="25dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
 
-            <View
+            <FrameLayout
                 android:id="@+id/line3"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:background="@color/c_dfdfdf" />
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_polling_mission"
@@ -197,9 +215,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:text="巡检任务"
                     android:textColor="@color/c_252525"
@@ -209,19 +227,26 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="25dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
 
-            <View
+            <FrameLayout
                 android:id="@+id/line4"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:background="@color/c_dfdfdf" />
+                android:layout_height="wrap_content"
+                android:visibility="gone"
+                android:background="@color/white">
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+            </FrameLayout>
 
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_maintenance_mission"
@@ -242,9 +267,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:text="维保任务"
                     android:textColor="@color/c_252525"
@@ -254,8 +279,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="25dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
@@ -294,9 +319,9 @@
                     <TextView
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="16dp"
+                        android:layout_marginBottom="16dp"
                         android:layout_weight="1"
                         android:text="扫码登录"
                         android:textColor="@color/c_252525"
@@ -306,8 +331,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:layout_marginEnd="25dp"
                         android:layout_marginStart="15dp"
+                        android:layout_marginEnd="25dp"
                         android:contentDescription="@null"
                         android:src="@drawable/arrows_right" />
                 </LinearLayout>
@@ -342,9 +367,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:text="关于我们"
                     android:textColor="@color/c_252525"
@@ -354,19 +379,25 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="25dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
 
-            <View
+            <FrameLayout
+                android:id="@+id/line5"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginStart="20dp"
-                android:background="@color/c_dfdfdf" />
+                android:layout_height="wrap_content"
+                android:background="@color/white">
 
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+            </FrameLayout>
             <LinearLayout
                 android:id="@+id/fg_main_manage_ll_version_info"
                 android:layout_width="match_parent"
@@ -385,9 +416,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:text="版本信息"
                     android:textColor="@color/c_252525"
@@ -405,8 +436,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="25dp"
                     android:layout_marginStart="15dp"
+                    android:layout_marginEnd="25dp"
                     android:contentDescription="@null"
                     android:src="@drawable/arrows_right" />
             </LinearLayout>
@@ -430,9 +461,9 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
                     android:layout_marginStart="12dp"
                     android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:layout_weight="1"
                     android:text="退出账户"
                     android:textColor="@color/c_f34a4a"

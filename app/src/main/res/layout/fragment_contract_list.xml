@@ -20,9 +20,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                android:layout_marginLeft="@dimen/x10"
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
-                android:padding="18dp"
+                android:padding="15dp"
                 android:src="@mipmap/ic_back" />
 
             <TextView
@@ -45,7 +46,7 @@
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
                 android:padding="8dp"
-                android:src="@mipmap/ic_contract_index_add" />
+                android:src="@mipmap/main_add" />
         </RelativeLayout>
 
 
@@ -72,7 +73,7 @@
                 android:padding="@dimen/px20dp"
                 android:text="全部合同"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <RadioButton
                 android:id="@+id/rb_contract_business"
@@ -84,7 +85,7 @@
                 android:padding="@dimen/px20dp"
                 android:text="企业合同"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
 
             <RadioButton
                 android:id="@+id/rb_contract_person"
@@ -96,7 +97,7 @@
                 android:padding="@dimen/px20dp"
                 android:text="个人合同"
                 android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="16sp" />
+                android:textSize="14sp" />
         </RadioGroup>
 
         <RelativeLayout

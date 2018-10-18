@@ -20,7 +20,6 @@ import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
-import com.sensoro.smartcity.server.bean.DeviceAlarmCount;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
@@ -28,6 +27,7 @@ import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.NetWorkUtils;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceAlarmCount;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
@@ -70,11 +70,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
+        try {
+            Beta.init(mContext.getApplicationContext(), BuildConfig.DEBUG);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         initViewPager();
     }
 
     private void initViewPager() {
-        onCreate();
         //
         HomeFragment homeFragment = new HomeFragment();
         warnFragment = new WarnFragment();
@@ -87,12 +92,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);
         //
-        try {
-            Beta.init(mContext.getApplicationContext(), BuildConfig.DEBUG);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-
         final EventLoginData eventLoginData = (EventLoginData) mContext.getIntent().getSerializableExtra(EXTRA_EVENT_LOGIN_DATA);
         //
         if (null != eventLoginData) {
@@ -115,11 +114,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         try {
             String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
             LogUtils.loge("main ---->> " + log);
-        } catch (Exception e) {
+        } catch (NullPointerException e) {
             e.printStackTrace();
             openLogin();
         }
-
     }
 
     /**

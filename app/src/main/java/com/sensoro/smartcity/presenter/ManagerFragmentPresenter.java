@@ -108,8 +108,8 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             }
 //                merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
 //                getView().setMenuSelected(0);
-            getView().setAppUpdateVisible(hasNewVersion());
         }
+        getView().setAppUpdateVisible(hasNewVersion());
 
     }
 
