@@ -23,6 +23,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -160,6 +161,12 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     protected WarnFragmentPresenter createPresenter() {
         return new WarnFragmentPresenter();
     }
+
+    @Override
+    protected int fragmentStatusBarColor() {
+        return R.color.white;
+    }
+
 
     @Override
     public void startAC(Intent intent) {

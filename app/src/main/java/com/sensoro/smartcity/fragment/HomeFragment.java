@@ -2,6 +2,8 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -183,6 +185,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     @Override
+    protected int fragmentStatusBarColor() {
+        return R.color.white;
+    }
+
+    @Override
     public void onFragmentStart() {
 
     }
@@ -320,7 +327,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_home_imb_add:
-                addImbRotate();
+                showDialog();
                 break;
             case R.id.fg_main_home_imb_search:
                 mPresenter.doSearch();
@@ -332,39 +339,14 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
 
-    private void addImbRotate() {
-        RotateAnimation rotateAnimation = new RotateAnimation(0, 45, Animation.RELATIVE_TO_SELF, 0.5f,
-                Animation.RELATIVE_TO_SELF, 0.5f);
-        rotateAnimation.setDuration(200);
-        rotateAnimation.setRepeatCount(0);
-        rotateAnimation.setFillAfter(true);
-        rotateAnimation.setInterpolator(new LinearInterpolator());
-        rotateAnimation.setAnimationListener(new Animation.AnimationListener() {
-            @Override
-            public void onAnimationStart(Animation animation) {
 
-            }
-
-            @Override
-            public void onAnimationEnd(Animation animation) {
-                showDialog();
-            }
-
-            @Override
-            public void onAnimationRepeat(Animation animation) {
-
-            }
-        });
-        fgMainHomeImbAdd.startAnimation(rotateAnimation);
-    }
 
     private void showDialog() {
-        fgMainHomeImbAdd.clearAnimation();
         MenuDialogFragment menuDialogFragment = new MenuDialogFragment();
         menuDialogFragment.setOnDismissListener(this);
         menuDialogFragment.show(mRootFragment.getActivity().getSupportFragmentManager(), "mainMenuDialog");
         setImvAddVisible(false);
-        setImvSearchVisible(false);
+//        setImvSearchVisible(false);
     }
 
     @Override
@@ -418,7 +400,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 break;
         }
         setImvAddVisible(true);
-        setImvSearchVisible(true);
+//        setImvSearchVisible(true);
     }
 
     @Override

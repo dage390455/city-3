@@ -8,6 +8,7 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
+import android.os.Build;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -15,6 +16,9 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.SensoroCityApplication;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -191,5 +195,49 @@ public class AppUtils {
         s = Math.round(s * 10000) / 10000;
 
         return s;
+    }
+
+    /**
+     * @return 手机型号
+     */
+    public static String getSystemModel() {
+        return Build.MODEL;
+    }
+
+    /**
+     * @return 手机厂商
+     */
+    public static String getSystemBrand() {
+        return Build.BRAND;
+    }
+
+    /**
+     * 系统版本
+     *
+     * @return
+     */
+    public static String getSystemVersion() {
+        return Build.VERSION.RELEASE;
+    }
+
+    public static String getSystemProperty(String propName) {
+        String line;
+        BufferedReader input = null;
+        try {
+            Process p = Runtime.getRuntime().exec("getprop " + propName);
+            input = new BufferedReader(new InputStreamReader(p.getInputStream()), 1024);
+            line = input.readLine();
+            input.close();
+        } catch (IOException ex) {
+            return null;
+        } finally {
+            if (input != null) {
+                try {
+                    input.close();
+                } catch (IOException e) {
+                }
+            }
+        }
+        return line;
     }
 }

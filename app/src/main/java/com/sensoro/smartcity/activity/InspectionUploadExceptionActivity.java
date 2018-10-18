@@ -47,8 +47,6 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
-    @BindView(R.id.include_text_title_cl_root)
-    ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.ac_inspection_upload_exception_rc_tag)
     RecyclerView acInspectionUploadExceptionRcTag;
     @BindView(R.id.ac_inspection_upload_exception_et_remark)

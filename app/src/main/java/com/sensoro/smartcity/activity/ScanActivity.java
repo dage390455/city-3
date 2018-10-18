@@ -14,6 +14,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
@@ -51,6 +52,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     ImageView acScanImvScanLine;
     private boolean isFlashOn;
     private ProgressUtils mProgressUtils;
+    private ImmersionBar immersionBar;
 
 
     @Override
@@ -73,6 +75,9 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         acScanQrView.setDelegate(this);
         acScanQrView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
         acScanQrView.getCameraPreview().setAutoFocusFailureDelay(0);
+
+        immersionBar = ImmersionBar.with(mActivity);
+        immersionBar.transparentStatusBar().init();
     }
 
     private void initScanLineAnimation() {
@@ -105,6 +110,11 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     @Override
+    public boolean isChangeStatusBar() {
+        return false;
+    }
+
+    @Override
     protected void onStop() {
         super.onStop();
         stopScan();
@@ -114,6 +124,10 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
         acScanQrView.onDestroy();
+
+        if(immersionBar != null){
+            immersionBar.destroy();
+        }
         super.onDestroy();
     }
 

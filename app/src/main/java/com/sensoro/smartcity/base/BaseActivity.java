@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -15,16 +16,25 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 
 import com.baidu.mobstat.StatService;
+import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+
+import static com.loopj.android.http.AsyncHttpClient.log;
 
 /**
  * @author JL-DDONG
@@ -42,6 +52,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      * 主AC
      */
     protected BaseActivity mActivity;
+    private ImmersionBar immersionBar;
 
 
     @Override
@@ -64,9 +75,26 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
 //        CustomDensityUtils.SetCustomDensity(this, SensoroCityApplication.getInstance());
         //控制顶部状态栏显示
-//        StatusBarCompat.setStatusBarColor(this);
+//        StatusBarCompat.translucentStatusBar(thi®s);
+//        StatusBarCompat.setStatusBarIconDark(this,true);
+        boolean darkmode = true;
         onCreateInit(savedInstanceState);
+        // todo 先不适配红米 红米手机有问题
+        if(!AppUtils.getSystemModel().contains("Redmi")){
+            immersionBar = ImmersionBar.with(this);
+            immersionBar.fitsSystemWindows(true)
+                    .statusBarColor(R.color.white)
+                    .statusBarDarkFont(true)
+                    .navigationBarAlpha(0.4f).fullScreen(true).init();
+        }
+
+
         StatService.setDebugOn(true);
+    }
+
+
+    public boolean isChangeStatusBar() {
+        return true;
     }
 
     @Override
@@ -86,6 +114,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         mPresenter.onDestroy();
         mPresenter.detachView();
         SensoroToast.INSTANCE.cancelToast();
+        if (immersionBar != null) {
+            immersionBar.destroy();
+        }
         super.onDestroy();
     }
 

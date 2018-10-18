@@ -4,11 +4,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.baidu.mobstat.StatService;
+import com.gyf.barlibrary.ImmersionBar;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
@@ -25,6 +28,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     protected View mRootView;
     protected Unbinder unbinder;
     protected BaseFragment mRootFragment;
+    private ImmersionBar immersionBar;
 
     @Nullable
     @Override
@@ -44,6 +48,13 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         }
         unbinder = ButterKnife.bind(mPresenter.getView(), mRootView);
         LogUtils.logd("onCreateView");
+//        if (fragmentStatusBarColor() != -1 && mRootFragment != null) {
+//            immersionBar = ImmersionBar.with(mRootFragment);
+//            immersionBar.fitsSystemWindows(true)
+//                    .statusBarColor(fragmentStatusBarColor())
+//                    .statusBarDarkFont(true)
+//                    .init();
+//        }
         return mRootView;
     }
 
@@ -58,6 +69,7 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         // 页面埋点
         StatService.onPageStart(getActivity(), this.getClass().getSimpleName());
     }
+
 
     /**
      * fragment onStart
@@ -128,11 +140,18 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         super.onActivityCreated(savedInstanceState);
         LogUtils.logd("onActivityCreated");
         initData(mRootFragment.getActivity());
+
     }
 
     protected abstract int initRootViewId();
 
     protected abstract P createPresenter();
+
+    /**
+     * 修改自己状态栏的颜色，必须翻一个颜色值
+     * @return
+     */
+    protected abstract int fragmentStatusBarColor();
 
     @Override
     public void onDestroyView() {
@@ -147,6 +166,10 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         }
         if (mRootFragment != null) {
             mRootFragment = null;
+        }
+
+        if(immersionBar != null){
+            immersionBar.destroy();
         }
         SensoroToast.INSTANCE.cancelToast();
         super.onDestroyView();

@@ -12,22 +12,23 @@
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="11dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="24dp"
         android:background="@color/transparent"
         android:contentDescription="@null"
         android:padding="8dp"
         android:src="@drawable/main_menu_close" />
 
     <LinearLayout
+        android:id="@+id/dialog_main_home_menu_ll_quick_root"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/dialog_main_home_menu_imv_close"
         android:layout_alignParentEnd="true"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="25dp"
+        android:layout_marginEnd="32dp"
         android:layout_marginBottom="16dp"
-        android:background="@color/white"
+        android:background="@drawable/shape_bg_corner_2dp_ff_shadow"
         android:gravity="center"
         android:orientation="vertical">
 
