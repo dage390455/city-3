@@ -79,6 +79,11 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     TextView acMonitoringPointTvStatus;
     @BindView(R.id.ac_monitoring_point_view)
     View acMonitoringPointView;
+    @BindView(R.id.ac_monitoring_point_imv_phone_view)
+    View acMonitoringPointImvPhoneView;
+    @BindView(R.id.ac_monitoring_point_tv_device_type)
+    TextView acMonitoringPointTvDeviceType;
+
     private MonitoringPointRcContentAdapter mContentAdapter;
     private TagAdapter mTagAdapter;
     private ProgressUtils mProgressUtils;
@@ -105,7 +110,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeImvTitleTvTitle.setText("检测点详情");
+        includeImvTitleTvTitle.setText("监测点详情");
         includeTextTitleTvSubtitle.setText("预警日志");
         //
         mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
@@ -212,8 +217,9 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     @Override
-    public void setDeviceLocation(String location) {
+    public void setDeviceLocation(String location,boolean isArrowsRight) {
         acMonitoringPointTvLocation.setText(location);
+        acMonitoringPointImvLocation.setVisibility(isArrowsRight ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -285,5 +291,26 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     @Override
     public void setContactPhoneIconVisible(boolean isVisible) {
         acMonitoringPointImvPhone.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
+    @Override
+    public void setNoContact() {
+        acMonitoringPointTvAlertContactName.setText("未添加联系人");
+        acMonitoringPointTvAlertContactName.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+        acMonitoringPointView.setVisibility(View.GONE);
+        acMonitoringPointTvAlertContactPhone.setVisibility(View.GONE);
+        acMonitoringPointImvPhone.setVisibility(View.GONE);
+        acMonitoringPointImvPhoneView.setVisibility(View.GONE);
+
+    }
+
+    @Override
+    public void setDeviceLocationTextColor(int color) {
+        acMonitoringPointTvLocation.setTextColor(mActivity.getResources().getColor(color));
+    }
+
+    @Override
+    public void setDeviceTypeName(String typeName) {
+        acMonitoringPointTvDeviceType.setText(typeName);
     }
 }

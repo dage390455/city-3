@@ -82,10 +82,10 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         // todo 先不适配红米 红米手机有问题
         if(!AppUtils.getSystemModel().contains("Redmi")){
             immersionBar = ImmersionBar.with(this);
-            immersionBar.fitsSystemWindows(true)
+            immersionBar.fitsSystemWindows(true,R.color.white)
                     .statusBarColor(R.color.white)
                     .statusBarDarkFont(true)
-                    .navigationBarAlpha(0.4f).fullScreen(true).init();
+                    .navigationBarAlpha(0.4f).init();
         }
 
 
