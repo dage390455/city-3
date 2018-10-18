@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="13dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="24dp">
+        android:layout_marginTop="12dp">
 
         <TextView
             android:id="@+id/fg_main_home_tv_title"
@@ -27,25 +27,26 @@
 
         <ImageButton
             android:id="@+id/fg_main_home_imb_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
             android:layout_marginEnd="9dp"
             android:background="@color/transparent"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/main_add" />
 
         <ImageButton
             android:id="@+id/fg_main_home_imb_search"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="19.45dp"
+            android:layout_height="19.45dp"
             android:layout_centerVertical="true"
             android:layout_toStartOf="@id/fg_main_home_imb_add"
+            android:layout_marginEnd="18dp"
             android:background="@color/transparent"
             android:contentDescription="@null"
-            android:padding="8dp"
+            android:scaleType="centerCrop"
             android:src="@drawable/main_search" />
 
     </RelativeLayout>
@@ -55,17 +56,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="4.5dp"
         android:text="0"
         android:textColor="@color/c_252525"
-        android:textSize="44sp" />
+        android:textSize="28sp" />
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/fg_main_home_rc_type"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="24.5dp">
+        android:layout_marginTop="16dp">
 
     </android.support.v7.widget.RecyclerView>
 

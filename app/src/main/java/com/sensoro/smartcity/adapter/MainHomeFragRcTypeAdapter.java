@@ -178,66 +178,66 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
     private void freshType(MyViewHolder holder, int type, int position) {
         switch (type) {
             case 0:
-                holder.mainRcTypeTvStateTxt.setText("预警");
+                holder.mainRcTypeTvStateTxt.setText("预警监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_warning);
-                if (0 == mStatus) {
+//                if (0 == mStatus) {
                     holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_f34a4a));
                     holder.mainRcTypeTvStateTxt.setTextColor(Color.WHITE);
                     holder.mainRcTypeTvCount.setTextColor(Color.WHITE);
                     holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
-                } else {
-                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
-                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
-                }
+//                } else {
+//                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
+//                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+//                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
+//                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
+//                }
 
                 break;
             case 1:
                 holder.mainRcTypeTvStateTxt.setText("正常监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_normal);
-                if (1 == mStatus) {
+//                if (1 == mStatus) {
                     holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_29c093));
                     holder.mainRcTypeTvStateTxt.setTextColor(Color.WHITE);
                     holder.mainRcTypeTvCount.setTextColor(Color.WHITE);
                     holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
-                } else {
-                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
-                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
-                }
+//                } else {
+//                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
+//                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+//                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
+//                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
+//                }
 
                 break;
             case 2:
-                holder.mainRcTypeTvStateTxt.setText("失联");
+                holder.mainRcTypeTvStateTxt.setText("失联监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_lose);
-                if (2 == mStatus) {
+//                if (2 == mStatus) {
                     holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_5d5d5d));
                     holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.white));
                     holder.mainRcTypeTvCount.setTextColor(mContext.getResources().getColor(R.color.white));
                     holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
-                } else {
-                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
-                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
-                }
+//                } else {
+//                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
+//                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+//                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
+//                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
+//                }
                 break;
             case 3:
-                holder.mainRcTypeTvStateTxt.setText("未激活");
+                holder.mainRcTypeTvStateTxt.setText("未激活监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_inactivated);
-                if (3 == mStatus) {
+//                if (3 == mStatus) {
                     holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_b6b6b6));
                     holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.white));
                     holder.mainRcTypeTvCount.setTextColor(mContext.getResources().getColor(R.color.white));
                     holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
-                } else {
-                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
-                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
-                }
+//                } else {
+//                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
+//                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+//                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
+//                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
+//                }
                 break;
         }
     }
@@ -267,7 +267,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
             public void onClick(View v) {
                 if (onTopClickListener != null) {
                     int type = mData.get(position).type;
-                    setStatus(type);
+//                    setStatus(type);
                     onTopClickListener.onStatusChange(type);
                 }
             }
