@@ -7,5 +7,9 @@ import com.sensoro.smartcity.iwidget.IToast;
 public interface IDeployMapActivityView extends IActivityIntent, IToast, IProgressDialog {
     void refreshSignal(long updateTime, String signal);
 
-    void setSignalVisible(boolean isVisble);
+    void setSignalVisible(boolean isVisible);
+
+    void setSaveVisible(boolean isVisible);
+
+    void refreshSignal(String signal);
 }

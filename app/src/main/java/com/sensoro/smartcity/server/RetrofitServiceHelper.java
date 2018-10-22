@@ -19,6 +19,7 @@ import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -42,6 +43,7 @@ import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -434,6 +436,18 @@ public enum RetrofitServiceHelper {
         Observable<UserAccountControlRsp> userAccountControlRspObservable = retrofitService.doAccountControl(uid, body);
         RxApiManager.getInstance().add("doAccountControl", userAccountControlRspObservable.subscribe());
         return userAccountControlRspObservable;
+    }
+
+    /**
+     * 查询账号下的部署记录
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public Observable<DeployRecordRsp> getDeployRecordList(String searchText, Long beginTime, Long endTime, String owners, String signalQuality) {
+        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(searchText,beginTime,endTime,owners,signalQuality);
+        RxApiManager.getInstance().add("getDeployRecordList", deployRecordList.subscribe());
+        return deployRecordList;
     }
 
     /**

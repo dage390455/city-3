@@ -127,8 +127,42 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     }
 
     @Override
+    public void refreshSignal(String signal) {
+        String signal_text = null;
+        if (signal != null) {
+            switch (signal) {
+                case "good":
+                    signal_text = "信号：优";
+                    btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
+                    break;
+                case "normal":
+                    signal_text = "信号：良";
+                    btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
+                    break;
+                case "bad":
+                    signal_text = "信号：差";
+                    btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
+                    break;
+                default:
+                    signal_text = "信号：差";
+                    btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
+                    break;
+            }
+        } else {
+            signal_text = "无信号";
+            btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
+        }
+        btDeployMapSignal.setText(signal_text);
+    }
+
+    @Override
     public void setSignalVisible(boolean isVisible) {
         btDeployMapSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSaveVisible(boolean isVisible) {
+        tvDeployMapSave.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

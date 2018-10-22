@@ -3,6 +3,7 @@ package com.sensoro.smartcity.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -40,6 +41,11 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
     private OnRecyclerViewItemClickListener listener;
     private boolean isAdded;   //是否额外添加了最后一个图片
     private String tipText;
+    private boolean isJustDisplay = false;
+
+    public void setJustDisplay(boolean isJustDisplay) {
+        this.isJustDisplay = isJustDisplay;
+    }
 //    private boolean canVideo;
 
     public interface OnRecyclerViewItemClickListener {
@@ -52,12 +58,16 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public void setImages(List<ImageItem> data) {
         mData = new ArrayList<>(data);
-        if (getItemCount() < maxImgCount) {
-            mData.add(new ImageItem());
-            isAdded = true;
-        } else {
-            isAdded = false;
+        if(!isJustDisplay){
+            if (getItemCount() < maxImgCount) {
+                mData.add(new ImageItem());
+                isAdded = true;
+            } else {
+                isAdded = false;
+            }
         }
+
+
         notifyDataSetChanged();
     }
 
@@ -107,8 +117,13 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public List<ImageItem> getImages() {
         //由于图片未选满时，最后一张显示添加图片，因此这个方法返回真正的已选图片
-        if (isAdded) return new ArrayList<>(mData.subList(0, mData.size() - 1));
-        else return mData;
+        if(isJustDisplay){
+            return mData;
+        }else if (isAdded) {
+            return new ArrayList<>(mData.subList(0, mData.size() - 1));
+        } else{
+            return mData;
+        }
     }
 
     public ImagePickerAdapter(Context mContext, List<ImageItem> data) {
@@ -128,7 +143,25 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     @Override
     public void onBindViewHolder(SelectedPicViewHolder holder, int position) {
-        holder.bind(position);
+        if (isJustDisplay) {
+            holder.itemView.setOnClickListener(holder);
+            holder.image_delete.setVisibility(View.GONE);
+            ImageItem item = mData.get(position);
+            if (item != null) {
+                holder.iv_record_play.setVisibility(item.isRecord ? View.VISIBLE : View.GONE);
+            }
+            Glide.with((Activity) mContext)                             //配置上下文
+                    .load(item.path)
+                    .error(R.drawable.ic_default_image)           //设置错误图片
+                    .placeholder(R.drawable.ic_default_image)//设置占位图片
+                    .thumbnail(0.01f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                    .into(holder.iv_img);
+
+        }else{
+            holder.bind(position);
+        }
+
     }
 
     @Override

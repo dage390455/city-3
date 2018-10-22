@@ -20,15 +20,15 @@ public class DateUtil {
     /*
      * 将时间戳转为字符串 ，格式：yyyy-MM-dd HH:mm
      */
-    public static String getStrTime_ymd_hm(String cc_time) {
+    public static String getStrTime_ymd_hm(long cc_time) {
         String re_StrTime = "";
-        if (TextUtils.isEmpty(cc_time) || "null".equals(cc_time)) {
-            return re_StrTime;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        // 例如：cc_time=1291778220
-        long lcc_time = Long.valueOf(cc_time);
-        re_StrTime = sdf.format(new Date(lcc_time));
+//        if (TextUtils.isEmpty(cc_time) || "null".equals(cc_time)) {
+//            return re_StrTime;
+//        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+//        // 例如：cc_time=1291778220
+//        long lcc_time = Long.valueOf(cc_time);
+        re_StrTime = sdf.format(new Date(cc_time));
         return re_StrTime;
 
     }

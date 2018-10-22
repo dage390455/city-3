@@ -75,15 +75,12 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
-        android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
-        android:drawableEnd="@drawable/main_smal_triangle"
+        android:drawableEnd="@drawable/main_smal_triangle_gray"
         android:drawablePadding="8dp"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp"
         android:paddingTop="6dp"
         android:paddingBottom="6dp"
         android:text="全部类型"
-        android:textColor="@color/c_252525"
+        android:textColor="@color/c_a6a6a6"
         android:textSize="12sp" />
 
     <RelativeLayout

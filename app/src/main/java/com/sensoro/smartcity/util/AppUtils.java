@@ -11,6 +11,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
@@ -239,5 +241,12 @@ public class AppUtils {
             }
         }
         return line;
+    }
+
+    public static void dismissInputMethodManager(Context context,EditText editText) {
+        editText.setCursorVisible(false);
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        editText.setCursorVisible(false);
     }
 }

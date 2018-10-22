@@ -69,6 +69,7 @@ public class ImagePreviewActivity extends ImagePreviewBaseActivity implements Im
 //        bottomRecyclerView.setHasFixedSize(true);
         adapter = new ImageBottomAdapter(this, mImageItems);
         bottomRecyclerView.setAdapter(adapter);
+        adapter.setIsJustDisplay(isJustDisplay);
         bottomBar.setVisibility(View.VISIBLE);
         adapter.setOnItemClickListener(new ImageBottomAdapter.OnRecyclerViewItemClickListener() {
             @Override

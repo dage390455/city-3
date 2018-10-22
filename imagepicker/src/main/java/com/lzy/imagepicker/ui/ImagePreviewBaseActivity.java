@@ -2,6 +2,7 @@ package com.lzy.imagepicker.ui;
 
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.SyncStateContract;
 import android.view.View;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -37,6 +38,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
     protected ViewPagerFixed mViewPager;
     protected ImagePageAdapter mAdapter;
     protected boolean isFromItems = false;
+    public boolean isJustDisplay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +47,9 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 
         mCurrentPosition = getIntent().getIntExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
         isFromItems = getIntent().getBooleanExtra(ImagePicker.EXTRA_FROM_ITEMS, false);
+        //该extra 在city的constants里面，无法直接获取，所以直接写了
+        isJustDisplay = getIntent().getBooleanExtra("extra_just_display_pic", false);
+
 
         if (isFromItems) {
             // 据说这样会导致大量图片崩溃
@@ -80,6 +85,7 @@ public abstract class ImagePreviewBaseActivity extends ImageBaseActivity {
 
         mViewPager = (ViewPagerFixed) findViewById(R.id.viewpager);
         mAdapter = new ImagePageAdapter(this, mImageItems);
+        mAdapter.setIsJustDisplay(isJustDisplay);
         mAdapter.setPhotoViewClickListener(new ImagePageAdapter.PhotoViewClickListener() {
             @Override
             public void OnPhotoTapListener(View view, float v, float v1) {

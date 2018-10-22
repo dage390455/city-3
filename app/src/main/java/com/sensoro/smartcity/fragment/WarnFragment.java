@@ -104,7 +104,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                     // 当按了搜索之后关闭软键盘
                     String text = fgMainWarnEtSearch.getText().toString();
                     mPresenter.requestSearchData(DIRECTION_DOWN, text);
-                    dismissInputMethodManager(fgMainWarnEtSearch);
+                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
                     return true;
                 }
                 return false;
@@ -139,12 +139,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
 
-    private void dismissInputMethodManager(View view) {
-        fgMainWarnEtSearch.setCursorVisible(false);
-        InputMethodManager imm = (InputMethodManager) mRootFragment.getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
-        fgMainWarnEtSearch.setCursorVisible(false);
-    }
+
 
     public void forceOpenSoftKeyboard() {
         fgMainWarnEtSearch.setCursorVisible(true);
@@ -400,7 +395,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         if (isVisible) {
             tvWarnAlarmSearchCancel.setVisibility(View.VISIBLE);
 //            setEditTextState(false);
-            dismissInputMethodManager(fgMainWarnEtSearch);
+            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
         } else {
             tvWarnAlarmSearchCancel.setVisibility(View.GONE);
 //            setEditTextState(true);

@@ -7,6 +7,7 @@ import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -28,6 +29,7 @@ import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -76,6 +78,7 @@ public interface RetrofitService {
     String INSPECT_TASK_EXCEPTION_DETAIL = "inspect/device/_search";
     String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
     String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
+    String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -152,6 +155,9 @@ public interface RetrofitService {
     @POST(STATION_DEPLOY + "{sn}")
     Observable<StationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
+    @GET(GET_DEPOLY_RECORD_LIST)
+    Observable<DeployRecordRsp> getDeployRecordList(@Query("search") String searchText, @Query("beginTime") Long beginTime,
+                                                    @Query("endTime") Long endTime, @Query("owners") String owners, @Query("signalQuality")String signalQuality);
     @PUT("alarmplay/{id}")
     Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(@Path("id") String id, @Body RequestBody requestBody);
 
