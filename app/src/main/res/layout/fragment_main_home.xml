@@ -1,114 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/fg_main_home_ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
     android:background="@color/white"
-    >
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="13dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp">
+        android:theme="@style/AppTheme.AppBarOverlay"
+        app:elevation="0dp">
 
-        <TextView
-            android:id="@+id/fg_main_home_tv_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:text="监测点数"
-            android:textColor="@color/c_a6a6a6"
-            android:textSize="14sp" />
-
-        <ImageButton
-            android:id="@+id/fg_main_home_imb_add"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginEnd="9dp"
-            android:background="@color/transparent"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            android:src="@drawable/main_add" />
-
-        <ImageButton
-            android:id="@+id/fg_main_home_imb_search"
-            android:layout_width="19.45dp"
-            android:layout_height="19.45dp"
-            android:layout_centerVertical="true"
-            android:layout_toStartOf="@id/fg_main_home_imb_add"
-            android:layout_marginEnd="18dp"
-            android:background="@color/transparent"
-            android:contentDescription="@null"
-            android:scaleType="centerCrop"
-            android:src="@drawable/main_search" />
-
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/tv_detection_point"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:text="0"
-        android:textColor="@color/c_252525"
-        android:textSize="28sp" />
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/fg_main_home_rc_type"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp">
-
-    </android.support.v7.widget.RecyclerView>
-
-    <TextView
-        android:id="@+id/fg_main_home_tv_select_type"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="28dp"
-        android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
-        android:drawableEnd="@drawable/main_smal_triangle"
-        android:drawablePadding="8dp"
-        android:paddingStart="14dp"
-        android:paddingEnd="14dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp"
-        android:text="全部类型"
-        android:textColor="@color/c_252525"
-        android:textSize="12sp" />
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-        <include
-            layout="@layout/item_no_content"
-            />
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
+        <android.support.design.widget.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:orientation="vertical">
+            android:background="@color/white"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
+            app:title="">
 
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fg_main_home_rc_content"
+            <include
+                android:id="@+id/home_layout_head"
+                layout="@layout/layout_home_head"
+                app:layout_collapseMode="pin"
+                app:layout_collapseParallaxMultiplier="0.7" />
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp"
-                />
+                android:layout_height="?attr/actionBarSize"
+                app:contentInsetLeft="0dp"
+                app:contentInsetStart="0dp"
+                app:layout_collapseMode="pin">
 
+                <include
+                    android:id="@+id/home_toolbar_monitor"
+                    layout="@layout/layout_home_top_toolbar_monitor"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
 
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
-    </RelativeLayout>
+                <include
+                    android:id="@+id/home_top_toolbar"
+                    layout="@layout/layout_home_top_toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+            </android.support.v7.widget.Toolbar>
 
+        </android.support.design.widget.CollapsingToolbarLayout>
+    </android.support.design.widget.AppBarLayout>
 
-</LinearLayout>
+    <include layout="@layout/layout_home_content" />
+
+</android.support.design.widget.CoordinatorLayout>

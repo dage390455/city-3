@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ApplicationInfo;
 import android.content.res.Resources;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -16,10 +15,6 @@ import android.support.v4.app.NotificationManagerCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 
 import com.baidu.mobstat.StatService;
 import com.gyf.barlibrary.ImmersionBar;
@@ -28,13 +23,10 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.statusbar.StatusBarCompat;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
-import static com.loopj.android.http.AsyncHttpClient.log;
 
 /**
  * @author JL-DDONG
@@ -52,7 +44,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      * 主AC
      */
     protected BaseActivity mActivity;
-    private ImmersionBar immersionBar;
+    public ImmersionBar immersionBar;
 
 
     @Override

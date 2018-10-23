@@ -12,6 +12,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -19,6 +21,7 @@ import com.sensoro.smartcity.adapter.DiffUtils.TopListAdapterDiff;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.push.ThreadPoolManager;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.ArrayList;
@@ -38,7 +41,6 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
     private final List<HomeTopModel> mData = new ArrayList<>();
     private OnTopClickListener onTopClickListener;
     private Handler mHandler = new Handler(Looper.getMainLooper());
-    private int mStatus = 0;
 
     public MainHomeFragRcTypeAdapter(Activity context) {
         mContext = context;
@@ -170,75 +172,50 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         holder.mainRcTypeTvCount.setText(String.valueOf(value));
     }
 
-    public void setStatus(int status) {
-        mStatus = status;
-        notifyDataSetChanged();
-    }
-
     private void freshType(MyViewHolder holder, int type, int position) {
+        int currentColor = R.color.c_29c093;
         switch (type) {
             case 0:
+                currentColor = R.color.c_f34a4a;
                 holder.mainRcTypeTvStateTxt.setText("预警监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_warning);
-//                if (0 == mStatus) {
-                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_f34a4a));
-                    holder.mainRcTypeTvStateTxt.setTextColor(Color.WHITE);
-                    holder.mainRcTypeTvCount.setTextColor(Color.WHITE);
-                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
-//                } else {
-//                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-//                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-//                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
-//                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
-//                }
-
+                holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_alarm);
                 break;
             case 1:
+                currentColor = R.color.c_29c093;
                 holder.mainRcTypeTvStateTxt.setText("正常监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_normal);
-//                if (1 == mStatus) {
-                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_29c093));
-                    holder.mainRcTypeTvStateTxt.setTextColor(Color.WHITE);
-                    holder.mainRcTypeTvCount.setTextColor(Color.WHITE);
-                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
-//                } else {
-//                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-//                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-//                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
-//                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
-//                }
-
+                holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_normal);
                 break;
             case 2:
+                currentColor = R.color.c_5d5d5d;
                 holder.mainRcTypeTvStateTxt.setText("失联监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_lose);
-//                if (2 == mStatus) {
-                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_5d5d5d));
-                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.white));
-                    holder.mainRcTypeTvCount.setTextColor(mContext.getResources().getColor(R.color.white));
-                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
-//                } else {
-//                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-//                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-//                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
-//                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
-//                }
+                holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_lost);
                 break;
             case 3:
+                currentColor = R.color.c_b6b6b6;
                 holder.mainRcTypeTvStateTxt.setText("未激活监测点");
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_inactivated);
-//                if (3 == mStatus) {
-                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_b6b6b6));
-                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.white));
-                    holder.mainRcTypeTvCount.setTextColor(mContext.getResources().getColor(R.color.white));
-                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
-//                } else {
-//                    holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(R.color.c_fafafa));
-//                    holder.mainRcTypeTvStateTxt.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-//                    holder.mainRcTypeTvCount.setTextColor(Color.BLACK);
-//                    holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.c_a6a6a6));
-//                }
+                holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_inactivated);
                 break;
+        }
+        holder.mainRcTypeTvStateTxt.setTextColor(Color.WHITE);
+        holder.mainRcTypeTvCount.setTextColor(Color.WHITE);
+        holder.mainRcTypeImvState.setColorFilter(mContext.getResources().getColor(R.color.white));
+        holder.mainRcTypeCv.setCardBackgroundColor(mContext.getResources().getColor(currentColor));
+        if (position == 0) {
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeStatusRoot.getLayoutParams());
+            int pxL = AppUtils.dp2px(mContext, 14);
+            lp.setMargins(pxL, 0, 0, 0);
+            holder.homeStatusRoot.setLayoutParams(lp);
+        } else {
+            if (position == mData.size() - 1) {
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeStatusRoot.getLayoutParams());
+                int pxR = AppUtils.dp2px(mContext, 14);
+                lp.setMargins(0, 0, pxR, 0);
+                holder.homeStatusRoot.setLayoutParams(lp);
+            }
         }
     }
 
@@ -267,7 +244,6 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
             public void onClick(View v) {
                 if (onTopClickListener != null) {
                     int type = mData.get(position).type;
-//                    setStatus(type);
                     onTopClickListener.onStatusChange(type);
                 }
             }
@@ -288,6 +264,10 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         CardView mainRcTypeCv;
         @BindView(R.id.main_rc_type_tv_state_txt)
         TextView mainRcTypeTvStateTxt;
+        @BindView(R.id.iv_home_status_card)
+        ImageView ivHomeStatusCard;
+        @BindView(R.id.home_status_root)
+        LinearLayout homeStatusRoot;
 
         MyViewHolder(View itemView) {
             super(itemView);

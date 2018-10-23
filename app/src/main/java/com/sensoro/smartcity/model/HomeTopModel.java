@@ -1,10 +1,18 @@
 package com.sensoro.smartcity.model;
 
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.server.bean.DeviceInfo;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public class HomeTopModel {
     public int type;
     public int value;
+    public final List<DeviceInfo> mDeviceList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
+    public int color = R.color.white;
 
     @Override
     public boolean equals(Object o) {

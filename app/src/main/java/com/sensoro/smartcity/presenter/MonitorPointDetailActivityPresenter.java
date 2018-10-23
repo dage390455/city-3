@@ -12,9 +12,9 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
-import com.sensoro.smartcity.activity.MonitorPointMapActivity;
-import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorMoreActivity;
+import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
@@ -105,10 +105,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         } catch (Exception e) {
             e.printStackTrace();
         }
-        if(TextUtils.isEmpty(contact) && TextUtils.isEmpty(phone)){
+        if (TextUtils.isEmpty(contact) && TextUtils.isEmpty(phone)) {
             getView().setNoContact();
             hasPhoneNumber = false;
-        }else{
+        } else {
             if (TextUtils.isEmpty(contact)) {
                 contact = "未设定";
             }
@@ -122,14 +122,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             getView().setContractName(contact);
             getView().setContractPhone(content);
         }
-        String typeName = "未知";
-        try {
-            DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-            typeName = localDevicesMergeTypes.getMergeType().get(mDeviceInfo.getDeviceType()).getName();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        getView().setDeviceTypeName(typeName);
         getView().setUpdateTime(DateUtil.getStrTimeToday(mDeviceInfo.getUpdatedTime(), 0));
         String tags[] = mDeviceInfo.getTags();
         if (tags != null && tags.length > 0) {
@@ -152,7 +144,14 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     private void initCurrentDeviceInfo() {
         getView().setSNText(mDeviceInfo.getSn());
-
+        String typeName = "未知";
+        try {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
+            typeName = localDevicesMergeTypes.getMergeType().get(mDeviceInfo.getDeviceType()).getName();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        getView().setDeviceTypeName(typeName);
         GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         double[] lonlat = mDeviceInfo.getLonlat();
@@ -160,7 +159,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             double v = lonlat[1];
             double v1 = lonlat[0];
             if (v == 0 || v1 == 0) {
-                getView().setDeviceLocation("未定位",false);
+                getView().setDeviceLocation("未定位", false);
                 getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
                 return;
             }
@@ -168,7 +167,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             geocoderSearch.getFromLocationAsyn(query);
         } catch (Exception e) {
             e.printStackTrace();
-            getView().setDeviceLocation("未定位",false);
+            getView().setDeviceLocation("未定位", false);
 
         }
 
@@ -310,13 +309,13 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             address = "未知街道";
         }
         mDeviceInfo.setAddress(address);
-        getView().setDeviceLocation(address,true);
+        getView().setDeviceLocation(address, true);
     }
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
         LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
-        getView().setDeviceLocation("未知街道",true);
+        getView().setDeviceLocation("未知街道", true);
     }
 
     public void doMore() {

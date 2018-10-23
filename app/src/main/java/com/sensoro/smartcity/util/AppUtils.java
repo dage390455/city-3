@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -239,5 +240,13 @@ public class AppUtils {
             }
         }
         return line;
+    }
+
+    public static int dp2px(Context context, int dpValue) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
+    }
+
+    public static int sp2px(Context context, int spValue) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, context.getResources().getDisplayMetrics());
     }
 }
