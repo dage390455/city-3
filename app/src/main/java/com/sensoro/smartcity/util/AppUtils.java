@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.inputmethod.InputMethodManager;
@@ -243,7 +244,16 @@ public class AppUtils {
         return line;
     }
 
-    public static void dismissInputMethodManager(Context context,EditText editText) {
+    public static int dp2px(Context context, int dpValue) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
+    }
+
+    public static int sp2px(Context context, int spValue) {
+        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, context.getResources().getDisplayMetrics());
+
+    }
+
+    public static void dismissInputMethodManager(Context context, EditText editText) {
         editText.setCursorVisible(false);
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//从控件所在的窗口中隐藏

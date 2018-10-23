@@ -192,5 +192,4 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         acMainHvpContent.setAdapter(mPageAdapter);
         acMainHvpContent.setOffscreenPageLimit(5);
     }
-
 }

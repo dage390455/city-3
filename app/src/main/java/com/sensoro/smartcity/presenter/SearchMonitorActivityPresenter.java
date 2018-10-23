@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
-import android.view.inputmethod.InputMethodManager;
 
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
@@ -35,12 +34,10 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
-import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
 import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
@@ -345,26 +342,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         getView().showProgressDialog();
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, null,status, searchText).subscribeOn
-                    (Schedulers.io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
-                @Override
-                public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
-                    //去除rfid类型
-                    List<DeviceInfo> list = deviceInfoListRsp.getData();
-                    Iterator<DeviceInfo> iterator = list.iterator();
-                    while (iterator.hasNext()) {
-                        DeviceInfo next = iterator.next();
-                        String[] sensorTypes = next.getSensorTypes();
-                        if (sensorTypes != null && sensorTypes.length > 0) {
-                            final List<String> sensorTypesList = Arrays.asList(sensorTypes);
-                            if (sensorTypesList.contains("rfid")) {
-                                iterator.remove();
-                            }
-                        }
-                    }
-                    return deviceInfoListRsp;
-                }
-            }).doOnNext(new Action1<DeviceInfoListRsp>() {
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, null, status, searchText).subscribeOn
+                    (Schedulers.io()).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
                 public void call(DeviceInfoListRsp deviceInfoListRsp) {
                     if (deviceInfoListRsp.getData().size() == 0) {
@@ -398,26 +377,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             });
         } else {
             page++;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type,null, status, searchText).subscribeOn
-                    (Schedulers.io()).map(new Func1<DeviceInfoListRsp, DeviceInfoListRsp>() {
-                @Override
-                public DeviceInfoListRsp call(DeviceInfoListRsp deviceInfoListRsp) {
-                    //去除rfid类型
-                    List<DeviceInfo> list = deviceInfoListRsp.getData();
-                    Iterator<DeviceInfo> iterator = list.iterator();
-                    while (iterator.hasNext()) {
-                        DeviceInfo next = iterator.next();
-                        String[] sensorTypes = next.getSensorTypes();
-                        if (sensorTypes != null && sensorTypes.length > 0) {
-                            final List<String> sensorTypesList = Arrays.asList(sensorTypes);
-                            if (sensorTypesList.contains("rfid")) {
-                                iterator.remove();
-                            }
-                        }
-                    }
-                    return deviceInfoListRsp;
-                }
-            }).doOnNext(new Action1<DeviceInfoListRsp>() {
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, null, status, searchText).subscribeOn
+                    (Schedulers.io()).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
                 public void call(DeviceInfoListRsp deviceInfoListRsp) {
                     try {
@@ -523,6 +484,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             }
         });
     }
+
     private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
         //TODO 弹起预警记录的dialog
         AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext);
@@ -530,6 +492,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         mAlarmLogPop.show();
 
     }
+
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
         //TODO 对照片信息统一处理
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {

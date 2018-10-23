@@ -63,6 +63,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 
 import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE;
@@ -168,13 +169,14 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     }
 
     public void addData(List<DeviceInfo> list) {
-        this.mDeviceInfoList.addAll(list);
+        this.mDeviceInfoList.addAll(new HashSet<>(list));
+        Collections.sort(mDeviceInfoList);
     }
 
     public void setData(List<DeviceInfo> list) {
         this.mDeviceInfoList.clear();
-        this.mDeviceInfoList.addAll(list);
-
+        this.mDeviceInfoList.addAll(new HashSet<>(list));
+        Collections.sort(mDeviceInfoList);
     }
 
     private void initSensoroSDK() {

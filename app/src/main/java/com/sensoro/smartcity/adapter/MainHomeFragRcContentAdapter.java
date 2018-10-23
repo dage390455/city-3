@@ -249,6 +249,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            ivItemAlarm.setColorFilter(mContext.getResources().getColor(R.color.c_f34a4a));
         }
     }
 }

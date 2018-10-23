@@ -28,7 +28,9 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     void setDetectionPoints(String count);
 
-    void  setNoContentVisible(boolean isVisible);
+    void setNoContentVisible(boolean isVisible);
+
     void updateSelectDeviceTypePopAndShow(List<String> devicesTypes);
-    void updateMainTypeSelectStatus(int status);
+    void setToolbarTitleCount(String text);
+    void setToolbarTitleBackgroundColor(int color);
 }

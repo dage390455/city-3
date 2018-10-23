@@ -61,6 +61,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private InspectionIndexTaskInfo mTaskInfo;
     private volatile boolean bleHasOpen = false;
     private final List<String> selectDeviceList = new ArrayList<>();
+    private final int maxPageCount = 5000;
 
     @Override
     public void initData(Context context) {
@@ -276,7 +277,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             case DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * 15, 15).
+                RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * maxPageCount, maxPageCount).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
                     @Override
                     public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
@@ -299,7 +300,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             case DIRECTION_UP:
                 cur_page++;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * 15, 15).
+                RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), tempSearch, null, finish, tempDeviceType, cur_page * maxPageCount, maxPageCount).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
                     @Override
                     public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {

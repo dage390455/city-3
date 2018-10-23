@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical"
+    android:paddingBottom="18dp">
+
+    <TextView
+        android:id="@+id/tv_detection_point"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="30dp"
+        android:text="0"
+        android:textColor="@color/c_252525"
+        android:textSize="28sp" />
+
+    <com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView
+        android:id="@+id/fg_main_home_rc_type"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp">
+
+    </com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView>
+
+</LinearLayout>
