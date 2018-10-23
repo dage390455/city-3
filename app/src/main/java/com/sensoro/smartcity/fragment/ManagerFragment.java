@@ -106,10 +106,6 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
         return new ManagerFragmentPresenter();
     }
 
-    @Override
-    protected int fragmentStatusBarColor() {
-        return R.color.c_fafafa;
-    }
 
     @Override
     public void startAC(Intent intent) {

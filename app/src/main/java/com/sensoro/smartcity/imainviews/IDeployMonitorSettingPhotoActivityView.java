@@ -12,4 +12,8 @@ public interface IDeployMonitorSettingPhotoActivityView extends IActivityIntent,
     void updateImageList(ArrayList<ImageItem> imageList);
 
     void showDialog(SelectDialog.SelectDialogListener listener, List<String> names);
+
+    void setJustDisplayPic(boolean isJustDisplay);
+
+    void setSubtitleVisible(boolean isVisible);
 }

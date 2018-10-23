@@ -2,10 +2,12 @@ package com.sensoro.smartcity.activity;
 
 
 import android.content.Intent;
+import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.lzy.imagepicker.bean.ImageItem;
@@ -28,6 +30,8 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
         IDeployMonitorSettingPhotoActivityView, ImagePickerAdapter.OnRecyclerViewItemClickListener {
     @BindView(R.id.rv_deploy_photo)
     RecyclerView rvDeployPhoto;
+    @BindView(R.id.deploy_setting_photo_finish)
+    TextView deploySettingPhotoFinish;
     private ImagePickerAdapter adapter;
 
     @Override
@@ -59,6 +63,16 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
         if (!mActivity.isFinishing()) {
             dialog.show();
         }
+    }
+
+    @Override
+    public void setJustDisplayPic(boolean isJustDisplay) {
+        adapter.setJustDisplay(isJustDisplay);
+    }
+
+    @Override
+    public void setSubtitleVisible(boolean isVisible) {
+        deploySettingPhotoFinish.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

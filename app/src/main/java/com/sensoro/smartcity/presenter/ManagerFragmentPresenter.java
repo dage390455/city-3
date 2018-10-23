@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.activity.ContractManagerActivity;
+import com.sensoro.smartcity.activity.DeployRecordActivity;
 import com.sensoro.smartcity.activity.InspectionTaskListActivity;
 import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.activity.MerchantSwitchActivity;
@@ -158,8 +159,8 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void doScanDeploy() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (!PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-                Intent intent = new Intent(mContext, ScanActivity.class);
-                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
+                Intent intent = new Intent(mContext, DeployRecordActivity.class);
+//                intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE);
                 getView().startAC(intent);
                 return;
             }

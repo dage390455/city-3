@@ -66,6 +66,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     //
     private WarnFragment warnFragment;
+    private HomeFragment homeFragment;
 
     @Override
     public void initData(Context context) {
@@ -81,7 +82,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     private void initViewPager() {
         //
-        HomeFragment homeFragment = new HomeFragment();
+        homeFragment = new HomeFragment();
         warnFragment = new WarnFragment();
         ManagerFragment managerFragment = new ManagerFragment();
         if (mFragmentList.size() > 0) {
@@ -464,6 +465,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
+            if (getView().isHomeFragmentChecked()) {
+                if (homeFragment.onBackPressed()) {
+                    return true;
+                }
+            }
             exit();
             return true;
         }

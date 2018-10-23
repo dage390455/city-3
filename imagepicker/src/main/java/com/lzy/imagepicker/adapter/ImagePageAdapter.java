@@ -33,6 +33,7 @@ public class ImagePageAdapter extends PagerAdapter {
     private ArrayList<ImageItem> images = new ArrayList<>();
     private Activity mActivity;
     public PhotoViewClickListener listener;
+    private boolean isJustDisplay = false;
 
     public ImagePageAdapter(Activity activity, ArrayList<ImageItem> images) {
         this.mActivity = activity;
@@ -110,6 +111,10 @@ public class ImagePageAdapter extends PagerAdapter {
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
+    }
+
+    public void setIsJustDisplay(boolean isJustDisplay) {
+        this.isJustDisplay = isJustDisplay;
     }
 
     public interface PhotoViewClickListener {

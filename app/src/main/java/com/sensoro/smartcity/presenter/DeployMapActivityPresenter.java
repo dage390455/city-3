@@ -64,6 +64,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     private Activity mContext;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private DeployMapModel deployMapModel;
+    private boolean isDisplayMap;
+    private boolean isBackBtnClick = false;
 
     @Override
     public void initData(Context context) {
@@ -72,6 +74,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         deployMapModel = (DeployMapModel) mContext.getIntent().getParcelableExtra(EXTRA_DEPLOY_TO_MAP);
+        isDisplayMap = mContext.getIntent().getBooleanExtra(EXTRA_DEPLOY_DISPLAY_MAP, false);
         switch (deployMapModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
                 //基站部署
@@ -87,6 +90,12 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 break;
             case TYPE_SCAN_INSPECTION:
                 //扫描巡检设备
+                break;
+            case TYPE_SCAN_DEPLOY_POINT_DISPLAY:
+                //回显地图数据
+                getView().setSaveVisible(false);
+                getView().refreshSignal(deployMapModel.signal);
+
                 break;
             default:
                 break;
@@ -243,6 +252,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void refreshSignal() {
+        if(isDisplayMap){
+           return;
+        }
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(deployMapModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
@@ -273,7 +285,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        if (cameraPosition != null) {
+
+        if (cameraPosition != null && !isDisplayMap) {
             deployMapModel.latLng = cameraPosition.target;
             smoothMoveMarker.setPosition(deployMapModel.latLng);
             System.out.println("====>onCameraChange");
@@ -282,6 +295,19 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
+        if(isDisplayMap){
+            if(isBackBtnClick){
+                isBackBtnClick = false;
+            }else{
+                smoothMoveMarker.setInfoWindowEnable(true);
+                LatLonPoint lp = new LatLonPoint(deployMapModel.latLng.latitude, deployMapModel.latLng.longitude);
+                System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
+                RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+                geocoderSearch.getFromLocationAsyn(query);
+            }
+            return;
+        }
+
         deployMapModel.latLng = cameraPosition.target;
         smoothMoveMarker.setPosition(deployMapModel.latLng);
         LatLonPoint lp = new LatLonPoint(deployMapModel.latLng.latitude, deployMapModel.latLng.longitude);
@@ -297,13 +323,29 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Override
     public void onMapLoaded() {
-        //TODO 先获原先取信号强度
-
         BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_cur);
         MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
                 .anchor(0.5f, 0.5f)
                 .draggable(true);
         smoothMoveMarker = aMap.addMarker(markerOption);
+
+        if(isDisplayMap){
+            if (aMap != null) {
+                //可视化区域，将指定位置指定到屏幕中心位置
+                CameraUpdate update = CameraUpdateFactory
+                        .newCameraPosition(new CameraPosition(deployMapModel.latLng, 15, 0, 30));
+                aMap.moveCamera(update);
+            }
+
+            smoothMoveMarker.setPosition(deployMapModel.latLng);
+            LatLonPoint lp = new LatLonPoint(deployMapModel.latLng.latitude, deployMapModel.latLng.longitude);
+            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+            geocoderSearch.getFromLocationAsyn(query);
+            return;
+        }
+
+        //TODO 先获原先取信号强度
+
         getCurrentLocation();
         switch (deployMapModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
@@ -372,7 +414,13 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
                 aMap.moveCamera(update);
             }
-            smoothMoveMarker.setPosition(latLng);
+
+            if(!isDisplayMap){
+                smoothMoveMarker.setPosition(latLng);
+            }else{
+                smoothMoveMarker.setInfoWindowEnable(false);
+                isBackBtnClick = true;
+            }
         } else {
             //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
             Log.e("地图错误", "定位失败, 错误码:" + lastKnownLocation.getErrorCode() + ", 错误信息:"

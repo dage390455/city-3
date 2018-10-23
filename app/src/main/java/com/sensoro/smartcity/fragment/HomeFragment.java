@@ -3,6 +3,8 @@ package com.sensoro.smartcity.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
@@ -13,6 +15,10 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.util.Log;
+import android.view.Gravity;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -128,7 +134,22 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel item) {
                 mPresenter.requestDataByTypes(position, item);
                 //选择类型的pop点击事件
-                fgMainHomeTvSelectType.setText(item.name);
+                Resources resources = mRootFragment.getActivity().getResources();
+                if ("全部".equals(item.name)) {
+                    fgMainHomeTvSelectType.setText("未筛选");
+                    fgMainHomeTvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));
+                    Drawable drawable = resources.getDrawable(R.drawable.main_smal_triangle_gray);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    fgMainHomeTvSelectType.setCompoundDrawables(null, null, drawable, null);
+                } else {
+                    fgMainHomeTvSelectType.setText(item.name);
+                    Drawable drawable = resources.getDrawable(R.drawable.main_smal_triangle);
+                    drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+                    fgMainHomeTvSelectType.setTextColor(resources.getColor(R.color.c_252525));
+                    fgMainHomeTvSelectType.setCompoundDrawables(null, null, drawable, null);
+                }
+
+
                 mSelectDeviceTypePop.dismiss();
             }
         });
@@ -255,11 +276,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     protected HomeFragmentPresenter createPresenter() {
         return new HomeFragmentPresenter();
-    }
-
-    @Override
-    protected int fragmentStatusBarColor() {
-        return R.color.white;
     }
 
     @Override
@@ -573,4 +589,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
 
+    public boolean onBackPressed() {
+        if (mSelectDeviceTypePop.isShowing()) {
+            mSelectDeviceTypePop.dismiss();
+            return true;
+        } else {
+            return false;
+        }
+
+    }
 }

@@ -34,12 +34,16 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
 
     private ArrayList<ImageItem> tempImages = null;
     private Activity mContext;
+    private boolean isJustDisplay = false;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         ArrayList<ImageItem> items = (ArrayList<ImageItem>) mContext.getIntent().getSerializableExtra
                 (EXTRA_DEPLOY_TO_PHOTO);
+        isJustDisplay = mContext.getIntent().getBooleanExtra(EXTRA_JUST_DISPLAY_PIC, false);
+        getView().setJustDisplayPic(isJustDisplay);
+        getView().setSubtitleVisible(!isJustDisplay);
         if (items != null && items.size() > 0) {
             selImageList.addAll(items);
             getView().updateImageList(selImageList);
@@ -96,6 +100,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) images);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
             intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC,isJustDisplay);
             getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
         }
     }

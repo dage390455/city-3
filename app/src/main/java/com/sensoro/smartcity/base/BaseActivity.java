@@ -72,16 +72,24 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         boolean darkmode = true;
         onCreateInit(savedInstanceState);
         // todo 先不适配红米 红米手机有问题
-        if(!AppUtils.getSystemModel().contains("Redmi")){
+        if(!AppUtils.getSystemModel().contains("Redmi") && !isActivityOverrideStatusBar()){
             immersionBar = ImmersionBar.with(this);
             immersionBar.fitsSystemWindows(true,R.color.white)
                     .statusBarColor(R.color.white)
                     .statusBarDarkFont(true)
-                    .navigationBarAlpha(0.4f).init();
+                    .init();
         }
 
 
         StatService.setDebugOn(true);
+    }
+
+    /**
+     * activity 需要自己设置statusbar 重写该函数，并在该函数内实现
+     * @return
+     */
+    public boolean isActivityOverrideStatusBar() {
+        return false;
     }
 
 

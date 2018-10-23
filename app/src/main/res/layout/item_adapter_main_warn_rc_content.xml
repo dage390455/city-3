@@ -48,13 +48,17 @@
 
     <TextView
         android:id="@+id/main_warn_rc_content_tv_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"
+        android:layout_marginStart="20dp"
+        android:gravity="start"
+        android:layout_marginEnd="20dp"
         android:textColor="@color/c_252525"
         android:textSize="14sp"
         app:layout_constraintStart_toStartOf="@id/main_warn_rc_content_tv_state"
-        app:layout_constraintTop_toBottomOf="@id/main_warn_rc_content_tv_state" />
+        app:layout_constraintTop_toBottomOf="@id/main_warn_rc_content_tv_state"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <View
         android:id="@+id/view"

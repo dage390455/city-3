@@ -18,4 +18,6 @@ public interface IMainView extends IProgressDialog, IToast, IActivityIntent {
 
     void setSuperAccount(boolean isSuper);
     void setAlarmWarnCount(int count);
+
+    boolean isHomeFragmentChecked();
 }

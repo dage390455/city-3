@@ -210,12 +210,15 @@ public interface Constants {
     String EXTRA_SETTING_INDEX = "extra_setting_index";
     String EXTRA_SETTING_TAG_LIST = "extra_tag_list";
     String EXTRA_CONTAINS_DATA = "extra_contains_data";
-    //
+    //部署相关
     String EXTRA_DEPLOY_PHOTO = "extra_deploy_photo";
     String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
     String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
     String EXTRA_DEPLOY_TO_SN = "extra_deploy_to_sn";
     String EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL = "extra_inspection_task_item_device_detail";
+    String EXTRA_DEPLOY_RECORD_DETAIL = "extra_deploy_record_detail";
+    String EXTRA_JUST_DISPLAY_PIC = "extra_just_display_pic";
+    String EXTRA_DEPLOY_DISPLAY_MAP = "extra_deploy_display_map";
 
     //巡检相关
     String EXTRA_INSPECTION_START_TIME = "extra_inspection_start_time";
@@ -318,5 +321,6 @@ public interface Constants {
     int TYPE_SCAN_LOGIN = 0x30;
     int TYPE_SCAN_DEPLOY_DEVICE_CHANGE = 0X37;
     int TYPE_SCAN_INSPECTION = 0X38;
+    int TYPE_SCAN_DEPLOY_POINT_DISPLAY = 0x41;
 
 }
