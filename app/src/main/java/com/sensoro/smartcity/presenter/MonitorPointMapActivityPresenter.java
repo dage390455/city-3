@@ -4,9 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.SystemClock;
 import android.text.TextUtils;
+import android.util.Log;
 
+import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -17,6 +20,7 @@ import com.amap.api.maps.model.CameraPosition;
 import com.amap.api.maps.model.LatLng;
 import com.amap.api.maps.model.Marker;
 import com.amap.api.maps.model.MarkerOptions;
+import com.amap.api.maps.model.MyLocationStyle;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
@@ -38,6 +42,10 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
@@ -70,19 +78,65 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     private void initMap() {
-        aMap.setMapCustomEnable(true);
+        setMapCustomStyleFile();
         aMap.getUiSettings().setTiltGesturesEnabled(false);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.setMapCustomEnable(true);
+        aMap.setMyLocationEnabled(true);
         aMap.setOnMapLoadedListener(this);
         aMap.moveCamera(CameraUpdateFactory.zoomTo(15));
 //        aMap.getUiSettings().setScaleControlsEnabled(true);
         aMap.setMapType(MAP_TYPE_NORMAL);
 //        aMap.setOnMapTouchListener(this);
-        String styleName = "custom_config.data";
-        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
+//        String styleName = "custom_config.data";
+//        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
+
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+        myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
+        myLocationStyle.strokeWidth(0);
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_location));
+        myLocationStyle.showMyLocation(true);
+        aMap.setMyLocationStyle(myLocationStyle);
     }
 
+    private void setMapCustomStyleFile() {
+        String styleName = "custom_config.data";
+        FileOutputStream outputStream = null;
+        InputStream inputStream = null;
+        String filePath = null;
+        try {
+            inputStream = mContext.getAssets().open(styleName);
+            byte[] b = new byte[inputStream.available()];
+            inputStream.read(b);
+
+            filePath = mContext.getFilesDir().getAbsolutePath();
+            File file = new File(filePath + "/" + styleName);
+            if (!file.exists()) {
+                file.createNewFile();
+            }
+            outputStream = new FileOutputStream(file);
+            outputStream.write(b);
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+                if (inputStream != null) {
+                    inputStream.close();
+                }
+
+                if (outputStream != null) {
+                    outputStream.close();
+                }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        aMap.setCustomMapStylePath(filePath + "/" + styleName);
+
+    }
     @Override
     public void onMapLoaded() {
         refreshMap();
@@ -178,8 +232,10 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
         }
         tempUpBitmap = bitmapDescriptor.getBitmap();
-        aMap.clear();
+//        aMap.clear();
+//        destPosition.latitude -=
         MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
+                .anchor(0.5f,0.95f)
                 .position(destPosition)
                 .draggable(true);
         Marker marker = aMap.addMarker(markerOption);
@@ -277,5 +333,25 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     @Override
     public void onStop() {
         EventBus.getDefault().unregister(this);
+    }
+
+    public void backToCurrentLocation() {
+        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+        if (lastKnownLocation != null) {
+            double lat = lastKnownLocation.getLatitude();//获取纬度
+            double lon = lastKnownLocation.getLongitude();//获取经度
+            LatLng latLng = new LatLng(lat, lon);
+            if (aMap != null) {
+                //可视化区域，将指定位置指定到屏幕中心位置
+                CameraUpdate update = CameraUpdateFactory
+                        .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                aMap.moveCamera(update);
+            }
+
+        } else {
+            //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+            Log.e("地图错误", "定位失败, 错误码:" + lastKnownLocation.getErrorCode() + ", 错误信息:"
+                    + lastKnownLocation.getErrorInfo());
+        }
     }
 }

@@ -59,6 +59,8 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
     LinearLayout calendarBtnLayout;
     @BindView(R.id.sensor_calendar_date_layout)
     LinearLayout sensorCalendarDateLayout;
+    @BindView(R.id.ac_calendar_view_dismiss)
+    View dismissiView;
     private boolean isMultiple;
     private String startDate;
     private String endDate;
@@ -149,7 +151,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
 
     }
 
-    @OnClick({R.id.ac_calendar_tv_cancel, R.id.ac_calendar_tv_save})
+    @OnClick({R.id.ac_calendar_tv_cancel, R.id.ac_calendar_tv_save,R.id.ac_calendar_view_dismiss})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_calendar_tv_cancel:
@@ -157,6 +159,9 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
                 break;
             case R.id.ac_calendar_tv_save:
                 saveDate();
+                break;
+            case R.id.ac_calendar_view_dismiss:
+                mPopupWindow.dismiss();
                 break;
         }
     }

@@ -36,8 +36,9 @@
             android:paddingLeft="10dp"
             android:paddingRight="10dp"
             android:paddingTop="3dp"
-            android:visibility="gone"
+            android:visibility="visible"
             android:src="@drawable/deploy_map_back_location" />
+
     </RelativeLayout>
 
     <LinearLayout
@@ -52,7 +53,7 @@
             android:layout_gravity="center"
             android:layout_margin="10dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_bg_corner_fa_shadow"
+            android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_6dp"
             android:gravity="center"
             android:padding="10dp"
             android:text="微信分享"

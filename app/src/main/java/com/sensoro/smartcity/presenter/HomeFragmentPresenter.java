@@ -37,6 +37,7 @@ import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
+import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils.DialogDisplayStatusListener;
 import com.tencent.bugly.beta.Beta;
 import com.tencent.bugly.beta.UpgradeInfo;
 
@@ -58,7 +59,8 @@ import rx.functions.Action1;
 import rx.functions.Func1;
 import rx.schedulers.Schedulers;
 
-public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> implements Constants, IOnCreate {
+public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> implements Constants, IOnCreate
+,DialogDisplayStatusListener {
     private Activity mContext;
     private final List<DeviceInfo> mDataList = new ArrayList<>();
     private final Handler mHandler = new Handler();
@@ -697,8 +699,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
             @Override
             public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                getView().dismissProgressDialog();
+//                getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
+                    getView().dismissProgressDialog();
                     getView().toastShort("未获取到预警日志信息");
                 } else {
                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
@@ -716,7 +719,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
         //TODO 弹起预警记录的dialog
-        AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext);
+        AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext,this);
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
         mAlarmLogPop.show();
 
@@ -771,5 +774,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
             });
         }
+    }
+
+    @Override
+    public void onDialogShow() {
+        getView().dismissProgressDialog();
     }
 }
