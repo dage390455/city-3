@@ -7,6 +7,7 @@ import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
@@ -79,6 +80,7 @@ public interface RetrofitService {
     String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
     String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
     String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
+    String DEPLOY_DEVICE_DETAIL = "devices/detail";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -139,6 +141,9 @@ public interface RetrofitService {
 
     @POST("devices/app/{sn}")
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    @GET(DEPLOY_DEVICE_DETAIL)
+    Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(@Query("sn") String sn, @Query("longitude") double longitude, @Query("latitude") double latitude);
 
     //    @HTTP(method = "DELETE", path = LOGOUT, hasBody = true)
 //    Observable<ResponseBase> logout(@Header("phoneId") String phoneId, @Header("uid")

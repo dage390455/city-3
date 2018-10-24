@@ -77,6 +77,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     private ProgressUtils mProgressUtils;
     private ProgressDialog progressDialog;
+    private ProgressUtils mLoadBleConfigDialog;
+    private ProgressUtils.Builder mLoadBleConfigDialogBuilder;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -90,6 +92,9 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     private void initView() {
         includeTextTitleImvArrowsLeft = (ImageView) findViewById(R.id.include_text_title_imv_arrows_left);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
+        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage("获取中配置文件...").build());
+
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         updateUploadState(true);
         initUploadDialog();
@@ -337,6 +342,21 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void updateUploadTvText(String text) {
         acDeployDeviceDetailTvUpload.setText(text);
+    }
+
+    @Override
+    public void showBleConfigDialog() {
+        mLoadBleConfigDialog.showProgress();
+    }
+
+    @Override
+    public void updateBleConfigDialogMessage(String msg) {
+        mLoadBleConfigDialogBuilder.setMessage(msg);
+    }
+
+    @Override
+    public void dismissBleConfigDialog() {
+        mLoadBleConfigDialog.dismissProgress();
     }
 
     @Override

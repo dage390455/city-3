@@ -38,4 +38,11 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void showWarnDialog();
 
     void updateUploadTvText(String text);
+
+    void showBleConfigDialog();
+
+    void updateBleConfigDialogMessage(String msg);
+
+    void dismissBleConfigDialog();
+
 }

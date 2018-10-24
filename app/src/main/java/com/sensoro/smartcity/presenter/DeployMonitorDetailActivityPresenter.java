@@ -4,10 +4,19 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.amap.api.maps.model.LatLng;
 import com.lzy.imagepicker.bean.ImageItem;
+import com.sensoro.libbleserver.ble.BLEDevice;
+import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
+import com.sensoro.libbleserver.ble.SensoroDevice;
+import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
+import com.sensoro.libbleserver.ble.SensoroDeviceConnectionTest;
+import com.sensoro.libbleserver.ble.SensoroWriteCallback;
+import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
@@ -27,12 +36,12 @@ import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
-import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
@@ -44,13 +53,13 @@ import org.greenrobot.eventbus.ThreadMode;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants {
+public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants
+,SensoroConnectionCallback,BLEDeviceListener<BLEDevice> {
     private Activity mContext;
     private DeployMapModel deployMapModel = new DeployMapModel();
     private final List<String> tagList = new ArrayList<>();
@@ -61,6 +70,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private String mNameAndAddress;
     //旧设备
     private InspectionTaskDeviceDetail mDeviceDetail;
+    private SensoroDeviceConnectionTest sensoroDeviceConnection;
+    private List<Integer> channelMask;
+    private String blePassword;
 
 
     @Override
@@ -163,15 +175,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 default:
                     break;
             }
-            String tags[] = mDeviceInfo.getTags();
-            if (tags != null) {
-                for (String tag : tags) {
-                    if (!TextUtils.isEmpty(tag)) {
-                        tagList.add(tag);
-                    }
-                }
-                getView().updateTagsData(tagList);
-            }
+//            String tags[] = mDeviceInfo.getTags();
+//            if (tags != null) {
+//                for (String tag : tags) {
+//                    if (!TextUtils.isEmpty(tag)) {
+//                        tagList.add(tag);
+//                    }
+//                }
+//                getView().updateTagsData(tagList);
+//            }
             //
             getView().updateUploadState(true);
         }
@@ -237,11 +249,23 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
             }
         }
-        String[] tags = mDeviceInfo.getTags();
-        if(tags != null && tags.length > 0){
-            getView().updateTagsData(Arrays.asList(tags));
-        }
 
+//        String[] tags = mDeviceInfo.getTags();
+//        if(tags != null && tags.length > 0){
+//            tagList.clear();
+//            tagList.addAll(Arrays.asList(tags));
+//            getView().updateTagsData(tagList);
+//        }
+        String tags[] = mDeviceInfo.getTags();
+            if (tags != null && tags.length>0) {
+                tagList.clear();
+                for (String tag : tags) {
+                    if (!TextUtils.isEmpty(tag)) {
+                        tagList.add(tag);
+                    }
+                }
+                getView().updateTagsData(tagList);
+            }
         double[] lonlat = mDeviceInfo.getLonlat();
         if (lonlat != null && lonlat[0] != 0 && lonlat[1] != 0) {
             deployMapModel.latLng = new LatLng(lonlat[1],lonlat[0]);
@@ -289,52 +313,91 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //设备部署
             case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
                 //巡检设备更换
-                if (images.size() > 0) {
-                    //TODO 图片提交
-                    final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
-                            .UpLoadPhotoListener() {
+                getView().showBleConfigDialog();
+                RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployMapModel.sn,lon,lan)
+                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>() {
+                    @Override
+                    public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                        blePassword = deployDeviceDetailRsp.getData().getBlePassword();
+                        channelMask = deployDeviceDetailRsp.getData().getChannelMask();
+                        if (TextUtils.isEmpty(blePassword)&&channelMask!=null&&channelMask.size()>0) {
+                            try {
+                                boolean bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
+                                if (!bleHasOpen) {
+                                    bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
+                                }
 
-                        @Override
-                        public void onStart() {
-                            getView().showStartUploadProgressDialog();
-                        }
-
-                        @Override
-                        public void onComplete(List<ScenesData> scenesDataList) {
-                            ArrayList<String> strings = new ArrayList<>();
-                            for (ScenesData scenesData : scenesDataList) {
-                                scenesData.type = "image";
-                                strings.add(scenesData.url);
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                                getView().dismissBleConfigDialog();
+                                getView().updateUploadState(true);
+                                getView().toastShort("请检查蓝牙状态");
                             }
-                            getView().dismissUploadProgressDialog();
-                            LogUtils.loge(this, "上传成功--- size = " + strings.size());
-                            //TODO 上传结果
-                            doDeployResult(lon, lan, strings);
+                        }else{
+                            getView().dismissBleConfigDialog();
+                            doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.latitude);
                         }
 
-                        @Override
-                        public void onError(String errMsg) {
-                            getView().updateUploadState(true);
-                            getView().dismissUploadProgressDialog();
-                            getView().toastShort(errMsg);
-                        }
+                    }
 
-                        @Override
-                        public void onProgress(String content, double percent) {
-                            getView().showUploadProgressDialog(content, percent);
-                        }
-                    };
-                    UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
-                    upLoadPhotosUtils.doUploadPhoto(images);
-                } else {
-                    doDeployResult(lon, lan, null);
-                }
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissBleConfigDialog();
+//                        getView().updateUploadState(true);
+//                        getView().toastShort("获取配置文件失败，请重试 "+errorMsg);
+                        doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.latitude);
+                    }
+                });
+                //doUploadImages(lon, lan);
                 break;
             case TYPE_SCAN_INSPECTION:
                 //扫描巡检设备
                 break;
             default:
                 break;
+        }
+    }
+
+    private void doUploadImages(final double lon, final double lan) {
+        if (images.size() > 0) {
+            //TODO 图片提交
+            final UpLoadPhotosUtils.UpLoadPhotoListener upLoadPhotoListener = new UpLoadPhotosUtils
+                    .UpLoadPhotoListener() {
+
+                @Override
+                public void onStart() {
+                    getView().showStartUploadProgressDialog();
+                }
+
+                @Override
+                public void onComplete(List<ScenesData> scenesDataList) {
+                    ArrayList<String> strings = new ArrayList<>();
+                    for (ScenesData scenesData : scenesDataList) {
+                        scenesData.type = "image";
+                        strings.add(scenesData.url);
+                    }
+                    getView().dismissUploadProgressDialog();
+                    LogUtils.loge(this, "上传成功--- size = " + strings.size());
+                    //TODO 上传结果
+                    doDeployResult(lon, lan, strings);
+                }
+
+                @Override
+                public void onError(String errMsg) {
+                    getView().updateUploadState(true);
+                    getView().dismissUploadProgressDialog();
+                    getView().toastShort(errMsg);
+                }
+
+                @Override
+                public void onProgress(String content, double percent) {
+                    getView().showUploadProgressDialog(content, percent);
+                }
+            };
+            UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);
+            upLoadPhotosUtils.doUploadPhoto(images);
+        } else {
+            doDeployResult(lon, lan, null);
         }
     }
 
@@ -734,5 +797,71 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             }
         }
         return true;
+    }
+
+    @Override
+    public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
+        for (Integer integer : ((SensoroDevice) bleDevice).getChannelMaskList()) {
+            Log.e("hcs","channelmask:::"+integer);
+        }
+        getView().updateBleConfigDialogMessage("正在加载配置文件...");
+        sensoroDeviceConnection.writeData05ChannelMask(channelMask, new SensoroWriteCallback() {
+            @Override
+            public void onWriteSuccess(Object o, int cmd) {
+                Log.e("hcs","写入成功:::");
+                getView().dismissBleConfigDialog();
+                sensoroDeviceConnection.disconnect();
+                doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.latitude);
+            }
+
+            @Override
+            public void onWriteFailure(int errorCode, int cmd) {
+                Log.e("hcs","写入失败:::");
+                getView().dismissBleConfigDialog();
+                getView().updateUploadState(true);
+                getView().toastShort("蓝牙连接失败，请重试");
+            }
+        });
+
+    }
+
+    @Override
+    public void onConnectedFailure(int errorCode) {
+        getView().dismissBleConfigDialog();
+        getView().updateUploadState(true);
+        getView().toastShort("蓝牙连接失败，请重试");
+
+    }
+
+    @Override
+    public void onDisconnected() {
+
+    }
+
+    @Override
+    public void onNewDevice(BLEDevice bleDevice) {
+        if(bleDevice.getSn().equals(deployMapModel.sn) && !TextUtils.isEmpty(blePassword) && channelMask != null && channelMask.size() > 0){
+            deployMapModel.address = bleDevice.getMacAddress();
+            sensoroDeviceConnection = new SensoroDeviceConnectionTest(mContext, bleDevice.getMacAddress());
+            try {
+                sensoroDeviceConnection.connect(blePassword,DeployMonitorDetailActivityPresenter.this);
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().dismissBleConfigDialog();
+                getView().updateUploadState(true);
+                getView().toastShort("蓝牙连接失败,请重试");
+
+            }
+        }
+    }
+
+    @Override
+    public void onGoneDevice(BLEDevice bleDevice) {
+
+    }
+
+    @Override
+    public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
+
     }
 }
