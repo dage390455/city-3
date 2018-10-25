@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="18dp"
-            android:drawableEnd="@drawable/main_smal_triangle"
+            android:drawableEnd="@drawable/main_small_triangle"
             android:drawablePadding="10dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"

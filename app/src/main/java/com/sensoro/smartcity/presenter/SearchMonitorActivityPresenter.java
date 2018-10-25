@@ -169,7 +169,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                 mDataList.add(deviceInfo);
             }
         }
-//        getView().refreshData(mDataList);
+//        getView().refreshContentData(mDataList);
     }
 
     private boolean isMatcher(DeviceInfo deviceInfo) {

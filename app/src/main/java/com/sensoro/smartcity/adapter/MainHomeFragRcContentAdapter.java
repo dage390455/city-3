@@ -1,8 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
-import android.support.v7.util.DiffUtil;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -17,9 +15,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.DiffUtils.HomeContentListAdapterDiff;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
@@ -27,10 +23,8 @@ import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
-import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,16 +33,17 @@ import butterknife.ButterKnife;
 public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeFragRcContentAdapter.MyViewHolder> implements Constants {
     private final Activity mContext;
     private final List<DeviceInfo> mList = new ArrayList<>();
-    private RecycleViewItemClickListener itemClickListener;
-    private OnItemAlarmInfoClickListener onItemAlarmInfoClickListener;
+    private OnContentItemClickListener onContentItemClickListener;
     private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
 
-    public interface OnItemAlarmInfoClickListener {
+    public interface OnContentItemClickListener {
         void onAlarmInfoClick(View v, int position);
+
+        void onItemClick(View view, int position);
     }
 
-    public void setOnItemAlarmInfoClickListener(OnItemAlarmInfoClickListener onItemAlarmInfoClickListener) {
-        this.onItemAlarmInfoClickListener = onItemAlarmInfoClickListener;
+    public void setOnContentItemClickListener(OnContentItemClickListener onContentItemClickListener) {
+        this.onContentItemClickListener = onContentItemClickListener;
     }
 
     public MainHomeFragRcContentAdapter(Activity context) {
@@ -58,27 +53,30 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     public void updateData(final List<DeviceInfo> list) {
         deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
         //
-        ThreadPoolManager.getInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                HomeContentListAdapterDiff homeContentListAdapterDiff = new HomeContentListAdapterDiff(mList, list);
-                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(homeContentListAdapterDiff, true);
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        diffResult.dispatchUpdatesTo(MainHomeFragRcContentAdapter.this);
-                        mList.clear();
-                        mList.addAll(list);
-                    }
-                });
-
-
-            }
-        });
+//        ThreadPoolManager.getInstance().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                HomeContentListAdapterDiff homeContentListAdapterDiff = new HomeContentListAdapterDiff(mList, list);
+//                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(homeContentListAdapterDiff, true);
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        diffResult.dispatchUpdatesTo(MainHomeFragRcContentAdapter.this);
+//                        mList.clear();
+//                        mList.addAll(list);
+//                    }
+//                });
+//
+//
+//            }
+//        });
+        mList.clear();
+        mList.addAll(list);
+        notifyDataSetChanged();
     }
 
-    public void setOnItemClickListener(RecycleViewItemClickListener itemClickListener) {
-        this.itemClickListener = itemClickListener;
+    public void addData(List<DeviceInfo> list) {
+        mList.addAll(list);
     }
 
     public List<DeviceInfo> getData() {
@@ -122,8 +120,8 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (itemClickListener != null) {
-                    itemClickListener.onItemClick(v, position);
+                if (onContentItemClickListener != null) {
+                    onContentItemClickListener.onItemClick(v, position);
                 }
             }
         });
@@ -144,11 +142,11 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
             case SENSOR_STATUS_ALARM:
                 color = R.color.c_f34a4a;
                 holder.ivItemAlarm.setVisibility(View.VISIBLE);
-                if (onItemAlarmInfoClickListener != null) {
+                if (onContentItemClickListener != null) {
                     holder.ivItemAlarm.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            onItemAlarmInfoClickListener.onAlarmInfoClick(v, position);
+                            onContentItemClickListener.onAlarmInfoClick(v, position);
                         }
                     });
                 }
@@ -200,33 +198,33 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         }
     }
 
-    @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull List<Object> payloads) {
-        if (payloads.isEmpty()) {
-            onBindViewHolder(holder, position);
-        } else {
-            setBottomVisible(holder, position);
-            DeviceInfo deviceInfo = mList.get(position);
-            HashMap map = (HashMap) payloads.get(0);
-            LogUtils.loge(this, "----------------->>>>" + map.toString());
-            Integer status = (Integer) map.get("status");
-            if (status != null) {
-                LogUtils.loge(this, "status change -->> " + status);
-                setContentStatus(holder, position, status, deviceInfo.getDeviceType());
-            }
-            Long updateTime = (Long) map.get("updateTime");
-            if (updateTime != null) {
-                LogUtils.loge(this, "updateTime change -->> " + updateTime);
-                setContentTime(holder, updateTime);
-            }
-            String name = (String) map.get("name");
-            if (!TextUtils.isEmpty(name)) {
-                LogUtils.loge(this, "updateTime name -->> " + name);
-                setContentName(holder, name, deviceInfo.getSn());
-            }
-            setListener(holder, position);
-        }
-    }
+//    @Override
+//    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull List<Object> payloads) {
+//        if (payloads.isEmpty()) {
+//            onBindViewHolder(holder, position);
+//        } else {
+//            setBottomVisible(holder, position);
+//            DeviceInfo deviceInfo = mList.get(position);
+//            HashMap map = (HashMap) payloads.get(0);
+//            LogUtils.loge(this, "----------------->>>>" + map.toString());
+//            Integer status = (Integer) map.get("status");
+//            if (status != null) {
+//                LogUtils.loge(this, "status change -->> " + status);
+//                setContentStatus(holder, position, status, deviceInfo.getDeviceType());
+//            }
+//            Long updateTime = (Long) map.get("updateTime");
+//            if (updateTime != null) {
+//                LogUtils.loge(this, "updateTime change -->> " + updateTime);
+//                setContentTime(holder, updateTime);
+//            }
+//            String name = (String) map.get("name");
+//            if (!TextUtils.isEmpty(name)) {
+//                LogUtils.loge(this, "updateTime name -->> " + name);
+//                setContentName(holder, name, deviceInfo.getSn());
+//            }
+//            setListener(holder, position);
+//        }
+//    }
 
     @Override
     public int getItemCount() {

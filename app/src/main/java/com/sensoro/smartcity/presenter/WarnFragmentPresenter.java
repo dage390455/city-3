@@ -59,7 +59,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
-        requestSearchData(DIRECTION_DOWN, null);
+        if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+            requestSearchData(DIRECTION_DOWN, null);
+        }
     }
 
     public void doContactOwner(int position) {
@@ -308,7 +310,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             Intent intent = new Intent(mContext, AlarmDetailLogActivity.class);
             intent.putExtra(EXTRA_ALARM_INFO, mDeviceAlarmLogInfoList.get(position));
             getView().startAC(intent);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 

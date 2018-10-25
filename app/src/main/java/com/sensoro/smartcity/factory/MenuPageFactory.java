@@ -17,11 +17,7 @@ public class MenuPageFactory {
         if (grants != null) {
             List<String> station = grants.getStation();
             if (station != null) {
-                for (String str : station) {
-                    if (str.equals("deploy")) {
-                        return true;
-                    }
-                }
+                return station.contains("deploy");
             }
 
         }
@@ -48,11 +44,7 @@ public class MenuPageFactory {
         if (grants != null) {
             List<String> contract = grants.getContract();
             if (contract != null) {
-                for (String str : contract) {
-                    if ("list".equals(str) || "create".equals(str)) {
-                        return true;
-                    }
-                }
+                return contract.contains("list") || contract.contains("create");
             }
         }
         return false;
@@ -68,11 +60,7 @@ public class MenuPageFactory {
         if (grants != null) {
             List<String> tv = grants.getTv();
             if (tv != null) {
-                for (String str : tv) {
-                    if ("qrcode".equals(str)) {
-                        return true;
-                    }
-                }
+                return tv.contains("qrcode");
             }
         }
         return false;
@@ -91,6 +79,7 @@ public class MenuPageFactory {
 
     /**
      * 判断巡检权限
+     *
      * @param grants
      * @return
      */
@@ -98,11 +87,65 @@ public class MenuPageFactory {
         if (grants != null) {
             List<String> inspectTask = grants.getInspectTask();
             if (inspectTask != null) {
-                for (String str : inspectTask) {
-                    if ("modifyStatus".equals(str)) {
-                        return true;
-                    }
-                }
+                return inspectTask.contains("modifyStatus");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否有预警权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasAlarmInfo(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsAlarm = grants.getAlarm();
+            if (grantsAlarm != null) {
+                return grantsAlarm.contains("list");
+            }
+        }
+        return false;
+    }
+
+    public static boolean getHasDeviceBriefList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("briefList") && grantsDevice.contains("statusStatistics");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 信号测试权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasSignalCheck(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("signalCheck");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 信号配置权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasSignalConfig(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("signalConfig");
             }
         }
         return false;

@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.PopupWindow;
@@ -12,11 +11,13 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.HomeViewPager;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -44,6 +45,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private MainFragmentPageAdapter mPageAdapter;
     private PopupWindow mPopupWindow;
+    private int mode;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -51,6 +53,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
+
     }
 
     @Override
@@ -163,22 +166,42 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void setSuperAccount(boolean isSuper) {
-        acMainRbMain.setVisibility(isSuper ? View.GONE : View.VISIBLE);
-        acMainRbWarning.setVisibility(isSuper ? View.GONE : View.VISIBLE);
+    public void setHasDeviceBriefControl(boolean hasDeviceBriefControl) {
+        acMainRbMain.setVisibility(hasDeviceBriefControl ? View.VISIBLE : View.GONE);
+
+    }
+
+    @Override
+    public void setHasAlarmInfoControl(boolean hasDeviceAlarmInfoControl) {
+        acMainRbWarning.setVisibility(hasDeviceAlarmInfoControl ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setHasManagerControl(boolean hasManagerControl) {
+        acMainRbManage.setVisibility(hasManagerControl ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setAlarmWarnCount(int count) {
-        if (count > 0) {
-            acMainTvWarningCount.setVisibility(View.VISIBLE);
-            if (count > 99) {
-                count = 99;
+        try {
+            if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+                if (count > 0) {
+                    acMainTvWarningCount.setVisibility(View.VISIBLE);
+                    if (count > 99) {
+                        count = 99;
+                    }
+                    acMainTvWarningCount.setText(String.valueOf(count));
+                } else {
+                    acMainTvWarningCount.setVisibility(View.GONE);
+                }
+            } else {
+                acMainTvWarningCount.setVisibility(View.GONE);
             }
-            acMainTvWarningCount.setText(String.valueOf(count));
-        } else {
-            acMainTvWarningCount.setVisibility(View.GONE);
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+
+
     }
 
     @Override
@@ -191,5 +214,15 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager());
         acMainHvpContent.setAdapter(mPageAdapter);
         acMainHvpContent.setOffscreenPageLimit(5);
+    }
+
+    @Override
+    public boolean isActivityOverrideStatusBar() {
+        immersionBar = ImmersionBar.with(mActivity);
+        immersionBar
+                .transparentStatusBar()
+                .statusBarDarkFont(true)
+                .init();
+        return true;
     }
 }

@@ -43,7 +43,6 @@ import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
-import com.tencent.mm.opensdk.modelbase.BaseResp;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -440,12 +439,13 @@ public enum RetrofitServiceHelper {
 
     /**
      * 查询账号下的部署记录
+     *
      * @param beginTime
      * @param endTime
      * @return
      */
     public Observable<DeployRecordRsp> getDeployRecordList(String searchText, Long beginTime, Long endTime, String owners, String signalQuality) {
-        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(searchText,beginTime,endTime,owners,signalQuality);
+        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(searchText, beginTime, endTime, owners, signalQuality);
         RxApiManager.getInstance().add("getDeployRecordList", deployRecordList.subscribe());
         return deployRecordList;
     }

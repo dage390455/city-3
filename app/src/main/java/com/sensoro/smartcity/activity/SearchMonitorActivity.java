@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -14,7 +13,6 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -62,7 +60,7 @@ import static com.sensoro.smartcity.constant.Constants.TYPE_LIST;
 
 public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityView, SearchMonitorActivityPresenter>
         implements ISearchMonitorActivityView, View.OnClickListener, TextView
-        .OnEditorActionListener, TextWatcher, RecycleViewItemClickListener, MainHomeFragRcContentAdapter.OnItemAlarmInfoClickListener {
+        .OnEditorActionListener, TextWatcher, MainHomeFragRcContentAdapter.OnContentItemClickListener {
     @BindView(R.id.search_device_et)
     EditText mKeywordEt;
     @BindView(R.id.search_device_cancel_tv)
@@ -178,8 +176,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     private void initListView() {
 
         mSearchRcContentAdapter = new MainHomeFragRcContentAdapter(mActivity);
-        mSearchRcContentAdapter.setOnItemClickListener(this);
-        mSearchRcContentAdapter.setOnItemAlarmInfoClickListener(this);
+        mSearchRcContentAdapter.setOnContentItemClickListener(this);
         //
         xLinearLayoutManager = new SensoroXLinearLayoutManager(mActivity);
         xLinearLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
@@ -252,7 +249,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 //            }
 //            mDataList.add(deviceInfo);
 //        }
-//        refreshData();
+//        refreshContentData();
 //    }
     @Override
     public void refreshData(List<DeviceInfo> dataList) {

@@ -107,7 +107,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             } else {
 //                    indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
             }
-//                merchantSwitchFragment.refreshData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
+//                merchantSwitchFragment.refreshContentData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
 //                getView().setMenuSelected(0);
         }
         getView().setAppUpdateVisible(hasNewVersion());

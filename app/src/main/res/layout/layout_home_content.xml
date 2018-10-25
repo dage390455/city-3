@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
             android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
-            android:drawableEnd="@drawable/main_smal_triangle_gray"
+            android:drawableEnd="@drawable/main_small_triangle_gray"
             android:drawablePadding="8dp"
             android:paddingStart="14dp"
             android:paddingTop="6dp"
@@ -35,21 +35,9 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <include layout="@layout/item_no_content" />
-
-        <com.scwang.smartrefresh.layout.SmartRefreshLayout
-            android:id="@+id/refreshLayout"
+        <com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView
+            android:id="@+id/fg_main_home_rc_content"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <android.support.v7.widget.RecyclerView
-                android:id="@+id/fg_main_home_rc_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_marginStart="20dp" />
-
-
-        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+            android:layout_height="match_parent" />
     </RelativeLayout>
 </LinearLayout>

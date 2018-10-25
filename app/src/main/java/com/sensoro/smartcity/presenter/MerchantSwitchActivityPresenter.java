@@ -158,6 +158,10 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
                 eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
                 eventLoginData.hasInspection = MenuPageFactory.getHasInspection(grants);
+                eventLoginData.hasAlarmInfo = MenuPageFactory.getHasAlarmInfo(grants);
+                eventLoginData.hasDeviceBrief = MenuPageFactory.getHasDeviceBriefList(grants);
+                eventLoginData.hasSignalCheck = MenuPageFactory.getHasSignalCheck(grants);
+                eventLoginData.hasSignalConfig = MenuPageFactory.getHasSignalConfig(grants);
                 //
                 return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
             }

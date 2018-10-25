@@ -70,7 +70,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 //        StatusBarCompat.translucentStatusBar(thi®s);
 //        StatusBarCompat.setStatusBarIconDark(this,true);
         boolean darkmode = true;
-        onCreateInit(savedInstanceState);
         // todo 先不适配红米 红米手机有问题
         if(!AppUtils.getSystemModel().contains("Redmi") && !isActivityOverrideStatusBar()){
             immersionBar = ImmersionBar.with(this);
@@ -79,8 +78,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                     .statusBarDarkFont(true)
                     .init();
         }
-
-
+        onCreateInit(savedInstanceState);
         StatService.setDebugOn(true);
     }
 
@@ -90,11 +88,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      */
     public boolean isActivityOverrideStatusBar() {
         return false;
-    }
-
-
-    public boolean isChangeStatusBar() {
-        return true;
     }
 
     @Override
@@ -238,4 +231,5 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         return hasNavigationBar;
     }
+
 }

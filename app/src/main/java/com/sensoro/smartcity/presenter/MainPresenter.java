@@ -110,7 +110,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         } else {
             openLogin();
         }
-        LogUtils.loge(this, "refreshData");
+        LogUtils.loge(this, "refreshContentData");
         //提前获取一次
         try {
             String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
@@ -126,8 +126,15 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
      *
      * @return
      */
-    private boolean isSupperAccount() {
-        return PreferencesHelper.getInstance().getUserData() != null && PreferencesHelper.getInstance().getUserData().isSupperAccount;
+//    private boolean isSupperAccount() {
+//        return PreferencesHelper.getInstance().getUserData() != null && PreferencesHelper.getInstance().getUserData().isSupperAccount;
+//    }
+    public boolean hasDeviceBriefControl() {
+        return PreferencesHelper.getInstance().getUserData().hasDeviceBrief;
+    }
+
+    public boolean hasAlarmInfoControl() {
+        return PreferencesHelper.getInstance().getUserData().hasAlarmInfo;
     }
 
     private final class DeviceInfoListener implements Emitter.Listener {
@@ -142,7 +149,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             final JSONObject jsonObject = jsonArray.getJSONObject(0);
                             String json = jsonObject.toString();
 //                            LogUtils.loge(this, "jsonArray = " + json);
-                            if (!isSupperAccount()) {
+                            if (hasDeviceBriefControl()) {
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json,
                                             DeviceInfo.class);
@@ -177,7 +184,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             JSONObject jsonObject = (JSONObject) arg;
                             String json = jsonObject.toString();
                             LogUtils.loge(this, "DeviceAlarmCountListener jsonArray = " + json);
-                            if (!isSupperAccount()) {
+                            if (hasDeviceBriefControl()) {
                                 try {
                                     DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmCount.class);
                                     List<DeviceAlarmCount.AllBean> all = deviceAlarmCount.getAll();
@@ -213,7 +220,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             JSONObject jsonObject = (JSONObject) arg;
                             String json = jsonObject.toString();
                             LogUtils.loge(this, "DeviceAlarmDisplayStatusListener json = " + json);
-                            if (!isSupperAccount()) {
+                            if (hasAlarmInfoControl()) {
                                 try {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmLogInfo.class);
                                     String event = deviceAlarmLogInfo.getEvent();
@@ -280,9 +287,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             });
             //检查更新
 //            Beta.checkUpgrade(false, false);
-            if (!isSupperAccount()) {
-                createSocket();
-            }
+            createSocket();
         }
     }
 
@@ -293,10 +298,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             options.query = "session=" + sessionId;
             options.forceNew = true;
             mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
-            mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-            mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-            mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
-            mSocket.connect();
+            if (hasDeviceBriefControl()) {
+                mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+            }
+            if (hasAlarmInfoControl()) {
+                mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+            }
+            if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
+                mSocket.connect();
+            }
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -322,12 +333,19 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
      * 简单判断账户类型
      */
     private void freshAccountType() {
-        if (isSupperAccount()) {
-            getView().setRbChecked(R.id.ac_main_rb_manage);
-            getView().setSuperAccount(true);
-        } else {
+        if (hasDeviceBriefControl()) {
+            getView().setHasDeviceBriefControl(true);
             getView().setRbChecked(R.id.ac_main_rb_main);
-            getView().setSuperAccount(false);
+            getView().setHasAlarmInfoControl(hasAlarmInfoControl());
+        } else {
+            getView().setHasDeviceBriefControl(false);
+            if (hasAlarmInfoControl()) {
+                getView().setRbChecked(R.id.ac_main_rb_warning);
+                getView().setHasAlarmInfoControl(true);
+            } else {
+                getView().setHasAlarmInfoControl(false);
+                getView().setRbChecked(R.id.ac_main_rb_manage);
+            }
         }
     }
 
@@ -336,16 +354,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         PreferencesHelper.getInstance().saveUserData(eventLoginData);
 //        getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
 //        if (indexFragment != null) {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-            getView().setSuperAccount(true);
-            getView().setRbChecked(R.id.ac_main_rb_manage);
-//                merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
-        } else {
-            getView().setSuperAccount(false);
-            getView().setRbChecked(R.id.ac_main_rb_main);
+        freshAccountType();
+        if (hasAlarmInfoControl()) {
             freshAlarmCount();
         }
-//            merchantSwitchFragment.refreshData(mEventLoginData.userName, mEventLoginData.phone, mEventLoginData.phoneId);
         //
 //            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
 //            getView().setCurrentPagerItem(0);
@@ -359,9 +371,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         try {
             if (mSocket != null) {
                 mSocket.disconnect();
-                mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-                mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+                if (hasDeviceBriefControl()) {
+                    mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                    mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                }
+                if (hasAlarmInfoControl()) {
+                    mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+                }
+
                 mSocket = null;
             }
             String sessionId = RetrofitServiceHelper.INSTANCE.getSessionId();
@@ -369,11 +386,16 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             options.query = "session=" + sessionId;
             options.forceNew = true;
             mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
-            mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-            mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-            mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
-            mSocket.connect();
-
+            if (hasDeviceBriefControl()) {
+                mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+            }
+            if (hasAlarmInfoControl()) {
+                mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+            }
+            if (hasAlarmInfoControl() || hasDeviceBriefControl()) {
+                mSocket.connect();
+            }
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
@@ -388,9 +410,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
         if (mSocket != null) {
             mSocket.disconnect();
-            mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
-            mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-            mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+            if (hasDeviceBriefControl()) {
+                mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+            }
+            if (hasAlarmInfoControl()) {
+                mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
+            }
             mSocket = null;
         }
         mFragmentList.clear();
@@ -443,7 +469,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     }
 
     private void freshAlarmCount() {
-        if (isSupperAccount()) {
+        if (!hasAlarmInfoControl()) {
             return;
         }
         String[] str = {"0"};

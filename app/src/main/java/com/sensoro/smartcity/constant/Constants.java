@@ -176,6 +176,10 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
     String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
     String EXTRA_GRANTS_HAS_INSPECTION_TASK = "extra_grants_has_inspection_task";
+    String EXTRA_GRANTS_HAS_ALARM_LOG_INFO = "extra_grants_has_alarm_log_info";
+    String EXTRA_GRANTS_HAS_DEVICE_BRIEF = "extra_grants_has_device_brief";
+    String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK = "extra_grants_has_device_signal_check";
+    String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG = "extra_grants_has_device_signal_config";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO = "extra_inspection_deploy_old_device_info";
     //扫描来源

@@ -9,7 +9,7 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="28dp"
         android:background="@drawable/shape_bg_solid_fa_stroke_df_full_corner"
-        android:drawableEnd="@drawable/main_smal_triangle"
+        android:drawableEnd="@drawable/main_small_triangle"
         android:drawablePadding="8dp"
         android:paddingStart="14dp"
         android:paddingTop="6dp"

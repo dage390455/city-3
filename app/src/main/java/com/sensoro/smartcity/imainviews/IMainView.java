@@ -16,7 +16,12 @@ public interface IMainView extends IProgressDialog, IToast, IActivityIntent {
 
     void updateMainPageAdapterData(List<Fragment> fragments);
 
-    void setSuperAccount(boolean isSuper);
+    void setHasDeviceBriefControl(boolean hasDeviceBriefControl);
+
+    void setHasAlarmInfoControl(boolean hasDeviceAlarmInfoControl);
+
+    void setHasManagerControl(boolean hasManagerControl);
+
     void setAlarmWarnCount(int count);
 
     boolean isHomeFragmentChecked();

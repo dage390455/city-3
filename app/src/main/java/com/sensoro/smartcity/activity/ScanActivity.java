@@ -23,7 +23,6 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.yixia.camera.util.Log;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -119,10 +118,6 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         startScan();
     }
 
-    @Override
-    public boolean isChangeStatusBar() {
-        return false;
-    }
 
     @Override
     protected void onStop() {

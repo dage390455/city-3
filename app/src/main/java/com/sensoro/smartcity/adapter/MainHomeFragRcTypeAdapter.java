@@ -2,10 +2,6 @@ package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.Looper;
-import android.support.v7.util.DiffUtil;
-import android.support.v7.util.ListUpdateCallback;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -17,15 +13,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.DiffUtils.TopListAdapterDiff;
 import com.sensoro.smartcity.iwidget.IOnDestroy;
 import com.sensoro.smartcity.model.HomeTopModel;
-import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.util.AppUtils;
-import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -39,101 +31,98 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
 
     private final Activity mContext;
     private final List<HomeTopModel> mData = new ArrayList<>();
-    private OnTopClickListener onTopClickListener;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     public MainHomeFragRcTypeAdapter(Activity context) {
         mContext = context;
     }
 
-    public void setOnTopClickListener(OnTopClickListener onTopClickListener) {
-        this.onTopClickListener = onTopClickListener;
-    }
-
     public void updateData(final RecyclerView recyclerView, final List<HomeTopModel> data) {
-        ThreadPoolManager.getInstance().execute(new Runnable() {
-            @Override
-            public void run() {
-                TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mData, data);
-                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, true);
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
-                            @Override
-                            public void onInserted(final int position, final int count) {
-                                LogUtils.loge("updateData-----onInserted-->>position = " + position + ", count = " + count);
-                                notifyItemRangeInserted(position, count);
-                                try {
-                                    mHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            recyclerView.smoothScrollToPosition(position);
-                                        }
-                                    }, 50);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                            @Override
-                            public void onRemoved(final int position, final int count) {
-                                notifyItemRangeRemoved(position, count);
-                                LogUtils.loge("updateData-----onRemoved-->>position = " + position + ", count = " + count);
-                                try {
-                                    mHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            recyclerView.smoothScrollToPosition(position);
-                                        }
-                                    }, 50);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                            @Override
-                            public void onMoved(final int fromPosition, final int toPosition) {
-                                notifyItemMoved(fromPosition, toPosition);
-                                LogUtils.loge("updateData-----onMoved-->>fromPosition = " + fromPosition + ", toPosition = " + toPosition);
-                                try {
-                                    mHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            recyclerView.smoothScrollToPosition(toPosition);
-                                        }
-                                    }, 50);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                            @Override
-                            public void onChanged(final int position, final int count, final Object payload) {
-                                notifyItemRangeChanged(position, count, payload);
-                                LogUtils.loge("updateData-----onChanged-->>position = " + position + ", count = " + count);
-                                try {
-                                    mHandler.postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            recyclerView.smoothScrollToPosition(position);
-                                        }
-                                    }, 50);
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                            }
-                        });
-                        mData.clear();
-                        mData.addAll(data);
-                    }
-                });
-
-            }
-        });
+//        ThreadPoolManager.getInstance().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mData, data);
+//                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, true);
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
+//                            @Override
+//                            public void onInserted(final int position, final int count) {
+//                                LogUtils.loge("updateData-----onInserted-->>position = " + position + ", count = " + count);
+//                                notifyItemRangeInserted(position, count);
+//                                try {
+//                                    mHandler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            recyclerView.smoothScrollToPosition(position);
+//                                        }
+//                                    }, 50);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//
+//                            @Override
+//                            public void onRemoved(final int position, final int count) {
+//                                notifyItemRangeRemoved(position, count);
+//                                LogUtils.loge("updateData-----onRemoved-->>position = " + position + ", count = " + count);
+//                                try {
+//                                    mHandler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            recyclerView.smoothScrollToPosition(position);
+//                                        }
+//                                    }, 50);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//
+//                            @Override
+//                            public void onMoved(final int fromPosition, final int toPosition) {
+//                                notifyItemMoved(fromPosition, toPosition);
+//                                LogUtils.loge("updateData-----onMoved-->>fromPosition = " + fromPosition + ", toPosition = " + toPosition);
+//                                try {
+//                                    mHandler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            recyclerView.smoothScrollToPosition(toPosition);
+//                                        }
+//                                    }, 50);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//
+//                            }
+//
+//                            @Override
+//                            public void onChanged(final int position, final int count, final Object payload) {
+//                                notifyItemRangeChanged(position, count, payload);
+//                                LogUtils.loge("updateData-----onChanged-->>position = " + position + ", count = " + count);
+//                                try {
+//                                    mHandler.postDelayed(new Runnable() {
+//                                        @Override
+//                                        public void run() {
+//                                            recyclerView.smoothScrollToPosition(position);
+//                                        }
+//                                    }, 50);
+//                                } catch (Exception e) {
+//                                    e.printStackTrace();
+//                                }
+//                            }
+//                        });
+//                        mData.clear();
+//                        mData.addAll(data);
+//                    }
+//                });
+//
+//            }
+//        });
+        mData.clear();
+        mData.addAll(data);
+        notifyDataSetChanged();
     }
 
     public List<HomeTopModel> getData() {
@@ -142,14 +131,7 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
 
     @Override
     public void onDestroy() {
-        if (mHandler != null) {
-            mHandler.removeCallbacksAndMessages(null);
-        }
         mData.clear();
-    }
-
-    public interface OnTopClickListener {
-        void onStatusChange(int status);
     }
 
     @Override
@@ -165,7 +147,6 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         freshType(holder, type, position);
         int value = homeTopModel.value;
         freshValue(holder, value);
-        setListener(holder, position);
     }
 
     private void freshValue(MyViewHolder holder, int value) {
@@ -219,36 +200,23 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         }
     }
 
-    @Override
-    public void onBindViewHolder(MyViewHolder holder, final int position, List<Object> payloads) {
-        if (payloads.isEmpty()) {
-            onBindViewHolder(holder, position);
-        } else {
-            HashMap map = (HashMap) payloads.get(0);
-            Integer type = (Integer) map.get("type");
-            if (type != null) {
-                freshType(holder, type, position);
-            }
-            Integer value = (Integer) map.get("value");
-            if (value != null) {
-                freshValue(holder, value);
-            }
-            setListener(holder, position);
-
-        }
-    }
-
-    private void setListener(MyViewHolder holder, final int position) {
-        holder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (onTopClickListener != null) {
-                    int type = mData.get(position).type;
-                    onTopClickListener.onStatusChange(type);
-                }
-            }
-        });
-    }
+//    @Override
+//    public void onBindViewHolder(MyViewHolder holder, final int position, List<Object> payloads) {
+//        if (payloads.isEmpty()) {
+//            onBindViewHolder(holder, position);
+//        } else {
+//            HashMap map = (HashMap) payloads.get(0);
+//            Integer type = (Integer) map.get("type");
+//            if (type != null) {
+//                freshType(holder, type, position);
+//            }
+//            Integer value = (Integer) map.get("value");
+//            if (value != null) {
+//                freshValue(holder, value);
+//            }
+//
+//        }
+//    }
 
     @Override
     public int getItemCount() {

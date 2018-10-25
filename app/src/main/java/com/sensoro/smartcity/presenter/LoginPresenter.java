@@ -109,7 +109,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             getView().toastShort(mContext.getResources().getString(R.string.tips_login_pwd_empty));
         } else {
             final String phoneId = PushManager.getInstance().getClientid(SensoroCityApplication.getInstance());
-            LogUtils.loge(this,"------phoneId = "+phoneId);
+            LogUtils.loge(this, "------phoneId = " + phoneId);
             getView().showProgressDialog();
             //
             RetrofitServiceHelper.INSTANCE.login(account, pwd, phoneId).subscribeOn
@@ -140,6 +140,11 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                     eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
                     eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
                     eventLoginData.hasInspection = MenuPageFactory.getHasInspection(grants);
+                    eventLoginData.hasAlarmInfo = MenuPageFactory.getHasAlarmInfo(grants);
+                    eventLoginData.hasDeviceBrief = MenuPageFactory.getHasDeviceBriefList(grants);
+                    eventLoginData.hasSignalCheck = MenuPageFactory.getHasSignalCheck(grants);
+                    eventLoginData.hasSignalConfig = MenuPageFactory.getHasSignalConfig(grants);
+                    LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
                     //
                     UserInfo.Account account1 = userInfo.getAccount();
                     if (account1 != null) {

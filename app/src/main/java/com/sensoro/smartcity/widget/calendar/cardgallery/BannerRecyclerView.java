@@ -4,6 +4,7 @@ import android.content.Context;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,9 @@ public class BannerRecyclerView extends RecyclerView {
     private static boolean mEnableLimitVelocity = true; // 最大顺时滑动速度
     private List<OnPageChangeListener> mOnPageChangeListeners;
     private OnPageChangeListener mOnPageChangeListener;
-    private int currentPosition = -1;
+    private int currentPosition = 0;
+    private float lastY;
+    private float lastX;
 
     public BannerRecyclerView(Context context) {
         super(context);
@@ -104,4 +107,38 @@ public class BannerRecyclerView extends RecyclerView {
         }
     }
 
+
+    @Override
+    public boolean onInterceptTouchEvent(MotionEvent ev) {
+        int action = ev.getAction();
+        float x = ev.getRawX();
+        float y = ev.getRawY();
+        float dealtX = 0;
+        float dealtY = 0;
+
+        switch (action) {
+            case MotionEvent.ACTION_DOWN:
+                dealtX = 0;
+                dealtY = 0;
+                getParent().requestDisallowInterceptTouchEvent(true);
+                break;
+            case MotionEvent.ACTION_MOVE:
+                dealtX += Math.abs(x - lastX);
+                dealtY += Math.abs(y - lastY);
+                if (dealtX >= dealtY) {
+                    getParent().requestDisallowInterceptTouchEvent(true);
+                } else {
+                    getParent().requestDisallowInterceptTouchEvent(false);
+                }
+                lastX = x;
+                lastY = y;
+                break;
+            case MotionEvent.ACTION_UP:
+                break;
+        }
+//        ViewParent parent = this;
+//        while (!((parent = parent.getParent()) instanceof CoordinatorLayout)) ;
+//        parent.requestDisallowInterceptTouchEvent(true);
+        return super.onInterceptTouchEvent(ev);
+    }
 }
