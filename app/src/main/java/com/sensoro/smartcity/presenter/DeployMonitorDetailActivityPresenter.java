@@ -375,10 +375,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     isAgainUpLoad = true;
                     blePassword = deployDeviceDetailRsp.getData().getBlePassword();
                     channelMask = deployDeviceDetailRsp.getData().getChannelMask();
-                    Log.e("hcs","blepassword:::="+blePassword+"channel = "+channelMask);
                     blePassword = "hzmBl4;XTD6*[@}I";
                     if (!TextUtils.isEmpty(blePassword)&&channelMask!=null&&channelMask.size()>0) {
-                        Log.e("hcs",":::"+bleAddress);
                         if(!TextUtils.isEmpty(bleAddress)){
                             connectDevice();
                             stopScanService();
@@ -397,7 +395,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                 @Override
                 public void onErrorMsg(int errorCode, String errorMsg) {
-                    Log.e("hcs","错误了:::");
                     getView().dismissBleConfigDialog();
 //                        getView().updateUploadState(true);
 //                        getView().toastShort("获取配置文件失败，请重试 "+errorMsg);
@@ -413,7 +410,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         sensoroDeviceConnection = new SensoroDeviceConnectionTest(mContext, bleAddress);
         try {
             sensoroDeviceConnection.connect(blePassword,DeployMonitorDetailActivityPresenter.this);
-            Log.e("hcs","连接中:::");
             stopScanService();
 
         } catch (Exception e) {
@@ -872,7 +868,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
-        Log.e("hcs","连接成功:::");
         isAgainUpLoad = false;
         isAutoConnect = false;
         mContext.runOnUiThread(new Runnable() {
@@ -882,7 +877,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 sensoroDeviceConnection.writeData05ChannelMask(channelMask, new SensoroWriteCallback() {
                     @Override
                     public void onWriteSuccess(Object o, int cmd) {
-                        Log.e("hcs","写入成功:::");
                         mContext.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -896,7 +890,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                     @Override
                     public void onWriteFailure(int errorCode, int cmd) {
-                        Log.e("hcs","写入失败:::");
                         mContext.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
@@ -916,7 +909,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onConnectedFailure(int errorCode) {
-        Log.e("hcs","连接失败:::"+errorCode);
         isAgainUpLoad = false;
         isAutoConnect = false;
         mContext.runOnUiThread(new Runnable() {
@@ -938,7 +930,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onNewDevice(final BLEDevice bleDevice) {
-        Log.e("hcs","扫描到的sn:::"+bleDevice.getSn()+"   "+bleDevice.getSn().equals(deployMapModel.sn));
         if(bleDevice.getSn().equals(deployMapModel.sn) ){
             bleAddress = bleDevice.getMacAddress();
             if(isAutoConnect){
