@@ -122,6 +122,7 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
                 finishAc();
                 break;
             case R.id.iv_monitor_map_location:
+                mPresenter.backToCurrentLocation();
                 break;
             case R.id.tv_monitor_map_share:
                 mPresenter.doDetailShare();
@@ -129,6 +130,7 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
             case R.id.tv_monitor_map_guide:
                 mPresenter.doNavigation();
                 break;
+                
         }
     }
 

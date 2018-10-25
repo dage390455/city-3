@@ -126,6 +126,10 @@
             android:textSize="@dimen/city_btn_text_size" />
 
     </LinearLayout>
+    <View
+        android:id="@+id/ac_calendar_view_dismiss"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </LinearLayout>
 
 

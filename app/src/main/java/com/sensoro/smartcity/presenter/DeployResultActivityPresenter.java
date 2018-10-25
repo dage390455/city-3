@@ -185,10 +185,13 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 
     public void backHome() {
         EventData eventData = new EventData();
-        if(scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE && resultCode == -1){
+        if(scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE ){
             //todo 部署失败，返回巡检
             eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
-        }else{
+            EventBus.getDefault().post(eventData);
+            getView().finishAc();
+
+        } else{
             eventData.code = EVENT_DATA_DEPLOY_RESULT_FINISH;
         }
 

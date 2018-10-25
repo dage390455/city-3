@@ -19,6 +19,7 @@ import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
@@ -498,6 +499,12 @@ public enum RetrofitServiceHelper {
         Observable<DeviceDeployRsp> deviceDeployRspObservable = retrofitService.doDevicePointDeploy(sn, body);
         RxApiManager.getInstance().add("doDevicePointDeploy", deviceDeployRspObservable.subscribe());
         return deviceDeployRspObservable;
+    }
+
+    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, double longitude, double latitude){
+        Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude,latitude);
+        RxApiManager.getInstance().add("deployDeviceDetail",deployDeviceDetail.subscribe());
+        return deployDeviceDetail;
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String

@@ -28,7 +28,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @BindView(R.id.fg_main_manage_tv_merchant_name)
     TextView fgMainManageTvMerchantName;
     @BindView(R.id.fg_main_manage_imv_merchant_icon)
-    ImageView fgMainManageimvMerchantIcon;
+    ImageView fgMainManageImvMerchantIcon;
     @BindView(R.id.fg_main_manage_tv_merchant_title)
     TextView fgMainManageTvMerchantTitle;
     @BindView(R.id.fg_main_manage_ll_change_merchants)
@@ -258,7 +258,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @Override
     public void changeMerchantTitle(boolean hasSubMerchant) {
         if (!hasSubMerchant) {
-            fgMainManageimvMerchantIcon.setImageResource(R.drawable.single_merchant);
+            fgMainManageImvMerchantIcon.setImageResource(R.drawable.single_merchant1);
             fgMainManageTvMerchantTitle.setText("商户名称");
         }
     }

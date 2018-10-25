@@ -325,7 +325,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     public void onMapLoaded() {
         BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_cur);
         MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
-                .anchor(0.5f, 0.5f)
+                .anchor(0.5f, 0.95f)
                 .draggable(true);
         smoothMoveMarker = aMap.addMarker(markerOption);
 

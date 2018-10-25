@@ -29,7 +29,7 @@ implements Constants {
         mActivity = (Activity) context;
         mDeployRecordInfo = (DeployRecordInfo) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_RECORD_DETAIL);
 
-        refrehUI();
+        refreshUI();
     }
 
     private void initDeployMapModel() {
@@ -41,7 +41,7 @@ implements Constants {
 
     }
 
-    private void refrehUI() {
+    private void refreshUI() {
         if (mDeployRecordInfo != null) {
             getView().setInclueTitle(mDeployRecordInfo.getSn());
             getView().setDeviceName(mDeployRecordInfo.getDeviceName());

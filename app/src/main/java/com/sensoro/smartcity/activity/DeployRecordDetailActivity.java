@@ -68,6 +68,7 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
 
     private void initView() {
         includeTextTitleTvSubtitle.setText("历史记录");
+        includeTextTitleTvTitle.setVisibility(View.GONE);
         initRcTag();
 
         initRcContact();
@@ -225,8 +226,8 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
                     acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
                 default:
-                    signal_text = "信号：差";
-                    acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
+                    signal_text = "无信号";
+                    acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
                     break;
             }
         } else {

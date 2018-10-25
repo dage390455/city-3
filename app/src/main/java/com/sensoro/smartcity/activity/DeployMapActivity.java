@@ -144,8 +144,8 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
                 default:
-                    signal_text = "信号：差";
-                    btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
+                    signal_text = "无信号";
+                    btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
                     break;
             }
         } else {

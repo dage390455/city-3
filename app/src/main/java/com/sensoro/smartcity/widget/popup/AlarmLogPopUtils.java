@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.widget.popup;
 
 import android.app.Activity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -98,6 +99,22 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         initRcContent();
         mAlarmLogDialog.setContentView(view);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+    }
+
+    public AlarmLogPopUtils(Activity activity, final DialogDisplayStatusListener listener) {
+        mActivity = activity;
+        mAlarmLogDialog = new FixHeightBottomSheetDialog(activity);
+        View view = View.inflate(activity, R.layout.item_pop_alert_log, null);
+        ButterKnife.bind(this, view);
+        initRcContent();
+        mAlarmLogDialog.setContentView(view);
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        mAlarmLogDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                listener.onDialogShow();
+            }
+        });
     }
 
     private void initRcContent() {
@@ -323,5 +340,9 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
             }
 
         }
+    }
+
+    public interface DialogDisplayStatusListener{
+        void onDialogShow();
     }
 }
