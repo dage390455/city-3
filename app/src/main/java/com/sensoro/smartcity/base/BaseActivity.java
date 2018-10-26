@@ -70,10 +70,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 //        StatusBarCompat.translucentStatusBar(thi®s);
 //        StatusBarCompat.setStatusBarIconDark(this,true);
         boolean darkmode = true;
-        // todo 先不适配红米 红米手机有问题
-        if(!AppUtils.getSystemModel().contains("Redmi") && !isActivityOverrideStatusBar()){
+        if (!isActivityOverrideStatusBar()) {
             immersionBar = ImmersionBar.with(this);
-            immersionBar.fitsSystemWindows(true,R.color.white)
+            immersionBar.fitsSystemWindows(true, R.color.white)
                     .statusBarColor(R.color.white)
                     .statusBarDarkFont(true)
                     .init();
@@ -84,6 +83,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     /**
      * activity 需要自己设置statusbar 重写该函数，并在该函数内实现
+     *
      * @return
      */
     public boolean isActivityOverrideStatusBar() {

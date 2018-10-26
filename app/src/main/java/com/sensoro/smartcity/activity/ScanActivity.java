@@ -79,8 +79,8 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     private void initScanLineAnimation() {
-        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF,0f,Animation.RELATIVE_TO_SELF,0f,
-                Animation.RELATIVE_TO_PARENT,-0.25f,Animation.RELATIVE_TO_PARENT,1f);
+        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
+                Animation.RELATIVE_TO_PARENT, -0.25f, Animation.RELATIVE_TO_PARENT, 1f);
         translateAnimation.setDuration(4000);
         translateAnimation.setRepeatMode(Animation.RESTART);
         translateAnimation.setRepeatCount(Animation.INFINITE);
@@ -103,12 +103,10 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public boolean isActivityOverrideStatusBar() {
-        if(!AppUtils.getSystemModel().contains("Redmi")){
-            immersionBar = ImmersionBar.with(mActivity);
-            immersionBar
-                    .transparentStatusBar()
-                    .init();
-        }
+        immersionBar = ImmersionBar.with(mActivity);
+        immersionBar
+                .transparentStatusBar()
+                .init();
         return true;
     }
 
@@ -130,7 +128,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         mProgressUtils.destroyProgress();
         acScanQrView.onDestroy();
 
-        if(immersionBar != null){
+        if (immersionBar != null) {
             immersionBar.destroy();
         }
         super.onDestroy();
@@ -210,7 +208,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void onScanQRCodeOpenCameraError() {
-        LogUtils.loge(this,"扫描出错！！！！！！！");
+        LogUtils.loge(this, "扫描出错！！！！！！！");
     }
 
     @Override
