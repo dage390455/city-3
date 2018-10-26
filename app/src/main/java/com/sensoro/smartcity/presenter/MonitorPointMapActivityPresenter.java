@@ -337,9 +337,11 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     public void backToCurrentLocation() {
         AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-        if (lastKnownLocation != null) {
-            double lat = lastKnownLocation.getLatitude();//获取纬度
-            double lon = lastKnownLocation.getLongitude();//获取经度
+        double[] lonlat = mDeviceInfo.getLonlat();
+
+        if (lonlat != null&&lonlat.length>1&&lonlat[0]!=0&&lonlat[1]!=0) {
+            double lat = lonlat[1];//获取纬度
+            double lon = lonlat[0];//获取经度
             LatLng latLng = new LatLng(lat, lon);
             if (aMap != null) {
                 //可视化区域，将指定位置指定到屏幕中心位置

@@ -32,4 +32,6 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     void setToolbarTitleCount(String text);
 
     void setToolbarTitleBackgroundColor(int color);
+
+    void setImvTopAddVisible(boolean b);
 }

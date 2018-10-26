@@ -2,14 +2,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:paddingTop="18dp"
-    android:paddingBottom="12dp"
     android:background="@color/c_29c093">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="33dp"
+        android:layout_marginBottom="12dp"
         android:orientation="horizontal">
 
         <ImageView
@@ -41,8 +41,8 @@
         android:layout_width="20dp"
         android:layout_height="20dp"
         android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_marginEnd="18dp"
+        android:layout_marginEnd="23dp"
+        android:layout_marginTop="33dp"
         android:background="@color/transparent"
         android:contentDescription="@null"
         android:scaleType="centerCrop"
@@ -52,8 +52,8 @@
         android:id="@+id/home_iv_top_search"
         android:layout_width="19.45dp"
         android:layout_height="19.45dp"
-        android:layout_centerVertical="true"
         android:layout_marginEnd="18dp"
+        android:layout_marginTop="33dp"
         android:layout_toStartOf="@id/home_iv_top_add"
         android:background="@color/transparent"
         android:contentDescription="@null"

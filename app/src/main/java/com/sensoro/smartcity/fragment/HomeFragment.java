@@ -462,7 +462,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         menuDialogFragment.setOnDismissListener(this);
         menuDialogFragment.show(mRootFragment.getActivity().getSupportFragmentManager(), "mainMenuDialog");
         setImvAddVisible(false);
+        setImvTopAddVisible(false);
 //        setImvSearchVisible(false);
+    }
+
+    @Override
+    public void setImvTopAddVisible(boolean b) {
+        homeIvTopAdd.setVisibility(b ? View.VISIBLE : View.INVISIBLE);
     }
 
     @Override
@@ -499,6 +505,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 break;
         }
         setImvAddVisible(true);
+        setImvTopAddVisible(true);
 //        setImvSearchVisible(true);
     }
 
