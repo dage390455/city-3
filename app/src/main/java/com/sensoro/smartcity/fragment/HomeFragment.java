@@ -16,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,9 +80,13 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     TextView homeTvTitleCount;
     @BindView(R.id.home_iv_top_search)
     ImageButton homeIvTopSearch;
+    @BindView(R.id.iv_header_title_left)
+    ImageView ivHeaderTitleLeft;
+    @BindView(R.id.iv_header_title_right)
+    ImageView ivHeaderTitleRight;
+    private MainHomeFragRcContentAdapterHorizontal mMainHomeFragRcContentAdapter;
     @BindView(R.id.home_iv_top_add)
     ImageButton homeIvTopAdd;
-    private MainHomeFragRcContentAdapterHorizontal mMainHomeFragRcContentAdapter;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeHeaderAdapter;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
@@ -201,6 +206,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
+        fgMainHomeRcContent.setNestedScrollingEnabled(false);
         fgMainHomeRcContent.setAdapter(mMainHomeFragRcContentAdapter);
         mBannerScaleContentHelper = new BannerScaleHelper();
         mBannerScaleContentHelper.setScale(1);
@@ -435,7 +441,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
 
-    @OnClick({R.id.fg_main_home_imb_add, R.id.fg_main_home_imb_search, R.id.fg_main_home_tv_select_type, R.id.fl_main_home_select_type, R.id.home_iv_top_search, R.id.home_iv_top_add})
+    @OnClick({R.id.fg_main_home_imb_add, R.id.fg_main_home_imb_search, R.id.fg_main_home_tv_select_type, R.id.fl_main_home_select_type, R.id.home_iv_top_search, R.id.home_iv_top_add, R.id.iv_header_title_left, R.id.iv_header_title_right})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.home_iv_top_add:
@@ -452,6 +458,32 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             case R.id.fl_main_home_select_type:
                 boolean expand = toolbarDirection == DIRECTION_UP;
                 appBarLayout.setExpanded(expand, true);
+                break;
+            case R.id.iv_header_title_left:
+                try {
+                    int index = currentPosition - 1;
+                    if (index != 0 && index != mMainHomeFragRcContentAdapter.getItemCount() - 1) {
+                        mBannerScaleContentHelper.setCurrentItem(index, true);
+//                        mBannerScaleHeaderHelper.setCurrentItem(index, true);
+//                        currentPosition = index;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                break;
+            case R.id.iv_header_title_right:
+                try {
+                    int index = currentPosition + 1;
+                    if (index != 0 && index != mMainHomeFragRcContentAdapter.getItemCount() - 1) {
+                        mBannerScaleContentHelper.setCurrentItem(index, true);
+//                        mBannerScaleHeaderHelper.setCurrentItem(index, true);
+//                        currentPosition = index;
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 break;
         }
     }

@@ -126,9 +126,9 @@ public class BannerRecyclerView extends RecyclerView {
                 dealtX += Math.abs(x - lastX);
                 dealtY += Math.abs(y - lastY);
                 if (dealtX >= dealtY) {
-                    getParent().requestDisallowInterceptTouchEvent(true);
-                } else {
                     getParent().requestDisallowInterceptTouchEvent(false);
+                } else {
+                    getParent().requestDisallowInterceptTouchEvent(true);
                 }
                 lastX = x;
                 lastY = y;
