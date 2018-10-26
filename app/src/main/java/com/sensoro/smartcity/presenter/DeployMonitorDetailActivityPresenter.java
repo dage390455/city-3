@@ -45,6 +45,7 @@ import com.sensoro.smartcity.server.response.StationInfo;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.RegexUtils;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
@@ -91,7 +92,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO);
         deployMapModel.deployType = intent.getIntExtra(EXTRA_SCAN_ORIGIN_TYPE, -1);
         init();
-        mHandler.post(this);
+        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+            mHandler.post(this);
+        }
         BleObserver.getInstance().registerBleObserver(this);
 
     }
@@ -322,7 +325,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //设备部署
             case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
                 //巡检设备更换
-                changeDevice(lon, lan);
+                if(PreferencesHelper.getInstance().getUserData().hasSignalConfig){
+                    changeDevice(lon, lan);
+                }else{
+                    doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.longitude);
+                }
+
                 //doUploadImages(lon, lan);
                 break;
             case TYPE_SCAN_INSPECTION:
@@ -375,6 +383,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     isAgainUpLoad = true;
                     blePassword = deployDeviceDetailRsp.getData().getBlePassword();
                     channelMask = deployDeviceDetailRsp.getData().getChannelMask();
+                    //todo delete
                     blePassword = "hzmBl4;XTD6*[@}I";
                     if (!TextUtils.isEmpty(blePassword)&&channelMask!=null&&channelMask.size()>0) {
                         if(!TextUtils.isEmpty(bleAddress)){
@@ -611,7 +620,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         EventBus.getDefault().unregister(this);
         tagList.clear();
         images.clear();
+        mHandler.removeCallbacksAndMessages(null);
         stopScanService();
+        BleObserver.getInstance().unregisterBleObserver(this);
+
     }
 
     public void doNameAddress() {
