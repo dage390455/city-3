@@ -91,7 +91,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private BannerScaleHelper mBannerScaleContentHelper;
     private int toolbarDirection = DIRECTION_DOWN;
     private int currentPosition = 0;
-    private float currentPercent;
+    private double currentPercent;
 
     @Override
     protected void initData(Context activity) {
@@ -170,8 +170,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 if (recyclerView.getScrollState() != RecyclerView.SCROLL_STATE_IDLE) {
                     if (currentPercent == 0) {
                         try {
-                            float widthHeader = recyclerView.getChildAt(0).getWidth();
-                            float widthContent = fgMainHomeRcContent.getChildAt(0).getWidth();
+                            double widthHeader = recyclerView.getChildAt(0).getWidth();
+                            double widthContent = fgMainHomeRcContent.getChildAt(0).getWidth();
                             currentPercent = widthHeader / widthContent;
                         } catch (Exception e) {
                             currentPercent = 1;
@@ -182,9 +182,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                         }
                     }
                     if (dx > 0) {
-                        dx = (int) (dx / currentPercent + 0.5f);
+                        dx = (int) (dx / currentPercent + 0.5d);
                     } else if (dx < 0) {
-                        dx = (int) (dx / currentPercent - 0.5f);
+                        dx = (int) (dx / currentPercent - 0.5d);
                     }
                     fgMainHomeRcContent.scrollBy(dx, dy);
                 }
@@ -249,8 +249,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
                     if (currentPercent == 0) {
                         try {
-                            float widthContent = recyclerView.getChildAt(0).getWidth();
-                            float widthHeader = fgMainHomeRcTypeHeader.getChildAt(0).getWidth();
+                            double widthContent = recyclerView.getChildAt(0).getWidth();
+                            double widthHeader = fgMainHomeRcTypeHeader.getChildAt(0).getWidth();
                             currentPercent = widthHeader / widthContent;
                         } catch (Exception e) {
                             currentPercent = 1;
@@ -262,9 +262,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
                     }
                     if (dx > 0) {
-                        dx = (int) (currentPercent * dx + 0.5f);
+                        dx = (int) (currentPercent * dx + 0.5d);
                     } else if (dx < 0) {
-                        dx = (int) (currentPercent * dx - 0.5f);
+                        dx = (int) (currentPercent * dx - 0.5d);
                     }
                     fgMainHomeRcTypeHeader.scrollBy(dx, dy);
                 }
