@@ -2,11 +2,55 @@ package com.sensoro.smartcity.factory;
 
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
+import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.List;
 
 public class MenuPageFactory {
+    public static EventLoginData createLoginData(UserInfo userInfo, String phoneId) {
+        final EventLoginData eventLoginData = new EventLoginData();
+        GrantsInfo grants = userInfo.getGrants();
+        //
+        eventLoginData.userId = userInfo.get_id();
+        eventLoginData.userName = userInfo.getNickname();
+        eventLoginData.phone = userInfo.getContacts();
+        eventLoginData.phoneId = phoneId;
+        LogUtils.loge("logPresenter", "phoneId = " + phoneId);
+        //TODO 处理Character信息
+//                      mCharacter = userInfo.getCharacter();
+        String roles = userInfo.getRoles();
+        eventLoginData.roles = roles;
+        String isSpecific = userInfo.getIsSpecific();
+        eventLoginData.isSupperAccount = getIsSupperAccount(isSpecific);
+        eventLoginData.hasStation = getHasStationDeploy(grants);
+        eventLoginData.hasContract = getHasContract(grants);
+        eventLoginData.hasScanLogin = getHasScanLogin(grants);
+        eventLoginData.hasSubMerchant = getHasSubMerchant(roles, isSpecific);
+        eventLoginData.hasInspectionTaskList = getHasInspectionTaskList(grants);
+        eventLoginData.hasInspectionTaskModify = getHasInspectionTaskModify(grants);
+        eventLoginData.hasInspectionDeviceList = getHasInspectionDeviceList(grants);
+        eventLoginData.hasInspectionDeviceModify = getHasInspectionDeviceModify(grants);
+        eventLoginData.hasAlarmInfo = getHasAlarmInfo(grants);
+        eventLoginData.hasDeviceBrief = getHasDeviceBriefList(grants);
+        eventLoginData.hasSignalCheck = getHasSignalCheck(grants);
+        eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
+        LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
+        //
+        UserInfo.Account account = userInfo.getAccount();
+        if (account != null) {
+            String id = account.getId();
+            boolean totpEnable = account.isTotpEnable();
+            LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
+            if (totpEnable) {
+                eventLoginData.needAuth = true;
+            }
+        }
+        return eventLoginData;
+    }
+
     /**
      * 判断基站权限
      *
@@ -78,12 +122,28 @@ public class MenuPageFactory {
     }
 
     /**
-     * 判断巡检权限
+     * 判断巡检任务列表权限
      *
      * @param grants
      * @return
      */
-    public static boolean getHasInspection(GrantsInfo grants) {
+    public static boolean getHasInspectionTaskList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> inspectTask = grants.getInspectTask();
+            if (inspectTask != null) {
+                return inspectTask.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有修改任务权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasInspectionTaskModify(GrantsInfo grants) {
         if (grants != null) {
             List<String> inspectTask = grants.getInspectTask();
             if (inspectTask != null) {
@@ -92,6 +152,39 @@ public class MenuPageFactory {
         }
         return false;
     }
+
+    /**
+     * 是否有设备任务列表权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasInspectionDeviceList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> inspectDevice = grants.getInspectDevice();
+            if (inspectDevice != null) {
+                return inspectDevice.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有设备巡检任务修改权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasInspectionDeviceModify(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> inspectDevice = grants.getInspectDevice();
+            if (inspectDevice != null) {
+                return inspectDevice.contains("modify");
+            }
+        }
+        return false;
+    }
+
 
     /**
      * 判断是否有预警权限

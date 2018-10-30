@@ -7,16 +7,17 @@
 
     <ImageButton
         android:id="@+id/dialog_main_home_menu_imv_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
-        android:layout_marginTop="28dp"
-        android:layout_marginEnd="24dp"
+        android:layout_marginTop="11dp"
+        android:layout_marginEnd="22dp"
+        android:padding="2dp"
         android:background="@color/transparent"
         android:contentDescription="@null"
-        android:padding="8dp"
+        android:scaleType="centerCrop"
         android:src="@drawable/main_menu_close" />
 
     <LinearLayout

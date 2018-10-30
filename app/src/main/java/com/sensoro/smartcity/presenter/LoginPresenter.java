@@ -22,7 +22,6 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.bean.UserInfo;
@@ -121,43 +120,12 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                     //
                     UserInfo userInfo = loginRsp.getData();
-                    final EventLoginData eventLoginData = new EventLoginData();
-                    GrantsInfo grants = userInfo.getGrants();
-                    //
-                    eventLoginData.userId = userInfo.get_id();
-                    eventLoginData.userName = userInfo.getNickname();
-                    eventLoginData.phone = userInfo.getContacts();
-                    eventLoginData.phoneId = phoneId;
-                    LogUtils.loge("logPresenter", "phoneId = " + phoneId);
-                    //TODO 处理Character信息
-//                      mCharacter = userInfo.getCharacter();
-                    String roles = userInfo.getRoles();
-                    eventLoginData.roles = roles;
-                    String isSpecific = userInfo.getIsSpecific();
-                    eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
-                    eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
-                    eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
-                    eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
-                    eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
-                    eventLoginData.hasInspection = MenuPageFactory.getHasInspection(grants);
-                    eventLoginData.hasAlarmInfo = MenuPageFactory.getHasAlarmInfo(grants);
-                    eventLoginData.hasDeviceBrief = MenuPageFactory.getHasDeviceBriefList(grants);
-                    eventLoginData.hasSignalCheck = MenuPageFactory.getHasSignalCheck(grants);
-                    eventLoginData.hasSignalConfig = MenuPageFactory.getHasSignalConfig(grants);
-                    LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
-                    //
-                    UserInfo.Account account1 = userInfo.getAccount();
-                    if (account1 != null) {
-                        String id = account1.getId();
-                        boolean totpEnable = account1.isTotpEnable();
-                        LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
-                        if (totpEnable) {
-                            eventLoginData.needAuth = true;
-                            openMain(eventLoginData);
-                            return;
-                        }
+                    EventLoginData loginData = MenuPageFactory.createLoginData(userInfo, phoneId);
+                    if (loginData.needAuth){
+                        openNextActivity(loginData);
+                        return;
                     }
-                    getMergeType(eventLoginData);
+                    getMergeType(loginData);
                 }
 
                 @Override
@@ -203,7 +171,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(LoginPresenter.this) {
             @Override
             public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
-                openMain(eventLoginData);
+                openNextActivity(eventLoginData);
                 LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
             }
 
@@ -216,7 +184,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         });
     }
 
-    private void openMain(EventLoginData eventLoginData) {
+    private void openNextActivity(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
         mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
         if (eventLoginData.needAuth) {

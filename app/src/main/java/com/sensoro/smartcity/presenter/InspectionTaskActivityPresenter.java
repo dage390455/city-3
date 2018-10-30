@@ -71,7 +71,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
         if (mTaskInfo != null) {
             requestSearchData(DIRECTION_DOWN, null);
-            mHandler.postDelayed(this, 1000);
+            mHandler.post(this);
         }
 
     }
@@ -100,7 +100,13 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         InspectionTaskDeviceDetail deviceDetail = mDevices.get(position);
         switch (status) {
             case 0:
-                intent.setClass(mContext, InspectionActivity.class);
+                if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
+                    intent.setClass(mContext, InspectionActivity.class);
+                } else {
+                    getView().toastShort("该账户没有巡检设备权限");
+                    return;
+                }
+
                 break;
             case 1:
             case 2:
@@ -410,19 +416,25 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     public void run() {
         try {
             bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-            if (!bleHasOpen) {
-                bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
-            }
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort("请检查蓝牙状态");
+            getView().showBleTips();
+//            getView().toastShort("请检查蓝牙状态");
+        }
+        if (!bleHasOpen) {
+            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
+        }
+        if (bleHasOpen) {
+            getView().hideBleTips();
+        } else {
+            getView().showBleTips();
         }
         if (canFreshBle) {
             handlerInspectionTaskDevice();
             getView().updateInspectionTaskDeviceItem(mDevices);
         }
         LogUtils.loge("run canFreshBle ----->> " + canFreshBle);
-        mHandler.postDelayed(this, 2 * 1000);
+        mHandler.postDelayed(this, 3 * 1000);
     }
 
     public void doNavigation(int position) {

@@ -20,6 +20,7 @@ import com.sensoro.smartcity.server.bean.InspectionTaskExecutionModel;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -116,13 +117,22 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
     }
 
     public void doBtnStart() {
-        //TODO 检查巡检
-        if (mTaskInfo.getStatus() == 0) {
-            changeTaskState();
+        if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceList) {
+            if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
+                if (mTaskInfo.getStatus() == 0) {
+                    changeTaskState();
+                } else {
+                    Intent intent = new Intent(mContext, InspectionTaskActivity.class);
+                    intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+                    getView().startAC(intent);
+                }
+            } else {
+                Intent intent = new Intent(mContext, InspectionTaskActivity.class);
+                intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
+                getView().startAC(intent);
+            }
         } else {
-            Intent intent = new Intent(mContext, InspectionTaskActivity.class);
-            intent.putExtra(EXTRA_INSPECTION_INDEX_TASK_INFO, mTaskInfo);
-            getView().startAC(intent);
+            getView().toastShort("该账户没有查看巡检设备列表权限");
         }
     }
 

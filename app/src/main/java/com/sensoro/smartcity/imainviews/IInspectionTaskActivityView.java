@@ -28,4 +28,8 @@ public interface IInspectionTaskActivityView extends IToast, IProgressDialog, IA
     void showSelectDeviceTypePop();
 
     void setNoContentVisible(boolean isVisible);
+
+    void showBleTips();
+
+    void hideBleTips();
 }

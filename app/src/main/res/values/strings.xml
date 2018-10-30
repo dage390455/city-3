@@ -139,7 +139,7 @@
     <string name="misdescription">Mis</string>
     <string name="alarm_test">Test</string>
     <string name="alarm_risk">Risk</string>
-    <string name="confirming">Confirming</string>
+    <string name="confirming">Alarm Confirming</string>
     <string name="confirming_again">Confirming Again</string>
     <string name="setting_name_address">Name/Address</string>
     <string name="setting_tag">Setting Tag</string>

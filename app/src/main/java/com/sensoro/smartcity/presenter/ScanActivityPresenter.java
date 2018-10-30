@@ -31,7 +31,7 @@ import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DeployAnalyzerUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.yixia.camera.util.Log;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -223,7 +223,12 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     int status = deviceDetail.getStatus();
                     switch (status) {
                         case 0:
-                            intent.setClass(mContext, InspectionActivity.class);
+                            if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
+                                intent.setClass(mContext, InspectionActivity.class);
+                            } else {
+                                getView().toastShort("该账户没有巡检设备权限");
+                                return;
+                            }
                             break;
                         case 1:
                             getView().toastShort("此设备已巡检完毕，且状态正常");

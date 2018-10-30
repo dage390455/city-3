@@ -13,7 +13,10 @@ public final class EventLoginData implements Serializable {
     public boolean hasContract;
     public boolean hasScanLogin;
     public boolean hasSubMerchant = true;
-    public boolean hasInspection = false;
+    public boolean hasInspectionTaskList = false;
+    public boolean hasInspectionTaskModify = false;
+    public boolean hasInspectionDeviceList = false;
+    public boolean hasInspectionDeviceModify = false;
     public boolean hasAlarmInfo = false;
     public boolean hasDeviceBrief = false;
     public boolean hasSignalCheck = false;
@@ -37,6 +40,10 @@ public final class EventLoginData implements Serializable {
                 ", hasDeviceBrief=" + hasDeviceBrief +
                 ", hasSignalCheck=" + hasSignalCheck +
                 ", hasSignalConfig=" + hasSignalConfig +
+                ", hasInspectionTaskList=" + hasInspectionTaskList +
+                ", hasInspectionTaskModify=" + hasInspectionTaskModify +
+                ", hasInspectionDeviceList=" + hasInspectionDeviceList +
+                ", hasInspectionDeviceModify=" + hasInspectionDeviceModify +
                 ", needAuth=" + needAuth +
                 '}';
     }

@@ -53,7 +53,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     private void checkPermission(EventLoginData userData) {
         if (userData != null) {
             getView().setContractVisible(userData.hasContract);
-            getView().setInspectionVisible(userData.hasInspection);
+            getView().setInspectionVisible(userData.hasInspectionTaskList);
             getView().setScanLoginVisible(userData.hasScanLogin);
             getView().setMerchantVisible(userData.hasSubMerchant);
             getView().changeMerchantTitle(userData.hasSubMerchant);
@@ -184,7 +184,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 
     public void doInspection() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
-            if (PreferencesHelper.getInstance().getUserData().hasInspection) {
+            if (PreferencesHelper.getInstance().getUserData().hasInspectionTaskList) {
                 Intent intent = new Intent(mContext, InspectionTaskListActivity.class);
                 getView().startAC(intent);
                 return;

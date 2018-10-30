@@ -46,7 +46,7 @@ public interface Constants {
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
     String[] DEVICE_STATUS_ARRAY = {"预警", "正常", "失联", "未激活"};
-    String[] MONITOR_STATUS_ARRAY = {"预警中", "正常", "失联", "未激活"};
+    String[] MONITOR_STATUS_ARRAY = {"预警", "正常", "失联", "未激活"};
     String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
@@ -175,7 +175,10 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_CONTRACT = "extra_grants_has_contract";
     String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
     String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
-    String EXTRA_GRANTS_HAS_INSPECTION_TASK = "extra_grants_has_inspection_task";
+    String EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST = "extra_grants_has_inspection_task_list";
+    String EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY = "extra_grants_has_inspection_task_modify";
+    String EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST = "extra_grants_has_inspection_device_list";
+    String EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY = "extra_grants_has_inspection_device_modify";
     String EXTRA_GRANTS_HAS_ALARM_LOG_INFO = "extra_grants_has_alarm_log_info";
     String EXTRA_GRANTS_HAS_DEVICE_BRIEF = "extra_grants_has_device_brief";
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK = "extra_grants_has_device_signal_check";

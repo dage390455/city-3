@@ -18,11 +18,11 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -101,10 +101,11 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         setContentTime(holder, updatedTime);
         //
         int status = deviceInfo.getStatus();
-        String deviceType = deviceInfo.getDeviceType();
-
-        setContentStatus(holder, position, status, deviceType);
-
+        String mergeType = deviceInfo.getMergeType();
+        if (TextUtils.isEmpty(mergeType)) {
+            mergeType = WidgetUtil.handleMergeType(deviceInfo.getDeviceType());
+        }
+        setContentStatus(holder, position, status, mergeType);
         setListener(holder, position);
     }
 
@@ -127,15 +128,14 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         });
     }
 
-    private void setContentStatus(final MyViewHolder holder, final int position, int status, String deviceType) {
+    private void setContentStatus(final MyViewHolder holder, final int position, int status, String mergeType) {
         String image = null;
         try {
-            DeviceTypeStyles deviceTypeStyles = deviceMergeTypeConfig.getDeviceType().get(deviceType);
-            MergeTypeStyles mergeTypeStyles = deviceMergeTypeConfig.getMergeType().get(deviceTypeStyles.getMergeType());
+            MergeTypeStyles mergeTypeStyles = deviceMergeTypeConfig.getMergeType().get(mergeType);
             image = mergeTypeStyles.getImage();
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.loge("MainHomeFragRcContentAdapter ----->>>deviceType = " + deviceType);
+            LogUtils.loge("MainHomeFragRcContentAdapter ----->>>mergeType = " + mergeType);
         }
         int color = 0;
         switch (status) {
@@ -168,22 +168,29 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 break;
         }
         final int colorResId = mContext.getResources().getColor(color);
-        Glide.with(mContext)                             //配置上下文
-                .load(image)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                .diskCacheStrategy(DiskCacheStrategy.SOURCE)
-                .listener(new RequestListener<String, GlideDrawable>() {
-                    @Override
-                    public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
-                        return false;
-                    }
 
-                    @Override
-                    public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
-                        holder.mainRcContentImvIcon.setImageDrawable(resource);
-                        holder.mainRcContentImvIcon.setColorFilter(colorResId);
-                        return true;
-                    }
-                }).centerCrop().into(holder.mainRcContentImvIcon);
+        if ("smoke".equalsIgnoreCase(mergeType) && status == SENSOR_STATUS_ALARM) {
+            holder.mainRcContentImvIcon.setImageResource(R.drawable.smoke_alarm_down);
+            holder.mainRcContentImvIcon.setColorFilter(colorResId);
+        } else {
+            Glide.with(mContext)                             //配置上下文
+                    .load(image)      //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                    .diskCacheStrategy(DiskCacheStrategy.SOURCE)
+                    .listener(new RequestListener<String, GlideDrawable>() {
+                        @Override
+                        public boolean onException(Exception e, String model, Target<GlideDrawable> target, boolean isFirstResource) {
+                            return false;
+                        }
+
+                        @Override
+                        public boolean onResourceReady(GlideDrawable resource, String model, Target<GlideDrawable> target, boolean isFromMemoryCache, boolean isFirstResource) {
+                            holder.mainRcContentImvIcon.setImageDrawable(resource);
+                            holder.mainRcContentImvIcon.setColorFilter(colorResId);
+                            return true;
+                        }
+                    }).centerCrop().into(holder.mainRcContentImvIcon);
+        }
+
     }
 
     private void setContentTime(MyViewHolder holder, long updatedTime) {

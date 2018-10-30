@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server.bean;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -35,8 +36,9 @@ public class DeviceInfo implements Serializable, Comparable {
     private String lastUpdatedTime;
     private boolean isNewDevice;
     private boolean isPushDevice;
-
+    private String mergeType;
     private Map<String, SensorStruct> sensoroDetails;
+    private List<DeviceAlarmsRecord> alarmsRecords;
 
     public String getAddress() {
         return address;
@@ -51,6 +53,22 @@ public class DeviceInfo implements Serializable, Comparable {
     public DeviceInfo() {
         isPushDevice = false;
         isNewDevice = false;
+    }
+
+    public List<DeviceAlarmsRecord> getAlarmsRecords() {
+        return alarmsRecords;
+    }
+
+    public void setAlarmsRecords(List<DeviceAlarmsRecord> alarmsRecords) {
+        this.alarmsRecords = alarmsRecords;
+    }
+
+    public String getMergeType() {
+        return mergeType;
+    }
+
+    public void setMergeType(String mergeType) {
+        this.mergeType = mergeType;
     }
 
     public int getId() {

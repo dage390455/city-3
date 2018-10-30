@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:padding="10dp"
-            android:src="@drawable/main_item_alarm_info"
+            android:src="@drawable/home_device_alarm"
             android:visibility="gone" />
 
 

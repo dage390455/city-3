@@ -129,7 +129,7 @@
     <string name="misdescription">误报</string>
     <string name="alarm_test">测试</string>
     <string name="alarm_risk">安全隐患</string>
-    <string name="confirming">确认</string>
+    <string name="confirming">预警确认</string>
     <string name="confirming_again">再次确认</string>
     <string name="setting_name_address">设置名称/地址</string>
     <string name="setting_tag">设置标签</string>

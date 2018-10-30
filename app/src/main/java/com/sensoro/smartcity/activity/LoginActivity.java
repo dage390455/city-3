@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.SystemClock;
@@ -113,12 +114,9 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
-                    acLoginImvAccountIcon.setImageResource(R.drawable.login_account_person_high_light);
-                    acLoginImvAccountClear.setVisibility(View.VISIBLE);
-
+                    updateAccountIcon(false);
                 } else {
-                    acLoginImvAccountIcon.setImageResource(R.drawable.login_account_person_normal);
-                    acLoginImvAccountClear.setVisibility(View.GONE);
+                    updateAccountIcon(true);
                     if (acLoginEtPsd.getText().length() == 0) {
                         updateLogoDescriptionState(true);
                     }
@@ -139,12 +137,10 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
             @Override
             public void afterTextChanged(Editable s) {
                 if (s.length() > 0) {
-                    acLoginImvPsdIcon.setImageResource(R.drawable.login_psd_high_light);
-                    acLoginImvPsdClear.setVisibility(View.VISIBLE);
+                    updatePsdIcon(false);
 
                 } else {
-                    acLoginImvPsdIcon.setImageResource(R.drawable.login_psd);
-                    acLoginImvPsdClear.setVisibility(View.GONE);
+                    updatePsdIcon(true);
                     if (acLoginEtAccount.getText().length() == 0) {
                         updateLogoDescriptionState(true);
                     }
@@ -298,8 +294,11 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     }
 
     private void updateAccountIcon(boolean isEmpty) {
-        acLoginImvAccountIcon.setImageResource(isEmpty ? R.drawable.login_account_person_normal : R.drawable
-                .login_account_person_high_light);
+        if (isEmpty) {
+            acLoginImvAccountIcon.setColorFilter(R.color.c_a6a6a6,PorterDuff.Mode.SRC_IN);
+        } else {
+            acLoginImvAccountIcon.clearColorFilter();
+        }
         acLoginImvAccountClear.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 
@@ -314,7 +313,12 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
     }
 
     private void updatePsdIcon(boolean isEmpty) {
-        acLoginImvPsdIcon.setImageResource(isEmpty ? R.drawable.login_psd : R.drawable.login_psd_high_light);
+        if (isEmpty) {
+            acLoginImvPsdIcon.setColorFilter(R.color.c_a6a6a6,PorterDuff.Mode.SRC_IN);
+        } else {
+            acLoginImvPsdIcon.clearColorFilter();
+        }
+
         acLoginImvPsdClear.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
     }
 

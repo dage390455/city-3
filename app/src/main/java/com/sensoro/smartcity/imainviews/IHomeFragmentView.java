@@ -18,7 +18,7 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
 
     void returnTop();
 
-    void refreshContentData(boolean isFirstInit,List<HomeTopModel> dataList);
+    void refreshContentData(boolean isFirstInit, List<HomeTopModel> dataList);
 
 //    void recycleViewRefreshComplete();
 
@@ -32,4 +32,18 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     void setToolbarTitleCount(String text);
 
     void setToolbarTitleBackgroundColor(int color);
+
+    void setImvTopAddVisible(boolean b);
+
+    void setImvHeaderLeftVisible(boolean isVisible);
+
+    void setImvHeaderRightVisible(boolean isVisible);
+
+    void recycleViewRefreshComplete();
+
+    void recycleViewRefreshCompleteNoMoreData();
+
+    void showAlarmInfoView();
+
+    void dismissAlarmInfoView();
 }

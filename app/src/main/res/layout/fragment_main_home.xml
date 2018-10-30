@@ -33,7 +33,7 @@
             <android.support.v7.widget.Toolbar
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
+                android:layout_height="wrap_content"
                 app:contentInsetLeft="0dp"
                 app:contentInsetStart="0dp"
                 app:layout_collapseMode="pin">
@@ -42,7 +42,8 @@
                     android:id="@+id/home_toolbar_monitor"
                     layout="@layout/layout_home_top_toolbar_monitor"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent" />
+                    android:layout_height="match_parent"
+                    android:visibility="visible" />
 
                 <include
                     android:id="@+id/home_top_toolbar"
@@ -56,5 +57,18 @@
     </android.support.design.widget.AppBarLayout>
 
     <include layout="@layout/layout_home_content" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_behavior="@string/bottom_sheet_behavior">
+
+        <com.sensoro.smartcity.widget.SensoroHomeAlarmView
+            android:id="@+id/shav_home_alarm_tip"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:visibility="gone" />
+    </FrameLayout>
 
 </android.support.design.widget.CoordinatorLayout>

@@ -48,7 +48,8 @@ public class CustomVRecyclerView extends RecyclerView {
                 dealtX += Math.abs(x - lastX);
                 dealtY += Math.abs(y - lastY);
                 if (dealtX >= dealtY) {
-                    getParent().requestDisallowInterceptTouchEvent(false);
+                    //TODO 屏蔽水平滑动
+//                    getParent().requestDisallowInterceptTouchEvent(false);
                 } else {
                     getParent().requestDisallowInterceptTouchEvent(true);
                 }
@@ -138,6 +139,5 @@ public class CustomVRecyclerView extends RecyclerView {
             }
         }
     }
-
 
 }

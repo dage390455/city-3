@@ -34,6 +34,7 @@ import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
 
@@ -87,6 +88,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     private InspectionTaskStatePopUtils mSelectStatusPop;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
+    private TipBleDialogUtils tipBleDialogUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -97,8 +99,10 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     }
 
     private void initView() {
+        tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 //地图模式切换，图片 map_list_mode map_mode,已经准备好了
+
         acInspectionTaskEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -272,9 +276,9 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     public void onBackPressed() {
-        if(mSelectDeviceTypePop.isShowing()){
+        if (mSelectDeviceTypePop.isShowing()) {
             mSelectDeviceTypePop.dismiss();
-        }else{
+        } else {
             super.onBackPressed();
         }
 
@@ -441,5 +445,27 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         acInspectionTaskRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void showBleTips() {
+        if (tipBleDialogUtils != null && !tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void hideBleTips() {
+        if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (tipBleDialogUtils != null) {
+            tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

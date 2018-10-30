@@ -6,10 +6,8 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.amap.api.maps.model.LatLng;
-import com.amap.api.maps.model.Text;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
@@ -61,7 +59,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants
-,SensoroConnectionCallback,BLEDeviceListener<BLEDevice> ,Runnable{
+        , SensoroConnectionCallback, BLEDeviceListener<BLEDevice>, Runnable {
     private Activity mContext;
     private DeployMapModel deployMapModel = new DeployMapModel();
     private final List<String> tagList = new ArrayList<>();
@@ -178,7 +176,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 //                    if (mDeviceDetail != null) {
 //                        freshInspectionDevice();
 //                    } else {
-                        getOldDeviceInfo();
+                    getOldDeviceInfo();
 //                    }
                     break;
                 case TYPE_SCAN_INSPECTION:
@@ -233,6 +231,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployMapModel.updatedTime = mDeviceInfo.getUpdatedTime();
         freshSignalInfo();
     }
+
     private void freshInspectionDevice() {
         getView().setDeviceTitleName(deployMapModel.sn);
         mNameAndAddress = mDeviceInfo.getName();
@@ -269,18 +268,18 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 //            getView().updateTagsData(tagList);
 //        }
         String tags[] = mDeviceInfo.getTags();
-            if (tags != null && tags.length>0) {
-                tagList.clear();
-                for (String tag : tags) {
-                    if (!TextUtils.isEmpty(tag)) {
-                        tagList.add(tag);
-                    }
+        if (tags != null && tags.length > 0) {
+            tagList.clear();
+            for (String tag : tags) {
+                if (!TextUtils.isEmpty(tag)) {
+                    tagList.add(tag);
                 }
-                getView().updateTagsData(tagList);
             }
+            getView().updateTagsData(tagList);
+        }
         double[] lonlat = mDeviceInfo.getLonlat();
         if (lonlat != null && lonlat[0] != 0 && lonlat[1] != 0) {
-            deployMapModel.latLng = new LatLng(lonlat[1],lonlat[0]);
+            deployMapModel.latLng = new LatLng(lonlat[1], lonlat[0]);
 
         }
         deployMapModel.signal = mDeviceInfo.getSignal();
@@ -325,10 +324,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //设备部署
             case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
                 //巡检设备更换
-                if(PreferencesHelper.getInstance().getUserData().hasSignalConfig){
+                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
                     changeDevice(lon, lan);
-                }else{
-                    doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.longitude);
+                } else {
+                    doUploadImages(deployMapModel.latLng.longitude, deployMapModel.latLng.longitude);
                 }
 
                 //doUploadImages(lon, lan);
@@ -343,11 +342,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     private void changeDevice(double lon, double lan) {
         getView().showBleConfigDialog();
-        if(isAgainUpLoad){
-            if(!TextUtils.isEmpty(blePassword)&&channelMask!=null&&channelMask.size()>0){
-                if(!TextUtils.isEmpty(bleAddress)){
+        if (isAgainUpLoad) {
+            if (!TextUtils.isEmpty(blePassword) && channelMask != null && channelMask.size() > 0) {
+                if (!TextUtils.isEmpty(bleAddress)) {
                     connectDevice();
-                }else{
+                } else {
                     isAutoConnect = true;
                     mContext.runOnUiThread(new Runnable() {
                         @Override
@@ -366,17 +365,17 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             getView().updateUploadState(true);
 
                         }
-                    },120000);
+                    }, 120 * 1000);
 
 
                 }
-            }else{
+            } else {
                 getView().dismissBleConfigDialog();
                 isAgainUpLoad = false;
-                changeDevice(lon,lan);
+                changeDevice(lon, lan);
             }
-        }else{
-            RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployMapModel.sn,lon,lan)
+        } else {
+            RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployMapModel.sn, lon, lan)
                     .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>() {
                 @Override
                 public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
@@ -384,20 +383,20 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     blePassword = deployDeviceDetailRsp.getData().getBlePassword();
                     channelMask = deployDeviceDetailRsp.getData().getChannelMask();
                     //todo delete
-                    blePassword = "hzmBl4;XTD6*[@}I";
-                    if (!TextUtils.isEmpty(blePassword)&&channelMask!=null&&channelMask.size()>0) {
-                        if(!TextUtils.isEmpty(bleAddress)){
+//                    blePassword = "hzmBl4;XTD6*[@}I";
+                    if (!TextUtils.isEmpty(blePassword) && channelMask != null && channelMask.size() > 0) {
+                        if (!TextUtils.isEmpty(bleAddress)) {
                             connectDevice();
                             stopScanService();
-                        }else{
+                        } else {
                             getView().dismissBleConfigDialog();
                             getView().toastShort("请激活设备后，再进行上传");
                             getView().updateUploadState(true);
                         }
 
-                    }else{
+                    } else {
                         getView().dismissBleConfigDialog();
-                        doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.latitude);
+                        doUploadImages(deployMapModel.latLng.longitude, deployMapModel.latLng.latitude);
                     }
 
                 }
@@ -407,7 +406,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     getView().dismissBleConfigDialog();
 //                        getView().updateUploadState(true);
 //                        getView().toastShort("获取配置文件失败，请重试 "+errorMsg);
-                    doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.latitude);
+                    doUploadImages(deployMapModel.latLng.longitude, deployMapModel.latLng.latitude);
                 }
             });
         }
@@ -418,7 +417,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         mHandler.removeCallbacksAndMessages(null);
         sensoroDeviceConnection = new SensoroDeviceConnectionTest(mContext, bleAddress);
         try {
-            sensoroDeviceConnection.connect(blePassword,DeployMonitorDetailActivityPresenter.this);
+            sensoroDeviceConnection.connect(blePassword, DeployMonitorDetailActivityPresenter.this);
             stopScanService();
 
         } catch (Exception e) {
@@ -894,7 +893,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             public void run() {
                                 getView().dismissBleConfigDialog();
                                 sensoroDeviceConnection.disconnect();
-                                doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.latitude);
+                                doUploadImages(deployMapModel.latLng.longitude, deployMapModel.latLng.latitude);
                             }
                         });
 
@@ -942,16 +941,16 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onNewDevice(final BLEDevice bleDevice) {
-        if(bleDevice.getSn().equals(deployMapModel.sn) ){
+        if (bleDevice.getSn().equals(deployMapModel.sn)) {
             bleAddress = bleDevice.getMacAddress();
-            if(isAutoConnect){
+            if (isAutoConnect) {
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
                         if (!TextUtils.isEmpty(blePassword) && channelMask != null && channelMask.size() > 0) {
                             connectDevice();
-                        }else{
-                            doUploadImages(deployMapModel.latLng.longitude,deployMapModel.latLng.latitude);
+                        } else {
+                            doUploadImages(deployMapModel.latLng.longitude, deployMapModel.latLng.latitude);
                         }
 
                     }
@@ -978,15 +977,18 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort("请检查蓝牙状态");
+            getView().showBleTips();
+//            getView().toastShort("请检查蓝牙状态");
         }
         if (!bleHasOpen) {
             bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
-            if (!bleHasOpen) {
-                getView().toastShort("请检查蓝牙状态");
-            }
         }
-        mHandler.postDelayed(this,3000);
+        if (bleHasOpen) {
+            getView().hideBleTips();
+        } else {
+            getView().showBleTips();
+        }
+        mHandler.postDelayed(this, 3000);
 
     }
 }

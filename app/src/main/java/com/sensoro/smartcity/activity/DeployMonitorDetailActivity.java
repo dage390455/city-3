@@ -4,7 +4,6 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.view.View;
 import android.widget.ImageView;
@@ -24,6 +23,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.TouchRecyclerview;
 import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
+import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 
 import java.util.List;
 
@@ -74,7 +74,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     private TextView mDialogTvTitle;
     private TextView mDialogTvMsg;
     private CustomCornerDialog mUploadDialog;
-
+    private TipBleDialogUtils tipBleDialogUtils;
     private ProgressUtils mProgressUtils;
     private ProgressDialog progressDialog;
     private ProgressUtils mLoadBleConfigDialog;
@@ -92,6 +92,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     private void initView() {
         includeTextTitleImvArrowsLeft = (ImageView) findViewById(R.id.include_text_title_imv_arrows_left);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
         mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage("获取中配置文件...").build());
 
@@ -357,6 +358,28 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void dismissBleConfigDialog() {
         mLoadBleConfigDialog.dismissProgress();
+    }
+
+    @Override
+    public void showBleTips() {
+        if (tipBleDialogUtils != null && !tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void hideBleTips() {
+        if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (tipBleDialogUtils!=null){
+            tipBleDialogUtils.onActivityResult(requestCode,resultCode,data);
+        }
     }
 
     @Override

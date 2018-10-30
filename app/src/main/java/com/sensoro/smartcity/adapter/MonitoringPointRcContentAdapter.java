@@ -12,11 +12,11 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.server.bean.DeviceAlarmsRecord;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DpUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
@@ -76,6 +76,30 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
 //                return;
 //            }
             //
+            int color;
+            int status = mDeviceInfo.getStatus();
+            switch (status) {
+                case SENSOR_STATUS_ALARM:
+                    color = R.color.sensoro_alarm;
+                    break;
+                case SENSOR_STATUS_INACTIVE:
+                    color = R.color.sensoro_inactive;
+                    break;
+                case SENSOR_STATUS_LOST:
+                    color = R.color.sensoro_lost;
+                    break;
+                case SENSOR_STATUS_NORMAL:
+                    color = R.color.c_29c093;
+                    break;
+                default:
+                    color = R.color.c_29c093;
+                    break;
+            }
+            //
+//            holder.itemMonitoringPointContentTvName.setTextColor(mContext.getResources().getColor(color));
+            holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(color));
+            holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(color));
+
             Map<String, SensorTypeStyles> sensorTypeMap = typeConfig.getSensorType();
             List<String> sortSensorTypes = Arrays.asList(sensorTypes);
             Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
@@ -114,20 +138,21 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                                                         true, sensorStruct);
                                             }
                                         }
+
                                     }
                                     holder.itemMonitoringPointContentTvUnit.setVisibility(View.GONE);
                                 } else {
                                     String unit = sensorTypeStyles.getUnit();
-                                    Log.e("hcs","单位:::"+unit);
+                                    Log.e("hcs", "单位:::" + unit);
                                     if (!TextUtils.isEmpty(unit)) {
                                         LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.itemMonitoringPointContentTvUnit.getLayoutParams();
                                         if ("°".equals(unit)) {
                                             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
                                             layoutParams.bottomMargin = 0;
                                             holder.itemMonitoringPointContentTvUnit.setLayoutParams(layoutParams);
-                                        }else{
+                                        } else {
                                             layoutParams.height = LinearLayout.LayoutParams.MATCH_PARENT;
-                                            layoutParams.bottomMargin = DpUtils.dp2px(mContext,15);
+                                            layoutParams.bottomMargin = DpUtils.dp2px(mContext, 15);
                                             holder.itemMonitoringPointContentTvUnit.setLayoutParams(layoutParams);
                                         }
                                         holder.itemMonitoringPointContentTvUnit.setText(unit);
@@ -137,39 +162,56 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                                 }
                             }
                         }
-
-
                     }
-
+                    handleStatus(status, holder, type);
                 }
+
             }
             //
 
-            int color;
-            int status = mDeviceInfo.getStatus();
-            switch (status) {
-                case SENSOR_STATUS_ALARM:
-                    color = R.color.sensoro_alarm;
-                    break;
-                case SENSOR_STATUS_INACTIVE:
-                    color = R.color.sensoro_inactive;
-                    break;
-                case SENSOR_STATUS_LOST:
-                    color = R.color.sensoro_lost;
-                    break;
-                case SENSOR_STATUS_NORMAL:
-                    color = R.color.c_29c093;
-                    break;
-                default:
-                    color = R.color.c_29c093;
-                    break;
-            }
-            //
-//            holder.itemMonitoringPointContentTvName.setTextColor(mContext.getResources().getColor(color));
-            holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(color));
-            holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(color));
 
         }
+    }
+
+    private void handleStatus(int status, MonitoringPointRcContentHolder holder, String sensoroType) {
+        //只针对预警和正常的状态
+        switch (status) {
+            case SENSOR_STATUS_ALARM:
+            case SENSOR_STATUS_NORMAL:
+                List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
+                try {
+                    if (alarmsRecords != null) {
+                        for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
+                            String sensorTypeStr = deviceAlarmsRecord.getSensorTypes();
+                            if (sensoroType.equalsIgnoreCase(sensorTypeStr)) {
+                                int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
+                                switch (alarmStatus) {
+                                    case 1:
+                                        holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
+                                        holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
+                                        break;
+                                    case 2:
+                                        holder.itemMonitoringPointContentTvContent.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
+                                        holder.itemMonitoringPointContentTvUnit.setTextColor(mContext.getResources().getColor(R.color.sensoro_alarm));
+                                        break;
+                                }
+                                return;
+                            }
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+                break;
+            case SENSOR_STATUS_INACTIVE:
+                break;
+            case SENSOR_STATUS_LOST:
+                break;
+            default:
+                break;
+        }
+
     }
 
     @Override

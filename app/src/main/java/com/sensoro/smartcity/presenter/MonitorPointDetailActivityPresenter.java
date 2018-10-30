@@ -25,6 +25,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
@@ -46,6 +47,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
@@ -147,7 +149,13 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         String typeName = "未知";
         try {
             DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-            typeName = localDevicesMergeTypes.getMergeType().get(mDeviceInfo.getDeviceType()).getName();
+            String mergeType = mDeviceInfo.getMergeType();
+            if (TextUtils.isEmpty(mergeType)) {
+                mergeType = WidgetUtil.handleMergeType(mDeviceInfo.getDeviceType());
+            }
+            Map<String, MergeTypeStyles> mergeTypeMap = localDevicesMergeTypes.getMergeType();
+            MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(mergeType);
+            typeName = mergeTypeStyles.getName();
         } catch (Exception e) {
             e.printStackTrace();
         }

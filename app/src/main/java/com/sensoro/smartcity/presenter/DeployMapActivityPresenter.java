@@ -405,9 +405,16 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     public void backToCurrentLocation() {
         AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
         if (lastKnownLocation != null) {
-            double lat = lastKnownLocation.getLatitude();//获取纬度
-            double lon = lastKnownLocation.getLongitude();//获取经度
-            LatLng latLng = new LatLng(lat, lon);
+            LatLng latLng;
+            if(isDisplayMap){
+                latLng = deployMapModel.latLng;
+            }else{
+                double lat = lastKnownLocation.getLatitude();//获取纬度
+                double lon = lastKnownLocation.getLongitude();//获取经度
+                latLng = new LatLng(lat, lon);
+            }
+
+
             if (aMap != null) {
                 //可视化区域，将指定位置指定到屏幕中心位置
                 CameraUpdate update = CameraUpdateFactory

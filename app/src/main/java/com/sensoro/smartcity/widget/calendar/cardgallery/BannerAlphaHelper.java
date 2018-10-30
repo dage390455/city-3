@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.widget.calendar.cardgallery;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,11 +19,11 @@ import java.util.Objects;
  * Created by jameson on 8/30/16.
  * changed by 二精-霁雪清虹 on 2017/11/19
  */
-public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListener {
+public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListener {
     private BannerRecyclerView mRecyclerView;
     private Context mContext;
 
-    private float mScale = 0.8f; // 两边视图scale
+    private float mAlpha = 0f; // 两边视图scale
     private int mPagePadding = BannerAdapterHelper.sPagePadding; // 卡片的padding, 卡片间的距离等于2倍的mPagePadding
     private int mShowLeftCardWidth = BannerAdapterHelper.sShowLeftCardWidth;   // 左边卡片显示大小
 
@@ -99,26 +101,6 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         }
     }
 
-    public void scrollCurrent(int pos) {
-        if (mRecyclerView == null) {
-            return;
-        }
-        //mRecyclerView.getLayoutManager()).scrollToPositionWithOffset 方法不会回调  RecyclerView.OnScrollListener 的onScrollStateChanged方法,是瞬间跳到指定位置
-        //mRecyclerView.smoothScrollToPosition 方法会回调  RecyclerView.OnScrollListener 的onScrollStateChanged方法 并且是自动居中，有滚动过程的滑动到指定位置
-        ((LinearLayoutManager) mRecyclerView.getLayoutManager()).
-                scrollToPositionWithOffset(pos, 0);
-        mCurrentItemOffset = 0;
-        mLastPos = pos;
-        //认为是一次滑动停止 这里可以写滑动停止回调
-        //onScrolledChangedCallback();
-        mRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                onScrolledChangedCallback();
-            }
-        });
-    }
-
     public void scrollToPosition(int pos) {
         if (mRecyclerView == null) {
             return;
@@ -141,6 +123,31 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         });
     }
 
+    public void scrollToPositionAlpha(final int pos) {
+        if (mRecyclerView == null) {
+            return;
+        }
+        mRecyclerView.scrollToPosition(pos);
+        mCurrentItemOffset = 0;
+        mLastPos = pos;
+        mRecyclerView.post(new Runnable() {
+            @Override
+            public void run() {
+                View view = mRecyclerView.getLayoutManager().findViewByPosition(pos);
+                view.setAlpha(0);
+                view.animate()
+                        .alpha(1.f)                                //设置最终效果为完全不透明
+                        .setDuration(1500)
+                        .setListener(new AnimatorListenerAdapter() {
+                            @Override
+                            public void onAnimationEnd(Animator animation) {
+                            }
+                        })
+                        .start();
+            }
+        });
+    }
+
     public void setFirstItemPos(int firstItemPos) {
         this.mFirstItemPos = firstItemPos;
     }
@@ -153,34 +160,37 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         if (mOnePageWidth == 0) {
             return;
         }
-        int currentItemPos = getCurrentItem();
-        int offset = mCurrentItemOffset - (currentItemPos - mLastPos) * mOnePageWidth;
-        float percent = (float) Math.max(Math.abs(offset) * 1.0 / mOnePageWidth, 0.0001);
-
-        //Log.e("TAG",String.format("offset=%s, percent=%s", offset, percent));
-        View leftView = null;
-        View currentView;
-        View rightView = null;
-        if (currentItemPos > 0) {
-            leftView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos - 1);
-        }
-        currentView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos);
-        if (currentItemPos < mRecyclerView.getAdapter().getItemCount() - 1) {
-            rightView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos + 1);
-        }
-
-        if (leftView != null) {
-            // y = (1 - mScale)x + mScale
-            leftView.setScaleY((1 - mScale) * percent + mScale);
-        }
-        if (currentView != null) {
-            // y = (mScale - 1)x + 1
-            currentView.setScaleY((mScale - 1) * percent + 1);
-        }
-        if (rightView != null) {
-            // y = (1 - mScale)x + mScale
-            rightView.setScaleY((1 - mScale) * percent + mScale);
-        }
+//        int currentItemPos = getCurrentItem();
+//        int offset = mCurrentItemOffset - (currentItemPos - mLastPos) * mOnePageWidth;
+//        float percent = (float) Math.max(Math.abs(offset) * 1.0 / mOnePageWidth, 0.0001);
+//
+//        //Log.e("TAG",String.format("offset=%s, percent=%s", offset, percent));
+//        View leftView = null;
+//        View currentView;
+//        View rightView = null;
+//        if (currentItemPos > 0) {
+//            leftView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos - 1);
+//        }
+//        currentView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos);
+//        if (currentItemPos < mRecyclerView.getAdapter().getItemCount() - 1) {
+//            rightView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos + 1);
+//        }
+//
+//        if (leftView != null) {
+//            // y = (1 - mAlpha)x + mAlpha
+//            leftView.setAlpha((1 - mAlpha) * percent + mAlpha);
+////            leftView.setScaleY((1 - mAlpha) * percent + mAlpha);
+//        }
+//        if (currentView != null) {
+//            // y = (mAlpha - 1)x + 1
+//            currentView.setAlpha((mAlpha - 1) * percent + 1);
+////            currentView.setScaleY((mAlpha - 1) * percent + 1);
+//        }
+//        if (rightView != null) {
+//            // y = (1 - mAlpha)x + mAlpha
+//            rightView.setAlpha((1 - mAlpha) * percent + mAlpha);
+////            rightView.setScaleY((1 - mAlpha) * percent + mAlpha);
+//        }
     }
 
     public int getCurrentItem() {
@@ -193,8 +203,8 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
 
     }
 
-    public void setScale(float scale) {
-        mScale = scale;
+    public void setAlpha(float scale) {
+        mAlpha = scale;
     }
 
     public void setPagePadding(int pagePadding) {

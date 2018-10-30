@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.OrientationHelper;
 import android.support.v7.widget.RecyclerView;
@@ -11,10 +10,6 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.scwang.smartrefresh.layout.SmartRefreshLayout;
-import com.scwang.smartrefresh.layout.api.RefreshLayout;
-import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
-import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.HomeTopModel;
@@ -90,24 +85,6 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
         if (item.scrollOffset > 0) {
             layoutManager.scrollToPositionWithOffset(item.scrollPosition, item.scrollOffset);
         }
-        holder.refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
-        item.smartRefreshLayout = holder.refreshLayout;
-        holder.refreshLayout.setOnRefreshListener(new OnRefreshListener() {
-            @Override
-            public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
-                if (listener != null) {
-                    listener.onRefresh(refreshLayout, position);
-                }
-            }
-        });
-        holder.refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
-            @Override
-            public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
-                if (listener != null) {
-                    listener.onLoadMore(refreshLayout, position);
-                }
-            }
-        });
         holder.rvHorizontalItem.addOnScrollListener(new MyOnScrollListener(item, layoutManager));
 
         item.innerAdapter.setOnContentItemClickListener(new MainHomeFragRcContentAdapter.OnContentItemClickListener() {
@@ -125,7 +102,6 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
                 }
             }
         });
-//        holder.rvHorizontalItem.setNestParent(holder.refreshLayout);
         if (holder.rvHorizontalItem.isComputingLayout()) {
             holder.rvHorizontalItem.post(new Runnable() {
                 @Override
@@ -136,6 +112,7 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
             return;
         }
         item.innerAdapter.updateData(item.mDeviceList);
+//        runEnterAnimation(holder.itemView, position);
 //        if (position == 0) {
 //            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(holder.homeContentRoot.getLayoutParams());
 //            int pxL = AppUtils.dp2px(mContext, 14);
@@ -169,8 +146,6 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
 
         @BindView(R.id.rv_horizontal_item)
         CustomVRecyclerView rvHorizontalItem;
-        @BindView(R.id.refreshLayout)
-        SmartRefreshLayout refreshLayout;
         @BindView(R.id.ic_no_content)
         LinearLayout noContent;
         @BindView(R.id.home_content_root)
@@ -183,9 +158,6 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
     }
 
     public interface OnLoadInnerListener {
-        void onRefresh(@NonNull final RefreshLayout refreshLayout, int position);
-
-        void onLoadMore(@NonNull final RefreshLayout refreshLayout, int position);
 
         void onAlarmInfoClick(View v, int position);
 
@@ -244,4 +216,43 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
         holder.noContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         holder.rvHorizontalItem.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
+
+    //
+    private int lastAnimatedPosition = -1;
+    private boolean animationsLocked = false;
+    private boolean delayEnterAnimation = true;
+//    private void runEnterAnimation(View view, int position) {
+//
+//
+//        if (animationsLocked) return;              //animationsLocked是布尔类型变量，一开始为false
+//        //确保仅屏幕一开始能够容纳显示的item项才开启动画
+//
+//
+//        if (position > lastAnimatedPosition) {//lastAnimatedPosition是int类型变量，默认-1，
+//            //这两行代码确保了recyclerview滚动式回收利用视图时不会出现不连续效果
+//            lastAnimatedPosition = position;
+////            view.setTranslationY(500);     //Item项一开始相对于原始位置下方500距离
+//            view.setAlpha(0.f);           //item项一开始完全透明
+//            //每个item项两个动画，从透明到不透明，从下方移动到原始位置
+//
+//
+//            view.animate()
+////                    .translationY(0)
+//                    .alpha(1.f)                                //设置最终效果为完全不透明
+//                    //并且在原来的位置
+//                    .setStartDelay(delayEnterAnimation ? 20 * (position) : 0)//根据item的位置设置延迟时间
+//                    //达到依次动画一个接一个进行的效果
+//                    .setInterpolator(new DecelerateInterpolator(0.5f))     //设置动画位移先快后慢的效果
+//                    .setDuration(1000)
+//                    .setListener(new AnimatorListenerAdapter() {
+//                        @Override
+//                        public void onAnimationEnd(Animator animation) {
+//                            animationsLocked = true;
+//                            //确保仅屏幕一开始能够显示的item项才开启动画
+//                            //也就是说屏幕下方还没有显示的item项滑动时是没有动画效果
+//                        }
+//                    })
+//                    .start();
+//        }
+//    }
 }

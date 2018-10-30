@@ -14,7 +14,6 @@ import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
-import com.sensoro.smartcity.server.bean.GrantsInfo;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
@@ -170,27 +169,30 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             public Observable<DevicesMergeTypesRsp> call(UserAccountControlRsp userAccountControlRsp) {
                 UserInfo userInfo = userAccountControlRsp.getData();
                 RetrofitServiceHelper.INSTANCE.saveSessionId(userInfo.getSessionID());
-                GrantsInfo grants = userInfo.getGrants();
-                //修改loginData包装
-                eventLoginData = new EventLoginData();
-                eventLoginData.userId = userInfo.get_id();
-                eventLoginData.userName = userInfo.getNickname();
-                eventLoginData.phone = userInfo.getContacts();
-                eventLoginData.phoneId = phoneId;
-//            mCharacter = userInfo.getCharacter();
-                String roles = userInfo.getRoles();
-                eventLoginData.roles = roles;
-                String isSpecific = userInfo.getIsSpecific();
-                eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
-                eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
-                eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
-                eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
-                eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
-                eventLoginData.hasInspection = MenuPageFactory.getHasInspection(grants);
-                eventLoginData.hasAlarmInfo = MenuPageFactory.getHasAlarmInfo(grants);
-                eventLoginData.hasDeviceBrief = MenuPageFactory.getHasDeviceBriefList(grants);
-                eventLoginData.hasSignalCheck = MenuPageFactory.getHasSignalCheck(grants);
-                eventLoginData.hasSignalConfig = MenuPageFactory.getHasSignalConfig(grants);
+                //
+                eventLoginData = MenuPageFactory.createLoginData(userInfo, phoneId);
+                //
+//                GrantsInfo grants = userInfo.getGrants();
+//                //修改loginData包装
+//                eventLoginData = new EventLoginData();
+//                eventLoginData.userId = userInfo.get_id();
+//                eventLoginData.userName = userInfo.getNickname();
+//                eventLoginData.phone = userInfo.getContacts();
+//                eventLoginData.phoneId = phoneId;
+////            mCharacter = userInfo.getCharacter();
+//                String roles = userInfo.getRoles();
+//                eventLoginData.roles = roles;
+//                String isSpecific = userInfo.getIsSpecific();
+//                eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
+//                eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
+//                eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
+//                eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
+//                eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
+//                eventLoginData.hasInspectionTaskList = MenuPageFactory.getHasInspectionTaskList(grants);
+//                eventLoginData.hasAlarmInfo = MenuPageFactory.getHasAlarmInfo(grants);
+//                eventLoginData.hasDeviceBrief = MenuPageFactory.getHasDeviceBriefList(grants);
+//                eventLoginData.hasSignalCheck = MenuPageFactory.getHasSignalCheck(grants);
+//                eventLoginData.hasSignalConfig = MenuPageFactory.getHasSignalConfig(grants);
                 //
                 return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
             }

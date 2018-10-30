@@ -2489,4 +2489,17 @@ public class WidgetUtil {
 //        }
 //
 //    }
+
+    public static String handleMergeType(String deviceType) {
+        if (!TextUtils.isEmpty(deviceType)) {
+            try {
+                DeviceTypeStyles deviceTypeStyles = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig().getDeviceType().get(deviceType);
+                return deviceTypeStyles.getMergeType();
+            } catch (Exception e) {
+                e.printStackTrace();
+                LogUtils.loge("handleMergeType ----->>>deviceType = " + deviceType);
+            }
+        }
+        return null;
+    }
 }
