@@ -58,6 +58,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setScanLoginVisible(userData.hasScanLogin);
             getView().setMerchantVisible(userData.hasSubMerchant);
             getView().changeMerchantTitle(userData.hasSubMerchant);
+            getView().setSignalCheckVisible(userData.hasSignalCheck);
         }
     }
 

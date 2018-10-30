@@ -165,7 +165,6 @@ public class SensoroDeviceConnectionTest {
         @Override
         public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicWrite(gatt, characteristic, status);
-            Log.e("hcs",":onCharacteristicWrite::");
             bluetoothLEHelper4.bluetoothGatt = gatt;
             parseCharacteristicWrite(characteristic, status);
 
@@ -173,7 +172,6 @@ public class SensoroDeviceConnectionTest {
 
         private void parseCharacteristicWrite(BluetoothGattCharacteristic characteristic, int status) {
             // check pwd
-            Log.e("hcs",":parseCharacteristicWrite::");
             if (characteristic.getUuid().equals(BluetoothLEHelper4.GattInfo.SENSORO_DEVICE_AUTHORIZATION_CHAR_UUID)) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     bluetoothLEHelper4.listenOnCharactertisticRead(BluetoothLEHelper4.GattInfo
@@ -244,12 +242,10 @@ public class SensoroDeviceConnectionTest {
         public void onCharacteristicRead(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
             super.onCharacteristicRead(gatt, characteristic, status);
             bluetoothLEHelper4.bluetoothGatt = gatt;
-            Log.e("hcs","::onCharacteristicRead:");
             parseCharacteristicRead(characteristic, status);
         }
 
         private void parseCharacteristicRead(BluetoothGattCharacteristic characteristic, int status) {
-            Log.e("hcs",":parseCharacteristicRead::");
             if (characteristic.getUuid().equals(BluetoothLEHelper4.GattInfo.SENSORO_DEVICE_READ_CHAR_UUID)) {
                 if (status == BluetoothGatt.GATT_SUCCESS) {
                     byte value[] = characteristic.getValue();
@@ -292,7 +288,6 @@ public class SensoroDeviceConnectionTest {
         @Override
         public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
             super.onCharacteristicChanged(gatt, characteristic);
-            Log.e("hcs","::onCharacteristicChanged:");
             bluetoothLEHelper4.bluetoothGatt = gatt;
             try {
                 parseChangedData(characteristic);
@@ -339,7 +334,7 @@ public class SensoroDeviceConnectionTest {
         this.macAddress = macAddress;
     }
 
-    public SensoroDeviceConnectionTest(Context context, String macAddress, boolean isDfu) {
+    public SensoroDeviceConnectionTest(Context context, String macAddress, boolean isContainSignal,boolean isDfu) {
         this.context = context;
         bluetoothLEHelper4 = new BluetoothLEHelper4(context);
         writeCallbackHashMap = new HashMap<>();
@@ -349,12 +344,12 @@ public class SensoroDeviceConnectionTest {
     }
 
 
-    public SensoroDeviceConnectionTest(Context context, BLEDevice bleDevice, boolean isContainSignal) {
+    public SensoroDeviceConnectionTest(Context context, String macAddress, boolean isContainSignal) {
         this.context = context;
         bluetoothLEHelper4 = new BluetoothLEHelper4(context);
         writeCallbackHashMap = new HashMap<>();
         this.isContainSignal = isContainSignal;
-        this.macAddress = bleDevice.getMacAddress();
+        this.macAddress = macAddress;
     }
 
     private void initData() {
@@ -452,7 +447,6 @@ public class SensoroDeviceConnectionTest {
             }
         }
         int cmdType = bluetoothLEHelper4.getSendCmdType();
-        Log.e("hcs","char变化:::"+cmdType);
         switch (cmdType) {
             case CmdType.CMD_SET_ELEC_CMD:
                 parseElecData(characteristic);

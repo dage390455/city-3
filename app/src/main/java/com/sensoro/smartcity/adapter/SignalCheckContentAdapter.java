@@ -13,6 +13,7 @@ import com.sensoro.smartcity.model.SignalData;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -36,34 +37,24 @@ public class SignalCheckContentAdapter extends RecyclerView.Adapter<SignalCheckC
     @Override
     public void onBindViewHolder(@NonNull SignalCheckContentHolder holder, int position) {
         SignalData signalData = datas.get(position);
-        int down_sf = 12 - signalData.getDownlinkDR();
-        int up_sf = 12 - signalData.getUplinkDR();
-        holder.itemAdapterSignalCheckTvTime.setText(signalData.getDate());
-        float up_freq = (float)signalData.getUplinkFreq() / 1000000;
-        StringBuilder upData = new StringBuilder();
-        upData.append("RSSI：");
-        upData.append(signalData.getUplinkRSSI() == 0 ? "-" : signalData.getUplinkRSSI());
-        upData.append("SNR：");
-        upData.append(signalData.getUplinkSNR() == 0 ? "-" : signalData.getUplinkSNR());
-        upData.append(signalData.getUplinkTxPower() == 0 ? "-" : signalData.getUplinkTxPower());
-        upData.append(up_sf);
-        upData.append("@");
-        upData.append(up_freq == 0 ? "-" : up_freq);
-        upData.append("MHz");
-        holder.itemAdapterSignalCheckTvUpData.setText(upData.toString());
+        String upData;
+        String loadData;
+        if (signalData.getDownlinkRSSI() == 0) {
+            upData = String.format(Locale.CHINA,"RSSI: %d SNR: %.2f %ddBm SF%d@%.1fMHz",signalData.getUplinkRSSI(),
+                    signalData.getUplinkSNR(),signalData.getUplinkTxPower(),12-signalData.getUplinkDR(),
+                    (float) (signalData.getUplinkFreq() / 1000000));
+            loadData = String.format(Locale.CHINA,"RSSI: %d SNR: %.2f %ddBm SF%d@%.1fMHz",signalData.getDownlinkRSSI(),
+                    signalData.getDownlinkSNR(),signalData.getDownlinkTxPower(),12-signalData.getDownlinkDR(),
+                    (float) (signalData.getDownlinkFreq() / 1000000));
+        }else{
+            upData = String.format(Locale.CHINA,"RSSI: - SNR: - %ddBm SF%d@%.1fMHz",
+                    signalData.getUplinkTxPower(),12-signalData.getUplinkDR(),
+                    (float) (signalData.getUplinkFreq() / 1000000));
+            loadData = String.format(Locale.CHINA,"\"RSSI: - SNR: - -dBm SF-@-MHz");
+        }
 
-        float down_freq = (float)signalData.getDownlinkFreq() / 1000000;
-        StringBuilder loadData = new StringBuilder();
-        loadData.append("RSSI：");
-        loadData.append(signalData.getDownlinkRSSI() == 0 ? "-" : signalData.getDownlinkRSSI());
-        loadData.append("SNR：");
-        loadData.append(signalData.getDownlinkSNR() == 0 ? "-" : signalData.getDownlinkSNR());
-        loadData.append(signalData.getDownlinkTxPower() == 0 ? "-" : signalData.getDownlinkTxPower());
-        loadData.append(down_sf);
-        loadData.append("@");
-        loadData.append(down_freq == 0 ? "-" : down_freq);
-        loadData.append("MHz");
-        holder.itemAdapterSignalCheckTvLoadData.setText(loadData.toString());
+        holder.itemAdapterSignalCheckTvUpData.setText(upData);
+        holder.itemAdapterSignalCheckTvLoadData.setText(loadData);
 
     }
 
@@ -75,6 +66,15 @@ public class SignalCheckContentAdapter extends RecyclerView.Adapter<SignalCheckC
     public void updateData(SignalData signalData) {
         datas.add(signalData);
         notifyDataSetChanged();
+    }
+
+    public int getLastPosition() {
+        if(datas.size()>0){
+            return datas.size()-1;
+        }else{
+            return 0;
+        }
+
     }
 
     class SignalCheckContentHolder extends RecyclerView.ViewHolder {

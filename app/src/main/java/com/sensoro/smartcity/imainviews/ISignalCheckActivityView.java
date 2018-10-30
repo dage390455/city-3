@@ -33,4 +33,8 @@ public interface ISignalCheckActivityView extends IToast,IActivityIntent,IProgre
     void setLlTestVisible(boolean isVisible);
 
     void setLlDetailVisible(boolean isVisible);
+
+    void updateSignalStatusText(String text);
+
+    void setNearVisible(boolean isVisible);
 }

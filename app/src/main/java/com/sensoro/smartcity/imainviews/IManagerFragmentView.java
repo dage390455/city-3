@@ -20,4 +20,6 @@ public interface IManagerFragmentView extends IToast, IActivityIntent, IProgress
     void setMerchantVisible(boolean isVisible);
 
     void changeMerchantTitle(boolean hasSubMerchant);
+
+    void setSignalCheckVisible(boolean hasSignalCheck);
 }

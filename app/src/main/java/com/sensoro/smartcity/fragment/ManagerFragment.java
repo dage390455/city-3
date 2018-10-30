@@ -283,6 +283,11 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     }
 
     @Override
+    public void setSignalCheckVisible(boolean hasSignalCheck) {
+        fgMainManageLlSignalCheck.setVisibility(hasSignalCheck ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void onCancelClick() {
         mExitDialog.dismiss();
     }

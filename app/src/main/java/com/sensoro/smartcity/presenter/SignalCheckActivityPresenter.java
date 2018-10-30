@@ -10,6 +10,7 @@ import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.CmdType;
+import com.sensoro.libbleserver.ble.ResultCode;
 import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.SensoroDevice;
 import com.sensoro.libbleserver.ble.SensoroDeviceConnectionTest;
@@ -28,6 +29,7 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -37,7 +39,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActivityView>
-implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCallback ,SensoroWriteCallback {
+        implements Constants, Runnable, BLEDeviceListener<BLEDevice>, SensoroConnectionCallback, SensoroWriteCallback {
     private Activity mActivity;
     private DeviceInfo mDeviceInfo;
     private Handler mHandler;
@@ -55,7 +57,7 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        mDeviceInfo = (DeviceInfo)  mActivity.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        mDeviceInfo = (DeviceInfo) mActivity.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.post(this);
         init();
@@ -89,9 +91,9 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
                 statusText = "正常";
                 break;
         }
-        getView().setStatus(statusText,textColor);
+        getView().setStatus(statusText, textColor);
         getView().setUpdateTime(DateUtil.getStrTime_hms(mDeviceInfo.getUpdatedTime()));
-        String text = mDeviceInfo.getDeviceType()+" "+mDeviceInfo.getName();
+        String text = mDeviceInfo.getDeviceType() + " " + mDeviceInfo.getName();
         getView().setTypeAndName(text);
         getView().updateTag(Arrays.asList(mDeviceInfo.getTags()));
     }
@@ -100,7 +102,9 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
     public void onDestroy() {
         BleObserver.getInstance().unregisterBleObserver(this);
         stopScanService();
-        mConnection.disconnect();
+        if (mConnection != null) {
+            mConnection.disconnect();
+        }
     }
 
     @Override
@@ -117,17 +121,15 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
                 getView().toastShort("请检查蓝牙状态");
             }
         }
-        mHandler.postDelayed(this,3000);
+        mHandler.postDelayed(this, 3000);
     }
 
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
-        Log.e("hcs",":::"+bleDevice.getSn() + "  "+bleDevice.getSn().equals(mDeviceInfo.getSn()));
+        LogUtils.loge(this, bleDevice.getMacAddress() + " " + bleDevice.getSn().equals(mDeviceInfo.getSn()));
         if (bleDevice.getSn().equals(mDeviceInfo.getSn())) {
             bleAddress = bleDevice.getMacAddress();
-            if(isAutoConnect){
-                connectDevice();
-            }
+            getView().setNearVisible(true);
         }
     }
 
@@ -143,29 +145,22 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
 
     public void doStartOrStop() {
         if (getView().getIsStartSignalCheck()) {
-            getView().setStartBtnIcon(R.drawable.signal_check_stop_btn);
-            getView().showProgressDialog();
-            if(clickCount < 1){
-                RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mDeviceInfo.getSn(),mDeviceInfo.getLonlat()[0],mDeviceInfo.getLonlat()[1])
+            if (TextUtils.isEmpty(bleAddress)) {
+               getView().toastShort("设备未在附近，请激活设备后重新尝试");
+            }else{
+                getView().setStartBtnIcon(R.drawable.signal_check_stop_btn);
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mDeviceInfo.getSn(), mDeviceInfo.getLonlat()[0], mDeviceInfo.getLonlat()[1])
                         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>() {
                     @Override
                     public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                        clickCount++;
                         blePassword = deployDeviceDetailRsp.getData().getBlePassword();
                         //todo delete
 //                        blePassword = "hzmBl4;XTD6*[@}I";
                         if (!TextUtils.isEmpty(blePassword)) {
-                            if(!TextUtils.isEmpty(bleAddress)){
                                 connectDevice();
-                            }else{
-                                getView().dismissProgressDialog();
-                                getView().toastShort("请激活设备后，再开始测试");
-                                clickCount++;
-                                getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                                isStartSignalCheck = !isStartSignalCheck;
-                            }
 
-                        }else{
+                        } else {
                             getView().dismissProgressDialog();
                             getView().toastShort("该设备不支持信号测试");
                             getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
@@ -183,43 +178,12 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
                         getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
                     }
                 });
-            }else{
-                if(!TextUtils.isEmpty(blePassword)){
-                    if(!TextUtils.isEmpty(bleAddress)){
-                        connectDevice();
-                    }else{
-                        isAutoConnect = true;
-                        mActivity.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                getView().updateProgressDialogMessage("搜索中，请稍后...");
-                            }
-                        });
-
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                isAutoConnect = false;
-                                getView().dismissProgressDialog();
-                                getView().toastShort("未搜索到设备，请激活设备，重新开始测试");
-                                getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-
-                            }
-                        },120000);
-
-
-                    }
-                }else{
-                    getView().dismissProgressDialog();
-                    getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                    clickCount = 0;
-                    doStartOrStop();
-                }
             }
 
-        }else{
+
+        } else {
             getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-            if (mConnection!=null) {
+            if (mConnection != null) {
                 mConnection.disconnect();
             }
 
@@ -229,9 +193,10 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
 
     private void connectDevice() {
         mHandler.removeCallbacksAndMessages(null);
-        mConnection = new SensoroDeviceConnectionTest(mActivity, bleAddress);
+        mConnection = new SensoroDeviceConnectionTest(mActivity, bleAddress, true);
         try {
-            mConnection.connect(blePassword,SignalCheckActivityPresenter.this);
+            mConnection.connect(blePassword, SignalCheckActivityPresenter.this);
+            getView().updateProgressDialogMessage("正在连接...");
             stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
@@ -242,7 +207,6 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
     }
 
     private void sendDetectionCmd(SensoroDevice sensoroDevice) {
-        Log.e("hcs","ss:::"+sensoroDevice.getLoraDr()+"   "+sensoroDevice.getLoraTxp());
         mConnection.writeSignalData(selectedFreq, sensoroDevice.getLoraDr(), sensoroDevice.getLoraTxp(),
                 5, this);
 
@@ -254,7 +218,6 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
 
     @Override
     public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
-        Log.e("hcs","连接成功:::");
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -263,7 +226,7 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-
+                getView().updateProgressDialogMessage("正在发送数据...");
                 getView().setLlTestVisible(false);
                 getView().setLlDetailVisible(true);
                 sendCount = 0;
@@ -279,15 +242,13 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
     @Override
     public void onConnectedFailure(final int errorCode) {
         clickCount = 0;
-        Log.e("hcs","连接失败:::"+errorCode);
         isAutoConnect = false;
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 getView().dismissProgressDialog();
                 getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                getView().toastShort("蓝牙连接失败，请重试");
-                Log.e("hcs",":::"+errorCode);
+                getView().toastShort(ResultCode.errCodeToMsg(errorCode));
                 getView().setSubTitleVisible(true);
             }
         });
@@ -296,18 +257,18 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
     @Override
     public void onDisconnected() {
         getView().setSubTitleVisible(true);
+        getView().toastShort("蓝牙设备断开连接");
     }
 
     @Override
     public void onWriteSuccess(final Object o, final int cmd) {
-        Log.e("hcs",":写入成功::");
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 getView().dismissProgressDialog();
                 if (cmd == CmdType.CMD_SIGNAL) {
                     if (o == null) {
-                        getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
+                        getView().setStartBtnIcon(R.drawable.signal_check_stop_btn);
                     } else {
                         ProtoMsgTest1U1.MsgTest msgTest = (ProtoMsgTest1U1.MsgTest) o;
                         refresh(msgTest);
@@ -344,21 +305,21 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
         String rateString = String.format("%.1f", rate);
         //
 
-        String text = "发送："+sendCount+" 接收："+receiveCount+" 成功率："+rateString;
-        getView().updateStatusText(text);
+        String text = "发送：" + sendCount + "  接收：" + receiveCount + "  成功率：" + rateString + "%";
+        getView().updateSignalStatusText(text);
         getView().updateContentAdapter(signalData);
     }
 
     @Override
-    public void onWriteFailure(int errorCode, int cmd) {
-        Log.e("hcs","写入失败:::"+errorCode);
+    public void onWriteFailure(final int errorCode, int cmd) {
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
                 getView().dismissProgressDialog();
                 getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
                 mConnection.disconnect();
-                getView().toastShort("测试失败");
+
+                getView().toastShort(ResultCode.errCodeToMsg(errorCode));
             }
         });
     }
@@ -370,7 +331,7 @@ implements Constants ,Runnable,BLEDeviceListener<BLEDevice> ,SensoroConnectionCa
             return resources.getStringArray(R.array.signal_eu433_band_array);
         } else if (band.equals(Constants.LORA_BAND_EU868)) {
             return resources.getStringArray(R.array.signal_eu868_band_array);
-        }  else if (band.equals(Constants.LORA_BAND_US915)) {
+        } else if (band.equals(Constants.LORA_BAND_US915)) {
             return resources.getStringArray(R.array.signal_us915_band_array);
         } else if (band.equals(Constants.LORA_BAND_SE470)) {
             return resources.getStringArray(R.array.signal_se470_band_array);

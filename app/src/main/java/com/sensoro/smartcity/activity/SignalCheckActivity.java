@@ -25,7 +25,6 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -44,10 +43,14 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     TextView acSignalCheckTvSn;
     @BindView(R.id.ac_signal_check_tv_state)
     TextView acSignalCheckTvState;
+    @BindView(R.id.ac_signal_check_tv_near)
+    TextView acSignalCheckTvNear;
     @BindView(R.id.ac_signal_check_tv_time)
     TextView acSignalCheckTvTime;
     @BindView(R.id.ac_signal_check_tv_type_and_name)
     TextView acSignalCheckTvTypeAndName;
+    @BindView(R.id.ac_signal_check_tv_signal_status)
+    TextView acSignalCheckTvSignalStatus;
     @BindView(R.id.ac_signal_check_tv_rc_tag)
     RecyclerView acSignalCheckTvRcTag;
     @BindView(R.id.ac_signal_check_ll_name)
@@ -65,6 +68,7 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     private int btnResId = R.drawable.signal_check_start_btn;
     private ProgressUtils mProgressUtils;
     private AlertDialog mSignalChoiceDialog;
+    private ProgressUtils.Builder mProgressbuild;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -75,7 +79,9 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     }
 
     private void initView() {
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        mProgressbuild = new ProgressUtils.Builder(mActivity);
+        mProgressUtils = new ProgressUtils(mProgressbuild.build());
         includeTextTitleTvTitle.setText("信号测试");
         includeTextTitleTvSubtitle.setText("频点随机");
 
@@ -243,8 +249,8 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     }
 
     @Override
-    public void updateProgressDialogMessage(String content) {
-
+    public void updateProgressDialogMessage(final String content) {
+        mProgressUtils.setMessage(content);
     }
 
     @Override
@@ -254,7 +260,8 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
 
     @Override
     public void setSubTitleVisible(boolean isVisible) {
-        includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        //暂时不需要频点随机，以后需要不需要不知道，所以注释先留着
+//        includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -265,6 +272,7 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     @Override
     public void updateContentAdapter(SignalData signalData) {
         mContentAdapter.updateData(signalData);
+        acSignalCheckTvRcContent.smoothScrollToPosition(mContentAdapter.getLastPosition());
     }
 
     @Override
@@ -275,5 +283,15 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     @Override
     public void setLlDetailVisible(boolean isVisible) {
         acSignalCheckLlDetail.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void updateSignalStatusText(String text) {
+        acSignalCheckTvSignalStatus.setText(text);
+    }
+
+    @Override
+    public void setNearVisible(boolean isVisible) {
+        acSignalCheckTvNear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }
