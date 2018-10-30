@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4">
+
+    <include
+        android:id="@+id/ac_signal_check_title_root"
+        layout="@layout/item_include_text_title" />
+
+    <LinearLayout
+        android:id="@+id/ac_signal_check_ll_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ac_signal_check_title_root"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginTop="18dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/ac_signal_check_tv_sn"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:textColor="@color/c_252525"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/ac_signal_check_tv_state"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="4dp"
+                android:drawablePadding="4dp"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/ac_signal_check_tv_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:textColor="@color/c_5d5d5d"
+                android:layout_marginStart="16dp"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/ac_signal_check_tv_type_and_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="20dp"
+            android:textColor="@color/c_252525"
+            android:textSize="14sp"
+            />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="20dp"
+            android:background="@color/c_dfdfdf"
+            android:layout_marginBottom="12dp"/>
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/ac_signal_check_tv_rc_tag"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
+            android:layout_marginBottom="12dp">
+
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+    <ImageView
+        android:id="@+id/ac_signal_check_imv_start_or_stop"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:background="@drawable/shape_bg_signal_check_btn"
+        android:src="@drawable/signal_check_start_btn"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="12dp"
+        android:contentDescription="@null"
+        android:padding="16dp"/>
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/ac_signal_check_ll_name"
+        android:layout_above="@id/ac_signal_check_imv_start_or_stop"
+        android:layout_marginBottom="4dp"
+        >
+        <LinearLayout
+            android:id="@+id/ac_signal_check_ll_detail"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="gone">
+            <TextView
+                android:id="@+id/ac_signal_check_tv_signal_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:textSize="12sp"
+                android:layout_marginTop="20dp"
+                android:textColor="@color/c_252525"
+                />
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/ac_signal_check_tv_rc_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+               >
+
+            </android.support.v7.widget.RecyclerView>
+        </LinearLayout>
+
+       <LinearLayout
+           android:id="@+id/ac_signal_check_ll_test"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerInParent="true"
+           android:orientation="vertical">
+           <ImageView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:src="@drawable/signal_test"
+               android:contentDescription="@null"
+               android:layout_gravity="center_horizontal"
+               />
+           <TextView
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="点击测试按钮进行测试"
+               android:layout_marginTop="12dp"
+               android:layout_gravity="center_horizontal"
+               android:textSize="14sp"
+               android:textColor="@color/c_5d5d5d"/>
+       </LinearLayout>
+    </RelativeLayout>
+</RelativeLayout>

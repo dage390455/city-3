@@ -64,6 +64,18 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     LinearLayout acDeployResultLlRecentUploadTime;
     @BindView(R.id.ac_deploy_result_tv_recent_upload_time)
     TextView acDeployResultTvRecentUploadTime;
+    @BindView(R.id.ac_deploy_result_imv_arrows_left)
+    ImageView acDeployResultImvArrowsLeft;
+    @BindView(R.id.ac_deploy_result_title)
+    TextView acDeployResultTitle;
+    @BindView(R.id.ac_deploy_result_ll_title)
+    LinearLayout acDeployResultLlTitle;
+    @BindView(R.id.ac_deploy_result_line)
+    View acDeployResultLine;
+    @BindView(R.id.ac_deploy_result_bottom)
+    LinearLayout acDeployResultBottom;
+    @BindView(R.id.ac_deploy_result_tv_error_msg)
+    TextView acDeployResultTvErrorMsg;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -193,6 +205,21 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         acDeployResultTvContinue.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void setStateTextViewVisible(boolean isVisible) {
+        acDeployResultTvState.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setArrowsLeftVisible(boolean isVisible) {
+        acDeployResultImvArrowsLeft.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setTitleText(String text) {
+        acDeployResultTitle.setText(text);
+    }
+
 
     @Override
     public void toastShort(String msg) {
@@ -229,7 +256,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
 
-    @OnClick({ R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue})
+    @OnClick({R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue,R.id.ac_deploy_result_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_result_tv_back_home:
@@ -238,6 +265,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
             case R.id.ac_deploy_result_tv_continue:
                 mPresenter.gotoContinue();
                 break;
+            case R.id.ac_deploy_result_imv_arrows_left:
+                finishAc();
+                break;
         }
     }
+
 }

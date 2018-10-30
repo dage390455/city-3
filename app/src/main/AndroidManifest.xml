@@ -303,6 +303,7 @@
         <!-- </receiver> -->
         <activity android:name=".activity.DeployRecordActivity"></activity>
         <activity android:name=".activity.DeployRecordDetailActivity" />
+        <activity android:name=".activity.SignalCheckActivity" />
     </application>
 
 </manifest>

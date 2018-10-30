@@ -2,6 +2,8 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
@@ -21,7 +23,9 @@ import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 
 import butterknife.BindView;
+import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerFragmentPresenter> implements
         IManagerFragmentView, TipDialogUtils.TipDialogUtilsClickListener, VersionDialogUtils.VersionDialogUtilsClickListener {
@@ -57,6 +61,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlExit;
     @BindView(R.id.fg_main_manage_ll_main_function)
     LinearLayout fgMainManageLlMainFunction;
+    @BindView(R.id.fg_main_manage_ll_signal_check)
+    LinearLayout fgMainManageLlSignalCheck;
     @BindView(R.id.line1)
     FrameLayout line1;
     @BindView(R.id.line2)
@@ -65,6 +71,11 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     FrameLayout line3;
     @BindView(R.id.line4)
     FrameLayout line4;
+    @BindView(R.id.line6)
+    FrameLayout line6;
+    @BindView(R.id.line5)
+    FrameLayout line5;
+    Unbinder unbinder;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
@@ -182,9 +193,14 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 //            mAlarmPopupView.onDestroyPop();
 //        }
         super.onDestroyView();
+        unbinder.unbind();
     }
 
-    @OnClick({R.id.fg_main_manage_ll_change_merchants, R.id.fg_main_manage_ll_deploy_device, R.id.fg_main_manage_ll_contract_management, R.id.fg_main_manage_ll_polling_mission, R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login, R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info, R.id.fg_main_manage_ll_exit})
+    @OnClick({R.id.fg_main_manage_ll_change_merchants, R.id.fg_main_manage_ll_deploy_device,
+            R.id.fg_main_manage_ll_contract_management, R.id.fg_main_manage_ll_polling_mission,
+            R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login,
+            R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info,
+            R.id.fg_main_manage_ll_exit,R.id.fg_main_manage_ll_signal_check})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
@@ -213,6 +229,9 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 break;
             case R.id.fg_main_manage_ll_exit:
                 mExitDialog.show();
+                break;
+            case R.id.fg_main_manage_ll_signal_check:
+                mPresenter.doSignalCheck();
                 break;
         }
     }
@@ -282,5 +301,13 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @Override
     public void onVersionConfirmClick() {
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        // TODO: inflate a fragment view
+        View rootView = super.onCreateView(inflater, container, savedInstanceState);
+        unbinder = ButterKnife.bind(this, rootView);
+        return rootView;
     }
 }

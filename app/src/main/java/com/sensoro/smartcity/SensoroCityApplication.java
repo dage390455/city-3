@@ -168,7 +168,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         return instance;
     }
 
-    public void addData(List<DeviceInfo> list) {
+    public synchronized void addData(List<DeviceInfo> list) {
         if (list.size() > 0) {
             HashSet<DeviceInfo> hashSet = new HashSet<>(mDeviceInfoList);
             hashSet.addAll(list);
@@ -178,7 +178,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         }
     }
 
-    public void setData(List<DeviceInfo> list) {
+    public synchronized void setData(List<DeviceInfo> list) {
         this.mDeviceInfoList.clear();
         this.mDeviceInfoList.addAll(new HashSet<>(list));
         Collections.sort(mDeviceInfoList);

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
 import com.sensoro.smartcity.activity.InspectionTaskListActivity;
@@ -227,4 +228,25 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         LogUtils.loge(this, eventData.toString());
     }
 
+    public void doSignalCheck() {
+        boolean bleHasOpen = false;
+        try {
+            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
+        } catch (Exception e) {
+            e.printStackTrace();
+            getView().toastShort("请检查蓝牙状态");
+            return;
+        }
+        if (!bleHasOpen) {
+            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
+            if (!bleHasOpen) {
+                getView().toastShort("请检查蓝牙状态");
+                return;
+            }
+        }
+
+        Intent intent = new Intent(mContext,ScanActivity.class);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE,TYPE_SCAN_SIGNAL_CHECK);
+        getView().startAC(intent);
+    }
 }

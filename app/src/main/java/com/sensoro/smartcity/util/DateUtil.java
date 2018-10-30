@@ -32,6 +32,18 @@ public class DateUtil {
         return re_StrTime;
 
     }
+    public static String getStrTime_ymd_hm_ss(long cc_time) {
+        String re_StrTime = "";
+//        if (TextUtils.isEmpty(cc_time) || "null".equals(cc_time)) {
+//            return re_StrTime;
+//        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+//        // 例如：cc_time=1291778220
+//        long lcc_time = Long.valueOf(cc_time);
+        re_StrTime = sdf.format(new Date(cc_time));
+        return re_StrTime;
+
+    }
 
     /*
      * 将时间戳转为字符串 ，格式：yyyy-MM-dd HH:mm:ss
@@ -103,6 +115,14 @@ public class DateUtil {
         // 例如：cc_time=1291778220
         long lcc_time = Long.valueOf(cc_time);
         re_StrTime = sdf.format(new Date(lcc_time));
+        return re_StrTime;
+    }
+
+    public static String getStrTime_hms(long cc_time) {
+        String re_StrTime = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        // 例如：cc_time=1291778220
+        re_StrTime = sdf.format(new Date(cc_time));
         return re_StrTime;
     }
 

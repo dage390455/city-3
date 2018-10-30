@@ -46,7 +46,6 @@ public interface Constants {
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
     String[] DEVICE_STATUS_ARRAY = {"预警", "正常", "失联", "未激活"};
-    String[] MONITOR_STATUS_ARRAY = {"预警中", "正常", "失联", "未激活"};
     String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
@@ -259,6 +258,17 @@ public interface Constants {
     int TYPE_LIST = 0;
     int TYPE_GRID = 1;
 
+    //信号测试 band
+    String LORA_BAND_US915 = "US915";
+    String LORA_BAND_EU433 = "EU433";
+    String LORA_BAND_EU868 = "EU868";
+    String LORA_BAND_AU915 = "AU915";
+    String LORA_BAND_AS923 = "AS923";
+    String LORA_BAND_SE433 = "SE433";
+    String LORA_BAND_SE470 = "SE470";
+    String LORA_BAND_SE915 = "SE915";
+    String LORA_BAND_SE780 = "SE780";
+    String LORA_BAND_CN470 = "CN470";
     //
     int MODEL_ALARM_STATUS_EVENT_CODE_CREATE = 0;
     int MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY = 2;
@@ -326,5 +336,6 @@ public interface Constants {
     int TYPE_SCAN_DEPLOY_DEVICE_CHANGE = 0X37;
     int TYPE_SCAN_INSPECTION = 0X38;
     int TYPE_SCAN_DEPLOY_POINT_DISPLAY = 0x41;
+    int TYPE_SCAN_SIGNAL_CHECK = 0x42;
 
 }

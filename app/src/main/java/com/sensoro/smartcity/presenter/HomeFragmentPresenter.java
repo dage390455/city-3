@@ -282,7 +282,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
      * 请求剩余的数据
      */
 
-    private void scheduleRefresh() {
+    private synchronized void scheduleRefresh() {
         List<DeviceInfo> deviceInfoList = SensoroCityApplication.getInstance().getData();
         DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
         Map<String, DeviceTypeStyles> typeStylesMap = null;
