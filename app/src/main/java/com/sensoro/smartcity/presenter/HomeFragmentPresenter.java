@@ -802,4 +802,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
         return R.color.c_29c093;
     }
+
+    public boolean hasContentData() {
+        if (mCurrentHomeTopModel != null) {
+            return mCurrentHomeTopModel.innerAdapter.getData().size() > 0;
+        }
+        return false;
+    }
 }

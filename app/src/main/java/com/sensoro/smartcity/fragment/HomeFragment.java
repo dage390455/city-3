@@ -217,7 +217,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
-        fgMainHomeRcContent.setNestedScrollingEnabled(false);
+        fgMainHomeRcContent.setNestedScrollingEnabled(true);
         fgMainHomeRcContent.setAdapter(mMainHomeFragRcContentAdapter);
 
 //        fgMainHomeRcContent.addOnScrollListener(new SwipyAppBarScrollListener(appBarLayout, fgMainHomeRcContent, fgh));
@@ -612,15 +612,22 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             homeTopToolbar.setVisibility(View.GONE);
             homeToolbarMonitor.setAlpha(1.0f);
             home_layout_head.setAlpha(1.0f);
-            handleRefreshLayoutState(true);
-//            LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_DOWN");
+//            if (mPresenter.hasContentData()){
+            refreshLayout.setEnableRefresh(true);
+            refreshLayout.setEnableLoadMore(false);
+//            }else {
+//                handleRefreshLayoutState(false);
+//            }
+
+            LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_DOWN");
         } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {//收缩
             toolbarDirection = DIRECTION_UP;
             homeToolbarMonitor.setVisibility(View.GONE);
             homeTopToolbar.setVisibility(View.VISIBLE);
             homeTopToolbar.setAlpha(1.0f);
-            handleRefreshLayoutState(false);
-//            LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_UP");
+            refreshLayout.setEnableRefresh(false);
+            refreshLayout.setEnableLoadMore(true);
+            LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_UP");
         }
         LogUtils.loge(this, "onOffsetChanged-->> 执行 ---- ");
         if (toolbarDirection == DIRECTION_DOWN) {
@@ -650,15 +657,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         }
     }
 
-    //处理滑动逻辑
-    private void handleRefreshLayoutState(boolean enableRefresh) {
-        try {
-            refreshLayout.setEnableRefresh(enableRefresh);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
 
 
     public boolean onBackPressed() {

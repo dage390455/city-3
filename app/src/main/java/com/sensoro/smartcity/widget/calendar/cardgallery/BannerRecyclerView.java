@@ -5,6 +5,8 @@ import android.support.annotation.Nullable;
 import android.support.v7.widget.RecyclerView;
 import android.util.AttributeSet;
 
+import com.sensoro.smartcity.util.LogUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,6 +94,7 @@ public class BannerRecyclerView extends RecyclerView {
 
     public void dispatchOnPageSelected(int position) {
         if (currentPosition == position) return;
+        LogUtils.loge(this, "dispatchOnPageSelected -->> currentItem = " + position);
         currentPosition = position;
         if (mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageSelected(position);

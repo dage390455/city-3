@@ -43,12 +43,12 @@ public class CustomVRelativeLayout extends RelativeLayout {
                 lastY = y;
                 if (dealtX >= dealtY) {
                     //TODO 屏蔽水平滑动
-                    getParent().requestDisallowInterceptTouchEvent(true);
+//                    getParent().requestDisallowInterceptTouchEvent(false);
                 } else {
-                    getParent().requestDisallowInterceptTouchEvent(false);
+                    getParent().requestDisallowInterceptTouchEvent(true);
                 }
 
-//                break;
+                break;
             }
             case MotionEvent.ACTION_UP: {
                 break;
