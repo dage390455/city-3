@@ -47,22 +47,27 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    int currentItem = getCurrentItem();
-                    LogUtils.loge(this, "onScrollStateChanged -->> currentItem = " + currentItem);
-                    mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 ||
-                            currentItem == mRecyclerView.getAdapter().getItemCount() - 2;
-                    if (mLinearSnapHelper.finalSnapDistance[0] == 0
-                            && mLinearSnapHelper.finalSnapDistance[1] == 0) {
-                        mCurrentItemOffset = 0;
-                        mLastPos = currentItem;
-                        //认为是一次滑动停止 这里可以写滑动停止回调
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        int currentItem = getCurrentItem();
+                        LogUtils.loge(this, "onScrollStateChanged -->> currentItem = " + currentItem);
+                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 ||
+                                currentItem == mRecyclerView.getAdapter().getItemCount() - 1;
+                        if (mLinearSnapHelper.finalSnapDistance[0] == 0
+                                && mLinearSnapHelper.finalSnapDistance[1] == 0) {
+                            mCurrentItemOffset = 0;
+                            mLastPos = currentItem;
+                            //认为是一次滑动停止 这里可以写滑动停止回调
 //                        mRecyclerView.dispatchOnPageSelected(mLastPos);
-                        //Log.e("TAG", "滑动停止后最终位置为" + getCurrentItem());
-                    }
-                    mRecyclerView.dispatchOnPageSelected(getCurrentItem());
-                } else {
-                    mLinearSnapHelper.mNoNeedToScroll = false;
+                            //Log.e("TAG", "滑动停止后最终位置为" + getCurrentItem());
+                        }
+                        mRecyclerView.dispatchOnPageSelected(getCurrentItem());
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+                    default:
+                        mLinearSnapHelper.mNoNeedToScroll = false;
+                        break;
                 }
             }
 
@@ -160,37 +165,46 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
         if (mOnePageWidth == 0) {
             return;
         }
-//        int currentItemPos = getCurrentItem();
-//        int offset = mCurrentItemOffset - (currentItemPos - mLastPos) * mOnePageWidth;
-//        float percent = (float) Math.max(Math.abs(offset) * 1.0 / mOnePageWidth, 0.0001);
-//
-//        //Log.e("TAG",String.format("offset=%s, percent=%s", offset, percent));
-//        View leftView = null;
-//        View currentView;
-//        View rightView = null;
-//        if (currentItemPos > 0) {
-//            leftView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos - 1);
-//        }
-//        currentView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos);
-//        if (currentItemPos < mRecyclerView.getAdapter().getItemCount() - 1) {
-//            rightView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos + 1);
-//        }
-//
-//        if (leftView != null) {
-//            // y = (1 - mAlpha)x + mAlpha
+        int currentItemPos = getCurrentItem();
+        int offset = mCurrentItemOffset - (currentItemPos - mLastPos) * mOnePageWidth;
+        float percent = (float) Math.max(Math.abs(offset) * 1.0 / mOnePageWidth, 0.0001);
+
+        //Log.e("TAG",String.format("offset=%s, percent=%s", offset, percent));
+        View leftView = null;
+        View currentView;
+        View rightView = null;
+        if (currentItemPos > 0) {
+            leftView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos - 1);
+        }
+        currentView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos);
+        if (currentItemPos < mRecyclerView.getAdapter().getItemCount() - 1) {
+            rightView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos + 1);
+        }
+
+        if (leftView != null) {
+            if (onBannerHelperListener != null) {
+                onBannerHelperListener.onScrolledOther(percent);
+            }
+            // y = (1 - mAlpha)x + mAlpha
 //            leftView.setAlpha((1 - mAlpha) * percent + mAlpha);
-////            leftView.setScaleY((1 - mAlpha) * percent + mAlpha);
-//        }
-//        if (currentView != null) {
-//            // y = (mAlpha - 1)x + 1
+//            leftView.setScaleY((1 - mAlpha) * percent + mAlpha);
+        }
+        if (currentView != null) {
+            // y = (mAlpha - 1)x + 1
 //            currentView.setAlpha((mAlpha - 1) * percent + 1);
-////            currentView.setScaleY((mAlpha - 1) * percent + 1);
-//        }
-//        if (rightView != null) {
-//            // y = (1 - mAlpha)x + mAlpha
+//            currentView.setScaleY((mAlpha - 1) * percent + 1);
+            if (onBannerHelperListener != null) {
+                onBannerHelperListener.onScrolledCurrent(percent / 0.5f);
+            }
+        }
+        if (rightView != null) {
+            if (onBannerHelperListener != null) {
+                onBannerHelperListener.onScrolledOther(percent);
+            }
+            // y = (1 - mAlpha)x + mAlpha
 //            rightView.setAlpha((1 - mAlpha) * percent + mAlpha);
-////            rightView.setScaleY((1 - mAlpha) * percent + mAlpha);
-//        }
+//            rightView.setScaleY((1 - mAlpha) * percent + mAlpha);
+        }
     }
 
     public int getCurrentItem() {
@@ -201,6 +215,18 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
             return 0;
         }
 
+    }
+
+    public interface OnBannerHelperListener {
+        void onScrolledCurrent(float currentPercent);
+
+        void onScrolledOther(float otherPercent);
+    }
+
+    private OnBannerHelperListener onBannerHelperListener;
+
+    public void setOnBannerHelperListener(OnBannerHelperListener listener) {
+        onBannerHelperListener = listener;
     }
 
     public void setAlpha(float scale) {

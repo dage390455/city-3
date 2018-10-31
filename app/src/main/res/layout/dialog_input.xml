@@ -47,6 +47,6 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:background="@color/item_sensor_line"
-            android:text="@string/confirming" />
+            android:text="确认" />
     </LinearLayout>
 </LinearLayout>

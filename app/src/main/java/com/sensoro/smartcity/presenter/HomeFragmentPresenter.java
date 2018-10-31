@@ -125,7 +125,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                 if (PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
-                    requestInitData(true);
+                    requestInitData();
                 }
 
             }
@@ -148,26 +148,22 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
 
-    private void requestInitData(final boolean isInit) {
+    private void requestInitData() {
         if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
             return;
         }
-        if (isInit) {
-            getView().showProgressDialog();
-        }
+        getView().showProgressDialog();
         LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
                 .io()).flatMap(new Func1<DeviceTypeCountRsp, Observable<DeviceInfoListRsp>>() {
             @Override
             public Observable<DeviceInfoListRsp> call(DeviceTypeCountRsp deviceTypeCountRsp) {
                 mHomeTopModels.clear();
-                if (isInit) {
-                    alarmModel.clearData();
-                    normalModel.clearData();
-                    lostModel.clearData();
-                    inactiveModel.clearData();
-                    SensoroCityApplication.getInstance().getData().clear();
-                }
+                alarmModel.clearData();
+                normalModel.clearData();
+                lostModel.clearData();
+                inactiveModel.clearData();
+                SensoroCityApplication.getInstance().getData().clear();
                 final int alarmCount = deviceTypeCountRsp.getData().getAlarm();
                 int normal = deviceTypeCountRsp.getData().getNormal();
                 int lostCount = deviceTypeCountRsp.getData().getOffline();
@@ -191,30 +187,32 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 page = 1;
                 mCurrentHomeTopModel = mHomeTopModels.get(0);
 
-                return getAllDeviceInfoListRspObservable(isInit);
+                return getAllDeviceInfoListRspObservable(true);
             }
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-
-                getView().setDetectionPoints(String.valueOf(totalMonitorPoint));
-                getView().refreshHeaderData(isInit, mHomeTopModels);
-                getView().refreshContentData(isInit, mHomeTopModels);
-                if (isInit) {
-                    String currentDataStr = getCurrentDataStr();
-                    int currentColor = getCurrentColor();
-                    getView().setToolbarTitleBackgroundColor(currentColor);
-                    getView().setToolbarTitleCount(currentDataStr);
-                }
+                freshHeaderContentData();
                 getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
+                freshHeaderContentData();
                 getView().toastShort(errorMsg);
+                getView().dismissProgressDialog();
             }
         });
+    }
+
+    private void freshHeaderContentData() {
+        getView().setDetectionPoints(String.valueOf(totalMonitorPoint));
+        getView().refreshHeaderData(true, mHomeTopModels);
+        getView().refreshContentData(true, mHomeTopModels);
+        String currentDataStr = getCurrentDataStr();
+        int currentColor = getCurrentColor();
+        getView().setToolbarTitleBackgroundColor(currentColor);
+        getView().setToolbarTitleCount(currentDataStr);
     }
 
     @NonNull
@@ -485,7 +483,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        requestInitData(true);
+                        requestInitData();
                     }
                 });
                 break;
@@ -523,6 +521,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         public void onErrorMsg(int errorCode, String errorMsg) {
                             getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);
+                            getView().recycleViewRefreshComplete();
                         }
                     });
                     break;
@@ -564,6 +563,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         public void onErrorMsg(int errorCode, String errorMsg) {
                             getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);
+                            getView().recycleViewRefreshComplete();
                         }
                     });
                     break;

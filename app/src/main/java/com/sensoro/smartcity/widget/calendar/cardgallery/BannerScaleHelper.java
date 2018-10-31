@@ -45,22 +45,27 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
             @Override
             public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
                 super.onScrollStateChanged(recyclerView, newState);
-                if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                    int currentItem = getCurrentItem();
-                    LogUtils.loge(this, "onScrollStateChanged -->> currentItem = " + currentItem);
-                    mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 ||
-                            currentItem == mRecyclerView.getAdapter().getItemCount() - 2;
-                    if (mLinearSnapHelper.finalSnapDistance[0] == 0
-                            && mLinearSnapHelper.finalSnapDistance[1] == 0) {
-                        mCurrentItemOffset = 0;
-                        mLastPos = currentItem;
-                        //认为是一次滑动停止 这里可以写滑动停止回调
+                switch (newState) {
+                    case RecyclerView.SCROLL_STATE_IDLE:
+                        int currentItem = getCurrentItem();
+                        LogUtils.loge(this, "onScrollStateChanged -->> currentItem = " + currentItem);
+                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 ||
+                                currentItem == mRecyclerView.getAdapter().getItemCount() - 2;
+                        if (mLinearSnapHelper.finalSnapDistance[0] == 0
+                                && mLinearSnapHelper.finalSnapDistance[1] == 0) {
+                            mCurrentItemOffset = 0;
+                            mLastPos = currentItem;
+                            //认为是一次滑动停止 这里可以写滑动停止回调
 //                        mRecyclerView.dispatchOnPageSelected(mLastPos);
-                        //Log.e("TAG", "滑动停止后最终位置为" + getCurrentItem());
-                    }
-                    mRecyclerView.dispatchOnPageSelected(getCurrentItem());
-                } else {
-                    mLinearSnapHelper.mNoNeedToScroll = false;
+                            //Log.e("TAG", "滑动停止后最终位置为" + getCurrentItem());
+                        }
+                        mRecyclerView.dispatchOnPageSelected(getCurrentItem());
+                        break;
+                    case RecyclerView.SCROLL_STATE_SETTLING:
+                        break;
+                    default:
+                        mLinearSnapHelper.mNoNeedToScroll = false;
+                        break;
                 }
             }
 
