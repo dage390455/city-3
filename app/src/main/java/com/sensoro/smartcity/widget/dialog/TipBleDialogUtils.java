@@ -3,7 +3,6 @@ package com.sensoro.smartcity.widget.dialog;
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
-import android.provider.Settings;
 import android.support.annotation.ColorInt;
 import android.view.View;
 import android.widget.TextView;
@@ -44,8 +43,6 @@ public class TipBleDialogUtils {
             @Override
             public void onClick(View v) {
                 mDialog.dismiss();
-                Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                mActivity.startActivityForResult(mIntent, REQUEST_CODE_BLUETOOTH_ON);
                 if (listener != null) {
                     listener.onCancelClick();
                 }
@@ -55,11 +52,13 @@ public class TipBleDialogUtils {
         mTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
-                mActivity.startActivity(intent);
-                if (listener != null) {
-                    listener.onConfirmClick();
-                }
+//                Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
+//                mActivity.startActivity(intent);
+                Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                mActivity.startActivityForResult(mIntent, REQUEST_CODE_BLUETOOTH_ON);
+//                if (listener != null) {
+//                    listener.onConfirmClick();
+//                }
             }
         });
 
@@ -107,6 +106,9 @@ public class TipBleDialogUtils {
                 // 点击确认按钮
                 case Activity.RESULT_OK: {
                     dismiss();
+                    if (listener != null) {
+                        listener.onConfirmClick();
+                    }
                 }
                 break;
                 // 点击取消按钮或点击返回键

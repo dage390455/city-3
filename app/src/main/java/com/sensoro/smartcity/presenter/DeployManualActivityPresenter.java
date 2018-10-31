@@ -10,6 +10,7 @@ import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
+import com.sensoro.smartcity.activity.SignalCheckActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
@@ -93,11 +94,69 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                 case TYPE_SCAN_INSPECTION:
                     scanInspectionDevice(scanSerialNumber);
                     break;
+                case TYPE_SCAN_SIGNAL_CHECK:
+                    //信号测试
+                    scanSignalCheck(scanSerialNumber);
+                    break;
                 default:
                     break;
             }
 
         }
+    }
+
+    private void scanSignalCheck(final String signalCheckNum) {
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(signalCheckNum.toUpperCase(), null, 1).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    getView().toastShort(errorMsg);
+                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DeployResultActivity.class);
+                    intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                    intent.putExtra(EXTRA_SENSOR_SN_RESULT, signalCheckNum);
+                    intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+                    getView().startAC(intent);
+                } else {
+                    //TODO 控制逻辑
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DeployResultActivity.class);
+                    intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                    intent.putExtra(EXTRA_SENSOR_SN_RESULT, signalCheckNum);
+                    intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+                    intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorMsg);
+                    getView().startAC(intent);
+                }
+            }
+
+            @Override
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                getView().dismissProgressDialog();
+                try {
+                    if (deviceInfoListRsp.getData().size() > 0) {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, SignalCheckActivity.class);
+                        intent.putExtra(EXTRA_DEVICE_INFO, deviceInfoListRsp.getData().get(0));
+                        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+//                        intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
+                        getView().startAC(intent);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, DeployResultActivity.class);
+                        intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                        intent.putExtra(EXTRA_SENSOR_SN_RESULT, signalCheckNum);
+                        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+                        getView().startAC(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     private void changeDevice(final String scanSnNewDevice) {

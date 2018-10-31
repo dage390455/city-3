@@ -11,17 +11,21 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IManagerFragmentView;
 import com.sensoro.smartcity.presenter.ManagerFragmentPresenter;
 import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.PermissionUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 import com.sensoro.smartcity.widget.dialog.VersionDialogUtils;
 
 import butterknife.BindView;
 import butterknife.OnClick;
+import butterknife.Unbinder;
 
 public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerFragmentPresenter> implements
         IManagerFragmentView, TipDialogUtils.TipDialogUtilsClickListener, VersionDialogUtils.VersionDialogUtilsClickListener {
@@ -57,6 +61,8 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     LinearLayout fgMainManageLlExit;
     @BindView(R.id.fg_main_manage_ll_main_function)
     LinearLayout fgMainManageLlMainFunction;
+    @BindView(R.id.fg_main_manage_ll_signal_check)
+    LinearLayout fgMainManageLlSignalCheck;
     @BindView(R.id.line1)
     FrameLayout line1;
     @BindView(R.id.line2)
@@ -65,9 +71,15 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     FrameLayout line3;
     @BindView(R.id.line4)
     FrameLayout line4;
+    @BindView(R.id.line6)
+    FrameLayout line6;
+    @BindView(R.id.line5)
+    FrameLayout line5;
+    Unbinder unbinder;
     private ProgressUtils mProgressUtils;
     private TipDialogUtils mExitDialog;
     private VersionDialogUtils mVersionDialog;
+    private TipBleDialogUtils tipBleDialogUtils;
 
     @Override
     protected void initData(Context activity) {
@@ -76,6 +88,18 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     }
 
     private void initView() {
+        tipBleDialogUtils = new TipBleDialogUtils(mRootFragment.getActivity());
+        tipBleDialogUtils.setTipDialogUtilsClickListener(new TipBleDialogUtils.TipDialogUtilsClickListener() {
+            @Override
+            public void onCancelClick() {
+//                toastShort("");
+            }
+
+            @Override
+            public void onConfirmClick() {
+                mPresenter.doSignalCheck();
+            }
+        });
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         initExitDialog();
         initVersionDialog();
@@ -184,7 +208,11 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
         super.onDestroyView();
     }
 
-    @OnClick({R.id.fg_main_manage_ll_change_merchants, R.id.fg_main_manage_ll_deploy_device, R.id.fg_main_manage_ll_contract_management, R.id.fg_main_manage_ll_polling_mission, R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login, R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info, R.id.fg_main_manage_ll_exit})
+    @OnClick({R.id.fg_main_manage_ll_change_merchants, R.id.fg_main_manage_ll_deploy_device,
+            R.id.fg_main_manage_ll_contract_management, R.id.fg_main_manage_ll_polling_mission,
+            R.id.fg_main_manage_ll_maintenance_mission, R.id.fg_main_manage_ll_scan_login,
+            R.id.fg_main_manage_ll_about_us, R.id.fg_main_manage_ll_version_info,
+            R.id.fg_main_manage_ll_exit, R.id.fg_main_manage_ll_signal_check})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_manage_ll_change_merchants:
@@ -213,6 +241,13 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
                 break;
             case R.id.fg_main_manage_ll_exit:
                 mExitDialog.show();
+                break;
+            case R.id.fg_main_manage_ll_signal_check:
+                if (PermissionUtils.checkHasBlePermission(mRootFragment.getActivity()) && SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled()) {
+                    mPresenter.doSignalCheck();
+                } else {
+                    showBleTips();
+                }
                 break;
         }
     }
@@ -264,6 +299,11 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     }
 
     @Override
+    public void setSignalCheckVisible(boolean hasSignalCheck) {
+        fgMainManageLlSignalCheck.setVisibility(hasSignalCheck ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void onCancelClick() {
         mExitDialog.dismiss();
     }
@@ -282,5 +322,26 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @Override
     public void onVersionConfirmClick() {
 
+    }
+
+
+    @Override
+    public void showBleTips() {
+        if (tipBleDialogUtils != null && !tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.show();
+        }
+    }
+
+    @Override
+    public void hideBleTips() {
+        if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
+            tipBleDialogUtils.dismiss();
+        }
+    }
+
+    public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
+        if (tipBleDialogUtils != null) {
+            tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

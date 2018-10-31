@@ -72,26 +72,33 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     private void freshTopData() {
+        String statusText;
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
+                statusText = "预警中";
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = mContext.getResources().getColor(R.color.c_29c093);
+                statusText = "正常";
                 break;
             case SENSOR_STATUS_LOST:
                 textColor = mContext.getResources().getColor(R.color.c_5d5d5d);
+                statusText = "失联";
                 break;
             case SENSOR_STATUS_INACTIVE:
                 textColor = mContext.getResources().getColor(R.color.c_b6b6b6);
+                statusText = "未激活";
                 break;
             default:
+                textColor = mContext.getResources().getColor(R.color.c_29c093);
+                statusText = "正常";
                 break;
         }
         String name = mDeviceInfo.getName();
         String sn = mDeviceInfo.getSn();
         //
-        getView().setStatusInfo(MONITOR_STATUS_ARRAY[mDeviceInfo.getStatus()], textColor);
+        getView().setStatusInfo(statusText, textColor);
         //TODO 显示sn还是姓名等
         getView().setTitleNameTextView(TextUtils.isEmpty(name) ? sn : name);
         //

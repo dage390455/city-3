@@ -33,12 +33,47 @@ public class ResultCode {
     public static final int CODE_DEVICE_INVAILD_DTM = 0x0d;
     public static final int CODE_DEVICE_DFU_ERROR = 0x0e;
 
-    public static final int CODE_STATION_RET_NONE          = 0;
-    public static final int CODE_STATION_RET_SUCCCESS      = 1;
-    public static final int CODE_STATION_RET_INVALID_CMD   = 2;
-    public static final int CDOE_STATION_RET_INVALID_ARG   = 3;
+    public static final int CODE_STATION_RET_NONE = 0;
+    public static final int CODE_STATION_RET_SUCCCESS = 1;
+    public static final int CODE_STATION_RET_INVALID_CMD = 2;
+    public static final int CDOE_STATION_RET_INVALID_ARG = 3;
     public static final int CODE_STATION_RET_INVALID_STATE = 4;
 
-
+    public static String errCodeToMsg(int errCode) {
+        String msg;
+        switch (errCode) {
+            case SUCCESS:
+                msg = "成功";
+                break;
+            case MCU_BUSY:
+                msg = "失败，外围设备占用";
+                break;
+            case INVALID_PARAM:
+                msg = "失败，不可用参数";
+                break;
+            case BLUETOOTH_ERROR:
+                msg = "失败，蓝牙出现错误";
+                break;
+            case SYSTEM_ERROR:
+                msg = "失败，系统错误";
+                break;
+            case TASK_TIME_OUT:
+                msg = "失败，超时";
+                break;
+            case PASSWORD_ERR:
+                msg = "失败，密码错误";
+                break;
+            case CODE_DEVICE_DFU_ERROR:
+                msg = "失败，DFU 错误";
+                break;
+            case CODE_STATION_RET_SUCCCESS:
+                msg = "失败，基站成功";
+                break;
+            default:
+                msg = "失败";
+                break;
+        }
+        return msg;
+    }
 
 }

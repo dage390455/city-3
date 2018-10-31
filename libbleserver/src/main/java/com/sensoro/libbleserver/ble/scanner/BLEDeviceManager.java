@@ -192,15 +192,11 @@ public class BLEDeviceManager {
      * @return
      */
     public boolean isBluetoothEnabled() {
-        if (mContext != null) {
+        try {
             BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
             bluetoothAdapter = bluetoothManager.getAdapter();
-            if (bluetoothAdapter.isEnabled()) {// 蓝牙开启
-                return true;
-            } else {// 蓝牙关闭
-                return false;
-            }
-        } else {
+            return bluetoothAdapter.isEnabled();
+        } catch (Exception e) {
             return false;
         }
     }

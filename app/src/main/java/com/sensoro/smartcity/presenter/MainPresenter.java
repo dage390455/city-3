@@ -67,6 +67,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     //
     private WarnFragment warnFragment;
     private HomeFragment homeFragment;
+    private ManagerFragment managerFragment;
 
     @Override
     public void initData(Context context) {
@@ -84,7 +85,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         //
         homeFragment = new HomeFragment();
         warnFragment = new WarnFragment();
-        ManagerFragment managerFragment = new ManagerFragment();
+        managerFragment = new ManagerFragment();
         if (mFragmentList.size() > 0) {
             mFragmentList.clear();
         }
@@ -514,6 +515,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
         //TODO 对照片信息统一处理
         AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
+        if (managerFragment != null) {
+            managerFragment.handlerActivityResult(requestCode, resultCode, data);
+        }
     }
 
 

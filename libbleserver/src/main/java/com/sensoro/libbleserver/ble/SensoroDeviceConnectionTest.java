@@ -334,7 +334,7 @@ public class SensoroDeviceConnectionTest {
         this.macAddress = macAddress;
     }
 
-    public SensoroDeviceConnectionTest(Context context, String macAddress, boolean isDfu) {
+    public SensoroDeviceConnectionTest(Context context, String macAddress, boolean isContainSignal,boolean isDfu) {
         this.context = context;
         bluetoothLEHelper4 = new BluetoothLEHelper4(context);
         writeCallbackHashMap = new HashMap<>();
@@ -344,12 +344,12 @@ public class SensoroDeviceConnectionTest {
     }
 
 
-    public SensoroDeviceConnectionTest(Context context, BLEDevice bleDevice, boolean isContainSignal) {
+    public SensoroDeviceConnectionTest(Context context, String macAddress, boolean isContainSignal) {
         this.context = context;
         bluetoothLEHelper4 = new BluetoothLEHelper4(context);
         writeCallbackHashMap = new HashMap<>();
         this.isContainSignal = isContainSignal;
-        this.macAddress = bleDevice.getMacAddress();
+        this.macAddress = macAddress;
     }
 
     private void initData() {

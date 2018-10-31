@@ -31,15 +31,24 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         errorInfo = mContext.getIntent().getStringExtra(EXTRA_SENSOR_RESULT_ERROR);
         sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN_RESULT);
         mAddress = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_SUCCESS_ADDRESS);
-        if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType ) {
-            if (resultCode == -1) {
-                getView().setDeployResultContinueText("继续更换");
-                getView().setDeployResultBackHomeText("继续巡检");
-            }else{
-                getView().setDeployResultBackHomeText("继续巡检");
-                getView().setDeployResultContinueVisible(false);
-            }
-
+        switch (scanType){
+            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                if (resultCode == -1) {
+                    getView().setDeployResultContinueText("继续更换");
+                    getView().setDeployResultBackHomeText("继续巡检");
+                }else{
+                    getView().setDeployResultBackHomeText("继续巡检");
+                    getView().setDeployResultContinueVisible(false);
+                }
+                break;
+            case TYPE_SCAN_SIGNAL_CHECK:
+                if(resultCode == -1){
+                    getView().setStateTextViewVisible(false);
+                    getView().setDeployResultContinueText("重新扫码");
+                    getView().setArrowsLeftVisible(true);
+                    getView().setTitleText("扫码失败");
+                }
+                break;
         }
         init();
     }
@@ -59,8 +68,17 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             .tips_deploy_station_failed));
                     getView().setDeployResultErrorInfo("错误：" + errorInfo);
                 } else {
-                    getView().setTipsTextView(mContext.getResources().getString(R.string
-                            .tips_deploy_not_exist));
+                    String text ;
+                    switch (scanType){
+                        case TYPE_SCAN_SIGNAL_CHECK:
+                            text = "账户下不存在此设备,设备已关联\n在本账户下才能够进行测试";
+                            break;
+                            default:
+                                text = mContext.getResources().getString(R.string
+                                        .tips_deploy_not_exist);
+                                break;
+                    }
+                    getView().setTipsTextView(text);
                 }
 //                } else {
 //                    if (!TextUtils.isEmpty(errorInfo)) {

@@ -2497,7 +2497,7 @@ public class WidgetUtil {
                 return deviceTypeStyles.getMergeType();
             } catch (Exception e) {
                 e.printStackTrace();
-                LogUtils.loge("handleMergeType ----->>>deviceType = " + deviceType);
+//                LogUtils.loge("handleMergeType ----->>>deviceType = " + deviceType);
             }
         }
         return null;

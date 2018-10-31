@@ -361,7 +361,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             isAutoConnect = false;
                             getView().dismissBleConfigDialog();
                             getView().toastShort("未搜索到设备，请重新上传");
-                            stopScanService();
                             getView().updateUploadState(true);
 
                         }

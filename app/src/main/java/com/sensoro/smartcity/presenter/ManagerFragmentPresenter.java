@@ -57,6 +57,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             getView().setScanLoginVisible(userData.hasScanLogin);
             getView().setMerchantVisible(userData.hasSubMerchant);
             getView().changeMerchantTitle(userData.hasSubMerchant);
+            getView().setSignalCheckVisible(userData.hasSignalCheck);
         }
     }
 
@@ -227,4 +228,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         LogUtils.loge(this, eventData.toString());
     }
 
+    public void doSignalCheck() {
+        Intent intent = new Intent(mContext, ScanActivity.class);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+        getView().startAC(intent);
+
+    }
 }

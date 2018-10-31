@@ -446,4 +446,20 @@ public final class PermissionUtils {
         }
     }
 
+    public static boolean checkHasBlePermission(Activity activity) {
+        final ArrayList<String> blePermissions = new ArrayList<String>() {
+            {
+                add(Manifest.permission.ACCESS_COARSE_LOCATION);
+                add(Manifest.permission.ACCESS_FINE_LOCATION);
+            }
+
+        };
+        for (String permission : blePermissions) {
+            if (ContextCompat.checkSelfPermission(activity, permission) != PackageManager
+                    .PERMISSION_GRANTED) {
+                return false;
+            }
+        }
+        return true;
+    }
 }
