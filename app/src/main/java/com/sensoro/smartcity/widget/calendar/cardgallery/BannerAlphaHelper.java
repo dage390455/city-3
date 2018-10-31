@@ -1,7 +1,5 @@
 package com.sensoro.smartcity.widget.calendar.cardgallery;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -135,22 +133,22 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
         mRecyclerView.scrollToPosition(pos);
         mCurrentItemOffset = 0;
         mLastPos = pos;
-        mRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                View view = mRecyclerView.getLayoutManager().findViewByPosition(pos);
-                view.setAlpha(0);
-                view.animate()
-                        .alpha(1.f)                                //设置最终效果为完全不透明
-                        .setDuration(1500)
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                            }
-                        })
-                        .start();
-            }
-        });
+//        mRecyclerView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                View view = mRecyclerView.getLayoutManager().findViewByPosition(pos);
+//                view.setAlpha(0);
+//                view.animate()
+//                        .alpha(1.f)                                //设置最终效果为完全不透明
+//                        .setDuration(1500)
+//                        .setListener(new AnimatorListenerAdapter() {
+//                            @Override
+//                            public void onAnimationEnd(Animator animation) {
+//                            }
+//                        })
+//                        .start();
+//            }
+//        });
     }
 
     public void setFirstItemPos(int firstItemPos) {
