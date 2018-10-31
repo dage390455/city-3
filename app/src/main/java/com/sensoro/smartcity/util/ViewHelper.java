@@ -1,10 +1,12 @@
 package com.sensoro.smartcity.util;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.view.View;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 import com.fengmap.android.map.geometry.FMMapCoord;
 import com.fengmap.android.map.marker.FMImageMarker;
 import com.fengmap.android.map.marker.FMTextMarker;
+import com.sensoro.smartcity.R;
 
 /**
  * 控件控制帮助类
@@ -129,5 +132,23 @@ public class ViewHelper {
     public static void setViewEnable(Activity activity, int id, boolean enabled) {
         View view = getView(activity, id);
         view.setEnabled(enabled);
+    }
+
+    /**
+     * 改变文字的颜色，及startDrawable的颜色，主要用于巡检任务，任务状态文本的改变
+     * @param context
+     * @param tv
+     * @param colorId
+     * @param text
+     */
+    public static void changeTvState(Context context, TextView tv, int colorId, String text) {
+        Resources resources = context.getResources();
+        GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_small_oval_29c);
+        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
+        int color = resources.getColor(colorId);
+        gd.setColor(color);
+        tv.setCompoundDrawables(gd,null,null,null);
+        tv.setTextColor(color);
+        tv.setText(text);
     }
 }

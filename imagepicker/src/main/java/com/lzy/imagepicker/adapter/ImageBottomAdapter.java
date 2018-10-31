@@ -29,6 +29,11 @@ public class ImageBottomAdapter extends RecyclerView.Adapter<ImageBottomAdapter.
     private LayoutInflater mInflater;
     private OnRecyclerViewItemClickListener listener;
     private int currentPositon;
+    private boolean isJustDisplay;
+
+    public void setIsJustDisplay(boolean isJustDisplay) {
+        this.isJustDisplay = isJustDisplay;
+    }
 
     public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, int position);
@@ -93,7 +98,16 @@ public class ImageBottomAdapter extends RecyclerView.Adapter<ImageBottomAdapter.
             //根据条目位置设置图片
             ImageItem item = mData.get(position);
 //            image_delete.setVisibility(View.VISIBLE);
-            ImagePicker.getInstance().getImageLoader().displayImage((Activity) mContext, item.path, iv_img, 0, 0);
+            if(isJustDisplay){
+                ImagePicker.getInstance().getImageLoader().displayImagePreview((Activity) mContext,item.path,iv_img,0,0);
+            }else{
+                if (item.isRecord) {
+                    ImagePicker.getInstance().getImageLoader().displayImage((Activity) mContext, item.thumbPath, iv_img, 0, 0);
+                } else {
+                    ImagePicker.getInstance().getImageLoader().displayImage((Activity) mContext, item.path, iv_img, 0, 0);
+                }
+            }
+
             clickPosition = position;
             iv_img_bg.setVisibility(currentPositon == position ? View.VISIBLE : View.GONE);
         }

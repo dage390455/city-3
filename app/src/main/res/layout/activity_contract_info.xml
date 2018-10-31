@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/list_sep_color"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -28,12 +27,12 @@
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="物联网消防安全预警服务合同"
-            android:textColor="@color/c_626262"
+            android:textColor="@color/c_252525"
             android:textSize="@dimen/city_large_size" />
 
     </RelativeLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1">
@@ -73,7 +72,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center_vertical"
                         android:text="法定代表人"
-                        android:textColor="@color/c_b6b6b6"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="@dimen/city_tiny_large_size" />
 
 
@@ -86,8 +85,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                 </LinearLayout>
@@ -115,7 +113,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center_vertical"
                         android:text="手机号"
-                        android:textColor="@color/c_b6b6b6"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                     <TextView
@@ -127,8 +125,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
 
@@ -157,7 +154,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center_vertical"
                         android:text="企业名称"
-                        android:textColor="@color/c_b6b6b6"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                     <TextView
@@ -169,8 +166,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
 
@@ -199,7 +195,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center_vertical"
                         android:text="社会信用代码"
-                        android:textColor="@color/c_b6b6b6"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="@dimen/city_tiny_large_size" />
 
 
@@ -211,8 +207,7 @@
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                 </LinearLayout>
@@ -239,7 +234,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center_vertical"
                         android:text="注册号"
-                        android:textColor="@color/c_b6b6b6"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="@dimen/city_tiny_large_size" />
 
 
@@ -252,8 +247,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                 </LinearLayout>
@@ -280,7 +274,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center_vertical"
                         android:text="住址"
-                        android:textColor="@color/c_b6b6b6"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="@dimen/city_tiny_large_size" />
 
 
@@ -293,8 +287,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                 </LinearLayout>
@@ -323,7 +316,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center_vertical"
                         android:text="有效期"
-                        android:textColor="@color/c_b6b6b6"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="@dimen/city_tiny_large_size" />
 
 
@@ -336,8 +329,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:text="测试测试测试"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                 </LinearLayout>
@@ -366,7 +358,7 @@
                         android:layout_marginLeft="15dp"
                         android:gravity="center_vertical"
                         android:text="场地性质"
-                        android:textColor="@color/c_b6b6b6"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                     <TextView
@@ -379,7 +371,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
-                        android:textColor="@color/c_626262"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                 </LinearLayout>
@@ -403,7 +395,7 @@
                     android:layout_marginLeft="15dp"
                     android:gravity="center_vertical"
                     android:text="服务年限"
-                    android:textColor="@color/c_b6b6b6"
+                    android:textColor="@color/c_a6a6a6"
                     android:textSize="@dimen/city_tiny_large_size" />
 
                 <LinearLayout
@@ -423,8 +415,8 @@
                         android:background="@null"
                         android:cropToPadding="true"
                         android:padding="10dp"
-                        android:text="0"
-                        android:textColor="@color/c_626262"
+                        android:text="6"
+                        android:textColor="@color/c_252525"
                         android:textSize="@dimen/city_tiny_large_size" />
 
                 </LinearLayout>
@@ -488,7 +480,7 @@
             </RelativeLayout>
 
         </LinearLayout>
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 
 
     <Button

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.sensoro.smartcity.widget.CustomVRelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/home_content_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center_vertical"
+    android:paddingLeft="14dp"
+    android:paddingRight="14dp"
+
+    >
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="false"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp">
+
+        <include
+            layout="@layout/item_no_content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone" />
+    </android.support.v4.widget.NestedScrollView>
+
+
+    <com.sensoro.smartcity.widget.CustomVRecyclerView
+        android:id="@+id/rv_horizontal_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</com.sensoro.smartcity.widget.CustomVRelativeLayout>

@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.util;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
@@ -7,6 +8,8 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.EventLoginData;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,12 +18,14 @@ import java.util.Map;
  * Created by sensoro on 17/7/4.
  */
 
-public class PreferencesHelper implements Constants {
+public final class PreferencesHelper implements Constants {
 
     private volatile static PreferencesHelper instance;
-//    private SharedPreferences splashLoginData;
-    private PreferencesHelper() {
+    private volatile EventLoginData mEventLoginData;
+    private volatile DeviceMergeTypesInfo mDeviceMergeTypesInfo;
 
+    //    private SharedPreferences splashLoginData;
+    private PreferencesHelper() {
     }
 
     public static PreferencesHelper getInstance() {
@@ -36,6 +41,7 @@ public class PreferencesHelper implements Constants {
 
 
     public void saveUserData(EventLoginData eventLoginData) {
+        mEventLoginData = eventLoginData;
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -53,35 +59,64 @@ public class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_STATION, eventLoginData.hasStation);
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT, eventLoginData.hasContract);
         editor.putBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, eventLoginData.hasScanLogin);
+        editor.putBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, eventLoginData.hasSubMerchant);
+        editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST, eventLoginData.hasInspectionTaskList);
+        editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY, eventLoginData.hasInspectionTaskModify);
+        editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, eventLoginData.hasInspectionDeviceList);
+        editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY, eventLoginData.hasInspectionDeviceModify);
+        editor.putBoolean(EXTRA_GRANTS_HAS_ALARM_LOG_INFO, eventLoginData.hasAlarmInfo);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, eventLoginData.hasDeviceBrief);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
         //
         editor.apply();
     }
 
     public EventLoginData getUserData() {
-        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
-                .MODE_PRIVATE);
-        String phoneId = sp.getString(EXTRA_PHONE_ID, null);
-        String userId = sp.getString(EXTRA_USER_ID, null);
-        LogUtils.loge(this, "phoneId = " + phoneId + ",userId = " + userId);
-        String userName = sp.getString(EXTRA_USER_NAME, null);
-        String phone = sp.getString(EXTRA_PHONE, null);
-        String roles = sp.getString(EXTRA_USER_ROLES, null);
-        boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
-        boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
-        boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
-        boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
-        //
-        final EventLoginData eventLoginData = new EventLoginData();
-        eventLoginData.phoneId = phoneId;
-        eventLoginData.userId = userId;
-        eventLoginData.userName = userName;
-        eventLoginData.phone = phone;
-        eventLoginData.roles = roles;
-        eventLoginData.isSupperAccount = isSupperAccount;
-        eventLoginData.hasStation = hasStation;
-        eventLoginData.hasContract = hasContract;
-        eventLoginData.hasScanLogin = hasScanLogin;
-        return eventLoginData;
+        if (mEventLoginData == null) {
+            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
+                    .MODE_PRIVATE);
+            String phoneId = sp.getString(EXTRA_PHONE_ID, null);
+            String userId = sp.getString(EXTRA_USER_ID, null);
+            LogUtils.loge(this, "phoneId = " + phoneId + ",userId = " + userId);
+            String userName = sp.getString(EXTRA_USER_NAME, null);
+            String phone = sp.getString(EXTRA_PHONE, null);
+            String roles = sp.getString(EXTRA_USER_ROLES, null);
+            boolean isSupperAccount = sp.getBoolean(EXTRA_IS_SPECIFIC, false);
+            boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
+            boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
+            boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
+            boolean hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, true);
+            boolean hasInspectionTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST, false);
+            boolean hasInspectionTaskModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY, false);
+            boolean hasInspectionDeviceList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, false);
+            boolean hasInspectionDeviceModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY, false);
+            boolean hasAlarmInfo = sp.getBoolean(EXTRA_GRANTS_HAS_ALARM_LOG_INFO, false);
+            boolean hasDeviceBrief = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, false);
+            boolean hasDeviceSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
+            boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
+            final EventLoginData eventLoginData = new EventLoginData();
+            eventLoginData.phoneId = phoneId;
+            eventLoginData.userId = userId;
+            eventLoginData.userName = userName;
+            eventLoginData.phone = phone;
+            eventLoginData.roles = roles;
+            eventLoginData.hasSubMerchant = hasSubMerchant;
+            eventLoginData.isSupperAccount = isSupperAccount;
+            eventLoginData.hasStation = hasStation;
+            eventLoginData.hasContract = hasContract;
+            eventLoginData.hasScanLogin = hasScanLogin;
+            eventLoginData.hasInspectionTaskList = hasInspectionTaskList;
+            eventLoginData.hasInspectionTaskModify = hasInspectionTaskModify;
+            eventLoginData.hasInspectionDeviceList = hasInspectionDeviceList;
+            eventLoginData.hasInspectionDeviceModify = hasInspectionDeviceModify;
+            eventLoginData.hasAlarmInfo = hasAlarmInfo;
+            eventLoginData.hasDeviceBrief = hasDeviceBrief;
+            eventLoginData.hasSignalCheck = hasDeviceSignalCheck;
+            eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
+            mEventLoginData = eventLoginData;
+        }
+        return mEventLoginData;
     }
 
     /**
@@ -150,5 +185,65 @@ public class PreferencesHelper implements Constants {
                 .MODE_PRIVATE).edit().clear().apply();
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
                 .MODE_PRIVATE).edit().clear().apply();
+    }
+
+    public void saveDeployNameAddressHistory(String history) {
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, history).apply();
+    }
+
+    public String getDeployNameAddressHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, null);
+    }
+
+    public void saveDeployTagsHistory(String hisory) {
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_TAG, hisory).apply();
+    }
+
+    public String getDeployTagsHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_TAG, null);
+    }
+
+    public DeviceMergeTypesInfo getLocalDevicesMergeTypes() {
+        if (mDeviceMergeTypesInfo == null) {
+            String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+            if (!TextUtils.isEmpty(json)) {
+                mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
+            }
+        }
+//        if (mDeviceMergeTypesInfo != null) {
+//            //加入全部的类型数据
+//            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = mDeviceMergeTypesInfo.getConfig();
+//            Map<String, DeviceTypeStyles> deviceType = config.getDeviceType();
+//            if (!deviceType.containsKey("all")) {
+//                DeviceTypeStyles deviceTypeStyles = new DeviceTypeStyles();
+//                deviceTypeStyles.setMergeType("all");
+//                deviceType.put("all", deviceTypeStyles);
+//            }
+//            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+//            if (!mergeType.containsKey("all")) {
+//                MergeTypeStyles mergeTypeStyles = new MergeTypeStyles();
+//                mergeTypeStyles.setName("全部");
+//                mergeTypeStyles.setResId(R.drawable.type_all);
+//                mergeType.put("all", mergeTypeStyles);
+//            }
+//            Map<String, SensorTypeStyles> sensorType = config.getSensorType();
+//            if (!sensorType.containsKey("all")) {
+//                sensorType.put("all", new SensorTypeStyles());
+//            }
+//        }
+        return mDeviceMergeTypesInfo;
+    }
+
+    public void saveLocalDevicesMergeTypes(DeviceMergeTypesInfo deviceMergeTypesInfo) {
+        if (deviceMergeTypesInfo != null) {
+            mDeviceMergeTypesInfo = deviceMergeTypesInfo;
+            String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(mDeviceMergeTypesInfo);
+            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
+                    .MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
+            editor.apply();
+        }
+
     }
 }

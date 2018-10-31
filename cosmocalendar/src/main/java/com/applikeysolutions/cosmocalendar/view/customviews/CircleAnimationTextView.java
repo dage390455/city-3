@@ -141,6 +141,7 @@ public class CircleAnimationTextView extends AppCompatTextView {
         final int diameterProgress = animationProgress * diameter / MAX_PROGRESS;
 
         setBackgroundColor(Color.TRANSPARENT);
+        //todo 日历画圆的地方
         canvas.drawCircle(getWidth() / 2, getWidth() / 2, diameterProgress / 2, circlePaint);
     }
 

@@ -13,10 +13,14 @@ import com.google.gson.GsonBuilder;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -25,6 +29,12 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -207,12 +217,12 @@ public enum RetrofitServiceHelper {
                 Request.Builder builder = original.newBuilder();
                 //header
                 builder.headers(original.headers())
-                        .addHeader(HEADER_USER_AGENT, "Android/" +
+                        .header(HEADER_USER_AGENT, "Android/" +
                                 Build.VERSION.RELEASE);
 //                        .addHeader(HEADER_ACCEPT, "application/json")
 //                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
                 if (!TextUtils.isEmpty(getSessionId())) {
-                    builder.addHeader(HEADER_SESSION_ID, getSessionId());
+                    builder.header(HEADER_SESSION_ID, getSessionId());
                 }
                 //
                 builder.method(original.method(), original.body());
@@ -350,9 +360,9 @@ public enum RetrofitServiceHelper {
      * @param unionTypes
      * @return
      */
-    public Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(int page, String sn, String deviceName, String phone,
-                                                               Long beginTime, Long endTime, String unionTypes) {
-        Observable<DeviceAlarmLogRsp> deviceAlarmLogList = retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, beginTime, endTime, unionTypes);
+    public Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(int page, String sn, String deviceName, String phone
+            , String search, Long beginTime, Long endTime, String unionTypes) {
+        Observable<DeviceAlarmLogRsp> deviceAlarmLogList = retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
         RxApiManager.getInstance().add("getDeviceAlarmLogList", deviceAlarmLogList.subscribe());
         return deviceAlarmLogList;
     }
@@ -375,10 +385,10 @@ public enum RetrofitServiceHelper {
      * @param search
      * @return
      */
-    public Observable<DeviceInfoListRsp> getDeviceBriefInfoList(int page, String sensorTypes, Integer status, String
+    public Observable<DeviceInfoListRsp> getDeviceBriefInfoList(int page, String sensorTypes, String mergeTypes, Integer status, String
             search) {
         Observable<DeviceInfoListRsp> deviceBriefInfoList = retrofitService.getDeviceBriefInfoList(page, 20, 1, 1,
-                sensorTypes, status, search);
+                sensorTypes, mergeTypes, status, search);
         RxApiManager.getInstance().add("getDeviceBriefInfoList", deviceBriefInfoList.subscribe());
         return deviceBriefInfoList;
     }
@@ -429,6 +439,19 @@ public enum RetrofitServiceHelper {
     }
 
     /**
+     * 查询账号下的部署记录
+     *
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public Observable<DeployRecordRsp> getDeployRecordList(String searchText, Long beginTime, Long endTime, String owners, String signalQuality) {
+        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(searchText, beginTime, endTime, owners, signalQuality);
+        RxApiManager.getInstance().add("getDeployRecordList", deployRecordList.subscribe());
+        return deployRecordList;
+    }
+
+    /**
      * 上传部署信息数据
      *
      * @param sn
@@ -440,23 +463,18 @@ public enum RetrofitServiceHelper {
      * @param content
      * @return
      */
-    public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, String tags, String
+    public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
             name, String contact, String content, List<String> imgUrls) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
-            if (tags != null) {
-                if (BASE_URL.equals(SCOPE_MASTER)) {
-                    jsonObject.put("tags", tags);
-                } else {
-                    String[] split = tags.split(",");
-                    JSONArray jsonArray = new JSONArray();
-                    for (String temp : split) {
-                        jsonArray.put(temp);
-                    }
-                    jsonObject.put("tags", jsonArray);
+            if (tags != null && tags.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String temp : tags) {
+                    jsonArray.put(temp);
                 }
+                jsonObject.put("tags", jsonArray);
             }
             if (name != null) {
                 jsonObject.put("name", name);
@@ -464,7 +482,7 @@ public enum RetrofitServiceHelper {
             if (contact != null) {
                 jsonObject.put("contact", contact);
             }
-            if (contact != null) {
+            if (content != null) {
                 jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
@@ -483,6 +501,59 @@ public enum RetrofitServiceHelper {
         return deviceDeployRspObservable;
     }
 
+    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, double longitude, double latitude){
+        Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude,latitude);
+        RxApiManager.getInstance().add("deployDeviceDetail",deployDeviceDetail.subscribe());
+        return deployDeviceDetail;
+    }
+
+    public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
+            name, String contact, String content, List<String> imgUrls) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(newSn)) {
+                jsonObject.put("newSn", newSn);
+            }
+            if (!TextUtils.isEmpty(taskId)) {
+                jsonObject.put("taskId", taskId);
+            }
+            if (reason != null) {
+                jsonObject.put("reason", reason);
+            }
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+            if (tags != null && tags.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String temp : tags) {
+                    jsonArray.put(temp);
+                }
+                jsonObject.put("tags", jsonArray);
+            }
+            if (!TextUtils.isEmpty(name)) {
+                jsonObject.put("name", name);
+            }
+            if (!TextUtils.isEmpty(contact)) {
+                jsonObject.put("contact", contact);
+            }
+            if (!TextUtils.isEmpty(content)) {
+                jsonObject.put("content", content);
+            }
+            if (imgUrls != null && imgUrls.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (String url : imgUrls) {
+                    jsonArray.put(url);
+                }
+                jsonObject.put("imgUrls", jsonArray);
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<DeviceDeployRsp> inspectionChangeDeviceDeployRspObservable = retrofitService.doInspectionChangeDeviceDeploy(oldSn, body);
+        RxApiManager.getInstance().add("doInspectionChangeDeviceDeploy", inspectionChangeDeviceDeployRspObservable.subscribe());
+        return inspectionChangeDeviceDeployRspObservable;
+    }
+
     /**
      * 基站部署
      *
@@ -493,16 +564,15 @@ public enum RetrofitServiceHelper {
      * @param name
      * @return
      */
-    public Observable<StationInfoRsp> doStationDeploy(String sn, double lon, double lat, String tags, String
+    public Observable<StationInfoRsp> doStationDeploy(String sn, double lon, double lat, List<String> tags, String
             name) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
-            if (tags != null) {
-                String[] split = tags.split(",");
+            if (tags != null && tags.size() > 0) {
                 JSONArray jsonArray = new JSONArray();
-                for (String temp : split) {
+                for (String temp : tags) {
                     jsonArray.put(temp);
                 }
                 jsonObject.put("tags", jsonArray);
@@ -832,5 +902,235 @@ public enum RetrofitServiceHelper {
      */
     public Observable<AuthRsp> doubleCheck(String code) {
         return retrofitService.doubleCheck(code);
+    }
+
+    /**
+     * 获取报警次数
+     *
+     * @param startTime
+     * @param endTime
+     * @param displayStatus
+     * @param sn
+     * @return
+     */
+    public Observable<AlarmCountRsp> getAlarmCount(Long startTime, Long endTime, String[] displayStatus, String sn) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (displayStatus != null && displayStatus.length > 0) {
+            for (int i = 0; i < displayStatus.length; i++) {
+                if (i == displayStatus.length - 1) {
+                    stringBuilder.append(displayStatus[i]);
+                } else {
+                    stringBuilder.append(displayStatus[i]).append(",");
+                }
+            }
+        }
+        if (TextUtils.isEmpty(stringBuilder)) {
+            return retrofitService.getAlarmCount(startTime, endTime, null, sn);
+        } else {
+            return retrofitService.getAlarmCount(startTime, endTime, stringBuilder.toString(), sn);
+        }
+    }
+
+    public Observable<ResponseBase> doUploadInspectionResult(String id, String sn, String taskId, Integer status,
+                                                             Integer malfunctionHandle,
+                                                             Long startTime, Long finishTime, String remark, List<ScenesData> scenesDataList, List<Integer> tags) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            JSONObject jsonObject1 = new JSONObject();
+            if (!TextUtils.isEmpty(id)) {
+                jsonObject1.put("_id", id);
+            }
+            if (!TextUtils.isEmpty(sn)) {
+                jsonObject1.put("sn", sn);
+            }
+            if (!TextUtils.isEmpty(taskId)) {
+                jsonObject1.put("taskId", taskId);
+            }
+            jsonObject.put("condition", jsonObject1);
+            //
+            JSONObject jsonObject2 = new JSONObject();
+            if (status != null) {
+                jsonObject2.put("status", status);
+            }
+            if (malfunctionHandle != null) {
+                jsonObject2.put("malfunctionHandle", malfunctionHandle);
+            }
+            if (startTime != null && startTime != 0) {
+                jsonObject2.put("startTime", startTime);
+            }
+            if (finishTime != null && finishTime != 0) {
+                jsonObject2.put("finishTime", finishTime);
+            }
+            if (!TextUtils.isEmpty(remark)) {
+                jsonObject2.put("remark", remark);
+            }
+            if (scenesDataList != null && scenesDataList.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (ScenesData scenesData : scenesDataList) {
+                    JSONObject jsonObject3 = new JSONObject();
+                    String type = scenesData.type;
+                    String url = scenesData.url;
+                    String thumbUrl = scenesData.thumbUrl;
+                    jsonObject3.put("type", type);
+                    jsonObject3.put("url", url);
+                    jsonObject3.put("thumbUrl", thumbUrl);
+                    jsonArray.put(jsonObject3);
+                }
+                jsonObject2.put("imgAndVideo", jsonArray);
+
+            }
+
+            if (tags != null && tags.size() > 0) {
+                JSONArray jsonArray = new JSONArray();
+                for (Integer tag : tags) {
+                    jsonArray.put(tag);
+                }
+                jsonObject2.put("malfunctions", jsonArray);
+            }
+            jsonObject.put("doc", jsonObject2);
+            //
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ResponseBase> uploadInspectionResult = retrofitService.uploadInspectionResult(body);
+        RxApiManager.getInstance().add("uploadInspectionResult", uploadInspectionResult.subscribe());
+        return uploadInspectionResult;
+    }
+
+    public Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(String taskId) {
+        return retrofitService.getInspectTaskExecution(taskId);
+    }
+
+    public Observable<InspectionTaskDeviceDetailRsp> getInspectionDeviceList(String taskId, String search, String sn, Integer finish, String deviceTypes, Integer offset, Integer limit) {
+//        StringBuilder stringBuilder = new StringBuilder();
+//        if (deviceTypes!=null&&deviceTypes.size()>0){
+//            for (String deviceType:deviceTypes){
+//                stringBuilder.append(deviceType);
+//            }
+//        }
+        Observable<InspectionTaskDeviceDetailRsp> inspectionDeviceList = retrofitService.getInspectionDeviceList(taskId, search, sn, finish, deviceTypes, offset, limit);
+        RxApiManager.getInstance().add("inspectionDeviceList", inspectionDeviceList.subscribe());
+        return inspectionDeviceList;
+    }
+
+    /**
+     * 获取巡检任务列表
+     *
+     * @param search
+     * @param finish
+     * @param offset
+     * @param limit
+     * @param startTime
+     * @param finishTime
+     * @return
+     */
+    public Observable<InspectionTaskModelRsp> getInspectTaskList(String search, Integer finish, Integer offset, Integer
+            limit, Long startTime, Long finishTime) {
+        Observable<InspectionTaskModelRsp> inspectTaskList = retrofitService.getInspectTaskList(search, finish, offset, limit,
+                startTime, finishTime);
+        RxApiManager.getInstance().add("getInspectTaskList", inspectTaskList.subscribe());
+        return inspectTaskList;
+    }
+
+    /**
+     * 改变巡检任务状态，目前只能改为1，执行中
+     *
+     * @param id
+     * @param identifier
+     * @param status
+     * @return
+     */
+    public Observable<ChangeInspectionTaskStateRsp> doChangeInspectionTaskState(String id, String identifier, Integer status) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONObject jsonObject1 = new JSONObject();
+            if (id != null) {
+                jsonObject1.put("_id", id);
+            }
+            if (identifier != null) {
+                jsonObject1.put("identifier", identifier);
+            }
+            jsonObject.put("condition", jsonObject1);
+
+            JSONObject jsonObject2 = new JSONObject();
+            if (status != null) {
+                jsonObject2.put("status", status);
+            }
+            jsonObject.put("doc", jsonObject2);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ChangeInspectionTaskStateRsp> changeInspectionTaskState = retrofitService.changeInspectionTaskState(body);
+        RxApiManager.getInstance().add("doChangeInspectionTaskState", changeInspectionTaskState.subscribe());
+        return changeInspectionTaskState;
+    }
+
+    /**
+     * 获取单个巡检设备
+     *
+     * @param id
+     * @param sn
+     * @param taskId
+     * @param device
+     * @return
+     */
+    public Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(String id, String sn, String taskId, Integer device) {
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONObject jsonObject1 = new JSONObject();
+            if (id != null) {
+                jsonObject1.put("_id", id);
+            }
+            if (sn != null) {
+                jsonObject1.put("sn", sn);
+            }
+            if (taskId != null) {
+                jsonObject1.put("taskId", taskId);
+            }
+            if (device != null) {
+                jsonObject1.put("device", device);
+            }
+
+
+            jsonObject.put("condition", jsonObject1);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail = retrofitService.getInspectionDeviceDetail(body);
+        RxApiManager.getInstance().add("getInspectionDeviceDetail", getInspectionDeviceDetail.subscribe());
+        return getInspectionDeviceDetail;
+    }
+
+    /**
+     * 获取巡检内容模板
+     *
+     * @param deviceType
+     * @return
+     */
+    public Observable<InspectionTaskInstructionRsp> getInspectionTemplate(String deviceType) {
+        Observable<InspectionTaskInstructionRsp> inspectionTemplate = retrofitService.getInspectionTemplate(deviceType);
+        RxApiManager.getInstance().add("inspectionTemplate", inspectionTemplate.subscribe());
+        return inspectionTemplate;
+    }
+
+    /**
+     * 获取deviceType 对应关系
+     *
+     * @return
+     */
+    public Observable<DevicesMergeTypesRsp> getDevicesMergeTypes() {
+        Observable<DevicesMergeTypesRsp> devicesMergeTypes = retrofitService.getDevicesMergeTypes();
+        RxApiManager.getInstance().add("devicesMergeTypes", devicesMergeTypes.subscribe());
+        return devicesMergeTypes;
     }
 }

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
-    <string name="search_tips">查询设备号、名称、标签</string>
+    <string name="search_tips">设备名称/设备号/标签</string>
     <string name="search_alarm_tips">设备名称</string>
     <string name="cancel">取消</string>
     <string name="recent">最近搜索</string>
@@ -41,7 +41,7 @@
     <string name="confirm_info">确认信息</string>
     <string name="alarm_list">预警记录</string>
     <string name="contract_list">合同管理</string>
-    <string name="sensor_detail_sn">SN</string>
+    <string name="sensor_detail_sn">设备号</string>
     <string name="sensor_detail_name">名称</string>
     <string name="sensor_detail_type">类型</string>
     <string name="sensor_detail_status">状态</string>
@@ -52,8 +52,8 @@
     <string name="sensor_detail_phone">电话</string>
     <string name="sensor_detail_recent_report">最近上报</string>
     <string name="sensor_detail_interval">传输周期</string>
-    <string name="sensor_detail_recent_alarm">最近报警</string>
-    <string name="sensor_detail_alarm_setting">报警设置</string>
+    <string name="sensor_detail_recent_alarm">最近预警</string>
+    <string name="sensor_detail_alarm_setting">预警设置</string>
     <string name="sensor_jinggai">井盖</string>
     <string name="sensor_cover">井盖</string>
     <string name="sensor_level">水位</string>
@@ -114,7 +114,7 @@
     <string name="all_tag">历史记录</string>
     <string name="today_alarm">预警</string>
     <string name="alarm_type">预警类型</string>
-    <string name="remarks">备注</string>
+    <string name="remarks">备注说明</string>
     <string name="sun">日</string>
     <string name="mon">一</string>
     <string name="tue">二</string>
@@ -129,7 +129,7 @@
     <string name="misdescription">误报</string>
     <string name="alarm_test">测试</string>
     <string name="alarm_risk">安全隐患</string>
-    <string name="confirming">确认</string>
+    <string name="confirming">预警确认</string>
     <string name="confirming_again">再次确认</string>
     <string name="setting_name_address">设置名称/地址</string>
     <string name="setting_tag">设置标签</string>
@@ -146,7 +146,7 @@
     <string name="tips_input_machine_sn">请输入机身对应的SN号码</string>
     <string name="tips_user_info_error">用户信息错误，请重新输入</string>
     <string name="tips_network_error">网络连接错误,请检查网络连接</string>
-    <string name="tips_username_empty">请输入用户名</string>
+    <string name="tips_username_empty">请输入账号</string>
     <string name="tips_phone_empty">请输入有效电话号码</string>
     <string name="tips_login_pwd_empty">请输入登录密码</string>
     <string name="tips_deploy_success">恭喜! 传感器点位部署成功</string>
@@ -178,4 +178,5 @@
     <string name="menu_page_station">基站部署</string>
     <string name="menu_page_contract">合同管理</string>
     <string name="menu_page_scan_login">扫码登录</string>
+    <string name="no_find_contact_phone_number">未找到联系人电话</string>
 </resources>

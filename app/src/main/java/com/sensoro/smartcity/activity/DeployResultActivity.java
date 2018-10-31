@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -24,33 +25,68 @@ import butterknife.OnClick;
 public class DeployResultActivity extends BaseActivity<IDeployResultActivityView, DeployResultActivityPresenter>
         implements IDeployResultActivityView {
 
-    @BindView(R.id.deploy_result_tip_tv)
-    TextView tipsTextView;
-    @BindView(R.id.deploy_result_error)
-    TextView deployResultError;
-    @BindView(R.id.deploy_result_sn_tv)
-    TextView snTextView;
-    @BindView(R.id.deploy_result_name_tv)
-    TextView nameTextView;
-    @BindView(R.id.deploy_result_content_tv)
-    TextView contentTextView;
-    @BindView(R.id.deploy_result_status_tv)
-    TextView statusTextView;
-    @BindView(R.id.deploy_result_signal_tv)
-    TextView signalTextView;
-    @BindView(R.id.deploy_result_update_tv)
-    TextView updateTextView;
-    @BindView(R.id.deploy_result_iv)
-    ImageView resultImageView;
-    @BindView(R.id.deploy_result_address_tv)
-    TextView deployResultAddressTv;
 
+    @BindView(R.id.ac_deploy_result_imv_icon)
+    ImageView acDeployResultImvIcon;
+    @BindView(R.id.ac_deploy_result_tv_state)
+    TextView acDeployResultTvState;
+    @BindView(R.id.ac_deploy_result_tv_state_msg)
+    TextView acDeployResultTvStateMsg;
+    @BindView(R.id.ac_deploy_result_tv_sn)
+    TextView acDeployResultTvSn;
+    @BindView(R.id.ac_deploy_result_ll_sn)
+    LinearLayout acDeployResultLlSn;
+    @BindView(R.id.ac_deploy_result_tv_name)
+    TextView acDeployResultTvName;
+    @BindView(R.id.ac_deploy_result_ll_name)
+    LinearLayout acDeployResultLlName;
+    @BindView(R.id.ac_deploy_result_tv_address)
+    TextView acDeployResultTvAddress;
+    @BindView(R.id.ac_deploy_result_ll_address)
+    LinearLayout acDeployResultLlAddress;
+    @BindView(R.id.ac_deploy_result_ll_content)
+    LinearLayout acDeployResultLlContent;
+    @BindView(R.id.ac_deploy_result_tv_back_home)
+    TextView acDeployResultTvBackHome;
+    @BindView(R.id.ac_deploy_result_tv_continue)
+    TextView acDeployResultTvContinue;
+    @BindView(R.id.ac_deploy_result_ll_contact)
+    LinearLayout acDeployResultTvLlContact;
+    @BindView(R.id.ac_deploy_result_tv_contact)
+    TextView acDeployResultTvContact;
+    @BindView(R.id.ac_deploy_result_tv_signal)
+    TextView acDeployResultTvSignal;
+    @BindView(R.id.ac_deploy_result_ll_status)
+    LinearLayout acDeployResultLlStatus;
+    @BindView(R.id.ac_deploy_result_tv_status)
+    TextView acDeployResultTvStatus;
+    @BindView(R.id.ac_deploy_result_ll_recent_upload_time)
+    LinearLayout acDeployResultLlRecentUploadTime;
+    @BindView(R.id.ac_deploy_result_tv_recent_upload_time)
+    TextView acDeployResultTvRecentUploadTime;
+    @BindView(R.id.ac_deploy_result_imv_arrows_left)
+    ImageView acDeployResultImvArrowsLeft;
+    @BindView(R.id.ac_deploy_result_title)
+    TextView acDeployResultTitle;
+    @BindView(R.id.ac_deploy_result_ll_title)
+    LinearLayout acDeployResultLlTitle;
+    @BindView(R.id.ac_deploy_result_line)
+    View acDeployResultLine;
+    @BindView(R.id.ac_deploy_result_bottom)
+    LinearLayout acDeployResultBottom;
+    @BindView(R.id.ac_deploy_result_tv_error_msg)
+    TextView acDeployResultTvErrorMsg;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_deploy_result);
+        setContentView(R.layout.activity_deploy_result_test);
         ButterKnife.bind(mActivity);
+        initView();
         mPresenter.initData(mActivity);
+    }
+
+    private void initView() {
+
     }
 
 
@@ -59,7 +95,6 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         return new DeployResultActivityPresenter();
     }
 
-
     @Override
     public void refreshSignal(long updateTime, String signal) {
         String signal_text = null;
@@ -67,99 +102,124 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         if (signal != null && (time_diff < 300000)) {
             switch (signal) {
                 case "good":
-                    signal_text = "信号质量：优";
-                    signalTextView.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
+                    signal_text = "信号 优";
+                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
                     break;
                 case "normal":
-                    signal_text = "信号质量：良";
-                    signalTextView.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
+                    signal_text = "信号 良";
+                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
                     break;
                 case "bad":
-                    signal_text = "信号质量：差";
-                    signalTextView.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
+                    signal_text = "信号 差";
+                    acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
             }
         } else {
-            signal_text = "无信号";
-            signalTextView.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
+            signal_text = "信号 无";
+            acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
         }
-        signalTextView.setText(signal_text);
+        acDeployResultTvSignal.setText(signal_text);
     }
 
     @Override
     public void setResultImageView(int resId) {
-        resultImageView.setImageResource(resId);
+        acDeployResultImvIcon.setImageResource(resId);
     }
 
     @Override
     public void setTipsTextView(String text) {
-        tipsTextView.setText(text);
+        acDeployResultTvStateMsg.setText(text);
     }
 
     @Override
     public void setSnTextView(String sn) {
-        snTextView.setText(sn);
+        acDeployResultTvSn.setText(sn);
     }
 
     @Override
     public void setNameTextView(String name) {
-        nameTextView.setText(name);
+        acDeployResultLlName.setVisibility(View.VISIBLE);
+        acDeployResultTvName.setText(name);
     }
 
 
     @Override
-    public void setContentTextView(String content) {
-        contentTextView.setText(content);
+    public void setContactTextView(String content) {
+        acDeployResultTvLlContact.setVisibility(View.VISIBLE);
+        acDeployResultTvContact.setText(content);
     }
 
     @Override
     public void setStatusTextView(String status) {
-        statusTextView.setText(status);
+        acDeployResultLlStatus.setVisibility(View.VISIBLE);
+        acDeployResultTvStatus.setText(status);
     }
 
     @Override
     public void setUpdateTextView(String update) {
-        updateTextView.setText(update);
+        acDeployResultLlRecentUploadTime.setVisibility(View.VISIBLE);
+        acDeployResultTvRecentUploadTime.setText(update);
     }
 
     @Override
     public void setAddressTextView(String address) {
-        deployResultAddressTv.setText(address);
+        acDeployResultLlAddress.setVisibility(View.VISIBLE);
+        acDeployResultTvAddress.setText(address);
     }
 
     @Override
     public void setDeployResultErrorInfo(String errorInfo) {
-        deployResultError.setVisibility(View.VISIBLE);
-        deployResultError.setText(errorInfo);
+        acDeployResultTvStateMsg.setVisibility(View.VISIBLE);
+        acDeployResultTvStateMsg.setText(errorInfo);
     }
 
     @Override
     public void setUpdateTextViewVisible(boolean isVisible) {
-        updateTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployResultLlRecentUploadTime.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
     public void setContactAndSignalVisible(boolean isVisible) {
 //        contactTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        contentTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        signalTextView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployResultTvLlContact.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployResultTvSignal.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-
-    @OnClick(R.id.deploy_result_back)
-    public void back() {
-        finishAc();
+    @Override
+    public void setStateTextView(String msg) {
+        acDeployResultTvState.setText(msg);
     }
 
-    @OnClick(R.id.deploy_result_continue_btn)
-    public void gotoContinue() {
-        mPresenter.gotoContinue();
+    @Override
+    public void setDeployResultContinueText(String text) {
+        acDeployResultTvContinue.setText(text);
     }
 
-    @OnClick(R.id.deploy_result_back_home)
-    public void backHome() {
-        mPresenter.backHome();
+    @Override
+    public void setDeployResultBackHomeText(String text) {
+        acDeployResultTvBackHome.setText(text);
     }
+
+    @Override
+    public void setDeployResultContinueVisible(boolean isVisible) {
+        acDeployResultTvContinue.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setStateTextViewVisible(boolean isVisible) {
+        acDeployResultTvState.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setArrowsLeftVisible(boolean isVisible) {
+        acDeployResultImvArrowsLeft.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setTitleText(String text) {
+        acDeployResultTitle.setText(text);
+    }
+
 
     @Override
     public void toastShort(String msg) {
@@ -194,4 +254,21 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setIntentResult(int resultCode, Intent data) {
     }
+
+
+    @OnClick({R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue,R.id.ac_deploy_result_imv_arrows_left})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ac_deploy_result_tv_back_home:
+                mPresenter.backHome();
+                break;
+            case R.id.ac_deploy_result_tv_continue:
+                mPresenter.gotoContinue();
+                break;
+            case R.id.ac_deploy_result_imv_arrows_left:
+                finishAc();
+                break;
+        }
+    }
+
 }

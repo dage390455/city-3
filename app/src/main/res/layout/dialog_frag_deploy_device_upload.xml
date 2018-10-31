@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/shape_bg_solid_ff_corner"
+    >
+    <TextView
+        android:id="@+id/dialog_deploy_device_upload_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/c_252525"
+        android:textSize="18sp"
+        android:text="是否上传完成部署？"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        />
+<TextView
+    android:id="@+id/dialog_deploy_device_upload_tv_msg"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="当前设备无信号或信号差，请按设备自检按钮刷新信号再完成上传部署"
+    android:textSize="14sp"
+    android:textColor="@color/c_a6a6a6"
+    android:layout_marginStart="20dp"
+    android:layout_marginEnd="20dp"
+    android:gravity="center"
+    android:layout_marginTop="16dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/c_dfdfdf"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/dialog_deploy_device_upload_tv_cancel"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="强制上传"
+            android:textSize="16sp"
+            android:textColor="@color/c_a6a6a6"
+            android:paddingTop="12dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/selector_item_white_ee_corner_left"
+            android:gravity="center"/>
+        <View
+            android:layout_width="1dp"
+            android:layout_height="match_parent"
+            android:background="@color/c_dfdfdf"/>
+
+
+        <TextView
+            android:id="@+id/dialog_deploy_device_upload_tv_confirm"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:text="好的"
+            android:textSize="16sp"
+            android:paddingTop="12dp"
+            android:paddingBottom="20dp"
+            android:background="@drawable/selector_item_white_ee_corner_right"
+            android:textColor="@color/c_29c093"
+            android:gravity="center"/>
+
+    </LinearLayout>
+</LinearLayout>

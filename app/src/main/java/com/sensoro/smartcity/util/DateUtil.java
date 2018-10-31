@@ -20,15 +20,27 @@ public class DateUtil {
     /*
      * 将时间戳转为字符串 ，格式：yyyy-MM-dd HH:mm
      */
-    public static String getStrTime_ymd_hm(String cc_time) {
+    public static String getStrTime_ymd_hm(long cc_time) {
         String re_StrTime = "";
-        if (TextUtils.isEmpty(cc_time) || "null".equals(cc_time)) {
-            return re_StrTime;
-        }
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-        // 例如：cc_time=1291778220
-        long lcc_time = Long.valueOf(cc_time);
-        re_StrTime = sdf.format(new Date(lcc_time));
+//        if (TextUtils.isEmpty(cc_time) || "null".equals(cc_time)) {
+//            return re_StrTime;
+//        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm");
+//        // 例如：cc_time=1291778220
+//        long lcc_time = Long.valueOf(cc_time);
+        re_StrTime = sdf.format(new Date(cc_time));
+        return re_StrTime;
+
+    }
+    public static String getStrTime_ymd_hm_ss(long cc_time) {
+        String re_StrTime = "";
+//        if (TextUtils.isEmpty(cc_time) || "null".equals(cc_time)) {
+//            return re_StrTime;
+//        }
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd HH:mm:ss");
+//        // 例如：cc_time=1291778220
+//        long lcc_time = Long.valueOf(cc_time);
+        re_StrTime = sdf.format(new Date(cc_time));
         return re_StrTime;
 
     }
@@ -103,6 +115,14 @@ public class DateUtil {
         // 例如：cc_time=1291778220
         long lcc_time = Long.valueOf(cc_time);
         re_StrTime = sdf.format(new Date(lcc_time));
+        return re_StrTime;
+    }
+
+    public static String getStrTime_hms(long cc_time) {
+        String re_StrTime = null;
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        // 例如：cc_time=1291778220
+        re_StrTime = sdf.format(new Date(cc_time));
         return re_StrTime;
     }
 
@@ -210,6 +230,14 @@ public class DateUtil {
         return new SimpleDateFormat("dd", Locale.ROOT).format(new Date(time));
     }
 
+    public static String getYearDate(long time) {
+        return new SimpleDateFormat("yyyy", Locale.ROOT).format(new Date(time));
+    }
+
+    public static String getMonth(long time) {
+        return new SimpleDateFormat("MM", Locale.ROOT).format(new Date(time));
+    }
+
     public static String getMonthDate(long time) {
         return new SimpleDateFormat("MM/dd", Locale.ROOT).format(new Date(time));
     }
@@ -239,7 +267,7 @@ public class DateUtil {
         String apm_text = apm == 0 ? "上午" : "下午";
         long now = System.currentTimeMillis();
         long diff = now - time;
-        long day = diff / 3600000 / 24;
+        float day = diff / 3600000 / 24;
         String formatTime = new SimpleDateFormat("hh:mm:ss", Locale.ROOT).format(new Date(time));
         String other_date = new SimpleDateFormat("MM/dd hh:mm:ss", Locale.ROOT).format(new Date(time));
         if (day < 1) {
@@ -250,7 +278,7 @@ public class DateUtil {
             } else {
                 return "昨天 " + apm_text + formatTime;
             }
-        } else if (day > 1 && day < 2) {
+        } else if (day < 2) {
             return "昨天 " + apm_text + formatTime;
         } else {
 
@@ -258,9 +286,55 @@ public class DateUtil {
         }
     }
 
+    /**
+     * status 0 表示含有年月日， 1表示含有月日
+     * @param time
+     * @param status
+     * @return
+     */
+    public static String getStrTimeToday(long time, int status) {
+        final Calendar mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(time);
+        long now = System.currentTimeMillis();
+        long diff = now - time;
+        float day = diff / 3600000 / 24;
+        String pattern = "yyyy.MM.dd HH:mm:ss";
+        String formatPattern = "HH:mm:ss";
+        switch (status) {
+            case 0:
+                pattern = "yyyy.MM.dd HH:mm:ss";
+                break;
+            case 1:
+                pattern = "MM.dd  HH:mm:ss";
+                break;
+
+        }
+        String formatTime = new SimpleDateFormat(formatPattern, Locale.ROOT).format(new Date(time));
+        String other_date = new SimpleDateFormat(pattern, Locale.ROOT).format(new Date(time));
+
+        if (day < 1) {
+            String nowString = DateUtil.getDayDate(now);
+            String dataString = DateUtil.getDayDate(time);
+            if (dataString.equalsIgnoreCase(nowString)) {
+                return "今天 " + formatTime;
+            } else {
+                return "昨天 " + formatTime;
+            }
+        } else if (day < 2) {
+            return "昨天 " + formatTime;
+        } else {
+            return other_date;
+        }
+    }
+
+
 
     public static String getHourFormatDate(long time) {
         return new SimpleDateFormat("HH:mm:ss", Locale.ROOT).format(new Date(time));
+    }
+
+    public static String getHourMmFormatDate(long time) {
+        return new SimpleDateFormat("HH:mm", Locale.ROOT).format(new Date(time));
     }
 
     public static String getMothFormatDate(long time) {

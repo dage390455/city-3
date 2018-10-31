@@ -32,6 +32,12 @@ public class ProgressUtils {
     public void destroyProgress() {
         builder.destroyProgressDialog();
     }
+    public void setMessage(String message) {
+        ProgressDialog progressDialog = builder.getProgressDialog();
+        if (progressDialog != null) {
+            progressDialog.setMessage(message);
+        }
+    }
 
     public static final class Builder {
         private ProgressDialog progressDialog;

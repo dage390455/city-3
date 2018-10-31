@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <color name="defaultTagsTextColor">#FFFFFF</color>
-    <color name="popup_selected_text_color">#48b0f7</color>
-    <dimen name="defaultTagsTextSize">16sp</dimen>
-    <dimen name="defaultTagsCloseImagePadding">10dp</dimen>
-    <dimen name="defaultTagsPadding">0dp</dimen>
-</resources>

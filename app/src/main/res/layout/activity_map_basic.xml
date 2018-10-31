@@ -4,22 +4,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-    <mabbas007.tagsedittext.TagsEditText
-        android:id="@+id/tet"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@null"
-        android:gravity="center_vertical"
-        android:hint="@string/tips_hint_name_address_set"
-        android:imeOptions="actionDone"
-        android:inputType="text"
-        android:maxLines="1"
-        android:paddingLeft="@dimen/x30"
-        android:singleLine="true"
-        android:textSize="@dimen/city_normal_size"
-        TagsEditText:allowSpaceInTag="false"
-        />
-
     <com.fengmap.android.map.FMMapView
         android:id="@+id/map_view"
         android:layout_width="match_parent"

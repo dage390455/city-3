@@ -12,6 +12,16 @@ public final class EventLoginData implements Serializable {
     public boolean hasStation;
     public boolean hasContract;
     public boolean hasScanLogin;
+    public boolean hasSubMerchant = true;
+    public boolean hasInspectionTaskList = false;
+    public boolean hasInspectionTaskModify = false;
+    public boolean hasInspectionDeviceList = false;
+    public boolean hasInspectionDeviceModify = false;
+    public boolean hasAlarmInfo = false;
+    public boolean hasDeviceBrief = false;
+    public boolean hasSignalCheck = false;
+    public boolean hasSignalConfig = false;
+    public boolean needAuth = false;
 
     @Override
     public String toString() {
@@ -25,6 +35,16 @@ public final class EventLoginData implements Serializable {
                 ", hasStation=" + hasStation +
                 ", hasContract=" + hasContract +
                 ", hasScanLogin=" + hasScanLogin +
+                ", hasSubMerchant=" + hasSubMerchant +
+                ", hasAlarmInfo=" + hasAlarmInfo +
+                ", hasDeviceBrief=" + hasDeviceBrief +
+                ", hasSignalCheck=" + hasSignalCheck +
+                ", hasSignalConfig=" + hasSignalConfig +
+                ", hasInspectionTaskList=" + hasInspectionTaskList +
+                ", hasInspectionTaskModify=" + hasInspectionTaskModify +
+                ", hasInspectionDeviceList=" + hasInspectionDeviceList +
+                ", hasInspectionDeviceModify=" + hasInspectionDeviceModify +
+                ", needAuth=" + needAuth +
                 '}';
     }
 }

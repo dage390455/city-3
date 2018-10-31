@@ -11,6 +11,7 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
+//        startAC(new Intent(mActivity,DeployMonitorDetailActivity.class));
         checkActivity();
         mPresenter.initData(mActivity);
     }

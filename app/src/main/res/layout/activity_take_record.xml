@@ -24,13 +24,13 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerInParent="true"
-            android:src="@mipmap/video_delete"/>
+            android:src="@mipmap/record_delete"/>
         <ImageView
             android:id="@+id/iv_finish"
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_centerInParent="true"
-            android:src="@mipmap/video_finish"/>
+            android:src="@mipmap/record_finish"/>
         <com.sensoro.smartcity.widget.RecordedButton
             android:id="@+id/rb_start"
             android:layout_width="120dp"

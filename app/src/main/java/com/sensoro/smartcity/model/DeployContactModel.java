@@ -1,6 +1,8 @@
 package com.sensoro.smartcity.model;
 
-public class DeployContactModel {
+import java.io.Serializable;
+
+public class DeployContactModel implements Serializable{
     public String name;
     public String phone;
 }

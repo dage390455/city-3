@@ -17,8 +17,10 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
 import com.baidu.mobstat.StatService;
+import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -42,6 +44,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      * 主AC
      */
     protected BaseActivity mActivity;
+    public ImmersionBar immersionBar;
 
 
     @Override
@@ -64,9 +67,27 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
 //        CustomDensityUtils.SetCustomDensity(this, SensoroCityApplication.getInstance());
         //控制顶部状态栏显示
-//        StatusBarCompat.setStatusBarColor(this);
+//        StatusBarCompat.translucentStatusBar(thi®s);
+//        StatusBarCompat.setStatusBarIconDark(this,true);
+        boolean darkmode = true;
+        if (!isActivityOverrideStatusBar()) {
+            immersionBar = ImmersionBar.with(this);
+            immersionBar.fitsSystemWindows(true, R.color.white)
+                    .statusBarColor(R.color.white)
+                    .statusBarDarkFont(true)
+                    .init();
+        }
         onCreateInit(savedInstanceState);
         StatService.setDebugOn(true);
+    }
+
+    /**
+     * activity 需要自己设置statusbar 重写该函数，并在该函数内实现
+     *
+     * @return
+     */
+    public boolean isActivityOverrideStatusBar() {
+        return false;
     }
 
     @Override
@@ -86,6 +107,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         mPresenter.onDestroy();
         mPresenter.detachView();
         SensoroToast.INSTANCE.cancelToast();
+        if (immersionBar != null) {
+            immersionBar.destroy();
+        }
         super.onDestroy();
     }
 
@@ -160,7 +184,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
     private void showRationaleDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
         builder.setTitle("提示")
-                .setMessage("通知中包含了重要报警信息，请前往设置，打开的通知选项。")
+                .setMessage("通知中包含了重要报警信息，请前往设置，打开通知选项。")
                 .setPositiveButton("前往设置",
                         new DialogInterface.OnClickListener() {
                             @Override
@@ -207,4 +231,5 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         return hasNavigationBar;
     }
+
 }

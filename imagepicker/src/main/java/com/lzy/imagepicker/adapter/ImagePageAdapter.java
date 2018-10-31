@@ -33,6 +33,7 @@ public class ImagePageAdapter extends PagerAdapter {
     private ArrayList<ImageItem> images = new ArrayList<>();
     private Activity mActivity;
     public PhotoViewClickListener listener;
+    private boolean isJustDisplay = false;
 
     public ImagePageAdapter(Activity activity, ArrayList<ImageItem> images) {
         this.mActivity = activity;
@@ -58,8 +59,13 @@ public class ImagePageAdapter extends PagerAdapter {
         ImageItem imageItem = images.get(position);
         //TODO 区分
         if (imageItem.fromUrl) {
-            imagePicker.getImageLoader().displayImagePreview(mActivity, imageItem.path, photoView, screenWidth,
-                    screenHeight);
+            if (imageItem.isRecord) {
+                imagePicker.getImageLoader().displayImagePreview(mActivity, imageItem.thumbPath, photoView, screenWidth,
+                        screenHeight);
+            } else {
+                imagePicker.getImageLoader().displayImagePreview(mActivity, imageItem.path, photoView, screenWidth,
+                        screenHeight);
+            }
             photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                 @Override
                 public void onPhotoTap(View view, float x, float y) {
@@ -67,8 +73,14 @@ public class ImagePageAdapter extends PagerAdapter {
                 }
             });
         } else {
-            imagePicker.getImageLoader().displayImagePreview(mActivity, new File(imageItem.path), photoView,
-                    screenWidth, screenHeight);
+            if (imageItem.isRecord) {
+                imagePicker.getImageLoader().displayImagePreview(mActivity, new File(imageItem.thumbPath), photoView,
+                        screenWidth, screenHeight);
+            } else {
+                imagePicker.getImageLoader().displayImagePreview(mActivity, new File(imageItem.path), photoView,
+                        screenWidth, screenHeight);
+            }
+
             photoView.setOnPhotoTapListener(new PhotoViewAttacher.OnPhotoTapListener() {
                 @Override
                 public void onPhotoTap(View view, float x, float y) {
@@ -99,6 +111,10 @@ public class ImagePageAdapter extends PagerAdapter {
     @Override
     public int getItemPosition(Object object) {
         return POSITION_NONE;
+    }
+
+    public void setIsJustDisplay(boolean isJustDisplay) {
+        this.isJustDisplay = isJustDisplay;
     }
 
     public interface PhotoViewClickListener {

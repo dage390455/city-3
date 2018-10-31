@@ -1,16 +1,16 @@
 package com.sensoro.smartcity.widget;
 
 import android.content.Context;
+import android.support.v4.widget.NestedScrollView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 
 /**
  * 是地图可以横向滑动
  */
 public class MapContainer extends RelativeLayout {
-    private ScrollView scrollView;
+    private NestedScrollView scrollView;
 
     public MapContainer(Context context) {
         super(context);
@@ -20,7 +20,7 @@ public class MapContainer extends RelativeLayout {
         super(context, attrs);
     }
 
-    public void setScrollView(ScrollView scrollView) {
+    public void setScrollView(NestedScrollView scrollView) {
         this.scrollView = scrollView;
     }
 

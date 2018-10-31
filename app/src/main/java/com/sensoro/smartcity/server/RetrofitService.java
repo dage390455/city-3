@@ -1,10 +1,14 @@
 package com.sensoro.smartcity.server;
 
 
+import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
+import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -13,6 +17,12 @@ import com.sensoro.smartcity.server.response.DeviceHistoryListRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.DeviceTypeCountRsp;
+import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExceptionDeviceRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
@@ -20,6 +30,7 @@ import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.tencent.mm.opensdk.modelbase.BaseResp;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -40,6 +51,7 @@ public interface RetrofitService {
     String SCOPE_TEST = "https://city-test-api.sensoro.com/";
     //摩卡环境
     String SCOPE_MOCHA = "https://mocha-city-api.sensoro.com/";
+    //    String SCOPE_MOCHA = "http://xiaolai.ngrok.gkzyk.com/";
     //正式环境
     String SCOPE_MASTER = "https://city-api.sensoro.com/";
 
@@ -60,6 +72,15 @@ public interface RetrofitService {
     String DOUBLE_CHECK = "tfa/totp/verify";
     String APP_UPDATE = "http://api.fir" +
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
+    String ALARM_COUNT = "prov1/alarms/count";
+    String INSPECT_TASK_LIST = "inspect/task/list";
+    String INSPECT_TASK_EXECUTION = "/inspect/task/execution";
+    String INSPECT_TASK_CHANGE_STATE = "inspect/task/status";
+    String INSPECT_TASK_EXCEPTION_DETAIL = "inspect/device/_search";
+    String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
+    String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
+    String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
+    String DEPLOY_DEVICE_DETAIL = "devices/detail";
 
     @FormUrlEncoded
     @POST(LOGIN)
@@ -88,11 +109,8 @@ public interface RetrofitService {
 
     @GET(DEVICE_BRIEF_LIST)
     Observable<DeviceInfoListRsp> getDeviceBriefInfoList(@Query("page") int page, @Query("count")
-            int count, @Query
-                                                                 ("all") int all,
-                                                         @Query("showIndoorDevice") int showIndoorDevice, @Query
-                                                                 ("sensorTypes") String sensorTypes, @Query("status")
-                                                                 Integer status, @Query("search") String search);
+            int count, @Query("all") int all, @Query("showIndoorDevice") int showIndoorDevice,
+                                                         @Query("sensorTypes") String sensorTypes, @Query("mergeTypes") String mergeTypes, @Query("status") Integer status, @Query("search") String search);
 
     @GET(DEVICE_TYPE_COUNT)
     Observable<DeviceTypeCountRsp> getDeviceTypeCount();
@@ -103,12 +121,14 @@ public interface RetrofitService {
     @GET(DEVICE_ALARM_LOG)
     Observable<DeviceAlarmLogRsp> getDeviceAlarmLogList(@Query("count") int count, @Query("page") int page, @Query
             ("sn") String sn, @Query("deviceName") String deviceName, @Query("phone")
-                                                                String phone, @Query("beginTime") Long beginTime,
+                                                                String phone, @Query("search") String search, @Query
+                                                                ("beginTime") Long beginTime,
                                                         @Query("endTime") Long endTime
             , @Query("unionTypes") String unionTypes);
 
     @GET(USER_ACCOUNT_LIST)
-    Observable<UserAccountRsp> getUserAccountList(@Query("search") String search, @Query("page") Integer page, @Query("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
+    Observable<UserAccountRsp> getUserAccountList(@Query("search") String search, @Query("page") Integer page, @Query
+            ("count") Integer count, @Query("offset") Integer offset, @Query("limit") Integer limit);
 
     @GET(APP_UPDATE)
     Observable<UpdateRsp> getUpdateInfo();
@@ -121,6 +141,9 @@ public interface RetrofitService {
 
     @POST("devices/app/{sn}")
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    @GET(DEPLOY_DEVICE_DETAIL)
+    Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(@Query("sn") String sn, @Query("longitude") double longitude, @Query("latitude") double latitude);
 
     //    @HTTP(method = "DELETE", path = LOGOUT, hasBody = true)
 //    Observable<ResponseBase> logout(@Header("phoneId") String phoneId, @Header("uid")
@@ -137,6 +160,9 @@ public interface RetrofitService {
     @POST(STATION_DEPLOY + "{sn}")
     Observable<StationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
+    @GET(GET_DEPOLY_RECORD_LIST)
+    Observable<DeployRecordRsp> getDeployRecordList(@Query("search") String searchText, @Query("beginTime") Long beginTime,
+                                                    @Query("endTime") Long endTime, @Query("owners") String owners, @Query("signalQuality")String signalQuality);
     @PUT("alarmplay/{id}")
     Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(@Path("id") String id, @Body RequestBody requestBody);
 
@@ -183,4 +209,40 @@ public interface RetrofitService {
     @FormUrlEncoded
     @POST(DOUBLE_CHECK)
     Observable<AuthRsp> doubleCheck(@Field("code") String code);
+
+    @GET(ALARM_COUNT)
+    Observable<AlarmCountRsp> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
+                                            @Query("displayStatus") String displayStatus, @Query("sn") String sn);
+
+    @GET(INSPECT_TASK_LIST)
+    Observable<InspectionTaskModelRsp> getInspectTaskList(@Query("search") String search, @Query("finish") Integer finish, @Query
+            ("offset") Integer offset, @Query("limit") Integer limit, @Query("startTime") Long startTime, @Query("finishTime") Long finishTime);
+
+    @PUT("inspect/device")
+    Observable<ResponseBase> uploadInspectionResult(@Body RequestBody responseBody);
+
+    @GET("inspect/task/device")
+    Observable<InspectionTaskDeviceDetailRsp> getInspectionDeviceList(@Query("taskId") String taskId, @Query("search") String search, @Query("sn") String sn, @Query("finish") Integer finish,
+                                                                      @Query("deviceTypes") String deviceTypes, @Query("offset") Integer offset, @Query("limit") Integer limit);
+
+    @GET(INSPECT_TASK_EXECUTION)
+    Observable<InspectionTaskExecutionRsp> getInspectTaskExecution(@Query("taskId") String taskId);
+
+    @PUT(INSPECT_TASK_CHANGE_STATE)
+    Observable<ChangeInspectionTaskStateRsp> changeInspectionTaskState(@Body RequestBody requestBody);
+
+    @POST(INSPECT_TASK_EXCEPTION_DETAIL)
+    Observable<InspectionTaskExceptionDeviceRsp> getInspectionDeviceDetail(@Body RequestBody requestBody);
+
+    @GET(INSPECTION_TASK_GET_TEMPLATE)
+    Observable<InspectionTaskInstructionRsp> getInspectionTemplate(@Query("deviceType") String deviceType);
+
+    @POST("devices/change/{sn}")
+    Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    @GET(GET_DEVICES_MERGE_TYPES)
+//    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
+    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes();
+
 }
+

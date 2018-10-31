@@ -3,7 +3,9 @@ package com.sensoro.smartcity.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.net.Uri;
+import android.provider.ContactsContract;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,11 +17,12 @@ import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.popup.SensoroPopupAlarmView;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.sensoro.smartcity.constant.Constants.IMAGE_ITEM_ADD;
 
 /**
  * ================================================
@@ -31,13 +34,19 @@ import java.util.List;
  * ================================================
  */
 public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.SelectedPicViewHolder> {
-    private int maxImgCount;
+    private int maxImgCount = 9;
     private Context mContext;
     private List<ImageItem> mData;
     private LayoutInflater mInflater;
     private OnRecyclerViewItemClickListener listener;
     private boolean isAdded;   //是否额外添加了最后一个图片
-    private boolean canVideo;
+    private String tipText;
+    private boolean isJustDisplay = false;
+
+    public void setJustDisplay(boolean isJustDisplay) {
+        this.isJustDisplay = isJustDisplay;
+    }
+//    private boolean canVideo;
 
     public interface OnRecyclerViewItemClickListener {
         void onItemClick(View view, int position);
@@ -49,18 +58,22 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public void setImages(List<ImageItem> data) {
         mData = new ArrayList<>(data);
-        if (getItemCount() < maxImgCount) {
-            mData.add(new ImageItem());
-            isAdded = true;
-        } else {
-            isAdded = false;
+        if(!isJustDisplay){
+            if (getItemCount() < maxImgCount) {
+                mData.add(new ImageItem());
+                isAdded = true;
+            } else {
+                isAdded = false;
+            }
         }
+
+
         notifyDataSetChanged();
     }
 
-    public void canVideo(boolean canVideo) {
-        this.canVideo = canVideo;
-    }
+//    public void canVideo(boolean canVideo) {
+//        this.canVideo = canVideo;
+//    }
 //    public void removeImage(int position) {
 ////        mData = new ArrayList<>(data);
 //        ImageItem imageItem = mData.getInstance(position);
@@ -104,13 +117,17 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public List<ImageItem> getImages() {
         //由于图片未选满时，最后一张显示添加图片，因此这个方法返回真正的已选图片
-        if (isAdded) return new ArrayList<>(mData.subList(0, mData.size() - 1));
-        else return mData;
+        if(isJustDisplay){
+            return mData;
+        }else if (isAdded) {
+            return new ArrayList<>(mData.subList(0, mData.size() - 1));
+        } else{
+            return mData;
+        }
     }
 
-    public ImagePickerAdapter(Context mContext, List<ImageItem> data, int maxImgCount) {
+    public ImagePickerAdapter(Context mContext, List<ImageItem> data) {
         this.mContext = mContext;
-        this.maxImgCount = maxImgCount;
         this.mInflater = LayoutInflater.from(mContext);
         setImages(data);
     }
@@ -126,12 +143,34 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     @Override
     public void onBindViewHolder(SelectedPicViewHolder holder, int position) {
-        holder.bind(position);
+        if (isJustDisplay) {
+            holder.itemView.setOnClickListener(holder);
+            holder.image_delete.setVisibility(View.GONE);
+            ImageItem item = mData.get(position);
+            if (item != null) {
+                holder.iv_record_play.setVisibility(item.isRecord ? View.VISIBLE : View.GONE);
+            }
+            Glide.with((Activity) mContext)                             //配置上下文
+                    .load(item.path)
+                    .error(R.drawable.ic_default_image)           //设置错误图片
+                    .placeholder(R.drawable.ic_default_image)//设置占位图片
+                    .thumbnail(0.01f)
+                    .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                    .into(holder.iv_img);
+
+        }else{
+            holder.bind(position);
+        }
+
     }
 
     @Override
     public int getItemCount() {
         return mData.size();
+    }
+
+    public void setAddTipText(String tipText) {
+        this.tipText = tipText;
     }
 
     class SelectedPicViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -153,14 +192,17 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         }
 
         public void bind(int position) {
-            if (canVideo) {
-                if (isAdded) {
-                    if (getItemCount() > 1) {
-                        tv_add_content.setText("照片");
-                    } else {
-                        tv_add_content.setText("照片/视频");
-                    }
-                }
+//            if (canVideo) {
+//                if (isAdded) {
+//                    if (getItemCount() > 1) {
+//                        tv_add_content.setText("照片");
+//                    } else {
+//                        tv_add_content.setText("照片/视频");
+//                    }
+//                }
+//            }
+            if (!TextUtils.isEmpty(tipText)) {
+                tv_add_content.setText(tipText);
             }
             //设置条目的点击事件
             itemView.setOnClickListener(this);
@@ -171,7 +213,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                 ll_add.setVisibility(View.VISIBLE);
                 iv_img.setVisibility(View.GONE);
 //                iv_img.setImageResource(R.drawable.selector_image_add);
-                clickPosition = SensoroPopupAlarmView.IMAGE_ITEM_ADD;
+                clickPosition = IMAGE_ITEM_ADD;
                 image_delete.setVisibility(View.GONE);
                 iv_record_play.setVisibility(View.GONE);
             } else {
@@ -185,14 +227,25 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                     }
                 }
                 //替换压缩0.01
-                Glide.with((Activity) mContext)                             //配置上下文
-                        .load(Uri.fromFile(new File(item.path)))    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
-                        .error(R.drawable.ic_default_image)           //设置错误图片
-                        .placeholder(R.drawable.ic_default_image)//设置占位图片
-                        .thumbnail(0.01f)
-                        .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
-                        .into(iv_img);
+                if (item.isRecord) {
+                    Glide.with((Activity) mContext)                             //配置上下文
+                            .load(Uri.fromFile(new File(item.thumbPath)))    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                            .error(R.drawable.ic_default_image)           //设置错误图片
+                            .placeholder(R.drawable.ic_default_image)//设置占位图片
+                            .thumbnail(0.01f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                            .into(iv_img);
 //                ImagePicker.getInstance().getImageLoader().displayImage(, , iv_img, 0, 0);
+                } else {
+                    Glide.with((Activity) mContext)                             //配置上下文
+                            .load(Uri.fromFile(new File(item.path)))    //设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
+                            .error(R.drawable.ic_default_image)           //设置错误图片
+                            .placeholder(R.drawable.ic_default_image)//设置占位图片
+                            .thumbnail(0.01f)
+                            .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
+                            .into(iv_img);
+//                ImagePicker.getInstance().getImageLoader().displayImage(, , iv_img, 0, 0);
+                }
                 clickPosition = position;
             }
         }

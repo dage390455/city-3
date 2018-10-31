@@ -15,7 +15,6 @@ import java.util.List;
 
 
 /**
- * Created by fangping on 2016/7/7.
  */
 
 public class RelationAdapter extends RecyclerView.Adapter<RelationAdapter.RelationViewHolder> {

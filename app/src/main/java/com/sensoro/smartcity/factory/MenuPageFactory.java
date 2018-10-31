@@ -2,194 +2,53 @@ package com.sensoro.smartcity.factory;
 
 import android.text.TextUtils;
 
-import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.server.bean.GrantsInfo;
+import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.smartcity.util.LogUtils;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class MenuPageFactory {
-    //    R.mipmap.ic_menu_index, R.mipmap.ic_menu_alarm, R.mipmap.ic_menu_switch,
-//    R.mipmap.ic_menu_location, R.mipmap.ic_menu_location
-    //主页
-    private static final MenuPageInfo indexPage = new MenuPageInfo(R.string.menu_page_index, R.mipmap.ic_menu_index,
-            MenuPageInfo.MENU_PAGE_INDEX);
-    //预警记录
-    private static final MenuPageInfo alarmPage = new MenuPageInfo(R.string.menu_page_alarm, R.mipmap.ic_menu_alarm,
-            MenuPageInfo.MENU_PAGE_ALARM);
-    //商户切换
-    private static final MenuPageInfo merchantPage = new MenuPageInfo(R.string.menu_page_merchant, R.mipmap
-            .ic_menu_switch,
-            MenuPageInfo.MENU_PAGE_MERCHANT);
-    //点位部署
-    private static final MenuPageInfo pointPage = new MenuPageInfo(R.string.menu_page_point, R.mipmap.ic_menu_location,
-            MenuPageInfo.MENU_PAGE_POINT);
-    //基站部署
-    private static final MenuPageInfo stationPage = new MenuPageInfo(R.string.menu_page_station, R.mipmap
-            .ic_menu_location,
-            MenuPageInfo.MENU_PAGE_STATION);
-    //合同管理
-    private static final MenuPageInfo contractPage = new MenuPageInfo(R.string.menu_page_contract, R.mipmap
-            .ic_menu_contract, MenuPageInfo.MENU_PAGE_CONTRACT);
-    //扫码登录
-    private static final MenuPageInfo scanLoginPage = new MenuPageInfo(R.string.menu_page_scan_login, R.mipmap
-            .ic_menu_scan_login, MenuPageInfo.MENU_PAGE_SCAN_LOGIN);
-
-    public static List<MenuPageInfo> createMenuPageList(EventLoginData eventLoginData) {
-//        hasContract = false;
-//        boolean hasScanLogin = true;
-        ArrayList<MenuPageInfo> pageInfos = new ArrayList<>();
-        //超级账户
-        if (eventLoginData.isSupperAccount) {
-            pageInfos.add(merchantPage);
-            return pageInfos;
-        } else {
-            //商户账号
-            if ("business".equalsIgnoreCase(eventLoginData.roles)) {
-                if (eventLoginData.hasStation) {
-                    if (eventLoginData.hasContract) {
-                        if (eventLoginData.hasScanLogin) {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(stationPage);
-                            pageInfos.add(scanLoginPage);
-                            pageInfos.add(contractPage);
-                        } else {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(stationPage);
-                            pageInfos.add(contractPage);
-                        }
-
-                    } else {
-                        if (eventLoginData.hasScanLogin) {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(stationPage);
-                            pageInfos.add(scanLoginPage);
-                        } else {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(stationPage);
-                        }
-
-                    }
-
-                    return pageInfos;
-                } else {
-                    if (eventLoginData.hasContract) {
-                        if (eventLoginData.hasScanLogin) {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(scanLoginPage);
-                            pageInfos.add(contractPage);
-                        } else {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(contractPage);
-                        }
-
-                    } else {
-                        if (eventLoginData.hasScanLogin) {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(scanLoginPage);
-                        } else {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(pointPage);
-                        }
-
-                    }
-
-                    return pageInfos;
-                }
-            } else {
-                //管理员账号
-                if (eventLoginData.hasStation) {
-                    if (eventLoginData.hasContract) {
-                        if (eventLoginData.hasScanLogin) {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(merchantPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(stationPage);
-                            pageInfos.add(scanLoginPage);
-                            pageInfos.add(contractPage);
-                        } else {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(merchantPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(stationPage);
-                            pageInfos.add(contractPage);
-                        }
-
-                    } else {
-                        if (eventLoginData.hasScanLogin) {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(merchantPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(stationPage);
-                            pageInfos.add(scanLoginPage);
-                        } else {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(merchantPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(stationPage);
-                        }
-
-                    }
-
-                    return pageInfos;
-                } else {
-                    if (eventLoginData.hasContract) {
-                        if (eventLoginData.hasScanLogin) {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(merchantPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(scanLoginPage);
-                            pageInfos.add(contractPage);
-                        } else {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(merchantPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(contractPage);
-                        }
-
-                    } else {
-                        if (eventLoginData.hasScanLogin) {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(merchantPage);
-                            pageInfos.add(pointPage);
-                            pageInfos.add(scanLoginPage);
-                        } else {
-                            pageInfos.add(indexPage);
-                            pageInfos.add(alarmPage);
-                            pageInfos.add(merchantPage);
-                            pageInfos.add(pointPage);
-                        }
-
-                    }
-
-                    return pageInfos;
-                }
+    public static EventLoginData createLoginData(UserInfo userInfo, String phoneId) {
+        final EventLoginData eventLoginData = new EventLoginData();
+        GrantsInfo grants = userInfo.getGrants();
+        //
+        eventLoginData.userId = userInfo.get_id();
+        eventLoginData.userName = userInfo.getNickname();
+        eventLoginData.phone = userInfo.getContacts();
+        eventLoginData.phoneId = phoneId;
+        LogUtils.loge("logPresenter", "phoneId = " + phoneId);
+        //TODO 处理Character信息
+//                      mCharacter = userInfo.getCharacter();
+        String roles = userInfo.getRoles();
+        eventLoginData.roles = roles;
+        String isSpecific = userInfo.getIsSpecific();
+        eventLoginData.isSupperAccount = getIsSupperAccount(isSpecific);
+        eventLoginData.hasStation = getHasStationDeploy(grants);
+        eventLoginData.hasContract = getHasContract(grants);
+        eventLoginData.hasScanLogin = getHasScanLogin(grants);
+        eventLoginData.hasSubMerchant = getHasSubMerchant(roles, isSpecific);
+        eventLoginData.hasInspectionTaskList = getHasInspectionTaskList(grants);
+        eventLoginData.hasInspectionTaskModify = getHasInspectionTaskModify(grants);
+        eventLoginData.hasInspectionDeviceList = getHasInspectionDeviceList(grants);
+        eventLoginData.hasInspectionDeviceModify = getHasInspectionDeviceModify(grants);
+        eventLoginData.hasAlarmInfo = getHasAlarmInfo(grants);
+        eventLoginData.hasDeviceBrief = getHasDeviceBriefList(grants);
+        eventLoginData.hasSignalCheck = getHasSignalCheck(grants);
+        eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
+        LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
+        //
+        UserInfo.Account account = userInfo.getAccount();
+        if (account != null) {
+            String id = account.getId();
+            boolean totpEnable = account.isTotpEnable();
+            LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
+            if (totpEnable) {
+                eventLoginData.needAuth = true;
             }
         }
+        return eventLoginData;
     }
 
     /**
@@ -202,11 +61,7 @@ public class MenuPageFactory {
         if (grants != null) {
             List<String> station = grants.getStation();
             if (station != null) {
-                for (String str : station) {
-                    if (str.equals("deploy")) {
-                        return true;
-                    }
-                }
+                return station.contains("deploy");
             }
 
         }
@@ -233,11 +88,7 @@ public class MenuPageFactory {
         if (grants != null) {
             List<String> contract = grants.getContract();
             if (contract != null) {
-                for (String str : contract) {
-                    if ("list".equals(str) || "create".equals(str)) {
-                        return true;
-                    }
-                }
+                return contract.contains("list") || contract.contains("create");
             }
         }
         return false;
@@ -253,11 +104,141 @@ public class MenuPageFactory {
         if (grants != null) {
             List<String> tv = grants.getTv();
             if (tv != null) {
-                for (String str : tv) {
-                    if ("qrcode".equals(str)) {
-                        return true;
-                    }
-                }
+                return tv.contains("qrcode");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否有子账户权限
+     *
+     * @param roles
+     * @param isSupperAccountStr
+     * @return
+     */
+    public static boolean getHasSubMerchant(String roles, String isSupperAccountStr) {
+        return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr) || !"business".equalsIgnoreCase(roles);
+    }
+
+    /**
+     * 判断巡检任务列表权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasInspectionTaskList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> inspectTask = grants.getInspectTask();
+            if (inspectTask != null) {
+                return inspectTask.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有修改任务权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasInspectionTaskModify(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> inspectTask = grants.getInspectTask();
+            if (inspectTask != null) {
+                return inspectTask.contains("modifyStatus");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有设备任务列表权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasInspectionDeviceList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> inspectDevice = grants.getInspectDevice();
+            if (inspectDevice != null) {
+                return inspectDevice.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否有设备巡检任务修改权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasInspectionDeviceModify(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> inspectDevice = grants.getInspectDevice();
+            if (inspectDevice != null) {
+                return inspectDevice.contains("modify");
+            }
+        }
+        return false;
+    }
+
+
+    /**
+     * 判断是否有预警权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasAlarmInfo(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsAlarm = grants.getAlarm();
+            if (grantsAlarm != null) {
+                return grantsAlarm.contains("list");
+            }
+        }
+        return false;
+    }
+
+    public static boolean getHasDeviceBriefList(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("briefList") && grantsDevice.contains("statusStatistics");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 信号测试权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasSignalCheck(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("signalCheck");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 信号配置权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasSignalConfig(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("signalConfig");
             }
         }
         return false;

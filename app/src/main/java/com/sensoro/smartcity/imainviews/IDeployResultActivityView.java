@@ -14,7 +14,7 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setNameTextView(String name);
 
-    void setContentTextView(String content);
+    void setContactTextView(String content);
 
     void setStatusTextView(String status);
 
@@ -27,4 +27,18 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
     void setUpdateTextViewVisible(boolean isVisible);
 
     void setContactAndSignalVisible(boolean isVisible);
+
+    void setStateTextView(String msg);
+
+    void setDeployResultContinueText(String text);
+
+    void setDeployResultBackHomeText(String text);
+
+    void setDeployResultContinueVisible(boolean isVisible);
+
+    void setStateTextViewVisible(boolean isVisible);
+
+    void setArrowsLeftVisible(boolean isVisible);
+
+    void setTitleText(String text);
 }

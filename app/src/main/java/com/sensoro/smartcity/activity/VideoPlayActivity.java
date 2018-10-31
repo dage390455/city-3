@@ -18,6 +18,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepicker.util.NavigationBarChangeListener;
 import com.lzy.imagepicker.util.Utils;
@@ -42,6 +43,7 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
     private ImageItem mImageItem;
     private SystemBarTintManager tintManager;
     private ProgressUtils mProgressUtils;
+    private ImmersionBar immersionBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,18 +61,21 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         //
         vv_play = (MyVideoView) findViewById(R.id.vv_play);
         //
+        immersionBar = ImmersionBar.with(this);
+        immersionBar.fitsSystemWindows(true).statusBarColor(R.color.white).statusBarDarkFont(true).init();
         //因为状态栏透明后，布局整体会上移，所以给头部加上状态栏的margin值，保证头部不会被覆盖
         topBar = findViewById(com.lzy.imagepicker.R.id.top_bar);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) topBar.getLayoutParams();
-            params.topMargin = Utils.getStatusHeight(this);
-            topBar.setLayoutParams(params);
-        }
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+//            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) topBar.getLayoutParams();
+//            params.topMargin = Utils.getStatusHeight(this);
+//            topBar.setLayoutParams(params);
+//        }
         topBar.findViewById(com.lzy.imagepicker.R.id.btn_ok).setVisibility(View.GONE);
         topBar.findViewById(com.lzy.imagepicker.R.id.btn_back).setOnClickListener(this);
         ImageView mBtnDel = (ImageView) findViewById(com.lzy.imagepicker.R.id.btn_del);
         mBtnDel.setOnClickListener(this);
         topBar.findViewById(com.lzy.imagepicker.R.id.btn_back).setOnClickListener(this);
+
         mTitleCount = (TextView) findViewById(com.lzy.imagepicker.R.id.tv_des);
         mTitleCount.setText("视频");
         NavigationBarChangeListener.with(this, NavigationBarChangeListener.ORIENTATION_HORIZONTAL)
@@ -84,14 +89,14 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         mImageItem = (ImageItem) intent.getSerializableExtra("path_record");
         if (mImageItem != null) {
             mProgressUtils.showProgress();
-            Log.e("VideoPlayActivity", "path = " + mImageItem.recordPath);
-            vv_play.setVideoPath(mImageItem.recordPath);
+            Log.e("VideoPlayActivity", "path = " + mImageItem.path);
+            vv_play.setVideoPath(mImageItem.path);
             vv_play.setOnPreparedListener(this);
             vv_play.setOnErrorListener(this);
             if (!mImageItem.fromUrl) {
-                File file = new File(mImageItem.recordPath);
+                File file = new File(mImageItem.path);
                 Log.e("VideoPlayActivity", "path size = " + file.length());
-//            vv_play.setVideoPath(mImageItem.recordPath);
+//            vv_play.setVideoPath(mImageItem.thumbPath);
             }
         }
 
@@ -148,12 +153,14 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
     }
 
     private void deleteFile() {
-        //删除视频
+
         try {
-            File file = new File(mImageItem.recordPath);
+            //删除视频缩略图
+            File file = new File(mImageItem.thumbPath);
             if (file.exists()) {
                 file.delete();
             }
+            //删除视频
             File file1 = new File(mImageItem.path);
             if (file1.exists()) {
                 file1.delete();
@@ -198,6 +205,10 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
         vv_play.release();
+
+        if(immersionBar != null){
+            immersionBar.destroy();
+        }
         super.onDestroy();
     }
 

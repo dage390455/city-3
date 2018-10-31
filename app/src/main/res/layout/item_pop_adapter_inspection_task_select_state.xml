@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_pop_select_ll_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_marginStart="12dp"
+    >
+    <TextView
+        android:id="@+id/item_pop_tv_select_state"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="12dp"
+        android:textSize="14sp"
+        />
+    <TextView
+        android:id="@+id/item_pop_tv_select_count"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:textSize="12sp"
+        android:textColor="@color/c_252525"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="12dp"
+        />
+
+
+</LinearLayout>

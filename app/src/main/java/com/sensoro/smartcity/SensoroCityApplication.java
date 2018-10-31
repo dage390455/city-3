@@ -1,10 +1,20 @@
 package com.sensoro.smartcity;
 
+import android.content.Context;
+import android.content.res.AssetManager;
+import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.Message;
+import android.support.annotation.NonNull;
 import android.support.multidex.MultiDexApplication;
+import android.support.v7.app.AppCompatDelegate;
+import android.util.Log;
 
+import com.amap.api.location.AMapLocation;
+import com.amap.api.location.AMapLocationClient;
+import com.amap.api.location.AMapLocationClientOption;
+import com.amap.api.location.AMapLocationListener;
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
@@ -14,12 +24,27 @@ import com.lzy.imagepicker.view.CropImageView;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshFooterCreator;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshHeaderCreator;
+import com.scwang.smartrefresh.layout.api.DefaultRefreshInitializer;
+import com.scwang.smartrefresh.layout.api.RefreshFooter;
+import com.scwang.smartrefresh.layout.api.RefreshHeader;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
+import com.scwang.smartrefresh.layout.header.ClassicsHeader;
+import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.model.DeviceTypeModel;
+import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
+import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.util.BleObserver;
+import com.sensoro.smartcity.util.DynamicTimeFormat;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.NotificationUtils;
 import com.sensoro.smartcity.util.Repause;
@@ -32,29 +57,77 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.yixia.camera.VCamera;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
+
+import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE;
+import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE_RESOURCE;
+import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE_VALUES;
+import static com.sensoro.smartcity.constant.Constants.SENSOR_MENU_MATCHER_ARRAY;
 
 /**
  * Created by sensoro on 17/7/24.
  */
 
-public class SensoroCityApplication extends MultiDexApplication implements Repause
-        .Listener, SensoroPushListener, OnResultListener<AccessToken>, Runnable {
+public class SensoroCityApplication extends MultiDexApplication implements Repause.Listener, SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
     private final List<DeviceInfo> mDeviceInfoList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
-    public int saveSearchType = Constants.TYPE_DEVICE_NAME;
     private NotificationUtils mNotificationUtils;
     private static boolean isAPPBack = true;
     private static PushHandler pushHandler;
     public UploadManager uploadManager;
     public volatile boolean hasGotToken = false;
     public static String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
+    public AMapLocationClient mLocationClient;
+    public ArrayList<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
+    public BLEDeviceManager bleDeviceManager;
+    public DeviceTypeMutualModel mDeviceTypeMutualModel;
 
-    //    public static String VIDEO_PATH =  "/sdcard/SensroroCity/";
+    static {
+        //启用矢量图兼容
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+        //设置全局默认配置（优先级最低，会被其他设置覆盖）
+        SmartRefreshLayout.setDefaultRefreshInitializer(new DefaultRefreshInitializer() {
+            @Override
+            public void initialize(@NonNull Context context, @NonNull RefreshLayout layout) {
+                //全局设置（优先级最低）
+//                layout.setEnableLoadMore(false);
+                layout.setEnableAutoLoadMore(true);
+                layout.setEnableOverScrollDrag(false);
+                layout.setEnableOverScrollBounce(true);
+                layout.setEnableLoadMoreWhenContentNotFull(true);
+                layout.setEnableFooterFollowWhenLoadFinished(true);
+                layout.setEnableScrollContentWhenRefreshed(true);
+            }
+        });
+        //设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshHeaderCreator(new DefaultRefreshHeaderCreator() {
+            @NonNull
+            @Override
+            public RefreshHeader createRefreshHeader(@NonNull Context context, @NonNull RefreshLayout layout) {
+                //全局设置主题颜色（优先级第二低，可以覆盖 DefaultRefreshInitializer 的配置，与下面的ClassicsHeader绑定）
+                layout.setPrimaryColorsId(android.R.color.white);
+
+                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat("更新于 %s"));
+            }
+        });
+        //设置全局的Footer构建器
+        SmartRefreshLayout.setDefaultRefreshFooterCreator(new DefaultRefreshFooterCreator() {
+            @Override
+            public RefreshFooter createRefreshFooter(Context context, RefreshLayout layout) {
+                //指定为经典Footer，默认是 BallPulseFooter
+                return new ClassicsFooter(context).setDrawableSize(20);
+            }
+        });
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -94,16 +167,64 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         return instance;
     }
 
-    public void addData(List<DeviceInfo> list) {
-        this.mDeviceInfoList.addAll(list);
+    public synchronized void addData(List<DeviceInfo> list) {
+        if (list.size() > 0) {
+            HashSet<DeviceInfo> hashSet = new HashSet<>(mDeviceInfoList);
+            hashSet.addAll(list);
+            this.mDeviceInfoList.clear();
+            this.mDeviceInfoList.addAll(hashSet);
+            Collections.sort(mDeviceInfoList);
+        }
     }
 
-    public void setData(List<DeviceInfo> list) {
+    public synchronized void setData(List<DeviceInfo> list) {
         this.mDeviceInfoList.clear();
-        this.mDeviceInfoList.addAll(list);
-
+        this.mDeviceInfoList.addAll(new HashSet<>(list));
+        Collections.sort(mDeviceInfoList);
     }
 
+    private void initSensoroSDK() {
+        try {
+            bleDeviceManager = BLEDeviceManager.getInstance(this);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                bleDeviceManager.setForegroundScanPeriod(3 * 1000);
+                bleDeviceManager.setOutOfRangeDelay(7 * 1000);
+            }
+//            else if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+//                bleDeviceManager.setForegroundScanPeriod(5000);
+//                bleDeviceManager.setOutOfRangeDelay(15000);
+//            }
+            else {
+                bleDeviceManager.setOutOfRangeDelay(7 * 1000);
+            }
+            bleDeviceManager.setBackgroundMode(false);
+            bleDeviceManager.setBLEDeviceListener(BleObserver.getInstance());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }//yangzhiqiang@sensoro.com 123456
+    }
+
+    private void locate() {
+        mLocationClient = new AMapLocationClient(this);
+        //设置定位回调监听
+        mLocationClient.setLocationListener(this);
+        //初始化定位参数
+        AMapLocationClientOption mLocationOption = new AMapLocationClientOption();
+        //设置定位模式为Hight_Accuracy高精度模式，Battery_Saving为低功耗模式，Device_Sensors是仅设备模式
+        mLocationOption.setLocationMode(AMapLocationClientOption.AMapLocationMode.Hight_Accuracy);
+        //设置是否返回地址信息（默认返回地址信息）
+        mLocationOption.setNeedAddress(true);
+        //设置是否允许模拟位置,默认为false，不允许模拟位置
+        mLocationOption.setMockEnable(false);
+        //设置定位间隔,单位毫秒,默认为2000ms
+        mLocationOption.setInterval(2000);
+        mLocationOption.setHttpTimeOut(20000);
+        //给定位客户端对象设置定位参数
+        mLocationClient.setLocationOption(mLocationOption);
+        //启动定位
+        mLocationClient.startLocation();
+    }
 
     public List<DeviceInfo> getData() {
         return mDeviceInfoList;
@@ -119,13 +240,14 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         super.onTerminate();
         mDeviceInfoList.clear();
         Repause.unregisterListener(this);
+        mLocationClient.onDestroy();
     }
 
     private void init() {
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
-        mNotificationUtils = new NotificationUtils(this);
+        initSensoroSDK();
         ThreadPoolManager.getInstance().execute(this);
     }
 
@@ -139,7 +261,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
         // 开启log输出,ffmpeg输出到logcat
         VCamera.setDebugMode(false);
-
         // 初始化拍摄SDK，必须
         VCamera.initialize(this);
     }
@@ -217,7 +338,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         //关闭热更新
         Beta.enableHotfix = false;
         // 统一初始化Bugly产品，包含Beta
-        Bugly.init(getApplicationContext(), "ab6c4abe4f", true, strategy);
+        Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
 //        Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
     }
 
@@ -271,7 +392,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     @Override
     public void onPushCallBack(String message) {
-        LogUtils.loge(this, "pushNotification---isAPPBack = " + isAPPBack);
+        LogUtils.loge("hcs", "pushNotification---isAPPBack = " + isAPPBack);
         if (isAPPBack) {
             mNotificationUtils.sendNotification(message);
         }
@@ -294,19 +415,88 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     }
 
     @Override
+    public void onLocationChanged(AMapLocation aMapLocation) {
+        if (aMapLocation != null) {
+            if (aMapLocation.getErrorCode() == 0) {
+                //可在其中解析amapLocation获取相应内容。
+                double lat = aMapLocation.getLatitude();//获取纬度
+                double lon = aMapLocation.getLongitude();//获取经度
+//            mStartPosition = new LatLng(lat, lon);
+                LogUtils.loge(this, "定位信息------->lat = " + lat + ",lon = =" + lon);
+            } else {
+                //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                Log.e("地图错误", "定位失败, 错误码:" + aMapLocation.getErrorCode() + ", 错误信息:"
+                        + aMapLocation.getErrorInfo());
+            }
+
+        }
+    }
+
+    @Override
     public void run() {
         initORC();
         SensoroPushManager.getInstance().registerSensoroPushListener(this);
         Repause.init(this);
         Repause.registerListener(this);
+        mNotificationUtils = new NotificationUtils(this);
         api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
         api.registerApp(Constants.APP_ID);
 //        FMMapSDK.init(this);
         //
+        initVc();
+        initDeviceType();
         initImagePicker();
         initUploadManager();
+        locate();
+        paseDeviceJsonByAssets();
         initBugLy();
-        initVc();
+    }
+
+    private void paseDeviceJsonByAssets() {
+        StringBuilder sb = new StringBuilder();
+        AssetManager assetManager = getAssets();
+        BufferedReader bufferedReader = null;
+        try {
+            bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open("deviceModel.json"), "utf-8"));
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                sb.append(line);
+            }
+            bufferedReader.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (bufferedReader != null) {
+                    bufferedReader.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        mDeviceTypeMutualModel = RetrofitServiceHelper.INSTANCE.getGson().fromJson(sb.toString(), DeviceTypeMutualModel.class);
+    }
+
+    private void initDeviceType() {
+        for (int i = 0; i < SELECT_TYPE_VALUES.length; i++) {
+            mDeviceTypeList.add(new DeviceTypeModel(SELECT_TYPE[i], SELECT_TYPE_RESOURCE[i], SELECT_TYPE_VALUES[i]
+                    , SENSOR_MENU_MATCHER_ARRAY[i]));
+        }
+    }
+
+    /**
+     * 根据unionType获取设备
+     *
+     * @param unionType
+     */
+    public DeviceTypeModel getDeviceTypeName(String unionType) {
+        for (DeviceTypeModel deviceTypeModel : mDeviceTypeList) {
+            if (deviceTypeModel.matcherType.equals(unionType)) {
+                return deviceTypeModel;
+            }
+        }
+        return null;
     }
 
     /**

@@ -3,135 +3,68 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.PopupWindow;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.adapter.MainPagerAdapter;
-import com.sensoro.smartcity.adapter.MenuInfoAdapter;
+import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMainView;
-import com.sensoro.smartcity.model.EventLoginData;
-import com.sensoro.smartcity.model.MenuPageInfo;
 import com.sensoro.smartcity.presenter.MainPresenter;
-import com.sensoro.smartcity.util.WidgetUtil;
-import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroPager;
+import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.widget.HomeViewPager;
 import com.sensoro.smartcity.widget.SensoroToast;
-
-import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.Position;
 
 import java.util.List;
 
-import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
-import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView, AdapterView
-        .OnItemClickListener, View
-        .OnClickListener {
-    private MenuInfoAdapter mMenuInfoAdapter = null;
-    private SensoroPager sensoroPager = null;
-    private MenuDrawer mMenuDrawer = null;
-    private ListView mListView = null;
-    private TextView mNameTextView = null;
-    private TextView mPhoneTextView = null;
-    private TextView mVersionTextView = null;
-    private LinearLayout mExitLayout = null;
+public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView
+        , RadioGroup.OnCheckedChangeListener {
 
-    private ProgressUtils mProgressUtils;
-    private MainPagerAdapter mainPagerAdapter;
 
+    @BindView(R.id.ac_main_hvp_content)
+    HomeViewPager acMainHvpContent;
+    @BindView(R.id.ac_main_rb_main)
+    RadioButton acMainRbMain;
+    @BindView(R.id.ac_main_rb_warning)
+    RadioButton acMainRbWarning;
+    @BindView(R.id.ac_main_rb_manage)
+    RadioButton acMainRbManage;
+    @BindView(R.id.ac_main_rl_guide)
+    RadioGroup acMainRlGuide;
+    @BindView(R.id.ac_main_tv_warning_count)
+    TextView acMainTvWarningCount;
+
+    private MainFragmentPageAdapter mPageAdapter;
+    private PopupWindow mPopupWindow;
+    private int mode;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        initWidget();
+        setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
+        initView();
         mPresenter.initData(mActivity);
-    }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        setLeftMenuExitButtonState();
-        mPresenter.setAppVersion();
-    }
-
-    @Override
-    protected MainPresenter createPresenter() {
-        return new MainPresenter();
-    }
-
-    @Override
-    protected void onDestroy() {
-        mProgressUtils.destroyProgress();
-        super.onDestroy();
-    }
-
-    public boolean isSupperAccount() {
-        return mPresenter.isSupperAccount();
-    }
-
-    private void initWidget() {
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mMenuDrawer = MenuDrawer.attach(mActivity, MenuDrawer.Type.OVERLAY, Position.LEFT, MenuDrawer
-                .MENU_DRAG_WINDOW);
-        mMenuDrawer.setContentView(R.layout.content_main);
-        mMenuDrawer.setDropShadowEnabled(false);
-        mMenuDrawer.setDrawOverlay(false);
-        mMenuDrawer.setMenuView(R.layout.main_left_menu);
-        int width = getWindowManager().getDefaultDisplay().getWidth() / 5 * 3;
-        mMenuDrawer.setMenuSize(width);
-        //
-        mListView = (ListView) mMenuDrawer.findViewById(R.id.left_menu_list);
-        mNameTextView = (TextView) findViewById(R.id.left_menu_name);
-        mPhoneTextView = (TextView) findViewById(R.id.left_menu_phone);
-        mVersionTextView = (TextView) findViewById(R.id.app_version);
-        mExitLayout = (LinearLayout) findViewById(R.id.main_left_exit);
-        mExitLayout.setOnClickListener(this);
-        //
-        mMenuInfoAdapter = new MenuInfoAdapter(mActivity);
-        mListView.setAdapter(mMenuInfoAdapter);
-        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-        mListView.setOnItemClickListener(this);
-        sensoroPager = (SensoroPager) findViewById(R.id.main_container);
-        sensoroPager.setOffscreenPageLimit(8);
-        mainPagerAdapter = new MainPagerAdapter(getSupportFragmentManager());
-        sensoroPager.setAdapter(mainPagerAdapter);
-    }
-
-    public String getRoles() {
-        return mPresenter.getRoles();
     }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK) {
-            if (mPresenter.onKeyDown(keyCode, event)) {
-                if (sensoroPager.getCurrentItem() != 0 && !isSupperAccount()) {
-                    onItemClick(null, null, 0, 0);
-                } else {
-                    mPresenter.exit();
-                }
-            }
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
+        return mPresenter.onKeyDown(keyCode, event);
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        closeMenu();
-        setMenuSelected(position);
-        mPresenter.clickMenuItem((int) mMenuInfoAdapter.getItemId(position));
+    private void initView() {
+        initViewPager();
+        acMainRlGuide.setOnCheckedChangeListener(this);
     }
-
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -139,101 +72,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         mPresenter.handleActivityResult(requestCode, resultCode, data);
     }
 
-
     @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.main_left_exit:
-                mPresenter.logout();
-                break;
-        }
+    protected MainPresenter createPresenter() {
+        return new MainPresenter();
     }
 
-
-    @Override
-    public void setAPPVersionCode(String versionStr) {
-        mVersionTextView.setText(versionStr);
-    }
-
-    @Override
-    public void setMenuSelected(int position) {
-        mMenuInfoAdapter.setSelectedIndex(position);
-        mListView.setSelection(position);
-    }
-
-
-    @Override
-    public void showAccountInfo(String name, String phone) {
-        mNameTextView.setText(TextUtils.isEmpty(name) ? "" : name);
-        mPhoneTextView.setText(TextUtils.isEmpty(phone) ? "" : phone);
-    }
-
-    @Override
-    public void setCurrentPagerItem(int position) {
-        sensoroPager.setCurrentItem(position, false);
-    }
-
-    @Override
-    public void updateMenuPager(List<MenuPageInfo> menuPageInfos) {
-        mMenuInfoAdapter.updateMenuPager(menuPageInfos);
-    }
-
-    @Override
-    public void changeAccount(EventLoginData eventLoginData) {
-        mPresenter.changeAccount(eventLoginData);
-    }
-
-    @Override
-    public void updateMainPageAdapterData(List<Fragment> fragments) {
-        mainPagerAdapter.updateMainPagerAdapter(fragments);
-    }
-
-    @Override
-    public void openMenu() {
-        mMenuDrawer.openMenu();
-    }
-
-    /**
-     * 检查是否全面屏
-     */
-    private void setLeftMenuExitButtonState() {
-        if (mExitLayout != null) {
-            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(MATCH_PARENT, WRAP_CONTENT);
-            if (WidgetUtil.navigationBarExist(mActivity)) {
-                params.setMargins(0, 0, 0, getResources().getDimensionPixelSize(R.dimen.navigation_bar_exist));
-                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
-            } else {
-                params.setMargins(0, 0, 0, 0);
-                params.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, -1);
-            }
-            mExitLayout.setLayoutParams(params);
-        }
-    }
-
-    @Override
-    public void closeMenu() {
-        mMenuDrawer.closeMenu();
-    }
-
-    @Override
-    public void showProgressDialog() {
-        mProgressUtils.showProgress();
-    }
-
-    @Override
-    public void dismissProgressDialog() {
-        mProgressUtils.dismissProgress();
-    }
-
-    @Override
-    public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(mActivity, msg, Toast.LENGTH_SHORT).show();
-    }
-
-    @Override
-    public void toastLong(String msg) {
-
-    }
 
     @Override
     public void startAC(Intent intent) {
@@ -258,5 +101,128 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     @Override
     public void setIntentResult(int resultCode, Intent data) {
 
+    }
+
+    @Override
+    public void showProgressDialog() {
+
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+
+    }
+
+    @Override
+    public void toastShort(String msg) {
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void toastLong(String msg) {
+
+    }
+
+
+    @Override
+    public void onCheckedChanged(RadioGroup group, int checkedId) {
+        switch (checkedId) {
+            case R.id.ac_main_rb_main:
+                if (acMainRbMain.isChecked()) {
+                    setHpCurrentItem(0);
+                }
+
+                break;
+            case R.id.ac_main_rb_warning:
+                if (acMainRbWarning.isChecked()) {
+                    setHpCurrentItem(1);
+                }
+                break;
+            case R.id.ac_main_rb_manage:
+                if (acMainRbManage.isChecked()) {
+                    setHpCurrentItem(2);
+                }
+                break;
+
+        }
+    }
+
+
+    @Override
+    public void setHpCurrentItem(int position) {
+        acMainHvpContent.setCurrentItem(position);
+
+    }
+
+    @Override
+    public void setRbChecked(int id) {
+        acMainRlGuide.check(id);
+    }
+
+    @Override
+    public void updateMainPageAdapterData(List<Fragment> fragments) {
+        mPageAdapter.setFragmentList(fragments);
+        mPageAdapter.notifyDataSetChanged();
+    }
+
+    @Override
+    public void setHasDeviceBriefControl(boolean hasDeviceBriefControl) {
+        acMainRbMain.setVisibility(hasDeviceBriefControl ? View.VISIBLE : View.GONE);
+
+    }
+
+    @Override
+    public void setHasAlarmInfoControl(boolean hasDeviceAlarmInfoControl) {
+        acMainRbWarning.setVisibility(hasDeviceAlarmInfoControl ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setHasManagerControl(boolean hasManagerControl) {
+        acMainRbManage.setVisibility(hasManagerControl ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setAlarmWarnCount(int count) {
+        try {
+            if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+                if (count > 0) {
+                    acMainTvWarningCount.setVisibility(View.VISIBLE);
+                    if (count > 99) {
+                        count = 99;
+                    }
+                    acMainTvWarningCount.setText(String.valueOf(count));
+                } else {
+                    acMainTvWarningCount.setVisibility(View.GONE);
+                }
+            } else {
+                acMainTvWarningCount.setVisibility(View.GONE);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+
+    }
+
+    @Override
+    public boolean isHomeFragmentChecked() {
+        return acMainRbMain.isChecked();
+    }
+
+
+    private void initViewPager() {
+        mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager());
+        acMainHvpContent.setAdapter(mPageAdapter);
+        acMainHvpContent.setOffscreenPageLimit(5);
+    }
+
+    @Override
+    public boolean isActivityOverrideStatusBar() {
+        immersionBar = ImmersionBar.with(mActivity);
+        immersionBar
+                .transparentStatusBar()
+                .statusBarDarkFont(true)
+                .init();
+        return true;
     }
 }

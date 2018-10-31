@@ -10,17 +10,23 @@ public interface Constants {
     //
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
+    String SOCKET_EVENT_DEVICE_ALARM_DISPLAY = "city.alarm.display";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
     String PREFERENCE_ALARM_SEARCH_HISTORY = "preference_alarm_search_history";
     String PREFERENCE_MERCHANT_HISTORY = "city_merchant_history";
-    String PREFERENCE_DEPLOY_NAME_HISTORY = "city_deploy_name_history";
+    String PREFERENCE_DEPLOY_HISTORY = "preference_deploy_history";
     String PREFERENCE_DEPLOY_TAG_HISTORY = "city_deploy_tag_history";
     String PREFERENCE_DEPLOY_CONTACT_HISTORY = "city_deploy_contact_history";
     String PREFERENCE_DEPLOY_CONTENT_HISTORY = "city_deploy_content_history";
     String PREFERENCE_KEY_DEVICE = "key_search_history_keyword";
+    //
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
+    String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
+    String PREFERENCE_KEY_DEPLOY_TAG = "preference_key_deploy_tag";
+    String PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES = "preference_key_local_devices_mergetypes";
+    //
     String PREFERENCE_KEY_DEPLOY_PHONE = "preference_key_deploy_phone";
     //
     String PREFERENCE_KEY_DEVICE_NAME = "preference_key_device_name";
@@ -43,40 +49,79 @@ public interface Constants {
     String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
-    String[] INDEX_TYPE_ARRAY = {
+    //    String[] INDEX_TYPE_ARRAY = {
+//            "全部类型",
+//            "紧急呼叫", "追踪器", "甲烷",
+//            "一氧化碳", "二氧化碳", "倾角",
+//            "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
+//            "火焰", "光线", "液化石油气", "二氧化氮",
+//            "PM2.5/10", "烟感", "温湿度",
+//            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
+//    };
+    String[] SELECT_TYPE = {
             "全部类型",
-            "紧急呼叫", "追踪器", "甲烷",
-            "一氧化碳", "二氧化碳", "倾角",
-            "井位", "水位检测", "地磁", "门锁检测", "跑冒滴漏",
-            "火焰", "光线", "液化石油气", "二氧化氮",
-            "PM2.5/10", "烟感", "温湿度",
-            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
+            "甲烷", "一氧化碳", "二氧化碳",
+            "二氧化氮", "PM2.5/10", "光线",
+            "井位", "烟感", "温湿度", "倾角", "火焰",
+            "水位监测", "跑冒滴漏", "液化石油气", "紧急呼叫",
+            "追踪器", "消防液压", "地磁",
+            "门锁监测", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
     };
-    String INDEX_TYPE_VALUES[] = {
-            "all",
-            "alarm", "altitude,latitude,longitude", "ch4",
-            "co", "co2", "collision,pitch,roll",
-            "cover,level", "distance", "magnetic", "door", "drop",
-            "flame", "light", "lpg", "no2",
-            "pm10,pm2_5", "smoke", "humidity,temperature",
-            "waterPressure", "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+
+    Integer[] SELECT_TYPE_RESOURCE = {
+            R.drawable.type_all, R.drawable.type_ch4, R.drawable.type_co, R.drawable.type_co2,
+            R.drawable.type_no2, R.drawable.type_pm, R.drawable.type_light, R.drawable.type_well_position,
+            R.drawable.type_smoke, R.drawable.type_tempature_humidity, R.drawable.type_inclination,
+            R.drawable.type_flame, R.drawable.type_water_monitoring, R.drawable.type_leak,
+            R.drawable.type_gas, R.drawable.type_emergency_call, R.drawable.type_tracking_device,
+            R.drawable.type_fire_hydraulic, R.drawable.type_geomagnetic, R.drawable.type_lock_monitoring,
+            R.drawable.type_tempature, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
+            , R.mipmap.ic_sensor_electric_alarm, R.mipmap.ic_sensor_infrared,
+            R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
+    };
+
+    String SELECT_TYPE_VALUES[] = {
+            "all", "ch4", "co", "co2", "no2", "pm10,pm2_5", "light", "cover,level", "smoke",
+            "humidity,temperature", "collision,pitch,roll", "flame", "distance", "drop", "lpg",
+            "alarm", "altitude,latitude,longitude", "waterPressure", "magnetic", "door",
+            "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
             "TOTAL_POWER,VOLTAGE_A," +
             "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
             "manual_alarm", "sound_light_alarm"
-
     };
-    String SENSOR_MENU_ARRAY[] = {
-            "all",
-            "alarm", "latitude|longitude|altitude", "ch4",
-            "co", "co2", "collision|pitch|roll",
-            "cover|level", "distance", "magnetic", "door", "drop",
-            "flame", "light", "lpg", "no2",
-            "pm10|pm2_5", "smoke", "humidity|temperature",
-            "waterPressure", "temp1", "connection",
-            "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+    String SENSOR_MENU_MATCHER_ARRAY[] = {
+            "all", "ch4", "co", "co2", "no2", "pm10|pm2_5",
+            "light", "cover|level", "smoke", "humidity|temperature", "collision|pitch|roll", "flame",
+            "distance", "drop", "lpg", "alarm", "latitude|longitude|altitude", "waterPressure", "magnetic",
+            "door", "temp1", "connection", "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
             "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
             "manual_alarm", "sound_light_alarm"
     };
+    //    String INDEX_TYPE_VALUES[] = {
+//            "all",
+//            "alarm", "altitude,latitude,longitude", "ch4",
+//            "co", "co2", "collision,pitch,roll",
+//            "cover,level", "distance", "magnetic", "door", "drop",
+//            "flame", "light", "lpg", "no2",
+//            "pm10,pm2_5", "smoke", "humidity,temperature",
+//            "waterPressure", "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+//            "TOTAL_POWER,VOLTAGE_A," +
+//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//
+//    };
+//    String SENSOR_MENU_ARRAY[] = {
+//            "all",
+//            "alarm", "latitude|longitude|altitude", "ch4",
+//            "co", "co2", "collision|pitch|roll",
+//            "cover|level", "distance", "magnetic", "door", "drop",
+//            "flame", "light", "lpg", "no2",
+//            "pm10|pm2_5", "smoke", "humidity|temperature",
+//            "waterPressure", "temp1", "connection",
+//            "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
     Integer[] TYPE_MENU_RESOURCE = {
             R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
             R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,
@@ -97,7 +142,23 @@ public interface Constants {
             "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
             "magnetic", "tracker", "distance", "light"
     };
+
+    String[] confirmStatusArray = {"待确认", "真实火警", "误报", "测试/巡检", "安全隐患"};
+    int[] confirmStatusTextColorArray = {R.color.c_8058a5,R.color.c_f34a4a,R.color.c_8058a5,R.color.c_8058a5,R.color.c_ff8d34};
+
+    String[] confirmAlarmResultInfoArray = {"", "监测点或附近发生着火，需要立即进行扑救", "无任何火情和烟雾", "相关人员主动测试发出的预警",
+            "未发生着火，但现场确实存在隐患"};
+    String[] confirmAlarmTypeArray = {"其他", "用电异常", "生产作业", "吸烟", "室内生火", "烹饪", "燃气泄漏", "人为放火", "易燃物自燃"};
+    //    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房",};
+    String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房"};
     String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+
+    //巡检任务异常标签
+    String[] INSPECTION_EXCEPTION_TASGS = {"设备拆卸", "设备低电", "设备异常", "传感器异常", "指示灯损坏", "屏幕损坏", "按键损坏", "外观损坏", "设备丢失"};
+    //巡检任务状态颜色值及对应文本
+    int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5, R.color.c_3aa7f0, R.color.c_ff8d34, R.color.c_29c093, R.color.c_a6a6a6};
+    String[] INSPECTION_STATUS_TEXTS = {"待执行", "执行中", "超时未完成", "已完成", "超时完成"};
+    //
     String EXTRA_USER_ID = "extra_user_id";
     //
     String EXTRA_SAVE_NAME = "extra_save_name";
@@ -108,11 +169,25 @@ public interface Constants {
     String EXTRA_CHARACTER = "extra_character";
     String EXTRA_PHONE_ID = "extra_phone_id";
     String EXTRA_IS_SPECIFIC = "extra_is_specific";
+    String EXTRA_EVENT_LOGIN_DATA = "extra_event_login_data";
     String EXTRA_GRANTS_HAS_STATION = "extra_grants_has_station";
     String EXTRA_GRANTS_HAS_CONTRACT = "extra_grants_has_contract";
     String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
+    String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
+    String EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST = "extra_grants_has_inspection_task_list";
+    String EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY = "extra_grants_has_inspection_task_modify";
+    String EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST = "extra_grants_has_inspection_device_list";
+    String EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY = "extra_grants_has_inspection_device_modify";
+    String EXTRA_GRANTS_HAS_ALARM_LOG_INFO = "extra_grants_has_alarm_log_info";
+    String EXTRA_GRANTS_HAS_DEVICE_BRIEF = "extra_grants_has_device_brief";
+    String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK = "extra_grants_has_device_signal_check";
+    String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG = "extra_grants_has_device_signal_config";
     String EXTRA_DEVICE_INFO = "extra_device_info";
-    String EXTRA_IS_STATION_DEPLOY = "extra_is_station_deploy";
+    String EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO = "extra_inspection_deploy_old_device_info";
+    //扫描来源
+    String EXTRA_SCAN_ORIGIN_TYPE = "extra_scan_origin_type";
+    String EXTRA_DEPLOY_SUCCESS_ADDRESS = "extra_deploy_success_address";
+    //
     String EXTRA_SENSOR_SN = "extra_sn";
     String EXTRA_SENSOR_NAME = "extra_name";
     String EXTRA_SENSOR_TYPES = "extra_types";
@@ -136,19 +211,33 @@ public interface Constants {
     String EXTRA_ACTIVITY_CANCEL = "extra_activity_cancel";
     String EXTRA_SETTING_NAME_ADDRESS = "extra_setting_name_address";
     String EXTRA_SETTING_CONTACT = "extra_setting_contact";
+    String EXTRA_SETTING_DEPLOY_CONTACT = "extra_setting_deploy_contact";
     String EXTRA_SETTING_CONTENT = "extra_setting_content";
     String EXTRA_SETTING_INDEX = "extra_setting_index";
     String EXTRA_SETTING_TAG_LIST = "extra_tag_list";
     String EXTRA_CONTAINS_DATA = "extra_contains_data";
-    //
+    //部署相关
     String EXTRA_DEPLOY_PHOTO = "extra_deploy_photo";
     String EXTRA_DEPLOY_TO_PHOTO = "extra_deploy_to_photo";
+    String EXTRA_DEPLOY_TO_MAP = "extra_deploy_to_map";
+    String EXTRA_DEPLOY_TO_SN = "extra_deploy_to_sn";
+    String EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL = "extra_inspection_task_item_device_detail";
+    String EXTRA_DEPLOY_RECORD_DETAIL = "extra_deploy_record_detail";
+    String EXTRA_JUST_DISPLAY_PIC = "extra_just_display_pic";
+    String EXTRA_DEPLOY_DISPLAY_MAP = "extra_deploy_display_map";
+
+    //巡检相关
+    String EXTRA_INSPECTION_START_TIME = "extra_inspection_start_time";
+    String EXTRA_INSPECTION_INDEX_TASK_INFO = "extra_inspection_index_task_info";
+    String EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE = "extra_inspection_instruction_device_type";
+
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     //
     String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";
     //
     String PREFERENCE_LOGIN_ID = "preference_login_id";
+    String PREFERENCE_LOCAL_DEVICES_MERGETYPES = "preference_local_devices_mergetypes";
     String PREFERENCE_LOGIN_NAME_PWD = "preference_login_name_pwd";
     String PREFERENCE_SPLASH_LOGIN_DATA = "preference_main_login";
     String PREFERENCE_KEY_NAME = "preference_key_name";
@@ -171,6 +260,23 @@ public interface Constants {
     int DIRECTION_UP = 1;
     int TYPE_LIST = 0;
     int TYPE_GRID = 1;
+
+    //信号测试 band
+    String LORA_BAND_US915 = "US915";
+    String LORA_BAND_EU433 = "EU433";
+    String LORA_BAND_EU868 = "EU868";
+    String LORA_BAND_AU915 = "AU915";
+    String LORA_BAND_AS923 = "AS923";
+    String LORA_BAND_SE433 = "SE433";
+    String LORA_BAND_SE470 = "SE470";
+    String LORA_BAND_SE915 = "SE915";
+    String LORA_BAND_SE780 = "SE780";
+    String LORA_BAND_CN470 = "CN470";
+    //
+    int MODEL_ALARM_STATUS_EVENT_CODE_CREATE = 0;
+    int MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY = 2;
+    int MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM = 3;
+    int MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM = 4;
     //
     String ENCODE = "HmacSHA512";
     String APP_ID = "wxa65d8bad62a982e1";
@@ -216,4 +322,23 @@ public interface Constants {
     int EVENT_DATA_SESSION_ID_OVERTIME = 0x26;
     int EVENT_DATA_CANCEL_AUTH = 0x27;
     int EVENT_DATA_AUTH_SUC = 0x28;
+    int EVENT_DATA_DEPLOY_MAP = 0x31;
+    int EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE = 0x32;
+    int EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE = 0x36;
+    int EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE = 0x40;
+    int EVENT_DATA_ALARM_FRESH_ALARM_DATA = 0x34;
+    int EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS = 0x35;
+    int EVENT_DATA_SCAN_LOGIN_SUCCESS = 0x39;
+
+    int EVENT_DATA_ALARM_POP_IMAGES = 0x33;
+
+
+    int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
+    int TYPE_SCAN_DEPLOY_STATION = 0x39;
+    int TYPE_SCAN_LOGIN = 0x30;
+    int TYPE_SCAN_DEPLOY_DEVICE_CHANGE = 0X37;
+    int TYPE_SCAN_INSPECTION = 0X38;
+    int TYPE_SCAN_DEPLOY_POINT_DISPLAY = 0x41;
+    int TYPE_SCAN_SIGNAL_CHECK = 0x42;
+
 }

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/shape_bg_solid_ff_corner"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="24dp"
+        android:text="确认监测点是否异常"
+        android:textColor="@color/c_25292d"
+        android:textSize="18sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="24dp"
+        android:background="@color/c_dfdfdf" />
+
+    <TextView
+        android:id="@+id/dialog_tv_exception"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_item_white_ee"
+        android:gravity="center"
+        android:paddingBottom="14dp"
+        android:paddingTop="14dp"
+        android:text="异常"
+        android:textColor="@color/c_ff8d34"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/c_dfdfdf" />
+
+    <TextView
+        android:id="@+id/dialog_tv_upload_change_device"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_item_white_ee"
+        android:gravity="center"
+        android:paddingBottom="14dp"
+        android:paddingTop="14dp"
+        android:text="上报异常并更换设备"
+        android:textColor="@color/c_ff8d34"
+        android:textSize="16sp" />
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/c_dfdfdf" />
+
+    <TextView
+        android:id="@+id/dialog_tv_waite"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/selector_item_white_ee_corner_left_right"
+        android:paddingBottom="14dp"
+        android:gravity="center"
+        android:paddingTop="14dp"
+        android:text="我再看看"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="16sp" />
+
+
+</LinearLayout>

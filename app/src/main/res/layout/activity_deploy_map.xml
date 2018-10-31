@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <include layout="@layout/item_include_text_title" />
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@color/c_fafafa"
+        android:contentDescription="@null" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <com.amap.api.maps.TextureMapView
+            android:id="@+id/tm_deploy_map"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/bt_deploy_map_signal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/shape_button_tiny"
+            android:paddingLeft="10dp"
+            android:paddingTop="3dp"
+            android:paddingBottom="3dp"
+            android:paddingRight="10dp"
+            android:text="信号 良"
+            android:textColor="@color/white"
+            android:textSize="12sp" />
+        <ImageView
+            android:id="@+id/iv_deploy_map_location"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/deploy_map_back_location"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="15dp"
+            android:layout_marginBottom="15dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="8dp"
+            android:paddingBottom="3dp"
+            android:paddingRight="10dp"/>
+    </RelativeLayout>
+
+
+    <TextView
+        android:id="@+id/tv_deploy_map_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_bg_corner_29c_shadow"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="保存"
+        android:textColor="@color/white" />
+</LinearLayout>

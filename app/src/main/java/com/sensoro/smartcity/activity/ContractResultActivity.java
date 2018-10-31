@@ -51,6 +51,7 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
         return new ContractResultActivityPresenter();
     }
 
+
     @OnClick({R.id.bt_share, R.id.iv_contract_result_back, R.id.tv_contract_info_title_finish})
     public void onViewClicked(View view) {
         switch (view.getId()) {

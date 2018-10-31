@@ -1,9 +1,7 @@
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-           xmlns:tools="http://schemas.android.com/tools"
-           tools:ignore="MissingTranslation">
+<resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
-    <string name="search_tips"> SN、Name、Tag</string>
+    <string name="search_tips"> SN/Name/Tag</string>
     <string name="search_alarm_tips">Name</string>
     <string name="cancel">Cancel</string>
     <string name="recent">Recent Search</string>
@@ -141,7 +139,7 @@
     <string name="misdescription">Mis</string>
     <string name="alarm_test">Test</string>
     <string name="alarm_risk">Risk</string>
-    <string name="confirming">Confirming</string>
+    <string name="confirming">Alarm Confirming</string>
     <string name="confirming_again">Confirming Again</string>
     <string name="setting_name_address">Name/Address</string>
     <string name="setting_tag">Setting Tag</string>
@@ -199,5 +197,6 @@
     <string name="menu_page_station">Station Deployment</string>
     <string name="menu_page_contract">Contract management</string>
     <string name="menu_page_scan_login">ScanLogin Fragment</string>
+    <string name="no_find_contact_phone_number">未找到联系人电话</string>
 
 </resources>

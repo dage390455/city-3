@@ -151,11 +151,11 @@ public class AlarmInfo implements Serializable {
         private String name;
         private String remark;
         private Event[] phoneList;
+
         //
         private List<String> images;
 
         private List<ScenesData> scenes;
-
 
         public List<ScenesData> getScenes() {
             return scenes;

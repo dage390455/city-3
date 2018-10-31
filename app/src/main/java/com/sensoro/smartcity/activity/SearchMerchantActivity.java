@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -27,6 +28,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISearchMerchantActivityView;
 import com.sensoro.smartcity.presenter.SearchMerchantActivityPresenter;
 import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
@@ -54,12 +56,16 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     ImageView mClearKeywordIv;
     @BindView(R.id.search_merchant_history_ll)
     LinearLayout mSearchHistoryLayout;
+    @BindView(R.id.search_merchant_ll_root)
+    LinearLayout mSearchMerchantRoot;
+
+
     @BindView(R.id.search_merchant_clear_btn)
     ImageView mClearBtn;
     @BindView(R.id.search_merchant_history_rv)
     RecyclerView mSearchHistoryRv;
-    @BindView(R.id.search_merchant_tips)
-    LinearLayout tipsLinearLayout;
+//    @BindView(R.id.search_merchant_tips)
+//    LinearLayout tipsLinearLayout;
     @BindView(R.id.ll_merchant_item)
     LinearLayout llMerchantItem;
     @BindView(R.id.merchant_current_name)
@@ -70,6 +76,12 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     ImageView merchantCurrentStatus;
     @BindView(R.id.merchant_activity_list)
     ListView merchantList;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
+    @BindView(R.id.no_content_tip)
+    TextView tvNoContentTip;
+    @BindView(R.id.rl_merchant_item)
+    RelativeLayout rlMerchantItem;
     private MerchantAdapter mMerchantAdapter;
     private ProgressUtils mProgressUtils;
     private SearchHistoryAdapter mSearchHistoryAdapter;
@@ -84,11 +96,24 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     }
 
     private void init() {
+        tvNoContentTip.setText("搜索不到相关内容");
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mClearKeywordIv.setOnClickListener(this);
         mKeywordEt.setOnEditorActionListener(this);
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
+
+        AppUtils.getInputSoftStatus(mSearchMerchantRoot, new AppUtils.InputSoftStatusListener() {
+            @Override
+            public void onKeyBoardClose() {
+                mKeywordEt.setCursorVisible(false);
+            }
+
+            @Override
+            public void onKeyBoardOpen() {
+                mKeywordEt.setCursorVisible(true);
+            }
+        });
         //弹出框value unit对齐，搜索框有内容点击历史搜索出现没有搜索内容
         final SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -158,7 +183,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
             case R.id.search_merchant_clear_iv:
                 mKeywordEt.getText().clear();
                 setClearKeywordIvVisible(false);
-                setTipsLinearLayoutVisible(false);
+//                setTipsLinearLayoutVisible(false);
                 setSearchHistoryLayoutVisible(true);
 //                updateSearchHistory();
                 setLlMerchantItemViewVisible(false);
@@ -191,6 +216,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     @Override
     public void setSearchHistoryLayoutVisible(boolean isVisible) {
         mSearchHistoryLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        rlMerchantItem.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+
     }
 
     @Override
@@ -200,7 +227,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
     @Override
     public void setTipsLinearLayoutVisible(boolean isVisible) {
-        tipsLinearLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+//        tipsLinearLayout.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -212,7 +240,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     public void setEditText(String text) {
         if (text != null) {
             mKeywordEt.setText(text);
-            mKeywordEt.setSelection(text.length());
+            mKeywordEt.setSelection(mKeywordEt.getText().toString().length());
         }
     }
 

@@ -147,6 +147,7 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
             checkView = itemView.findViewById(R.id.checkView);
             cbCheck = (SuperCheckBox) itemView.findViewById(R.id.cb_check);
             circleSelect = itemView.findViewById(R.id.circle_select);
+//            circleSelect.setColorFilter(mActivity.getResources().getColor(R.color.ip_color_accent));
             itemView.setLayoutParams(new AbsListView.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, mImageSize));
             //让图片是个正方形
         }
@@ -209,7 +210,12 @@ public class ImageRecyclerAdapter extends RecyclerView.Adapter<ViewHolder> {
             }
             //显示图片
             if (needReLoad) {
-                imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize);
+                if (imageItem.isRecord) {
+                    imagePicker.getImageLoader().displayImage(mActivity, imageItem.thumbPath, ivThumb, mImageSize, mImageSize);
+                } else {
+                    imagePicker.getImageLoader().displayImage(mActivity, imageItem.path, ivThumb, mImageSize, mImageSize);
+                }
+
             }
         }
 

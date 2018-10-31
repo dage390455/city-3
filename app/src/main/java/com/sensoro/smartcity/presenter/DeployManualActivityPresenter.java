@@ -6,8 +6,11 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployActivity;
+import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
+import com.sensoro.smartcity.activity.InspectionActivity;
+import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
+import com.sensoro.smartcity.activity.SignalCheckActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
@@ -15,14 +18,18 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
+import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
+import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetailModel;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
-import com.sensoro.smartcity.server.response.StationInfo;
-import com.sensoro.smartcity.server.response.StationInfoRsp;
+import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
+import com.sensoro.smartcity.util.DeployAnalyzerUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -30,13 +37,17 @@ import rx.schedulers.Schedulers;
 public class DeployManualActivityPresenter extends BasePresenter<IDeployManualActivityView> implements IOnCreate,
         Constants {
     private Activity mContext;
-    private boolean hasStation;
+    private int scanType = -1;
+    private InspectionIndexTaskInfo mTaskInfo;
+    private InspectionTaskDeviceDetail mDeviceDetail;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        hasStation = mContext.getIntent().getBooleanExtra(EXTRA_IS_STATION_DEPLOY, false);
+        scanType = mContext.getIntent().getIntExtra(EXTRA_SCAN_ORIGIN_TYPE, -1);
+        mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
+        mDeviceDetail = (InspectionTaskDeviceDetail) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO);
     }
 
     public void clickNext(String text) {
@@ -55,133 +66,248 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
         if (TextUtils.isEmpty(scanSerialNumber)) {
             getView().toastShort(mContext.getResources().getString(R.string.invalid_qr_code));
         } else {
-            if (hasStation) {
-                getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getStationDetail(scanSerialNumber.toUpperCase()).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<StationInfoRsp>() {
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onNext(StationInfoRsp stationInfoRsp) {
-                        refreshStation(stationInfoRsp);
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                            getView().toastShort(errorMsg);
-                        } else if (errorCode == 4013101 || errorCode == 4000013) {
-                            freshError(scanSerialNumber, null);
-                        } else {
-                            freshError(scanSerialNumber, errorMsg);
+            switch (scanType) {
+                case TYPE_SCAN_DEPLOY_STATION:
+                case TYPE_SCAN_DEPLOY_DEVICE:
+                    getView().showProgressDialog();
+                    DeployAnalyzerUtils.INSTANCE.getDeployAnalyzerResult(scanSerialNumber.toUpperCase(), mContext, new DeployAnalyzerUtils.OnDeployAnalyzerListener() {
+                        @Override
+                        public void onSuccess(Intent intent) {
+                            getView().dismissProgressDialog();
+                            getView().startAC(intent);
                         }
-                    }
-                });
-            } else {
-                getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSerialNumber.toUpperCase(), null, 1)
-                        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
 
-
-                    @Override
-                    public void onCompleted() {
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onNext(DeviceInfoListRsp deviceInfoListRsp) {
-                        refreshDevice(scanSerialNumber, deviceInfoListRsp);
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-//                        getView().toastShort(errorMsg);
-                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
-                            getView().toastShort(errorMsg);
-                        } else {
-                            freshError(scanSerialNumber, errorMsg);
+                        @Override
+                        public void onError(int errType, Intent intent, String errMsg) {
+                            getView().dismissProgressDialog();
+                            if (intent != null) {
+                                getView().startAC(intent);
+                            } else {
+                                getView().toastShort(errMsg);
+                            }
                         }
+                    });
+                    break;
+                case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                    changeDevice(scanSerialNumber);
+                    break;
+                case TYPE_SCAN_INSPECTION:
+                    scanInspectionDevice(scanSerialNumber);
+                    break;
+                case TYPE_SCAN_SIGNAL_CHECK:
+                    //信号测试
+                    scanSignalCheck(scanSerialNumber);
+                    break;
+                default:
+                    break;
+            }
+
+        }
+    }
+
+    private void scanSignalCheck(final String signalCheckNum) {
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(signalCheckNum.toUpperCase(), null, 1).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    getView().toastShort(errorMsg);
+                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DeployResultActivity.class);
+                    intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                    intent.putExtra(EXTRA_SENSOR_SN_RESULT, signalCheckNum);
+                    intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+                    getView().startAC(intent);
+                } else {
+                    //TODO 控制逻辑
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DeployResultActivity.class);
+                    intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                    intent.putExtra(EXTRA_SENSOR_SN_RESULT, signalCheckNum);
+                    intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+                    intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorMsg);
+                    getView().startAC(intent);
+                }
+            }
+
+            @Override
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                getView().dismissProgressDialog();
+                try {
+                    if (deviceInfoListRsp.getData().size() > 0) {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, SignalCheckActivity.class);
+                        intent.putExtra(EXTRA_DEVICE_INFO, deviceInfoListRsp.getData().get(0));
+                        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+//                        intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
+                        getView().startAC(intent);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, DeployResultActivity.class);
+                        intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                        intent.putExtra(EXTRA_SENSOR_SN_RESULT, signalCheckNum);
+                        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_SIGNAL_CHECK);
+                        getView().startAC(intent);
                     }
-                });
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
-
-
-        }
+        });
     }
 
-    /**
-     * 错误的基站信息
-     */
-    private void freshError(String scanSN, String errorInfo) {
-        //
-        Intent intent = new Intent();
-        intent.setClass(mContext, DeployResultActivity.class);
-        intent.putExtra(EXTRA_SENSOR_RESULT, -1);
-        intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSN);
-        intent.putExtra(EXTRA_IS_STATION_DEPLOY, hasStation);
-        if (!TextUtils.isEmpty(errorInfo)) {
-            intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorInfo);
-        }
-        getView().startAC(intent);
-    }
-
-    /**
-     * 刷新基站
-     */
-    private void refreshStation(StationInfoRsp stationInfoRsp) {
-        try {
-            StationInfo stationInfo = stationInfoRsp.getData();
-            double[] lonlat = stationInfo.getLonlat();
-//        double[] lonlatLabel = stationInfo.getLonlatLabel();
-            String name = stationInfo.getName();
-            String sn = stationInfo.getSn();
-            String[] tags = stationInfo.getTags();
-            long updatedTime = stationInfo.getUpdatedTime();
-            DeviceInfo deviceInfo = new DeviceInfo();
-            deviceInfo.setSn(sn);
-            deviceInfo.setTags(tags);
-            deviceInfo.setLonlat(lonlat);
-            deviceInfo.setUpdatedTime(updatedTime);
-            if (!TextUtils.isEmpty(name)) {
-                deviceInfo.setName(name);
-            }
-            Intent intent = new Intent();
-            intent.setClass(mContext, DeployActivity.class);
-            intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
-            intent.putExtra(EXTRA_IS_STATION_DEPLOY, true);
-            intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
-            getView().startAC(intent);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    /**
-     * 刷新设备
-     */
-    private void refreshDevice(String sn, DeviceInfoListRsp response) {
-        try {
-            Intent intent = new Intent();
-            if (response.getData().size() > 0) {
-
-                intent.setClass(mContext, DeployActivity.class);
-                intent.putExtra(EXTRA_DEVICE_INFO, response.getData().get(0));
-                intent.putExtra(EXTRA_IS_STATION_DEPLOY, false);
-                intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
-                getView().startAC(intent);
-            } else {
-                freshError(sn, null);
+    private void changeDevice(final String scanSnNewDevice) {
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(scanSnNewDevice.toUpperCase(), null, 1).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                    getView().toastShort(errorMsg);
+                } else if (errorCode == 4013101 || errorCode == 4000013) {
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DeployResultActivity.class);
+                    intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                    intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSnNewDevice);
+                    intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_DEPLOY_DEVICE_CHANGE);
+                    getView().startAC(intent);
+                } else {
+                    //TODO 控制逻辑
+                    Intent intent = new Intent();
+                    intent.setClass(mContext, DeployResultActivity.class);
+                    intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                    intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSnNewDevice);
+                    intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_DEPLOY_DEVICE_CHANGE);
+                    intent.putExtra(EXTRA_SENSOR_RESULT_ERROR, errorMsg);
+                    getView().startAC(intent);
+                }
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+            @Override
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                getView().dismissProgressDialog();
+                try {
+                    if (deviceInfoListRsp.getData().size() > 0) {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, DeployMonitorDetailActivity.class);
+                        intent.putExtra(EXTRA_DEVICE_INFO, deviceInfoListRsp.getData().get(0));
+                        intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
+                        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_DEPLOY_DEVICE_CHANGE);
+                        intent.putExtra("uid", mContext.getIntent().getStringExtra("uid"));
+                        getView().startAC(intent);
+                    } else {
+                        Intent intent = new Intent();
+                        intent.setClass(mContext, DeployResultActivity.class);
+                        intent.putExtra(EXTRA_SENSOR_RESULT, -1);
+                        intent.putExtra(EXTRA_SENSOR_SN_RESULT, scanSnNewDevice);
+                        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, TYPE_SCAN_DEPLOY_DEVICE_CHANGE);
+                        getView().startAC(intent);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    private void scanInspectionDevice(String scanInspectionDevice) {
+        getView().showProgressDialog();
+        //TODO 暂时处理
+        RetrofitServiceHelper.INSTANCE.getInspectionDeviceList(mTaskInfo.getId(), null, scanInspectionDevice.toUpperCase(), null, null, null, null).
+                subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskDeviceDetailRsp>(this) {
+            @Override
+            public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
+                getView().dismissProgressDialog();
+                InspectionTaskDeviceDetailModel data = inspectionTaskDeviceDetailRsp.getData();
+                List<InspectionTaskDeviceDetail> devices = data.getDevices();
+                if (devices != null && devices.size() > 0) {
+                    InspectionTaskDeviceDetail deviceDetail = devices.get(0);
+                    Intent intent = new Intent();
+                    int status = deviceDetail.getStatus();
+                    switch (status) {
+                        case 0:
+                            intent.setClass(mContext, InspectionActivity.class);
+                            break;
+                        case 1:
+                            getView().toastShort("此设备已巡检完毕，且状态正常");
+                            return;
+                        case 2:
+                            intent.setClass(mContext, InspectionExceptionDetailActivity.class);
+                            break;
+                    }
+                    intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
+                    getView().startAC(intent);
+                } else {
+                    getView().toastShort("此设备未在巡检任务中");
+                }
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+//        RetrofitServiceHelper.INSTANCE.getInspectionDeviceDetail(null, scanInspectionDevice, mTaskInfo.getId(), 1)
+//                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<InspectionTaskExceptionDeviceRsp>() {
+//            @Override
+//            public void onCompleted(InspectionTaskExceptionDeviceRsp response) {
+//                getView().dismissProgressDialog();
+//                InspectionTaskExceptionDeviceModel taskDevice = response.getData();
+//                int status = taskDevice.getStatus();
+//                Intent intent = new Intent();
+//                String deviceType = taskDevice.getDeviceType();
+//                String sn = taskDevice.getSn();
+//                String taskId = taskDevice.getTaskId();
+//                InspectionTaskExceptionDeviceModel.DeviceBean device = taskDevice.getDevice();
+//                String name = device.getName();
+//                List<Double> lonlat = device.getLonlat();
+//                List<String> tags = device.getTags();
+//                String id = taskDevice.get_id();
+////                private String name;
+////                private String taskId;
+////                private String sn;
+////                private String deviceType;
+////                private int status;
+////                private String timecost;
+////                private InspectionTaskDeviceDetail.MalfunctionBean malfunction;
+////                private List<Double> lonlat;
+////                private List<String> tags;
+//
+//                InspectionTaskDeviceDetail deviceDetail = new InspectionTaskDeviceDetail();
+//                deviceDetail.setId(id);
+//                deviceDetail.setDeviceType(deviceType);
+//                deviceDetail.setLonlat(lonlat);
+//                deviceDetail.setSn(sn);
+//                deviceDetail.setTaskId(taskId);
+//                deviceDetail.setName(name);
+//                deviceDetail.setTags(tags);
+//                deviceDetail.setStatus(status);
+//                switch (status) {
+//                    case 0:
+//                        intent.setClass(mContext, InspectionActivity.class);
+//                        break;
+//                    case 1:
+//                    case 2:
+//                        intent.setClass(mContext, InspectionExceptionDetailActivity.class);
+//                        break;
+//                }
+//                intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
+//                getView().startAC(intent);
+//
+//            }
+//
+//            @Override
+//            public void onErrorMsg(int errorCode, String errorMsg) {
+//                getView().dismissProgressDialog();
+//                getView().toastShort(errorMsg);
+//            }
+//        });
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

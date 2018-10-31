@@ -37,12 +37,20 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
     public SearchHistoryViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater inflater = LayoutInflater.from(mContext);
         View view = inflater.inflate(R.layout.item_search_history, null);
-        return new SearchHistoryViewHolder(view, itemClickListener);
+        return new SearchHistoryViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(SearchHistoryViewHolder holder, int position) {
+    public void onBindViewHolder(final SearchHistoryViewHolder holder, int position) {
         holder.nameTextView.setText(mList.get(position));
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (itemClickListener != null) {
+                    itemClickListener.onItemClick(v, holder.getAdapterPosition());
+                }
+            }
+        });
     }
 
     @Override
@@ -52,25 +60,12 @@ public class SearchHistoryAdapter extends RecyclerView.Adapter<SearchHistoryAdap
 
     static class SearchHistoryViewHolder extends RecyclerView.ViewHolder {
         final TextView nameTextView;
-        final View itemView;
-        final RecycleViewItemClickListener itemClickListener;
 
-        SearchHistoryViewHolder(View itemView, RecycleViewItemClickListener itemClickListener) {
+        SearchHistoryViewHolder(View itemView) {
             super(itemView);
-            this.itemView = itemView;
             nameTextView = (TextView) itemView.findViewById(R.id.item_history_name);
-            this.itemClickListener = itemClickListener;
-            itemView.setOnClickListener(onItemClickListener);
         }
 
-        View.OnClickListener onItemClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (itemClickListener != null) {
-                    itemClickListener.onItemClick(v, getAdapterPosition());
-                }
-            }
-        };
     }
 
     public void updateSearchHistoryAdapter(List<String> list) {

@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/include_text_title_cl_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/include_text_title_imv_arrows_left"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="5dp"
+        android:contentDescription="@null"
+        android:padding="10dp"
+        android:src="@drawable/arrows_left"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/include_text_title_tv_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="5dp"
+        android:text="预警日志"
+        android:textColor="@color/c_030303"
+        android:textSize="18sp"
+        app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"
+        app:layout_constraintStart_toEndOf="@id/include_text_title_imv_arrows_left"
+        app:layout_constraintTop_toTopOf="@id/include_text_title_imv_arrows_left" />
+
+    <TextView
+        android:id="@+id/include_text_title_tv_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="20dp"
+        android:text="历史日志"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/include_text_title_imv_arrows_left" />
+
+
+</android.support.constraint.ConstraintLayout>

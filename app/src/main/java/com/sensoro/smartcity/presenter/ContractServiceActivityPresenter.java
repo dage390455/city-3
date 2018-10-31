@@ -94,17 +94,13 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     private void getContractTemplateInfos() {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getContractstemplate().subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsTemplateRsp>() {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsTemplateRsp>(this) {
 
 
             @Override
-            public void onCompleted() {
-                getView().dismissProgressDialog();
-            }
-
-            @Override
-            public void onNext(ContractsTemplateRsp contractsTemplateRsp) {
+            public void onCompleted(ContractsTemplateRsp contractsTemplateRsp) {
                 getView().updateContractTemplateAdapterInfo(contractsTemplateRsp.getData());
+                getView().dismissProgressDialog();
             }
 
             @Override

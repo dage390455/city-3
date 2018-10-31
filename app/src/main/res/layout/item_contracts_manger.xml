@@ -18,7 +18,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:text="姓名"
-            android:textColor="#b6b6b6"
+            android:textColor="@color/c_a6a6a6"
             android:textSize="12sp"/>
 
         <LinearLayout
@@ -37,8 +37,7 @@
                 android:background="@null"
                 android:cropToPadding="true"
                 android:padding="8dp"
-                android:textColor="@color/c_626262"
-                android:text="测试啦啦啦啦"
+                android:textColor="@color/c_252525"
                 android:textSize="12sp"/>
             <TextView
                 android:id="@+id/tv_contacts_manger_type"
@@ -50,7 +49,7 @@
                 android:padding="4dp"
                 android:text="企业"
                 android:layout_marginRight="15dp"
-                android:textColor="@color/c_48b0f7"
+                android:textColor="@color/c_dfdfdf"
                 android:textSize="10sp"/>
 
         </LinearLayout>
@@ -68,7 +67,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:text="住址"
-            android:textColor="#b6b6b6"
+            android:textColor="@color/c_a6a6a6"
             android:textSize="12sp"/>
 
         <LinearLayout
@@ -87,8 +86,7 @@
                 android:background="@null"
                 android:cropToPadding="true"
                 android:padding="8dp"
-                android:textColor="@color/c_626262"
-                android:text="深山老林"
+                android:textColor="@color/c_252525"
                 android:textSize="12sp"/>
         </LinearLayout>
     </RelativeLayout>
@@ -105,7 +103,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:text="合同号"
-            android:textColor="#b6b6b6"
+            android:textColor="@color/c_a6a6a6"
             android:textSize="12sp"/>
 
         <LinearLayout
@@ -124,8 +122,7 @@
                 android:background="@null"
                 android:cropToPadding="true"
                 android:padding="8dp"
-                android:textColor="@color/c_626262"
-                android:text="slfjslfjsljfklsjflksjflksjflksfjsklf"
+                android:textColor="@color/c_252525"
                 android:textSize="12sp"/>
         </LinearLayout>
     </RelativeLayout>
@@ -142,7 +139,7 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="15dp"
             android:text="签约时间"
-            android:textColor="#b6b6b6"
+            android:textColor="@color/c_a6a6a6"
             android:textSize="12sp"/>
 
         <LinearLayout
@@ -161,8 +158,7 @@
                 android:background="@null"
                 android:cropToPadding="true"
                 android:padding="8dp"
-                android:textColor="@color/c_626262"
-                android:text="2018.6.24"
+                android:textColor="@color/c_252525"
                 android:textSize="12sp"/>
         </LinearLayout>
     </RelativeLayout>

@@ -65,7 +65,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     private void openMain(EventLoginData eventLoginData) {
         Intent mainIntent = new Intent();
         mainIntent.setClass(mContext, MainActivity.class);
-        mainIntent.putExtra("eventLoginData", eventLoginData);
+        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
         getView().startAC(mainIntent);
         getView().finishAc();
     }
