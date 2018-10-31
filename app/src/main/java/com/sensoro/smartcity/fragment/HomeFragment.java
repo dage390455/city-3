@@ -224,6 +224,18 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mBannerScaleContentHelper = new BannerAlphaHelper();
         fgMainHomeRcContent.setOverScrollMode(View.OVER_SCROLL_NEVER);
         mBannerScaleContentHelper.attachToRecyclerView(fgMainHomeRcContent);
+        mBannerScaleContentHelper.setOnBannerHelperListener(new BannerAlphaHelper.OnBannerHelperListener() {
+            @Override
+            public void onScrolledCurrent(float currentPercent) {
+//                LogUtils.loge("setOnBannerHelperListener  onScrolledCurrent --->> " + currentPercent);
+//                flMainHomeSelectType.setAlpha(1 - currentPercent);
+            }
+
+            @Override
+            public void onScrolledOther(float otherPercent) {
+                LogUtils.loge("setOnBannerHelperListener  onScrolledOther --->> " + otherPercent);
+            }
+        });
         fgMainHomeRcContent.setOnPageChangeListener(new BannerRecyclerView.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
@@ -656,7 +668,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
         }
     }
-
 
 
     public boolean onBackPressed() {
