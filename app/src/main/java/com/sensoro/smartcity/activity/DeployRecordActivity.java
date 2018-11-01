@@ -52,8 +52,8 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     EditText acDeployRecordEtSearch;
     @BindView(R.id.ac_deploy_record_frame_search)
     FrameLayout acDeployRecordFrameSearch;
-    @BindView(R.id.tv_warn_alarm_search_cancel)
-    TextView tvWarnAlarmSearchCancel;
+    @BindView(R.id.tv_deploy_device_search_cancel)
+    TextView tvDeployDeviceSearchCancel;
     @BindView(R.id.ac_deploy_record_imv_calendar)
     ImageView acDeployRecordImvCalendar;
     @BindView(R.id.ac_deploy_record_tv_date_edit)
@@ -100,7 +100,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                     // 当按了搜索之后关闭软键盘
                     String text = getSearchText();
                     mPresenter.requestSearchData(DIRECTION_DOWN, text);
-                    AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
+                    AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
                     return true;
                 }
                 return false;
@@ -225,7 +225,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @Override
     public void showProgressDialog() {
-        if(isShowDialog){
+        if (isShowDialog) {
             mProgressDialog.showProgress();
         }
         isShowDialog = true;
@@ -238,16 +238,16 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_LONG).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_LONG).show();
     }
 
     @OnClick({R.id.ac_deploy_record_imv_finish, R.id.ac_deploy_record_imv_calendar, R.id.ac_deploy_record_deploy_rl_new_device
-    ,R.id.alarm_return_top,R.id.ac_deploy_record_imv_date_close})
+            , R.id.alarm_return_top, R.id.ac_deploy_record_imv_date_close, R.id.tv_deploy_device_search_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_record_imv_finish:
@@ -265,9 +265,18 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                 break;
             case R.id.ac_deploy_record_imv_date_close:
                 setSelectedDateLayoutVisible(false);
-                mPresenter.requestSearchData(DIRECTION_DOWN,getSearchText());
+                mPresenter.requestSearchData(DIRECTION_DOWN, getSearchText());
+                break;
+            case R.id.tv_deploy_device_search_cancel:
+                doCancelSearch();
                 break;
         }
+    }
+    private void doCancelSearch() {
+        if (getSearchTextVisible()) {
+            acDeployRecordEtSearch.getText().clear();
+        }
+        mPresenter.doCancelSearch();
     }
 
     @Override
@@ -281,7 +290,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
             mContentAdapter.setData(data);
             mContentAdapter.notifyDataSetChanged();
         }
-        setNoContentVisible(data.size()<1);
+        setNoContentVisible(data.size() < 1);
     }
 
     @Override
@@ -308,5 +317,24 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     private void setNoContentVisible(boolean isVisible) {
         acDeployRecordRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSearchButtonTextVisible(boolean isVisible) {
+        if (isVisible) {
+            tvDeployDeviceSearchCancel.setVisibility(View.VISIBLE);
+//            setEditTextState(false);
+            AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
+        } else {
+            tvDeployDeviceSearchCancel.setVisibility(View.GONE);
+//            setEditTextState(true);
+        }
+
+    }
+
+
+    @Override
+    public boolean getSearchTextVisible() {
+        return tvDeployDeviceSearchCancel.getVisibility() == View.VISIBLE;
     }
 }

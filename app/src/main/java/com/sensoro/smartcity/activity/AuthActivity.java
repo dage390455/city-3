@@ -70,7 +70,6 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
         return super.onKeyDown(keyCode, event);
     }
 
-
     @Override
     public void startAC(Intent intent) {
         mActivity.startActivity(intent);
@@ -159,7 +158,7 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
 
     @OnClick(R.id.ac_auth_imv_finish)
     public void onViewClicked() {
-        finishAc();
+        mPresenter.close();
     }
 
     @Override

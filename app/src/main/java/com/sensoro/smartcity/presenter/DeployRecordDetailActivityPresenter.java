@@ -46,7 +46,7 @@ implements Constants {
             getView().setInclueTitle(mDeployRecordInfo.getSn());
             getView().setDeviceName(mDeployRecordInfo.getDeviceName());
             getView().updateTagList(mDeployRecordInfo.getTags());
-            getView().setDeployTime(DateUtil.getStrTime_ymd_hm(mDeployRecordInfo.getCreatedTime()));
+            getView().setDeployTime(DateUtil.getStrTime_ymd_hm_ss(mDeployRecordInfo.getCreatedTime()));
             getView().setPicCount("已添加"+mDeployRecordInfo.getDeployPics().size()+"张照片");
             ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
             if(mDeployRecordInfo.getNotification()!=null){

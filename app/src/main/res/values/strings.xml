@@ -19,7 +19,7 @@
     <string name="continue_deploy">Continue</string>
     <string name="password">Password</string>
     <string name="save">Save</string>
-    <string name="finish">Finish</string>
+    <string name="finish">Save</string>
     <string name="login">Login</string>
     <string name="date_query">Date Query</string>
     <string name="alarm_detail">Alarm Detail</string>

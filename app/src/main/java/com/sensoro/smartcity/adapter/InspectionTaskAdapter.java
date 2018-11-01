@@ -1,11 +1,9 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +13,6 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
-import com.sensoro.smartcity.server.bean.InspectionTaskModel;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -47,7 +44,7 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
         InspectionIndexTaskInfo tasksBean = mTasks.get(position);
 
         holder.itemInspectionAdapterTvTitle.setText(tasksBean.getName());
-        holder.itemInspectionAdapterTvTime.setText(DateUtil.getDateByOtherFormat(tasksBean.getBeginTime())+" - "+DateUtil.getDateByOtherFormat(tasksBean.getEndTime()));
+        holder.itemInspectionAdapterTvTime.setText(DateUtil.getDateByOtherFormatPoint(tasksBean.getBeginTime())+" - "+DateUtil.getDateByOtherFormatPoint(tasksBean.getEndTime()));
 
         //防止status 后台瞎给 造成崩溃，如status 给个6，索引越界
         try {

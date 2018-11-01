@@ -213,8 +213,14 @@ public class DateUtil {
     public static String getDateByOtherFormat(long time) {
         return new SimpleDateFormat("yyyy/MM/dd", Locale.ROOT).format(new Date(time));
     }
+    public static String getDateByOtherFormatPoint(long time) {
+        return new SimpleDateFormat("yyyy.MM.dd", Locale.ROOT).format(new Date(time));
+    }
 
     public static String getFullDate(long time) {
+        return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).format(new Date(time));
+    }
+    public static String getFullDatePoint(long time) {
         return new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT).format(new Date(time));
     }
 
@@ -270,6 +276,31 @@ public class DateUtil {
         float day = diff / 3600000 / 24;
         String formatTime = new SimpleDateFormat("hh:mm:ss", Locale.ROOT).format(new Date(time));
         String other_date = new SimpleDateFormat("MM/dd hh:mm:ss", Locale.ROOT).format(new Date(time));
+        if (day < 1) {
+            String nowString = DateUtil.getDayDate(now);
+            String dataString = DateUtil.getDayDate(time);
+            if (dataString.equalsIgnoreCase(nowString)) {
+                return "今天 " + apm_text + formatTime;
+            } else {
+                return "昨天 " + apm_text + formatTime;
+            }
+        } else if (day < 2) {
+            return "昨天 " + apm_text + formatTime;
+        } else {
+
+            return other_date.replace(" ", " " + apm_text);
+        }
+    }
+    public static String getFullParseDatePoint(long time) {
+        final Calendar mCalendar = Calendar.getInstance();
+        mCalendar.setTimeInMillis(time);
+        int apm = mCalendar.get(Calendar.AM_PM);
+        String apm_text = apm == 0 ? "上午" : "下午";
+        long now = System.currentTimeMillis();
+        long diff = now - time;
+        float day = diff / 3600000 / 24;
+        String formatTime = new SimpleDateFormat("hh:mm:ss", Locale.ROOT).format(new Date(time));
+        String other_date = new SimpleDateFormat("MM.dd hh:mm:ss", Locale.ROOT).format(new Date(time));
         if (day < 1) {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);

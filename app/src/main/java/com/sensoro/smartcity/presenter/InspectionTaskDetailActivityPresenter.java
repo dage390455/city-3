@@ -44,7 +44,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
         onCreate();
         mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
         getView().setTvTaskNumber(mTaskInfo.getIdentifier());
-        getView().setTvTaskTime(DateUtil.getDateByOtherFormat(mTaskInfo.getBeginTime()) + " - " + DateUtil.getDateByOtherFormat(mTaskInfo.getEndTime()));
+        getView().setTvTaskTime(DateUtil.getDateByOtherFormatPoint(mTaskInfo.getBeginTime()) + " - " + DateUtil.getDateByOtherFormatPoint(mTaskInfo.getEndTime()));
 
         freshTvState(mTaskInfo.getStatus());
 

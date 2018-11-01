@@ -7,7 +7,7 @@ import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 
 import java.util.List;
 
-public interface IDeployRecordActivityView extends IToast,IProgressDialog,IActivityIntent {
+public interface IDeployRecordActivityView extends IToast, IProgressDialog, IActivityIntent {
     boolean isSelectedDateLayoutVisible();
 
     void updateRcContentData(List<DeployRecordInfo> data);
@@ -19,5 +19,9 @@ public interface IDeployRecordActivityView extends IToast,IProgressDialog,IActiv
     void setSelectedDateSearchText(String s);
 
     String getSearchText();
+
+    void setSearchButtonTextVisible(boolean isVisible);
+
+    boolean getSearchTextVisible();
 
 }
