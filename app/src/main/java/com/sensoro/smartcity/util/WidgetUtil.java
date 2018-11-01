@@ -2502,4 +2502,17 @@ public class WidgetUtil {
         }
         return null;
     }
+
+    public static String handlerNumber(String text) {
+        if (!TextUtils.isEmpty(text)) {
+            StringBuilder stringBuilder = new StringBuilder();
+            if (text.length() > 3) {
+                String t1 = text.substring(0, text.length() - 3);
+                String t2 = text.substring(text.length() - 3);
+                return stringBuilder.append(t1).append(",").append(t2).toString();
+            }
+
+        }
+        return text;
+    }
 }

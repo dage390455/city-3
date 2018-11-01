@@ -149,7 +149,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             JSONArray jsonArray = (JSONArray) arg;
                             final JSONObject jsonObject = jsonArray.getJSONObject(0);
                             String json = jsonObject.toString();
-//                            LogUtils.loge(this, "jsonArray = " + json);
+                            LogUtils.loge(this, "socket-->>> DeviceInfoListener jsonArray = " + json);
                             if (hasDeviceBriefControl()) {
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json,
@@ -184,7 +184,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
                             String json = jsonObject.toString();
-                            LogUtils.loge(this, "DeviceAlarmCountListener jsonArray = " + json);
+                            LogUtils.loge(this, "socket-->>> DeviceAlarmCountListener jsonArray = " + json);
                             if (hasDeviceBriefControl()) {
                                 try {
                                     DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmCount.class);
@@ -220,7 +220,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
                             String json = jsonObject.toString();
-                            LogUtils.loge(this, "DeviceAlarmDisplayStatusListener json = " + json);
+                            LogUtils.loge(this, "socket-->>> DeviceAlarmDisplayStatusListener json = " + json);
                             if (hasAlarmInfoControl()) {
                                 try {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmLogInfo.class);

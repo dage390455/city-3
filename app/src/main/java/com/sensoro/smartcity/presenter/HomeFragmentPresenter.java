@@ -115,11 +115,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mContext = (Activity) context;
         onCreate();
         //
+        alarmModel.type = 0;
         alarmModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        normalModel.type = 1;
         normalModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        lostModel.type = 2;
         lostModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        inactiveModel.type = 3;
         inactiveModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
-        //
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
@@ -127,24 +130,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 if (PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
                     requestInitData();
                 }
-
             }
         };
         mSoundPool.setOnLoadCompleteListener(listener);
         mSoundId = mSoundPool.load(context, R.raw.alarm, 1);
         mHandler.postDelayed(mTask, 3000);
         getView().setImvHeaderLeftVisible(false);
-        alarmModel.type = 0;
-        //
-        normalModel.type = 1;
-        mHomeTopModels.add(normalModel);
-        //
-        lostModel.type = 2;
-        mHomeTopModels.add(lostModel);
-        //
-        inactiveModel.type = 3;
-        mHomeTopModels.add(inactiveModel);
-        getView().refreshHeaderData(true, mHomeTopModels);
     }
 
 
@@ -173,15 +164,18 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     tempAlarmCount = alarmCount;
                     mHomeTopModels.add(alarmModel);
                 }
-                //
-                normalModel.value = normal;
-                mHomeTopModels.add(normalModel);
-                //
-                lostModel.value = lostCount;
-                mHomeTopModels.add(lostModel);
-                //
-                inactiveModel.value = inactiveCount;
-                mHomeTopModels.add(inactiveModel);
+                if (normal > 0) {
+                    normalModel.value = normal;
+                    mHomeTopModels.add(normalModel);
+                }
+                if (lostCount > 0) {
+                    lostModel.value = lostCount;
+                    mHomeTopModels.add(lostModel);
+                }
+                if (inactiveCount > 0) {
+                    inactiveModel.value = inactiveCount;
+                    mHomeTopModels.add(inactiveModel);
+                }
                 //
                 totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount;
                 page = 1;
@@ -206,7 +200,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private void freshHeaderContentData() {
-        getView().setDetectionPoints(String.valueOf(totalMonitorPoint));
+        getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
         getView().refreshHeaderData(true, mHomeTopModels);
         getView().refreshContentData(true, mHomeTopModels);
         String currentDataStr = getCurrentDataStr();
@@ -320,7 +314,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             pushList.addAll(normalModel.mDeviceList);
             pushList.addAll(lostModel.mDeviceList);
             pushList.addAll(inactiveModel.mDeviceList);
-            SensoroCityApplication.getInstance().addData(pushList);
+            SensoroCityApplication.getInstance().setData(pushList);
             Collections.sort(pushList);
             //推送数据
             PushData pushData = new PushData();
@@ -344,7 +338,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 @Override
                 public void run() {
                     getView().refreshHeaderData(false, mHomeTopModels);
-                    getView().setDetectionPoints(String.valueOf(totalMonitorPoint));
+                    getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
                     if (needAlarmPlay) {
                         playSound();
                         needAlarmPlay = false;
@@ -432,7 +426,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         switch (code) {
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
-//                    LogUtils.loge("new Socket SN = " + ((DeviceInfo) data).getSn());
                     organizeJsonData((DeviceInfo) data);
                     needRefreshContent = true;
                 }
@@ -466,15 +459,18 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         alarmModel.value = tempAlarmCount;
                         mHomeTopModels.add(alarmModel);
                     }
-                    //
-                    normalModel.value = normalCount;
-                    mHomeTopModels.add(normalModel);
-                    //
-                    lostModel.value = lostCount;
-                    mHomeTopModels.add(lostModel);
-                    //
-                    inactiveModel.value = inactiveCount;
-                    mHomeTopModels.add(inactiveModel);
+                    if (normalCount > 0) {
+                        normalModel.value = normalCount;
+                        mHomeTopModels.add(normalModel);
+                    }
+                    if (lostCount > 0) {
+                        lostModel.value = lostCount;
+                        mHomeTopModels.add(lostModel);
+                    }
+                    if (inactiveCount > 0) {
+                        inactiveModel.value = inactiveCount;
+                        mHomeTopModels.add(inactiveModel);
+                    }
                     totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount;
                     needRefreshHeader = true;
                 }

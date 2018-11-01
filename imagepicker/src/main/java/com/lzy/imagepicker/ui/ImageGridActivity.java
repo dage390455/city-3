@@ -338,7 +338,8 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             //如果是裁剪，因为裁剪指定了存储的Uri，所以返回的data一定为null
             if (resultCode == RESULT_OK && requestCode == ImagePicker.REQUEST_CODE_TAKE) {
                 //发送广播通知图片增加了
-                ImagePicker.galleryAddPic(this, imagePicker.getTakeImageFile());
+                //TODO 去掉广播通知
+//                ImagePicker.galleryAddPic(this, imagePicker.getTakeImageFile());
 
                 /**
                  * 2017-03-21 对机型做旋转处理
@@ -371,6 +372,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
                     Intent intent = new Intent();
                     intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imagePicker.getSelectedImages());
                     setResult(ImagePicker.RESULT_CODE_ITEMS, intent);   //单选不需要裁剪，返回数据
+                    intent.putExtra(ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO, true);
                     finish();
                 }
             } else if (directPhoto) {
@@ -378,5 +380,6 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
             }
         }
     }
+
 
 }

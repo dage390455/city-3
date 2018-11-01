@@ -19,6 +19,7 @@ import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.PushData;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
@@ -34,6 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -55,10 +57,10 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
     private int page = 1;
     private final List<DeviceInfo> mDataList = new ArrayList<>();
-    private final List<DeviceInfo> originHistoryList = new ArrayList<>();
+    private final List<DeviceInfo> originHistoryList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
     private final List<DeviceInfo> currentList = new ArrayList<>();
 
-    private final List<String> searchStrList = new ArrayList<>();
+    private final List<String> searchStrList = Collections.synchronizedList(new ArrayList<String>());
     private Activity mContext;
 
     @Override
@@ -106,25 +108,27 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PushData data) {
         if (data != null) {
+            boolean needFresh = false;
             List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
             for (int i = 0; i < mDataList.size(); i++) {
                 DeviceInfo deviceInfo = mDataList.get(i);
                 for (DeviceInfo in : deviceInfoList) {
                     if (in.getSn().equals(deviceInfo.getSn())) {
                         mDataList.set(i, in);
+                        needFresh = true;
                     }
                 }
             }
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if (isActivityTop() && getView().getSearchDataListVisible()) {
-                        getView().refreshData(mDataList);
+            if (needFresh) {
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isActivityTop() && getView().getSearchDataListVisible()) {
+                            getView().refreshData(mDataList);
+                        }
                     }
-                }
-            });
-
-
+                });
+            }
         }
     }
 
@@ -206,34 +210,44 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         }
     }
 
-    public void filterDeviceInfo(String filter) {
-        List<DeviceInfo> originDeviceInfoList = new ArrayList<>(originHistoryList);
-        ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
-        for (DeviceInfo deviceInfo : originDeviceInfoList) {
-            String name = deviceInfo.getName();
-            if (!TextUtils.isEmpty(name)) {
-                if (!(name.contains(filter.toUpperCase()))) {
-                    deleteDeviceInfoList.add(deviceInfo);
-                }
-            } else {
-                deleteDeviceInfoList.add(deviceInfo);
-            }
+    public void filterDeviceInfo(final String filter) {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (SearchMonitorActivityPresenter.class) {
+                    List<DeviceInfo> originDeviceInfoList = new ArrayList<>(originHistoryList);
+                    ArrayList<DeviceInfo> deleteDeviceInfoList = new ArrayList<>();
+                    for (DeviceInfo deviceInfo : originDeviceInfoList) {
+                        String name = deviceInfo.getName();
+                        if (!TextUtils.isEmpty(name)) {
+                            if (!(name.contains(filter.toUpperCase()))) {
+                                deleteDeviceInfoList.add(deviceInfo);
+                            }
+                        } else {
+                            deleteDeviceInfoList.add(deviceInfo);
+                        }
 
-        }
-        originDeviceInfoList.removeAll(deleteDeviceInfoList);
-        List<String> tempList = new ArrayList<>();
-        for (DeviceInfo deviceInfo : originDeviceInfoList) {
-            String name = deviceInfo.getName();
-            if (!TextUtils.isEmpty(name)) {
-                tempList.add(name);
+                    }
+                    originDeviceInfoList.removeAll(deleteDeviceInfoList);
+                    final List<String> tempList = new ArrayList<>();
+                    for (DeviceInfo deviceInfo : originDeviceInfoList) {
+                        String name = deviceInfo.getName();
+                        if (!TextUtils.isEmpty(name)) {
+                            tempList.add(name);
+                        }
+                    }
+                    searchStrList.clear();
+                    searchStrList.addAll(tempList);
+                    mContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getView().updateRelationData(tempList);
+                        }
+                    });
+                }
+
             }
-        }
-        searchStrList.clear();
-        searchStrList.addAll(tempList);
-        getView().updateRelationData(tempList);
-        originDeviceInfoList.clear();
-        tempList.clear();
-        deleteDeviceInfoList.clear();
+        });
 
 
     }
