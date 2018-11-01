@@ -45,7 +45,7 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
         DeployRecordInfo deployRecordInfo = recordInfoList.get(position);
         holder.itemAdapterDeployRecordTvName.setText(deployRecordInfo.getDeviceName());
         holder.itemAdapterDeployRecordTvSn.setText(deployRecordInfo.getSn());
-        holder.itemAdapterDeployRecordTvTime.setText(DateUtil.getStrTime_ymd_hm(deployRecordInfo.getCreatedTime()));
+        holder.itemAdapterDeployRecordTvTime.setText(DateUtil.getStrTime_ymd_hm_ss(deployRecordInfo.getCreatedTime()));
 
         TagAdapter tagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);

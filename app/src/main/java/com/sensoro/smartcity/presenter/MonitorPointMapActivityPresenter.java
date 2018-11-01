@@ -162,7 +162,10 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                     public void run() {
 //                        freshTopData();
 //                        freshStructData();
-                        freshMarker();
+                        if (getView()!=null){
+                            freshMarker();
+                        }
+
                     }
                 });
 

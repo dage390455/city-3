@@ -160,7 +160,7 @@
                 android:id="@+id/search_device_clear_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-
+                android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/y60"
                 android:text="@string/recent"
                 android:textColor="@color/c_252525"
@@ -171,7 +171,7 @@
                 android:layout_width="@dimen/x142"
                 android:layout_height="@dimen/y60"
                 android:layout_alignParentRight="true"
-                android:layout_gravity="center"
+                android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/y20"
                 android:src="@drawable/clear_cache"
                 android:layout_centerVertical="true"

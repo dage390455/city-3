@@ -76,7 +76,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
-                statusText = "预警中";
+                statusText = "预警";
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = mContext.getResources().getColor(R.color.c_29c093);
@@ -292,8 +292,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        freshTopData();
-                        getView().updateDeviceInfoAdapter(mDeviceInfo);
+                        if (getView() != null) {
+                            freshTopData();
+                            getView().updateDeviceInfoAdapter(mDeviceInfo);
+                        }
+
 //                        freshStructData();
 //                        freshMarker();
                     }

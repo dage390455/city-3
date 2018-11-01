@@ -277,6 +277,11 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     }
 
     @Override
+    public void setHistoryClearBtnVisible(boolean isVisible) {
+        mClearBtn.setVisibility(isVisible ? VISIBLE : View.GONE);
+    }
+
+    @Override
     public void updateRelationData(List<String> strList) {
         if (strList != null) {
             mRelationAdapter.setData(strList);
@@ -286,6 +291,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void updateSearchHistoryData(List<String> strHistory) {
+        setHistoryClearBtnVisible(strHistory != null && strHistory.size() > 0);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
     }
 

@@ -39,4 +39,6 @@ public interface ISearchMonitorActivityView extends IToast, IProgressDialog, IAc
     void setNoContentVisible(boolean isVisible);
 
     void hideSoftInput();
+
+    void setHistoryClearBtnVisible(boolean isVisible);
 }

@@ -49,7 +49,7 @@
                         android:singleLine="true"
                         android:textColorHint="@color/c_a6a6a6"
                         android:drawableStart="@drawable/main_search"
-                        android:hint="设备名称/设备号/手机号"
+                        android:hint="设备名称、设备号、手机号"
                         android:textColor="@color/c_252525"
                         android:textSize="12sp" />
                 </FrameLayout>

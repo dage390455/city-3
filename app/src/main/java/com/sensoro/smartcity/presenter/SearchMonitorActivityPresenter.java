@@ -124,7 +124,10 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                     @Override
                     public void run() {
                         if (isActivityTop() && getView().getSearchDataListVisible()) {
-                            getView().refreshData(mDataList);
+                            if (getView() != null) {
+                                getView().refreshData(mDataList);
+                            }
+
                         }
                     }
                 });

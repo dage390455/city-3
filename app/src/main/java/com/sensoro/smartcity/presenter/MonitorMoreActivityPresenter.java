@@ -75,7 +75,7 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
                         getView().setAlarmRecentInfo(R.string.tips_no_alarm);
                     } else {
                         //修改全部为时间格式
-                        getView().setAlarmRecentInfo(DateUtil.getFullDate(time));
+                        getView().setAlarmRecentInfo(DateUtil.getFullDatePoint(time));
                     }
                 }
                 getView().dismissProgressDialog();
@@ -203,7 +203,7 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
         }
         getView().setStatusInfo(DEVICE_STATUS_ARRAY[deviceInfo.getStatus()], statusId);
         if (deviceInfo.getUpdatedTime() > 0) {
-            getView().setReportText(DateUtil.getFullDate(deviceInfo.getUpdatedTime()));
+            getView().setReportText(DateUtil.getFullDatePoint(deviceInfo.getUpdatedTime()));
         }
     }
 
@@ -226,7 +226,10 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        freshStructData(finalTempDeviceInfo);
+                        if (getView()!=null){
+                            freshStructData(finalTempDeviceInfo);
+                        }
+
                     }
                 });
 

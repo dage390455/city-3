@@ -22,7 +22,7 @@
     <string name="password">密码</string>
     <string name="save">保存</string>
     <string name="login">登录</string>
-    <string name="finish">完成</string>
+    <string name="finish">保存</string>
     <string name="start_use">扫码部署</string>
     <string name="point_deploy">点位部署</string>
     <string name="scan_login">扫码登录</string>
