@@ -278,15 +278,17 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PushData data) {
         if (data != null) {
+            boolean needRefresh = false;
             List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
             String sn = mDeviceInfo.getSn();
             for (DeviceInfo deviceInfo : deviceInfoList) {
                 if (sn.equals(deviceInfo.getSn())) {
                     mDeviceInfo = deviceInfo;
+                    needRefresh = true;
                     break;
                 }
             }
-            if (mDeviceInfo != null && AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
+            if (needRefresh && AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -296,8 +298,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 //                        freshMarker();
                     }
                 });
-
-
             }
         }
     }

@@ -36,7 +36,6 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
@@ -65,11 +64,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-
-import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE;
-import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE_RESOURCE;
-import static com.sensoro.smartcity.constant.Constants.SELECT_TYPE_VALUES;
-import static com.sensoro.smartcity.constant.Constants.SENSOR_MENU_MATCHER_ARRAY;
+import java.util.Set;
 
 /**
  * Created by sensoro on 17/7/24.
@@ -87,7 +82,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     public volatile boolean hasGotToken = false;
     public static String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
     public AMapLocationClient mLocationClient;
-    public ArrayList<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
+    //    public ArrayList<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
     public BLEDeviceManager bleDeviceManager;
     public DeviceTypeMutualModel mDeviceTypeMutualModel;
 
@@ -168,20 +163,26 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         return instance;
     }
 
-    public synchronized void addData(List<DeviceInfo> list) {
+    public void addData(List<DeviceInfo> list) {
         if (list.size() > 0) {
-            HashSet<DeviceInfo> hashSet = new HashSet<>(mDeviceInfoList);
-            hashSet.addAll(list);
-            this.mDeviceInfoList.clear();
-            this.mDeviceInfoList.addAll(hashSet);
-            Collections.sort(mDeviceInfoList);
+            synchronized (mDeviceInfoList) {
+                Set<DeviceInfo> deviceInfos = new HashSet<>(mDeviceInfoList);
+                deviceInfos.addAll(list);
+                this.mDeviceInfoList.clear();
+                this.mDeviceInfoList.addAll(deviceInfos);
+                Collections.sort(mDeviceInfoList);
+            }
         }
     }
 
-    public synchronized void setData(List<DeviceInfo> list) {
-        this.mDeviceInfoList.clear();
-        this.mDeviceInfoList.addAll(new HashSet<>(list));
-        Collections.sort(mDeviceInfoList);
+    public void setData(List<DeviceInfo> list) {
+        synchronized (mDeviceInfoList) {
+            mDeviceInfoList.clear();
+            mDeviceInfoList.addAll(new HashSet<>(list));
+            Collections.sort(mDeviceInfoList);
+        }
+
+
     }
 
     private void initSensoroSDK() {
@@ -366,8 +367,10 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     private void initImagePicker() {
         ImagePicker imagePicker = ImagePicker.getInstance();
         imagePicker.setImageLoader(new GlideImageLoader());   //设置图片加载器
-        imagePicker.setShowCamera(false);                      //显示拍照按钮
-        imagePicker.setCrop(true);                           //允许裁剪（单选才有效）
+        imagePicker.setShowCamera(false);
+        //显示拍照按钮
+        //TODO 去掉裁剪
+        imagePicker.setCrop(false);                           //允许裁剪（单选才有效）
         imagePicker.setSaveRectangle(true);                   //是否按矩形区域保存
         imagePicker.setSelectLimit(9);              //选中数量限制
         imagePicker.setStyle(CropImageView.Style.RECTANGLE);  //裁剪框的形状
@@ -445,7 +448,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 //        FMMapSDK.init(this);
         //
         initVc();
-        initDeviceType();
+//        initDeviceType();
         initImagePicker();
         initUploadManager();
         locate();
@@ -479,26 +482,26 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         mDeviceTypeMutualModel = RetrofitServiceHelper.INSTANCE.getGson().fromJson(sb.toString(), DeviceTypeMutualModel.class);
     }
 
-    private void initDeviceType() {
-        for (int i = 0; i < SELECT_TYPE_VALUES.length; i++) {
-            mDeviceTypeList.add(new DeviceTypeModel(SELECT_TYPE[i], SELECT_TYPE_RESOURCE[i], SELECT_TYPE_VALUES[i]
-                    , SENSOR_MENU_MATCHER_ARRAY[i]));
-        }
-    }
+//    private void initDeviceType() {
+//        for (int i = 0; i < SELECT_TYPE_VALUES.length; i++) {
+//            mDeviceTypeList.add(new DeviceTypeModel(SELECT_TYPE[i], SELECT_TYPE_RESOURCE[i], SELECT_TYPE_VALUES[i]
+//                    , SENSOR_MENU_MATCHER_ARRAY[i]));
+//        }
+//    }
 
-    /**
-     * 根据unionType获取设备
-     *
-     * @param unionType
-     */
-    public DeviceTypeModel getDeviceTypeName(String unionType) {
-        for (DeviceTypeModel deviceTypeModel : mDeviceTypeList) {
-            if (deviceTypeModel.matcherType.equals(unionType)) {
-                return deviceTypeModel;
-            }
-        }
-        return null;
-    }
+//    /**
+//     * 根据unionType获取设备
+//     *
+//     * @param unionType
+//     */
+//    public DeviceTypeModel getDeviceTypeName(String unionType) {
+//        for (DeviceTypeModel deviceTypeModel : mDeviceTypeList) {
+//            if (deviceTypeModel.matcherType.equals(unionType)) {
+//                return deviceTypeModel;
+//            }
+//        }
+//        return null;
+//    }
 
     /**
      * 用handler

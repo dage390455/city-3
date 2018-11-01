@@ -8,12 +8,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.HomeTopModel;
 import com.sensoro.smartcity.widget.CustomVRecyclerView;
+import com.sensoro.smartcity.widget.CustomVRelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +82,7 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
         layoutManager.setOrientation(OrientationHelper.VERTICAL);
         holder.rvHorizontalItem.setLayoutManager(layoutManager);
         holder.rvHorizontalItem.setAdapter(item.innerAdapter);
+        holder.rvHorizontalItem.setNestedScrollingEnabled(true);
         if (item.scrollOffset > 0) {
             layoutManager.scrollToPositionWithOffset(item.scrollPosition, item.scrollOffset);
         }
@@ -149,7 +150,7 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
         @BindView(R.id.ic_no_content)
         LinearLayout noContent;
         @BindView(R.id.home_content_root)
-        RelativeLayout homeContentRoot;
+        CustomVRelativeLayout homeContentRoot;
 
         MyViewHolder(View itemView) {
             super(itemView);

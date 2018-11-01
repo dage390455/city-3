@@ -137,6 +137,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         aMap.setCustomMapStylePath(filePath + "/" + styleName);
 
     }
+
     @Override
     public void onMapLoaded() {
         refreshMap();
@@ -145,15 +146,17 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PushData data) {
         if (data != null) {
+            boolean needFresh = false;
             List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
             String sn = mDeviceInfo.getSn();
             for (DeviceInfo deviceInfo : deviceInfoList) {
                 if (sn.equals(deviceInfo.getSn())) {
                     mDeviceInfo = deviceInfo;
+                    needFresh = true;
                     break;
                 }
             }
-            if (mDeviceInfo != null && AppUtils.isActivityTop(mContext, MonitorPointMapActivity.class)) {
+            if (needFresh && AppUtils.isActivityTop(mContext, MonitorPointMapActivity.class)) {
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
@@ -235,7 +238,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //        aMap.clear();
 //        destPosition.latitude -=
         MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
-                .anchor(0.5f,0.95f)
+                .anchor(0.5f, 0.95f)
                 .position(destPosition)
                 .draggable(true);
         Marker marker = aMap.addMarker(markerOption);
@@ -339,7 +342,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
         double[] lonlat = mDeviceInfo.getLonlat();
 
-        if (lonlat != null&&lonlat.length>1&&lonlat[0]!=0&&lonlat[1]!=0) {
+        if (lonlat != null && lonlat.length > 1 && lonlat[0] != 0 && lonlat[1] != 0) {
             double lat = lonlat[1];//获取纬度
             double lon = lonlat[0];//获取经度
             LatLng latLng = new LatLng(lat, lon);

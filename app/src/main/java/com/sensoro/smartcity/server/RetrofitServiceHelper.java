@@ -10,6 +10,7 @@ import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
@@ -95,7 +96,9 @@ public enum RetrofitServiceHelper {
                 .registerTypeAdapter(float.class, new NumberDeserializer())
                 .registerTypeAdapter(long.class, new NumberDeserializer())
                 .registerTypeAdapter(short.class, new NumberDeserializer())
-                .registerTypeAdapter(Number.class, new NumberDeserializer());
+                .registerTypeAdapter(Number.class, new NumberDeserializer())
+                .registerTypeAdapter(JsonObject.class, new JsonObjectDeserializer())
+                .registerTypeAdapter(String.class, new StringDeserializer());
         gson = gsonBuilder.create();
         //支持RxJava
         builder = new Retrofit.Builder().baseUrl(BASE_URL).client(getNewClient())

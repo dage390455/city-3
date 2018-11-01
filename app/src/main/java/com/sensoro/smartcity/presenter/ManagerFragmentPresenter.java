@@ -220,12 +220,13 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
-        if (code == EVENT_DATA_SEARCH_MERCHANT) {
-            if (data != null && data instanceof EventLoginData) {
-                checkPermission((EventLoginData) data);
-            }
+        switch (code) {
+            case EVENT_DATA_SEARCH_MERCHANT:
+                if (data != null && data instanceof EventLoginData) {
+                    checkPermission((EventLoginData) data);
+                }
+                break;
         }
-        LogUtils.loge(this, eventData.toString());
     }
 
     public void doSignalCheck() {

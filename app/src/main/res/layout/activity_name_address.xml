@@ -1,49 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_fafafa"
-    >
+    android:background="@color/c_fafafa">
 
-<include
-    android:id="@+id/ac_nam_address_root"
-    layout="@layout/item_include_text_title"/>
+    <include
+        android:id="@+id/ac_nam_address_root"
+        layout="@layout/item_include_text_title" />
+
     <LinearLayout
         android:id="@+id/ac_nam_address_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_below="@id/ac_nam_address_root"
+        android:layout_marginTop="12dp"
         android:background="@color/white"
         android:focusable="true"
-        android:layout_below="@id/ac_nam_address_root"
         android:focusableInTouchMode="true"
-        android:layout_marginTop="12dp"
-        >
+        android:orientation="horizontal">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="名称/地址"
-            android:textSize="14sp"
-            android:textColor="@color/c_a6a6a6"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:layout_gravity="center_vertical"
-            />
+            android:text="名称/地址"
+            android:textColor="@color/c_a6a6a6"
+            android:textSize="14sp" />
+
         <EditText
             android:id="@+id/ac_name_address_et"
             android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_gravity="center_vertical"
             android:layout_height="wrap_content"
-            android:gravity="end"
-            android:layout_marginEnd="20dp"
-            android:textSize="14sp"
-            android:textColor="@color/c_252525"
+            android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
+            android:layout_marginEnd="20dp"
+            android:layout_weight="1"
             android:background="@null"
-            />
+            android:gravity="end"
+            android:singleLine="true"
+            android:scrollbars="horizontal"
+            android:textColor="@color/c_252525"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
@@ -51,21 +51,21 @@
         android:id="@+id/ac_nam_address_tv_history"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="历史标签"
-        android:textSize="14sp"
-        android:textColor="@color/c_252525"
+        android:layout_below="@id/ac_nam_address_ll"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:layout_below="@id/ac_nam_address_ll"
-        />
+        android:text="历史标签"
+        android:textColor="@color/c_252525"
+        android:textSize="14sp" />
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/ac_nam_address_rc_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
         android:layout_below="@id/ac_nam_address_tv_history"
-        android:layout_marginTop="16dp">
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="20dp">
 
     </android.support.v7.widget.RecyclerView>
 
@@ -73,18 +73,17 @@
         android:id="@+id/ac_nam_address_tv_save"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
         android:background="@drawable/shape_bg_corner_29c_shadow"
         android:gravity="center"
-        android:paddingBottom="10dp"
         android:paddingTop="10dp"
+        android:paddingBottom="10dp"
         android:text="保存"
         android:textColor="@color/white"
-        android:textSize="16sp"
-        />
+        android:textSize="16sp" />
 
 
 </RelativeLayout>

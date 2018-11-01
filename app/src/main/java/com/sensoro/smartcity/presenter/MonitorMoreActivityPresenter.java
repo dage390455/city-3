@@ -211,15 +211,17 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(PushData data) {
         if (data != null) {
+            boolean needFresh = false;
             DeviceInfo tempDeviceInfo = null;
             List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
             for (DeviceInfo deviceInfo : deviceInfoList) {
                 if (mSn.equals(deviceInfo.getSn())) {
                     tempDeviceInfo = deviceInfo;
+                    needFresh = true;
                     break;
                 }
             }
-            if (tempDeviceInfo != null && isActivityTop()) {
+            if (needFresh && isActivityTop()) {
                 final DeviceInfo finalTempDeviceInfo = tempDeviceInfo;
                 mContext.runOnUiThread(new Runnable() {
                     @Override

@@ -115,59 +115,46 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mContext = (Activity) context;
         onCreate();
         //
+        alarmModel.type = 0;
         alarmModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        normalModel.type = 1;
         normalModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        lostModel.type = 2;
         lostModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        inactiveModel.type = 3;
         inactiveModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
-        //
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                 if (PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
-                    requestInitData(true);
+                    requestInitData();
                 }
-
             }
         };
         mSoundPool.setOnLoadCompleteListener(listener);
         mSoundId = mSoundPool.load(context, R.raw.alarm, 1);
         mHandler.postDelayed(mTask, 3000);
         getView().setImvHeaderLeftVisible(false);
-        alarmModel.type = 0;
-        //
-        normalModel.type = 1;
-        mHomeTopModels.add(normalModel);
-        //
-        lostModel.type = 2;
-        mHomeTopModels.add(lostModel);
-        //
-        inactiveModel.type = 3;
-        mHomeTopModels.add(inactiveModel);
-        getView().refreshHeaderData(true, mHomeTopModels);
     }
 
 
-    private void requestInitData(final boolean isInit) {
+    private void requestInitData() {
         if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
             return;
         }
-        if (isInit) {
-            getView().showProgressDialog();
-        }
+        getView().showProgressDialog();
         LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
                 .io()).flatMap(new Func1<DeviceTypeCountRsp, Observable<DeviceInfoListRsp>>() {
             @Override
             public Observable<DeviceInfoListRsp> call(DeviceTypeCountRsp deviceTypeCountRsp) {
                 mHomeTopModels.clear();
-                if (isInit) {
-                    alarmModel.clearData();
-                    normalModel.clearData();
-                    lostModel.clearData();
-                    inactiveModel.clearData();
-                    SensoroCityApplication.getInstance().getData().clear();
-                }
+                alarmModel.clearData();
+                normalModel.clearData();
+                lostModel.clearData();
+                inactiveModel.clearData();
+                SensoroCityApplication.getInstance().getData().clear();
                 final int alarmCount = deviceTypeCountRsp.getData().getAlarm();
                 int normal = deviceTypeCountRsp.getData().getNormal();
                 int lostCount = deviceTypeCountRsp.getData().getOffline();
@@ -177,44 +164,49 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     tempAlarmCount = alarmCount;
                     mHomeTopModels.add(alarmModel);
                 }
-                //
-                normalModel.value = normal;
-                mHomeTopModels.add(normalModel);
-                //
-                lostModel.value = lostCount;
-                mHomeTopModels.add(lostModel);
-                //
-                inactiveModel.value = inactiveCount;
-                mHomeTopModels.add(inactiveModel);
+                if (normal > 0) {
+                    normalModel.value = normal;
+                    mHomeTopModels.add(normalModel);
+                }
+                if (lostCount > 0) {
+                    lostModel.value = lostCount;
+                    mHomeTopModels.add(lostModel);
+                }
+                if (inactiveCount > 0) {
+                    inactiveModel.value = inactiveCount;
+                    mHomeTopModels.add(inactiveModel);
+                }
                 //
                 totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount;
                 page = 1;
                 mCurrentHomeTopModel = mHomeTopModels.get(0);
 
-                return getAllDeviceInfoListRspObservable(isInit);
+                return getAllDeviceInfoListRspObservable(true);
             }
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-
-                getView().setDetectionPoints(String.valueOf(totalMonitorPoint));
-                getView().refreshHeaderData(isInit, mHomeTopModels);
-                getView().refreshContentData(isInit, mHomeTopModels);
-                if (isInit) {
-                    String currentDataStr = getCurrentDataStr();
-                    int currentColor = getCurrentColor();
-                    getView().setToolbarTitleBackgroundColor(currentColor);
-                    getView().setToolbarTitleCount(currentDataStr);
-                }
+                freshHeaderContentData();
                 getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
+                freshHeaderContentData();
                 getView().toastShort(errorMsg);
+                getView().dismissProgressDialog();
             }
         });
+    }
+
+    private void freshHeaderContentData() {
+        getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+        getView().refreshHeaderData(true, mHomeTopModels);
+        getView().refreshContentData(true, mHomeTopModels);
+        String currentDataStr = getCurrentDataStr();
+        int currentColor = getCurrentColor();
+        getView().setToolbarTitleBackgroundColor(currentColor);
+        getView().setToolbarTitleCount(currentDataStr);
     }
 
     @NonNull
@@ -322,7 +314,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             pushList.addAll(normalModel.mDeviceList);
             pushList.addAll(lostModel.mDeviceList);
             pushList.addAll(inactiveModel.mDeviceList);
-            SensoroCityApplication.getInstance().addData(pushList);
+            SensoroCityApplication.getInstance().setData(pushList);
             Collections.sort(pushList);
             //推送数据
             PushData pushData = new PushData();
@@ -346,7 +338,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 @Override
                 public void run() {
                     getView().refreshHeaderData(false, mHomeTopModels);
-                    getView().setDetectionPoints(String.valueOf(totalMonitorPoint));
+                    getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
                     if (needAlarmPlay) {
                         playSound();
                         needAlarmPlay = false;
@@ -434,7 +426,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         switch (code) {
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
-//                    LogUtils.loge("new Socket SN = " + ((DeviceInfo) data).getSn());
                     organizeJsonData((DeviceInfo) data);
                     needRefreshContent = true;
                 }
@@ -468,15 +459,18 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         alarmModel.value = tempAlarmCount;
                         mHomeTopModels.add(alarmModel);
                     }
-                    //
-                    normalModel.value = normalCount;
-                    mHomeTopModels.add(normalModel);
-                    //
-                    lostModel.value = lostCount;
-                    mHomeTopModels.add(lostModel);
-                    //
-                    inactiveModel.value = inactiveCount;
-                    mHomeTopModels.add(inactiveModel);
+                    if (normalCount > 0) {
+                        normalModel.value = normalCount;
+                        mHomeTopModels.add(normalModel);
+                    }
+                    if (lostCount > 0) {
+                        lostModel.value = lostCount;
+                        mHomeTopModels.add(lostModel);
+                    }
+                    if (inactiveCount > 0) {
+                        inactiveModel.value = inactiveCount;
+                        mHomeTopModels.add(inactiveModel);
+                    }
                     totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount;
                     needRefreshHeader = true;
                 }
@@ -485,7 +479,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        requestInitData(true);
+                        requestInitData();
                     }
                 });
                 break;
@@ -523,6 +517,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         public void onErrorMsg(int errorCode, String errorMsg) {
                             getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);
+                            getView().recycleViewRefreshComplete();
                         }
                     });
                     break;
@@ -564,6 +559,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         public void onErrorMsg(int errorCode, String errorMsg) {
                             getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);
+                            getView().recycleViewRefreshComplete();
                         }
                     });
                     break;
@@ -801,5 +797,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 return R.color.c_b6b6b6;
         }
         return R.color.c_29c093;
+    }
+
+    public boolean hasContentData() {
+        if (mCurrentHomeTopModel != null) {
+            return mCurrentHomeTopModel.innerAdapter.getData().size() > 0;
+        }
+        return false;
     }
 }
