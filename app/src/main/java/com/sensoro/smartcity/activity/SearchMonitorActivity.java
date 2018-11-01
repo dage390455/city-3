@@ -385,6 +385,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void setSearchHistoryLayoutVisible(boolean isVisible) {
         mSearchHistoryLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+        mClearBtn.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
     @Override
@@ -399,7 +400,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void setTipsLinearLayoutVisible(boolean isVisible) {
-        tipsLinearLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+//        tipsLinearLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+        tipsLinearLayout.setVisibility(View.GONE);
     }
 
 
@@ -473,15 +475,15 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if (!TextUtils.isEmpty(s.toString())) {
-            setSearchHistoryLayoutVisible(false);
-            setRelationLayoutVisible(true);
-            mPresenter.filterDeviceInfo(s.toString());
-        } else {
+//        if (!TextUtils.isEmpty(s.toString())) {
+//            setSearchHistoryLayoutVisible(false);
+//            setRelationLayoutVisible(true);
+//            mPresenter.filterDeviceInfo(s.toString());
+//        } else {
             setSearchHistoryLayoutVisible(true);
             setRelationLayoutVisible(false);
             setIndexListLayoutVisible(false);
-        }
+//        }
     }
 
     @Override

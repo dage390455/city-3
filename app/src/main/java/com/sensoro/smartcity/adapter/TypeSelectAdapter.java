@@ -66,7 +66,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     @Override
     public void onBindViewHolder(final TypeSelectHolder holder, final int position) {
         if (position == 0) {
-            holder.itemPopSelectTvTypeName.setText("全部");
+            holder.itemPopSelectTvTypeName.setText("全部类型");
             changeIconColor(holder, position != selectPosition, mContext.getResources().getDrawable(R.drawable.type_all_test));
         } else {
             final int index = position - 1;

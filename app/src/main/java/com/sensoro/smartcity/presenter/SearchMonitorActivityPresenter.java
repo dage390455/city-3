@@ -344,7 +344,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         mHistoryKeywords.clear();
         mEditor.commit();
         getView().updateSearchHistoryData(mHistoryKeywords);
-        getView().setSearchHistoryLayoutVisible(false);
+//        getView().setSearchHistoryLayoutVisible(false);
     }
 
     public void requestWithDirection(int direction, String searchText) {

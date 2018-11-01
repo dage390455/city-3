@@ -448,10 +448,17 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //        ArrayAdapter<String> adapter = (ArrayAdapter<String>) parent.getAdapter();
+
         switch (parent.getId()) {
             case R.id.spinner_result:
                 tvSpinnerResultInfo.setText(alarmResultInfo.get(position));
                 selectResult = resultArr[position];
+                if (selectResult != -1) {
+                    tvSpinnerResultInfo.setVisibility(View.VISIBLE);
+                }else{
+                    tvSpinnerResultInfo.setVisibility(View.GONE);
+                }
+
                 LogUtils.loge("结果类型：" + selectResult);
                 break;
             case R.id.spinner_type:

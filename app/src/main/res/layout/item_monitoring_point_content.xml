@@ -1,28 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal">
-
-    <TextView
-        android:id="@+id/item_monitoring_point_content_tv_name"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_weight="1"
-        android:textColor="@color/c_252525"
-        android:textSize="14sp" />
-
-    <TextView
-        android:id="@+id/item_monitoring_point_content_tv_content"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:layout_marginTop="15dp"
-        android:layout_marginBottom="15dp"
-        android:textColor="@color/c_29c093"
-        android:textSize="24sp" />
-
     <TextView
         android:id="@+id/item_monitoring_point_content_tv_unit"
         android:layout_width="wrap_content"
@@ -30,8 +10,33 @@
         android:layout_marginTop="15dp"
         android:layout_marginBottom="15dp"
         android:gravity="bottom"
+        android:layout_alignParentEnd="true"
         android:layout_marginStart="4dp"
         android:textColor="@color/c_29c093"
         android:textSize="14sp" />
+    <TextView
+        android:id="@+id/item_monitoring_point_content_tv_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:textColor="@color/c_252525"
+        android:textSize="14sp" />
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/item_monitoring_point_content_tv_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="15dp"
+        android:layout_marginBottom="15dp"
+        android:textColor="@color/c_29c093"
+        android:gravity="end"
+        android:layout_marginStart="8dp"
+        android:layout_centerVertical="true"
+        android:layout_toEndOf="@id/item_monitoring_point_content_tv_name"
+        android:layout_toStartOf="@id/item_monitoring_point_content_tv_unit"
+        android:textSize="24sp" />
+
+
+
+</RelativeLayout>

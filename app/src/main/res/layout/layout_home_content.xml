@@ -27,7 +27,7 @@
             android:paddingBottom="6dp"
             android:text="全部类型"
             android:textColor="@color/c_a6a6a6"
-            android:textSize="12sp" />
+            android:textSize="14sp" />
     </FrameLayout>
 
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
