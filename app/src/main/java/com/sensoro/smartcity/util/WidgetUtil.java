@@ -663,19 +663,33 @@ public class WidgetUtil {
                 }
             }
         } else {
-            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
-                DecimalFormat df = new DecimalFormat("###.##");
-                setIndexTextStyle(df.format(value), valueTextView);
-            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
-                    .equalsIgnoreCase
-                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
-                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
-                DecimalFormat df = new DecimalFormat("###.#");
-                setIndexTextStyle(df.format(value), valueTextView);
-            } else {
-                valueTextView.setText("" + String.format("%.0f", Double.valueOf(value
-                        .toString())));
+            if (value instanceof String) {
+                if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
+                    setIndexTextStyle((String) value, valueTextView);
+                } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+                        .equalsIgnoreCase
+                                ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+                        .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
+                    setIndexTextStyle((String) value, valueTextView);
+                } else {
+                    valueTextView.setText((String) value);
+                }
+            } else if (value instanceof Number) {
+                if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
+                    DecimalFormat df = new DecimalFormat("###.##");
+                    setIndexTextStyle(df.format(value), valueTextView);
+                } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+                        .equalsIgnoreCase
+                                ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+                        .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
+                    DecimalFormat df = new DecimalFormat("###.#");
+                    setIndexTextStyle(df.format(value), valueTextView);
+                } else {
+                    valueTextView.setText("" + String.format("%.0f", Double.valueOf(value
+                            .toString())));
+                }
             }
+
         }
     }
 
