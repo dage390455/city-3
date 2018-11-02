@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_f4f4f4">
+    >
 
     <include
         android:id="@+id/ac_inspection_upload_exception_title"
@@ -29,7 +29,8 @@
         android:layout_height="match_parent"
         android:layout_below="@id/ac_inspection_upload_exception_title"
         android:layout_above="@id/ac_inspection_upload_exception_tv_upload"
-        android:background="@color/c_fafafa">
+        android:background="@color/c_f4f4f4"
+        >
 
         <LinearLayout
             android:layout_width="match_parent"

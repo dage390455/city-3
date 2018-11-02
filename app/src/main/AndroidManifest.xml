@@ -223,7 +223,7 @@
             android:windowSoftInputMode="adjustPan|stateHidden" />
         <activity android:name=".activity.InspectionActivity" />
         <activity android:name=".activity.InspectionExceptionDetailActivity" />
-        <activity android:name=".activity.InspectionUploadExceptionActivity" />
+        <activity android:name=".activity.InspectionUploadExceptionActivity" android:windowSoftInputMode="adjustPan"/>
         <activity android:name=".activity.AlarmHistoryLogActivity" />
 
         <service android:name="com.sensoro.libbleserver.ble.scanner.BLEDeviceService" />
