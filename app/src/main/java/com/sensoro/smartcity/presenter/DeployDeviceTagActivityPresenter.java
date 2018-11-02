@@ -55,8 +55,12 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     }
 
     public void addTags(String tag) {
-        if (mTagList.size() >= 5) {
-            getView().toastShort("最多只能添加5个标签");
+        if (TextUtils.isEmpty(tag)){
+            getView().toastShort("请设置标签");
+            return;
+        }
+        if (mTagList.size() >= 8) {
+            getView().toastShort("最多只能添加8个标签");
         } else {
             if (!TextUtils.isEmpty(tag)) {
                 String trim = tag.trim();
@@ -74,8 +78,8 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
 
     public void addTags(int position) {
         String test = mHistoryKeywords.get(position);
-        if (mTagList.size() >= 5) {
-            getView().toastShort("最多只能添加5个标签");
+        if (mTagList.size() >= 8) {
+            getView().toastShort("最多只能添加8个标签");
         } else {
             if (!TextUtils.isEmpty(test)) {
                 String trim = test.trim();
@@ -91,8 +95,8 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     }
 
     public void doFinish() {
-        if (mTagList.size() > 5) {
-            getView().toastShort("最多只能添加5个标签");
+        if (mTagList.size() > 8) {
+            getView().toastShort("最多只能添加8个标签");
         } else {
             for (String temp : mTagList) {
                 if (ResourceUtils.getByteFromWords(temp) > 30) {
@@ -143,7 +147,7 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
 
 
     public void doEditTag(int position) {
-        if(position<mTagList.size()){
+        if (position < mTagList.size()) {
             String tag = mTagList.get(position);
             getView().showDialogWithEdit(tag, position);
         }
@@ -151,6 +155,10 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     }
 
     public void updateEditTag(int position, String text) {
+        if (TextUtils.isEmpty(text)){
+            getView().toastShort("请设置标签");
+            return;
+        }
         mTagList.set(position, text);
         getView().updateTags(mTagList);
         getView().dismissDialog();

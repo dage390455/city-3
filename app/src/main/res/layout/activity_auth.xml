@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
     android:background="@color/white"
     android:layout_width="match_parent"
@@ -132,53 +131,121 @@
             android:layout_height="@dimen/y200" />
     </LinearLayout>
 </RelativeLayout>-->
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
+
     <ImageView
         android:id="@+id/ac_auth_imv_finish"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/arrows_left"
         android:layout_marginStart="10dp"
         android:layout_marginTop="10dp"
-        android:padding="10dp"
         android:contentDescription="@null"
-        />
+        android:padding="10dp"
+        android:src="@drawable/arrows_left" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        >
+        android:orientation="vertical">
+
         <ImageView
             android:id="@+id/ac_auth_imv_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             android:layout_marginTop="50dp"
             android:contentDescription="@null"
-            android:src="@drawable/deploy_succeed"
-            android:layout_gravity="center_horizontal"
-            />
+            android:src="@drawable/deploy_succeed" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
             android:text="二次验证"
             android:textColor="@color/c_252525"
-            android:textSize="20sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"/>
+            android:textSize="20sp" />
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="4dp"
             android:text="为了账户安全，需要您进行二次验证"
             android:textColor="@color/c_b6b6b6"
-            android:textSize="12sp"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="4dp"/>
+            android:textSize="12sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="53dp"
+                android:background="@drawable/shape_bg_solid_f7_corner_4dp"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="@color/c_252525"
+                android:textSize="40sp" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="53dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/shape_bg_solid_f7_corner_4dp"
+                android:gravity="center"
+                android:text="2"
+                android:textColor="@color/c_252525"
+                android:textSize="40dp" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="53dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/shape_bg_solid_f7_corner_4dp"
+                android:gravity="center"
+                android:text="3"
+                android:textColor="@color/c_252525"
+                android:textSize="40dp" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="53dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/shape_bg_solid_f7_corner_4dp"
+                android:gravity="center"
+                android:text="4"
+                android:textColor="@color/c_252525"
+                android:textSize="40dp" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="53dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/shape_bg_solid_f7_corner_4dp"
+                android:gravity="center"
+                android:text="5"
+                android:textColor="@color/c_252525"
+                android:textSize="40dp" />
+
+            <TextView
+                android:layout_width="40dp"
+                android:layout_height="53dp"
+                android:layout_marginStart="12dp"
+                android:background="@drawable/shape_bg_solid_f7_corner_4dp"
+                android:gravity="center"
+                android:text="6"
+                android:textColor="@color/c_252525"
+                android:textSize="40dp" />
+        </LinearLayout>
+
         <TextView
             android:id="@+id/ac_auth_tv_Verification"
             android:layout_width="wrap_content"
@@ -186,16 +253,16 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="40dp"
             android:textColor="@color/c_252525"
-            android:textSize="40sp"
-            />
+            android:textSize="40sp" />
     </LinearLayout>
+
     <com.sensoro.smartcity.widget.NumKeyboard
         android:id="@+id/ac_auth_keyboard"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:background="#E2E2E2"
         android:focusable="true"
-        android:layout_alignParentBottom="true"
         android:focusableInTouchMode="true"
         android:keyBackground="@drawable/selector_keyboard_view"
         android:keyTextColor="@color/c_252525"

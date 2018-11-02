@@ -19,8 +19,10 @@ import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.TouchRecyclerview;
+import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.TouchRecycleView;
 
 import java.util.List;
 
@@ -70,7 +72,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     @BindView(R.id.monitor_detail_tv_sn)
     TextView monitorDetailTvSn;
     @BindView(R.id.monitor_detail_rc_tag)
-    TouchRecyclerview monitorDetailRcTag;
+    TouchRecycleView monitorDetailRcTag;
     @BindView(R.id.monitor_detail_tv_battery)
     TextView monitorDetailTvBattery;
     @BindView(R.id.monitor_detail_tv_interval)
@@ -114,9 +116,17 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         includeTextTitleTvSubtitle.setText("预警日志");
         //
         mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
-        LinearLayoutManager tagManager = new LinearLayoutManager(mActivity);
-        tagManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        monitorDetailRcTag.setLayoutManager(tagManager);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false) {
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+        monitorDetailRcTag.setIntercept(true);
+        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        monitorDetailRcTag.setLayoutManager(layoutManager);
         monitorDetailRcTag.setAdapter(mTagAdapter);
         //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
@@ -217,7 +227,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     @Override
-    public void setDeviceLocation(String location,boolean isArrowsRight) {
+    public void setDeviceLocation(String location, boolean isArrowsRight) {
         acMonitoringPointTvLocation.setText(location);
         acMonitoringPointImvLocation.setVisibility(isArrowsRight ? View.VISIBLE : View.GONE);
     }

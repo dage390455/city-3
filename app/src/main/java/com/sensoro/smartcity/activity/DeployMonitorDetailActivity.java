@@ -20,8 +20,10 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.TouchRecyclerview;
+import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 
@@ -48,11 +50,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @BindView(R.id.ac_deploy_device_detail_ll_name_location)
     LinearLayout acDeployDeviceDetailLlNameLocation;
     @BindView(R.id.ac_deploy_device_detail_rc_tag)
-    TouchRecyclerview acDeployDeviceDetailRcTag;
+    TouchRecycleView acDeployDeviceDetailRcTag;
     @BindView(R.id.ac_deploy_device_detail_rl_tag)
     RelativeLayout acDeployDeviceDetailRlTag;
     @BindView(R.id.ac_deploy_device_detail_rc_alarm_contact)
-    TouchRecyclerview acDeployDeviceDetailRcAlarmContact;
+    TouchRecycleView acDeployDeviceDetailRcAlarmContact;
     @BindView(R.id.ac_deploy_device_detail_ll_alarm_contact)
     LinearLayout acDeployDeviceDetailLlAlarmContact;
     @BindView(R.id.ac_deploy_device_detail_tv_deploy_pic)
@@ -104,11 +106,20 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     private void initRcDeployDeviceTag() {
-        acDeployDeviceDetailRcTag.setIntercept(false);
-        mTagAdapter = new TagAdapter(mActivity,R.color.c_252525,R.color.c_dfdfdf);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        acDeployDeviceDetailRcTag.setLayoutManager(manager);
+        acDeployDeviceDetailRcTag.setIntercept(true);
+        mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
+        //
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false){
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+        acDeployDeviceDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        acDeployDeviceDetailRcTag.setLayoutManager(layoutManager);
         acDeployDeviceDetailRcTag.setAdapter(mTagAdapter);
     }
 
@@ -175,7 +186,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 //        builder.setView(view);
 //        builder.setCancelable(false);
 //        mUploadDialog = builder.create();
-        mUploadDialog = new CustomCornerDialog(mActivity,R.style.CustomCornerDialogStyle,view);
+        mUploadDialog = new CustomCornerDialog(mActivity, R.style.CustomCornerDialogStyle, view);
     }
 
     @Override
@@ -304,7 +315,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void showUploadProgressDialog(String content ,double percent) {
+    public void showUploadProgressDialog(String content, double percent) {
         if (progressDialog != null) {
 //            String title = "正在上传第" + currentNum + "张，总共" + count + "张";
             progressDialog.setProgress((int) (percent * 100));
@@ -377,8 +388,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (tipBleDialogUtils!=null){
-            tipBleDialogUtils.onActivityResult(requestCode,resultCode,data);
+        if (tipBleDialogUtils != null) {
+            tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
         }
     }
 

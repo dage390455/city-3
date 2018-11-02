@@ -110,13 +110,13 @@
                     android:layout_toEndOf="@id/ac_deploy_device_detail_tv_tag"
                     android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag">
 
-                    <com.sensoro.smartcity.widget.TouchRecyclerview
+                    <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/ac_deploy_device_detail_rc_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true">
 
-                    </com.sensoro.smartcity.widget.TouchRecyclerview>
+                    </com.sensoro.smartcity.widget.TouchRecycleView>
                 </RelativeLayout>
 
 
@@ -147,14 +147,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.sensoro.smartcity.widget.TouchRecyclerview
+                    <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="8dp">
 
-                    </com.sensoro.smartcity.widget.TouchRecyclerview>
+                    </com.sensoro.smartcity.widget.TouchRecycleView>
                 </RelativeLayout>
 
 
