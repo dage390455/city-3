@@ -200,13 +200,18 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private void freshHeaderContentData() {
-        getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
-        getView().refreshHeaderData(true, mHomeTopModels);
-        getView().refreshContentData(true, mHomeTopModels);
-        String currentDataStr = getCurrentDataStr();
-        int currentColor = getCurrentColor();
-        getView().setToolbarTitleBackgroundColor(currentColor);
-        getView().setToolbarTitleCount(currentDataStr);
+        try {
+            getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+            getView().refreshHeaderData(true, mHomeTopModels);
+            getView().refreshContentData(true, mHomeTopModels);
+            String currentDataStr = getCurrentDataStr();
+            int currentColor = getCurrentColor();
+            getView().setToolbarTitleBackgroundColor(currentColor);
+            getView().setToolbarTitleCount(currentDataStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @NonNull

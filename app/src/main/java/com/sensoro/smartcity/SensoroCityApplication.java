@@ -1,7 +1,6 @@
 package com.sensoro.smartcity;
 
 import android.content.Context;
-import android.content.res.AssetManager;
 import android.os.Build;
 import android.os.Environment;
 import android.os.Handler;
@@ -36,11 +35,8 @@ import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.model.DeviceTypeMutualModel;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
-import com.sensoro.smartcity.push.ThreadPoolManager;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DynamicTimeFormat;
@@ -56,10 +52,7 @@ import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.yixia.camera.VCamera;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
@@ -80,11 +73,11 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     private static PushHandler pushHandler;
     public UploadManager uploadManager;
     public volatile boolean hasGotToken = false;
-    public static String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
+    public static String VIDEO_PATH;
     public AMapLocationClient mLocationClient;
     //    public ArrayList<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
     public BLEDeviceManager bleDeviceManager;
-    public DeviceTypeMutualModel mDeviceTypeMutualModel;
+//    public DeviceTypeMutualModel mDeviceTypeMutualModel;
 
     static {
         //启用矢量图兼容
@@ -128,7 +121,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     public void onCreate() {
         super.onCreate();
         instance = this;
-        init();
+//        init();
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not initView your app in this process.
@@ -245,12 +238,29 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         mLocationClient.onDestroy();
     }
 
-    private void init() {
+    public void init() {
+        VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
         initSensoroSDK();
-        ThreadPoolManager.getInstance().execute(this);
+        initORC();
+        SensoroPushManager.getInstance().registerSensoroPushListener(this);
+        Repause.init(this);
+        Repause.registerListener(this);
+        mNotificationUtils = new NotificationUtils(this);
+        api = WXAPIFactory.createWXAPI(this, Constants.APP_ID, false);
+        api.registerApp(Constants.APP_ID);
+//        FMMapSDK.init(this);
+        //
+        initVc();
+//        initDeviceType();
+        initImagePicker();
+        initUploadManager();
+        locate();
+//        paseDeviceJsonByAssets();
+        initBugLy();
+//        ThreadPoolManager.getInstance().execute(this);
     }
 
     private void initVc() {
@@ -452,35 +462,35 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         initImagePicker();
         initUploadManager();
         locate();
-        paseDeviceJsonByAssets();
+//        paseDeviceJsonByAssets();
         initBugLy();
     }
 
-    private void paseDeviceJsonByAssets() {
-        StringBuilder sb = new StringBuilder();
-        AssetManager assetManager = getAssets();
-        BufferedReader bufferedReader = null;
-        try {
-            bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open("deviceModel.json"), "utf-8"));
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                sb.append(line);
-            }
-            bufferedReader.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } finally {
-            try {
-                if (bufferedReader != null) {
-                    bufferedReader.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        mDeviceTypeMutualModel = RetrofitServiceHelper.INSTANCE.getGson().fromJson(sb.toString(), DeviceTypeMutualModel.class);
-    }
+//    private void paseDeviceJsonByAssets() {
+//        StringBuilder sb = new StringBuilder();
+//        AssetManager assetManager = getAssets();
+//        BufferedReader bufferedReader = null;
+//        try {
+//            bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open("deviceModel.json"), "utf-8"));
+//            String line;
+//            while ((line = bufferedReader.readLine()) != null) {
+//                sb.append(line);
+//            }
+//            bufferedReader.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//
+//        } finally {
+//            try {
+//                if (bufferedReader != null) {
+//                    bufferedReader.close();
+//                }
+//            } catch (IOException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//        mDeviceTypeMutualModel = RetrofitServiceHelper.INSTANCE.getGson().fromJson(sb.toString(), DeviceTypeMutualModel.class);
+//    }
 
 //    private void initDeviceType() {
 //        for (int i = 0; i < SELECT_TYPE_VALUES.length; i++) {

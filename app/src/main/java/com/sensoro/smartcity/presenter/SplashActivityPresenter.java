@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
 import android.text.TextUtils;
 
 import com.igexin.sdk.PushManager;
@@ -21,10 +22,12 @@ import com.sensoro.smartcity.util.PreferencesHelper;
 
 public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements Constants {
     private Activity mContext;
+    private final Handler handler = new Handler();
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        SensoroCityApplication.getInstance().init();
         //TODO 逻辑判断
         initPushSDK();
         checkLoginState();
@@ -37,6 +40,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             String sessionID = RetrofitServiceHelper.INSTANCE.getSessionId();
             LogUtils.loge("sessionID = " + sessionID);
             if (TextUtils.isEmpty(sessionID)) {
+
                 openLogin();
                 return;
             }
@@ -56,18 +60,31 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 
     //没有登录跳转登录界面
     private void openLogin() {
-        Intent loginIntent = new Intent();
-        loginIntent.setClass(mContext, LoginActivity.class);
-        getView().startAC(loginIntent);
-        getView().finishAc();
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent loginIntent = new Intent();
+                loginIntent.setClass(mContext, LoginActivity.class);
+                getView().startAC(loginIntent);
+                getView().finishAc();
+            }
+        }, 500);
+
     }
 
-    private void openMain(EventLoginData eventLoginData) {
-        Intent mainIntent = new Intent();
-        mainIntent.setClass(mContext, MainActivity.class);
-        mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
-        getView().startAC(mainIntent);
-        getView().finishAc();
+    private void openMain(final EventLoginData eventLoginData) {
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                Intent mainIntent = new Intent();
+                mainIntent.setClass(mContext, MainActivity.class);
+                mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
+                getView().startAC(mainIntent);
+                getView().finishAc();
+            }
+        }, 500);
+
+
     }
 
     private void initPushSDK() {
@@ -88,5 +105,6 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     @Override
     public void onDestroy() {
         LogUtils.loge("SplashActivityPresenter onDestroy ");
+        handler.removeCallbacksAndMessages(null);
     }
 }
