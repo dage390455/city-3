@@ -54,6 +54,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     private int sendCount;
     private int receiveCount;
     private int selectedFreq = 0;
+    private boolean isConnected = false;
 
     @Override
     public void initData(Context context) {
@@ -142,7 +143,10 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
-
+        if (bleDevice.getSn().equals(mDeviceInfo.getSn())&& !isConnected) {
+            bleAddress = null;
+            getView().setNearVisible(false);
+        }
     }
 
     @Override
@@ -204,7 +208,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         try {
             mConnection.connect(blePassword, SignalCheckActivityPresenter.this);
             getView().updateProgressDialogMessage("正在连接...");
-            stopScanService();
+//            stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
             getView().dismissProgressDialog();
@@ -225,6 +229,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     @Override
     public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
+        isConnected = true;
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -248,6 +253,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     @Override
     public void onConnectedFailure(final int errorCode) {
+        isConnected = false;
         clickCount = 0;
         isAutoConnect = false;
         mActivity.runOnUiThread(new Runnable() {
