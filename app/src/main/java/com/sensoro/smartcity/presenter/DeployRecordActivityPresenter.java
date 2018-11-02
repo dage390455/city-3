@@ -11,7 +11,9 @@ import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
@@ -20,13 +22,17 @@ import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordActivityView>
-        implements Constants, CalendarPopUtils.OnCalendarPopupCallbackListener {
+        implements Constants, IOnCreate, CalendarPopUtils.OnCalendarPopupCallbackListener {
     private String tempSearch;
     private Long startTime;
     private Long endTime;
@@ -36,6 +42,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
 
     @Override
     public void initData(Context context) {
+        onCreate();
         mActivity = (Activity) context;
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
@@ -44,7 +51,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
 
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 
     public void requestSearchData(int direction, String searchText) {
@@ -135,5 +142,23 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
     public void doCancelSearch() {
         tempSearch = null;
         requestSearchData(DIRECTION_DOWN, null);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        switch (code) {
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                requestSearchData(DIRECTION_DOWN, null);
+                break;
+        }
+//        LogUtils.loge(this, eventData.toString());
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }
