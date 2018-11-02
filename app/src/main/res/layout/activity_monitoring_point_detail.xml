@@ -383,13 +383,13 @@
                     android:layout_marginEnd="16dp"
                     android:layout_toEndOf="@id/monitor_detail_tv_tag">
 
-                    <com.sensoro.smartcity.widget.TouchRecyclerview
+                    <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/monitor_detail_rc_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true">
 
-                    </com.sensoro.smartcity.widget.TouchRecyclerview>
+                    </com.sensoro.smartcity.widget.TouchRecycleView>
 
                 </RelativeLayout>
 

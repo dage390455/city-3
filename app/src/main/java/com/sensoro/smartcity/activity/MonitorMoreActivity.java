@@ -14,7 +14,7 @@ import com.sensoro.smartcity.imainviews.IMonitorMoreActivityView;
 import com.sensoro.smartcity.presenter.MonitorMoreActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
-import com.sensoro.smartcity.widget.TouchRecyclerview;
+import com.sensoro.smartcity.widget.TouchRecycleView;
 
 import java.util.List;
 
@@ -58,7 +58,7 @@ public class MonitorMoreActivity extends BaseActivity<IMonitorMoreActivityView, 
     @BindView(R.id.sensor_more_tv_alarm_recent)
     TextView alarmRecentTextView;
     @BindView(R.id.sensor_more_rc_tag)
-    TouchRecyclerview sensorMoreRcTag;
+    TouchRecycleView sensorMoreRcTag;
     private ProgressUtils mProgressUtils;
     private TagAdapter mTagAdapter;
 
@@ -73,8 +73,8 @@ public class MonitorMoreActivity extends BaseActivity<IMonitorMoreActivityView, 
     }
 
     private void initRcTag() {
-        sensorMoreRcTag.setIntercept(false);
-        mTagAdapter = new TagAdapter(mActivity,R.color.c_252525,R.color.c_dfdfdf);
+        sensorMoreRcTag.setIntercept(true);
+        mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
         LinearLayoutManager manager = new LinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
         sensorMoreRcTag.setLayoutManager(manager);
