@@ -45,7 +45,8 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView, DeployRecordActivityPresenter> implements
         IDeployRecordActivityView {
-
+    @BindView(R.id.rl_root_deploy_record)
+    RelativeLayout rlRootDeployRecord;
     @BindView(R.id.ac_deploy_record_imv_finish)
     ImageView acDeployRecordImvFinish;
     @BindView(R.id.ac_deploy_record_et_search)
@@ -104,6 +105,17 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                     return true;
                 }
                 return false;
+            }
+        });
+        AppUtils.getInputSoftStatus(rlRootDeployRecord, new AppUtils.InputSoftStatusListener() {
+            @Override
+            public void onKeyBoardClose() {
+                acDeployRecordEtSearch.setCursorVisible(false);
+            }
+
+            @Override
+            public void onKeyBoardOpen() {
+                acDeployRecordEtSearch.setCursorVisible(true);
             }
         });
         initRcContent();
@@ -270,8 +282,13 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
             case R.id.tv_deploy_device_search_cancel:
                 doCancelSearch();
                 break;
+            case R.id.ac_deploy_record_et_search:
+                acDeployRecordEtSearch.requestFocus();
+                acDeployRecordEtSearch.setCursorVisible(true);
+                break;
         }
     }
+
     private void doCancelSearch() {
         if (getSearchTextVisible()) {
             acDeployRecordEtSearch.getText().clear();

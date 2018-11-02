@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4"
+    android:id="@+id/rl_root_deploy_record"
     tools:context=".activity.DeployRecordActivity">
     <LinearLayout
         android:id="@+id/ac_deploy_record_title_root"
