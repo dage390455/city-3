@@ -2517,6 +2517,21 @@ public class WidgetUtil {
         return null;
     }
 
+    public static String getDeviceTypeName(String deviceType) {
+        if (!TextUtils.isEmpty(deviceType)) {
+            try {
+                DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
+                DeviceTypeStyles deviceTypeStyles = config.getDeviceType().get(deviceType);
+                String mergeType = deviceTypeStyles.getMergeType();
+                return config.getMergeType().get(mergeType).getName();
+            } catch (Exception e) {
+                e.printStackTrace();
+//                LogUtils.loge("handleMergeType ----->>>deviceType = " + deviceType);
+            }
+        }
+        return "未知";
+    }
+
     public static String handlerNumber(String text) {
         if (!TextUtils.isEmpty(text)) {
             StringBuilder stringBuilder = new StringBuilder();
