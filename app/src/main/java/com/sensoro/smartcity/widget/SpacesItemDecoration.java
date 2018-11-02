@@ -101,4 +101,8 @@ public class SpacesItemDecoration extends RecyclerView.ItemDecoration {
         }
 
     }
+
+    public int getSpace(){
+        return space;
+    }
 }

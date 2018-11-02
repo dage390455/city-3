@@ -24,7 +24,9 @@ import com.sensoro.smartcity.presenter.InspectionTaskDetailActivityPresenter;
 import com.sensoro.smartcity.util.Util;
 import com.sensoro.smartcity.util.ViewHelper;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.List;
 
@@ -77,9 +79,11 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
 
     private void initRcDeviceCountTag() {
         mTagAdapter = new TagAdapter(mActivity,R.color.c_252525,R.color.c_dfdfdf);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
-        manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        acInspectionDetailTaskRcDeviceCountTag.setLayoutManager(manager);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        acInspectionDetailTaskRcDeviceCountTag.setLayoutManager(layoutManager);
+        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+        acInspectionDetailTaskRcDeviceCountTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         acInspectionDetailTaskRcDeviceCountTag.setAdapter(mTagAdapter);
     }
 

@@ -136,6 +136,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     private void initWidget() {
         RecyclerView recyclerView = mRoot.findViewById(R.id.recyclerView);
         adapter = new ImagePickerAdapter(mActivity, selImageList);
+        adapter.setAddTipText("拍照/录像");
         adapter.setOnItemClickListener(this);
 //        adapter.canVideo(true);
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);

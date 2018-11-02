@@ -139,7 +139,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     public DeviceTypeModel getItem(int position) {
         DeviceTypeModel deviceTypeModel = new DeviceTypeModel();
         if (position == 0) {
-            deviceTypeModel.name = "全部";
+            deviceTypeModel.name = "全部类型";
             deviceTypeModel.iconRes = R.mipmap.type_all;
         } else {
             Map<String, DeviceTypeStyles> deviceTypeMap = typesConfig.getDeviceType();

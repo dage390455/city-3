@@ -481,15 +481,16 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-//        if (!TextUtils.isEmpty(s.toString())) {
-//            setSearchHistoryLayoutVisible(false);
-//            setRelationLayoutVisible(true);
+        if (!TextUtils.isEmpty(s.toString())) {
+            setSearchHistoryLayoutVisible(false);
+            setRelationLayoutVisible(true);
+            mClearKeywordIv.setVisibility(View.VISIBLE);
 //            mPresenter.filterDeviceInfo(s.toString());
-//        } else {
+        } else {
             setSearchHistoryLayoutVisible(true);
             setRelationLayoutVisible(false);
             setIndexListLayoutVisible(false);
-//        }
+        }
     }
 
     @Override

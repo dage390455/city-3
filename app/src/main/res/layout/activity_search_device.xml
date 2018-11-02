@@ -174,7 +174,6 @@
                 android:layout_centerVertical="true"
                 android:layout_marginTop="@dimen/y20"
                 android:src="@drawable/clear_cache"
-                android:layout_centerVertical="true"
                 android:text="@string/clear"
                 android:textSize="12sp"
                 android:visibility="gone" />
