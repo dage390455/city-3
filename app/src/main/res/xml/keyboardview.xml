@@ -48,7 +48,7 @@
             android:keyLabel="清除"/>
         <Key
             android:codes="48"
-            android:keyLabel="0"/>
+            android:keyLabel="0" />
         <Key
             android:codes="-5"
             android:keyIcon="@color/colorPrimary"

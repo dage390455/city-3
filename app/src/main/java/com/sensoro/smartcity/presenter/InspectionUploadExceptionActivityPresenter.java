@@ -167,10 +167,6 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
             getView().toastShort("必须选择一个标签类型");
             return;
         }
-        Log.e("hcs", "remarkMessage:::");
-        for (Integer selectTag : selectTags) {
-            Log.e("hcs", ":selectTag::" + selectTag);
-        }
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doUploadInspectionResult(mDeviceDetail.getId(), null, null, 2, 0, startTime, finishTime, remarkMessage,
                 scenesDataList, selectTags).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())

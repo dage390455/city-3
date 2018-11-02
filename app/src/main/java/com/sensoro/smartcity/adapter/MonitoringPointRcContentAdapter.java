@@ -144,7 +144,6 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                                     holder.itemMonitoringPointContentTvUnit.setVisibility(View.GONE);
                                 } else {
                                     String unit = sensorTypeStyles.getUnit();
-                                    Log.e("hcs", "单位:::" + unit);
                                     if (!TextUtils.isEmpty(unit)) {
                                         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.itemMonitoringPointContentTvUnit.getLayoutParams();
                                         if ("°".equals(unit)) {

@@ -112,7 +112,6 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         getView().toastShort(errorMsg);
-                        Log.e("hcs", ":错误了::" + errorMsg);
                         getView().dismissProgressDialog();
                     }
                 });
