@@ -20,9 +20,7 @@
     <com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView
         android:id="@+id/fg_main_home_rc_type"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="16dp"
-        >
+        android:layout_height="wrap_content">
 
     </com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView>
 
