@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.SignalData;
+import com.sensoro.smartcity.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -53,6 +54,7 @@ public class SignalCheckContentAdapter extends RecyclerView.Adapter<SignalCheckC
             loadData = String.format(Locale.CHINA,"\"RSSI: - SNR: - -dBm SF-@-MHz");
         }
 
+        holder.itemAdapterSignalCheckTvTime.setText(signalData.getDate());
         holder.itemAdapterSignalCheckTvUpData.setText(upData);
         holder.itemAdapterSignalCheckTvLoadData.setText(loadData);
 

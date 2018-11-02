@@ -30,6 +30,7 @@ import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -93,7 +94,13 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         }
         getView().setStatus(statusText, textColor);
         getView().setUpdateTime(DateUtil.getStrTime_hms(mDeviceInfo.getUpdatedTime()));
-        String text = mDeviceInfo.getDeviceType() + " " + mDeviceInfo.getName();
+        String temp;
+        if (TextUtils.isEmpty(mDeviceInfo.getName())) {
+            temp = mDeviceInfo.getSn();
+        }else{
+            temp = mDeviceInfo.getName();
+        }
+        String text = WidgetUtil.getDeviceTypeName(mDeviceInfo.getDeviceType()) + " " + temp;
         getView().setTypeAndName(text);
         getView().updateTag(Arrays.asList(mDeviceInfo.getTags()));
     }
