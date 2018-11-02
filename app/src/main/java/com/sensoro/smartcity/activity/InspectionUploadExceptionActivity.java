@@ -129,10 +129,8 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 //                if(initEtRemarkWidth!=-1){
                     int diff = acInspectionUploadExceptionEtRemark.getHeight() - initEtRemarkWidth;
                     initEtRemarkWidth = acInspectionUploadExceptionEtRemark.getHeight();
-                    Log.e("hcs",":::"+diff);
                     if (diff>0 && !TextUtils.isEmpty(acInspectionUploadExceptionEtRemark.getText().toString())) {
 //                        acInspectionUploadExceptionScrollView.setScrollY(diff);
-                        Log.e("hcs","进来了:::");
                         acInspectionUploadExceptionScrollView.smoothScrollBy(0,diff);
                     }
 //                }
@@ -272,7 +270,6 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 
                 break;
             case R.id.ac_inspection_upload_exception_sf:
-                Log.e("hcs","点击了:::");
                 acInspectionUploadExceptionEtRemark.setFocusable(true);
                 acInspectionUploadExceptionEtRemark.setFocusableInTouchMode(true);
                 acInspectionUploadExceptionEtRemark.requestFocus();
