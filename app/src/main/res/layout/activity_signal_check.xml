@@ -41,13 +41,13 @@
                 android:layout_marginStart="2dp"
                 android:paddingTop="2dp"
                 android:paddingBottom="4dp"
-                android:paddingStart="6dp"
-                android:paddingEnd="6dp"
+                android:paddingStart="10dp"
+                android:paddingEnd="10dp"
                 android:text="附近"
                 android:visibility="gone"
                 android:textColor="@color/white"
-                android:background="@drawable/shape_btn_corner_29c_bg_4dp"
-                android:textSize="12sp" />
+                android:background="@drawable/shape_bg_solid_29c_full_corner"
+                android:textSize="10sp" />
             <TextView
                 android:id="@+id/ac_signal_check_tv_state"
                 android:layout_width="wrap_content"

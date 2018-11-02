@@ -272,7 +272,7 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     @Override
     public void updateContentAdapter(SignalData signalData) {
         mContentAdapter.updateData(signalData);
-        acSignalCheckTvRcContent.smoothScrollToPosition(mContentAdapter.getLastPosition());
+//        acSignalCheckTvRcContent.smoothScrollToPosition(mContentAdapter.getLastPosition());
     }
 
     @Override
