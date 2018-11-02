@@ -53,6 +53,7 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -163,6 +164,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     getView().setDeployContactRelativeLayoutVisible(true);
                     getView().setDeployDeviceRlSignalVisible(true);
                     getView().setDeployPhotoVisible(true);
+                    String[] tags = mDeviceInfo.getTags();
+                    if (tags!=null) {
+                        tagList.clear();
+                        tagList.addAll(Arrays.asList(tags));
+                        getView().updateTagsData(tagList);
+                    }
+
                     deployMapModel.sn = mDeviceInfo.getSn();
                     freshDevice();
                     break;
@@ -327,7 +335,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
                     changeDevice(lon, lan);
                 } else {
-                    doUploadImages(deployMapModel.latLng.longitude, deployMapModel.latLng.longitude);
+                    doUploadImages(deployMapModel.latLng.longitude, deployMapModel.latLng.latitude);
                 }
 
                 //doUploadImages(lon, lan);
