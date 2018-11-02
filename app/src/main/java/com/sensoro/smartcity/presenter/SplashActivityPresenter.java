@@ -26,8 +26,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 
     @Override
     public void initData(Context context) {
-        SensoroCityApplication.getInstance().init();
         mContext = (Activity) context;
+        SensoroCityApplication.getInstance().init();
         //TODO 逻辑判断
         initPushSDK();
         checkLoginState();
