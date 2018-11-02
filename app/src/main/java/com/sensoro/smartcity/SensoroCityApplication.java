@@ -80,7 +80,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     private static PushHandler pushHandler;
     public UploadManager uploadManager;
     public volatile boolean hasGotToken = false;
-    public static String VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
+    public static String VIDEO_PATH;
     public AMapLocationClient mLocationClient;
     //    public ArrayList<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
     public BLEDeviceManager bleDeviceManager;
@@ -128,7 +128,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     public void onCreate() {
         super.onCreate();
         instance = this;
-        init();
+//        init();
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not initView your app in this process.
@@ -245,7 +245,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         mLocationClient.onDestroy();
     }
 
-    private void init() {
+    public void init() {
+        VIDEO_PATH = Environment.getExternalStorageDirectory().getAbsolutePath() + "/DCIM/camera/";
         if (pushHandler == null) {
             pushHandler = new PushHandler();
         }
