@@ -2,13 +2,17 @@ package com.sensoro.smartcity.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.KeyboardView;
 import android.util.AttributeSet;
+import android.util.Log;
 
 import com.sensoro.smartcity.R;
 
@@ -64,7 +68,7 @@ public class NumKeyboard extends KeyboardView implements KeyboardView.OnKeyboard
 
             }else*/ if (key.codes[0]==Keyboard.KEYCODE_DELETE){
                 //绘制删除键背景
-                drawKeyBackGround(key,canvas);
+//                drawKeyBackGround(key,canvas);
                 //绘制按键图片
                 drawkeyDelete(key,canvas,mDeleteDrawable,4);
             }
@@ -76,20 +80,12 @@ public class NumKeyboard extends KeyboardView implements KeyboardView.OnKeyboard
         colordrawable.draw(canvas);
     }
     private void drawkeyDelete(Keyboard.Key key, Canvas canvas,Drawable drawable,int n) {
-        int intrinsicWidth=drawable.getIntrinsicWidth();
-        int intrinsicHeight=drawable.getIntrinsicHeight();
-        int drawWidth=key.width ;
-        int drawHeight=key.height;
-        if(drawWidth<intrinsicWidth){
-            drawHeight=drawWidth*intrinsicHeight/intrinsicWidth;
-        }
-        drawWidth=drawWidth/n -dp2px(4);
-        drawHeight=drawHeight/n;
-        int widthInterval=(key.width-drawWidth)/2;
-        int heightInterval=(key.height-drawHeight)/2;
-
-        drawable.setBounds(key.x+widthInterval,key.y+heightInterval,key.x+widthInterval+drawWidth,key.y+heightInterval+drawHeight);
-        drawable.draw(canvas);
+        Bitmap bitmap = BitmapFactory.decodeResource(mContext.getResources(), R.drawable.keyboard_delete);
+        int width = bitmap.getWidth();
+        int height = bitmap.getHeight();
+        int left = (key.width - width) / 2 + key.x;
+        int top = (key.height - height) / 2 + key.y;
+        canvas.drawBitmap(bitmap,left,top,new Paint(Paint.FILTER_BITMAP_FLAG));
     }
     //回调接口
     public interface OnKeyPressListener{
