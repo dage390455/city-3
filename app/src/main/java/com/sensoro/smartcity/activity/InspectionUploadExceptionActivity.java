@@ -13,6 +13,7 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -104,6 +105,13 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
             public void afterTextChanged(Editable s) {
                 int length = s.length();
                 updateWordCount(length);
+            }
+        });
+
+        acInspectionUploadExceptionEtRemark.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+
             }
         });
     }
