@@ -25,6 +25,8 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
 
     void setDeployContactRelativeLayoutVisible(boolean isVisible);
 
+    void setDeployDeviceDetailFixedPointNearVisible(boolean isVisible);
+
     void setDeployPhotoVisible(boolean isVisible);
 
     void showUploadProgressDialog(String content, double percent);
@@ -44,6 +46,8 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void updateBleConfigDialogMessage(String msg);
 
     void dismissBleConfigDialog();
+
     void showBleTips();
+
     void hideBleTips();
 }

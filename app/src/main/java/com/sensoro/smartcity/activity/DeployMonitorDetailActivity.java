@@ -69,6 +69,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     LinearLayout acDeployDeviceDetailLlFixedPoint;
     @BindView(R.id.ac_deploy_device_detail_tv_upload)
     TextView acDeployDeviceDetailTvUpload;
+    @BindView(R.id.ac_deploy_device_detail_fixed_point_tv_near)
+    TextView acDeployDeviceDetailFixedPointTvNear;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -109,7 +111,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         acDeployDeviceDetailRcTag.setIntercept(true);
         mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
         //
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false){
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false) {
             @Override
             public boolean canScrollHorizontally() {
                 return false;
@@ -307,6 +309,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void setDeployContactRelativeLayoutVisible(boolean isVisible) {
         acDeployDeviceDetailLlAlarmContact.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployDeviceDetailFixedPointNearVisible(boolean isVisible) {
+        acDeployDeviceDetailFixedPointTvNear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

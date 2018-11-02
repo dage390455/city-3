@@ -157,8 +157,6 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         fgMainHomeRcTypeHeader.setLayoutManager(linearLayoutManager);
         fgMainHomeRcTypeHeader.setAdapter(mMainHomeFragRcTypeHeaderAdapter);
         mBannerScaleHeaderHelper = new BannerScaleHelper();
-        mBannerScaleHeaderHelper.setPagePadding(0);
-        mBannerScaleHeaderHelper.setShowLeftCardWidth(0);
         mBannerScaleHeaderHelper.attachToRecyclerView(fgMainHomeRcTypeHeader);
         fgMainHomeRcTypeHeader.setOnPageChangeListener(new BannerRecyclerView.OnPageChangeListener() {
             @Override
