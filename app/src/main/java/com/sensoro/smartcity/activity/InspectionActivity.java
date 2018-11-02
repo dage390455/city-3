@@ -15,7 +15,9 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionActivityView;
 import com.sensoro.smartcity.presenter.InspectionActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.dialog.TipDialogUtils;
 
 import java.util.List;
@@ -85,8 +87,11 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
 
     private void initRcTag() {
         mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
-        LinearLayoutManager manager = new LinearLayoutManager(mActivity);
+        SensoroLinearLayoutManager manager = new SensoroLinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        acInspectionRcTag.setLayoutManager(manager);
+        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+        acInspectionRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         acInspectionRcTag.setLayoutManager(manager);
         acInspectionRcTag.setAdapter(mTagAdapter);
     }
