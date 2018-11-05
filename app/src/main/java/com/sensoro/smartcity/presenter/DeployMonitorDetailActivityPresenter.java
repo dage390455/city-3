@@ -63,7 +63,7 @@ import rx.schedulers.Schedulers;
 public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants
         , SensoroConnectionCallback, BLEDeviceListener<BLEDevice>, Runnable {
     private Activity mContext;
-    private DeployMapModel deployMapModel = new DeployMapModel();
+    private final DeployMapModel deployMapModel = new DeployMapModel();
     private final List<String> tagList = new ArrayList<>();
     private final List<DeployContactModel> deployContactModelList = new ArrayList<>();
     //新设备
@@ -240,7 +240,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         double[] lonlat = mDeviceInfo.getLonlat();
         if (lonlat != null && lonlat[0] != 0 && lonlat[1] != 0) {
             deployMapModel.latLng = new LatLng(lonlat[1], lonlat[0]);
-
         }
         deployMapModel.signal = mDeviceInfo.getSignal();
         deployMapModel.updatedTime = mDeviceInfo.getUpdatedTime();
@@ -729,7 +728,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 break;
             case EVENT_DATA_DEPLOY_MAP:
                 if (data instanceof DeployMapModel) {
-                    deployMapModel = (DeployMapModel) data;
+                    DeployMapModel mapModel = (DeployMapModel) data;
+                    if (mapModel.latLng != null) {
+                        deployMapModel.latLng = mapModel.latLng;
+                        LogUtils.loge("EVENT_DATA_DEPLOY_MAP-->>deployMapModel.latLng = " + deployMapModel.latLng.toString() + ",mapModel.latLng = " + mapModel.latLng.toString());
+                    }
                     freshSignalInfo();
                 }
                 break;

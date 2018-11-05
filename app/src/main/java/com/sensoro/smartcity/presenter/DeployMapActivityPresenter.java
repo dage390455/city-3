@@ -74,6 +74,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         deployMapModel = (DeployMapModel) mContext.getIntent().getParcelableExtra(EXTRA_DEPLOY_TO_MAP);
+        LogUtils.loge("EVENT_DATA_DEPLOY_MAP-->>deployMapModel.latLng = " + deployMapModel.latLng.toString());
         isDisplayMap = mContext.getIntent().getBooleanExtra(EXTRA_DEPLOY_DISPLAY_MAP, false);
         switch (deployMapModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
@@ -85,6 +86,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().setSignalVisible(true);
+                getView().refreshSignal(deployMapModel.updatedTime, deployMapModel.signal);
                 break;
             case TYPE_SCAN_LOGIN:
                 break;
@@ -107,27 +109,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     public void onDestroy() {
         EventBus.getDefault().unregister(this);
         mHandler.removeCallbacksAndMessages(null);
-    }
-
-    private void getCurrentLocation() {
-        System.out.println("====>onLocationChanged");
-        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-        if (lastKnownLocation != null) {
-            double lat = lastKnownLocation.getLatitude();//获取纬度
-            double lon = lastKnownLocation.getLongitude();//获取经度
-            deployMapModel.latLng = new LatLng(lat, lon);
-            if (aMap != null) {
-                //可视化区域，将指定位置指定到屏幕中心位置
-                CameraUpdate update = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(deployMapModel.latLng, 15, 0, 30));
-                aMap.moveCamera(update);
-            }
-            smoothMoveMarker.setPosition(deployMapModel.latLng);
-        } else {
-            //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-            Log.e("地图错误", "定位失败, 错误码:" + lastKnownLocation.getErrorCode() + ", 错误信息:"
-                    + lastKnownLocation.getErrorInfo());
-        }
     }
 
 
@@ -233,7 +214,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         aMap.setOnMarkerClickListener(this);
         aMap.setInfoWindowAdapter(this);
         aMap.setOnMapTouchListener(this);
-        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
+        //解决不能回显的bug 不能直接移动
+//        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
         myLocationStyle.strokeWidth(0);
@@ -248,6 +230,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         eventData.code = EVENT_DATA_DEPLOY_MAP;
         eventData.data = deployMapModel;
         EventBus.getDefault().post(eventData);
+        LogUtils.loge("EVENT_DATA_DEPLOY_MAP-->> finish deployMapModel.latLng = " + deployMapModel.latLng.toString());
         getView().finishAc();
     }
 
@@ -285,10 +268,9 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-
         if (cameraPosition != null && !isDisplayMap) {
-            deployMapModel.latLng = cameraPosition.target;
-            smoothMoveMarker.setPosition(deployMapModel.latLng);
+            //解决不能回显的bug 不能直接赋值
+            smoothMoveMarker.setPosition(cameraPosition.target);
             System.out.println("====>onCameraChange");
         }
     }
@@ -328,8 +310,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 .anchor(0.5f, 0.95f)
                 .draggable(true);
         smoothMoveMarker = aMap.addMarker(markerOption);
-
-//        if(isDisplayMap){
         if (aMap != null && deployMapModel.latLng != null) {
             //可视化区域，将指定位置指定到屏幕中心位置
             CameraUpdate update = CameraUpdateFactory
@@ -339,33 +319,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             LatLonPoint lp = new LatLonPoint(deployMapModel.latLng.latitude, deployMapModel.latLng.longitude);
             RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
             geocoderSearch.getFromLocationAsyn(query);
-        }
-
-
-//            return;
-//        }
-
-        //TODO 先获原先取信号强度
-
-//        getCurrentLocation();
-        switch (deployMapModel.deployType) {
-            case TYPE_SCAN_DEPLOY_STATION:
-                //基站部署
-                break;
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
-                //巡检设备更换
-            case TYPE_SCAN_DEPLOY_DEVICE:
-                //设备部署
-                getView().refreshSignal(deployMapModel.updatedTime, deployMapModel.signal);
-                refreshSignal();
-                break;
-            case TYPE_SCAN_LOGIN:
-                break;
-            case TYPE_SCAN_INSPECTION:
-                //扫描巡检设备
-                break;
-            default:
-                break;
         }
     }
 
