@@ -100,6 +100,7 @@
         <item name="android:textColor">@color/selector_ac_main_text_color</item>
         <item name="android:textSize">12sp</item>
         <item name="android:gravity">center</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <!--homeFragment add dialogFragment 样式-->
