@@ -310,6 +310,7 @@ public interface Constants {
     int EVENT_DATA_DEPLOY_SETTING_PHOTO = 0x19;
     //
     int EVENT_DATA_DEPLOY_RESULT_CONTINUE = 0x20;
+    int EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE = 0x43;
     //
     int EVENT_DATA_SEARCH_MERCHANT = 0x21;
     //

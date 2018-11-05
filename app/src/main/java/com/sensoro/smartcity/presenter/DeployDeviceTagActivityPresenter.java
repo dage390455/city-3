@@ -55,7 +55,7 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     }
 
     public void addTags(String tag) {
-        if (TextUtils.isEmpty(tag)){
+        if (TextUtils.isEmpty(tag)) {
             getView().toastShort("请设置标签");
             return;
         }
@@ -155,11 +155,18 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     }
 
     public void updateEditTag(int position, String text) {
-        if (TextUtils.isEmpty(text)){
+
+        if (TextUtils.isEmpty(text)) {
             getView().toastShort("请设置标签");
             return;
         }
-        mTagList.set(position, text);
+        String trim = text.trim();
+        if (mTagList.contains(trim)) {
+            getView().toastShort("标签不能重复");
+            return;
+        } else {
+            mTagList.set(position, text);
+        }
         getView().updateTags(mTagList);
         getView().dismissDialog();
     }

@@ -78,7 +78,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private boolean isAgainUpLoad = false;
     private Handler mHandler;
     private String bleAddress;
-//    private boolean isAutoConnect = false;
+    //    private boolean isAutoConnect = false;
     private boolean bleHasOpen;
     private static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
 
@@ -166,12 +166,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     getView().setDeployDeviceRlSignalVisible(true);
                     getView().setDeployPhotoVisible(true);
                     String[] tags = mDeviceInfo.getTags();
-                    if (tags!=null) {
+                    if (tags != null) {
                         tagList.clear();
                         tagList.addAll(Arrays.asList(tags));
                         getView().updateTagsData(tagList);
                     }
-
                     deployMapModel.sn = mDeviceInfo.getSn();
                     freshDevice();
                     break;
@@ -235,6 +234,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
 
             }
+        }
+        deployMapModel.signal = mDeviceInfo.getSignal();
+        deployMapModel.updatedTime = mDeviceInfo.getUpdatedTime();
+        double[] lonlat = mDeviceInfo.getLonlat();
+        if (lonlat != null && lonlat[0] != 0 && lonlat[1] != 0) {
+            deployMapModel.latLng = new LatLng(lonlat[1], lonlat[0]);
+
         }
         deployMapModel.signal = mDeviceInfo.getSignal();
         deployMapModel.updatedTime = mDeviceInfo.getUpdatedTime();
@@ -685,6 +691,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE:
             case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 getView().finishAc();
                 break;

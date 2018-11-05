@@ -96,7 +96,10 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                             mListener.onConfirmStatusClick(v, position, false);
                         }
                     });
-                    holder.mainWarnRcContentTvTag.setVisibility(View.GONE);
+                    holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
+                    holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
+                    holder.mainWarnRcContentTvTag.setText("待确认");
+                    changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_a6a6a6);
                     break;
                 case DISPLAY_STATUS_ALARM:
                     isReConfirm = true;

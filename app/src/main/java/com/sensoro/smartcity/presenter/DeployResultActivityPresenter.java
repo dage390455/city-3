@@ -187,12 +187,13 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     }
 
     public void gotoContinue() {
+        EventData eventData = new EventData();
         if (scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE && resultCode == -1) {
+            eventData.code = EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE;
+            EventBus.getDefault().post(eventData);
             getView().finishAc();
             return;
         }
-
-        EventData eventData = new EventData();
         eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
         if (resultCode == 1 && deviceInfo != null) {
             eventData.data = deviceInfo;
