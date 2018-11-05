@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -124,6 +125,14 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         acAlertRcContent.setLayoutManager(manager);
         acAlertRcContent.setAdapter(alertLogRcContentAdapter);
+
+        int androiodScreenHeight = AppUtils.getAndroiodScreenHeight(mActivity);
+        if(androiodScreenHeight == -1){
+            androiodScreenHeight = AppUtils.dp2px(mActivity,220);
+        }
+        ViewGroup.LayoutParams layoutParams = acAlertRcContent.getLayoutParams();
+        layoutParams.height = (int) (androiodScreenHeight*0.46);
+        acAlertRcContent.setLayoutParams(layoutParams);
     }
 
     public void show() {
