@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.adapter;
 
 import android.app.Activity;
+import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -25,6 +26,7 @@ import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import butterknife.BindView;
@@ -57,7 +59,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 //            @Override
 //            public void run() {
 //                HomeContentListAdapterDiff homeContentListAdapterDiff = new HomeContentListAdapterDiff(mList, list);
-//                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(homeContentListAdapterDiff, true);
+//                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(homeContentListAdapterDiff, false);
 //                mContext.runOnUiThread(new Runnable() {
 //                    @Override
 //                    public void run() {
@@ -67,6 +69,44 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
 //                    }
 //                });
 //
+//
+//            }
+//        });
+//        ThreadPoolManager.getInstance().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                TopListAdapterDiff indexListAdapterDiff = new TopListAdapterDiff(mData, data);
+//                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(indexListAdapterDiff, true);
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        diffResult.dispatchUpdatesTo(new ListUpdateCallback() {
+//                            @Override
+//                            public void onInserted(final int position, final int count) {
+//                                LogUtils.loge("updateData-----onInserted-->>position = " + position + ", count = " + count);
+//                                notifyItemRangeInserted(position, count);
+//                            }
+//
+//                            @Override
+//                            public void onRemoved(final int position, final int count) {
+//                                notifyItemRangeRemoved(position, count);
+//
+//                            }
+//
+//                            @Override
+//                            public void onMoved(final int fromPosition, final int toPosition) {
+//                                notifyItemMoved(fromPosition, toPosition);
+//                            }
+//
+//                            @Override
+//                            public void onChanged(final int position, final int count, final Object payload) {
+//                                notifyItemRangeChanged(position, count, payload);
+//                            }
+//                        });
+////                        mData.clear();
+////                        mData.addAll(data);
+//                    }
+//                });
 //
 //            }
 //        });
@@ -194,7 +234,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     }
 
     private void setContentTime(MyViewHolder holder, long updatedTime) {
-        holder.mainRcContentTvTime.setText(DateUtil.getHourFormatDate(updatedTime));
+        holder.mainRcContentTvTime.setText(DateUtil.getStrTimeTodayByDevice(updatedTime));
     }
 
     private void setContentName(MyViewHolder holder, String deviceInfoName, String sn) {
@@ -205,33 +245,33 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
         }
     }
 
-//    @Override
-//    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull List<Object> payloads) {
-//        if (payloads.isEmpty()) {
-//            onBindViewHolder(holder, position);
-//        } else {
-//            setBottomVisible(holder, position);
-//            DeviceInfo deviceInfo = mList.get(position);
-//            HashMap map = (HashMap) payloads.get(0);
-//            LogUtils.loge(this, "----------------->>>>" + map.toString());
-//            Integer status = (Integer) map.get("status");
-//            if (status != null) {
-//                LogUtils.loge(this, "status change -->> " + status);
-//                setContentStatus(holder, position, status, deviceInfo.getDeviceType());
-//            }
-//            Long updateTime = (Long) map.get("updateTime");
-//            if (updateTime != null) {
-//                LogUtils.loge(this, "updateTime change -->> " + updateTime);
-//                setContentTime(holder, updateTime);
-//            }
-//            String name = (String) map.get("name");
-//            if (!TextUtils.isEmpty(name)) {
-//                LogUtils.loge(this, "updateTime name -->> " + name);
-//                setContentName(holder, name, deviceInfo.getSn());
-//            }
-//            setListener(holder, position);
-//        }
-//    }
+    @Override
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position, @NonNull List<Object> payloads) {
+        if (payloads.isEmpty()) {
+            onBindViewHolder(holder, position);
+        } else {
+            setBottomVisible(holder, position);
+            DeviceInfo deviceInfo = mList.get(position);
+            HashMap map = (HashMap) payloads.get(0);
+            LogUtils.loge(this, "----------------->>>>" + map.toString());
+            Integer status = (Integer) map.get("status");
+            if (status != null) {
+                LogUtils.loge(this, "status change -->> " + status);
+                setContentStatus(holder, position, status, deviceInfo.getDeviceType());
+            }
+            Long updateTime = (Long) map.get("updateTime");
+            if (updateTime != null) {
+                LogUtils.loge(this, "updateTime change -->> " + updateTime);
+                setContentTime(holder, updateTime);
+            }
+            String name = (String) map.get("name");
+            if (!TextUtils.isEmpty(name)) {
+                LogUtils.loge(this, "updateTime name -->> " + name);
+                setContentName(holder, name, deviceInfo.getSn());
+            }
+            setListener(holder, position);
+        }
+    }
 
     @Override
     public int getItemCount() {

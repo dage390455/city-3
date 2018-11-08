@@ -14,6 +14,9 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
+import com.tencent.bugly.crashreport.common.info.AppInfo;
 
 public class FixHeightBottomSheetDialog extends BottomSheetDialog {
 
@@ -48,7 +51,7 @@ public class FixHeightBottomSheetDialog extends BottomSheetDialog {
         this.mContentView = view;
     }
 
-    private void fixHeight() {
+    public void fixHeight() {
         if (null == mContentView) {
             return;
         }
@@ -56,7 +59,15 @@ public class FixHeightBottomSheetDialog extends BottomSheetDialog {
         View parent = (View) mContentView.getParent();
         BottomSheetBehavior behavior = BottomSheetBehavior.from(parent);
         mContentView.measure(0, 0);
-        behavior.setPeekHeight(mContentView.getMeasuredHeight());
+
+        int androiodScreenHeight = AppUtils.getAndroiodScreenHeight(mActivity);
+        if (androiodScreenHeight != -1) {
+            behavior.setPeekHeight((int) (androiodScreenHeight*0.92));
+        }else{
+            behavior.setPeekHeight(mContentView.getMeasuredHeight());
+        }
+
+        mActivity.getWindow();
 
         CoordinatorLayout.LayoutParams params = (CoordinatorLayout.LayoutParams) parent.getLayoutParams();
         params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;

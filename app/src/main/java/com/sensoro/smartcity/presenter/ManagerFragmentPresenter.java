@@ -222,7 +222,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_SEARCH_MERCHANT:
-                if (data != null && data instanceof EventLoginData) {
+                if (data instanceof EventLoginData) {
                     checkPermission((EventLoginData) data);
                 }
                 break;

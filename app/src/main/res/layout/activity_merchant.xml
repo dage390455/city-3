@@ -151,9 +151,8 @@
             android:id="@+id/merchant_return_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/y30"
-            android:layout_marginRight="@dimen/x30"
-            android:src="@mipmap/ic_return_top"
+            android:layout_marginRight="15.5dp"
+            android:src="@drawable/ic_return_to_top"
             android:visibility="gone" />
     </LinearLayout>
 

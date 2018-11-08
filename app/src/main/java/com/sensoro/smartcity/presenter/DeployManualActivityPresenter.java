@@ -314,8 +314,11 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
     public void onMessageEvent(EventData eventData) {
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
-        if (code == EVENT_DATA_DEPLOY_RESULT_FINISH || code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
-            getView().finishAc();
+        switch (code){
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                getView().finishAc();
+                break;
         }
 //        LogUtils.loge(this, eventData.toString());
     }

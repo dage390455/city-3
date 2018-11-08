@@ -9,7 +9,6 @@ import android.text.TextUtils;
 
 import com.lzy.imagepicker.ImagePicker;
 import com.lzy.imagepicker.bean.ImageItem;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -18,7 +17,6 @@ import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -30,8 +28,6 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.popup.AlarmLogPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -66,7 +62,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        originHistoryList.addAll(SensoroCityApplication.getInstance().getData());
+//        originHistoryList.addAll(SensoroCityApplication.getInstance().getData());
         currentList.addAll(originHistoryList);
         mPref = mContext.getSharedPreferences(PREFERENCE_DEVICE_HISTORY, Activity.MODE_PRIVATE);
         mEditor = mPref.edit();
@@ -87,12 +83,12 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
     @Override
     public void onStart() {
-        EventBus.getDefault().register(this);
+//        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         getView().hideSoftInput();
     }
 
@@ -105,35 +101,35 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 //
 //    }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(PushData data) {
-        if (data != null) {
-            boolean needFresh = false;
-            List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
-            for (int i = 0; i < mDataList.size(); i++) {
-                DeviceInfo deviceInfo = mDataList.get(i);
-                for (DeviceInfo in : deviceInfoList) {
-                    if (in.getSn().equals(deviceInfo.getSn())) {
-                        mDataList.set(i, in);
-                        needFresh = true;
-                    }
-                }
-            }
-            if (needFresh) {
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isActivityTop() && getView().getSearchDataListVisible()) {
-                            if (getView() != null) {
-                                getView().refreshData(mDataList);
-                            }
-
-                        }
-                    }
-                });
-            }
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+//    public void onMessageEvent(PushData data) {
+//        if (data != null) {
+//            boolean needFresh = false;
+//            List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
+//            for (int i = 0; i < mDataList.size(); i++) {
+//                DeviceInfo deviceInfo = mDataList.get(i);
+//                for (DeviceInfo in : deviceInfoList) {
+//                    if (in.getSn().equals(deviceInfo.getSn())) {
+//                        mDataList.set(i, in);
+//                        needFresh = true;
+//                    }
+//                }
+//            }
+//            if (needFresh) {
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (isActivityTop() && getView().getSearchDataListVisible()) {
+//                            if (getView() != null) {
+//                                getView().refreshData(mDataList);
+//                            }
+//
+//                        }
+//                    }
+//                });
+//            }
+//        }
+//    }
 
 
     private boolean isActivityTop() {

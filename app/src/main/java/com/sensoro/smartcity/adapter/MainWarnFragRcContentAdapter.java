@@ -89,6 +89,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             switch (alarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
+                    holder.mainWarnRcContentBtnConfirm.setTextColor(mContext.getResources().getColor(R.color.white));
+                    holder.mainWarnRcContentBtnConfirm.setBackgroundResource(R.drawable.shape_btn_corner_29c_bg);
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -103,6 +105,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     break;
                 case DISPLAY_STATUS_ALARM:
                     isReConfirm = true;
+                    holder.mainWarnRcContentBtnConfirm.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                    holder.mainWarnRcContentBtnConfirm.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_2dp);
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming_again);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -117,6 +121,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     break;
                 case DISPLAY_STATUS_MIS_DESCRIPTION:
                     isReConfirm = true;
+                    holder.mainWarnRcContentBtnConfirm.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                    holder.mainWarnRcContentBtnConfirm.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_2dp);
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming_again);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -131,6 +137,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     break;
                 case DISPLAY_STATUS_TEST:
                     isReConfirm = true;
+                    holder.mainWarnRcContentBtnConfirm.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                    holder.mainWarnRcContentBtnConfirm.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_2dp);
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming_again);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override
@@ -145,6 +153,8 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     break;
                 case DISPLAY_STATUS_RISKS:
                     isReConfirm = true;
+                    holder.mainWarnRcContentBtnConfirm.setTextColor(mContext.getResources().getColor(R.color.c_252525));
+                    holder.mainWarnRcContentBtnConfirm.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_2dp);
                     holder.mainWarnRcContentBtnConfirm.setText(R.string.confirming_again);
                     holder.mainWarnRcContentBtnConfirm.setOnClickListener(new View.OnClickListener() {
                         @Override

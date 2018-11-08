@@ -7,7 +7,8 @@ import android.support.v7.widget.RecyclerView;
 import java.util.List;
 
 public abstract class DiffCallBack<T> extends DiffUtil.Callback {
-    protected List<T> mOldList, mNewList;//看名字
+    protected List<T> mOldList;
+    protected List<T> mNewList;
 
     protected DiffCallBack(List<T> oldList, List<T> newList) {
         this.mOldList = oldList;

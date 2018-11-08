@@ -78,6 +78,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         } catch (Exception e) {
             e.printStackTrace();
         }
+        try {
+            String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
+            LogUtils.loge("main ---->> " + log);
+        } catch (NullPointerException e) {
+            e.printStackTrace();
+            openLogin();
+            return;
+        }
         initViewPager();
     }
 
@@ -113,13 +121,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
         LogUtils.loge(this, "refreshContentData");
         //提前获取一次
-        try {
-            String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
-            LogUtils.loge("main ---->> " + log);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
-            openLogin();
-        }
     }
 
     /**
@@ -280,7 +281,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         @Override
                         public void run() {
                             if (!ping) {
-                                getView().toastShort("似乎断开了网路连接");
+                                getView().toastShort("似乎断开了网络连接");
                             }
                         }
                     });
@@ -430,41 +431,38 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
-        if (code == EVENT_DATA_SESSION_ID_OVERTIME) {
-            RetrofitServiceHelper.INSTANCE.cancelAllRsp();
-            openLogin();
-        } else if (code == EVENT_DATA_FINISH_CODE) {
-//            if (contractFragment != null) {
+        switch (code) {
+            case EVENT_DATA_SESSION_ID_OVERTIME:
+                RetrofitServiceHelper.INSTANCE.cancelAllRsp();
+                openLogin();
+                break;
+            case EVENT_DATA_FINISH_CODE:
+                //            if (contractFragment != null) {
 //                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
 //            }
-        } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
-            if (data != null && data instanceof DeviceInfo) {
-                refreshDeviceInfo((DeviceInfo) data);
-            }
-            getView().setRbChecked(R.id.ac_main_rb_main);
-        } else if (code == EVENT_DATA_SEARCH_MERCHANT) {
-            if (data != null && data instanceof EventLoginData) {
-                EventLoginData eventLoginData = (EventLoginData) data;
-                changeAccount(eventLoginData);
-            }
-        }
-//        else if (code == EVENT_DATA_ALARM_TOTAL_COUNT) {
-//            if (data != null && data instanceof Integer) {
-//                getView().setAlarmWarnCount((Integer) data);
-//            }
-//        }
-        else if (code == EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS) {
-            if (data != null && data instanceof EventAlarmStatusModel) {
-                switch (((EventAlarmStatusModel) data).status) {
-                    case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
-                    case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                        freshAlarmCount();
-                        break;
-                    default:
-                        break;
+                break;
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+                getView().setRbChecked(R.id.ac_main_rb_main);
+                break;
+            case EVENT_DATA_SEARCH_MERCHANT:
+                if (data instanceof EventLoginData) {
+                    EventLoginData eventLoginData = (EventLoginData) data;
+                    changeAccount(eventLoginData);
                 }
+                break;
+            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+                if (data instanceof EventAlarmStatusModel) {
+                    switch (((EventAlarmStatusModel) data).status) {
+                        case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                        case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                            freshAlarmCount();
+                            break;
+                        default:
+                            break;
+                    }
 
-            }
+                }
+                break;
         }
 //        LogUtils.loge(this, eventData.toString());
     }
@@ -517,17 +515,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
         if (managerFragment != null) {
             managerFragment.handlerActivityResult(requestCode, resultCode, data);
-        }
-    }
-
-
-    private void refreshDeviceInfo(DeviceInfo deviceInfo) {
-        for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
-            DeviceInfo tempDeviceInfo = SensoroCityApplication.getInstance().getData().get(i);
-            if (deviceInfo.getSn().equals(tempDeviceInfo.getSn())) {
-                SensoroCityApplication.getInstance().getData().set(i, deviceInfo);
-                break;
-            }
         }
     }
 }

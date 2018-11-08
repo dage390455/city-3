@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -105,6 +108,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     private int toolbarDirection = DIRECTION_DOWN;
     private int currentPosition = 0;
     private double currentPercent;
+    private Parcelable recycleViewState;
+    private SensoroXLinearLayoutManager xLinearLayoutManager;
 
     @Override
     protected void initData(Context activity) {
@@ -156,6 +161,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 //        linearLayoutManager.setReverseLayout(false);
         fgMainHomeRcTypeHeader.setLayoutManager(linearLayoutManager);
         fgMainHomeRcTypeHeader.setAdapter(mMainHomeFragRcTypeHeaderAdapter);
+        fgMainHomeRcTypeHeader.setFocusableInTouchMode(false);
+        fgMainHomeRcTypeHeader.setFocusable(false);
+        fgMainHomeRcTypeHeader.setHasFixedSize(true);
         mBannerScaleHeaderHelper = new BannerScaleHelper();
         mBannerScaleHeaderHelper.attachToRecyclerView(fgMainHomeRcTypeHeader);
         fgMainHomeRcTypeHeader.setOnPageChangeListener(new BannerRecyclerView.OnPageChangeListener() {
@@ -206,6 +214,28 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         });
     }
 
+    @Override
+    public int getFirstVisibleItemPosition() {
+        try {
+            return xLinearLayoutManager.findFirstVisibleItemPosition();
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        recycleViewState = fgMainHomeRcTypeHeader.getLayoutManager().onSaveInstanceState();
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (recycleViewState != null) {
+            fgMainHomeRcTypeHeader.getLayoutManager().onRestoreInstanceState(recycleViewState);
+        }
+    }
 
     private void initRcContent() {
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
@@ -214,7 +244,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         //
         mMainHomeFragRcContentAdapter = new MainHomeFragRcContentAdapterHorizontal(mRootFragment.getActivity());
         mMainHomeFragRcContentAdapter.setOnLoadInnerListener(this);
-        final SensoroXLinearLayoutManager xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
+        xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
         fgMainHomeRcContent.setNestedScrollingEnabled(true);
@@ -406,14 +436,35 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     }
 
     private void freshHeader(boolean isFirstInit, List<HomeTopModel> data) {
-        //如果需要带缩放的scale需要调用一下，否则缩放效果会出现缩放误差
         if (isFirstInit) {
-            //如果数据重新加载 添加滚动 防止错位
             mBannerScaleHeaderHelper.initWidthData();
+            mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
         } else {
+//            HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(0);
+//            if (homeTopModel.type != 0 && data.get(0).type == 0) {
+//                //不滑动并且刷新
+//                mBannerScaleHeaderHelper.setCurrentItem(mBannerScaleHeaderHelper.getCurrentItem(), true);
+//                mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
+////                mBannerScaleHeaderHelper.scrollToPositionAlpha(type);
+//                try {
+//                    mBannerScaleContentHelper.scrollToPositionAlpha(0);
+//                    currentPosition = 0;
+////                    mBannerScaleContentHelper.initWidthData();
+//                    mBannerScaleContentHelper.scrollToPositionAlpha(currentPosition);
+////                    mBannerScaleContentHelper.setCurrentItem(position, true);
+//                    mPresenter.requestDataByStatus(mMainHomeFragRcTypeHeaderAdapter.getData().get(currentPosition));
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            } else {
             mBannerScaleHeaderHelper.setCurrentItem(mBannerScaleHeaderHelper.getCurrentItem(), true);
+            mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
+//            }
+//            mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
         }
-        mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
+
+        //如果需要带缩放的scale需要调用一下，否则缩放效果会出现缩放误差
+
     }
 
     @Override

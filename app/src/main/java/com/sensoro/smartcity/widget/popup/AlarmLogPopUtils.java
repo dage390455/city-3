@@ -7,6 +7,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -124,6 +125,14 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         manager.setOrientation(LinearLayoutManager.VERTICAL);
         acAlertRcContent.setLayoutManager(manager);
         acAlertRcContent.setAdapter(alertLogRcContentAdapter);
+
+        int androiodScreenHeight = AppUtils.getAndroiodScreenHeight(mActivity);
+        if (androiodScreenHeight == -1) {
+            androiodScreenHeight = AppUtils.dp2px(mActivity, 220);
+        }
+        ViewGroup.LayoutParams layoutParams = acAlertRcContent.getLayoutParams();
+        layoutParams.height = (int) (androiodScreenHeight * 0.46);
+        acAlertRcContent.setLayoutParams(layoutParams);
     }
 
     public void show() {
@@ -138,7 +147,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         String name = mDeviceAlarmLogInfo.getDeviceName();
         acAlertLogTvName.setText(TextUtils.isEmpty(name) ? mDeviceAlarmLogInfo.getDeviceSN() : name);
 
-        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mDeviceAlarmLogInfo.getUpdatedTime(),1));
+        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mDeviceAlarmLogInfo.getUpdatedTime(), 1));
 
         acAlertTvAlertCount.setText(mDeviceAlarmLogInfo.getDisplayStatus() + 10 + "");
 
@@ -146,9 +155,13 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         if (displayStatus == DISPLAY_STATUS_CONFIRM) {
             isReConfirm = true;
             acAlertTvAlertConfirm.setText("预警确认");
+            acAlertTvAlertConfirm.setTextColor(mActivity.getResources().getColor(R.color.white));
+            acAlertTvAlertConfirm.setBackgroundResource(R.drawable.shape_btn_corner_29c_bg_4dp);
         } else {
             isReConfirm = false;
             acAlertTvAlertConfirm.setText("再次确认");
+            acAlertTvAlertConfirm.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            acAlertTvAlertConfirm.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_4dp);
         }
 
         initRcContentData();
@@ -342,7 +355,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         }
     }
 
-    public interface DialogDisplayStatusListener{
+    public interface DialogDisplayStatusListener {
         void onDialogShow();
     }
 }

@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
@@ -149,12 +148,12 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功
-        if (code == EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE) {
-            getView().finishAc();
-        } else if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
-            getView().finishAc();
-        } else if (code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
-            getView().finishAc();
+        switch (code) {
+            case EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE:
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                getView().finishAc();
+                break;
         }
     }
 

@@ -74,33 +74,36 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         int code = eventData.code;
         Object data = eventData.data;
         //
-        if (code == EVENT_DATA_ALARM_FRESH_ALARM_DATA) {
-            if (data instanceof DeviceAlarmLogInfo) {
-                if (this.deviceAlarmLogInfo.get_id().equals(((DeviceAlarmLogInfo) data).get_id())) {
-                    this.deviceAlarmLogInfo = (DeviceAlarmLogInfo) data;
-                }
+        switch (code) {
+            case EVENT_DATA_ALARM_FRESH_ALARM_DATA:
+                if (data instanceof DeviceAlarmLogInfo) {
+                    if (this.deviceAlarmLogInfo.get_id().equals(((DeviceAlarmLogInfo) data).get_id())) {
+                        this.deviceAlarmLogInfo = (DeviceAlarmLogInfo) data;
+                    }
 
-            }
-        } else if (code == EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS) {
-            if (data instanceof EventAlarmStatusModel) {
-                EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                if (deviceAlarmLogInfo.get_id().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.get_id())) {
-                    switch (tempEventAlarmStatusModel.status) {
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
-                            // 做一些预警恢复的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                            // 做一些预警被确认的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
-                            // 做一些预警被再次确认的逻辑
-                            deviceAlarmLogInfo = tempEventAlarmStatusModel.deviceAlarmLogInfo;
-                            refreshData(false);
-                            break;
-                        default:
-                            // 未知逻辑 可以联系我确认 有可能是bug
-                            break;
+                }
+                break;
+            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+                if (data instanceof EventAlarmStatusModel) {
+                    EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
+                    if (deviceAlarmLogInfo.get_id().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.get_id())) {
+                        switch (tempEventAlarmStatusModel.status) {
+                            case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                                // 做一些预警恢复的逻辑
+                            case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                                // 做一些预警被确认的逻辑
+                            case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                                // 做一些预警被再次确认的逻辑
+                                deviceAlarmLogInfo = tempEventAlarmStatusModel.deviceAlarmLogInfo;
+                                refreshData(false);
+                                break;
+                            default:
+                                // 未知逻辑 可以联系我确认 有可能是bug
+                                break;
+                        }
                     }
                 }
-            }
+                break;
         }
     }
 
@@ -108,7 +111,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
         getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        String alarmTime = DateUtil.getStrTimeToday(deviceAlarmLogInfo.getCreatedTime(),1);
+        String alarmTime = DateUtil.getStrTimeToday(deviceAlarmLogInfo.getCreatedTime(), 1);
         //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {
@@ -141,6 +144,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             switch (deviceAlarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
+                    getView().setConfirmColor(mContext.getResources().getColor(R.color.white));
+                    getView().setConfirmBg(R.drawable.shape_btn_corner_29c_bg_4dp);
                     getView().setConfirmText("预警确认");
                     break;
                 case DISPLAY_STATUS_ALARM:
@@ -148,6 +153,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 case DISPLAY_STATUS_TEST:
                 case DISPLAY_STATUS_RISKS:
                     isReConfirm = true;
+                    getView().setConfirmColor(mContext.getResources().getColor(R.color.c_252525));
+                    getView().setConfirmBg(R.drawable.shape_bg_solid_fa_stroke_df_corner_4dp);
                     getView().setConfirmText("再次确认");
                     break;
             }

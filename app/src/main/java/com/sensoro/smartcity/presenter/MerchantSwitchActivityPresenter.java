@@ -233,8 +233,10 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
 //        Object data = eventData.data;
-        if (code == EVENT_DATA_SEARCH_MERCHANT) {
-            getView().finishAc();
+        switch (code) {
+            case EVENT_DATA_SEARCH_MERCHANT:
+                getView().finishAc();
+                break;
         }
 //        LogUtils.loge(this, eventData.toString());
     }

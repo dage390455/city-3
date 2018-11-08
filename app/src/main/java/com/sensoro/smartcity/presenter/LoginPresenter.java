@@ -121,7 +121,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                     //
                     UserInfo userInfo = loginRsp.getData();
                     EventLoginData loginData = MenuPageFactory.createLoginData(userInfo, phoneId);
-                    if (loginData.needAuth){
+                    if (loginData.needAuth) {
                         openNextActivity(loginData);
                         return;
                     }
@@ -203,11 +203,14 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
 //        Object data = eventData.data;
-        if (code == EVENT_DATA_CANCEL_AUTH) {
-            getView().dismissProgressDialog();
-        } else if (code == EVENT_DATA_AUTH_SUC) {
-            getView().dismissProgressDialog();
-            getView().finishAc();
+        switch (code) {
+            case EVENT_DATA_CANCEL_AUTH:
+                getView().dismissProgressDialog();
+                break;
+            case EVENT_DATA_AUTH_SUC:
+                getView().dismissProgressDialog();
+                getView().finishAc();
+                break;
         }
 //        LogUtils.loge(this, eventData.toString());
     }

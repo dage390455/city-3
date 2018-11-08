@@ -1,9 +1,7 @@
 package com.sensoro.smartcity.widget.calendar.cardgallery;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -49,10 +47,8 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
                     case RecyclerView.SCROLL_STATE_IDLE:
                         int currentItem = getCurrentItem();
                         LogUtils.loge(this, "onScrollStateChanged -->> currentItem = " + currentItem);
-                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 ||
-                                currentItem == mRecyclerView.getAdapter().getItemCount() - 2;
-                        if (mLinearSnapHelper.finalSnapDistance[0] == 0
-                                && mLinearSnapHelper.finalSnapDistance[1] == 0) {
+                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 || currentItem == mRecyclerView.getAdapter().getItemCount() - 2;
+                        if (mLinearSnapHelper.finalSnapDistance[0] == 0 && mLinearSnapHelper.finalSnapDistance[1] == 0) {
                             mCurrentItemOffset = 0;
                             mLastPos = currentItem;
                             //认为是一次滑动停止 这里可以写滑动停止回调
@@ -102,6 +98,31 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
         } else {
             scrollToPosition(item);
         }
+    }
+
+    public void scrollToPositionAlpha(final int pos) {
+        if (mRecyclerView == null) {
+            return;
+        }
+        mRecyclerView.scrollToPosition(pos);
+        mCurrentItemOffset = 0;
+        mLastPos = pos;
+//        mRecyclerView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                View view = mRecyclerView.getLayoutManager().findViewByPosition(pos);
+//                view.setAlpha(0);
+//                view.animate()
+//                        .alpha(1.f)                                //设置最终效果为完全不透明
+//                        .setDuration(1500)
+//                        .setListener(new AnimatorListenerAdapter() {
+//                            @Override
+//                            public void onAnimationEnd(Animator animation) {
+//                            }
+//                        })
+//                        .start();
+//            }
+//        });
     }
 
     public void scrollCurrent(int pos) {
@@ -223,20 +244,4 @@ public class BannerScaleHelper implements ViewTreeObserver.OnGlobalLayoutListene
      * 防止卡片在第一页和最后一页因无法"居中"而一直循环调用onScrollStateChanged-->SnapHelper.snapToTargetExistingView-->onScrollStateChanged
      * Created by jameson on 9/3/16.
      */
-    private static class CardLinearSnapHelper extends LinearSnapHelper {
-        public boolean mNoNeedToScroll = false;
-        public int[] finalSnapDistance = {0, 0};
-
-        @Override
-        public int[] calculateDistanceToFinalSnap(@NonNull RecyclerView.LayoutManager layoutManager, @NonNull View targetView) {
-            //Log.e("TAG", "calculateDistanceToFinalSnap");
-            if (mNoNeedToScroll) {
-                finalSnapDistance[0] = 0;
-                finalSnapDistance[1] = 0;
-            } else {
-                finalSnapDistance = super.calculateDistanceToFinalSnap(layoutManager, targetView);
-            }
-            return finalSnapDistance;
-        }
-    }
 }

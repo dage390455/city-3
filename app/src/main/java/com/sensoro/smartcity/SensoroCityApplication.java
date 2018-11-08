@@ -37,7 +37,6 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DynamicTimeFormat;
 import com.sensoro.smartcity.util.LogUtils;
@@ -53,11 +52,6 @@ import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.yixia.camera.VCamera;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by sensoro on 17/7/24.
@@ -65,7 +59,6 @@ import java.util.Set;
 
 public class SensoroCityApplication extends MultiDexApplication implements Repause
         .Listener, SensoroPushListener, OnResultListener<AccessToken>, AMapLocationListener, Runnable {
-    private final List<DeviceInfo> mDeviceInfoList = Collections.synchronizedList(new ArrayList<DeviceInfo>());
     public IWXAPI api;
     private static volatile SensoroCityApplication instance;
     private NotificationUtils mNotificationUtils;
@@ -75,9 +68,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     public volatile boolean hasGotToken = false;
     public static String VIDEO_PATH;
     public AMapLocationClient mLocationClient;
-    //    public ArrayList<DeviceTypeModel> mDeviceTypeList = new ArrayList<>();
     public BLEDeviceManager bleDeviceManager;
-//    public DeviceTypeMutualModel mDeviceTypeMutualModel;
 
     static {
         //启用矢量图兼容
@@ -156,28 +147,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         return instance;
     }
 
-    public void addData(List<DeviceInfo> list) {
-        if (list.size() > 0) {
-            synchronized (mDeviceInfoList) {
-                Set<DeviceInfo> deviceInfos = new HashSet<>(mDeviceInfoList);
-                deviceInfos.addAll(list);
-                this.mDeviceInfoList.clear();
-                this.mDeviceInfoList.addAll(deviceInfos);
-                Collections.sort(mDeviceInfoList);
-            }
-        }
-    }
-
-    public void setData(List<DeviceInfo> list) {
-        synchronized (mDeviceInfoList) {
-            mDeviceInfoList.clear();
-            mDeviceInfoList.addAll(new HashSet<>(list));
-            Collections.sort(mDeviceInfoList);
-        }
-
-
-    }
-
     private void initSensoroSDK() {
         try {
             bleDeviceManager = BLEDeviceManager.getInstance(this);
@@ -221,10 +190,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         mLocationClient.startLocation();
     }
 
-    public List<DeviceInfo> getData() {
-        return mDeviceInfoList;
-    }
-
     @Override
     public void onLowMemory() {
         super.onLowMemory();
@@ -233,7 +198,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
     @Override
     public void onTerminate() {
         super.onTerminate();
-        mDeviceInfoList.clear();
         Repause.unregisterListener(this);
         mLocationClient.onDestroy();
     }
@@ -465,53 +429,6 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 //        paseDeviceJsonByAssets();
         initBugLy();
     }
-
-//    private void paseDeviceJsonByAssets() {
-//        StringBuilder sb = new StringBuilder();
-//        AssetManager assetManager = getAssets();
-//        BufferedReader bufferedReader = null;
-//        try {
-//            bufferedReader = new BufferedReader(new InputStreamReader(assetManager.open("deviceModel.json"), "utf-8"));
-//            String line;
-//            while ((line = bufferedReader.readLine()) != null) {
-//                sb.append(line);
-//            }
-//            bufferedReader.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//
-//        } finally {
-//            try {
-//                if (bufferedReader != null) {
-//                    bufferedReader.close();
-//                }
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        mDeviceTypeMutualModel = RetrofitServiceHelper.INSTANCE.getGson().fromJson(sb.toString(), DeviceTypeMutualModel.class);
-//    }
-
-//    private void initDeviceType() {
-//        for (int i = 0; i < SELECT_TYPE_VALUES.length; i++) {
-//            mDeviceTypeList.add(new DeviceTypeModel(SELECT_TYPE[i], SELECT_TYPE_RESOURCE[i], SELECT_TYPE_VALUES[i]
-//                    , SENSOR_MENU_MATCHER_ARRAY[i]));
-//        }
-//    }
-
-//    /**
-//     * 根据unionType获取设备
-//     *
-//     * @param unionType
-//     */
-//    public DeviceTypeModel getDeviceTypeName(String unionType) {
-//        for (DeviceTypeModel deviceTypeModel : mDeviceTypeList) {
-//            if (deviceTypeModel.matcherType.equals(unionType)) {
-//                return deviceTypeModel;
-//            }
-//        }
-//        return null;
-//    }
 
     /**
      * 用handler

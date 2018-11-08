@@ -234,6 +234,16 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     }
 
     @Override
+    public void setConfirmBg(int resId) {
+        acAlertTvAlertConfirm.setBackgroundResource(resId);
+    }
+
+    @Override
+    public void setConfirmColor(int resId) {
+        acAlertTvAlertConfirm.setTextColor(resId);
+    }
+
+    @Override
     public void onPhotoItemClick(int position, List<ScenesData> scenesDataList) {
         mPresenter.clickPhotoItem(position, scenesDataList);
     }

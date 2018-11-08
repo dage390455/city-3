@@ -79,32 +79,35 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         int code = eventData.code;
         Object data = eventData.data;
         //
-        if (code == EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS) {
-            if (data instanceof EventAlarmStatusModel) {
-                EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                if (mCurrentDeviceAlarmLogInfo.getDeviceSN().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.getDeviceSN())) {
-                    switch (tempEventAlarmStatusModel.status) {
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
-                            // 做一些预警发生的逻辑
-                            mDeviceAlarmLogInfoList.add(0, tempEventAlarmStatusModel.deviceAlarmLogInfo);
-                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
-                            break;
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
-                            // 做一些预警恢复的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                            // 做一些预警被确认的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
-                            freshDeviceAlarmLogInfo(tempEventAlarmStatusModel.deviceAlarmLogInfo);
-                            // 做一些预警被再次确认的逻辑
-                            break;
-                        default:
-                            // 未知逻辑 可以联系我确认 有可能是bug
-                            break;
+        switch (code) {
+            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+                if (data instanceof EventAlarmStatusModel) {
+                    EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
+                    if (mCurrentDeviceAlarmLogInfo.getDeviceSN().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.getDeviceSN())) {
+                        switch (tempEventAlarmStatusModel.status) {
+                            case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                                // 做一些预警发生的逻辑
+                                mDeviceAlarmLogInfoList.add(0, tempEventAlarmStatusModel.deviceAlarmLogInfo);
+                                getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                                break;
+                            case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                                // 做一些预警恢复的逻辑
+                            case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                                // 做一些预警被确认的逻辑
+                            case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                                freshDeviceAlarmLogInfo(tempEventAlarmStatusModel.deviceAlarmLogInfo);
+                                // 做一些预警被再次确认的逻辑
+                                break;
+                            default:
+                                // 未知逻辑 可以联系我确认 有可能是bug
+                                break;
+                        }
                     }
                 }
-            }
+                break;
         }
     }
+
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
         //TODO 对照片信息统一处理
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
@@ -168,6 +171,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
         }
     }
+
     public void onCalendarBack(CalendarDateModel calendarDateModel) {
         getView().setDateSelectVisible(true);
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
