@@ -37,6 +37,12 @@ public class InspectionTaskStatePopUtils {
         View view = LayoutInflater.from(activity).inflate(R.layout.item_pop_inspection_task_select_state, null);
         RecyclerView mRcStateSelect = view.findViewById(R.id.pop_inspection_task_rc_select_state);
         mll = view.findViewById(R.id.item_pop_select_state_ll);
+        view.findViewById(R.id.pop_inspection_task_view).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mPopupWindow.dismiss();
+            }
+        });
 
         mSelectStateAdapter = new InspectionTaskStateSelectAdapter(activity);
         GridLayoutManager manager = new GridLayoutManager(activity, 3);
@@ -129,6 +135,10 @@ public class InspectionTaskStatePopUtils {
 
     public InspectionStatusCountModel getItem(int position) {
         return mSelectStateAdapter.getItem(position);
+    }
+
+    public boolean isShowing(){
+        return mPopupWindow.isShowing();
     }
 
     public void clearAnimation() {

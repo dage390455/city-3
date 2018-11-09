@@ -18,6 +18,7 @@ import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
+import com.sensoro.smartcity.server.response.ContractInfoRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
@@ -820,6 +821,12 @@ public enum RetrofitServiceHelper {
         return contractAddRspObservable;
     }
 
+    public Observable<ContractInfoRsp> getContractInfo(String id){
+        Observable<ContractInfoRsp> contractInfo = retrofitService.getContractInfo(id);
+        RxApiManager.getInstance().add("contractInfo",contractInfo.subscribe());
+        return contractInfo;
+    }
+
     /**
      * 合同检索
      *
@@ -830,15 +837,23 @@ public enum RetrofitServiceHelper {
      * @param offset
      * @return
      */
-    public Observable<ContractsListRsp> searchContract(Integer contractType, Long beginTime, Long endTime, Integer
-            limit,
-                                                       Integer offset) {
+    public Observable<ContractsListRsp> searchContract(Integer contractType, Integer confirmed,Long beginTime, Long endTime, Integer
+            limit, Integer offset) {
         JSONObject jsonObject = new JSONObject();
         try {
             JSONObject jsonObject1 = new JSONObject();
             if (contractType != null) {
                 jsonObject1.put("contract_type", contractType);
             }
+
+            if(confirmed != null){
+                if(confirmed == 1){
+                    jsonObject1.put("confirmed",false);
+                }else{
+                    jsonObject1.put("confirmed",true);
+                }
+            }
+
             if (beginTime != null) {
                 jsonObject1.put("beginTime", beginTime);
             }

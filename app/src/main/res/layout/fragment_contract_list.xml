@@ -3,11 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/c_f4f4f4"
         android:orientation="vertical">
 
         <RelativeLayout
@@ -21,20 +23,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginLeft="@dimen/x10"
+                android:layout_marginStart="4dp"
                 android:adjustViewBounds="true"
                 android:cropToPadding="true"
-                android:padding="15dp"
+                android:padding="12dp"
                 android:src="@drawable/arrows_left" />
-
             <TextView
                 android:id="@+id/contract_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
+                android:layout_centerVertical="true"
+                android:layout_toEndOf="@id/contract_iv_menu_list"
                 android:text="@string/contract_list"
                 android:textColor="@color/c_252525"
-                android:textSize="@dimen/x60" />
+                android:textSize="18sp" />
 
 
             <ImageView
@@ -50,63 +52,62 @@
                 android:src="@mipmap/main_add" />
         </RelativeLayout>
 
-
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/y1"
-            android:background="@color/c_e7e7e7" />
-
-        <RadioGroup
-            android:id="@+id/rg_contract_select"
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/contract_cl_select_root"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/px20dp"
-            android:orientation="horizontal">
+            android:background="@color/white">
 
-            <RadioButton
-                android:id="@+id/rb_contract_all"
-                android:layout_width="100dp"
+            <TextView
+                android:id="@+id/contract_tv_select_type"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_contract_title_bg_select"
-                android:button="@null"
-                android:checked="true"
-                android:gravity="center"
-                android:padding="@dimen/px20dp"
                 android:text="全部合同"
-                android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="14sp" />
-
-            <RadioButton
-                android:id="@+id/rb_contract_business"
-                android:layout_width="100dp"
+                android:textSize="12sp"
+                android:textColor="@color/c_a6a6a6"
+                android:drawableEnd="@drawable/main_small_triangle_gray"
+                android:drawablePadding="4dp"
+                android:layout_marginBottom="12dp"
+                android:layout_marginTop="4dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="@+id/center_line"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"/>
+            <View
+                android:id="@+id/center_line"
+                android:layout_width="1dp"
+                android:layout_height="0dp"
+                android:background="@color/c_dfdfdf"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="@id/contract_tv_select_type"
+                app:layout_constraintBottom_toBottomOf="@id/contract_tv_select_type"
+                />
+            <TextView
+                android:id="@+id/contract_tv_select_status"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_contract_title_bg_select"
-                android:button="@null"
-                android:gravity="center"
-                android:padding="@dimen/px20dp"
-                android:text="企业合同"
-                android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="14sp" />
+                android:text="全部状态"
+                android:textSize="12sp"
+                android:textColor="@color/c_a6a6a6"
+                android:drawableEnd="@drawable/main_small_triangle_gray"
+                android:drawablePadding="4dp"
+                app:layout_constraintStart_toStartOf="@id/center_line"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
 
-            <RadioButton
-                android:id="@+id/rb_contract_person"
-                android:layout_width="100dp"
-                android:layout_height="wrap_content"
-                android:background="@drawable/selector_contract_title_bg_select"
-                android:button="@null"
-                android:gravity="center"
-                android:padding="@dimen/px20dp"
-                android:text="个人合同"
-                android:textColor="@drawable/selector_contract_title_text_select"
-                android:textSize="14sp" />
-        </RadioGroup>
+                app:layout_constraintBottom_toBottomOf="parent"/>
+        </android.support.constraint.ConstraintLayout>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="0.5dp"
+            android:background="@color/c_dfdfdf" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginLeft="@dimen/x30"
-            android:layout_marginRight="@dimen/x30"
-            android:background="@color/list_sep_color">
+            android:layout_marginTop="12dp"
+            android:background="@color/c_f4f4f4">
 
             <include
                 layout="@layout/item_no_content"
@@ -116,17 +117,19 @@
                 android:id="@+id/refreshLayout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/white"
                 android:orientation="vertical">
 
                 <ListView
                     android:id="@+id/contract_ptr_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/y10"
-                    android:divider="@color/list_sep_color"
-                    android:dividerHeight="@dimen/y30"
+                    android:divider="@color/c_dfdfdf"
+                    android:dividerHeight="0.5dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:fadingEdge="none"
-                    android:scrollbars="vertical" />
+                    android:scrollbars="none" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
         </RelativeLayout>
     </LinearLayout>

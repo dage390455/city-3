@@ -118,8 +118,6 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     RecyclerView rvSensorCount;
     @BindView(R.id.bt_next)
     Button btNext;
-    @BindView(R.id.iv_line1)
-    ImageView ivLine1;
     @BindView(R.id.iv_line_phone)
     ImageView ivLinePhone;
     @BindView(R.id.iv_line2)
