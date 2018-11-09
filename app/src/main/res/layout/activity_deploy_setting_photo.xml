@@ -3,13 +3,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
+    android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/deploy_setting_photo_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/y200"
+        android:background="@color/white"
         android:gravity="center_vertical">
 
         <ImageView
@@ -21,7 +22,7 @@
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:padding="15dp"
-            android:src="@mipmap/ic_back" />
+            android:src="@drawable/arrows_left" />
 
         <TextView
             android:id="@+id/deploy_setting_photo_title"

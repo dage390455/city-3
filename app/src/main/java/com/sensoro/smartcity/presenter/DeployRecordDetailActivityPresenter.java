@@ -43,7 +43,7 @@ implements Constants {
 
     private void refreshUI() {
         if (mDeployRecordInfo != null) {
-            getView().setInclueTitle(mDeployRecordInfo.getSn());
+            getView().setSNTitle(mDeployRecordInfo.getSn());
             getView().setDeviceName(mDeployRecordInfo.getDeviceName());
             getView().updateTagList(mDeployRecordInfo.getTags());
             getView().setDeployTime(DateUtil.getStrTime_ymd_hm_ss(mDeployRecordInfo.getCreatedTime()));

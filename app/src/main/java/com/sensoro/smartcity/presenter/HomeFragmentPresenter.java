@@ -171,27 +171,25 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 //
                 totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount;
                 page = 1;
-                mCurrentHomeTopModel = mHomeTopModels.get(0);
-
                 return getAllDeviceInfoListRspObservable(true);
             }
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                freshHeaderContentData();
+                freshHeaderContentData(mHomeTopModels.get(0));
                 getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                freshHeaderContentData();
+                freshHeaderContentData(mHomeTopModels.get(0));
                 getView().toastShort(errorMsg);
                 getView().dismissProgressDialog();
             }
         });
     }
 
-    private void freshHeaderContentData() {
+    private void freshHeaderContentData(HomeTopModel homeTopModel) {
         try {
             getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
             getView().refreshHeaderData(true, mHomeTopModels);
@@ -200,14 +198,19 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 getView().setImvHeaderLeftVisible(false);
                 getView().setImvHeaderRightVisible(false);
             }
-            String currentDataStr = getCurrentDataStr();
-            int currentColor = getCurrentColor();
-            getView().setToolbarTitleBackgroundColor(currentColor);
-            getView().setToolbarTitleCount(currentDataStr);
+            updateHeaderTop(homeTopModel);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
+    }
+
+    public void updateHeaderTop(HomeTopModel homeTopModel) {
+        mCurrentHomeTopModel = homeTopModel;
+        String currentDataStr = getCurrentDataStr();
+        int currentColor = getCurrentColor();
+        getView().setToolbarTitleBackgroundColor(currentColor);
+        getView().setToolbarTitleCount(currentDataStr);
     }
 
     @NonNull
@@ -639,11 +642,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void requestDataByStatus(HomeTopModel homeTopModel) {
         try {
-            mCurrentHomeTopModel = homeTopModel;
-            String currentDataStr = getCurrentDataStr();
-            int currentColor = getCurrentColor();
-            getView().setToolbarTitleBackgroundColor(currentColor);
-            getView().setToolbarTitleCount(currentDataStr);
+            updateHeaderTop(homeTopModel);
             int index = mHomeTopModels.indexOf(homeTopModel);
             if (mHomeTopModels.size() <= 1) {
                 getView().setImvHeaderLeftVisible(false);
@@ -666,7 +665,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     }
 
-    public void requestDataByTypes(int position, HomeTopModel homeTopModel) {
+    public void requestDataByTypes(int position, final HomeTopModel homeTopModel) {
 
         if (position == 0) {
             mTypeSelectedType = null;
@@ -674,17 +673,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             mTypeSelectedType = mMergeTypes.get(position - 1);
         }
         page = 1;
-        mCurrentHomeTopModel = homeTopModel;
         getView().showProgressDialog();
         getAllDeviceInfoListRspObservable(true).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
 
                 getView().refreshContentData(false, mHomeTopModels);
-                String currentDataStr = getCurrentDataStr();
-                int currentColor = getCurrentColor();
-                getView().setToolbarTitleBackgroundColor(currentColor);
-                getView().setToolbarTitleCount(currentDataStr);
+                updateHeaderTop(homeTopModel);
                 getView().dismissProgressDialog();
             }
 

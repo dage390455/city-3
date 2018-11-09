@@ -788,7 +788,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(0);
             if (homeTopModel.type == 0) {
                 setHeaderTitleLeftArrow(0);
+                mPresenter.updateHeaderTop(homeTopModel);
                 currentPosition = 0;
+
             } else {
                 toastShort("设备预警已解除，请在“预警”界面中查看事件");
             }

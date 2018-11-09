@@ -135,17 +135,17 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_LONG).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_LONG).show();
     }
 
 
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_record_detail_ll_fixed_point, R.id.ac_deploy_record_detail_ll_deploy_pic
-    ,R.id.include_text_title_tv_subtitle})
+            , R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -164,7 +164,9 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     }
 
     @Override
-    public void setInclueTitle(String sn) {
+    public void setSNTitle(String sn) {
+        includeTextTitleTvTitle.setVisibility(View.VISIBLE);
+
         includeTextTitleTvTitle.setText(sn);
     }
 
@@ -195,7 +197,7 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
 
     @Override
     public void setPositionStatus(int status) {
-        switch (status){
+        switch (status) {
             case 0:
                 acDeployRecordDetailTvFixedPointState.setText("未定位");
                 acDeployRecordDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));

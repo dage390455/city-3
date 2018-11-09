@@ -145,6 +145,11 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     }
 
     @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[]
             grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -172,6 +177,44 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
     @Override
     public void onClick(View v) {
         int id = v.getId();
+//        switch (id) {
+//            case R.id.btn_ok:
+//                Intent intent = new Intent();
+//                intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imagePicker.getSelectedImages());
+//                setResult(ImagePicker.RESULT_CODE_ITEMS, intent);  //多选不允许裁剪裁剪，返回数据
+//                finish();
+//                break;
+//            case R.id.ll_dir:
+//                if (mImageFolders == null) {
+//                    Log.i("ImageGridActivity", "您的手机没有图片");
+//                    return;
+//                }
+//                //点击文件夹按钮
+//                createPopupFolderList();
+//                mImageFolderAdapter.refreshData(mImageFolders);  //刷新数据
+//                if (mFolderPopupWindow.isShowing()) {
+//                    mFolderPopupWindow.dismiss();
+//                } else {
+//                    mFolderPopupWindow.showAtLocation(mFooterBar, Gravity.NO_GRAVITY, 0, 0);
+//                    //默认选择当前选择的上一个，当目录很多时，直接定位到已选中的条目
+//                    int index = mImageFolderAdapter.getSelectIndex();
+//                    index = index == 0 ? index : index - 1;
+//                    mFolderPopupWindow.setSelection(index);
+//                }
+//                break;
+//            case R.id.btn_preview:
+//                Intent intent = new Intent(ImageGridActivity.this, ImagePreviewActivity.class);
+//                intent.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, 0);
+//                intent.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, imagePicker.getSelectedImages());
+//                intent.putExtra(ImagePreviewActivity.ISORIGIN, isOrigin);
+//                intent.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+//                startActivityForResult(intent, ImagePicker.REQUEST_CODE_PREVIEW);
+//                break;
+//            case R.id.btn_back:
+//                finish();
+//                break;
+//
+//        }
         if (id == R.id.btn_ok) {
             Intent intent = new Intent();
             intent.putExtra(ImagePicker.EXTRA_RESULT_ITEMS, imagePicker.getSelectedImages());
@@ -231,6 +274,7 @@ public class ImageGridActivity extends ImageBaseActivity implements ImageDataSou
 
     @Override
     public void onImagesLoaded(List<ImageFolder> imageFolders) {
+        Log.e("", "onImagesLoaded----->>" + imageFolders.size());
         this.mImageFolders = imageFolders;
         imagePicker.setImageFolders(imageFolders);
         if (imageFolders.size() == 0) {

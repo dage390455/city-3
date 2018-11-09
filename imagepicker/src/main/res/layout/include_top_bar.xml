@@ -16,7 +16,7 @@
         android:adjustViewBounds="true"
         android:cropToPadding="true"
         android:padding="15dp"
-        app:srcCompat="@mipmap/ic_back" />
+        app:srcCompat="@mipmap/arrows_left" />
 
 
     <TextView
