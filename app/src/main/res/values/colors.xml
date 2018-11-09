@@ -57,6 +57,7 @@
     <color name="c_f3f5f6">#f3f5f6</color>
     <color name="c_252525">#252525</color>
     <color name="c_b6b6b6">#b6b6b6</color>
+    <color name="c_fdc83b">#FDC83B</color>
     //
     <color name="gray">#5D5D5D</color>
 
@@ -78,6 +79,15 @@
     <color name="c_afb4bb">#AFB4BB</color>
     <color name="c_f4f4f4">#F4F4F4</color>
     <color name="c_a0000000">#a0000000</color>
-
+    //
+    <color name="ic_back_press">#afffffff</color>
+    <color name="ip_color_primary">#393A3F</color>
+    <color name="ip_color_primary_dark">#ffffffff</color>
+    <color name="ip_color_primary_trans">#002f3335</color>
+    <color name="ip_color_press">#ffe0e0e0</color>
+    <color name="ip_camera_pre">#353535</color>
+    <color name="ip_color_accent">#29C093</color>
+    <color name="ip_text_secondary_inverted">#66ffffff</color>
+    <color name="ip_text_primary_inverted">#ff5d5d5d</color>
 
 </resources>

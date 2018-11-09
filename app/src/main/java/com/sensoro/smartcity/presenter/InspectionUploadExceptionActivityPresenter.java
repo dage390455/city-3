@@ -3,14 +3,9 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.ui.ImageGridActivity;
-import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
@@ -27,6 +22,10 @@ import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
@@ -37,8 +36,8 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;

@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.model;
 
-import com.lzy.imagepicker.bean.ImageItem;
+
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.io.Serializable;
 import java.util.ArrayList;

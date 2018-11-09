@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.amap.api.maps.model.LatLng;
-import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -14,6 +13,7 @@ import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.model.DeployMapModel;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.util.ArrayList;
 import java.util.List;

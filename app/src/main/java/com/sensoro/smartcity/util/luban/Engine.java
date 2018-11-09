@@ -71,6 +71,8 @@ class Engine {
         options.inSampleSize = computeSize();
 
         Bitmap tagBitmap = BitmapFactory.decodeStream(srcImg.open(), null, options);
+        //TODO 添加日期等
+
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
         if (Checker.SINGLE.isJPG(srcImg.open())) {

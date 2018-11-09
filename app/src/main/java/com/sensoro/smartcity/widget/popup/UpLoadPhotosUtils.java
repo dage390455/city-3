@@ -3,7 +3,6 @@ package com.sensoro.smartcity.widget.popup;
 import android.content.Context;
 import android.text.TextUtils;
 
-import com.lzy.imagepicker.bean.ImageItem;
 import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
@@ -18,6 +17,7 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.luban.CompressionPredicate;
 import com.sensoro.smartcity.util.luban.Luban;
 import com.sensoro.smartcity.util.luban.OnCompressListener;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import org.json.JSONObject;
 
