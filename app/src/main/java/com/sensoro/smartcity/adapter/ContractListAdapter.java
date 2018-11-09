@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,14 +22,16 @@ import java.util.List;
 
 public class ContractListAdapter extends BaseAdapter implements Constants {
 
-    //    private Context mContext;
+//        private Context mContext;
     private LayoutInflater mInflater;
     private final List<ContractListInfo> mList = new ArrayList<>();
-//    private OnContractClickListener mListener;
+    private final Resources resources;
+    //    private OnContractClickListener mListener;
 
     public ContractListAdapter(Context context) {
 //        this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
+        resources = context.getResources();
 //        this.mListener = listener;
     }
 
@@ -70,11 +73,13 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
             holder.itemTvLine1 = (TextView) convertView.findViewById(R.id.tv_contacts_manger_line1);
             holder.itemEtLine1 = (TextView) convertView.findViewById(R.id.et_contacts_manger_line1);
             holder.itemTvType = (TextView) convertView.findViewById(R.id.tv_contacts_manger_type);
+            holder.itemTvStatus = convertView.findViewById(R.id.tv_contacts_manger_status);
             //
             holder.itemTvLine2 = (TextView) convertView.findViewById(R.id.tv_contacts_manger_line2);
             holder.itemEtLine2 = (TextView) convertView.findViewById(R.id.et_contacts_manger_line2);
             holder.itemEtNumber = (TextView) convertView.findViewById(R.id.et_contacts_manger_number);
             holder.itemEtDate = (TextView) convertView.findViewById(R.id.et_contacts_manger_time);
+            holder.itemEtSignTime = convertView.findViewById(R.id.et_contacts_manger_sign_time);
             convertView.setTag(holder);
         } else {
             holder = (ContractViewHolder) convertView.getTag();
@@ -92,6 +97,16 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
                 holder.itemTvType.setText("企业");
                 break;
         }
+
+        if (contractListInfo.isConfirmed()) {
+            holder.itemTvStatus.setText("已签订");
+            holder.itemTvStatus.setTextColor(resources.getColor(R.color.c_29c093));
+            holder.itemTvStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_29c_full_corner);
+        }else {
+            holder.itemTvStatus.setText("未签订");
+            holder.itemTvStatus.setTextColor(resources.getColor(R.color.c_ff8d34));
+            holder.itemTvStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_ff8d_full_corner);
+        }
         String contract_number = contractListInfo.getContract_number();
         holder.itemEtNumber.setText(contract_number);
         //
@@ -105,6 +120,21 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
                 e.printStackTrace();
             }
             holder.itemEtDate.setText(createdAt);
+        }
+        //
+        String confirmTime = contractListInfo.getConfirmTime();
+        if(!TextUtils.isEmpty(confirmTime)){
+            try {
+                String[] ts = confirmTime.split("T");
+                confirmTime = ts[0].replaceAll("-",".");
+            } catch (Exception e) {
+                e.printStackTrace();
+                confirmTime = "-";
+            }
+
+            holder.itemEtSignTime.setText(confirmTime);
+        }else{
+            holder.itemEtSignTime.setText("-");
         }
         //
         int created_type = contractListInfo.getCreated_type();
@@ -153,6 +183,8 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         TextView itemEtLine2;
         TextView itemEtNumber;
         TextView itemEtDate;
+        TextView itemTvStatus;
+        TextView itemEtSignTime;
 
         ContractViewHolder() {
 

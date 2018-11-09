@@ -13,6 +13,7 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTemplateShowAdapter
@@ -25,7 +26,7 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
         this.mContext = context;
     }
 
-    public void updateList(ArrayList<ContractsTemplateInfo> list) {
+    public void updateList(List<ContractsTemplateInfo> list) {
         this.mList.clear();
         this.mList.addAll(list);
         Collections.sort(mList);

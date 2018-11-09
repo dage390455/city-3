@@ -47,7 +47,12 @@ public class InspectionTaskStateSelectAdapter extends RecyclerView.Adapter<Inspe
     public void onBindViewHolder(InspectionTaskStateSelectHolder holder, int position) {
         Resources resources = mContext.getResources();
         InspectionStatusCountModel ic = mStateCountList.get(position);
-        holder.itemPopTvSelectCount.setText(ic.count+"");
+        if(ic.count == -1){
+            holder.itemPopTvSelectCount.setVisibility(View.GONE);
+        }else{
+            holder.itemPopTvSelectCount.setVisibility(View.VISIBLE);
+            holder.itemPopTvSelectCount.setText(ic.count+"");
+        }
         holder.itemPopTvSelectState.setText(ic.statusTitle);
 
         holder.itemPopSelectLlRoot.setBackgroundResource(position != selectPosition ? R.drawable.shape_bg_solid_ff_stroke_df_corner

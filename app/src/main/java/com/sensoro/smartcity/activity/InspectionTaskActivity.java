@@ -382,9 +382,15 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 //                forceOpenSoftKeyboard();
                 break;
             case R.id.ac_inspection_task_fl_state:
+                if (mSelectDeviceTypePop!=null&&mSelectDeviceTypePop.isShowing()) {
+                    mSelectDeviceTypePop.dismiss();
+                }
                 mPresenter.doInspectionStatus(true);
                 break;
             case R.id.ac_inspection_task_fl_type:
+                if(mSelectStatusPop!=null&&mSelectStatusPop.isShowing()){
+                    mSelectStatusPop.dismiss();
+                }
                 mPresenter.doInspectionType(true);
                 break;
             case R.id.ac_inspection_task_imv_scan:
@@ -493,4 +499,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
             tipBleDialogUtils.onActivityResult(requestCode, resultCode, data);
         }
     }
+
+
 }

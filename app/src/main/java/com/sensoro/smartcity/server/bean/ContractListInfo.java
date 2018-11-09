@@ -1,8 +1,9 @@
 package com.sensoro.smartcity.server.bean;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ContractListInfo {
+public class ContractListInfo implements Serializable {
 
     /**
      * id : 111

@@ -22,6 +22,7 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -68,8 +69,6 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     @BindView(R.id.et_contract_info_line6)
     TextView etContractInfoLine6;
     //
-    @BindView(R.id.ll_contract_info_place)
-    LinearLayout lLContractInfoPlace;
     @BindView(R.id.tv_contract_service_place_type)
     TextView tvContractServicePlace;
     @BindView(R.id.tv_service_age)
@@ -86,8 +85,6 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     TextView tvContractSign;
     @BindView(R.id.bt_confirm)
     Button btConfirm;
-    @BindView(R.id.iv_line1)
-    ImageView ivLine1;
     @BindView(R.id.iv_line_phone)
     ImageView ivLinePhone;
     @BindView(R.id.iv_line2)
@@ -100,8 +97,28 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     ImageView ivLine5;
     @BindView(R.id.iv_line6)
     ImageView ivLine6;
-    @BindView(R.id.iv_line_place)
-    ImageView ivLinePlace;
+    @BindView(R.id.tv_contract_info_place_title)
+    TextView tvContractInfoPlaceTitle;
+    @BindView(R.id.ll_contract_info_place)
+    LinearLayout llContractInfoPlace;
+    @BindView(R.id.ll_contract_info_layout)
+    LinearLayout llContractInfoLayout;
+    @BindView(R.id.tv_service_status)
+    TextView tvServiceStatus;
+    @BindView(R.id.tv_contract_status)
+    TextView tvContractStatus;
+    @BindView(R.id.rl_service_info_status)
+    RelativeLayout rlServiceInfoStatus;
+    @BindView(R.id.iv_line8)
+    ImageView ivLine8;
+    @BindView(R.id.tv_service_crate_time)
+    TextView tvServiceCrateTime;
+    @BindView(R.id.tv_contract_crete_time)
+    TextView tvContractCreteTime;
+    @BindView(R.id.rl_service_info_create_time)
+    RelativeLayout rlServiceInfoCreateTime;
+    @BindView(R.id.iv_line7)
+    ImageView ivLine7;
     private ProgressUtils mProgressUtils;
     private ContractTemplateShowAdapter contractTemplateShowAdapter;
 
@@ -215,7 +232,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 //
                 ivLine5.setVisibility(View.GONE);
                 llContractInfoLine5.setVisibility(View.GONE);
-                //
+//                //
                 ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
                 //
@@ -239,7 +256,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 //
                 ivLine5.setVisibility(View.GONE);
                 llContractInfoLine5.setVisibility(View.GONE);
-                //
+//                //
                 ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
                 //
@@ -252,7 +269,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     }
 
     @Override
-    public void updateContractTemplateAdapterInfo(ArrayList<ContractsTemplateInfo> data) {
+    public void updateContractTemplateAdapterInfo(List<ContractsTemplateInfo> data) {
         contractTemplateShowAdapter.updateList(data);
     }
 
@@ -265,6 +282,37 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     @Override
     public void setConfirmText(String text) {
         btConfirm.setText(text);
+    }
+
+    @Override
+    public void updateFirmOrPersonal(int contract_type) {
+        switch (contract_type) {
+            case 1:
+                tvContractInfoLine1.setText("企业名称");
+                tvContractInfoLine2.setText("社会信用代码");
+                break;
+            case 2:
+                break;
+        }
+    }
+
+    @Override
+    public void setConfirmVisible(boolean isConfirmed) {
+        btConfirm.setVisibility(!isConfirmed ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setConfirmStatus(boolean confirmed) {
+        tvContractStatus.setText(confirmed ? "已签订" : "未签订");
+        tvContractStatus.setTextColor(confirmed ? getResources().getColor(R.color.c_29c093) :
+        getResources().getColor(R.color.c_ff8d34));
+        tvContractStatus.setBackgroundResource(confirmed ? R.drawable.shape_bg_stroke_1_29c_full_corner :
+                R.drawable.shape_bg_stroke_1_ff8d_full_corner);
+    }
+
+    @Override
+    public void setContractCreateTime(String createdAt) {
+        tvContractCreteTime.setText(createdAt);
     }
 
 
@@ -288,4 +336,10 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
     }
 
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: add setContentView(...) invocation
+        ButterKnife.bind(this);
+    }
 }

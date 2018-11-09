@@ -10,6 +10,7 @@ import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
+import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
@@ -27,11 +28,49 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     private final List<ContractListInfo> dataList = new ArrayList<>();
     private Integer requestDataType = null;
     private volatile int cur_page = 0;
+    List<InspectionStatusCountModel> mSelectStatuslist = new ArrayList<>();
+    List<InspectionStatusCountModel> mSelectTypelist = new ArrayList<>();
+    private Integer requestDataConfirmed = null;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        initSelectData();
         requestDataByDirection(DIRECTION_DOWN, true);
+    }
+
+    private void initSelectData() {
+        InspectionStatusCountModel im1 = new InspectionStatusCountModel();
+        im1.statusTitle = "全部";
+        im1.count = -1;
+        im1.status = 0;
+        mSelectStatuslist.add(im1);
+        InspectionStatusCountModel im2 = new InspectionStatusCountModel();
+        im2.statusTitle = "未签订";
+        im2.count = -1;
+        im2.status = 1;
+        mSelectStatuslist.add(im2);
+        InspectionStatusCountModel im3 = new InspectionStatusCountModel();
+        im3.statusTitle = "已签订";
+        im3.count = -1;
+        im3.status = 2;
+        mSelectStatuslist.add(im3);
+
+        InspectionStatusCountModel im4 = new InspectionStatusCountModel();
+        im4.statusTitle = "全部";
+        im4.count = -1;
+        im4.status = 0;
+        mSelectTypelist.add(im4);
+        InspectionStatusCountModel im5 = new InspectionStatusCountModel();
+        im5.statusTitle = "企业";
+        im5.count = -1;
+        im5.status = 1;
+        mSelectTypelist.add(im5);
+        InspectionStatusCountModel im6 = new InspectionStatusCountModel();
+        im6.statusTitle = "个人";
+        im6.count = -1;
+        im6.status = 2;
+        mSelectTypelist.add(im6);
     }
 
     public void startToAdd() {
@@ -42,6 +81,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     public void requestDataByDirection(int direction, boolean isFirst) {
         if (isFirst) {
             requestDataType = null;
+            requestDataConfirmed = null;
         }
         refreshData(direction);
     }
@@ -51,9 +91,8 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
             case DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, null, null, null, null).subscribeOn
-                        (Schedulers
-                                .io())
+                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, requestDataConfirmed,null, null, null, null).subscribeOn
+                        (Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
 
                     @Override
@@ -82,7 +121,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 cur_page++;
                 getView().showProgressDialog();
                 int offset = cur_page * 20;
-                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, null, null, null, offset).subscribeOn
+                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType,requestDataConfirmed, null, null, null, offset).subscribeOn
                         (Schedulers
                                 .io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
@@ -122,6 +161,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         int created_type = contractListInfo.getCreated_type();
         Intent intent = new Intent();
         intent.setClass(mContext, ContractInfoActivity.class);
+        intent.putExtra(EXTRA_CONTRACT_ID,contractListInfo.getId());
         //
         intent.putExtra(EXTRA_CONTRACT_TYPE, created_type);
         //
@@ -287,5 +327,41 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     @Override
     public void onDestroy() {
         dataList.clear();
+    }
+
+    public void doSelectTypePop() {
+        getView().UpdateSelectTypePopList(mSelectTypelist);
+        getView().showSelectStTypePop();
+    }
+
+    public void doSelectStatusPop() {
+        getView().UpdateSelectStatusPopList(mSelectStatuslist);
+        getView().showSelectStatusPop();
+    }
+
+    public void doSelectTypeDevice(InspectionStatusCountModel item) {
+        switch (item.status){
+            case 0:
+                requestDataType = null;
+                break;
+            case 1:
+            case 2:
+                requestDataType = item.status;
+                break;
+        }
+        refreshData(DIRECTION_DOWN);
+    }
+
+    public void doSelectStatusDevice(InspectionStatusCountModel item) {
+        switch (item.status){
+            case 0:
+                requestDataConfirmed = null;
+                break;
+            case 1:
+            case 2:
+                requestDataConfirmed = item.status;
+                break;
+        }
+        refreshData(DIRECTION_DOWN);
     }
 }
