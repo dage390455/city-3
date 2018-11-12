@@ -337,18 +337,19 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private void freshAccountType() {
         if (hasDeviceBriefControl()) {
             getView().setHasDeviceBriefControl(true);
-            getView().setRbChecked(R.id.ac_main_rb_main);
+            getView().setBottomBarSelected(0);
             getView().setHasAlarmInfoControl(hasAlarmInfoControl());
         } else {
             getView().setHasDeviceBriefControl(false);
             if (hasAlarmInfoControl()) {
-                getView().setRbChecked(R.id.ac_main_rb_warning);
+                getView().setBottomBarSelected(1);
                 getView().setHasAlarmInfoControl(true);
             } else {
                 getView().setHasAlarmInfoControl(false);
-                getView().setRbChecked(R.id.ac_main_rb_manage);
+                getView().setBottomBarSelected(2);
             }
         }
+
     }
 
     public void changeAccount(EventLoginData eventLoginData) {
@@ -442,7 +443,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 //            }
                 break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
-                getView().setRbChecked(R.id.ac_main_rb_main);
+                getView().setBottomBarSelected(0);
                 break;
             case EVENT_DATA_SEARCH_MERCHANT:
                 if (data instanceof EventLoginData) {

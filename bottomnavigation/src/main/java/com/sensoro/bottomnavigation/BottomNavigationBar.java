@@ -748,6 +748,10 @@ public class BottomNavigationBar extends FrameLayout {
         return mAnimationDuration;
     }
 
+    public void setBottomNavigationItemVisible(int position ,boolean isVisible){
+        BottomNavigationTab bottomNavigationTab = mBottomNavigationTabs.get(position);
+        bottomNavigationTab.setVisibility(isVisible ? VISIBLE : GONE);
+    }
     ///////////////////////////////////////////////////////////////////////////
     // Listener interfaces
     ///////////////////////////////////////////////////////////////////////////

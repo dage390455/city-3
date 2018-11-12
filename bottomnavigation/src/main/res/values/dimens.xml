@@ -10,13 +10,13 @@
     <dimen name="fixed_no_title_icon_container_width">56dp</dimen>
     <dimen name="fixed_no_title_icon_height">32dp</dimen>
     <dimen name="fixed_no_title_icon_width">32dp</dimen>
-    <dimen name="fixed_height_top_padding_inactive">2dp
+    <dimen name="fixed_height_top_padding_inactive">-2dp
     </dimen><!-- 8(Top Padding) - 12/2(extra padding due to badges) = 2 -->
-    <dimen name="fixed_height_top_padding_active">0dp
+    <dimen name="fixed_height_top_padding_active">-2dp
     </dimen><!-- 6(Top Padding) - 12/2(extra padding due to badges) = 0 -->
     <dimen name="fixed_height_bottom_padding">10dp</dimen>
 
-    <dimen name="fixed_label_active">14sp</dimen>
+    <dimen name="fixed_label_active">12sp</dimen>
     <dimen name="fixed_label_inactive">12sp</dimen>
     <item name="fixed_label_active_to_inactive_ratio" format="float" type="dimen">0.857</item>
 

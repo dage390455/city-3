@@ -12,8 +12,6 @@ import java.util.List;
 public interface IMainView extends IProgressDialog, IToast, IActivityIntent {
     void setHpCurrentItem(int position);
 
-    void setRbChecked(@IdRes int id);
-
     void updateMainPageAdapterData(List<Fragment> fragments);
 
     void setHasDeviceBriefControl(boolean hasDeviceBriefControl);
@@ -23,6 +21,8 @@ public interface IMainView extends IProgressDialog, IToast, IActivityIntent {
     void setHasManagerControl(boolean hasManagerControl);
 
     void setAlarmWarnCount(int count);
+
+    void setBottomBarSelected(int i);
 
     boolean isHomeFragmentChecked();
 }
