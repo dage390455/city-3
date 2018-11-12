@@ -12,6 +12,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.sensoro.bottomnavigation.BottomNavigationBar;
+import com.sensoro.bottomnavigation.BottomNavigationItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
@@ -42,6 +44,8 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     RadioGroup acMainRlGuide;
     @BindView(R.id.ac_main_tv_warning_count)
     TextView acMainTvWarningCount;
+    @BindView(R.id.ac_main_bottom_navigation_bar)
+    BottomNavigationBar acMainBottomBar;
 
     private MainFragmentPageAdapter mPageAdapter;
     private PopupWindow mPopupWindow;
@@ -64,6 +68,17 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     private void initView() {
         initViewPager();
         acMainRlGuide.setOnCheckedChangeListener(this);
+
+        initBottomBar();
+    }
+
+    private void initBottomBar() {
+        acMainBottomBar
+                .addItem(new BottomNavigationItem(R.drawable.home_normal, "首页"))
+                .addItem(new BottomNavigationItem(R.drawable.warning_norm, "预警"))
+                .addItem(new BottomNavigationItem(R.drawable.manage_normal, "管理"))
+                .setFirstSelectedPosition(0)
+                .initialise();
     }
 
     @Override
