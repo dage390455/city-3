@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -143,9 +144,8 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                                     holder.itemMonitoringPointContentTvUnit.setVisibility(View.GONE);
                                 } else {
                                     String unit = sensorTypeStyles.getUnit();
-                                    Log.e("hcs", "单位:::" + unit);
                                     if (!TextUtils.isEmpty(unit)) {
-                                        LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) holder.itemMonitoringPointContentTvUnit.getLayoutParams();
+                                        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) holder.itemMonitoringPointContentTvUnit.getLayoutParams();
                                         if ("°".equals(unit)) {
                                             layoutParams.height = LinearLayout.LayoutParams.WRAP_CONTENT;
                                             layoutParams.bottomMargin = 0;

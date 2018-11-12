@@ -52,6 +52,9 @@ public class RelationAdapter extends RecyclerView.Adapter<RelationAdapter.Relati
 
     @Override
     public int getItemCount() {
+        if (mList.size() > 100) {
+            return 100;
+        }
         return mList.size();
     }
 

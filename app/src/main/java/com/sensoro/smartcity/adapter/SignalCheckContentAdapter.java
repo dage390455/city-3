@@ -10,6 +10,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.SignalData;
+import com.sensoro.smartcity.util.DateUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,19 +41,20 @@ public class SignalCheckContentAdapter extends RecyclerView.Adapter<SignalCheckC
         String upData;
         String loadData;
         if (signalData.getDownlinkRSSI() == 0) {
+            upData = String.format(Locale.CHINA,"RSSI: - SNR: - %ddBm SF%d@%.1fMHz",
+                    signalData.getUplinkTxPower(),12-signalData.getUplinkDR(),
+                    (float) (signalData.getUplinkFreq() / 1000000));
+            loadData = String.format(Locale.CHINA,"\"RSSI: - SNR: - -dBm SF-@-MHz");
+        }else{
             upData = String.format(Locale.CHINA,"RSSI: %d SNR: %.2f %ddBm SF%d@%.1fMHz",signalData.getUplinkRSSI(),
                     signalData.getUplinkSNR(),signalData.getUplinkTxPower(),12-signalData.getUplinkDR(),
                     (float) (signalData.getUplinkFreq() / 1000000));
             loadData = String.format(Locale.CHINA,"RSSI: %d SNR: %.2f %ddBm SF%d@%.1fMHz",signalData.getDownlinkRSSI(),
                     signalData.getDownlinkSNR(),signalData.getDownlinkTxPower(),12-signalData.getDownlinkDR(),
                     (float) (signalData.getDownlinkFreq() / 1000000));
-        }else{
-            upData = String.format(Locale.CHINA,"RSSI: - SNR: - %ddBm SF%d@%.1fMHz",
-                    signalData.getUplinkTxPower(),12-signalData.getUplinkDR(),
-                    (float) (signalData.getUplinkFreq() / 1000000));
-            loadData = String.format(Locale.CHINA,"\"RSSI: - SNR: - -dBm SF-@-MHz");
         }
 
+        holder.itemAdapterSignalCheckTvTime.setText(signalData.getDate());
         holder.itemAdapterSignalCheckTvUpData.setText(upData);
         holder.itemAdapterSignalCheckTvLoadData.setText(loadData);
 
@@ -64,7 +66,7 @@ public class SignalCheckContentAdapter extends RecyclerView.Adapter<SignalCheckC
     }
 
     public void updateData(SignalData signalData) {
-        datas.add(signalData);
+        datas.add(0,signalData);
         notifyDataSetChanged();
     }
 

@@ -6,8 +6,8 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.lzy.imagepicker.loader.ImageLoader;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.widget.imagepicker.loader.ImageLoader;
 
 import java.io.File;
 

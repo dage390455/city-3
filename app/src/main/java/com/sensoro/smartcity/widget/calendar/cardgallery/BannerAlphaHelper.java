@@ -1,11 +1,7 @@
 package com.sensoro.smartcity.widget.calendar.cardgallery;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -51,8 +47,7 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
                     case RecyclerView.SCROLL_STATE_IDLE:
                         int currentItem = getCurrentItem();
                         LogUtils.loge(this, "onScrollStateChanged -->> currentItem = " + currentItem);
-                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 ||
-                                currentItem == mRecyclerView.getAdapter().getItemCount() - 1;
+                        mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 || currentItem == mRecyclerView.getAdapter().getItemCount() - 1;
                         if (mLinearSnapHelper.finalSnapDistance[0] == 0
                                 && mLinearSnapHelper.finalSnapDistance[1] == 0) {
                             mCurrentItemOffset = 0;
@@ -61,7 +56,7 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
 //                        mRecyclerView.dispatchOnPageSelected(mLastPos);
                             //Log.e("TAG", "滑动停止后最终位置为" + getCurrentItem());
                         }
-                        mRecyclerView.dispatchOnPageSelected(getCurrentItem());
+                        mRecyclerView.dispatchOnPageSelected(currentItem);
                         break;
                     case RecyclerView.SCROLL_STATE_SETTLING:
                         break;
@@ -135,22 +130,22 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
         mRecyclerView.scrollToPosition(pos);
         mCurrentItemOffset = 0;
         mLastPos = pos;
-        mRecyclerView.post(new Runnable() {
-            @Override
-            public void run() {
-                View view = mRecyclerView.getLayoutManager().findViewByPosition(pos);
-                view.setAlpha(0);
-                view.animate()
-                        .alpha(1.f)                                //设置最终效果为完全不透明
-                        .setDuration(1500)
-                        .setListener(new AnimatorListenerAdapter() {
-                            @Override
-                            public void onAnimationEnd(Animator animation) {
-                            }
-                        })
-                        .start();
-            }
-        });
+//        mRecyclerView.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                View view = mRecyclerView.getLayoutManager().findViewByPosition(pos);
+//                view.setAlpha(0);
+//                view.animate()
+//                        .alpha(1.f)                                //设置最终效果为完全不透明
+//                        .setDuration(1500)
+//                        .setListener(new AnimatorListenerAdapter() {
+//                            @Override
+//                            public void onAnimationEnd(Animator animation) {
+//                            }
+//                        })
+//                        .start();
+//            }
+//        });
     }
 
     public void setFirstItemPos(int firstItemPos) {
@@ -171,7 +166,7 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
 
         //Log.e("TAG",String.format("offset=%s, percent=%s", offset, percent));
         View leftView = null;
-        View currentView;
+        View currentView = null;
         View rightView = null;
         if (currentItemPos > 0) {
             leftView = mRecyclerView.getLayoutManager().findViewByPosition(currentItemPos - 1);
@@ -250,24 +245,5 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
         scrollToPosition(mFirstItemPos);
     }
 
-    /**
-     * 防止卡片在第一页和最后一页因无法"居中"而一直循环调用onScrollStateChanged-->SnapHelper.snapToTargetExistingView-->onScrollStateChanged
-     * Created by jameson on 9/3/16.
-     */
-    private static class CardLinearSnapHelper extends LinearSnapHelper {
-        public boolean mNoNeedToScroll = false;
-        public int[] finalSnapDistance = {0, 0};
 
-        @Override
-        public int[] calculateDistanceToFinalSnap(@NonNull RecyclerView.LayoutManager layoutManager, @NonNull View targetView) {
-            //Log.e("TAG", "calculateDistanceToFinalSnap");
-            if (mNoNeedToScroll) {
-                finalSnapDistance[0] = 0;
-                finalSnapDistance[1] = 0;
-            } else {
-                finalSnapDistance = super.calculateDistanceToFinalSnap(layoutManager, targetView);
-            }
-            return finalSnapDistance;
-        }
-    }
 }

@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -10,13 +9,13 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorSettingPhotoActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorSettingPhotoActivityPresenter;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.util.ArrayList;
@@ -32,6 +31,8 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
     RecyclerView rvDeployPhoto;
     @BindView(R.id.deploy_setting_photo_finish)
     TextView deploySettingPhotoFinish;
+    @BindView(R.id.tv_deploy_photo_save)
+    TextView tvDeployPhotoSave;
     private ImagePickerAdapter adapter;
 
     @Override
@@ -72,7 +73,7 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
 
     @Override
     public void setSubtitleVisible(boolean isVisible) {
-        deploySettingPhotoFinish.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        tvDeployPhotoSave.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override
@@ -81,13 +82,14 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
     }
 
 
-    @OnClick({R.id.deploy_setting_photo_back, R.id.deploy_setting_photo_finish})
+    @OnClick({R.id.deploy_setting_photo_back, R.id.deploy_setting_photo_finish,R.id.tv_deploy_photo_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.deploy_setting_photo_back:
                 finishAc();
                 break;
             case R.id.deploy_setting_photo_finish:
+            case R.id.tv_deploy_photo_save:
                 mPresenter.doFinish();
                 break;
         }

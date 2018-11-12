@@ -38,6 +38,18 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
     ImageView acAuthImvFinish;
     @BindView(R.id.ac_auth_imv_status)
     ImageView acAuthImvStatus;
+    @BindView(R.id.ac_auth_tv_num1)
+    TextView acAuthTvNum1;
+    @BindView(R.id.ac_auth_tv_num2)
+    TextView acAuthTvNum2;
+    @BindView(R.id.ac_auth_tv_num3)
+    TextView acAuthTvNum3;
+    @BindView(R.id.ac_auth_tv_num4)
+    TextView acAuthTvNum4;
+    @BindView(R.id.ac_auth_tv_num5)
+    TextView acAuthTvNum5;
+    @BindView(R.id.ac_auth_tv_num6)
+    TextView acAuthTvNum6;
     private int textCount;
     private ProgressUtils mProgressUtils;
     private StringBuilder mInputCode;
@@ -69,7 +81,6 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
         }
         return super.onKeyDown(keyCode, event);
     }
-
 
     @Override
     public void startAC(Intent intent) {
@@ -127,8 +138,29 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
     @Override
     public void onInertKey(String text) {
         if (mInputCode.length() < 6) {
+            switch (mInputCode.length()) {
+                case 0:
+                    acAuthTvNum1.setText(text);
+                    break;
+                case 1:
+                    acAuthTvNum2.setText(text);
+                    break;
+                case 2:
+                    acAuthTvNum3.setText(text);
+                    break;
+                case 3:
+                    acAuthTvNum4.setText(text);
+                    break;
+                case 4:
+                    acAuthTvNum5.setText(text);
+                    break;
+                case 5:
+                    acAuthTvNum6.setText(text);
+                    break;
+
+            }
             mInputCode.append(text);
-            acAuthTvVerification.setText(mInputCode.toString());
+//            acAuthTvVerification.setText(mInputCode.toString());
             if (mInputCode.length() == 6) {
                 mPresenter.doAuthCheck(mInputCode.toString());
             }
@@ -140,8 +172,29 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
     @Override
     public void onDeleteKey() {
         if (mInputCode.length() > 0) {
+            switch (mInputCode.length()-1) {
+                case 0:
+                    acAuthTvNum1.setText("");
+                    break;
+                case 1:
+                    acAuthTvNum2.setText("");
+                    break;
+                case 2:
+                    acAuthTvNum3.setText("");
+                    break;
+                case 3:
+                    acAuthTvNum4.setText("");
+                    break;
+                case 4:
+                    acAuthTvNum5.setText("");
+                    break;
+                case 5:
+                    acAuthTvNum6.setText("");
+                    break;
+
+            }
             mInputCode.deleteCharAt(mInputCode.length() - 1);
-            acAuthTvVerification.setText(mInputCode.toString());
+//            acAuthTvVerification.setText(mInputCode.toString());
         }
         if (mInputCode.length() == 0) {
             updateImvStatus(true);
@@ -152,14 +205,20 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
     @Override
     public void onClearKey(String s) {
         mInputCode.delete(0, mInputCode.length());
-        acAuthTvVerification.setText(mInputCode.toString());
+        acAuthTvNum1.setText("");
+        acAuthTvNum2.setText("");
+        acAuthTvNum3.setText("");
+        acAuthTvNum4.setText("");
+        acAuthTvNum5.setText("");
+        acAuthTvNum6.setText("");
+//        acAuthTvVerification.setText(mInputCode.toString());
         updateImvStatus(true);
     }
 
 
     @OnClick(R.id.ac_auth_imv_finish)
     public void onViewClicked() {
-        finishAc();
+        mPresenter.close();
     }
 
     @Override

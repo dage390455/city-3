@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
     >
 
     <android.support.v4.widget.NestedScrollView
@@ -110,13 +111,13 @@
                     android:layout_toEndOf="@id/ac_deploy_device_detail_tv_tag"
                     android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag">
 
-                    <com.sensoro.smartcity.widget.TouchRecyclerview
+                    <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/ac_deploy_device_detail_rc_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignParentEnd="true">
 
-                    </com.sensoro.smartcity.widget.TouchRecyclerview>
+                    </com.sensoro.smartcity.widget.TouchRecycleView>
                 </RelativeLayout>
 
 
@@ -147,14 +148,14 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1">
 
-                    <com.sensoro.smartcity.widget.TouchRecyclerview
+                    <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center_vertical"
                         android:layout_marginBottom="8dp">
 
-                    </com.sensoro.smartcity.widget.TouchRecyclerview>
+                    </com.sensoro.smartcity.widget.TouchRecycleView>
                 </RelativeLayout>
 
 
@@ -234,7 +235,21 @@
                     android:text="部署位置"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
-
+                <TextView
+                    android:id="@+id/ac_deploy_device_detail_fixed_point_tv_near"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="2dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="4dp"
+                    android:paddingStart="10dp"
+                    android:paddingEnd="10dp"
+                    android:text="附近"
+                    android:visibility="gone"
+                    android:textColor="@color/white"
+                    android:background="@drawable/shape_bg_solid_29c_full_corner"
+                    android:textSize="10sp" />
                 <TextView
                     android:id="@+id/ac_deploy_device_detail_tv_fixed_point_signal"
                     android:layout_width="wrap_content"

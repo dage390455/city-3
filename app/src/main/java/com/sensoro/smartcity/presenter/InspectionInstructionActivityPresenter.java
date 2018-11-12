@@ -4,9 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.CityObserver;
@@ -14,6 +11,9 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 
 import java.util.ArrayList;
 import java.util.List;

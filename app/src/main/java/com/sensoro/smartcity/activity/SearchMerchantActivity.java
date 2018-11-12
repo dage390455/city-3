@@ -64,7 +64,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     ImageView mClearBtn;
     @BindView(R.id.search_merchant_history_rv)
     RecyclerView mSearchHistoryRv;
-//    @BindView(R.id.search_merchant_tips)
+    //    @BindView(R.id.search_merchant_tips)
 //    LinearLayout tipsLinearLayout;
     @BindView(R.id.ll_merchant_item)
     LinearLayout llMerchantItem;
@@ -222,6 +222,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
     @Override
     public void updateSearchHistory(List<String> strHistory) {
+        setHistoryClearBtnVisible(strHistory != null && strHistory.size() > 0);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
     }
 
@@ -264,6 +265,11 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     public void setCurrentNameAndPhone(String name, String phone) {
         merchantCurrentName.setText(name);
         merchantCurrentPhone.setText(phone);
+    }
+
+    @Override
+    public void setHistoryClearBtnVisible(boolean isVisible) {
+        mClearBtn.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

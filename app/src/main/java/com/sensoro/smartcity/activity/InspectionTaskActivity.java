@@ -2,6 +2,8 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
@@ -89,6 +91,8 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private TipBleDialogUtils tipBleDialogUtils;
+    private Drawable blackTriangle;
+    private Drawable grayTriangle;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -129,6 +133,11 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
             }
         });
         initRcContent();
+
+        blackTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle);
+        blackTriangle.setBounds(0, 0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
+        grayTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle_gray);
+        grayTriangle.setBounds(0, 0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
 
         initSelectDeviceTypePop();
 
@@ -177,6 +186,14 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 mPresenter.doSelectTypeDevice(deviceTypeModel);
                 acInspectionTaskTvType.setText(mSelectDeviceTypePop.getItem(position).name);
                 mSelectDeviceTypePop.dismiss();
+                Resources resources = mActivity.getResources();
+                if (position == 0) {
+                    acInspectionTaskTvType.setTextColor(resources.getColor(R.color.c_a6a6a6));
+                    acInspectionTaskTvType.setCompoundDrawables(null, null, grayTriangle, null);
+                } else {
+                    acInspectionTaskTvType.setTextColor(resources.getColor(R.color.c_252525));
+                    acInspectionTaskTvType.setCompoundDrawables(null, null, blackTriangle, null);
+                }
 //                mPresenter.requestDataByDirection(DIRECTION_DOWN);
 
             }
@@ -194,6 +211,14 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 InspectionStatusCountModel item = mSelectStatusPop.getItem(position);
                 acInspectionTaskTvState.setText(item.statusTitle);
                 mPresenter.doSelectStatusDevice(item);
+                Resources resources = mActivity.getResources();
+                if (position == 0) {
+                    acInspectionTaskTvState.setTextColor(resources.getColor(R.color.c_a6a6a6));
+                    acInspectionTaskTvState.setCompoundDrawables(null, null, grayTriangle, null);
+                } else {
+                    acInspectionTaskTvState.setTextColor(resources.getColor(R.color.c_252525));
+                    acInspectionTaskTvState.setCompoundDrawables(null, null, blackTriangle, null);
+                }
                 mSelectStatusPop.dismiss();
 
             }
@@ -276,10 +301,14 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     public void onBackPressed() {
-        if (mSelectDeviceTypePop.isShowing()) {
-            mSelectDeviceTypePop.dismiss();
-        } else {
-            super.onBackPressed();
+        try {
+            if (mSelectDeviceTypePop.isShowing()) {
+                mSelectDeviceTypePop.dismiss();
+            } else {
+                super.onBackPressed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 

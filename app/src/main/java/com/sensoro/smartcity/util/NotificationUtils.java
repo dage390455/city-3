@@ -103,19 +103,35 @@ public class NotificationUtils extends ContextWrapper {
 //        } else {
 //            aClass = LoginActivity.class;
 //        }
-        if (Build.VERSION.SDK_INT >= 26) {
-            createNotificationChannel();
-            Notification notification = getChannelNotification
-                    (content).build();
-            getManager().notify(noID++, notification);
-        } else {
-            Notification notification = getNotification_25(content).build();
-            getManager().notify(noID++, notification);
+        //只在mainActivity推送通知
+        if (!isSplashACLived()) {
+            if (Build.VERSION.SDK_INT >= 26) {
+                createNotificationChannel();
+                Notification notification = getChannelNotification
+                        (content).build();
+                getManager().notify(noID++, notification);
+            } else {
+                Notification notification = getNotification_25(content).build();
+                getManager().notify(noID++, notification);
+            }
         }
+
     }
 
     private boolean isMainACLived() {
         final String name = "com.sensoro.smartcity.activity/MainActivity";
+        Intent intent = new Intent();
+        intent.setClassName(getPackageName(), name);
+        ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
+        if (resolveInfo != null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean isSplashACLived() {
+        final String name = "com.sensoro.smartcity.activity/SplashActivity";
         Intent intent = new Intent();
         intent.setClassName(getPackageName(), name);
         ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);

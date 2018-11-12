@@ -301,6 +301,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     @Override
     public void setSignalCheckVisible(boolean hasSignalCheck) {
         fgMainManageLlSignalCheck.setVisibility(hasSignalCheck ? View.VISIBLE : View.GONE);
+        line6.setVisibility(hasSignalCheck ? View.VISIBLE : View.GONE);
     }
 
     @Override

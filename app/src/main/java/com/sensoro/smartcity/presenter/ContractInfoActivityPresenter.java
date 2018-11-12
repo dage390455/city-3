@@ -266,14 +266,16 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == EVENT_DATA_FINISH_CODE) {
-            Object data = eventData.data;
-            if (data instanceof Boolean) {
-                boolean needFinish = (boolean) data;
-                if (needFinish) {
-                    getView().finishAc();
+        Object data = eventData.data;
+        switch (code) {
+            case EVENT_DATA_FINISH_CODE:
+                if (data instanceof Boolean) {
+                    boolean needFinish = (boolean) data;
+                    if (needFinish) {
+                        getView().finishAc();
+                    }
                 }
-            }
+                break;
         }
     }
 }

@@ -8,7 +8,7 @@ import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import java.util.List;
 
 public interface IDeployRecordDetailActivityView extends IToast,IActivityIntent,IProgressDialog {
-    void setInclueTitle(String sn);
+    void setSNTitle(String sn);
 
     void setDeviceName(String deviceName);
 

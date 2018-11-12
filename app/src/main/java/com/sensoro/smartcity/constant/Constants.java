@@ -144,7 +144,7 @@ public interface Constants {
     };
 
     String[] confirmStatusArray = {"待确认", "真实火警", "误报", "测试/巡检", "安全隐患"};
-    int[] confirmStatusTextColorArray = {R.color.c_8058a5,R.color.c_f34a4a,R.color.c_8058a5,R.color.c_8058a5,R.color.c_ff8d34};
+    int[] confirmStatusTextColorArray = {R.color.c_8058a5, R.color.c_f34a4a, R.color.c_8058a5, R.color.c_8058a5, R.color.c_ff8d34};
 
     String[] confirmAlarmResultInfoArray = {"", "监测点或附近发生着火，需要立即进行扑救", "无任何火情和烟雾", "相关人员主动测试发出的预警",
             "未发生着火，但现场确实存在隐患"};
@@ -154,7 +154,7 @@ public interface Constants {
     String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
 
     //巡检任务异常标签
-    String[] INSPECTION_EXCEPTION_TASGS = {"设备拆卸", "设备低电", "设备异常", "传感器异常", "指示灯损坏", "屏幕损坏", "按键损坏", "外观损坏", "设备丢失"};
+    String[] INSPECTION_EXCEPTION_TASGS = {"设备拆卸", "设备低电", "设备异常", "传感器异常", "指示灯损坏", "屏幕损坏", "按键损坏", "外观损坏", "设备丢失", "蓝牙异常", "设备松动"};
     //巡检任务状态颜色值及对应文本
     int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5, R.color.c_3aa7f0, R.color.c_ff8d34, R.color.c_29c093, R.color.c_a6a6a6};
     String[] INSPECTION_STATUS_TEXTS = {"待执行", "执行中", "超时未完成", "已完成", "超时完成"};
@@ -310,6 +310,7 @@ public interface Constants {
     int EVENT_DATA_DEPLOY_SETTING_PHOTO = 0x19;
     //
     int EVENT_DATA_DEPLOY_RESULT_CONTINUE = 0x20;
+    int EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE = 0x43;
     //
     int EVENT_DATA_SEARCH_MERCHANT = 0x21;
     //

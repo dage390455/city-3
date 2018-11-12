@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
-    <string name="search_tips">设备名称/设备号/标签</string>
+    <string name="search_tips">设备名称、设备号、标签</string>
     <string name="search_alarm_tips">设备名称</string>
     <string name="cancel">取消</string>
     <string name="recent">最近搜索</string>
@@ -22,7 +22,7 @@
     <string name="password">密码</string>
     <string name="save">保存</string>
     <string name="login">登录</string>
-    <string name="finish">完成</string>
+    <string name="finish">保存</string>
     <string name="start_use">扫码部署</string>
     <string name="point_deploy">点位部署</string>
     <string name="scan_login">扫码登录</string>
@@ -179,4 +179,17 @@
     <string name="menu_page_contract">合同管理</string>
     <string name="menu_page_scan_login">扫码登录</string>
     <string name="no_find_contact_phone_number">未找到联系人电话</string>
+
+    //
+    <string name="ip_all_images">所有图片</string>
+    <string name="ip_folder_image_count">共%1$d张</string>
+    <string name="ip_preview_image_count">%1$d/%2$d</string>
+    <string name="ip_select_limit">最多选择%1$d张图片</string>
+    <string name="ip_complete">完成</string>
+    <string name="ip_select_complete">完成(%1$d/%2$d)</string>
+    <string name="ip_preview">预览</string>
+    <string name="ip_preview_count">预览(%1$d)</string>
+    <string name="ip_photo_crop">图片裁剪</string>
+    <string name="ip_origin">原图</string>
+    <string name="ip_origin_size">原图(%1$s)</string>
 </resources>

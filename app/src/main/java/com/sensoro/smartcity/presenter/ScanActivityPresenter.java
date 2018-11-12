@@ -104,14 +104,18 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
 //        Object data = eventData.data;
-        if (code == EVENT_DATA_DEPLOY_RESULT_FINISH) {
-            getView().finishAc();
-        } else if (code == EVENT_DATA_DEPLOY_RESULT_CONTINUE) {
-            if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType) {
+        switch (code) {
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
-            }
-        } else if (code == EVENT_DATA_SCAN_LOGIN_SUCCESS) {
-            getView().finishAc();
+                break;
+            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType) {
+                    getView().finishAc();
+                }
+                break;
+            case EVENT_DATA_SCAN_LOGIN_SUCCESS:
+                getView().finishAc();
+                break;
         }
 //        LogUtils.loge(this, eventData.toString());
     }

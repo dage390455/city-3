@@ -20,10 +20,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.ui.ImageGridActivity;
-import com.lzy.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
@@ -35,6 +31,10 @@ import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -45,7 +45,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 public class AlarmPopUtils implements View.OnClickListener, Constants,
         ImagePickerAdapter.OnRecyclerViewItemClickListener, UpLoadPhotosUtils.UpLoadPhotoListener, AdapterView
@@ -136,6 +136,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     private void initWidget() {
         RecyclerView recyclerView = mRoot.findViewById(R.id.recyclerView);
         adapter = new ImagePickerAdapter(mActivity, selImageList);
+        adapter.setAddTipText("拍照/录像");
         adapter.setOnItemClickListener(this);
 //        adapter.canVideo(true);
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
@@ -448,10 +449,17 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
 //        ArrayAdapter<String> adapter = (ArrayAdapter<String>) parent.getAdapter();
+
         switch (parent.getId()) {
             case R.id.spinner_result:
                 tvSpinnerResultInfo.setText(alarmResultInfo.get(position));
                 selectResult = resultArr[position];
+                if (selectResult != -1) {
+                    tvSpinnerResultInfo.setVisibility(View.VISIBLE);
+                } else {
+                    tvSpinnerResultInfo.setVisibility(View.GONE);
+                }
+
                 LogUtils.loge("结果类型：" + selectResult);
                 break;
             case R.id.spinner_type:
@@ -540,47 +548,49 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
-        if (code == EVENT_DATA_ALARM_POP_IMAGES) {
-            if (data instanceof AlarmPopModel) {
-                AlarmPopModel alarmPopModel = (AlarmPopModel) data;
-                if (alarmPopModel.resultCode == ImagePicker.RESULT_CODE_ITEMS) {
-                    //添加图片返回
-                    if (alarmPopModel.requestCode == REQUEST_CODE_SELECT) {
-                        if (alarmPopModel.imageItems != null) {
-                            adapter.setMaxImgCount(9);
-                            if (!alarmPopModel.fromTakePhoto) {
-                                selImageList.clear();
+        switch (code) {
+            case EVENT_DATA_ALARM_POP_IMAGES:
+                if (data instanceof AlarmPopModel) {
+                    AlarmPopModel alarmPopModel = (AlarmPopModel) data;
+                    if (alarmPopModel.resultCode == ImagePicker.RESULT_CODE_ITEMS) {
+                        //添加图片返回
+                        if (alarmPopModel.requestCode == REQUEST_CODE_SELECT) {
+                            if (alarmPopModel.imageItems != null) {
+                                adapter.setMaxImgCount(9);
+                                if (!alarmPopModel.fromTakePhoto) {
+                                    selImageList.clear();
+                                }
+                                selImageList.addAll(alarmPopModel.imageItems);
+                                adapter.setImages(selImageList);
                             }
-                            selImageList.addAll(alarmPopModel.imageItems);
-                            adapter.setImages(selImageList);
                         }
-                    }
-                } else if (alarmPopModel.resultCode == ImagePicker.RESULT_CODE_BACK) {
-                    //预览图片返回
-                    if (alarmPopModel.requestCode == REQUEST_CODE_PREVIEW) {
-                        if (alarmPopModel.imageItems != null) {
+                    } else if (alarmPopModel.resultCode == ImagePicker.RESULT_CODE_BACK) {
+                        //预览图片返回
+                        if (alarmPopModel.requestCode == REQUEST_CODE_PREVIEW) {
+                            if (alarmPopModel.imageItems != null) {
+                                adapter.setMaxImgCount(9);
+                                selImageList.clear();
+                                selImageList.addAll(alarmPopModel.imageItems);
+                                adapter.setImages(selImageList);
+                            }
+                        }
+                    } else if (alarmPopModel.resultCode == RESULT_CODE_RECORD) {
+                        //拍视频
+                        if (alarmPopModel.requestCode == REQUEST_CODE_RECORD) {
+                            if (alarmPopModel.imageItems != null) {
+                                adapter.setMaxImgCount(9);
+                                selImageList.addAll(alarmPopModel.imageItems);
+                                adapter.setImages(selImageList);
+                            }
+                        } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
                             adapter.setMaxImgCount(9);
-                            selImageList.clear();
-                            selImageList.addAll(alarmPopModel.imageItems);
-                            adapter.setImages(selImageList);
-                        }
-                    }
-                } else if (alarmPopModel.resultCode == RESULT_CODE_RECORD) {
-                    //拍视频
-                    if (alarmPopModel.requestCode == REQUEST_CODE_RECORD) {
-                        if (alarmPopModel.imageItems != null) {
-                            adapter.setMaxImgCount(9);
-                            selImageList.addAll(alarmPopModel.imageItems);
-                            adapter.setImages(selImageList);
-                        }
-                    } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
-                        adapter.setMaxImgCount(9);
 //                        selImageList.clear();
 //                        adapter.setImages(selImageList);
-                    }
+                        }
 
+                    }
                 }
-            }
+                break;
         }
     }
 

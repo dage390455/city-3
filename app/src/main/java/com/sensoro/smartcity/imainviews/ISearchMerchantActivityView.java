@@ -26,5 +26,7 @@ public interface ISearchMerchantActivityView extends IToast, IProgressDialog, IA
 
     void setCurrentNameAndPhone(String name, String phone);
 
+    void setHistoryClearBtnVisible(boolean isVisible);
+
 
 }

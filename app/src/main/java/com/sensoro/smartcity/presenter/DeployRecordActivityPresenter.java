@@ -6,42 +6,43 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
-import com.sensoro.smartcity.activity.DeployRecordActivity;
 import com.sensoro.smartcity.activity.DeployRecordDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitService;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
-import com.tencent.mm.opensdk.modelbase.BaseResp;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import rx.Scheduler;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
-
 public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordActivityView>
-implements Constants,CalendarPopUtils.OnCalendarPopupCallbackListener {
+        implements Constants, IOnCreate, CalendarPopUtils.OnCalendarPopupCallbackListener {
     private String tempSearch;
     private Long startTime;
     private Long endTime;
     private Activity mActivity;
     private CalendarPopUtils mCalendarPopUtils;
+    private volatile int cur_page = 1;
 
     @Override
     public void initData(Context context) {
+        onCreate();
         mActivity = (Activity) context;
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
@@ -50,7 +51,7 @@ implements Constants,CalendarPopUtils.OnCalendarPopupCallbackListener {
 
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 
     public void requestSearchData(int direction, String searchText) {
@@ -71,14 +72,21 @@ implements Constants,CalendarPopUtils.OnCalendarPopupCallbackListener {
             temp_endTime = endTime + 1000 * 60 * 60 * 24;
         }
 
-        switch (direction){
+        switch (direction) {
             case DIRECTION_DOWN:
+                cur_page = 1;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeployRecordList(searchText,temp_startTime,temp_endTime,owners,signalQuality).subscribeOn(Schedulers.io())
+                RetrofitServiceHelper.INSTANCE.getDeployRecordList(searchText, temp_startTime, temp_endTime, owners, signalQuality).subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>() {
                     @Override
                     public void onCompleted(DeployRecordRsp recordRsp) {
                         List<DeployRecordInfo> data = recordRsp.getData();
+                        if (!TextUtils.isEmpty(tempSearch)) {
+//            getView().setSelectedDateSearchText(searchText);
+                            getView().setSearchButtonTextVisible(true);
+                        } else {
+                            getView().setSearchButtonTextVisible(false);
+                        }
                         getView().onPullRefreshComplete();
                         getView().updateRcContentData(data);
                         getView().dismissProgressDialog();
@@ -100,7 +108,7 @@ implements Constants,CalendarPopUtils.OnCalendarPopupCallbackListener {
 
     public void doRecorDetail(DeployRecordInfo deployRecordInfo) {
         Intent intent = new Intent(mActivity, DeployRecordDetailActivity.class);
-        intent.putExtra(EXTRA_DEPLOY_RECORD_DETAIL,deployRecordInfo);
+        intent.putExtra(EXTRA_DEPLOY_RECORD_DETAIL, deployRecordInfo);
         getView().startAC(intent);
     }
 
@@ -128,6 +136,29 @@ implements Constants,CalendarPopUtils.OnCalendarPopupCallbackListener {
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
         getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
                 .getMothDayFormatDate(endTime));
-        requestSearchData(DIRECTION_DOWN,getView().getSearchText());
+        requestSearchData(DIRECTION_DOWN, getView().getSearchText());
+    }
+
+    public void doCancelSearch() {
+        tempSearch = null;
+        requestSearchData(DIRECTION_DOWN, null);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        switch (code) {
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
+            case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
+                requestSearchData(DIRECTION_DOWN, null);
+                break;
+        }
+//        LogUtils.loge(this, eventData.toString());
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

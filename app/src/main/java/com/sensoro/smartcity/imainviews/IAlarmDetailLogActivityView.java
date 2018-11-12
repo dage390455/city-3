@@ -23,4 +23,6 @@ public interface IAlarmDetailLogActivityView extends IToast, IProgressDialog, IA
     void setUpdateButtonClickable(boolean canClick);
 
     void setConfirmText(String text);
+    void setConfirmBg(int resId);
+    void setConfirmColor(int resId);
 }

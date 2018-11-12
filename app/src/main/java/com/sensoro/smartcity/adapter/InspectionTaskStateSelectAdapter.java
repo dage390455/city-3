@@ -47,7 +47,6 @@ public class InspectionTaskStateSelectAdapter extends RecyclerView.Adapter<Inspe
     public void onBindViewHolder(InspectionTaskStateSelectHolder holder, int position) {
         Resources resources = mContext.getResources();
         InspectionStatusCountModel ic = mStateCountList.get(position);
-        Log.e("hcs","ic:::"+ic.count+":  "+ic.statusTitle);
         holder.itemPopTvSelectCount.setText(ic.count+"");
         holder.itemPopTvSelectState.setText(ic.statusTitle);
 

@@ -28,7 +28,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
-import com.sensoro.smartcity.model.PushData;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.ImageFactory;
@@ -46,7 +46,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
@@ -137,34 +136,35 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         aMap.setCustomMapStylePath(filePath + "/" + styleName);
 
     }
+
     @Override
     public void onMapLoaded() {
         refreshMap();
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(PushData data) {
-        if (data != null) {
-            List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
-            String sn = mDeviceInfo.getSn();
-            for (DeviceInfo deviceInfo : deviceInfoList) {
-                if (sn.equals(deviceInfo.getSn())) {
-                    mDeviceInfo = deviceInfo;
-                    break;
-                }
-            }
-            if (mDeviceInfo != null && AppUtils.isActivityTop(mContext, MonitorPointMapActivity.class)) {
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-//                        freshTopData();
-//                        freshStructData();
-                        freshMarker();
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        Object data = eventData.data;
+        switch (code) {
+            case EVENT_DATA_SOCKET_DATA_INFO:
+                if (data instanceof DeviceInfo) {
+                    DeviceInfo pushDeviceInfo = (DeviceInfo) data;
+                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
+                        mDeviceInfo = pushDeviceInfo;
+                        if (AppUtils.isActivityTop(mContext, MonitorPointMapActivity.class)) {
+                            mContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (getView() != null) {
+                                        freshMarker();
+                                    }
+                                }
+                            });
+                        }
                     }
-                });
-
-
-            }
+                }
+                break;
         }
     }
 
@@ -235,7 +235,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //        aMap.clear();
 //        destPosition.latitude -=
         MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
-                .anchor(0.5f,0.95f)
+                .anchor(0.5f, 0.95f)
                 .position(destPosition)
                 .draggable(true);
         Marker marker = aMap.addMarker(markerOption);
@@ -339,7 +339,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
         double[] lonlat = mDeviceInfo.getLonlat();
 
-        if (lonlat != null&&lonlat.length>1&&lonlat[0]!=0&&lonlat[1]!=0) {
+        if (lonlat != null && lonlat.length > 1 && lonlat[0] != 0 && lonlat[1] != 0) {
             double lat = lonlat[1];//获取纬度
             double lon = lonlat[0];//获取经度
             LatLng latLng = new LatLng(lat, lon);

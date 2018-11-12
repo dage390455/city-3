@@ -46,4 +46,6 @@ public interface IHomeFragmentView extends IToast, IProgressDialog, IActivityInt
     void showAlarmInfoView();
 
     void dismissAlarmInfoView();
+
+    int getFirstVisibleItemPosition();
 }

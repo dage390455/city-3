@@ -30,6 +30,7 @@ import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -53,6 +54,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     private int sendCount;
     private int receiveCount;
     private int selectedFreq = 0;
+    private boolean isConnected = false;
 
     @Override
     public void initData(Context context) {
@@ -93,7 +95,13 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         }
         getView().setStatus(statusText, textColor);
         getView().setUpdateTime(DateUtil.getStrTime_hms(mDeviceInfo.getUpdatedTime()));
-        String text = mDeviceInfo.getDeviceType() + " " + mDeviceInfo.getName();
+        String temp;
+        if (TextUtils.isEmpty(mDeviceInfo.getName())) {
+            temp = mDeviceInfo.getSn();
+        }else{
+            temp = mDeviceInfo.getName();
+        }
+        String text = WidgetUtil.getDeviceTypeName(mDeviceInfo.getDeviceType()) + " " + temp;
         getView().setTypeAndName(text);
         getView().updateTag(Arrays.asList(mDeviceInfo.getTags()));
     }
@@ -135,7 +143,10 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
-
+        if (bleDevice.getSn().equals(mDeviceInfo.getSn())&& !isConnected) {
+            bleAddress = null;
+            getView().setNearVisible(false);
+        }
     }
 
     @Override
@@ -197,7 +208,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         try {
             mConnection.connect(blePassword, SignalCheckActivityPresenter.this);
             getView().updateProgressDialogMessage("正在连接...");
-            stopScanService();
+//            stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
             getView().dismissProgressDialog();
@@ -218,6 +229,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     @Override
     public void onConnectedSuccess(final BLEDevice bleDevice, int cmd) {
+        isConnected = true;
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -241,6 +253,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     @Override
     public void onConnectedFailure(final int errorCode) {
+        isConnected = false;
         clickCount = 0;
         isAutoConnect = false;
         mActivity.runOnUiThread(new Runnable() {

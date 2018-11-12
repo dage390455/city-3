@@ -19,7 +19,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
-import com.sensoro.smartcity.model.PushData;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
@@ -76,7 +76,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
-                statusText = "预警中";
+                statusText = "预警";
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = mContext.getResources().getColor(R.color.c_29c093);
@@ -276,29 +276,32 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(PushData data) {
-        if (data != null) {
-            List<DeviceInfo> deviceInfoList = data.getDeviceInfoList();
-            String sn = mDeviceInfo.getSn();
-            for (DeviceInfo deviceInfo : deviceInfoList) {
-                if (sn.equals(deviceInfo.getSn())) {
-                    mDeviceInfo = deviceInfo;
-                    break;
-                }
-            }
-            if (mDeviceInfo != null && AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        freshTopData();
-                        getView().updateDeviceInfoAdapter(mDeviceInfo);
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        Object data = eventData.data;
+        switch (code) {
+            case EVENT_DATA_SOCKET_DATA_INFO:
+                if (data instanceof DeviceInfo) {
+                    DeviceInfo pushDeviceInfo = (DeviceInfo) data;
+                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
+                        mDeviceInfo = pushDeviceInfo;
+                        if (AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
+                            mContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (getView() != null) {
+                                        freshTopData();
+                                        getView().updateDeviceInfoAdapter(mDeviceInfo);
+                                    }
+
 //                        freshStructData();
 //                        freshMarker();
+                                }
+                            });
+                        }
                     }
-                });
-
-
-            }
+                }
+                break;
         }
     }
 

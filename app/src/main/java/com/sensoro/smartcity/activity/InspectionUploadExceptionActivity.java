@@ -2,24 +2,22 @@ package com.sensoro.smartcity.activity;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.v7.app.AlertDialog;
+import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.view.View;
-import android.view.Window;
+import android.view.ViewTreeObserver;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ImagePickerAdapter;
 import com.sensoro.smartcity.adapter.InspectionUploadExceptionTagAdapter;
@@ -27,9 +25,11 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionUploadExceptionActivityView;
 import com.sensoro.smartcity.presenter.InspectionUploadExceptionActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.ScrollFrameLayout;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.util.ArrayList;
@@ -57,6 +57,10 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     RecyclerView acInspectionUploadExceptionRcPic;
     @BindView(R.id.ac_inspection_upload_exception_tv_upload)
     TextView acInspectionUploadExceptionTvUpload;
+    @BindView(R.id.ac_inspection_upload_exception_scroll_view)
+    NestedScrollView acInspectionUploadExceptionScrollView;
+    @BindView(R.id.ac_inspection_upload_exception_sf)
+    ScrollFrameLayout acInspectionUploadExceptionSF;
     private InspectionUploadExceptionTagAdapter mRcExceptionTagAdapter;
     private ImagePickerAdapter mRcExceptionPicAdapter;
     private TextView dialogTvException;
@@ -65,7 +69,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     private CustomCornerDialog mExceptionDialog;
     private ProgressUtils mProgressUtils;
     private ProgressDialog progressDialog;
-
+    private int initEtRemarkWidth = -1;
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_inspection_upload_exception);
@@ -75,7 +79,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     }
 
     private void initView() {
-
+        acInspectionUploadExceptionScrollView.setNestedScrollingEnabled(false);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
         includeTextTitleTvTitle.setText("异常上报");
@@ -104,6 +108,25 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
             public void afterTextChanged(Editable s) {
                 int length = s.length();
                 updateWordCount(length);
+            }
+        });
+        acInspectionUploadExceptionEtRemark.post(new Runnable() {
+            @Override
+            public void run() {
+                initEtRemarkWidth = acInspectionUploadExceptionEtRemark.getWidth();
+            }
+        });
+        acInspectionUploadExceptionEtRemark.getViewTreeObserver().addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+            @Override
+            public void onGlobalLayout() {
+//                if(initEtRemarkWidth!=-1){
+                    int diff = acInspectionUploadExceptionEtRemark.getHeight() - initEtRemarkWidth;
+                    initEtRemarkWidth = acInspectionUploadExceptionEtRemark.getHeight();
+                    if (diff>0 && !TextUtils.isEmpty(acInspectionUploadExceptionEtRemark.getText().toString())) {
+//                        acInspectionUploadExceptionScrollView.setScrollY(diff);
+                        acInspectionUploadExceptionScrollView.smoothScrollBy(0,diff);
+                    }
+//                }
             }
         });
     }
@@ -220,7 +243,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_inspection_upload_exception_tv_upload})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_inspection_upload_exception_tv_upload,R.id.ac_inspection_upload_exception_sf})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -238,6 +261,14 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
                     toastShort("至少上传一张照片或一段视频");
                 }
 
+                break;
+            case R.id.ac_inspection_upload_exception_sf:
+                acInspectionUploadExceptionEtRemark.setFocusable(true);
+                acInspectionUploadExceptionEtRemark.setFocusableInTouchMode(true);
+                acInspectionUploadExceptionEtRemark.requestFocus();
+                InputMethodManager inputManager = (InputMethodManager)mActivity
+                        .getSystemService(mActivity.INPUT_METHOD_SERVICE);
+                inputManager.showSoftInput(acInspectionUploadExceptionEtRemark, 0);
                 break;
         }
     }

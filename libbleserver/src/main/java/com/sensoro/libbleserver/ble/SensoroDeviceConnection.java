@@ -2056,7 +2056,6 @@ public class SensoroDeviceConnection {
                 builder.setVolHighTh(sensoroSensorTest.mantunData.volHighTh);
             }
             if (sensoroSensorTest.mantunData.hasVolLowTh) {
-                Log.e("hcs",":触点::"+sensoroSensorTest.mantunData.volLowTh);
                 builder.setVolLowTh(sensoroSensorTest.mantunData.volLowTh);
             }
             if (sensoroSensorTest.mantunData.hasLeakageTh) {

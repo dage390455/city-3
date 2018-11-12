@@ -4,8 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -25,6 +23,8 @@ import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -37,7 +37,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistoryLogActivityView> implements IOnCreate, Constants, AlarmPopUtils.OnPopupCallbackListener {
     private Activity mContext;
@@ -79,32 +79,35 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         int code = eventData.code;
         Object data = eventData.data;
         //
-        if (code == EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS) {
-            if (data instanceof EventAlarmStatusModel) {
-                EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                if (mCurrentDeviceAlarmLogInfo.getDeviceSN().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.getDeviceSN())) {
-                    switch (tempEventAlarmStatusModel.status) {
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
-                            // 做一些预警发生的逻辑
-                            mDeviceAlarmLogInfoList.add(0, tempEventAlarmStatusModel.deviceAlarmLogInfo);
-                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
-                            break;
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
-                            // 做一些预警恢复的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                            // 做一些预警被确认的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
-                            freshDeviceAlarmLogInfo(tempEventAlarmStatusModel.deviceAlarmLogInfo);
-                            // 做一些预警被再次确认的逻辑
-                            break;
-                        default:
-                            // 未知逻辑 可以联系我确认 有可能是bug
-                            break;
+        switch (code) {
+            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+                if (data instanceof EventAlarmStatusModel) {
+                    EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
+                    if (mCurrentDeviceAlarmLogInfo.getDeviceSN().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.getDeviceSN())) {
+                        switch (tempEventAlarmStatusModel.status) {
+                            case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                                // 做一些预警发生的逻辑
+                                mDeviceAlarmLogInfoList.add(0, tempEventAlarmStatusModel.deviceAlarmLogInfo);
+                                getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                                break;
+                            case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                                // 做一些预警恢复的逻辑
+                            case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                                // 做一些预警被确认的逻辑
+                            case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                                freshDeviceAlarmLogInfo(tempEventAlarmStatusModel.deviceAlarmLogInfo);
+                                // 做一些预警被再次确认的逻辑
+                                break;
+                            default:
+                                // 未知逻辑 可以联系我确认 有可能是bug
+                                break;
+                        }
                     }
                 }
-            }
+                break;
         }
     }
+
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
         //TODO 对照片信息统一处理
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
@@ -168,6 +171,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
         }
     }
+
     public void onCalendarBack(CalendarDateModel calendarDateModel) {
         getView().setDateSelectVisible(true);
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();

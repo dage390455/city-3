@@ -7,10 +7,12 @@
     <include
         android:id="@+id/ac_inspection_upload_exception_title"
         layout="@layout/item_include_text_title" />
+
     <TextView
         android:id="@+id/ac_inspection_upload_exception_tv_upload"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="20dp"
@@ -20,16 +22,16 @@
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="上报"
-        android:layout_alignParentBottom="true"
         android:textColor="@color/white"
         android:textSize="16sp" />
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/ac_inspection_upload_exception_scroll_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/ac_inspection_upload_exception_title"
         android:layout_above="@id/ac_inspection_upload_exception_tv_upload"
-        android:background="@color/c_fafafa">
+        android:layout_below="@id/ac_inspection_upload_exception_title"
+        android:background="@color/c_f4f4f4">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -56,27 +58,11 @@
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="200dp"
+                android:layout_height="120dp"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/white">
-
-                <EditText
-                    android:id="@+id/ac_inspection_upload_exception_et_remark"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="16dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginEnd="16dp"
-                    android:background="@null"
-                    android:hint="请填写监测点异常说明"
-                    android:inputType="none"
-                    android:maxLength="200"
-                    android:textColor="@color/c_252525"
-                    android:textColorHint="@color/c_a6a6a6"
-                    android:textSize="14sp" />
-
                 <TextView
                     android:id="@+id/ac_inspection_upload_exception_tv_word_count"
                     android:layout_width="wrap_content"
@@ -87,6 +73,30 @@
                     android:layout_marginBottom="12dp"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="12sp" />
+                <com.sensoro.smartcity.widget.ScrollFrameLayout
+                    android:id="@+id/ac_inspection_upload_exception_sf"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_above="@id/ac_inspection_upload_exception_tv_word_count">
+                    <EditText
+                        android:id="@+id/ac_inspection_upload_exception_et_remark"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginEnd="16dp"
+                        android:scrollbars="vertical"
+                        android:background="@null"
+                        android:hint="请填写监测点异常说明"
+                        android:inputType="none"
+                        android:maxLength="200"
+                        android:textColor="@color/c_252525"
+                        android:textColorHint="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+                </com.sensoro.smartcity.widget.ScrollFrameLayout>
+
+
+
             </RelativeLayout>
 
             <TextView
@@ -103,14 +113,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp">
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_f4f4f4">
 
             </android.support.v7.widget.RecyclerView>
-
-
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="40dp"/>
         </LinearLayout>
     </android.support.v4.widget.NestedScrollView>
-
 
 </RelativeLayout>
 

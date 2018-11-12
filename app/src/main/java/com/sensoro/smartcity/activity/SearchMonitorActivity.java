@@ -277,6 +277,11 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     }
 
     @Override
+    public void setHistoryClearBtnVisible(boolean isVisible) {
+        mClearBtn.setVisibility(isVisible ? VISIBLE : View.GONE);
+    }
+
+    @Override
     public void updateRelationData(List<String> strList) {
         if (strList != null) {
             mRelationAdapter.setData(strList);
@@ -286,6 +291,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void updateSearchHistoryData(List<String> strHistory) {
+        setHistoryClearBtnVisible(strHistory != null && strHistory.size() > 0);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
     }
 
@@ -385,6 +391,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void setSearchHistoryLayoutVisible(boolean isVisible) {
         mSearchHistoryLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+        mClearBtn.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
     @Override
@@ -399,7 +406,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void setTipsLinearLayoutVisible(boolean isVisible) {
-        tipsLinearLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+//        tipsLinearLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
+        tipsLinearLayout.setVisibility(View.GONE);
     }
 
 
@@ -476,7 +484,8 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         if (!TextUtils.isEmpty(s.toString())) {
             setSearchHistoryLayoutVisible(false);
             setRelationLayoutVisible(true);
-            mPresenter.filterDeviceInfo(s.toString());
+            mClearKeywordIv.setVisibility(View.VISIBLE);
+//            mPresenter.filterDeviceInfo(s.toString());
         } else {
             setSearchHistoryLayoutVisible(true);
             setRelationLayoutVisible(false);

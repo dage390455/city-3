@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/home_content_root"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_gravity="center_vertical"
     android:paddingLeft="14dp"
     android:paddingRight="14dp"
@@ -12,7 +12,7 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:layout_centerInParent="false"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp">
@@ -28,6 +28,6 @@
     <com.sensoro.smartcity.widget.CustomVRecyclerView
         android:id="@+id/rv_horizontal_item"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="match_parent" />
 
 </com.sensoro.smartcity.widget.CustomVRelativeLayout>

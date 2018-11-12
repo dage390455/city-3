@@ -49,6 +49,7 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
                 public void onErrorMsg(int errorCode, String errorMsg) {
                     getView().dismissProgressDialog();
                     getView().toastShort(errorMsg);
+                    getView().finishAc();
                 }
             });
         }
@@ -76,6 +77,7 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
                 public void onErrorMsg(int errorCode, String errorMsg) {
                     getView().dismissProgressDialog();
                     getView().toastShort(errorMsg);
+                    getView().finishAc();
                 }
             });
         }

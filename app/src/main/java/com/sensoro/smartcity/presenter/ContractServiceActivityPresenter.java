@@ -513,8 +513,10 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
         int code = eventData.code;
-        if (code == EVENT_DATA_FINISH_CODE) {
-            getView().finishAc();
+        switch (code){
+            case EVENT_DATA_FINISH_CODE:
+                getView().finishAc();
+                break;
         }
 //        LogUtils.loge(this, eventData.toString());
     }

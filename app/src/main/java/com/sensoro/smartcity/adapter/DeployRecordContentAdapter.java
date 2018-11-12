@@ -45,14 +45,13 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
         DeployRecordInfo deployRecordInfo = recordInfoList.get(position);
         holder.itemAdapterDeployRecordTvName.setText(deployRecordInfo.getDeviceName());
         holder.itemAdapterDeployRecordTvSn.setText(deployRecordInfo.getSn());
-        holder.itemAdapterDeployRecordTvTime.setText(DateUtil.getStrTime_ymd_hm(deployRecordInfo.getCreatedTime()));
+        holder.itemAdapterDeployRecordTvTime.setText(DateUtil.getStrTime_ymd_hm_ss(deployRecordInfo.getCreatedTime()));
 
         TagAdapter tagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity,false);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         holder.itemAdapterDeployRecordRcTag.setLayoutManager(layoutManager);
-        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
-        holder.itemAdapterDeployRecordRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+
         holder.itemAdapterDeployRecordRcTag.setAdapter(tagAdapter);
         tagAdapter.updateTags(deployRecordInfo.getTags());
         holder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -95,6 +94,8 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
         public DeployRecordContentHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
+            int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+            itemAdapterDeployRecordRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         }
     }
 

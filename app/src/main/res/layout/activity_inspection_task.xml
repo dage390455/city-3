@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ac_inspection_task_rl_root"
     android:layout_width="match_parent"
+    android:background="@color/c_f4f4f4"
     android:layout_height="match_parent">
 
     <RelativeLayout
@@ -38,7 +39,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_above="@id/ac_inspection_task_rl_bottom"
-        android:background="@color/c_fafafa"
+        android:background="@color/c_f4f4f4"
         android:orientation="vertical">
 
         <LinearLayout
@@ -111,6 +112,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="12dp"
+                    android:layout_marginStart="4dp"
                     android:contentDescription="@null"
                     android:padding="8dp"
                     android:src="@drawable/scan_device" />
@@ -136,7 +138,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:drawableEnd="@mipmap/triangle_b6"
+                        android:drawableEnd="@drawable/main_small_triangle_gray"
                         android:drawablePadding="4dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="12dp"
@@ -166,7 +168,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:drawableEnd="@mipmap/triangle_b6"
+                        android:drawableEnd="@drawable/main_small_triangle_gray"
                         android:drawablePadding="4dp"
                         android:paddingTop="4dp"
                         android:paddingBottom="12dp"
@@ -183,6 +185,8 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="20dp"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
                     android:contentDescription="@null"
                     android:src="@drawable/map_mode"
                     android:visibility="invisible" />

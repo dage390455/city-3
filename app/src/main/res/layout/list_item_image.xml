@@ -20,7 +20,7 @@
         android:layout_height="70dp"
         android:layout_centerInParent="true"
         android:layout_margin="10dp"
-        android:background="@mipmap/pup_item_bg"
+        android:background="@drawable/shape_item_image_picker_bg"
         android:orientation="vertical"
         android:visibility="gone">
 
@@ -39,7 +39,7 @@
             android:layout_marginBottom="3dp"
             android:layout_marginTop="3dp"
             android:text="视频/照片"
-            android:textColor="@color/ip_text_primary_inverted"
+            android:textColor="@color/c_252525"
             android:textSize="10sp" />
     </LinearLayout>
 

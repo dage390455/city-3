@@ -186,7 +186,7 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     public void setCurrentAlarmState(int state, String time) {
         switch (state) {
             case 0:
-                acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_fa_shadow);
+                acAlertLlAlertTime.setBackgroundResource(R.drawable.shape_bg_corner_f4_shadow);
                 acAlertImvAlertIcon.setImageResource(R.drawable.alert_time_normal);
                 acAlertTvAlertTime.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
                 acAlertTvAlertTimeText.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
@@ -231,6 +231,16 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     public void setConfirmText(String text) {
         acAlertTvAlertConfirm.setText(text);
+    }
+
+    @Override
+    public void setConfirmBg(int resId) {
+        acAlertTvAlertConfirm.setBackgroundResource(resId);
+    }
+
+    @Override
+    public void setConfirmColor(int resId) {
+        acAlertTvAlertConfirm.setTextColor(resId);
     }
 
     @Override

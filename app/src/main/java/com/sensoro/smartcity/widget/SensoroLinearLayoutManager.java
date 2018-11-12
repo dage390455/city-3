@@ -11,8 +11,15 @@ import android.view.View;
  */
 
 public class SensoroLinearLayoutManager extends LinearLayoutManager {
+    private boolean isScrollVertical = true;
+
     public SensoroLinearLayoutManager(Context context) {
         super(context);
+    }
+
+    public SensoroLinearLayoutManager(Context context,boolean isScrollVertical) {
+        this(context);
+        this.isScrollVertical = isScrollVertical;
     }
 
     public SensoroLinearLayoutManager(Context context, int orientation, boolean reverseLayout) {
@@ -28,6 +35,17 @@ public class SensoroLinearLayoutManager extends LinearLayoutManager {
         return new RecyclerView.LayoutParams(
                 RecyclerView.LayoutParams.WRAP_CONTENT,
                 RecyclerView.LayoutParams.WRAP_CONTENT);
+    }
+
+    @Override
+    public boolean canScrollVertically() {
+        if(isScrollVertical){
+            return super.canScrollVertically();
+        }else{
+            return false;
+        }
+
+
     }
 
     @Override

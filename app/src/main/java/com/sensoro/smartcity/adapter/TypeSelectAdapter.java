@@ -66,7 +66,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     @Override
     public void onBindViewHolder(final TypeSelectHolder holder, final int position) {
         if (position == 0) {
-            holder.itemPopSelectTvTypeName.setText("全部");
+            holder.itemPopSelectTvTypeName.setText("全部类型");
             changeIconColor(holder, position != selectPosition, mContext.getResources().getDrawable(R.drawable.type_all_test));
         } else {
             final int index = position - 1;
@@ -139,7 +139,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     public DeviceTypeModel getItem(int position) {
         DeviceTypeModel deviceTypeModel = new DeviceTypeModel();
         if (position == 0) {
-            deviceTypeModel.name = "全部";
+            deviceTypeModel.name = "全部类型";
             deviceTypeModel.iconRes = R.mipmap.type_all;
         } else {
             Map<String, DeviceTypeStyles> deviceTypeMap = typesConfig.getDeviceType();

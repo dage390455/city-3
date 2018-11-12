@@ -11,7 +11,6 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractIndexActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
@@ -24,7 +23,6 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.AlarmDeviceCountsBean;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.HomeTopModel;
-import com.sensoro.smartcity.model.PushData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -66,20 +64,20 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private final Handler mHandler = new Handler();
     private volatile int page = 1;
     private volatile boolean needAlarmPlay = false;
-    //
     private volatile boolean needRefreshContent = false;
+    private volatile boolean needShowAlarmWindow = false;
     private volatile boolean needRefreshHeader = false;
     //
     private volatile int totalMonitorPoint;
     private int mSoundId;
     private SoundPool mSoundPool;
     //TODO 联动类型选择
-    private String mTypeSelectedType;
+    private volatile String mTypeSelectedType;
     private volatile int tempAlarmCount = 0;
     private final List<HomeTopModel> mHomeTopModels = new ArrayList<>();
     private final ArrayList<String> mMergeTypes = new ArrayList<>();
     //
-    private HomeTopModel mCurrentHomeTopModel;
+    private volatile HomeTopModel mCurrentHomeTopModel;
     //
     private final HomeTopModel alarmModel = new HomeTopModel();
     private final HomeTopModel normalModel = new HomeTopModel();
@@ -97,10 +95,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 ThreadPoolManager.getInstance().execute(new Runnable() {
                     @Override
                     public void run() {
-                        if (needRefreshContent || needRefreshHeader) {
-                            Log.d("scheduleRefresh", "run: 刷新数据！");
-                            scheduleRefresh();
-                        }
+                        Log.d("scheduleRefresh", "run: 刷新数据！");
+                        scheduleRefresh();
                         mHandler.postDelayed(mTask, 3000);
                     }
                 });
@@ -115,11 +111,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mContext = (Activity) context;
         onCreate();
         //
+        alarmModel.type = 0;
         alarmModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        normalModel.type = 1;
         normalModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        lostModel.type = 2;
         lostModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        inactiveModel.type = 3;
         inactiveModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
-        //
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
@@ -127,31 +126,16 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 if (PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
                     requestInitData();
                 }
-
             }
         };
         mSoundPool.setOnLoadCompleteListener(listener);
         mSoundId = mSoundPool.load(context, R.raw.alarm, 1);
         mHandler.postDelayed(mTask, 3000);
         getView().setImvHeaderLeftVisible(false);
-        alarmModel.type = 0;
-        //
-        normalModel.type = 1;
-        mHomeTopModels.add(normalModel);
-        //
-        lostModel.type = 2;
-        mHomeTopModels.add(lostModel);
-        //
-        inactiveModel.type = 3;
-        mHomeTopModels.add(inactiveModel);
-        getView().refreshHeaderData(true, mHomeTopModels);
     }
 
 
     private void requestInitData() {
-        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-            return;
-        }
         getView().showProgressDialog();
         LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
@@ -163,7 +147,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 normalModel.clearData();
                 lostModel.clearData();
                 inactiveModel.clearData();
-                SensoroCityApplication.getInstance().getData().clear();
                 final int alarmCount = deviceTypeCountRsp.getData().getAlarm();
                 int normal = deviceTypeCountRsp.getData().getNormal();
                 int lostCount = deviceTypeCountRsp.getData().getOffline();
@@ -173,42 +156,61 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     tempAlarmCount = alarmCount;
                     mHomeTopModels.add(alarmModel);
                 }
-                //
-                normalModel.value = normal;
-                mHomeTopModels.add(normalModel);
-                //
-                lostModel.value = lostCount;
-                mHomeTopModels.add(lostModel);
-                //
-                inactiveModel.value = inactiveCount;
-                mHomeTopModels.add(inactiveModel);
+                if (normal > 0) {
+                    normalModel.value = normal;
+                    mHomeTopModels.add(normalModel);
+                }
+                if (lostCount > 0) {
+                    lostModel.value = lostCount;
+                    mHomeTopModels.add(lostModel);
+                }
+                if (inactiveCount > 0) {
+                    inactiveModel.value = inactiveCount;
+                    mHomeTopModels.add(inactiveModel);
+                }
                 //
                 totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount;
                 page = 1;
-                mCurrentHomeTopModel = mHomeTopModels.get(0);
-
                 return getAllDeviceInfoListRspObservable(true);
             }
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                freshHeaderContentData();
+                if (mHomeTopModels.size() > 0) {
+                    freshHeaderContentData(mHomeTopModels.get(0));
+                }
                 getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                freshHeaderContentData();
+                if (mHomeTopModels.size() > 0) {
+                    freshHeaderContentData(mHomeTopModels.get(0));
+                }
                 getView().toastShort(errorMsg);
                 getView().dismissProgressDialog();
             }
         });
     }
 
-    private void freshHeaderContentData() {
-        getView().setDetectionPoints(String.valueOf(totalMonitorPoint));
-        getView().refreshHeaderData(true, mHomeTopModels);
-        getView().refreshContentData(true, mHomeTopModels);
+    private void freshHeaderContentData(HomeTopModel homeTopModel) {
+        try {
+            getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+            getView().refreshHeaderData(true, mHomeTopModels);
+            getView().refreshContentData(true, mHomeTopModels);
+            if (mHomeTopModels.size() <= 1) {
+                getView().setImvHeaderLeftVisible(false);
+                getView().setImvHeaderRightVisible(false);
+            }
+            updateHeaderTop(homeTopModel);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    public void updateHeaderTop(HomeTopModel homeTopModel) {
+        mCurrentHomeTopModel = homeTopModel;
         String currentDataStr = getCurrentDataStr();
         int currentColor = getCurrentColor();
         getView().setToolbarTitleBackgroundColor(currentColor);
@@ -268,10 +270,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     inactiveModel.mDeviceList.clear();
                     inactiveModel.mDeviceList.addAll(data);
                 }
-                SensoroCityApplication.getInstance().addData(alarmModel.mDeviceList);
-                SensoroCityApplication.getInstance().addData(normalModel.mDeviceList);
-                SensoroCityApplication.getInstance().addData(lostModel.mDeviceList);
-                SensoroCityApplication.getInstance().addData(inactiveModel.mDeviceList);
             }
         });
     }
@@ -285,107 +283,60 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
      * 请求剩余的数据
      */
 
-    private synchronized void scheduleRefresh() {
-        if (needRefreshContent) {
-            List<DeviceInfo> deviceInfoList = SensoroCityApplication.getInstance().getData();
-            for (int i = 0; i < deviceInfoList.size(); i++) {
-                DeviceInfo deviceInfo = deviceInfoList.get(i);
-                //TODO 过滤设备信息
-                String mergeType = deviceInfo.getMergeType();
-                if (TextUtils.isEmpty(mergeType)) {
-                    mergeType = WidgetUtil.handleMergeType(deviceInfo.getDeviceType());
-                }
-                int status = deviceInfo.getStatus();
-                switch (status) {
-                    case SENSOR_STATUS_ALARM:
-                        handleDevicePush(deviceInfo, mergeType, alarmModel.mDeviceList);
-                        break;
-                    case SENSOR_STATUS_NORMAL:
-                        handleDevicePush(deviceInfo, mergeType, normalModel.mDeviceList);
-                        break;
-                    case SENSOR_STATUS_LOST:
-                        handleDevicePush(deviceInfo, mergeType, lostModel.mDeviceList);
-                        break;
-                    case SENSOR_STATUS_INACTIVE:
-                        handleDevicePush(deviceInfo, mergeType, inactiveModel.mDeviceList);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            //排序
-            ArrayList<DeviceInfo> pushList = new ArrayList<>();
-            pushList.addAll(alarmModel.mDeviceList);
-            pushList.addAll(normalModel.mDeviceList);
-            pushList.addAll(lostModel.mDeviceList);
-            pushList.addAll(inactiveModel.mDeviceList);
-            SensoroCityApplication.getInstance().addData(pushList);
-            Collections.sort(pushList);
-            //推送数据
-            PushData pushData = new PushData();
-            pushData.setDeviceInfoList(pushList);
-            EventBus.getDefault().post(pushData);
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    //TODO 去掉只在主页可见出现的时候刷新
-                    alarmModel.innerAdapter.updateData(alarmModel.mDeviceList);
-                    normalModel.innerAdapter.updateData(normalModel.mDeviceList);
-                    lostModel.innerAdapter.updateData(lostModel.mDeviceList);
-                    inactiveModel.innerAdapter.updateData(inactiveModel.mDeviceList);
+    private void scheduleRefresh() {
+        mContext.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                if (needRefreshContent) {
+                    if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3]) {
+                        getView().refreshContentData(false, mHomeTopModels);
+                        homeTopModelCacheFresh[0] = false;
+                        homeTopModelCacheFresh[1] = false;
+                        homeTopModelCacheFresh[2] = false;
+                        homeTopModelCacheFresh[3] = false;
+                    }
                     needRefreshContent = false;
                 }
-            });
-            LogUtils.logd("new dataList = " + pushList.size());
-        }
-        if (needRefreshHeader) {
-            mContext.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
+                if (needRefreshHeader) {
                     getView().refreshHeaderData(false, mHomeTopModels);
-                    getView().setDetectionPoints(String.valueOf(totalMonitorPoint));
+                    getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
                     if (needAlarmPlay) {
                         playSound();
-                        needAlarmPlay = false;
                     }
+                    shoAlarmWindow();
+                    needAlarmPlay = false;
                     needRefreshHeader = false;
                 }
-            });
-        }
 
+            }
+        });
+    }
+
+    private void handleDevicePush(DeviceInfo deviceInfo) {
+        String mergeType = deviceInfo.getMergeType();
+        if (TextUtils.isEmpty(mergeType)) {
+            try {
+                String deviceType = deviceInfo.getDeviceType();
+                DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
+                mergeType = config.getDeviceType().get(deviceType).getMergeType();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        if (TextUtils.isEmpty(mTypeSelectedType)) {
+            organizeJsonData(deviceInfo);
+            addSocketData(deviceInfo);
+        } else {
+            if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
+                organizeJsonData(deviceInfo);
+                addSocketData(deviceInfo);
+            }
+        }
 
     }
 
-    private void handleDevicePush(DeviceInfo deviceInfo, String mergeType, List<DeviceInfo> dataList) {
-        for (int j = 0; j < dataList.size(); j++) {
-            DeviceInfo currentDeviceInfo = dataList.get(j);
-            if (currentDeviceInfo.getSn().equals(deviceInfo.getSn())) {
-                if (TextUtils.isEmpty(mTypeSelectedType)) {
-                    dataList.set(j, deviceInfo);
-                } else {
-                    if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
-                        dataList.set(j, deviceInfo);
-                    }
-                }
 
-            }
-        }
-        if (deviceInfo.isNewDevice()) {
-            if (TextUtils.isEmpty(mTypeSelectedType)) {
-                deviceInfo.setNewDevice(false);
-                dataList.add(deviceInfo);
-            } else {
-                if (mTypeSelectedType.equalsIgnoreCase(mergeType)) {
-                    deviceInfo.setNewDevice(false);
-                    dataList.add(deviceInfo);
-                }
-            }
-
-        }
-    }
-
-    public void playSound() {
+    private void playSound() {
         if (!"admin".equals(PreferencesHelper.getInstance().getUserData().roles)) {
             mSoundPool.play(mSoundId, 1, 1, 0, 0, 1);
         }
@@ -430,10 +381,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
+            case EVENT_DATA_DEPLOY_RESULT_FINISH:
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
-//                    LogUtils.loge("new Socket SN = " + ((DeviceInfo) data).getSn());
-                    organizeJsonData((DeviceInfo) data);
+                    handleDevicePush((DeviceInfo) data);
                     needRefreshContent = true;
                 }
                 break;
@@ -448,16 +399,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     if (tempAlarmCount == 0 && currentAlarmCount > 0) {
                         needAlarmPlay = true;
                     }
-                    if (currentAlarmCount > tempAlarmCount) {
-                        mContext.runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                if (mCurrentHomeTopModel.type != 0) {
-                                    getView().showAlarmInfoView();
-                                }
-                            }
-                        });
-                    }
+                    needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
                     LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
                     tempAlarmCount = currentAlarmCount;
                     //
@@ -466,15 +408,18 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         alarmModel.value = tempAlarmCount;
                         mHomeTopModels.add(alarmModel);
                     }
-                    //
-                    normalModel.value = normalCount;
-                    mHomeTopModels.add(normalModel);
-                    //
-                    lostModel.value = lostCount;
-                    mHomeTopModels.add(lostModel);
-                    //
-                    inactiveModel.value = inactiveCount;
-                    mHomeTopModels.add(inactiveModel);
+                    if (normalCount > 0) {
+                        normalModel.value = normalCount;
+                        mHomeTopModels.add(normalModel);
+                    }
+                    if (lostCount > 0) {
+                        lostModel.value = lostCount;
+                        mHomeTopModels.add(lostModel);
+                    }
+                    if (inactiveCount > 0) {
+                        inactiveModel.value = inactiveCount;
+                        mHomeTopModels.add(inactiveModel);
+                    }
                     totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount;
                     needRefreshHeader = true;
                 }
@@ -488,6 +433,27 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 });
                 break;
         }
+    }
+
+    private void shoAlarmWindow() {
+        //这里是为了控制显示问题，暂时采用延时方式
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    int position = getView().getFirstVisibleItemPosition();
+                    requestDataByStatus(mHomeTopModels.get(position));
+                    LogUtils.loge("shoAlarmWindow  position = " + position + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type + ",mCurrentHomeTopModel.value = " + mCurrentHomeTopModel.value);
+                    if (needShowAlarmWindow && mCurrentHomeTopModel.type != 0) {
+                        getView().showAlarmInfoView();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                } finally {
+                    needShowAlarmWindow = false;
+                }
+            }
+        }, 300);
     }
 
     public void requestWithDirection(int direction, boolean needShowProgress, final HomeTopModel homeTopModel) {
@@ -506,7 +472,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         @Override
                         public void call(DeviceInfoListRsp deviceInfoListRsp) {
                             List<DeviceInfo> data = deviceInfoListRsp.getData();
-                            SensoroCityApplication.getInstance().addData(data);
                             homeTopModel.mDeviceList.clear();
                             homeTopModel.mDeviceList.addAll(data);
                         }
@@ -536,7 +501,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                                 if (data.size() == 0) {
                                     page--;
                                 } else {
-                                    SensoroCityApplication.getInstance().addData(data);
                                     homeTopModel.mDeviceList.addAll(data);
                                 }
                             } catch (Exception e) {
@@ -576,74 +540,161 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     /**
      * 处理push来的json数据
      */
+    private final boolean[] homeTopModelCacheFresh = {false, false, false, false};
+
     private void organizeJsonData(DeviceInfo newDeviceInfo) {
-        if (newDeviceInfo != null) {
-            boolean isContains = false;
-            for (int i = 0; i < SensoroCityApplication.getInstance().getData().size(); i++) {
-                DeviceInfo deviceInfo = SensoroCityApplication.getInstance().getData().get(i);
-                if (deviceInfo.getSn().equals(newDeviceInfo.getSn())) {
-                    newDeviceInfo.setPushDevice(true);
-                    SensoroCityApplication.getInstance().getData().set(i, newDeviceInfo);
-                    isContains = true;
-                    break;
+        int status = newDeviceInfo.getStatus();
+        String sn = newDeviceInfo.getSn();
+        synchronized (alarmModel.mDeviceList) {
+            for (int i = 0; i < alarmModel.mDeviceList.size(); i++) {
+                DeviceInfo currentDeviceInfo = alarmModel.mDeviceList.get(i);
+                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+                    if (status == SENSOR_STATUS_ALARM) {
+                        alarmModel.mDeviceList.set(i, currentDeviceInfo);
+                    } else {
+                        alarmModel.mDeviceList.remove(i);
+                    }
+                    homeTopModelCacheFresh[0] = true;
+                    return;
                 }
             }
-            if (!isContains) {
-                newDeviceInfo.setNewDevice(true);
-                newDeviceInfo.setPushDevice(true);
-                SensoroCityApplication.getInstance().getData().add(newDeviceInfo);
+        }
+        synchronized (normalModel.mDeviceList) {
+            for (int i = 0; i < normalModel.mDeviceList.size(); i++) {
+                DeviceInfo currentDeviceInfo = normalModel.mDeviceList.get(i);
+                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+                    if (status == SENSOR_STATUS_NORMAL) {
+                        normalModel.mDeviceList.set(i, currentDeviceInfo);
+                    } else {
+                        normalModel.mDeviceList.remove(i);
+                    }
+                    homeTopModelCacheFresh[1] = true;
+                    return;
+                }
             }
+        }
+        synchronized (lostModel.mDeviceList) {
+            for (int i = 0; i < lostModel.mDeviceList.size(); i++) {
+                DeviceInfo currentDeviceInfo = lostModel.mDeviceList.get(i);
+                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+                    if (status == SENSOR_STATUS_LOST) {
+                        lostModel.mDeviceList.set(i, currentDeviceInfo);
+                    } else {
+                        lostModel.mDeviceList.remove(i);
+                    }
+                    homeTopModelCacheFresh[2] = true;
+                    return;
+                }
+            }
+        }
+        synchronized (inactiveModel.mDeviceList) {
+            for (int i = 0; i < inactiveModel.mDeviceList.size(); i++) {
+                DeviceInfo currentDeviceInfo = inactiveModel.mDeviceList.get(i);
+                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+                    if (status == SENSOR_STATUS_INACTIVE) {
+                        inactiveModel.mDeviceList.set(i, currentDeviceInfo);
+                    } else {
+                        inactiveModel.mDeviceList.remove(i);
+                    }
+                    homeTopModelCacheFresh[3] = true;
+                    return;
+                }
+            }
+        }
+    }
+
+    private void addSocketData(DeviceInfo newDeviceInfo) {
+        int status = newDeviceInfo.getStatus();
+        switch (status) {
+            case SENSOR_STATUS_ALARM:
+                if (!homeTopModelCacheFresh[0]) {
+                    synchronized (alarmModel.mDeviceList) {
+                        alarmModel.mDeviceList.add(0, newDeviceInfo);
+                        homeTopModelCacheFresh[0] = true;
+                    }
+                }
+                break;
+            case SENSOR_STATUS_NORMAL:
+                if (!homeTopModelCacheFresh[1]) {
+                    synchronized (normalModel.mDeviceList) {
+                        normalModel.mDeviceList.add(0, newDeviceInfo);
+                        homeTopModelCacheFresh[1] = true;
+                    }
+                }
+                break;
+            case SENSOR_STATUS_LOST:
+                if (!homeTopModelCacheFresh[2]) {
+                    synchronized (lostModel.mDeviceList) {
+                        lostModel.mDeviceList.add(0, newDeviceInfo);
+                        homeTopModelCacheFresh[2] = true;
+                    }
+                }
+                break;
+            case SENSOR_STATUS_INACTIVE:
+                if (!homeTopModelCacheFresh[3]) {
+                    synchronized (inactiveModel.mDeviceList) {
+                        inactiveModel.mDeviceList.add(0, newDeviceInfo);
+                        homeTopModelCacheFresh[3] = true;
+                    }
+                }
+                break;
+            default:
+                break;
         }
     }
 
 
     public void requestDataByStatus(HomeTopModel homeTopModel) {
-        mCurrentHomeTopModel = homeTopModel;
-        String currentDataStr = getCurrentDataStr();
-        int currentColor = getCurrentColor();
-        getView().setToolbarTitleBackgroundColor(currentColor);
-        getView().setToolbarTitleCount(currentDataStr);
-        int index = mHomeTopModels.indexOf(homeTopModel);
-        if (index == 0) {
-            getView().setImvHeaderLeftVisible(false);
-        } else {
-            getView().setImvHeaderLeftVisible(true);
+        try {
+            updateHeaderTop(homeTopModel);
+            int index = mHomeTopModels.indexOf(homeTopModel);
+            if (mHomeTopModels.size() <= 1) {
+                getView().setImvHeaderLeftVisible(false);
+                getView().setImvHeaderRightVisible(false);
+            } else {
+                if (index == 0) {
+                    getView().setImvHeaderLeftVisible(false);
+                } else {
+                    getView().setImvHeaderLeftVisible(true);
+                }
+                if (index == mHomeTopModels.size() - 1) {
+                    getView().setImvHeaderRightVisible(false);
+                } else {
+                    getView().setImvHeaderRightVisible(true);
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-        if (index == mHomeTopModels.size() - 1) {
-            getView().setImvHeaderRightVisible(false);
-        } else {
-            getView().setImvHeaderRightVisible(true);
-        }
+
     }
 
-    public void requestDataByTypes(int position, HomeTopModel homeTopModel) {
-
-        if (position == 0) {
+    public void requestDataByTypes(int position, final HomeTopModel homeTopModel) {
+        try {
+            if (position == 0) {
+                mTypeSelectedType = null;
+            } else {
+                mTypeSelectedType = mMergeTypes.get(position - 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             mTypeSelectedType = null;
-        } else {
-            mTypeSelectedType = mMergeTypes.get(position - 1);
         }
         page = 1;
-        mCurrentHomeTopModel = homeTopModel;
         getView().showProgressDialog();
         getAllDeviceInfoListRspObservable(true).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
 
                 getView().refreshContentData(false, mHomeTopModels);
-                String currentDataStr = getCurrentDataStr();
-                int currentColor = getCurrentColor();
-                getView().setToolbarTitleBackgroundColor(currentColor);
-                getView().setToolbarTitleCount(currentDataStr);
+                updateHeaderTop(homeTopModel);
                 getView().dismissProgressDialog();
-//                needRefreshAll = false;
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
-//                needRefreshAll = false;
             }
         });
     }
@@ -765,48 +816,49 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private String getCurrentDataStr() {
-        if (mCurrentHomeTopModel == null) {
-            mCurrentHomeTopModel = mHomeTopModels.get(0);
+        try {
+            if (mCurrentHomeTopModel == null) {
+                mCurrentHomeTopModel = mHomeTopModels.get(0);
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            switch (mCurrentHomeTopModel.type) {
+                case 0:
+                    stringBuilder.append("预警");
+                    break;
+                case 1:
+                    stringBuilder.append("正常");
+                    break;
+                case 2:
+                    stringBuilder.append("失联");
+                    break;
+                case 3:
+                    stringBuilder.append("未激活");
+                    break;
+            }
+            return stringBuilder.append("(").append(mCurrentHomeTopModel.value).append(")").toString();
+        } catch (Exception e) {
+            return "";
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        switch (mCurrentHomeTopModel.type) {
-            case 0:
-                stringBuilder.append("预警");
-                break;
-            case 1:
-                stringBuilder.append("正常");
-                break;
-            case 2:
-                stringBuilder.append("失联");
-                break;
-            case 3:
-                stringBuilder.append("未激活");
-                break;
-        }
-        return stringBuilder.append("(").append(mCurrentHomeTopModel.value).append(")").toString();
     }
 
     private int getCurrentColor() {
-        if (mCurrentHomeTopModel == null) {
-            mCurrentHomeTopModel = mHomeTopModels.get(0);
-        }
-        switch (mCurrentHomeTopModel.type) {
-            case 0:
-                return R.color.c_f34a4a;
-            case 1:
-                return R.color.c_29c093;
-            case 2:
-                return R.color.c_5d5d5d;
-            case 3:
-                return R.color.c_b6b6b6;
+        try {
+            if (mCurrentHomeTopModel == null) {
+                mCurrentHomeTopModel = mHomeTopModels.get(0);
+            }
+            switch (mCurrentHomeTopModel.type) {
+                case 0:
+                    return R.color.c_f34a4a;
+                case 1:
+                    return R.color.c_29c093;
+                case 2:
+                    return R.color.c_5d5d5d;
+                case 3:
+                    return R.color.c_b6b6b6;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return R.color.c_29c093;
-    }
-
-    public boolean hasContentData() {
-        if (mCurrentHomeTopModel != null) {
-            return mCurrentHomeTopModel.innerAdapter.getData().size() > 0;
-        }
-        return false;
     }
 }

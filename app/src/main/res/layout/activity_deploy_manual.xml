@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/white"
-              android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
+    android:orientation="vertical">
 
     <RelativeLayout
         android:id="@+id/sensor_deploy_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/y200"
-        >
+        android:layout_height="@dimen/y200">
 
         <ImageView
             android:id="@+id/deploy_manual_close"
@@ -21,7 +20,7 @@
             android:adjustViewBounds="true"
             android:cropToPadding="true"
             android:padding="12dp"
-            android:src="@mipmap/ic_close"/>
+            android:src="@mipmap/ic_close" />
 
     </RelativeLayout>
 
@@ -37,7 +36,7 @@
             android:layout_height="wrap_content"
             android:text="@string/tips_input_machine_sn"
             android:textColor="@color/c_1b1b1b"
-            android:textSize="@dimen/x60"/>
+            android:textSize="@dimen/x60" />
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -52,7 +51,7 @@
                 android:layout_marginLeft="@dimen/x75"
                 android:layout_marginRight="@dimen/x75"
                 android:background="@null"
-                android:gravity="center"/>
+                android:gravity="center" />
 
             <ImageView
                 android:id="@+id/deploy_clear_iv"
@@ -62,7 +61,7 @@
                 android:layout_centerVertical="true"
                 android:padding="8dp"
                 android:src="@mipmap/ic_et_delete"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </RelativeLayout>
 
         <View
@@ -70,20 +69,20 @@
             android:layout_height="@dimen/y3"
             android:layout_marginLeft="@dimen/x75"
             android:layout_marginRight="@dimen/x75"
-            android:background="@color/c_e7e7e7"/>
+            android:background="@color/c_e7e7e7" />
 
         <Button
             android:id="@+id/deploy_manual_btn"
             style="?android:attr/borderlessButtonStyle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/y150"
             android:layout_marginLeft="@dimen/x75"
-            android:layout_marginRight="@dimen/x75"
             android:layout_marginTop="@dimen/y80"
+            android:layout_marginRight="@dimen/x75"
+            android:layout_marginBottom="@dimen/y150"
             android:background="@drawable/shape_button_normal"
             android:text="@string/next"
             android:textColor="@color/white"
-            android:textSize="@dimen/city_btn_text_size"/>
+            android:textSize="@dimen/city_btn_text_size" />
     </LinearLayout>
 </LinearLayout>

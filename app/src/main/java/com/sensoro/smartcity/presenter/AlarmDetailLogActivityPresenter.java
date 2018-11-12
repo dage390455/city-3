@@ -6,9 +6,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.VideoPlayActivity;
@@ -30,6 +27,9 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,7 +43,7 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.lzy.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
+import static com.sensoro.smartcity.widget.imagepicker.ImagePicker.EXTRA_RESULT_BY_TAKE_PHOTO;
 
 public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailLogActivityView> implements Constants, IOnCreate, AlarmPopUtils.OnPopupCallbackListener {
     private final List<AlarmInfo.RecordInfo> mList = new ArrayList<>();
@@ -74,33 +74,36 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         int code = eventData.code;
         Object data = eventData.data;
         //
-        if (code == EVENT_DATA_ALARM_FRESH_ALARM_DATA) {
-            if (data instanceof DeviceAlarmLogInfo) {
-                if (this.deviceAlarmLogInfo.get_id().equals(((DeviceAlarmLogInfo) data).get_id())) {
-                    this.deviceAlarmLogInfo = (DeviceAlarmLogInfo) data;
-                }
+        switch (code) {
+            case EVENT_DATA_ALARM_FRESH_ALARM_DATA:
+                if (data instanceof DeviceAlarmLogInfo) {
+                    if (this.deviceAlarmLogInfo.get_id().equals(((DeviceAlarmLogInfo) data).get_id())) {
+                        this.deviceAlarmLogInfo = (DeviceAlarmLogInfo) data;
+                    }
 
-            }
-        } else if (code == EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS) {
-            if (data instanceof EventAlarmStatusModel) {
-                EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                if (deviceAlarmLogInfo.get_id().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.get_id())) {
-                    switch (tempEventAlarmStatusModel.status) {
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
-                            // 做一些预警恢复的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                            // 做一些预警被确认的逻辑
-                        case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
-                            // 做一些预警被再次确认的逻辑
-                            deviceAlarmLogInfo = tempEventAlarmStatusModel.deviceAlarmLogInfo;
-                            refreshData(false);
-                            break;
-                        default:
-                            // 未知逻辑 可以联系我确认 有可能是bug
-                            break;
+                }
+                break;
+            case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
+                if (data instanceof EventAlarmStatusModel) {
+                    EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
+                    if (deviceAlarmLogInfo.get_id().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.get_id())) {
+                        switch (tempEventAlarmStatusModel.status) {
+                            case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                                // 做一些预警恢复的逻辑
+                            case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                                // 做一些预警被确认的逻辑
+                            case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                                // 做一些预警被再次确认的逻辑
+                                deviceAlarmLogInfo = tempEventAlarmStatusModel.deviceAlarmLogInfo;
+                                refreshData(false);
+                                break;
+                            default:
+                                // 未知逻辑 可以联系我确认 有可能是bug
+                                break;
+                        }
                     }
                 }
-            }
+                break;
         }
     }
 
@@ -108,7 +111,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
         getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        String alarmTime = DateUtil.getStrTimeToday(deviceAlarmLogInfo.getCreatedTime(),1);
+        String alarmTime = DateUtil.getStrTimeToday(deviceAlarmLogInfo.getCreatedTime(), 1);
         //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {
@@ -141,6 +144,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             switch (deviceAlarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
+                    getView().setConfirmColor(mContext.getResources().getColor(R.color.white));
+                    getView().setConfirmBg(R.drawable.shape_btn_corner_29c_bg_4dp);
                     getView().setConfirmText("预警确认");
                     break;
                 case DISPLAY_STATUS_ALARM:
@@ -148,6 +153,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 case DISPLAY_STATUS_TEST:
                 case DISPLAY_STATUS_RISKS:
                     isReConfirm = true;
+                    getView().setConfirmColor(mContext.getResources().getColor(R.color.c_252525));
+                    getView().setConfirmBg(R.drawable.shape_bg_solid_fa_stroke_df_corner_4dp);
                     getView().setConfirmText("再次确认");
                     break;
             }

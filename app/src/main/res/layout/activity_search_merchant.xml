@@ -3,6 +3,7 @@
     android:id="@+id/search_merchant_ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
     <RelativeLayout
@@ -181,6 +182,7 @@
                 android:layout_marginTop="@dimen/y60"
                 android:text="@string/recent"
                 android:textColor="@color/c_626262"
+                android:layout_centerVertical="true"
                 android:textSize="15sp" />
 
             <ImageView
@@ -188,10 +190,10 @@
                 android:layout_width="@dimen/x142"
                 android:layout_height="@dimen/y60"
                 android:layout_alignParentRight="true"
-                android:layout_gravity="center"
                 android:layout_marginTop="@dimen/y20"
                 android:src="@mipmap/ic_rubbish"
                 android:text="@string/clear"
+                android:layout_centerVertical="true"
                 android:textSize="12sp"
                 android:visibility="gone" />
         </RelativeLayout>

@@ -9,9 +9,11 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.util.DisplayMetrics;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 
@@ -258,5 +260,27 @@ public class AppUtils {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         imm.hideSoftInputFromWindow(editText.getWindowToken(), 0);//从控件所在的窗口中隐藏
         editText.setCursorVisible(false);
+    }
+
+    public static int getAndroiodScreenHeight(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        if (wm != null) {
+            wm.getDefaultDisplay().getMetrics(dm);
+            return dm.heightPixels; // 屏幕高度（像素）
+        }
+
+        return -1;
+    }
+
+    public static int getAndroiodScreenWidth(Context context) {
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        DisplayMetrics dm = new DisplayMetrics();
+        if (wm != null) {
+            wm.getDefaultDisplay().getMetrics(dm);
+            return dm.widthPixels;// 屏幕宽度（像素）
+        }
+
+        return -1;
     }
 }

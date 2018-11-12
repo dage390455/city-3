@@ -1,5 +1,7 @@
 <resources>
-
+    <style name="ImagePickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
     <!-- Base application theme. -->
     <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Customize your theme here. -->
@@ -76,12 +78,16 @@
         <item name="android:windowBackground">@drawable/splash</item>
     </style>
 
-    <style name="AppTheme.Splash">
+    <style name="AppTheme.Splash" parent="Theme.AppCompat.Light.NoActionBar">>
+        <item name="android:fitsSystemWindows">true</item>
+        <item name="android:clipToPadding">true</item>
+        <item name="android:windowTranslucentNavigation">true</item>
+
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-        <item name="android:windowBackground">@android:color/transparent</item>
-        <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@drawable/bg_splash_launcher</item>
+        <item name="android:colorBackgroundCacheHint">@null</item>
         <item name="android:windowFullscreen">true</item>
         <item name="android:windowContentOverlay">@null</item>
     </style>
@@ -96,6 +102,7 @@
         <item name="android:textColor">@color/selector_ac_main_text_color</item>
         <item name="android:textSize">12sp</item>
         <item name="android:gravity">center</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <!--homeFragment add dialogFragment 样式-->
@@ -132,6 +139,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
     </style>
+
     <style name="StatusBarNoChangColorDialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
@@ -140,6 +148,25 @@
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
         <item name="android:backgroundDimEnabled">true</item>
-        <item name="android:textColorPrimary" >@color/c_a6a6a6</item>
+        <item name="android:textColorPrimary">@color/c_a6a6a6</item>
     </style>
+    //
+
+    <style name="ImagePickerThemeFullScreen" parent="ImagePickerTheme">
+        <item name="android:fitsSystemWindows">false</item>
+    </style>
+
+    <!--SuperCheckbox的样式-->
+    <style name="SuperCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/selector_item_checked</item>
+    </style>
+
+    <style name="popupwindow_anim_style">
+        <!-- 指定显示的动画xml -->
+        <item name="android:windowEnterAnimation">@anim/show_from_bottom</item>
+        <!-- 指定消失的动画xml -->
+        <item name="android:windowExitAnimation">@anim/hide_to_bottom</item>
+    </style>
+
+
 </resources>

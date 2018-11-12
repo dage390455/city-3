@@ -31,18 +31,18 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         errorInfo = mContext.getIntent().getStringExtra(EXTRA_SENSOR_RESULT_ERROR);
         sn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN_RESULT);
         mAddress = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_SUCCESS_ADDRESS);
-        switch (scanType){
+        switch (scanType) {
             case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
                 if (resultCode == -1) {
                     getView().setDeployResultContinueText("继续更换");
                     getView().setDeployResultBackHomeText("继续巡检");
-                }else{
+                } else {
                     getView().setDeployResultBackHomeText("继续巡检");
                     getView().setDeployResultContinueVisible(false);
                 }
                 break;
             case TYPE_SCAN_SIGNAL_CHECK:
-                if(resultCode == -1){
+                if (resultCode == -1) {
                     getView().setStateTextViewVisible(false);
                     getView().setDeployResultContinueText("重新扫码");
                     getView().setArrowsLeftVisible(true);
@@ -68,15 +68,15 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             .tips_deploy_station_failed));
                     getView().setDeployResultErrorInfo("错误：" + errorInfo);
                 } else {
-                    String text ;
-                    switch (scanType){
+                    String text;
+                    switch (scanType) {
                         case TYPE_SCAN_SIGNAL_CHECK:
                             text = "账户下不存在此设备,设备已关联\n在本账户下才能够进行测试";
                             break;
-                            default:
-                                text = mContext.getResources().getString(R.string
-                                        .tips_deploy_not_exist);
-                                break;
+                        default:
+                            text = mContext.getResources().getString(R.string
+                                    .tips_deploy_not_exist);
+                            break;
                     }
                     getView().setTipsTextView(text);
                 }
@@ -156,7 +156,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             getView().setUpdateTextViewVisible(false);
         } else {
             getView().setUpdateTextView(DateUtil
-                    .getFullParseDate(updatedTime));
+                    .getFullParseDatePoint(updatedTime));
         }
     }
 
@@ -182,18 +182,19 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             getView().setUpdateTextViewVisible(false);
         } else {
             getView().setUpdateTextView(DateUtil
-                    .getFullParseDate(updatedTime));
+                    .getFullParseDatePoint(updatedTime));
         }
     }
 
     public void gotoContinue() {
-        if(scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE && resultCode == -1){
+        EventData eventData = new EventData();
+        if (scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE && resultCode == -1) {
+            eventData.code = EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE;
+            EventBus.getDefault().post(eventData);
             getView().finishAc();
             return;
         }
-
-        EventData eventData = new EventData();
-
+        eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
         if (resultCode == 1 && deviceInfo != null) {
             eventData.data = deviceInfo;
         }
@@ -203,13 +204,13 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 
     public void backHome() {
         EventData eventData = new EventData();
-        if(scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE ){
+        if (scanType == TYPE_SCAN_DEPLOY_DEVICE_CHANGE) {
             //todo 部署失败，返回巡检
             eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
             EventBus.getDefault().post(eventData);
             getView().finishAc();
 
-        } else{
+        } else {
             eventData.code = EVENT_DATA_DEPLOY_RESULT_FINISH;
         }
 

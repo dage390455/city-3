@@ -15,17 +15,15 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.gyf.barlibrary.ImmersionBar;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.util.NavigationBarChangeListener;
-import com.lzy.imagepicker.util.Utils;
-import com.lzy.imagepicker.view.SystemBarTintManager;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.MyVideoView;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.imagepicker.util.NavigationBarChangeListener;
+import com.sensoro.smartcity.widget.imagepicker.view.SystemBarTintManager;
 
 import java.io.File;
 
@@ -54,7 +52,7 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         }
         tintManager = new SystemBarTintManager(this);
         tintManager.setStatusBarTintEnabled(true);
-        tintManager.setStatusBarTintResource(com.lzy.imagepicker.R.color.ip_color_primary_dark);  //设置上方状态栏的颜色
+        tintManager.setStatusBarTintResource(R.color.ip_color_primary_dark);  //设置上方状态栏的颜色
         setContentView(R.layout.activity_video_play);
         //
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(this).build());
@@ -64,19 +62,19 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         immersionBar = ImmersionBar.with(this);
         immersionBar.fitsSystemWindows(true).statusBarColor(R.color.white).statusBarDarkFont(true).init();
         //因为状态栏透明后，布局整体会上移，所以给头部加上状态栏的margin值，保证头部不会被覆盖
-        topBar = findViewById(com.lzy.imagepicker.R.id.top_bar);
+        topBar = findViewById(R.id.top_bar);
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
 //            RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) topBar.getLayoutParams();
 //            params.topMargin = Utils.getStatusHeight(this);
 //            topBar.setLayoutParams(params);
 //        }
-        topBar.findViewById(com.lzy.imagepicker.R.id.btn_ok).setVisibility(View.GONE);
-        topBar.findViewById(com.lzy.imagepicker.R.id.btn_back).setOnClickListener(this);
-        ImageView mBtnDel = (ImageView) findViewById(com.lzy.imagepicker.R.id.btn_del);
+        topBar.findViewById(R.id.btn_ok).setVisibility(View.GONE);
+        topBar.findViewById(R.id.btn_back).setOnClickListener(this);
+        ImageView mBtnDel = (ImageView) findViewById(R.id.btn_del);
         mBtnDel.setOnClickListener(this);
-        topBar.findViewById(com.lzy.imagepicker.R.id.btn_back).setOnClickListener(this);
+        topBar.findViewById(R.id.btn_back).setOnClickListener(this);
 
-        mTitleCount = (TextView) findViewById(com.lzy.imagepicker.R.id.tv_des);
+        mTitleCount = (TextView) findViewById(R.id.tv_des);
         mTitleCount.setText("视频");
         NavigationBarChangeListener.with(this, NavigationBarChangeListener.ORIENTATION_HORIZONTAL)
                 .setListener(this);
@@ -107,23 +105,23 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
     public void onClick(View v) {
         int id = v.getId();
         switch (id) {
-            case com.lzy.imagepicker.R.id.btn_del:
+            case R.id.btn_del:
                 showDeleteDialog();
                 break;
-            case com.lzy.imagepicker.R.id.btn_back:
+            case R.id.btn_back:
                 finish();
                 break;
-            case com.lzy.imagepicker.R.id.top_bar:
+            case R.id.top_bar:
                 if (topBar.getVisibility() == View.VISIBLE) {
-                    topBar.setAnimation(AnimationUtils.loadAnimation(VideoPlayActivity.this, com.lzy.imagepicker.R.anim.top_out));
+                    topBar.setAnimation(AnimationUtils.loadAnimation(VideoPlayActivity.this, R.anim.top_out));
                     topBar.setVisibility(View.GONE);
                     tintManager.setStatusBarTintResource(Color.TRANSPARENT);//通知栏所需颜色
                     //给最外层布局加上这个属性表示，Activity全屏显示，且状态栏被隐藏覆盖掉。
 //            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_FULLSCREEN);
                 } else {
-                    topBar.setAnimation(AnimationUtils.loadAnimation(VideoPlayActivity.this, com.lzy.imagepicker.R.anim.top_in));
+                    topBar.setAnimation(AnimationUtils.loadAnimation(VideoPlayActivity.this, R.anim.top_in));
                     topBar.setVisibility(View.VISIBLE);
-                    tintManager.setStatusBarTintResource(com.lzy.imagepicker.R.color.ip_color_primary_dark);//通知栏所需颜色
+                    tintManager.setStatusBarTintResource(R.color.ip_color_primary_dark);//通知栏所需颜色
                     //Activity全屏显示，但状态栏不会被隐藏覆盖，状态栏依然可见，Activity顶端布局部分会被状态遮住
 //            if (Build.VERSION.SDK_INT >= 16) content.setSystemUiVisibility(View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN);
                 }

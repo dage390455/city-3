@@ -42,25 +42,24 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
     }
 
     public void updateData(final List<HomeTopModel> list) {
-//        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-////        //
-////        ThreadPoolManager.getInstance().execute(new Runnable() {
-////            @Override
-////            public void run() {
-////                HomeContentListAdapterDiff homeContentListAdapterDiff = new HomeContentListAdapterDiff(mList, list);
-////                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(homeContentListAdapterDiff, true);
-////                mContext.runOnUiThread(new Runnable() {
-////                    @Override
-////                    public void run() {
-////                        diffResult.dispatchUpdatesTo(MainHomeFragRcContentAdapter.this);
-////                        mList.clear();
-////                        mList.addAll(list);
-////                    }
-////                });
-////
-////
-////            }
-////        });
+//        //
+//        ThreadPoolManager.getInstance().execute(new Runnable() {
+//            @Override
+//            public void run() {
+//                TopListAdapterDiff homeContentListAdapterDiff = new TopListAdapterDiff(mList, list);
+//                final DiffUtil.DiffResult diffResult = DiffUtil.calculateDiff(homeContentListAdapterDiff, false);
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        diffResult.dispatchUpdatesTo(MainHomeFragRcContentAdapterHorizontal.this);
+//                        mList.clear();
+//                        mList.addAll(list);
+//                    }
+//                });
+//
+//
+//            }
+//        });
         mList.clear();
         mList.addAll(list);
         notifyDataSetChanged();
@@ -219,9 +218,9 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
     }
 
     //
-    private int lastAnimatedPosition = -1;
-    private boolean animationsLocked = false;
-    private boolean delayEnterAnimation = true;
+//    private int lastAnimatedPosition = -1;
+//    private boolean animationsLocked = false;
+//    private boolean delayEnterAnimation = true;
 //    private void runEnterAnimation(View view, int position) {
 //
 //
