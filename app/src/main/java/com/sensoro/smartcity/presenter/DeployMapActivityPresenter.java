@@ -64,7 +64,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     private Activity mContext;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private DeployMapModel deployMapModel;
-    private boolean isDisplayMap;
+    private boolean isFromDeployRecord;
     private boolean isBackBtnClick = false;
 
     @Override
@@ -74,8 +74,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         deployMapModel = (DeployMapModel) mContext.getIntent().getParcelableExtra(EXTRA_DEPLOY_TO_MAP);
-        LogUtils.loge("EVENT_DATA_DEPLOY_MAP-->>deployMapModel.latLng = " + deployMapModel.latLng.toString());
-        isDisplayMap = mContext.getIntent().getBooleanExtra(EXTRA_DEPLOY_DISPLAY_MAP, false);
+        isFromDeployRecord = mContext.getIntent().getBooleanExtra(EXTRA_DEPLOY_DISPLAY_MAP, false);
         switch (deployMapModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
                 //基站部署
@@ -102,7 +101,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             default:
                 break;
         }
-
     }
 
     @Override
@@ -113,8 +111,8 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
 
     private void setMarkerAddress(RegeocodeAddress regeocodeAddress) {
-        StringBuffer stringBuffer = new StringBuffer();
-        String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
+        StringBuilder stringBuilder = new StringBuilder();
+//        String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
         String ts = regeocodeAddress.getTownship();// 乡镇
         String thf = null;// 道路
         List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
@@ -129,7 +127,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
         if (streetNumber != null) {
             subthf = streetNumber.getNumber();
         }
-        String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+//        String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
 //        if (subLoc != null) {
 //            stringBuffer.append(subLoc);
 //        }
@@ -137,12 +135,12 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 //            stringBuffer.append(ts);
 //        }
         if (thf != null) {
-            stringBuffer.append(thf);
+            stringBuilder.append(thf);
         }
         if (subthf != null) {
-            stringBuffer.append(subthf);
+            stringBuilder.append(subthf);
         }
-        String address = stringBuffer.toString();
+        String address = stringBuilder.toString();
         if (TextUtils.isEmpty(address)) {
             address = ts;
         }
@@ -195,7 +193,13 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             }
         }
         aMap.setCustomMapStylePath(filePath + "/" + styleName);
-
+        MyLocationStyle myLocationStyle = new MyLocationStyle();
+        myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
+        myLocationStyle.strokeWidth(0);
+        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
+        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_location));
+        myLocationStyle.showMyLocation(true);
+        aMap.setMyLocationStyle(myLocationStyle);
     }
 
     public void initMap(AMap map) {
@@ -209,20 +213,10 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 //            String styleName = "custom_config.data";
 //            aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
         aMap.setOnMapClickListener(this);
-        aMap.setOnCameraChangeListener(this);
         aMap.setOnMapLoadedListener(this);
         aMap.setOnMarkerClickListener(this);
         aMap.setInfoWindowAdapter(this);
         aMap.setOnMapTouchListener(this);
-        //解决不能回显的bug 不能直接移动
-//        aMap.moveCamera(CameraUpdateFactory.zoomTo(16));
-        MyLocationStyle myLocationStyle = new MyLocationStyle();
-        myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
-        myLocationStyle.strokeWidth(0);
-        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
-        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_location));
-        myLocationStyle.showMyLocation(true);
-        aMap.setMyLocationStyle(myLocationStyle);
     }
 
     public void doSaveLocation() {
@@ -235,7 +229,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void refreshSignal() {
-        if (isDisplayMap) {
+        if (isFromDeployRecord) {
             return;
         }
         getView().showProgressDialog();
@@ -268,7 +262,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        if (cameraPosition != null && !isDisplayMap) {
+        if (cameraPosition != null && !isFromDeployRecord) {
             //解决不能回显的bug 不能直接赋值
             smoothMoveMarker.setPosition(cameraPosition.target);
             System.out.println("====>onCameraChange");
@@ -277,7 +271,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
-        if (isDisplayMap) {
+        if (isFromDeployRecord) {
             if (isBackBtnClick) {
                 isBackBtnClick = false;
             } else {
@@ -289,7 +283,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             }
             return;
         }
-
         deployMapModel.latLng = cameraPosition.target;
         smoothMoveMarker.setPosition(deployMapModel.latLng);
         LatLonPoint lp = new LatLonPoint(deployMapModel.latLng.latitude, deployMapModel.latLng.longitude);
@@ -310,15 +303,22 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                 .anchor(0.5f, 0.95f)
                 .draggable(true);
         smoothMoveMarker = aMap.addMarker(markerOption);
-        if (aMap != null && deployMapModel.latLng != null) {
-            //可视化区域，将指定位置指定到屏幕中心位置
-            CameraUpdate update = CameraUpdateFactory
-                    .newCameraPosition(new CameraPosition(deployMapModel.latLng, 15, 0, 30));
-            aMap.moveCamera(update);
-            smoothMoveMarker.setPosition(deployMapModel.latLng);
-            LatLonPoint lp = new LatLonPoint(deployMapModel.latLng.latitude, deployMapModel.latLng.longitude);
-            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-            geocoderSearch.getFromLocationAsyn(query);
+        //加载完地图之后添加监听防止位置错乱
+        aMap.setOnCameraChangeListener(this);
+        if (aMap != null) {
+            if (deployMapModel.latLng != null) {
+//可视化区域，将指定位置指定到屏幕中心位置
+                CameraUpdate update = CameraUpdateFactory
+                        .newCameraPosition(new CameraPosition(deployMapModel.latLng, 15, 0, 30));
+                aMap.moveCamera(update);
+                smoothMoveMarker.setPosition(deployMapModel.latLng);
+                LatLonPoint lp = new LatLonPoint(deployMapModel.latLng.latitude, deployMapModel.latLng.longitude);
+                RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+                geocoderSearch.getFromLocationAsyn(query);
+            } else {
+                backToCurrentLocation();
+            }
+
         }
     }
 
@@ -357,35 +357,38 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void backToCurrentLocation() {
-        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-        if (lastKnownLocation != null) {
-            LatLng latLng;
-            if (isDisplayMap) {
-                latLng = deployMapModel.latLng;
-            } else {
+        LatLng latLng = null;
+        if (isFromDeployRecord) {
+            latLng = deployMapModel.latLng;
+        } else {
+            AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+            if (lastKnownLocation != null) {
                 double lat = lastKnownLocation.getLatitude();//获取纬度
                 double lon = lastKnownLocation.getLongitude();//获取经度
                 latLng = new LatLng(lat, lon);
+            } else {
+                //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
+                Log.e("地图错误", "定位失败, 错误码:" + lastKnownLocation.getErrorCode() + ", 错误信息:"
+                        + lastKnownLocation.getErrorInfo());
             }
-
-
+        }
+        if (latLng != null) {
             if (aMap != null) {
                 //可视化区域，将指定位置指定到屏幕中心位置
                 CameraUpdate update = CameraUpdateFactory
                         .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
                 aMap.moveCamera(update);
-            }
-
-            if (!isDisplayMap) {
+//                if (isFromDeployRecord) {
+//                    smoothMoveMarker.setInfoWindowEnable(false);
+//                    isBackBtnClick = true;
+//                } else {
+//                    smoothMoveMarker.setPosition(latLng);
+//                }
+                if (isFromDeployRecord) {
+                    isBackBtnClick = true;
+                }
                 smoothMoveMarker.setPosition(latLng);
-            } else {
-                smoothMoveMarker.setInfoWindowEnable(false);
-                isBackBtnClick = true;
             }
-        } else {
-            //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-            Log.e("地图错误", "定位失败, 错误码:" + lastKnownLocation.getErrorCode() + ", 错误信息:"
-                    + lastKnownLocation.getErrorInfo());
         }
     }
 

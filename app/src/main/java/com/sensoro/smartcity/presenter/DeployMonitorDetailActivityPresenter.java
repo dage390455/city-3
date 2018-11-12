@@ -733,6 +733,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         deployMapModel.latLng = mapModel.latLng;
                         LogUtils.loge("EVENT_DATA_DEPLOY_MAP-->>deployMapModel.latLng = " + deployMapModel.latLng.toString() + ",mapModel.latLng = " + mapModel.latLng.toString());
                     }
+                    if (!TextUtils.isEmpty(mapModel.address)) {
+                        deployMapModel.address = mapModel.address;
+                    }
+                    if (!TextUtils.isEmpty(mapModel.signal)) {
+                        deployMapModel.signal = mapModel.signal;
+                    }
+                    if (mapModel.updatedTime != 0) {
+                        deployMapModel.updatedTime = mapModel.updatedTime;
+                    }
                     freshSignalInfo();
                 }
                 break;

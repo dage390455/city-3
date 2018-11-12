@@ -722,13 +722,15 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
 
     public boolean onBackPressed() {
-        if (mSelectDeviceTypePop.isShowing()) {
-            mSelectDeviceTypePop.dismiss();
-            return true;
-        } else {
-            return false;
+        try {
+            if (mSelectDeviceTypePop.isShowing()) {
+                mSelectDeviceTypePop.dismiss();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
+        return false;
     }
 
     @Override

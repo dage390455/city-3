@@ -176,13 +176,17 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                freshHeaderContentData(mHomeTopModels.get(0));
+                if (mHomeTopModels.size() > 0) {
+                    freshHeaderContentData(mHomeTopModels.get(0));
+                }
                 getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                freshHeaderContentData(mHomeTopModels.get(0));
+                if (mHomeTopModels.size() > 0) {
+                    freshHeaderContentData(mHomeTopModels.get(0));
+                }
                 getView().toastShort(errorMsg);
                 getView().dismissProgressDialog();
             }
@@ -666,11 +670,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void requestDataByTypes(int position, final HomeTopModel homeTopModel) {
-
-        if (position == 0) {
+        try {
+            if (position == 0) {
+                mTypeSelectedType = null;
+            } else {
+                mTypeSelectedType = mMergeTypes.get(position - 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             mTypeSelectedType = null;
-        } else {
-            mTypeSelectedType = mMergeTypes.get(position - 1);
         }
         page = 1;
         getView().showProgressDialog();
@@ -808,40 +816,48 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private String getCurrentDataStr() {
-        if (mCurrentHomeTopModel == null) {
-            mCurrentHomeTopModel = mHomeTopModels.get(0);
+        try {
+            if (mCurrentHomeTopModel == null) {
+                mCurrentHomeTopModel = mHomeTopModels.get(0);
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            switch (mCurrentHomeTopModel.type) {
+                case 0:
+                    stringBuilder.append("预警");
+                    break;
+                case 1:
+                    stringBuilder.append("正常");
+                    break;
+                case 2:
+                    stringBuilder.append("失联");
+                    break;
+                case 3:
+                    stringBuilder.append("未激活");
+                    break;
+            }
+            return stringBuilder.append("(").append(mCurrentHomeTopModel.value).append(")").toString();
+        } catch (Exception e) {
+            return "";
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        switch (mCurrentHomeTopModel.type) {
-            case 0:
-                stringBuilder.append("预警");
-                break;
-            case 1:
-                stringBuilder.append("正常");
-                break;
-            case 2:
-                stringBuilder.append("失联");
-                break;
-            case 3:
-                stringBuilder.append("未激活");
-                break;
-        }
-        return stringBuilder.append("(").append(mCurrentHomeTopModel.value).append(")").toString();
     }
 
     private int getCurrentColor() {
-        if (mCurrentHomeTopModel == null) {
-            mCurrentHomeTopModel = mHomeTopModels.get(0);
-        }
-        switch (mCurrentHomeTopModel.type) {
-            case 0:
-                return R.color.c_f34a4a;
-            case 1:
-                return R.color.c_29c093;
-            case 2:
-                return R.color.c_5d5d5d;
-            case 3:
-                return R.color.c_b6b6b6;
+        try {
+            if (mCurrentHomeTopModel == null) {
+                mCurrentHomeTopModel = mHomeTopModels.get(0);
+            }
+            switch (mCurrentHomeTopModel.type) {
+                case 0:
+                    return R.color.c_f34a4a;
+                case 1:
+                    return R.color.c_29c093;
+                case 2:
+                    return R.color.c_5d5d5d;
+                case 3:
+                    return R.color.c_b6b6b6;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return R.color.c_29c093;
     }
