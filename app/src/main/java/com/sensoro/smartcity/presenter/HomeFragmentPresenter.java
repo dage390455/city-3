@@ -176,13 +176,17 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                freshHeaderContentData(mHomeTopModels.get(0));
+                if (mHomeTopModels.size()>0) {
+                    freshHeaderContentData(mHomeTopModels.get(0));
+                }
                 getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                freshHeaderContentData(mHomeTopModels.get(0));
+                if (mHomeTopModels.size()>0) {
+                    freshHeaderContentData(mHomeTopModels.get(0));
+                }
                 getView().toastShort(errorMsg);
                 getView().dismissProgressDialog();
             }
