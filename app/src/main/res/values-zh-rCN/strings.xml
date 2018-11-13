@@ -1,8 +1,41 @@
 <resources>
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
+    //
+    <string name="historical_log">历史日志</string>
+    <string name="year">年</string>
+    <string name="name">姓名</string>
+    <string name="sexs">性别</string>
+    <string name="identification_number">身份证号码</string>
+    <string name="address">住址</string>
+    //
+
+    <string name="detection_points">检测点数</string>
+    <string name="warning_monitoring_point">预警检测点</string>
+    <string name="normal_monitoring_point">正常检测点</string>
+    <string name="lost_monitoring_point">失联检测点</string>
+    <string name="inactive_monitoring_point">未激活检测点</string>
+    <string name="all_types">全部类型</string>
+    <string name="main_page_home">首页</string>
+    <string name="main_page_warm">预警</string>
+    <string name="main_page_mange">管理</string>
+    <string name="search_alarm_tips">设备名称、设备号、手机号</string>
+    <string name="contact_owner">联系业主</string>
+    <string name="confirming">预警确认</string>
+    <string name="confirming_again">再次确认</string>
+    <string name="to_be_confirmed">待确认</string>
+    <string name="real_warning">真实预警</string>
+    <string name="false_positive">误报</string>
+    <string name="test_patrol">测试/巡检</string>
+    <string name="security_risks">安全隐患</string>
+    <string name="warm_status_alarm">报警中</string>
+    <string name="warm_status_normal">正常</string>
+
+    //
+
+    //
     <string name="search_tips">设备名称、设备号、标签</string>
-    <string name="search_alarm_tips">设备名称</string>
+
     <string name="cancel">取消</string>
     <string name="recent">最近搜索</string>
     <string name="clear">清除</string>
@@ -129,8 +162,8 @@
     <string name="misdescription">误报</string>
     <string name="alarm_test">测试</string>
     <string name="alarm_risk">安全隐患</string>
-    <string name="confirming">预警确认</string>
-    <string name="confirming_again">再次确认</string>
+
+
     <string name="setting_name_address">设置名称/地址</string>
     <string name="setting_tag">设置标签</string>
     <string name="tips_no_search_data">搜索不到相关内容</string>
@@ -171,8 +204,8 @@
     <string name="tips_commit_failed">提交失败</string>
     <string name="tips_choose_status">请选择预警类型</string>
     //主页信息相关
-    <string name="menu_page_index">主页</string>
-    <string name="menu_page_alarm">预警记录</string>
+    <string name="menu_page_index">首页</string>
+    <string name="menu_page_alarm">预警</string>
     <string name="menu_page_merchant">商户切换</string>
     <string name="menu_page_point">点位部署</string>
     <string name="menu_page_station">基站部署</string>

@@ -5,6 +5,7 @@ import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
+import com.sensoro.smartcity.server.response.ContractInfoRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
@@ -190,6 +191,9 @@ public interface RetrofitService {
 //                                         @Field("serviceTime") int serviceTime);
     @POST("contracts")
     Observable<ContractAddRsp> newContract(@Body RequestBody requestBody);
+
+    @GET("contracts/"+"{id}")
+    Observable<ContractInfoRsp> getContractInfo(@Path("id")String id);
 
     @POST("contracts/_search")
     Observable<ContractsListRsp> searchContract(@Body RequestBody requestBody);

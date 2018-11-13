@@ -67,7 +67,8 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     }
 
     private void initView() {
-        includeTextTitleTvSubtitle.setText("历史记录");
+//        includeTextTitleTvSubtitle.setText("历史记录");
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setVisibility(View.GONE);
         initRcTag();
 

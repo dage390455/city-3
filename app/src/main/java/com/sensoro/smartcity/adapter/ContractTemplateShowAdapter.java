@@ -13,6 +13,7 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 
 
 public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTemplateShowAdapter
@@ -25,7 +26,7 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
         this.mContext = context;
     }
 
-    public void updateList(ArrayList<ContractsTemplateInfo> list) {
+    public void updateList(List<ContractsTemplateInfo> list) {
         this.mList.clear();
         this.mList.addAll(list);
         Collections.sort(mList);
@@ -54,6 +55,12 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
         int deviceCount = mList.get(position).getQuantity();
 
         holder.contractItemShowNum.setText(String.valueOf(deviceCount));
+
+        if(position == 0){
+            holder.contractItemView.setVisibility(View.GONE);
+        }else{
+            holder.contractItemView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override
@@ -64,11 +71,13 @@ public class ContractTemplateShowAdapter extends RecyclerView.Adapter<ContractTe
     static class ContractTemplateShowViewHolder extends RecyclerView.ViewHolder {
         final TextView nameTextView;
         final TextView contractItemShowNum;
+        private final View contractItemView;
 
         ContractTemplateShowViewHolder(View itemView) {
             super(itemView);
             nameTextView = (TextView) itemView.findViewById(R.id.tv_contacts_template_show_name);
             contractItemShowNum = (TextView) itemView.findViewById(R.id.et_contract_item_show_num);
+            contractItemView = itemView.findViewById(R.id.view_contract_item);
             //
         }
     }

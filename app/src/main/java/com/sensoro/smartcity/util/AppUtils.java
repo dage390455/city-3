@@ -26,6 +26,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AppUtils {
     public static boolean isAppInstalled(Context context, String packageName) {
@@ -282,5 +283,31 @@ public class AppUtils {
         }
 
         return -1;
+    }
+
+    public static boolean isChineseLanguage() {
+        String language = getLanguageEnv();
+
+        return language != null && (language.trim().equals("zh-CN") || language.trim().equals("zh-TW"));
+    }
+
+    private static String getLanguageEnv() {
+        Locale l = Locale.getDefault();
+        String language = l.getLanguage();
+        String country = l.getCountry().toLowerCase();
+        if ("zh".equals(language)) {
+            if ("cn".equals(country)) {
+                language = "zh-CN";
+            } else if ("tw".equals(country)) {
+                language = "zh-TW";
+            }
+        } else if ("pt".equals(language)) {
+            if ("br".equals(country)) {
+                language = "pt-BR";
+            } else if ("pt".equals(country)) {
+                language = "pt-PT";
+            }
+        }
+        return language;
     }
 }

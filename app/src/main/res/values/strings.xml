@@ -1,8 +1,28 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android" xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
+    <string name="detection_points">检测点数</string>
+    <string name="warning_monitoring_point">预警检测点</string>
+    <string name="normal_monitoring_point">正常检测点</string>
+    <string name="lost_monitoring_point">失联检测点</string>
+    <string name="inactive_monitoring_point">未激活检测点</string>
+    <string name="all_types">全部类型</string>
+    <string name="main_page_home">首页</string>
+    <string name="main_page_warm">预警</string>
+    <string name="main_page_mange">管理</string>
+    <string name="search_alarm_tips">Name、SN、Phone</string>
+    <string name="contact_owner">联系业主</string>
+    <string name="confirming">Alarm Confirming</string>
+    <string name="confirming_again">Confirming Again</string>
+    <string name="real_warning">真实预警</string>
+    <string name="false_positive">误报</string>
+    <string name="test_patrol">测试/巡检</string>
+    <string name="security_risks">安全隐患</string>
+    <string name="warm_status_alarm">报警中</string>
+    <string name="warm_status_normal">正常</string>
+
+    //
     <string name="search_tips"> SN/Name/Tag</string>
-    <string name="search_alarm_tips">Name</string>
     <string name="cancel">Cancel</string>
     <string name="recent">Recent Search</string>
     <string name="clear">Clear</string>
@@ -139,8 +159,7 @@
     <string name="misdescription">Mis</string>
     <string name="alarm_test">Test</string>
     <string name="alarm_risk">Risk</string>
-    <string name="confirming">Alarm Confirming</string>
-    <string name="confirming_again">Confirming Again</string>
+
     <string name="setting_name_address">Name/Address</string>
     <string name="setting_tag">Setting Tag</string>
     <string name="fix_behavior">com.sensoro.smartcity.widget.FixScrollingFooterBehavior</string>

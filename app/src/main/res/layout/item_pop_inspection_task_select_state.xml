@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:id="@+id/item_pop_select_state_ll"
-    android:orientation="horizontal">
+    android:orientation="vertical">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -23,6 +23,11 @@
 
         </android.support.v7.widget.RecyclerView>
     </RelativeLayout>
+    <View
+        android:id="@+id/pop_inspection_task_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+
 
 
 </LinearLayout>

@@ -62,13 +62,10 @@ public class DateUtil {
     /*
      * 将时间戳转为字符串 ，格式：yyyy.MM.dd
      */
-    public static String getStrTime_ymd(String cc_time) {
-        String re_StrTime = null;
+    public static String getStrTime_ymd(long cc_time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
         // 例如：cc_time=1291778220
-        long lcc_time = Long.valueOf(cc_time);
-        re_StrTime = sdf.format(new Date(lcc_time));
-        return re_StrTime;
+        return sdf.format(new Date(cc_time));
     }
 
     /*
