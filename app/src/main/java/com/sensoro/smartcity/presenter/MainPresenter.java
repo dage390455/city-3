@@ -15,6 +15,7 @@ import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.fragment.HomeFragment;
+import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
@@ -68,6 +69,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private WarnFragment warnFragment;
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
+    private MalfunctionFragment malfunctionFragment;
 
     @Override
     public void initData(Context context) {
@@ -94,11 +96,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         homeFragment = new HomeFragment();
         warnFragment = new WarnFragment();
         managerFragment = new ManagerFragment();
+        malfunctionFragment = new MalfunctionFragment();
         if (mFragmentList.size() > 0) {
             mFragmentList.clear();
         }
         mFragmentList.add(homeFragment);
         mFragmentList.add(warnFragment);
+        mFragmentList.add(malfunctionFragment);
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);
         //

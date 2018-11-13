@@ -42,9 +42,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     private MainFragmentPageAdapter mPageAdapter;
     private PopupWindow mPopupWindow;
     private int mode;
-    private BottomNavigationItem homeItem;
-    private BottomNavigationItem warnItem;
-    private BottomNavigationItem managerItem;
     private TextBadgeItem warnBadgeItem;
 
     @Override
@@ -69,15 +66,17 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private void initBottomBar() {
         warnBadgeItem = new TextBadgeItem();
-        homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, "首页");
-        warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "预警");
-        managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, "管理");
+        BottomNavigationItem homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, "首页");
+        BottomNavigationItem warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "预警");
+        BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "故障");
+        BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, "管理");
         warnItem.setBadgeItem(warnBadgeItem);
 //        warnBadgeItem.hide();
         acMainBottomBar.setTabSelectedListener(this);
         acMainBottomBar
                 .addItem(homeItem)
                 .addItem(warnItem)
+                .addItem(malfunctionItem)
                 .addItem(managerItem)
                 .setFirstSelectedPosition(0)
                 .initialise();
@@ -228,18 +227,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void onTabSelected(int position) {
-        switch (position) {
-            case 0:
-                setHpCurrentItem(0);
-                break;
-            case 1:
-                setHpCurrentItem(1);
-                break;
-            case 2:
-                setHpCurrentItem(2);
-                break;
-
-        }
+        setHpCurrentItem(position);
     }
 
     @Override
