@@ -38,7 +38,7 @@
             android:layout_gravity="center"
             android:layout_marginBottom="3dp"
             android:layout_marginTop="3dp"
-            android:text="视频/照片"
+            android:text="@string/camera_photo"
             android:textColor="@color/c_252525"
             android:textSize="10sp" />
     </LinearLayout>

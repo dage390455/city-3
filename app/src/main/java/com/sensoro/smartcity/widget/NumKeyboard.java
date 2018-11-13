@@ -123,7 +123,7 @@ public class NumKeyboard extends KeyboardView implements KeyboardView.OnKeyboard
             //删除数据回调
             mOnkeyPressListener.onInertKey(Character.toString((char) i));
         } else if (i == KEYCODE_EMPTY) {
-            mOnkeyPressListener.onClearKey("清除");
+            mOnkeyPressListener.onClearKey(mContext.getString(R.string.keyboard_clear));
         }
     }
 

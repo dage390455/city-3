@@ -37,7 +37,7 @@
                 android:layout_height="wrap_content"
                 android:checked="true"
                 android:drawableTop="@drawable/selector_ac_main_home"
-                android:text="首页" />
+                android:text="@string/main_bottom_home" />
 
 
             <RadioButton
@@ -46,7 +46,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/selector_ac_main_warning"
-                android:text="预警" />
+                android:text="@string/main_bottom_warn" />
 
             <RadioButton
                 android:id="@+id/ac_main_rb_manage"
@@ -54,7 +54,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:drawableTop="@drawable/selector_ac_main_manage"
-                android:text="管理" />
+                android:text="@string/main_bottom_manager" />
         </RadioGroup>
 
         <View

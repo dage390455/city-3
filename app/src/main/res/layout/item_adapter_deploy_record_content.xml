@@ -17,7 +17,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="设备号"
+            android:text="@string/deploy_record_device_number"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp"
             />
@@ -41,7 +41,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="名称"
+            android:text="@string/deploy_record_name"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp"
             />
@@ -64,7 +64,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="标签"
+            android:text="@string/deploy_record_tag"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp"
             />
@@ -85,7 +85,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="部署时间"
+            android:text="@string/deploy_record_deploy_time"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp"
             />

@@ -26,7 +26,7 @@
         android:layout_centerVertical="true"
         android:layout_marginLeft="12dp"
         android:layout_toRightOf="@id/btn_back"
-        android:text="图片"
+        android:text="@string/top_bar_image"
         android:textAppearance="@style/TextAppearance.AppCompat.Title"
         android:textColor="#626262"
         android:textSize="18sp" />
@@ -44,7 +44,7 @@
         android:minWidth="48dp"
         android:paddingLeft="16.0dp"
         android:paddingRight="16.0dp"
-        android:text="完成(0/3)"
+        android:text="@string/top_bar_finish"
         android:textColor="#fff"
         android:textSize="14sp" />
 

@@ -131,7 +131,6 @@
     <string name="unknown">未知</string>
     <string name="unname">未命名</string>
     <string name="next">下一步</string>
-    <string name="name">姓名</string>
     <string name="name_phone">名称</string>
     <string name="contacts">电话</string>
     <string name="contact_name">联系人姓名</string>
@@ -225,4 +224,247 @@
     <string name="ip_photo_crop">图片裁剪</string>
     <string name="ip_origin">原图</string>
     <string name="ip_origin_size">原图(%1$s)</string>
+
+    //键盘
+    <string name="keyboard_clear">清除</string>
+    //
+    <string name="alarm_contact_btn_save">保存</string>
+    <string name="alarm_contact_tip" >预警联系人</string>
+    <string name="alarm_contact_tip_sample">例：某某</string>
+    <string name="alarm_contact_tip_phone">预警电话</string>
+    <string name="alarm_contact_tip_phone_sample">例：18600000000</string>
+    //预警日志xml
+    <string name="alarm_log_unknown">未知</string>
+    <string name="alarm_log_alarm_time">报警时间</string>
+    <string name="alarm_log_alarm_count">半年累计报警次数</string>
+    <string name="alarm_log_alarm_contact_owner">联系业主</string>
+    <string name="alarm_log_alarm_quick_navigation">快速导航</string>
+    <string name="alarm_log_alarm_warn_confirm">预警确认</string>
+    <string name="alarm_log_alarm_call">系统将拨打电话至</string>
+    <string name="alarm_log_alarm_result">预警结果:</string>
+    <string name="alarm_log_alarm_cause">预警成因:</string>
+    <string name="alarm_log_alarm_place">预警场所:</string>
+    <string name="alarm_log_alarm_remark">备注说明:</string>
+    //二次验证xml
+    <string name="auth_two_step_verification">二次验证</string>
+    <string name="auth_two_step_verification_tip">为了账户安全，需要您进行二次验证</string>
+    //下拉日历xml
+    <string name="calendar_cancel">取消</string>
+    //合同index xml
+    <string name="contract_index_title">合同管理</string>
+    <string name="contract_index_business_license_identification">营业执照识别</string>
+    <string name="contract_index_id_card_identification">身份证识别</string>
+    <string name="contract_index_">手动填写业主信息</string>
+    //合同info xml
+    <string name="contract_info_title">物联网消防安全预警服务合同</string>
+    <string name="contract_info_legal_representative">法定代表人</string>
+    <string name="contract_info_phone_number">手机号</string>
+    <string name="contract_info_company_name">企业名称</string>
+    <string name="contract_info_social_credit_code">社会信用代码</string>
+    <string name="contract_info_registration_number">注册号</string>
+    <string name="contract_info_address">住址</string>
+    <string name="contract_info_validity_period">有效期</string>
+    <string name="contract_info_site_nature">场地性质</string>
+    <string name="contract_info_contract_service_life">合同服务年限</string>
+    <string name="contract_info_contract_status">合同状态</string>
+    <string name="contract_info_contract_created_time">合同生成时间</string>
+    <string name="contract_info_contract_sign_time">合同签订时间</string>
+    <string name="contract_info_contract_qr_code">合同二维码</string>
+    //合同result xml
+    <string name="contract_result_title">二维码</string>
+    <string name="contract_result_finish">完成</string>
+    <string name="contract_result_share">分享</string>
+    <string name="contract_result_tip">业主扫描此二维码，查看合同详情</string>
+    //合同service
+    <string name="contract_service_retake">重拍</string>
+    <string name="contract_service_next">下一步</string>
+    //部署标签
+    <string name="deploy_device_tag_save">保存</string>
+    <string name="deploy_device_tag_history_tag">历史标签</string>
+    <string name="deploy_device_tag_add_tag">新增标签</string>
+    <string name="deploy_device_tag_cancel">取消</string>
+    <string name="deploy_device_tag_confirm">确定</string>
+    //部署地图
+    <string name="deploy_device_map_save">保存</string>
+    //部署记录
+    <string name="deploy_record_search_tip">设备名称、设备号、标签</string>
+    <string name="deploy_record_search_cancel_tip">设备名称、设备号、标签</string>
+    <string name="deploy_record_new_device">部署新设备</string>
+    <string name="deploy_record_device_number">设备号</string>
+    <string name="deploy_record_name">名称</string>
+    <string name="deploy_record_tag">标签</string>
+    <string name="deploy_record_deploy_time">部署时间</string>
+
+    //部署结果
+    <string name="deploy_result_confirm_information">确认信息</string>
+    <string name="deploy_result_back_home">返回主页</string>
+    <string name="deploy_result_continue">继续部署</string>
+    <string name="deploy_result_successed">恭喜！传感器点位部署成功</string>
+    <string name="deploy_result_device_number">设备号:</string>
+    <string name="deploy_result_unknown">未知</string>
+    <string name="deploy_result_name">名称:</string>
+    <string name="deploy_result_location">位置:</string>
+    <string name="deploy_result_contract">联系人:</string>
+    <string name="deploy_result_status">状态:</string>
+    <string name="deploy_result_signal">信号 无</string>
+    <string name="deploy_result_recent_upload_time">最近上传时间:</string>
+    <string name="deploy_result_is_upload">是否上传完成部署？</string>
+    <string name="deploy_result_upload_tip">当前设备无信号或信号差，请按设备自检按钮刷新信号再完成上传部署</string>
+    <string name="deploy_result_force_upload">强制上传</string>
+    <string name="deploy_result_ok">好的</string>
+
+    //部署选择图片
+    <string name="deploy_setting_photo_save">保存</string>
+    //预览图片
+    <string name="image_grid_preview">预览(3)</string>
+    <string name="image_preview_original">原图(3.07M)</string>
+    <string name="image_preview_finish">完成</string>
+    <string name="image_preview_select">选择</string>
+    <string name="image_preview_camera">拍摄照片</string>
+
+    //巡检异常详情
+    <string name="inspection_exception_detail_monitor_point_detail">监测点标签</string>
+    <string name="inspection_exception_detail_exception_detail">异常详情</string>
+    <string name="inspection_exception_detail_inspection_result">巡检结果</string>
+    <string name="inspection_exception_detail_exception_type">异常类型</string>
+    <string name="inspection_exception_detail_remark">备注</string>
+    <string name="inspection_exception_detail_live_photo">现场照片</string>
+    <string name="inspection_exception_detail_live_video">现场录像</string>
+    //巡检task
+    <string name="inspection_task_search_hint">设备名称/设备号</string>
+    <string name="inspection_task_search_cancel">取消</string>
+    <string name="inspection_task_all_states">全部状态</string>
+    <string name="inspection_task_all_types">全部类型</string>
+    //巡检task detail
+    <string name="inspection_task_detail_start_inspection">开始巡检</string>
+    <string name="inspection_task_detail_task_number">任务编号</string>
+    <string name="inspection_task_detail_inspection_established">既定巡检时间</string>
+    <string name="inspection_task_detail_device_counts">设备数量</string>
+    <string name="inspection_task_detail_inspection_content">巡检内容</string>
+    <string name="inspection_task_detail_status">状态</string>
+    //巡检task list
+    <string name="inspection_task_list_undone">未完成</string>
+    <string name="inspection_task_list_complete">已完成</string>
+    //巡检异常上报
+    <string name="inspection_uploade_exception_uploade">上报</string>
+    <string name="inspection_uploade_exception_exception_remark">异常备注</string>
+    <string name="inspection_uploade_exception_exception_description">请填写监测点异常说明</string>
+    <string name="inspection_uploade_exception_live_photo_video">现场照片/录像</string>
+    //登录
+    <string name="login_tip">生活更便捷 城市更安全</string>
+    <string name="login_input_account_tip">请输入账号</string>
+    <string name="login_input_password_tip">请输入密码</string>
+    //mian
+    <string name="main_bottom_home">首页</string>
+    <string name="main_bottom_warn">预警</string>
+    <string name="main_bottom_manager">预警</string>
+    //监测点地图
+    <string name="monitor_point_map_weixin_share">微信分享</string>
+    <string name="monitor_point_map_navigation">导航</string>
+    //监测点详情
+    <string name="monitor_point_detail_monitor_parameter">监控参数</string>
+    <string name="monitor_point_detail_alarm_contact">预警联系人</string>
+    <string name="monitor_point_detail_unknown">未知</string>
+    <string name="monitor_point_detail_location_navigation">位置导航</string>
+    <string name="monitor_point_detail_operat">操作</string>
+    <string name="monitor_point_detail_alarm">发声报警</string>
+    <string name="monitor_point_firmware_upgrade">固件升级</string>
+    <string name="monitor_point_information">基本信息</string>
+    //名称和地址
+    <string name="name_address">名称/地址</string>
+    <string name="name_address_history_tag">历史标签</string>
+    <string name="name_address_save">保存</string>
+    //扫描界面
+    <string name="scan_tip">对准二维码，即可自动扫描</string>
+    <string name="scan_input_sn">手动输入SN</string>
+    <string name="scan_open_flashlight">打开手电筒</string>
+    //扫描结果
+    <string name="scan_result_login_big_screen">登录大屏应用</string>
+    <string name="scan_result_login">登录</string>
+    <string name="scan_result_cancel">取消</string>
+    //监测点更多
+    <string name="monitor_more_detail">更多详情</string>
+    //信号测试
+    <string name="signal_check_near">附近</string>
+    <string name="signal_check_test">点击测试按钮进行测试</string>
+    //take record
+    <string name="take_record_camera">长按摄像</string>
+    //设备部署 详情
+    <string name="deploy_device_detail_name_address">名称/地址</string>
+    <string name="deploy_device_detail_no_added">未添加</string>
+    <string name="deploy_device_detail_tag">标签</string>
+    <string name="deploy_device_detail_alarm_contact">预警联系人</string>
+    <string name="deploy_device_detail_deploy_photo">部署照片</string>
+    <string name="deploy_device_detail_deploy_location">部署位置</string>
+    <string name="deploy_device_detail_not_positioned">未定位</string>
+    <string name="deploy_device_detail_uploade">上传</string>
+    //部署记录详情
+    <string name="deploy_record_name_address">名称/地址</string>
+    <string name="deploy_record_alarm_contact">预警联系人</string>
+    //巡检
+    <string name="inspection_button_test">按键测试:</string>
+    <string name="inspection_button_test_tip">长按设备按钮3秒后，确认指示灯和提示音工作正常</string>
+    <string name="inspection_button_check_appearance">检查外观：是否明显损坏及积灰</string>
+    <string name="inspection_button_check_ble">长按按键3秒后，正常按钮将变为可点击，若未变为可点击，则为异常状态，在异常上报中备注蓝牙无效</string>
+    <string name="inspection_exception">异常</string>
+    //文件list
+    <string name="folder_list_zero">共0张</string>
+    //主页弹窗
+    <string name="quick_deploy">快速部署</string>
+    <string name="new_contract">新建合同</string>
+    //dialog 输入
+    <string name="dialog_input_tip">提示</string>
+    <string name="dialog_input_tip_detail">请输入密码</string>
+    <string name="dialog_input_confirm">确认</string>
+    //合同 列表
+    <string name="contract_list_all_contract">全部合同</string>
+    <string name="contract_list_all_status">全部状态</string>
+    //manager fragment
+    <string name="manager_fragment_manager">管理</string>
+    <string name="manager_fragment_main_function">主要功能</string>
+    <string name="manager_fragment_merchant_switch">商户切换</string>
+    <string name="manager_fragment_deploy_manager">部署管理</string>
+    <string name="manager_fragment_contract_manager">合同管理</string>
+    <string name="manager_fragment_inspection_task">巡检任务</string>
+    <string name="manager_fragment_maintenance_task">维保任务</string>
+    <string name="manager_fragment_signal_test">信号测试</string>
+    <string name="manager_fragment_monitor_big_screen">监控大屏</string>
+    <string name="manager_fragment_other">其他</string>
+    <string name="manager_fragment_about_us">关于我们</string>
+    <string name="manager_fragment_version_information">版本信息</string>
+    <string name="manager_fragment_exit_account">退出账户</string>
+    //warn framgen
+    <string name="warn_fragment_search_tip">设备名称、设备号、手机号</string>
+    <string name="warn_fragment_search_cancel">取消</string>
+
+    //
+    <string name="top_bar_image">图片</string>
+    <string name="top_bar_finish">完成(0/3)</string>
+    <string name="inspection">巡检</string>
+    <string name="normal_monitor">正常监测</string>
+    <string name="inspection_test">巡检测试</string>
+    <string name="company">企业</string>
+    <string name="signed">已签订</string>
+    <string name="contract_number">已签订</string>
+    <string name="contract_created_time">生成时间</string>
+    <string name="contract_signed_time">签订时间</string>
+    <string name="alarm_log">预警日志</string>
+    <string name="co2">二氧化碳</string>
+    <string name="no_content">无内容</string>
+    <string name="alarm_result_type">预警结果类型</string>
+    <string name="alarm_cause_type">预警成因类型</string>
+    <string name="alarm_place">预警场所</string>
+    <string name="alarm_descript">请对预警事件的实际情况进行描述</string>
+    <string name="occur_alarm_event">发生新的预警事件</string>
+    <string name="look">去查看</string>
+    <string name="monitor_point_number">监测点数</string>
+    <string name="camera_photo">视频/照片</string>
+    <string name="slect_alarm_cause_site">请选择预警成因场所</string>
+    <string name="slect_alarm_result_type">请选择预警结果类型</string>
+    <string name="slect_alarm_cause_type">请选择预警成因类型</string>
+    <string name="inspection_noraml">正常</string>
+    <string name="inspection_exception_remark">异常备注</string>
+    <string name="not_obtain_location_infomation">未获取到位置信息</string>
+
+
 </resources>

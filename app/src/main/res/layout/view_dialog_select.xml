@@ -36,7 +36,7 @@
         android:layout_marginTop="5dip"
         android:background="@drawable/dialog_item_bg_only"
         android:gravity="center"
-        android:text="取消"
+        android:text="@string/cancel"
         android:textColor="#5D5D5D"
         android:textSize="18sp" />
 

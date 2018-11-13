@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:text="开始巡检"
+        android:text="@string/inspection_task_detail_start_inspection"
         android:textSize="16sp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/shape_bg_corner_29c_shadow"
@@ -49,7 +49,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="任务编号"
+                    android:text="@string/inspection_task_detail_task_number"
                     android:textSize="16sp"
                     android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
@@ -83,7 +83,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="既定巡检时间"
+                    android:text="@string/inspection_task_detail_inspection_established"
                     android:textSize="16sp"
                     android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
@@ -118,7 +118,7 @@
                     android:id="@+id/ac_inspection_detail_task_tv_device_count"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="设备数量"
+                    android:text="@string/inspection_task_detail_device_counts"
                     android:textSize="16sp"
                     android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
@@ -160,7 +160,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="巡检内容"
+                    android:text="@string/inspection_task_detail_inspection_content"
                     android:textSize="16sp"
                     android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"
@@ -193,7 +193,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="状态"
+                    android:text="@string/inspection_task_detail_status"
                     android:textSize="16sp"
                     android:textColor="@color/c_252525"
                     android:layout_marginTop="16dp"

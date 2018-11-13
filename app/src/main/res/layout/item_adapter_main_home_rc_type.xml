@@ -51,7 +51,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
-                    android:text="正常监测"
+                    android:text="@string/normal_monitor"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>

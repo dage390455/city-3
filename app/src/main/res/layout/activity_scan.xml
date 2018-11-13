@@ -24,7 +24,7 @@
         app:qrcv_customGridScanLineDrawable="@drawable/clear_scan_line"
         app:qrcv_isTipTextBelowRect="true"
         app:qrcv_maskColor="#7e000000"
-        app:qrcv_qrCodeTipText="对准二维码，即可自动扫描"
+        app:qrcv_qrCodeTipText="@string/scan_tip"
         app:qrcv_rectWidth="200dp"
         app:qrcv_scanLineColor="@color/c_29c093"
         app:qrcv_toolbarHeight="56dp"
@@ -57,7 +57,7 @@
             android:drawablePadding="8dp"
             android:drawableTop="@drawable/input_sn"
             android:gravity="center"
-            android:text="手动输入SN"
+            android:text="@string/scan_input_sn"
             android:textColor="@color/white"
             android:textSize="12sp" />
 
@@ -69,7 +69,7 @@
             android:drawablePadding="8dp"
             android:drawableTop="@drawable/open_flashlight"
             android:gravity="center"
-            android:text="打开手电筒"
+            android:text="@string/scan_open_flashlight"
             android:textColor="@color/white"
             android:textSize="12sp" />
 

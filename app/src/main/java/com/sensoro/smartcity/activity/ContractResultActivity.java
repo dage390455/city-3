@@ -59,6 +59,7 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
                 mPresenter.sharePic();
                 break;
             case R.id.iv_contract_result_back:
+                mPresenter.finish();
                 break;
             case R.id.tv_contract_info_title_finish:
                 mPresenter.finish();

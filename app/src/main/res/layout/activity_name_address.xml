@@ -26,7 +26,7 @@
             android:layout_marginStart="20dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:text="名称/地址"
+            android:text="@string/name_address"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp" />
 
@@ -54,7 +54,7 @@
         android:layout_below="@id/ac_nam_address_ll"
         android:layout_marginStart="20dp"
         android:layout_marginTop="20dp"
-        android:text="历史标签"
+        android:text="@string/name_address_history_tag"
         android:textColor="@color/c_252525"
         android:textSize="14sp" />
 
@@ -81,7 +81,7 @@
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="保存"
+        android:text="@string/name_address_save"
         android:textColor="@color/white"
         android:textSize="16sp" />
 
