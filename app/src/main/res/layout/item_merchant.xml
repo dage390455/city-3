@@ -22,7 +22,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/y30"
         android:layout_marginTop="@dimen/y30"
-        android:text="aaaaa"
         android:textColor="@color/c_626262"
         android:textSize="18sp"
 
@@ -35,7 +34,6 @@
         android:layout_alignLeft="@id/item_merchant_name"
         android:layout_below="@id/item_merchant_name"
         android:layout_marginBottom="@dimen/y30"
-        android:text="bbb"
         android:textColor="#9b9b9b"
         android:textSize="@dimen/x45"
         android:visibility="gone" />

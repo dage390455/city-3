@@ -29,7 +29,7 @@
             android:layout_weight="1"
             android:ellipsize="middle"
             android:singleLine="true"
-            android:text="未知"
+            android:text="@string/alarm_log_unknown"
             android:textColor="@color/c_252525"
             android:textSize="16sp" />
 
@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:layout_marginStart="8dp"
-            android:text="未知"
+            android:text="@string/alarm_log_unknown"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp" />
 

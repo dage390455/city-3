@@ -27,7 +27,7 @@
             android:id="@+id/ac_deploy_result_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="确认信息"
+            android:text="@string/deploy_result_confirm_information"
             android:layout_gravity="center_vertical"
             android:textSize="18sp"
             android:layout_marginStart="12dp"
@@ -60,7 +60,7 @@
             android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_4dp"
             android:gravity="center"
             android:padding="10dp"
-            android:text="返回主页"
+            android:text="@string/deploy_result_back_home"
             android:textColor="@color/c_252525"
             android:textSize="16sp" />
 
@@ -73,7 +73,7 @@
             android:background="@drawable/shape_bg_corner_29c_shadow"
             android:gravity="center"
             android:padding="10dp"
-            android:text="继续部署"
+            android:text="@string/deploy_result_continue"
             android:textColor="@color/white"
             android:textSize="16sp" />
     </LinearLayout>
@@ -116,7 +116,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="恭喜！传感器点位部署成功"
+                android:text="@string/deploy_result_successed"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="14sp" />
 
@@ -126,7 +126,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="8dp"
-                android:text="恭喜！传感器点位部署成功"
+                android:text="@string/deploy_result_successed"
                 android:textColor="@color/c_f34a4a"
                 android:textSize="14sp"
                 android:visibility="gone" />
@@ -155,7 +155,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="设备号:"
+                        android:text="@string/deploy_result_device_number"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -164,7 +164,7 @@
                         android:layout_width="wrap_content"
                         android:layout_marginStart="8dp"
                         android:layout_height="wrap_content"
-                        android:text="未知"
+                        android:text="@string/deploy_result_unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -183,7 +183,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="名称:"
+                        android:text="@string/deploy_result_name"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -192,7 +192,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="未知"
+                        android:text="@string/deploy_result_unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -210,7 +210,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="位置:"
+                        android:text="@string/deploy_result_location"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -220,7 +220,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
-                        android:text="未知"
+                        android:text="@string/deploy_result_unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -239,7 +239,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="联系人:"
+                        android:text="@string/deploy_result_contract"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -248,7 +248,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="未知"
+                        android:text="@string/deploy_result_unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -268,7 +268,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
-                        android:text="状态:"
+                        android:text="@string/deploy_result_status"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -278,7 +278,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:text="未知"
+                        android:text="@string/deploy_result_unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -293,7 +293,7 @@
                         android:paddingEnd="10dp"
                         android:paddingStart="10dp"
                         android:paddingTop="4dp"
-                        android:text="信号 无"
+                        android:text="@string/deploy_result_signal"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
@@ -312,7 +312,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="最近上传时间:"
+                        android:text="@string/deploy_result_recent_upload_time"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -321,7 +321,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
-                        android:text="未知"
+                        android:text="@string/deploy_result_unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 

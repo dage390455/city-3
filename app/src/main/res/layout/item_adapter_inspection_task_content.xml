@@ -40,7 +40,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp"
-                android:text="附近"
+                android:text="@string/signal_check_near"
                 android:textColor="@color/c_29c093"
                 android:textSize="12sp" />
 
@@ -94,7 +94,7 @@
             android:paddingTop="6dp"
             android:paddingEnd="20dp"
             android:paddingBottom="6dp"
-            android:text="导航"
+            android:text="@string/monitor_point_map_navigation"
             android:textColor="@color/c_252525"
             android:textSize="12sp"
             app:layout_goneMarginEnd="0dp" />
@@ -110,7 +110,7 @@
             android:paddingTop="6dp"
             android:paddingEnd="20dp"
             android:paddingBottom="6dp"
-            android:text="巡检"
+            android:text="@string/inspection"
             android:textColor="@color/white"
             android:textSize="12sp" />
     </LinearLayout>

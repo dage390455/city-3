@@ -6,5 +6,5 @@
           android:layout_height="wrap_content"
           android:ellipsize="marquee"
           android:singleLine="true"
-          android:text="请选择预警成因场所"
+          android:text="@string/slect_alarm_cause_site"
           android:textColor="#808080"/>

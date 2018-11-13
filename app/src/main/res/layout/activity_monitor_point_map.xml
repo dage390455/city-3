@@ -56,7 +56,7 @@
             android:background="@drawable/shape_bg_solid_fa_stroke_df_corner_4dp"
             android:gravity="center"
             android:padding="10dp"
-            android:text="微信分享"
+            android:text="@string/monitor_point_map_weixin_share"
             android:textColor="@color/c_252525" />
 
         <TextView
@@ -69,7 +69,7 @@
             android:background="@drawable/shape_bg_corner_29c_shadow"
             android:gravity="center"
             android:padding="10dp"
-            android:text="导航"
+            android:text="@string/monitor_point_map_navigation"
             android:textColor="@color/white" />
     </LinearLayout>
 

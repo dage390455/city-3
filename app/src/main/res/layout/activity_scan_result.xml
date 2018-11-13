@@ -29,7 +29,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:text="登录大屏应用"
+                android:text="@string/scan_result_login_big_screen"
                 android:textColor="@color/gray"
                 />
 
@@ -47,7 +47,7 @@
         android:layout_marginTop="@dimen/y50"
         android:background="@drawable/shape_button"
         android:gravity="center"
-        android:text="登录"
+        android:text="@string/scan_result_login"
         android:textColor="@color/white"
         android:textSize="@dimen/city_btn_text_size"/>
 
@@ -61,7 +61,7 @@
         android:layout_marginRight="@dimen/x70"
         android:background="@drawable/shape_button_normal"
         android:gravity="center"
-        android:text="取消"
+        android:text="@string/scan_result_cancel"
         android:textColor="@color/white"
         android:textSize="@dimen/city_btn_text_size"/>
 </LinearLayout>

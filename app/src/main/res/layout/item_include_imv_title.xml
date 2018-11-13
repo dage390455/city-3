@@ -24,7 +24,7 @@
         android:id="@+id/include_imv_title_tv_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="预警日志"
+        android:text="@string/alarm_log"
         android:textSize="18sp"
         android:textColor="@color/c_030303"
         app:layout_constraintStart_toEndOf="@id/include_imv_title_imv_arrows_left"

@@ -41,7 +41,7 @@
             android:drawablePadding="10dp"
             android:paddingStart="8dp"
             android:paddingEnd="8dp"
-            android:text="全部类型"
+            android:text="@string/inspection_task_all_types"
             android:layout_marginBottom="16dp"
             android:textColor="@color/c_030303"
             android:textSize="18sp" />

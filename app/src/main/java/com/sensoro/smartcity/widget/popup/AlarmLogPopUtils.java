@@ -154,12 +154,12 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         int displayStatus = mDeviceAlarmLogInfo.getDisplayStatus();
         if (displayStatus == DISPLAY_STATUS_CONFIRM) {
             isReConfirm = true;
-            acAlertTvAlertConfirm.setText("预警确认");
+            acAlertTvAlertConfirm.setText(mActivity.getString(R.string.alarm_log_alarm_warn_confirm));
             acAlertTvAlertConfirm.setTextColor(mActivity.getResources().getColor(R.color.white));
             acAlertTvAlertConfirm.setBackgroundResource(R.drawable.shape_btn_corner_29c_bg_4dp);
         } else {
             isReConfirm = false;
-            acAlertTvAlertConfirm.setText("再次确认");
+            acAlertTvAlertConfirm.setText(mActivity.getString(R.string.confirming_again));
             acAlertTvAlertConfirm.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
             acAlertTvAlertConfirm.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_4dp);
         }
@@ -275,7 +275,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                 return;
             }
         }
-        SensoroToast.INSTANCE.makeText("未获取到位置信息", Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(mActivity.getString(R.string.not_obtain_location_infomation), Toast.LENGTH_SHORT).show();
     }
 
     private void doConfirm() {

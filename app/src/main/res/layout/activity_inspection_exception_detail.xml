@@ -60,7 +60,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="监测点标签"
+                android:text="@string/inspection_exception_detail_monitor_point_detail"
                 android:textColor="@color/c_252525"
                 android:textSize="14sp" />
 
@@ -88,7 +88,7 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="异常详情"
+        android:text="@string/inspection_exception_detail_exception_detail"
         android:textSize="12sp"
         android:textColor="@color/c_a6a6a6"
         android:layout_marginStart="20dp"
@@ -112,7 +112,7 @@
                 android:layout_width="0dp"
                 android:layout_weight="1"
                 android:layout_height="wrap_content"
-                android:text="巡检结果"
+                android:text="@string/inspection_exception_detail_inspection_result"
                 android:textSize="14sp"
                 android:textColor="@color/c_252525"
                 />
@@ -144,7 +144,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="异常类型"
+                android:text="@string/inspection_exception_detail_exception_type"
                 android:textColor="@color/c_252525"
                 android:textSize="14sp" />
 
@@ -183,7 +183,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="备注"
+                android:text="@string/inspection_exception_detail_remark"
                 android:textSize="14sp"
                 android:textColor="@color/c_252525"
                 />
@@ -218,7 +218,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="现场照片"
+                android:text="@string/inspection_exception_detail_live_photo"
                 android:textSize="14sp"
                 android:textColor="@color/c_252525"
                 />
@@ -255,7 +255,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="现场录像"
+                android:text="@string/inspection_exception_detail_live_video"
                 android:textSize="14sp"
                 android:textColor="@color/c_252525"
                 />

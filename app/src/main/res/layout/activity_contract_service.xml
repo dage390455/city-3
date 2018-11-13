@@ -27,7 +27,7 @@
             android:id="@+id/contract_service_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="物联网消防安全预警服务合同"
+            android:text="@string/contract_info_title"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/iv_contract_service_back"
             android:textColor="@color/c_252525"
@@ -40,7 +40,7 @@
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:layout_marginEnd="10dp"
-            android:text="重拍"
+            android:text="@string/contract_service_retake"
             android:textColor="@color/c_252525"
             android:textSize="@dimen/city_tiny_large_size" />
     </RelativeLayout>
@@ -81,7 +81,7 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="法定代表人"
+                        android:text="@string/contract_info_legal_representative"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -137,7 +137,7 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="手机号"
+                        android:text="@string/contract_info_phone_number"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -192,7 +192,7 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="企业名称"
+                        android:text="@string/contract_info_company_name"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -258,7 +258,7 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="社会信用代码"
+                        android:text="@string/contract_info_social_credit_code"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -313,7 +313,7 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="注册号"
+                        android:text="@string/contract_info_registration_number"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -368,7 +368,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:gravity="center_vertical"
-                        android:text="住址"
+                        android:text="@string/contract_info_address"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -423,7 +423,7 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="有效期"
+                        android:text="@string/contract_info_validity_period"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -478,7 +478,7 @@
                         android:layout_width="120dp"
                         android:layout_height="wrap_content"
                         android:gravity="center_vertical"
-                        android:text="场地性质"
+                        android:text="@string/contract_info_site_nature"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -523,7 +523,7 @@
                     android:layout_centerVertical="true"
                     android:gravity="center_vertical"
                     android:layout_marginStart="20dp"
-                    android:text="服务年限"
+                    android:text="@string/contract_info_contract_service_life"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
@@ -613,7 +613,7 @@
         android:layout_marginTop="@dimen/y50"
         android:background="@drawable/shape_button"
         android:gravity="center"
-        android:text="下一步"
+        android:text="@string/contract_service_next"
         android:textColor="@color/white"
         android:textSize="@dimen/city_btn_text_size" />
 
