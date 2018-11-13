@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.CmdType;
@@ -74,23 +73,23 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = R.color.c_f34a4a;
-                statusText = "预警";
+                statusText = mActivity.getString(R.string.status_alarm);
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = R.color.c_29c093;
-                statusText = "正常";
+                statusText = mActivity.getString(R.string.status_normal);
                 break;
             case SENSOR_STATUS_LOST:
                 textColor = R.color.c_5d5d5d;
-                statusText = "失联";
+                statusText = mActivity.getString(R.string.status_lost);
                 break;
             case SENSOR_STATUS_INACTIVE:
                 textColor = R.color.c_b6b6b6;
-                statusText = "未激活";
+                statusText = mActivity.getString(R.string.status_inactive);
                 break;
             default:
                 textColor = R.color.c_29c093;
-                statusText = "正常";
+                statusText = mActivity.getString(R.string.status_normal);
                 break;
         }
         getView().setStatus(statusText, textColor);
@@ -98,7 +97,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         String temp;
         if (TextUtils.isEmpty(mDeviceInfo.getName())) {
             temp = mDeviceInfo.getSn();
-        }else{
+        } else {
             temp = mDeviceInfo.getName();
         }
         String text = WidgetUtil.getDeviceTypeName(mDeviceInfo.getDeviceType()) + " " + temp;
@@ -121,6 +120,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
             bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
         } catch (Exception e) {
             e.printStackTrace();
+            //TODO 提示
             getView().toastShort("请检查蓝牙状态");
         }
         if (!bleHasOpen) {
@@ -143,7 +143,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
-        if (bleDevice.getSn().equals(mDeviceInfo.getSn())&& !isConnected) {
+        if (bleDevice.getSn().equals(mDeviceInfo.getSn()) && !isConnected) {
             bleAddress = null;
             getView().setNearVisible(false);
         }
@@ -157,8 +157,8 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     public void doStartOrStop() {
         if (getView().getIsStartSignalCheck()) {
             if (TextUtils.isEmpty(bleAddress)) {
-               getView().toastShort("设备未在附近，请激活设备后重新尝试");
-            }else{
+                getView().toastShort(mActivity.getString(R.string.device_not_near));
+            } else {
                 getView().setStartBtnIcon(R.drawable.signal_check_stop_btn);
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mDeviceInfo.getSn(), mDeviceInfo.getLonlat()[0], mDeviceInfo.getLonlat()[1])
@@ -169,11 +169,11 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                         //todo delete
 //                        blePassword = "hzmBl4;XTD6*[@}I";
                         if (!TextUtils.isEmpty(blePassword)) {
-                                connectDevice();
+                            connectDevice();
 
                         } else {
                             getView().dismissProgressDialog();
-                            getView().toastShort("该设备不支持信号测试");
+                            getView().toastShort(mActivity.getString(R.string.device_not_signal_check));
                             getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
                             isStartSignalCheck = !isStartSignalCheck;
                         }
@@ -185,7 +185,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                         getView().dismissProgressDialog();
 //                        getView().updateUploadState(true);
 //                        getView().toastShort("获取配置文件失败，请重试 "+errorMsg);
-                        getView().toastShort("该设备不支持信号测试");
+                        getView().toastShort(mActivity.getString(R.string.device_not_signal_check));
                         getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
                     }
                 });
@@ -207,12 +207,12 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mConnection = new SensoroDeviceConnectionTest(mActivity, bleAddress, true);
         try {
             mConnection.connect(blePassword, SignalCheckActivityPresenter.this);
-            getView().updateProgressDialogMessage("正在连接...");
+            getView().updateProgressDialogMessage(mActivity.getString(R.string.connecting));
 //            stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
             getView().dismissProgressDialog();
-            getView().toastShort("蓝牙连接失败,请重试");
+            getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
         }
 
     }
@@ -238,7 +238,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                getView().updateProgressDialogMessage("正在发送数据...");
+                getView().updateProgressDialogMessage(mActivity.getString(R.string.ble_send_data));
                 getView().setLlTestVisible(false);
                 getView().setLlDetailVisible(true);
                 sendCount = 0;
@@ -270,7 +270,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     @Override
     public void onDisconnected() {
         getView().setSubTitleVisible(true);
-        getView().toastShort("蓝牙设备断开连接");
+        getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
     }
 
     @Override
@@ -318,7 +318,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         String rateString = String.format("%.1f", rate);
         //
 
-        String text = "发送：" + sendCount + "  接收：" + receiveCount + "  成功率：" + rateString + "%";
+        String text = mActivity.getString(R.string.send) + "：" + sendCount + "  " + mActivity.getString(R.string.receive) + "：" + receiveCount + "  " + mActivity.getString(R.string.success_rate) + "：" + rateString + "%";
         getView().updateSignalStatusText(text);
         getView().updateContentAdapter(signalData);
     }

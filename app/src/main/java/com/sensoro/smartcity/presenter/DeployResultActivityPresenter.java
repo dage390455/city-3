@@ -34,19 +34,19 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         switch (scanType) {
             case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
                 if (resultCode == -1) {
-                    getView().setDeployResultContinueText("继续更换");
-                    getView().setDeployResultBackHomeText("继续巡检");
+                    getView().setDeployResultContinueText(mContext.getString(R.string.continue_to_replace));
+                    getView().setDeployResultBackHomeText(mContext.getString(R.string.continue_inspection));
                 } else {
-                    getView().setDeployResultBackHomeText("继续巡检");
+                    getView().setDeployResultBackHomeText(mContext.getString(R.string.continue_inspection));
                     getView().setDeployResultContinueVisible(false);
                 }
                 break;
             case TYPE_SCAN_SIGNAL_CHECK:
                 if (resultCode == -1) {
                     getView().setStateTextViewVisible(false);
-                    getView().setDeployResultContinueText("重新扫码");
+                    getView().setDeployResultContinueText(mContext.getString(R.string.rescan_code));
                     getView().setArrowsLeftVisible(true);
-                    getView().setTitleText("扫码失败");
+                    getView().setTitleText(mContext.getString(R.string.scan_code_failed));
                 }
                 break;
         }
@@ -57,7 +57,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         try {
             if (resultCode == -1) {
                 getView().setResultImageView(R.drawable.deploy_fail);
-                getView().setStateTextView("失败");
+                getView().setStateTextView(mContext.getString(R.string.failed));
                 //
                 if (!TextUtils.isEmpty(sn)) {
                     getView().setSnTextView(sn);
@@ -66,12 +66,12 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 if (!TextUtils.isEmpty(errorInfo)) {
                     getView().setTipsTextView(mContext.getResources().getString(R.string
                             .tips_deploy_station_failed));
-                    getView().setDeployResultErrorInfo("错误：" + errorInfo);
+                    getView().setDeployResultErrorInfo(mContext.getString(R.string.error) + "：" + errorInfo);
                 } else {
                     String text;
                     switch (scanType) {
                         case TYPE_SCAN_SIGNAL_CHECK:
-                            text = "账户下不存在此设备,设备已关联\n在本账户下才能够进行测试";
+                            text = mContext.getString(R.string.device_exist_under_the_account);
                             break;
                         default:
                             text = mContext.getResources().getString(R.string
@@ -134,14 +134,14 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         String contact = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTACT);
         String content = mContext.getIntent().getStringExtra(EXTRA_SETTING_CONTENT);
 
-        getView().setContactTextView((TextUtils.isEmpty(contact) ?
-                "无" : contact) + "(" + (TextUtils.isEmpty
+        getView().setContactTextView((TextUtils.isEmpty(contact) ?mContext.getString(R.string.no)
+                : contact) + "(" + (TextUtils.isEmpty
                 (contact) ?
-                "无" : content) + ")");
+                mContext.getString(R.string.no) : content) + ")");
         getView().refreshSignal(updatedTime, deviceInfo.getSignal());
         if (resultCode == 1) {
             getView().setResultImageView(R.drawable.deploy_succeed);
-            getView().setStateTextView("成功");
+            getView().setStateTextView(mContext.getString(R.string.success));
             getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
         } else {
             getView().setResultImageView(R.mipmap.ic_deploy_failed);
@@ -149,7 +149,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         }
         getView().setSnTextView(sn);
         getView().setNameTextView(name);
-        getView().setStatusTextView(Constants.DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]);
+        getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]));
 //                // 修改长传时间
 //                String lastUpdatedTime = deviceInfo.getLastUpdatedTime();
         if (updatedTime == -1) {
@@ -167,7 +167,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         getView().setContactAndSignalVisible(false);
         if (resultCode == 1) {
             getView().setResultImageView(R.drawable.deploy_succeed);
-            getView().setStateTextView("成功");
+            getView().setStateTextView(mContext.getString(R.string.success));
             getView().setTipsTextView(mContext.getResources().getString(R.string
                     .tips_deploy_station_success));
         } else {
@@ -177,7 +177,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         }
         getView().setSnTextView(sn);
         getView().setNameTextView(name);
-        getView().setStatusTextView(Constants.STATION_STATUS_ARRAY[deviceInfo.getStatus() + 1]);
+        getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deviceInfo.getStatus() + 1]));
         if (updatedTime == -1) {
             getView().setUpdateTextViewVisible(false);
         } else {

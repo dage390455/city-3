@@ -515,7 +515,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             try {
                                 List<DeviceInfo> data = deviceInfoListRsp.getData();
                                 if (data.size() == 0) {
-                                    getView().toastShort("没有更多数据了");
+                                    getView().toastShort(mContext.getString(R.string.no_more_data));
                                 }
                                 freshDataList(homeTopModel);
                             } catch (Exception e) {
@@ -714,7 +714,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 return;
             }
         }
-        getView().toastShort("无此权限");
+        getView().toastShort(mContext.getString(R.string.no_such_permission));
     }
 
     public void clickAlarmInfo(int position, HomeTopModel homeTopModel) {
@@ -737,7 +737,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 //                getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
                     getView().dismissProgressDialog();
-                    getView().toastShort("未获取到预警日志信息");
+                    getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
                 } else {
                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);
@@ -779,7 +779,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 return;
             }
         }
-        getView().toastShort("无此权限");
+        getView().toastShort(mContext.getString(R.string.no_such_permission));
     }
 
     public void updateSelectDeviceTypePopAndShow() {
@@ -823,16 +823,16 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             StringBuilder stringBuilder = new StringBuilder();
             switch (mCurrentHomeTopModel.type) {
                 case 0:
-                    stringBuilder.append("预警");
+                    stringBuilder.append(mContext.getString(R.string.status_alarm));
                     break;
                 case 1:
-                    stringBuilder.append("正常");
+                    stringBuilder.append(mContext.getString(R.string.status_normal));
                     break;
                 case 2:
-                    stringBuilder.append("失联");
+                    stringBuilder.append(mContext.getString(R.string.status_lost));
                     break;
                 case 3:
-                    stringBuilder.append("未激活");
+                    stringBuilder.append(mContext.getString(R.string.status_inactive));
                     break;
             }
             return stringBuilder.append("(").append(mCurrentHomeTopModel.value).append(")").toString();

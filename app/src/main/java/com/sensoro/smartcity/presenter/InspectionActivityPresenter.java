@@ -9,6 +9,7 @@ import android.text.TextUtils;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
 import com.sensoro.smartcity.activity.InspectionUploadExceptionActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -97,13 +98,13 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
                     @Override
                     public void onCompleted(ResponseBase responseBase) {
                         if (responseBase.getErrcode() == 0) {
-                            getView().toastShort("上报成功");
+                            getView().toastShort(mContext.getString(R.string.successful_report));
                             EventData eventData = new EventData();
                             eventData.code = EVENT_DATA_INSPECTION_UPLOAD_NORMAL_CODE;
                             EventBus.getDefault().post(eventData);
                             getView().finishAc();
                         } else {
-                            getView().toastShort("上报失败");
+                            getView().toastShort(mContext.getString(R.string.report_failure));
                         }
                         getView().dismissProgressDialog();
                     }

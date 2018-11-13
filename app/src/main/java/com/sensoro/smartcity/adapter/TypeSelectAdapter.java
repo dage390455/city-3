@@ -20,7 +20,6 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.DeviceTypeModel;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
@@ -37,8 +36,6 @@ import butterknife.ButterKnife;
 
 public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.TypeSelectHolder> {
     private final Context mContext;
-    private String[] types = Constants.SELECT_TYPE;
-    private Integer[] typeIcons = Constants.SELECT_TYPE_RESOURCE;
     private int selectPosition = 0;
     private int oldSelectPosition = 0;
     private RecycleViewItemClickListener mListener;
@@ -66,7 +63,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     @Override
     public void onBindViewHolder(final TypeSelectHolder holder, final int position) {
         if (position == 0) {
-            holder.itemPopSelectTvTypeName.setText("全部类型");
+            holder.itemPopSelectTvTypeName.setText(R.string.all_types);
             changeIconColor(holder, position != selectPosition, mContext.getResources().getDrawable(R.drawable.type_all_test));
         } else {
             final int index = position - 1;
@@ -139,7 +136,7 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     public DeviceTypeModel getItem(int position) {
         DeviceTypeModel deviceTypeModel = new DeviceTypeModel();
         if (position == 0) {
-            deviceTypeModel.name = "全部类型";
+            deviceTypeModel.name = mContext.getString(R.string.all_types);
             deviceTypeModel.iconRes = R.mipmap.type_all;
         } else {
             Map<String, DeviceTypeStyles> deviceTypeMap = typesConfig.getDeviceType();

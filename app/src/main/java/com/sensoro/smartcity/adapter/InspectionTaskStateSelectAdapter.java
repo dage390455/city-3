@@ -3,7 +3,6 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +10,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
@@ -23,8 +21,6 @@ import butterknife.ButterKnife;
 
 public class InspectionTaskStateSelectAdapter extends RecyclerView.Adapter<InspectionTaskStateSelectAdapter.InspectionTaskStateSelectHolder> {
     private final Context mContext;
-    private String[] types = Constants.SELECT_TYPE;
-    private Integer[] typeIcons = Constants.SELECT_TYPE_RESOURCE;
     private int selectPosition = 0;
     private int oldSelectPosition = 0;
     private RecycleViewItemClickListener mListener;

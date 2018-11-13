@@ -142,7 +142,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         initRelation();
         initIndex();
 
-        tvNoContentTip.setText("搜索不到相关内容");
+        tvNoContentTip.setText(R.string.cant_find_related_content);
     }
 
 
@@ -503,7 +503,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String text = mKeywordEt.getText().toString();
             if (TextUtils.isEmpty(text)) {
-                SensoroToast.INSTANCE.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                SensoroToast.INSTANCE.makeText(mActivity, mActivity.getString(R.string.enter_search_content), Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                         .show();
                 return true;
             }

@@ -57,7 +57,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
 //            startActivity(intent);
             requestData(text);
         } else {
-            getView().toastShort("请输入正确的SN,SN为16个字符");
+            getView().toastShort(mContext.getString(R.string.please_enter_the_correct_sn));
         }
     }
 
@@ -233,7 +233,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                             intent.setClass(mContext, InspectionActivity.class);
                             break;
                         case 1:
-                            getView().toastShort("此设备已巡检完毕，且状态正常");
+                            getView().toastShort(mContext.getString(R.string.device_patrolled_status_normal));
                             return;
                         case 2:
                             intent.setClass(mContext, InspectionExceptionDetailActivity.class);
@@ -242,7 +242,7 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
                     intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
                     getView().startAC(intent);
                 } else {
-                    getView().toastShort("此设备未在巡检任务中");
+                    getView().toastShort(mContext.getString(R.string.device_not_in_inspection_mission));
                 }
 
             }

@@ -126,7 +126,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         }
                         freshInspectionDevice();
                     } else {
-                        getView().toastShort("未查找到旧设备信息");
+                        getView().toastShort(mContext.getString(R.string.no_old_device_information_found));
 //                        freshDevice();
                     }
                 } catch (Exception e) {
@@ -180,7 +180,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     getView().setDeployDeviceRlSignalVisible(true);
                     getView().setDeployPhotoVisible(true);
                     deployMapModel.sn = mDeviceInfo.getSn();
-                    getView().updateUploadTvText("更换设备");
+                    getView().updateUploadTvText(mContext.getString(R.string.replacement_equipment));
 //                    if (mDeviceDetail != null) {
 //                        freshInspectionDevice();
 //                    } else {
@@ -363,7 +363,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 } else {
 //                    isAutoConnect = false;
                     getView().dismissBleConfigDialog();
-                    getView().toastShort("设备配置失败，请常按设备按钮，等设备重新启动后再次配置");
+                    getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
                     getView().updateUploadState(true);
 //                    isAutoConnect = true;
 //                    mContext.runOnUiThread(new Runnable() {
@@ -407,7 +407,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 //                            stopScanService();
                         } else {
                             getView().dismissBleConfigDialog();
-                            getView().toastShort("未发现此设备，请激活部署设备的蓝牙");
+                            getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
                             getView().updateUploadState(true);
                         }
                     } else {
@@ -439,7 +439,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             e.printStackTrace();
             getView().dismissBleConfigDialog();
             getView().updateUploadState(true);
-            getView().toastShort("蓝牙连接失败,请重试");
+            getView().toastShort(mContext.getString(R.string.ble_connect_failed));
             isAgainUpLoad = false;
 
         }
@@ -720,9 +720,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     images.clear();
                     images.addAll((ArrayList<ImageItem>) data);
                     if (images.size() > 0) {
-                        getView().setDeployPhotoText("已添加" + images.size() + "张图片");
+                        getView().setDeployPhotoText(mContext.getString(R.string.added) + images.size() + mContext.getString(R.string.images));
                     } else {
-                        getView().setDeployPhotoText("未添加");
+                        getView().setDeployPhotoText(mContext.getString(R.string.not_added));
                     }
                 }
                 break;
@@ -789,19 +789,19 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 e.printStackTrace();
             }
             if (bytes.length > 48) {
-                getView().toastShort("名称/地址最长不能超过16个汉字或48个字符");
+                getView().toastShort(mContext.getString(R.string.name_address_length));
                 getView().updateUploadState(true);
                 return;
             }
         }
         if (images.size() == 0 && deployMapModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
-            getView().toastShort("请至少添加一张图片");
+            getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
             getView().updateUploadState(true);
             return;
         }
         //经纬度校验
         if (deployMapModel.latLng == null) {
-            getView().toastShort("请指定部署位置");
+            getView().toastShort(mContext.getString(R.string.please_specify_the_deployment_location));
             getView().updateUploadState(true);
         } else {
             //TODO 背景选择器
@@ -816,7 +816,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     if (deployContactModelList.size() > 0) {
                         DeployContactModel deployContactModel = deployContactModelList.get(0);
                         if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
-                            getView().toastShort("请输入联系人名称和电话号码");
+                            getView().toastShort(mContext.getString(R.string.please_enter_contact_phone));
                             getView().updateUploadState(true);
                             return;
                         }
@@ -826,7 +826,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             return;
                         }
                     } else {
-                        getView().toastShort("请输入联系人名称和电话号码");
+                        getView().toastShort(mContext.getString(R.string.please_enter_contact_phone));
                         getView().updateUploadState(true);
                         return;
                     }
@@ -853,20 +853,20 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (deployMapModel.signal != null && (time_diff < 300000)) {
             switch (deployMapModel.signal) {
                 case "good":
-                    signal_text = "信号：优";
+                    signal_text = mContext.getString(R.string.signal_excellent);
                     resId = R.drawable.shape_signal_good;
                     break;
                 case "normal":
-                    signal_text = "信号：良";
+                    signal_text =  mContext.getString(R.string.signal_good);
                     resId = R.drawable.shape_signal_normal;
                     break;
                 case "bad":
-                    signal_text = "信号：差";
+                    signal_text =  mContext.getString(R.string.signal_weak);
                     resId = R.drawable.shape_signal_bad;
                     break;
             }
         } else {
-            signal_text = "无信号";
+            signal_text =  mContext.getString(R.string.no_signal);
             resId = R.drawable.shape_signal_none;
         }
         switch (deployMapModel.deployType) {
@@ -914,7 +914,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getView().updateBleConfigDialogMessage("正在加载配置文件...");
+                getView().updateBleConfigDialogMessage(mContext.getString(R.string.loading_configuration_file));
                 sensoroDeviceConnection.writeData05ChannelMask(channelMask, new SensoroWriteCallback() {
                     @Override
                     public void onWriteSuccess(Object o, int cmd) {
@@ -936,7 +936,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             public void run() {
                                 getView().dismissBleConfigDialog();
                                 getView().updateUploadState(true);
-                                getView().toastShort("蓝牙连接失败，请重试");
+                                getView().toastShort(mContext.getString(R.string.ble_connect_failed));
                             }
                         });
 
@@ -957,7 +957,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             public void run() {
                 getView().dismissBleConfigDialog();
                 getView().updateUploadState(true);
-                getView().toastShort("蓝牙连接失败，请重试");
+                getView().toastShort(mContext.getString(R.string.ble_connect_failed));
             }
         });
 

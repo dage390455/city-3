@@ -3,17 +3,17 @@ package com.sensoro.smartcity.presenter;
 import android.content.Context;
 import android.content.Intent;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionTaskDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskListActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
-import com.yixia.camera.util.Log;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -80,7 +80,7 @@ public class InspectionTaskListActivityPresenter extends BasePresenter<IInspecti
                         getView().updateRcContent(tempTasks);
                     } else {
                         getView().recycleViewRefreshCompleteNoMoreData();
-                        getView().toastShort("没有更多数据了");
+                        getView().toastShort(mContext.getString(R.string.no_more_data));
                     }
                     getView().onPullRefreshCompleted();
                     getView().dismissProgressDialog();

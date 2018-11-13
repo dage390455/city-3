@@ -239,19 +239,19 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 tvContractAge.setText(serviceAge + mActivity.getString(R.string.year));
                 break;
             case 3:
-                tvContractInfoLine1.setText("甲方（客户名称）");
+                tvContractInfoLine1.setText(R.string.party_a_customer_name);
                 etContractInfoLine1.setText(line1);
                 //
                 ivLinePhone.setVisibility(View.GONE);
                 llContractInfoPhone.setVisibility(View.GONE);
                 //
-                tvContractInfoLine2.setText("业主姓名");
+                tvContractInfoLine2.setText(R.string.owners_name);
                 etContractInfoLine2.setText(line2);
                 //
-                tvContractInfoLine3.setText("手机号");
+                tvContractInfoLine3.setText(R.string.phone_num);
                 etContractInfoLine3.setText(line3);
                 //
-                tvContractInfoLine4.setText("住址");
+                tvContractInfoLine4.setText(R.string.address);
                 etContractInfoLine4.setText(line4);
                 //
                 ivLine5.setVisibility(View.GONE);
@@ -260,7 +260,8 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
                 //
-                tvContractAge.setText(serviceAge + "年");
+
+                tvContractAge.setText(serviceAge + mActivity.getString(R.string.year));
                 //
                 break;
             default:
@@ -288,8 +289,8 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     public void updateFirmOrPersonal(int contract_type) {
         switch (contract_type) {
             case 1:
-                tvContractInfoLine1.setText("企业名称");
-                tvContractInfoLine2.setText("社会信用代码");
+                tvContractInfoLine1.setText(R.string.company_name);
+                tvContractInfoLine2.setText(R.string.social_credit_code);
                 break;
             case 2:
                 break;
@@ -303,7 +304,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
     @Override
     public void setConfirmStatus(boolean confirmed) {
-        tvContractStatus.setText(confirmed ? "已签订" : "未签订");
+        tvContractStatus.setText(confirmed ? R.string.signed : R.string.not_signed);
         tvContractStatus.setTextColor(confirmed ? getResources().getColor(R.color.c_29c093) :
                 getResources().getColor(R.color.c_ff8d34));
         tvContractStatus.setBackgroundResource(confirmed ? R.drawable.shape_bg_stroke_1_29c_full_corner :
@@ -334,12 +335,5 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     @Override
     public void toastLong(String msg) {
 
-    }
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // TODO: add setContentView(...) invocation
-        ButterKnife.bind(this);
     }
 }

@@ -71,28 +71,28 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
             case TYPE_SCAN_DEPLOY_STATION:
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
-                getView().updateTitleText("设备部署");
-                getView().updateQrTipText("对准传感器上的二维码，即可自动扫描");
+                getView().updateTitleText(mContext.getString(R.string.device_deployment));
+                getView().updateQrTipText(mContext.getString(R.string.device_deployment_tip));
                 break;
             case TYPE_SCAN_LOGIN:
-                getView().updateTitleText("扫码登录");
-                getView().updateQrTipText("对准登录用二维码，即可自动扫描");
+                getView().updateTitleText(mContext.getString(R.string.scan_login));
+                getView().updateQrTipText(mContext.getString(R.string.scan_login_tip));
                 getView().setBottomVisible(false);
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
                 //巡检设备更换
-                getView().updateTitleText("设备更换");
-                getView().updateQrTipText("对准设备上的二维码，即可自动扫描");
+                getView().updateTitleText(mContext.getString(R.string.device_change));
+                getView().updateQrTipText(mContext.getString(R.string.device_change_tip));
                 break;
             case TYPE_SCAN_INSPECTION:
                 //扫描巡检设备
-                getView().updateTitleText("设备巡检");
-                getView().updateQrTipText("对准设备上的二维码，即可自动扫描");
+                getView().updateTitleText(mContext.getString(R.string.device_inspetion));
+                getView().updateQrTipText(mContext.getString(R.string.device_inspetion_tip));
                 break;
             case TYPE_SCAN_SIGNAL_CHECK:
                 //信号测试
-                getView().updateTitleText("信号测试");
-                getView().updateQrTipText("对准设备上的二维码，即可扫码测试");
+                getView().updateTitleText(mContext.getString(R.string.signal_test));
+                getView().updateQrTipText(mContext.getString(R.string.signal_test_tip));
                 break;
             default:
                 break;
@@ -305,12 +305,12 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                             if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
                                 intent.setClass(mContext, InspectionActivity.class);
                             } else {
-                                getView().toastShort("该账户没有巡检设备权限");
+                                getView().toastShort(mContext.getString(R.string.account_no_patrol_device_permissions));
                                 return;
                             }
                             break;
                         case 1:
-                            getView().toastShort("此设备已巡检完毕，且状态正常");
+                            getView().toastShort(mContext.getString(R.string.device_patrolled_status_normal));
                             getView().startScan();
                             return;
                         case 2:
@@ -320,7 +320,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                     intent.putExtra(EXTRA_INSPECTION_TASK_ITEM_DEVICE_DETAIL, deviceDetail);
                     getView().startAC(intent);
                 } else {
-                    getView().toastShort("此设备未在巡检任务中");
+                    getView().toastShort(mContext.getString(R.string.device_not_in_inspection_mission));
                     getView().startScan();
                 }
 
@@ -469,7 +469,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                         e.printStackTrace();
                     }
                 } else {
-                    getView().toastShort("请重新扫描后重试");
+                    getView().toastShort(mContext.getString(R.string.please_re_scan_try_again));
                     getView().startScan();
                 }
                 getView().dismissProgressDialog();

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.MenuPageFactory;
@@ -234,7 +235,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             String uid = mUserInfoList.get(position).get_id();
             doAccountSwitch(uid);
         } else {
-            getView().toastShort("账户已停用");
+            getView().toastShort(mContext.getString(R.string.account_has_been_disabled));
         }
     }
 

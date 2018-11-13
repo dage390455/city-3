@@ -200,11 +200,11 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     public void setPositionStatus(int status) {
         switch (status) {
             case 0:
-                acDeployRecordDetailTvFixedPointState.setText("未定位");
+                acDeployRecordDetailTvFixedPointState.setText(mActivity.getString(R.string.not_positioned));
                 acDeployRecordDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
                 break;
             case 1:
-                acDeployRecordDetailTvFixedPointState.setText("已定位");
+                acDeployRecordDetailTvFixedPointState.setText(mActivity.getString(R.string.positioned));
                 acDeployRecordDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
                 break;
 
@@ -217,24 +217,24 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
         if (signalQuality != null) {
             switch (signalQuality) {
                 case "good":
-                    signal_text = "信号：优";
+                    signal_text = mActivity.getString(R.string.signal_excellent);
                     acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
                     break;
                 case "normal":
-                    signal_text = "信号：良";
+                    signal_text = mActivity.getString(R.string.signal_good);
                     acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
                     break;
                 case "bad":
-                    signal_text = "信号：差";
+                    signal_text = mActivity.getString(R.string.signal_weak);
                     acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
                 default:
-                    signal_text = "无信号";
+                    signal_text = mActivity.getString(R.string.no_signal);
                     acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
                     break;
             }
         } else {
-            signal_text = "无信号";
+            signal_text = mActivity.getString(R.string.no_signal);
             acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
         }
         acDeployRecordDetailTvFixedPointSignal.setText(signal_text);

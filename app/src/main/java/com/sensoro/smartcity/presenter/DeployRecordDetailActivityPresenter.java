@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -47,7 +48,7 @@ implements Constants {
             getView().setDeviceName(mDeployRecordInfo.getDeviceName());
             getView().updateTagList(mDeployRecordInfo.getTags());
             getView().setDeployTime(DateUtil.getStrTime_ymd_hm_ss(mDeployRecordInfo.getCreatedTime()));
-            getView().setPicCount("已添加"+mDeployRecordInfo.getDeployPics().size()+"张照片");
+            getView().setPicCount(mActivity.getString(R.string.added)+mDeployRecordInfo.getDeployPics().size()+mActivity.getString(R.string.images));
             ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
             if(mDeployRecordInfo.getNotification()!=null){
                 contacts.add(mDeployRecordInfo.getNotification());
@@ -84,7 +85,7 @@ implements Constants {
             intent.putExtra(EXTRA_DEPLOY_TO_PHOTO,items);
             getView().startAC(intent);
         }else{
-            getView().toastShort("未添加照片");
+            getView().toastShort(mActivity.getString(R.string.no_photos_added));
         }
     }
 

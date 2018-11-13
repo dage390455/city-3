@@ -102,20 +102,20 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
         if (signal != null && (time_diff < 300000)) {
             switch (signal) {
                 case "good":
-                    signal_text = "信号 优";
+                    signal_text = mActivity.getString(R.string.signal_excellent);
                     acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
                     break;
                 case "normal":
-                    signal_text = "信号 良";
+                    signal_text = mActivity.getString(R.string.signal_good);
                     acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
                     break;
                 case "bad":
-                    signal_text = "信号 差";
+                    signal_text = mActivity.getString(R.string.signal_weak);
                     acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
             }
         } else {
-            signal_text = "信号 无";
+            signal_text = mActivity.getString(R.string.no_signal);
             acDeployResultTvSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
         }
         acDeployResultTvSignal.setText(signal_text);

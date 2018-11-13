@@ -249,7 +249,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                         getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
-                            getView().toastShort("没有更多数据了");
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
@@ -288,7 +288,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                 getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
-                    getView().toastShort("没有更多数据了");
+                    getView().toastShort(mContext.getString(R.string.no_more_data));
                 }
                 freshUI(DIRECTION_DOWN, deviceAlarmLogRsp);
                 getView().onPullRefreshComplete();

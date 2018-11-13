@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
@@ -56,16 +57,17 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
 
     public void addTags(String tag) {
         if (TextUtils.isEmpty(tag)) {
-            getView().toastShort("请设置标签");
+            getView().toastShort(mContext.getString(R.string
+            .please_set_the_label));
             return;
         }
         if (mTagList.size() >= 8) {
-            getView().toastShort("最多只能添加8个标签");
+            getView().toastShort(mContext.getString(R.string.can_only_add_up_to_limit_labels));
         } else {
             if (!TextUtils.isEmpty(tag)) {
                 String trim = tag.trim();
                 if (mTagList.contains(trim)) {
-                    getView().toastShort("标签不能重复");
+                    getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
                     return;
                 } else {
                     mTagList.add(trim);
@@ -79,12 +81,12 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     public void addTags(int position) {
         String test = mHistoryKeywords.get(position);
         if (mTagList.size() >= 8) {
-            getView().toastShort("最多只能添加8个标签");
+            getView().toastShort(mContext.getString(R.string.can_only_add_up_to_limit_labels));
         } else {
             if (!TextUtils.isEmpty(test)) {
                 String trim = test.trim();
                 if (mTagList.contains(trim)) {
-                    getView().toastShort("标签不能重复");
+                    getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
                     return;
                 } else {
                     mTagList.add(trim);
@@ -96,11 +98,11 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
 
     public void doFinish() {
         if (mTagList.size() > 8) {
-            getView().toastShort("最多只能添加8个标签");
+            getView().toastShort(mContext.getString(R.string.can_only_add_up_to_limit_labels));
         } else {
             for (String temp : mTagList) {
                 if (ResourceUtils.getByteFromWords(temp) > 30) {
-                    getView().toastShort("标签最长不能超过10个汉字或30个字符");
+                    getView().toastShort(mContext.getString(R.string.the_maximum_length_of_the_label));
                     return;
                 }
             }
@@ -157,12 +159,12 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     public void updateEditTag(int position, String text) {
 
         if (TextUtils.isEmpty(text)) {
-            getView().toastShort("请设置标签");
+            getView().toastShort(mContext.getString(R.string.please_set_the_label));
             return;
         }
         String trim = text.trim();
         if (mTagList.contains(trim)) {
-            getView().toastShort("标签不能重复");
+            getView().toastShort(mContext.getString(R.string.label_cannot_be_repeated));
             return;
         } else {
             mTagList.set(position, text);

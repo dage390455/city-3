@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.SearchMerchantActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -104,7 +105,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                         List<UserInfo> list = userAccountRsp.getData();
                         if (list == null || list.size() == 0) {
                             cur_page--;
-                            getView().toastShort("没有更多数据了");
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().showSeperatorView(false);
                         } else {
                             mUserInfoList.addAll(list);
@@ -206,7 +207,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             String uid = mUserInfoList.get(position).get_id();
             doAccountSwitch(uid);
         } else {
-            getView().toastShort("账户已停用");
+            getView().toastShort(mContext.getString(R.string.account_has_been_disabled));
         }
     }
 

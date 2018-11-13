@@ -98,7 +98,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
-        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage("获取中配置文件...").build());
+        mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.get_the_middle_profile)).build());
 
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         updateUploadState(true);

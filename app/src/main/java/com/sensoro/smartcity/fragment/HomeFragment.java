@@ -136,7 +136,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 //选择类型的pop点击事件
                 Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
                 if ("全部".equals(item.name)) {
-                    fgMainHomeTvSelectType.setText("全部类型");
+                    fgMainHomeTvSelectType.setText(R.string.all_types);
                     fgMainHomeTvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));
                     Drawable drawable = resources.getDrawable(R.drawable.main_small_triangle_gray);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -794,7 +794,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 currentPosition = 0;
 
             } else {
-                toastShort("设备预警已解除，请在“预警”界面中查看事件");
+                toastShort(mRootFragment.getString(R.string.device_alert_removed));
             }
         } catch (Exception e) {
             e.printStackTrace();

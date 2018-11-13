@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.sensoro.smartcity.BuildConfig;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -60,7 +61,7 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
                     getMergeType();
                 } else {
                     getView().dismissProgressDialog();
-                    getView().toastShort("二次验证失败");
+                    getView().toastShort(mContext.getString(R.string.secondary_verification_failed));
                     getView().updateImvStatus(false);
                 }
             }

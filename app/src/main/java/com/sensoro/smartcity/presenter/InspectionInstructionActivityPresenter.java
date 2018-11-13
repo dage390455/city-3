@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.imainviews.IInspectionInstructionActivityView;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;

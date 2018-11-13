@@ -114,7 +114,7 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 
     public void doFinish(String name, String phone) {
         if (TextUtils.isEmpty(name)) {
-            getView().toastShort("联系人姓名不能为空！");
+            getView().toastShort(mContext.getString(R.string.Contact_name_cannot_be_empty));
             return;
         }
         if (RegexUtils.checkPhone(phone)) {

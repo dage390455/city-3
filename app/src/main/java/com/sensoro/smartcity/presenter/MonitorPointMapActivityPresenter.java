@@ -245,7 +245,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     public void doNavigation() {
         if (!AppUtils.doNavigation(mContext, destPosition)) {
-            getView().toastShort("未获取到位置信息");
+            getView().toastShort(mContext.getString(R.string.location_not_obtained));
         }
     }
 
@@ -260,7 +260,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //                getView().toastShort("当前版的微信不支持分享功能");
 //            }
         } else {
-            getView().toastShort("当前手机未安装微信，请安装后重试");
+            getView().toastShort(mContext.getString(R.string.wechat_not_installed));
         }
     }
 
@@ -289,7 +289,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         long updatedTime = mDeviceInfo.getUpdatedTime();
         String tempAddress = mDeviceInfo.getAddress();
         if (TextUtils.isEmpty(tempAddress)) {
-            tempAddress = "未知街道";
+            tempAddress = mContext.getString(R.string.unknown_street);
         }
         final String tempData = "/pages/index?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
                 [1] +
@@ -297,8 +297,8 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                 updatedTime;
         miniProgramObj.path = tempData;            //小程序页面路径
         final WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
-        msg.title = "传感器位置";                    // 小程序消息title
-        msg.description = "通过此工具，可以查看，以及导航到相应的传感器设备";
+        msg.title = mContext.getString(R.string.sensor_location);                    // 小程序消息title
+        msg.description = mContext.getString(R.string.sensor_location_desc);
         aMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
             @Override
             public void onMapScreenShot(Bitmap bitmap) {

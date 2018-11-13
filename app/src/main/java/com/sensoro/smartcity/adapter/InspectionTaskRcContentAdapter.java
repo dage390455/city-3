@@ -132,18 +132,18 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
                 //未巡检调用的函数跟其他的不一样，我们不一样，每个人都有不同的境遇
                 setState(holder);
                 holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.VISIBLE);
-                holder.itemAdapterInspectionTaskTvInspection.setText("巡检");
+                holder.itemAdapterInspectionTaskTvInspection.setText(R.string.inspection);
                 holder.itemAdapterInspectionTaskTvInspection.setTextColor(mContext.getResources().getColor(R.color.white));
                 holder.itemAdapterInspectionTaskTvInspection.setBackgroundResource(R.drawable.shape_bg_corner_2dp_29c_shadow);
                 break;
             case 1:
-                setState(holder, R.color.c_29c093, "巡检正常");
+                setState(holder, R.color.c_29c093, mContext.getString(R.string.normal_inspection));
                 holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.GONE);
                 break;
             case 2:
-                setState(holder, R.color.c_ff8d34, "巡检异常");
+                setState(holder, R.color.c_ff8d34, mContext.getString(R.string.inspection_abnormality));
                 holder.itemAdapterInspectionTaskTvInspection.setVisibility(View.VISIBLE);
-                holder.itemAdapterInspectionTaskTvInspection.setText("详情");
+                holder.itemAdapterInspectionTaskTvInspection.setText(R.string.details);
                 holder.itemAdapterInspectionTaskTvInspection.setTextColor(mContext.getResources().getColor(R.color.c_252525));
                 holder.itemAdapterInspectionTaskTvInspection.setBackgroundResource(R.drawable.shape_bg_solid_fa_stroke_df_corner_2dp);
                 break;
@@ -183,7 +183,7 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
      */
     private void setState(InspectionTaskRcContentHolder holder) {
         Resources resources = mContext.getResources();
-        holder.itemAdapterInspectionTaskTvState.setText("未巡检");
+        holder.itemAdapterInspectionTaskTvState.setText(R.string.not_inspected);
         holder.itemAdapterInspectionTaskTvState.setTextColor(resources.getColor(R.color.c_a6a6a6));
         GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_small_oval_29c);
         gd.setColor(resources.getColor(R.color.c_626262));

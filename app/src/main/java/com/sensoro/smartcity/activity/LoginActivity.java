@@ -209,7 +209,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
                     if (str.equals("SENSORO")) {
                         switchApi();
                     } else {
-                        toastLong("密码错误！");
+                        toastLong(mActivity.getString(R.string.wrong_password));
                     }
                     dialog.cancel();
                     isShowPasswordDialog = true;

@@ -146,7 +146,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 mPresenter.doSelectTypeDevice(item);
                 Resources resources = mActivity.getResources();
                 if(position==0){
-                    tvSelectType.setText("全部合同");
+                    tvSelectType.setText(R.string.all_contracts);
                     tvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));
                     tvSelectType.setCompoundDrawables(null,null,grayTriangle,null);
                 }else{
@@ -174,7 +174,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 if(position==0){
                     tvSelectStatus.setTextColor(resources.getColor(R.color.c_a6a6a6));
                     tvSelectStatus.setCompoundDrawables(null,null,grayTriangle,null);
-                    tvSelectStatus.setText("全部状态");
+                    tvSelectStatus.setText(R.string.all_states);
                 }else{
                     tvSelectStatus.setTextColor(resources.getColor(R.color.c_252525));
                     tvSelectStatus.setCompoundDrawables(null,null,blackTriangle,null);

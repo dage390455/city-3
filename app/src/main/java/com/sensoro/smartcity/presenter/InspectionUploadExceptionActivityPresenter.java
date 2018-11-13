@@ -36,7 +36,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,7 +65,11 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     }
 
     private void initExceptionTag() {
-        Collections.addAll(exceptionTags, INSPECTION_EXCEPTION_TASGS);
+        exceptionTags.clear();
+        for (int resId : INSPECTION_EXCEPTION_TAGS) {
+            exceptionTags.add(mContext.getString(resId));
+        }
+//        Collections.addAll(exceptionTags, INSPECTION_EXCEPTION_TAGS);
         getView().updateExceptionTagAdapter(exceptionTags);
     }
 
@@ -95,9 +98,9 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 //            updateButton();
         } else if (IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
-            names.add("拍照");
+            names.add(mContext.getString(R.string.take_photo));
 //            names.add("相册");
-            names.add("拍摄视频");
+            names.add(mContext.getString(R.string.shooting_video));
             getView().showDialog(this, names);
         } else {
             //打开预览
@@ -163,7 +166,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         List<Integer> selectTags = getView().getSelectTags();
         String remarkMessage = getView().getRemarkMessage();
         if (selectTags.size() == 0) {
-            getView().toastShort("必须选择一个标签类型");
+            getView().toastShort(mContext.getString(R.string.must_select_a_tag_type));
             return;
         }
         getView().showProgressDialog();
@@ -176,7 +179,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                             if (needChangeDevice) {
                                 doUploadAndChange();
                             } else {
-                                getView().toastShort("异常上报成功");
+                                getView().toastShort(mContext.getString(R.string.abnormal_reporting_success));
                                 EventData eventData = new EventData();
                                 eventData.code = EVENT_DATA_INSPECTION_UPLOAD_EXCEPTION_CODE;
                                 EventBus.getDefault().post(eventData);
@@ -184,7 +187,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                             }
 
                         } else {
-                            getView().toastShort("异常上报失败");
+                            getView().toastShort(mContext.getString(R.string.abnormal_reporting_failure));
                         }
                         getView().dismissProgressDialog();
                     }
@@ -299,7 +302,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
     @Override
     public void onStart() {
-        getView().showUploadProgressDialog("请稍后", 0);
+        getView().showUploadProgressDialog(mContext.getString(R.string.please_wait), 0);
     }
 
     @Override

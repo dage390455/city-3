@@ -89,7 +89,7 @@ public class InspectionTaskListActivity extends BaseActivity<IInspectionTaskList
 
 
     private void initView() {
-        includeTextTitleTvTitle.setText("巡检任务");
+        includeTextTitleTvTitle.setText(R.string.inspection_task);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         acInspectionTaskListImvCalendar.setVisibility(View.GONE);
 

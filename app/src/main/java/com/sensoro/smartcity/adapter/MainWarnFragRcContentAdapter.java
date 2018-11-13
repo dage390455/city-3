@@ -100,7 +100,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     });
                     holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
-                    holder.mainWarnRcContentTvTag.setText("待确认");
+                    holder.mainWarnRcContentTvTag.setText(R.string.to_be_confirmed);
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_a6a6a6);
                     break;
                 case DISPLAY_STATUS_ALARM:
@@ -116,7 +116,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     });
                     holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
-                    holder.mainWarnRcContentTvTag.setText("真实预警");
+                    holder.mainWarnRcContentTvTag.setText(R.string.real_warning);
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_f34a4a);
                     break;
                 case DISPLAY_STATUS_MIS_DESCRIPTION:
@@ -132,7 +132,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     });
                     holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_8058a5));
-                    holder.mainWarnRcContentTvTag.setText("误报");
+                    holder.mainWarnRcContentTvTag.setText(R.string.false_positive);
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_8058a5);
                     break;
                 case DISPLAY_STATUS_TEST:
@@ -148,7 +148,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     });
                     holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_8058a5));
-                    holder.mainWarnRcContentTvTag.setText("测试/巡检");
+                    holder.mainWarnRcContentTvTag.setText(R.string.test_patrol);
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_8058a5);
                     break;
                 case DISPLAY_STATUS_RISKS:
@@ -164,7 +164,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
                     });
                     holder.mainWarnRcContentTvTag.setVisibility(View.VISIBLE);
                     holder.mainWarnRcContentTvTag.setTextColor(mContext.getResources().getColor(R.color.c_ff8d34));
-                    holder.mainWarnRcContentTvTag.setText("安全隐患");
+                    holder.mainWarnRcContentTvTag.setText(R.string.security_risks);
                     changeStrokeColor(holder.mainWarnRcContentTvTag, R.color.c_ff8d34);
                     break;
             }
@@ -182,10 +182,10 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             }
         }
         if (isAlarm) {
-            holder.mainWarnRcContentTvState.setText("报警中");
+            holder.mainWarnRcContentTvState.setText(R.string.warm_status_alarm);
             holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
         } else {
-            holder.mainWarnRcContentTvState.setText("正常");
+            holder.mainWarnRcContentTvState.setText(R.string.warm_status_normal);
             holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
         }
         final Boolean finalIsReConfirm = isReConfirm;

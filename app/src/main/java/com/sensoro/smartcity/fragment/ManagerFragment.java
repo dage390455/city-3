@@ -107,16 +107,16 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     private void initVersionDialog() {
         mVersionDialog = new VersionDialogUtils(mRootFragment.getActivity());
-        mVersionDialog.setTipMessageText("现在App版本为最新版  " + AppUtils.getVersionName(mRootFragment.getActivity()));
-        mVersionDialog.setTipCacnleText("好的", mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
+        mVersionDialog.setTipMessageText(mRootFragment.getString(R.string.version_tip_text)+"  " + AppUtils.getVersionName(mRootFragment.getActivity()));
+        mVersionDialog.setTipCacnleText(mRootFragment.getString(R.string.ok), mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
         mVersionDialog.setVersionDialogUtilsClickListener(this);
     }
 
     private void initExitDialog() {
         mExitDialog = new TipDialogUtils(mRootFragment.getActivity());
-        mExitDialog.setTipMessageText("确定要退出登录吗？");
-        mExitDialog.setTipCacnleText("取消", mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
-        mExitDialog.setTipConfirmText("退出", mRootFragment.getActivity().getResources().getColor(R.color.c_f34a4a));
+        mExitDialog.setTipMessageText(mRootFragment.getString(R.string.tip_text_login_out));
+        mExitDialog.setTipCacnleText(mRootFragment.getString(R.string.cancel), mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
+        mExitDialog.setTipConfirmText(mRootFragment.getString(R.string.quit), mRootFragment.getActivity().getResources().getColor(R.color.c_f34a4a));
         mExitDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -294,7 +294,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
     public void changeMerchantTitle(boolean hasSubMerchant) {
         if (!hasSubMerchant) {
             fgMainManageImvMerchantIcon.setImageResource(R.drawable.single_merchant1);
-            fgMainManageTvMerchantTitle.setText("商户名称");
+            fgMainManageTvMerchantTitle.setText(R.string.business_name);
         }
     }
 

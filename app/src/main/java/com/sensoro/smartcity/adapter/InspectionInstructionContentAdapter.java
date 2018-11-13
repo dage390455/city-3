@@ -99,7 +99,7 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
         @BindView(R.id.item_adapter_inspection_instruction_content_rc_pic)
         RecyclerView itemAdapterInspectionInstructionContentRcPic;
 
-        public InspectionInstructionContentHolder(View itemView) {
+         InspectionInstructionContentHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this,itemView);
 

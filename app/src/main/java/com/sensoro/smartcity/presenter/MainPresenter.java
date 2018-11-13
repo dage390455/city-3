@@ -281,7 +281,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         @Override
                         public void run() {
                             if (!ping) {
-                                getView().toastShort("似乎断开了网络连接");
+                                getView().toastShort(mContext.getString(R.string.disconnected_from_network));
                             }
                         }
                     });

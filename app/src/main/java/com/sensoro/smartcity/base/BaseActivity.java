@@ -20,7 +20,6 @@ import com.baidu.mobstat.StatService;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 
@@ -183,9 +182,9 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
      */
     private void showRationaleDialog() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
-        builder.setTitle("提示")
-                .setMessage("通知中包含了重要报警信息，请前往设置，打开通知选项。")
-                .setPositiveButton("前往设置",
+        builder.setTitle(R.string.prompt)
+                .setMessage(R.string.notification_prompt)
+                .setPositiveButton(R.string.go_to_settings,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
@@ -199,7 +198,7 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
                                 startActivity(intent);
                             }
                         })
-                .setNegativeButton("取消",
+                .setNegativeButton(R.string.cancel,
                         new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {

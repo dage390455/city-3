@@ -57,7 +57,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     }
 
     private void initView() {
-        includeTextTitleTvTitle.setText("名称/地址");
+        includeTextTitleTvTitle.setText(R.string.name_address);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         initRcHistory();
     }
