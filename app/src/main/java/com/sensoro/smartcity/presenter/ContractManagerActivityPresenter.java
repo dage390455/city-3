@@ -41,7 +41,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
     private void initSelectData() {
         InspectionStatusCountModel im1 = new InspectionStatusCountModel();
-        im1.statusTitle = "全部";
+        im1.statusTitle = "全部状态";
         im1.count = -1;
         im1.status = 0;
         mSelectStatuslist.add(im1);
@@ -57,17 +57,17 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         mSelectStatuslist.add(im3);
 
         InspectionStatusCountModel im4 = new InspectionStatusCountModel();
-        im4.statusTitle = "全部";
+        im4.statusTitle = "全部合同";
         im4.count = -1;
         im4.status = 0;
         mSelectTypelist.add(im4);
         InspectionStatusCountModel im5 = new InspectionStatusCountModel();
-        im5.statusTitle = "企业";
+        im5.statusTitle = "企业合同";
         im5.count = -1;
         im5.status = 1;
         mSelectTypelist.add(im5);
         InspectionStatusCountModel im6 = new InspectionStatusCountModel();
-        im6.statusTitle = "个人";
+        im6.statusTitle = "个人合同";
         im6.count = -1;
         im6.status = 2;
         mSelectTypelist.add(im6);
