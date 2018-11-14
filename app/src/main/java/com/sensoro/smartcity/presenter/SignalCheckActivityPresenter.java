@@ -73,11 +73,11 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = R.color.c_f34a4a;
-                statusText = mActivity.getString(R.string.status_alarm);
+                statusText = mActivity.getString(R.string.main_page_warm);
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = R.color.c_29c093;
-                statusText = mActivity.getString(R.string.status_normal);
+                statusText = mActivity.getString(R.string.normal);
                 break;
             case SENSOR_STATUS_LOST:
                 textColor = R.color.c_5d5d5d;
@@ -89,7 +89,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 break;
             default:
                 textColor = R.color.c_29c093;
-                statusText = mActivity.getString(R.string.status_normal);
+                statusText = mActivity.getString(R.string.normal);
                 break;
         }
         getView().setStatus(statusText, textColor);

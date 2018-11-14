@@ -136,7 +136,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     private void initWidget() {
         RecyclerView recyclerView = mRoot.findViewById(R.id.recyclerView);
         adapter = new ImagePickerAdapter(mActivity, selImageList);
-        adapter.setAddTipText("拍照/录像");
+        adapter.setAddTipText(mActivity.getString(R.string.photo_recording));
         adapter.setOnItemClickListener(this);
 //        adapter.canVideo(true);
         GridLayoutManager layoutManager = new GridLayoutManager(mActivity, 4);
@@ -189,35 +189,35 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
     }
 
     private void intData() {
-        alarmResult.add("真实火警");
-        alarmResult.add("安全隐患");
-        alarmResult.add("误报");
-        alarmResult.add("测试/巡检");
+        alarmResult.add(mActivity.getString(R.string.true_alarm));
+        alarmResult.add(mActivity.getString(R.string.security_risks));
+        alarmResult.add(mActivity.getString(R.string.misdescription));
+        alarmResult.add(mActivity.getString(R.string.test_patrol));
         //
         alarmResultInfo.add("");
-        alarmResultInfo.add("*监测点或附近发生着火，需要立即进行扑救");
-        alarmResultInfo.add("*未发生着火，但现场确实存在隐患");
-        alarmResultInfo.add("*无任何火情和烟雾");
-        alarmResultInfo.add("*相关人员主动测试发出的预警");
+        alarmResultInfo.add(mActivity.getString(R.string.alarm_pop_alarm_result_info_tip1));
+        alarmResultInfo.add(mActivity.getString(R.string.alarm_pop_alarm_result_info_tip2));
+        alarmResultInfo.add(mActivity.getString(R.string.alarm_pop_alarm_result_info_tip3));
+        alarmResultInfo.add(mActivity.getString(R.string.alarm_pop_alarm_result_info_tip4));
         //
-        alarmType.add("用电异常");
-        alarmType.add("生产作业");
-        alarmType.add("吸烟");
-        alarmType.add("室内生火");
-        alarmType.add("烹饪");
-        alarmType.add("燃气泄漏");
-        alarmType.add("人为放火");
-        alarmType.add("易燃物自燃");
-        alarmType.add("其他");
+        alarmType.add(mActivity.getString(R.string.alarm_type_bnormal_power));
+        alarmType.add(mActivity.getString(R.string.alarm_type_production_operation));
+        alarmType.add(mActivity.getString(R.string.alarm_type_smoke));
+        alarmType.add(mActivity.getString(R.string.alarm_type_indoor_fire));
+        alarmType.add(mActivity.getString(R.string.alarm_type_cooking));
+        alarmType.add(mActivity.getString(R.string.alarm_type_gas_leak));
+        alarmType.add(mActivity.getString(R.string.alarm_type_artificial_arson));
+        alarmType.add(mActivity.getString(R.string.alarm_type_combustible_self_ignition));
+        alarmType.add(mActivity.getString(R.string.the_ohter));
         //
-        alarmPlace.add("小区");
-        alarmPlace.add("出租房");
-        alarmPlace.add("工厂");
-        alarmPlace.add("居民作坊");
-        alarmPlace.add("仓库");
-        alarmPlace.add("商铺店面");
-        alarmPlace.add("商场");
-        alarmPlace.add("其他");
+        alarmPlace.add(mActivity.getString(R.string.community));
+        alarmPlace.add(mActivity.getString(R.string.rental_house));
+        alarmPlace.add(mActivity.getString(R.string.factory));
+        alarmPlace.add(mActivity.getString(R.string.resident_workshop));
+        alarmPlace.add(mActivity.getString(R.string.warehouse));
+        alarmPlace.add(mActivity.getString(R.string.shop_storefront));
+        alarmPlace.add(mActivity.getString(R.string.the_mall));
+        alarmPlace.add(mActivity.getString(R.string.the_ohter));
     }
 
     private void init() {
@@ -307,17 +307,17 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
         setUpdateButtonClickable(false);
         mRemark = remarkEditText.getText().toString();
         if (selectResult == -1) {
-            toastShort("请选择预警结果类型");
+            toastShort(mActivity.getString(R.string.select_alarm_result_type));
             setUpdateButtonClickable(true);
             return;
         }
         if (selectType == -1) {
-            toastShort("请选择预警成因类型");
+            toastShort(mActivity.getString(R.string.select_alarm_cause_type));
             setUpdateButtonClickable(true);
             return;
         }
         if (selectPlace == -1) {
-            toastShort("请选择预警场所");
+            toastShort(mActivity.getString(R.string.select_alarm_cause_site));
             setUpdateButtonClickable(true);
             return;
         }
@@ -379,8 +379,8 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 //            updateButton();
         } else if (IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
-            names.add("拍照");
-            names.add("相册");
+            names.add(mActivity.getString(R.string.take_photo));
+            names.add(mActivity.getString(R.string.album));
 //            boolean needRecord = true;
 //            for (ImageItem imageItem : selImageList) {
 //                if (!imageItem.isRecord) {
@@ -392,7 +392,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 //            if (needRecord) {
 //                names.add("拍摄视频");
 //            }
-            names.add("拍摄视频");
+            names.add(mActivity.getString(R.string.shooting_video));
             showDialog(this, names);
         } else {
             //打开预览
@@ -416,7 +416,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
     @Override
     public void onStart() {
-        progressDialog.setTitle("请稍后");
+        progressDialog.setTitle(mActivity.getString(R.string.please_wait));
         progressDialog.setProgress(0);
         progressDialog.show();
     }

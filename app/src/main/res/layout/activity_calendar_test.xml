@@ -104,7 +104,7 @@
             android:layout_marginRight="@dimen/x100"
             android:layout_marginTop="@dimen/y50"
             android:background="@drawable/shape_bg_solid_ff_stroke_df_corner"
-            android:text="@string/calendar_cancel"
+            android:text="@string/cancel"
             android:textColor="@color/c_252525"
             android:layout_marginStart="40dp"
             android:textSize="@dimen/city_btn_text_size" />

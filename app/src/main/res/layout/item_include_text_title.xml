@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:text="@string/alarm_log"
+        android:text="@string/alert_log"
         android:textColor="@color/c_030303"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"

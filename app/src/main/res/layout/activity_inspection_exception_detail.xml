@@ -218,7 +218,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/inspection_exception_detail_live_photo"
+                android:text="@string/live_photo"
                 android:textSize="14sp"
                 android:textColor="@color/c_252525"
                 />

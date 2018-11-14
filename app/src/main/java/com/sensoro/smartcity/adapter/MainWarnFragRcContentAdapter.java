@@ -84,7 +84,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             } else {
                 holder.mainWarnRcContentTvContent.setText(stringBuilder.append(deviceTypeStr).append(" ").append(deviceName).toString());
             }
-            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(alarmLogInfo.getCreatedTime(), 0));
+            holder.mainWarnRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext,alarmLogInfo.getCreatedTime(), 0));
             //
             switch (alarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
@@ -182,10 +182,10 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             }
         }
         if (isAlarm) {
-            holder.mainWarnRcContentTvState.setText(R.string.warm_status_alarm);
+            holder.mainWarnRcContentTvState.setText(R.string.alarming);
             holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_f34a4a));
         } else {
-            holder.mainWarnRcContentTvState.setText(R.string.warm_status_normal);
+            holder.mainWarnRcContentTvState.setText(R.string.normal);
             holder.mainWarnRcContentTvState.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
         }
         final Boolean finalIsReConfirm = isReConfirm;

@@ -221,7 +221,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="@string/manager_fragment_inspection_task"
+                    android:text="@string/inspection_task"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -324,7 +324,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="@string/manager_fragment_signal_test"
+                    android:text="@string/signal_test"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -397,7 +397,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/manager_fragment_other"
+                android:text="@string/the_ohter"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="12sp" />
 

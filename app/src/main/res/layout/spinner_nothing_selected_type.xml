@@ -6,5 +6,5 @@
           android:layout_height="wrap_content"
           android:ellipsize="marquee"
           android:singleLine="true"
-          android:text="@string/slect_alarm_cause_type"
+          android:text="@string/select_alarm_cause_type"
           android:textColor="#808080"/>

@@ -183,7 +183,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
                 listener.onCalendarPopupCallback(calendarDateModel);
                 mPopupWindow.dismiss();
             } else {
-                SensoroToast.INSTANCE.makeText("日期段中的任一日期不能为空", Toast.LENGTH_SHORT).show();
+                SensoroToast.INSTANCE.makeText(mActivity.getString(R.string.tips_date_not_null), Toast.LENGTH_SHORT).show();
             }
         }
 

@@ -74,7 +74,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         //
 
         AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(position);
-        String time = DateUtil.getStrTimeToday(recordInfo.getUpdatedTime(), 0);
+        String time = DateUtil.getStrTimeToday(mContext,recordInfo.getUpdatedTime(), 0);
         holder.itemAlertContentTvTime.setText(time);
         //
         if ("confirm".equals(recordInfo.getType())) {
@@ -92,7 +92,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                 }
                 confirm_text = day + mContext.getString(R.string.no_one_confirmed_the_system_automatically_confirms);
                 SpannableString spannableString = new SpannableString(confirm_text);
-                String temp = day + mContext.getString(R.string.hours);
+                String temp = day + mContext.getString(R.string.hour);
                 changTextColor(confirm_text, temp, spannableString, R.color.c_252525);
                 temp = mContext.getString(R.string.test_patrol);
                 changTextColor(confirm_text, temp, spannableString, R.color.c_8058a5);

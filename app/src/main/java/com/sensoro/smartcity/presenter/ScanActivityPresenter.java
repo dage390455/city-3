@@ -154,7 +154,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     public void processResult(String result) {
         playVoice();
         if (TextUtils.isEmpty(result)) {
-            getView().toastShort(mContext.getResources().getString(R.string.scan_failed));
+            getView().toastShort(mContext.getResources().getString(R.string.please_re_scan_try_again));
             getView().startScan();
             return;
         }

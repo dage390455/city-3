@@ -45,8 +45,8 @@ public interface Constants {
 //            R.mipmap.ic_menu_location};
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
-    int[] DEVICE_STATUS_ARRAY = {R.string.status_alarm, R.string.status_normal, R.string.status_lost, R.string.status_inactive};
-    int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.status_normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline};
+    int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warm, R.string.normal, R.string.status_lost, R.string.status_inactive};
+    int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
     //    String[] INDEX_TYPE_ARRAY = {

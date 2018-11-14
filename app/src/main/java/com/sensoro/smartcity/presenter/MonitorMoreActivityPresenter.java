@@ -151,7 +151,7 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
                     getView().setAlarmSetting(stringBuilder.append("时报警").toString());
                 }
                 int interval = deviceInfo.getInterval();
-                getView().setInterval(DateUtil.secToTimeBefore(interval));
+                getView().setInterval(DateUtil.secToTimeBefore(mContext,interval));
 
                 String name = deviceInfo.getName();
                 if (TextUtils.isEmpty(name)) {
