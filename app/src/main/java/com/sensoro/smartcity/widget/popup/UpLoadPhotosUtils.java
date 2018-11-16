@@ -7,6 +7,7 @@ import com.qiniu.android.http.ResponseInfo;
 import com.qiniu.android.storage.UpCompletionHandler;
 import com.qiniu.android.storage.UpProgressHandler;
 import com.qiniu.android.storage.UploadOptions;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -95,7 +96,7 @@ public final class UpLoadPhotosUtils {
                 }).setCompressListener(new OnCompressListener() {
                     @Override
                     public void onStart() {
-                        String title = "正在上传第" + currentNum + "文件，总共" + imageItems.size() + "个";
+                        String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2)+ imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                         upLoadPhotoListener.onProgress(title, 0);
                     }
 
@@ -124,7 +125,7 @@ public final class UpLoadPhotosUtils {
                                                                 //TODO 可以添加重试获取token机制
                                                                 LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + currentNum + "】文件-" +
                                                                         imageItem.name + "-->" + responseInfo.error);
-                                                                upLoadPhotoListener.onError("上传视频失败");
+                                                                upLoadPhotoListener.onError(mContext.getString(R.string.upload_photo_dialog_upload_video_failed));
                                                                 pictureIndex = 0;
                                                             }
 
@@ -134,7 +135,7 @@ public final class UpLoadPhotosUtils {
                                                 @Override
                                                 public void progress(String key, double percent) {
                                                     LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                                    String title = "正在上传第" + currentNum + "个文件，总共" + imageItems.size() + "个";
+                                                    String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2)+ imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                                     upLoadPhotoListener.onProgress(title, percent);
                                                 }
                                             }, null));
@@ -151,7 +152,7 @@ public final class UpLoadPhotosUtils {
                             @Override
                             public void progress(String key, double percent) {
                                 LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                String title = "正在上传第" + currentNum + "个文件，总共" + imageItems.size() + "个";
+                                String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2)+ imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                 upLoadPhotoListener.onProgress(title, percent);
                             }
                         }, null));
@@ -161,7 +162,7 @@ public final class UpLoadPhotosUtils {
                     public void onError(Throwable e) {
                         LogUtils.loge(this, "压缩视频缩略图" + "第【" + currentNum + "】张-" + imageItem
                                 .name + "失败--->>" + e.getMessage());
-                        upLoadPhotoListener.onError("上传视频缩略图失败");
+                        upLoadPhotoListener.onError(mContext.getString(R.string.upload_photo_dialog_upload_thumbnail_failed));
                     }
                 }).launch();
             } else {
@@ -175,7 +176,7 @@ public final class UpLoadPhotosUtils {
                         () {
                     @Override
                     public void onStart() {
-                        String title = "正在上传第" + currentNum + "个文件，总共" + imageItems.size() + "个";
+                        String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2)+ imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                         upLoadPhotoListener.onProgress(title, 0);
                     }
 
@@ -217,7 +218,7 @@ public final class UpLoadPhotosUtils {
                     public void onError(Throwable e) {
                         LogUtils.loge(this, "压缩 " + "第【" + currentNum + "】张-" + imageItem
                                 .name + "失败--->>" + e.getMessage());
-                        upLoadPhotoListener.onError("上传 " + "第 " + currentNum + " 张失败");
+                        upLoadPhotoListener.onError(mContext.getString(R.string.upload_photo_dialog_upload) + currentNum + mContext.getString(R.string.upload_photo_dialog_upload_count_failed));
                         pictureIndex = 0;
                     }
                 }).launch();

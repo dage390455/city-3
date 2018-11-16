@@ -51,7 +51,7 @@ public enum DeployAnalyzerUtils implements Constants {
      */
     public void handlerDeployAnalyzerResult(BasePresenter presenter, final int scanType, final String result, final Activity activity, InspectionIndexTaskInfo inspectionIndexTaskInfo, InspectionTaskDeviceDetail oldDeviceDetail, final OnDeployAnalyzerListener listener) {
         if (TextUtils.isEmpty(result)) {
-            listener.onError(0, null, activity.getResources().getString(R.string.scan_failed));
+            listener.onError(0, null, activity.getResources().getString(R.string.please_re_scan_try_again));
             return;
         }
         switch (scanType) {

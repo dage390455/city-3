@@ -64,7 +64,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/deploy_record_tag"
+            android:text="@string/sensor_detail_tag"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp"
             />

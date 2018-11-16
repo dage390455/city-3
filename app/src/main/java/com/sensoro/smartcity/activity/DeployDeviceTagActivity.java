@@ -58,7 +58,7 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     private void initView() {
         tagDialogUtils = new TagDialogUtils(mActivity);
         tagDialogUtils.registerListener(this);
-        includeTextTitleTvTitle.setText(R.string.label);
+        includeTextTitleTvTitle.setText(R.string.sensor_detail_tag);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
         initRcAddTag();

@@ -137,7 +137,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/y20"
-            android:text="@string/tips_no_search_data"
+            android:text="@string/cant_find_related_content"
             android:textSize="13sp" />
     </LinearLayout>
 

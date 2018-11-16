@@ -229,7 +229,7 @@
                             android:paddingRight="@dimen/x20"
                             android:paddingTop="@dimen/y10"
                             android:singleLine="true"
-                            android:text="@string/status_normal"
+                            android:text="@string/normal"
                             android:textColor="@color/white"
                             android:textSize="@dimen/x45" />
 

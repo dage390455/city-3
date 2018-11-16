@@ -151,7 +151,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             getView().setUpdateTextViewVisible(false);
         } else {
             getView().setUpdateTextView(DateUtil
-                    .getFullParseDatePoint(updatedTime));
+                    .getFullParseDatePoint(mContext, updatedTime));
         }
     }
 
@@ -170,7 +170,8 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         if (updatedTime == -1 || updatedTime == 0) {
             getView().setUpdateTextViewVisible(false);
         } else {
-            getView().setUpdateTextView(DateUtil.getFullParseDatePoint(updatedTime));
+            getView().setUpdateTextView(DateUtil
+                    .getFullParseDatePoint(mContext, updatedTime));
         }
     }
 

@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.SensoroToast;
 
 import java.lang.ref.SoftReference;
@@ -112,24 +113,25 @@ public final class PermissionUtils {
      */
     private void showRationaleDialog(final String[] permissions, final int myRequestPermissionCode) {
         if (hasActivity()) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext.get());
-            builder.setTitle("提示")
-                    .setMessage("为了应用可以正常使用，请您点击确认申请权限。")
-                    .setPositiveButton("确认",
+            final Activity activity = mContext.get();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(activity.getString(R.string.prompt))
+                    .setMessage(activity.getString(R.string.permission_descript))
+                    .setPositiveButton(activity.getString(R.string.dialog_input_confirm),
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
-                                    ActivityCompat.requestPermissions(mContext.get(), permissions,
+                                    ActivityCompat.requestPermissions(activity, permissions,
                                             myRequestPermissionCode);
                                 }
                             })
-                    .setNegativeButton("取消",
+                    .setNegativeButton(activity.getString(R.string.cancel),
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     dialog.dismiss();
-                                    SensoroToast.INSTANCE.makeText(mContext.get(), "需要权限！请重新打开应用", Toast.LENGTH_SHORT).show();
-                                    mContext.get().finish();
+                                    SensoroToast.INSTANCE.makeText(activity, activity.getString(R.string.permission_instruction), Toast.LENGTH_SHORT).show();
+                                    activity.finish();
                                 }
                             })
                     .setCancelable(false)
@@ -252,23 +254,24 @@ public final class PermissionUtils {
      */
     private void showPermissionSettingDialog(final int myRequestPermissionCode) {
         if (hasActivity()) {
-            final AlertDialog.Builder builder = new AlertDialog.Builder(mContext.get());
-            builder.setTitle("提示")
-                    .setMessage("必要的权限被拒绝")
-                    .setPositiveButton("去设置", new DialogInterface.OnClickListener() {
+            final Activity activity = mContext.get();
+            final AlertDialog.Builder builder = new AlertDialog.Builder(activity);
+            builder.setTitle(activity.getString(R.string.prompt))
+                    .setMessage(activity.getString(R.string.necessary_permission_are_denied))
+                    .setPositiveButton(activity.getString(R.string.go_to_setting), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             Intent in = new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
-                            Uri uri = Uri.fromParts("package", mContext.get().getPackageName(), null);
+                            Uri uri = Uri.fromParts("package", activity.getPackageName(), null);
                             in.setData(uri);
-                            mContext.get().startActivityForResult(in, myRequestPermissionCode);
+                            activity.startActivityForResult(in, myRequestPermissionCode);
                         }
                     })
-                    .setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(activity.getString(R.string.cancel), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             dialogInterface.dismiss();
-                            restart(mContext.get());
+                            restart(activity);
                         }
                     })
                     .setCancelable(false)
@@ -379,8 +382,8 @@ public final class PermissionUtils {
                 Camera.Parameters param = camera.getParameters();
                 if (param != null) {
                     return true;
-                } else {
-                    SensoroToast.INSTANCE.makeText("请打开拍照权限", Toast.LENGTH_SHORT).show();
+                } else if(mContext.get() != null){
+                    SensoroToast.INSTANCE.makeText(mContext.get().getString(R.string.open_camera_permission), Toast.LENGTH_SHORT).show();
                 }
 
             } catch (Exception e) {

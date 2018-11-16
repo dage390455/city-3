@@ -15,7 +15,7 @@
         android:paddingTop="6dp"
         android:paddingEnd="14dp"
         android:paddingBottom="6dp"
-        android:text="@string/inspection_task_all_types"
+        android:text="@string/all_types"
         android:textColor="@color/c_252525"
         android:textSize="12sp" />
 </LinearLayout>

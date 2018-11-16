@@ -87,13 +87,13 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         int contract_type = contractListInfo.getContract_type();
         switch (contract_type) {
             case 1:
-                holder.itemTvType.setText(R.string.enterprise);
+                holder.itemTvType.setText(R.string.company);
                 break;
             case 2:
                 holder.itemTvType.setText(R.string.personal);
                 break;
             default:
-                holder.itemTvType.setText(R.string.enterprise);
+                holder.itemTvType.setText(R.string.company);
                 break;
         }
 

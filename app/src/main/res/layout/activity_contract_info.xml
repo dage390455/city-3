@@ -70,7 +70,7 @@
                         android:gravity="center_vertical"
                         android:paddingTop="12dp"
                         android:paddingBottom="12dp"
-                        android:text="@string/contract_info_legal_representative"
+                        android:text="@string/legal_representative"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -115,7 +115,7 @@
                         android:gravity="center_vertical"
                         android:paddingTop="12dp"
                         android:paddingBottom="12dp"
-                        android:text="@string/contract_info_phone_number"
+                        android:text="@string/phone_num"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -160,7 +160,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="12dp"
                         android:gravity="center_vertical"
-                        android:text="@string/contract_info_company_name"
+                        android:text="@string/company_name"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -204,7 +204,7 @@
                         android:layout_marginTop="12dp"
                         android:layout_marginBottom="12dp"
                         android:gravity="center_vertical"
-                        android:text="@string/contract_info_social_credit_code"
+                        android:text="@string/social_credit_code"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -290,7 +290,7 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="20dp"
                         android:gravity="center_vertical"
-                        android:text="@string/contract_info_address"
+                        android:text="@string/address"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 

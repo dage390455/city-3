@@ -61,7 +61,7 @@
         android:layout_marginRight="@dimen/x70"
         android:background="@drawable/shape_button_normal"
         android:gravity="center"
-        android:text="@string/scan_result_cancel"
+        android:text="@string/cancel"
         android:textColor="@color/white"
         android:textSize="@dimen/city_btn_text_size"/>
 </LinearLayout>

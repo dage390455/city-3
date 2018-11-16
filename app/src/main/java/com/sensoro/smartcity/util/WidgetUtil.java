@@ -62,7 +62,7 @@ public class WidgetUtil {
                 isBoolean = true;
                 Boolean isOk = (Boolean) value;
                 if (isOk) {
-                    valueTextView.setText(R.string.jinggai_true);
+                    valueTextView.setText(R.string.normal);
                 } else {
                     valueTextView.setText(R.string.jinggai_false);
                 }
@@ -91,16 +91,16 @@ public class WidgetUtil {
                 if (isOk) {
                     valueTextView.setText(R.string.collision_true);
                 } else {
-                    valueTextView.setText(R.string.collision_false);
+                    valueTextView.setText(R.string.normal);
                 }
                 unitTextView.setText("");
             } else if (sensorType.equals("alarm")) {
                 isBoolean = true;
                 Boolean isOk = (Boolean) value;
                 if (isOk) {
-                    valueTextView.setText(R.string.alarm_true);
+                    valueTextView.setText(R.string.status_alarm_true);
                 } else {
-                    valueTextView.setText(R.string.alarm_false);
+                    valueTextView.setText(R.string.normal);
                 }
                 unitTextView.setText("");
             } else if (sensorType.equals("smoke")) {
@@ -161,27 +161,27 @@ public class WidgetUtil {
                 isBoolean = true;
                 Boolean isTrue = (Boolean) value;
                 if (isTrue) {
-                    valueTextView.setText(R.string.alarm_true);
+                    valueTextView.setText(R.string.status_alarm_true);
                 } else {
-                    valueTextView.setText(R.string.alarm_false);
+                    valueTextView.setText(R.string.normal);
                 }
 //                    unitTextView.setEditText(R.string.sensor_magnetic);
             } else if (sensorType.equals("manual_alarm")) {
                 isBoolean = true;
                 Boolean isTrue = (Boolean) value;
                 if (isTrue) {
-                    valueTextView.setText(R.string.alarm_true);
+                    valueTextView.setText(R.string.status_alarm_true);
                 } else {
-                    valueTextView.setText(R.string.alarm_false);
+                    valueTextView.setText(R.string.normal);
                 }
 //                    unitTextView.setEditText(R.string.sensor_magnetic);
             } else if (sensorType.equals("sound_light_alarm")) {
                 isBoolean = true;
                 Boolean isTrue = (Boolean) value;
                 if (isTrue) {
-                    valueTextView.setText(R.string.alarm_true);
+                    valueTextView.setText(R.string.status_alarm_true);
                 } else {
-                    valueTextView.setText(R.string.alarm_false);
+                    valueTextView.setText(R.string.normal);
                 }
 //                    unitTextView.setEditText(R.string.sensor_magnetic);
             } else if (sensorType.equals("drop")) {
@@ -596,14 +596,14 @@ public class WidgetUtil {
                 if (isTrue) {
                     valueTextView.setText(R.string.collision_true);
                 } else {
-                    valueTextView.setText(R.string.collision_false);
+                    valueTextView.setText(R.string.normal);
                 }
             } else if (sensorType.equalsIgnoreCase("alarm")) {
                 Boolean isTrue = (Boolean) value;
                 if (isTrue) {
-                    valueTextView.setText(R.string.alarm_true);
+                    valueTextView.setText(R.string.status_alarm_true);
                 } else {
-                    valueTextView.setText(R.string.alarm_false);
+                    valueTextView.setText(R.string.normal);
                 }
             } else if (sensorType.equalsIgnoreCase("flame")) { //
                 Boolean isTrue = (Boolean) value;
@@ -643,23 +643,23 @@ public class WidgetUtil {
             } else if (sensorType.equalsIgnoreCase("infrared")) {
                 Boolean isTrue = (Boolean) value;
                 if (isTrue) {
-                    valueTextView.setText(R.string.alarm_true);
+                    valueTextView.setText(R.string.status_alarm_true);
                 } else {
-                    valueTextView.setText(R.string.alarm_false);
+                    valueTextView.setText(R.string.normal);
                 }
             } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
                 Boolean isTrue = (Boolean) value;
                 if (isTrue) {
-                    valueTextView.setText(R.string.alarm_true);
+                    valueTextView.setText(R.string.status_alarm_true);
                 } else {
-                    valueTextView.setText(R.string.alarm_false);
+                    valueTextView.setText(R.string.normal);
                 }
             } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
                 Boolean isTrue = (Boolean) value;
                 if (isTrue) {
-                    valueTextView.setText(R.string.alarm_true);
+                    valueTextView.setText(R.string.status_alarm_true);
                 } else {
-                    valueTextView.setText(R.string.alarm_false);
+                    valueTextView.setText(R.string.normal);
                 }
             }
         } else {
@@ -751,16 +751,16 @@ public class WidgetUtil {
             if (isTrue) {
                 valueTextView.setText(R.string.collision_true);
             } else {
-                valueTextView.setText(R.string.collision_false);
+                valueTextView.setText(R.string.normal);
             }
             unitTextView.setText("");
         } else if (sensorType.equalsIgnoreCase("alarm")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
+                valueTextView.setText(R.string.status_alarm_true);
             } else {
-                valueTextView.setText(R.string.alarm_false);
+                valueTextView.setText(R.string.normal);
             }
             unitTextView.setText("");
         } else if (sensorType.equalsIgnoreCase("flame")) { //
@@ -812,27 +812,27 @@ public class WidgetUtil {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
+                valueTextView.setText(R.string.status_alarm_true);
             } else {
-                valueTextView.setText(R.string.alarm_false);
+                valueTextView.setText(R.string.normal);
             }
             unitTextView.setText("");
         } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
+                valueTextView.setText(R.string.status_alarm_true);
             } else {
-                valueTextView.setText(R.string.alarm_false);
+                valueTextView.setText(R.string.normal);
             }
             unitTextView.setText("");
         } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
             isBool = true;
             Boolean isTrue = (Boolean) value;
             if (isTrue) {
-                valueTextView.setText(R.string.alarm_true);
+                valueTextView.setText(R.string.status_alarm_true);
             } else {
-                valueTextView.setText(R.string.alarm_false);
+                valueTextView.setText(R.string.normal);
             }
             unitTextView.setText("");
         }
