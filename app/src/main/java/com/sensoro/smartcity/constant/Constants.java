@@ -234,6 +234,8 @@ public interface Constants {
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     String EXTRA_CONTRACT_ID = "EXTRA_CONTRACT_ID";
+    //故障
+    String EXTRA_MALFUNCTION_INFO = "extra_malfunction_info";
 
     //
     String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";

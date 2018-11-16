@@ -25,6 +25,8 @@ import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
+import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
+import com.sensoro.smartcity.server.response.MalfunctionListRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
@@ -68,12 +70,14 @@ public interface RetrofitService {
     String DEVICE_ALARM_TIME = "details/alarm/ltime";
     String DEVICE_ALARM_HISTORY = "prov1/alarms/list/app";
     String DEVICE_ALARM_LOG = "alarmplay";
+    String DEVICE_MALFUNCTION_LOG = "prov1/malfunctions";
     String DEVICE_BRIEF_LIST = "stats/device/brief/app";
     String DEVICE_TYPE_COUNT = "prov1/devices/status/count";
     String DOUBLE_CHECK = "tfa/totp/verify";
     String APP_UPDATE = "http://api.fir" +
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
     String ALARM_COUNT = "prov1/alarms/count";
+    String MALFUNCTION_COUNT = "malfunctions/count";
     String INSPECT_TASK_LIST = "inspect/task/list";
     String INSPECT_TASK_EXECUTION = "/inspect/task/execution";
     String INSPECT_TASK_CHANGE_STATE = "inspect/task/status";
@@ -126,6 +130,12 @@ public interface RetrofitService {
                                                                 ("beginTime") Long beginTime,
                                                         @Query("endTime") Long endTime
             , @Query("unionTypes") String unionTypes);
+
+    @GET(DEVICE_MALFUNCTION_LOG)
+    Observable<MalfunctionListRsp> getDeviceMalfunctionLogList(@Query("count") int count, @Query("page") int page, @Query
+            ("sn") String sn, @Query("deviceName") String deviceName, @Query("search") String search, @Query
+                                                                ("beginTime") Long beginTime,
+                                                               @Query("endTime") Long endTime);
 
     @GET(USER_ACCOUNT_LIST)
     Observable<UserAccountRsp> getUserAccountList(@Query("search") String search, @Query("page") Integer page, @Query
@@ -217,6 +227,10 @@ public interface RetrofitService {
     @GET(ALARM_COUNT)
     Observable<AlarmCountRsp> getAlarmCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
                                             @Query("displayStatus") String displayStatus, @Query("sn") String sn);
+
+    @GET(MALFUNCTION_COUNT)
+    Observable<MalfunctionCountRsp> getMalfunctionCount(@Query("beginTime") Long beginTime, @Query("endTime") Long endTime,
+                                                        @Query("malfunctionStatus") String malfunctionStatus, @Query("sn") String sn);
 
     @GET(INSPECT_TASK_LIST)
     Observable<InspectionTaskModelRsp> getInspectTaskList(@Query("search") String search, @Query("finish") Integer finish, @Query

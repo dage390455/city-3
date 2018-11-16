@@ -38,6 +38,8 @@ import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
+import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
+import com.sensoro.smartcity.server.response.MalfunctionListRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.StationInfoRsp;
@@ -99,6 +101,7 @@ public enum RetrofitServiceHelper {
                 .registerTypeAdapter(short.class, new NumberDeserializer())
                 .registerTypeAdapter(Number.class, new NumberDeserializer())
                 .registerTypeAdapter(JsonObject.class, new JsonObjectDeserializer())
+                .registerTypeAdapter(String.class, new JsonStringDeserializer())
                 .registerTypeAdapter(String.class, new StringDeserializer());
         gson = gsonBuilder.create();
         //支持RxJava
@@ -369,6 +372,22 @@ public enum RetrofitServiceHelper {
         Observable<DeviceAlarmLogRsp> deviceAlarmLogList = retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
         RxApiManager.getInstance().add("getDeviceAlarmLogList", deviceAlarmLogList.subscribe());
         return deviceAlarmLogList;
+    }
+
+    /**
+     * 获取故障信息日志
+     * @param page
+     * @param sn
+     * @param deviceName
+     * @param search
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public Observable<MalfunctionListRsp> getDeviceMalfunctionLogList(int page, String sn, String deviceName, String search, Long beginTime, Long endTime) {
+        Observable<MalfunctionListRsp> deviceMalfunctionLogList = retrofitService.getDeviceMalfunctionLogList(10, page, sn, deviceName, search, beginTime, endTime);
+        RxApiManager.getInstance().add("getDeviceMalfunctionLogList", deviceMalfunctionLogList.subscribe());
+        return deviceMalfunctionLogList;
     }
 
     /**
@@ -946,6 +965,32 @@ public enum RetrofitServiceHelper {
             return retrofitService.getAlarmCount(startTime, endTime, null, sn);
         } else {
             return retrofitService.getAlarmCount(startTime, endTime, stringBuilder.toString(), sn);
+        }
+    }
+
+    /**
+     * 获取半年故障次数
+     * @param startTime
+     * @param endTime
+     * @param displayStatus
+     * @param sn
+     * @return
+     */
+    public Observable<MalfunctionCountRsp> getMalfunctionCount(Long startTime, Long endTime, String[] malfunctionStatus, String sn) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (malfunctionStatus != null && malfunctionStatus.length > 0) {
+            for (int i = 0; i < malfunctionStatus.length; i++) {
+                if (i == malfunctionStatus.length - 1) {
+                    stringBuilder.append(malfunctionStatus[i]);
+                } else {
+                    stringBuilder.append(malfunctionStatus[i]).append(",");
+                }
+            }
+        }
+        if (TextUtils.isEmpty(stringBuilder)) {
+            return retrofitService.getMalfunctionCount(startTime, endTime, null, sn);
+        } else {
+            return retrofitService.getMalfunctionCount(startTime, endTime, stringBuilder.toString(), sn);
         }
     }
 

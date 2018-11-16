@@ -65,10 +65,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     private void initBottomBar() {
+        //todo
         warnBadgeItem = new TextBadgeItem();
         BottomNavigationItem homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, "首页");
         BottomNavigationItem warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "预警");
-        BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "故障");
+        BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_malfunction, "故障");
         BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, "管理");
         warnItem.setBadgeItem(warnBadgeItem);
 //        warnBadgeItem.hide();
