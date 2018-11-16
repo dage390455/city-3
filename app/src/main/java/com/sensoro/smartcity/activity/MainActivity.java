@@ -173,6 +173,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void setHasAlarmInfoControl(boolean hasDeviceAlarmInfoControl) {
+        acMainTvWarningCount.setVisibility(hasDeviceAlarmInfoControl ? View.VISIBLE : View.GONE);
         acMainRbWarning.setVisibility(hasDeviceAlarmInfoControl ? View.VISIBLE : View.GONE);
     }
 

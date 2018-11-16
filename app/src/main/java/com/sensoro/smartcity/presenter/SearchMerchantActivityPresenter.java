@@ -226,6 +226,10 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
     }
 
     public void clickItem(int position) {
+        if (!PreferencesHelper.getInstance().getUserData().hasMerchantChange) {
+            getView().toastShort(mContext.getString(R.string.merchant_has_no_change_permission));
+            return;
+        }
         if (!mUserInfoList.get(position).isStop()) {
 //            getView().setAdapterSelectedIndex(position);
 //            mMerchantAdapter.setSelectedIndex(position);

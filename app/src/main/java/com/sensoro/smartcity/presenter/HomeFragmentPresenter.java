@@ -176,16 +176,30 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+                getView().refreshHeaderData(true, mHomeTopModels);
+                getView().refreshContentData(true, mHomeTopModels);
+                if (mHomeTopModels.size() <= 1) {
+                    getView().setImvHeaderLeftVisible(false);
+                    getView().setImvHeaderRightVisible(false);
+                }
                 if (mHomeTopModels.size() > 0) {
-                    freshHeaderContentData(mHomeTopModels.get(0));
+                    updateHeaderTop(mHomeTopModels.get(0));
                 }
                 getView().dismissProgressDialog();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+                getView().refreshHeaderData(true, mHomeTopModels);
+                getView().refreshContentData(true, mHomeTopModels);
+                if (mHomeTopModels.size() <= 1) {
+                    getView().setImvHeaderLeftVisible(false);
+                    getView().setImvHeaderRightVisible(false);
+                }
                 if (mHomeTopModels.size() > 0) {
-                    freshHeaderContentData(mHomeTopModels.get(0));
+                    updateHeaderTop(mHomeTopModels.get(0));
                 }
                 getView().toastShort(errorMsg);
                 getView().dismissProgressDialog();
@@ -193,28 +207,17 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         });
     }
 
-    private void freshHeaderContentData(HomeTopModel homeTopModel) {
+    public void updateHeaderTop(HomeTopModel homeTopModel) {
         try {
-            getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
-            getView().refreshHeaderData(true, mHomeTopModels);
-            getView().refreshContentData(true, mHomeTopModels);
-            if (mHomeTopModels.size() <= 1) {
-                getView().setImvHeaderLeftVisible(false);
-                getView().setImvHeaderRightVisible(false);
-            }
-            updateHeaderTop(homeTopModel);
+            mCurrentHomeTopModel = homeTopModel;
+            String currentDataStr = getCurrentDataStr();
+            int currentColor = getCurrentColor();
+            getView().setToolbarTitleBackgroundColor(currentColor);
+            getView().setToolbarTitleCount(currentDataStr);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-    }
-
-    public void updateHeaderTop(HomeTopModel homeTopModel) {
-        mCurrentHomeTopModel = homeTopModel;
-        String currentDataStr = getCurrentDataStr();
-        int currentColor = getCurrentColor();
-        getView().setToolbarTitleBackgroundColor(currentColor);
-        getView().setToolbarTitleCount(currentDataStr);
     }
 
     @NonNull

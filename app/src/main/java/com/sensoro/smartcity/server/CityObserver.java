@@ -26,8 +26,8 @@ import rx.Observer;
 import static com.sensoro.smartcity.constant.Constants.EVENT_DATA_SESSION_ID_OVERTIME;
 
 public abstract class CityObserver<T> implements Observer<T> {
-    public static int ERR_CODE_NET_CONNECT_EX = -0x01;
-    public static int ERR_CODE_UNKNOWN_EX = -0x02;
+    public static int ERR_CODE_NET_CONNECT_EX = -0x1001;
+    public static int ERR_CODE_UNKNOWN_EX = -0x1002;
     private final WeakReference<BasePresenter> presenterWeakReference;
     private boolean needPresenter;
 

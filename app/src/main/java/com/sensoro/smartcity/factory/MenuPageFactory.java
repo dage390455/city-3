@@ -28,7 +28,8 @@ public class MenuPageFactory {
         eventLoginData.hasStation = getHasStationDeploy(grants);
         eventLoginData.hasContract = getHasContract(grants);
         eventLoginData.hasScanLogin = getHasScanLogin(grants);
-        eventLoginData.hasSubMerchant = getHasSubMerchant(roles, isSpecific);
+        eventLoginData.hasSubMerchant = getHasSubMerchant(grants);
+        eventLoginData.hasMerchantChange = getHasMerchantChange(grants);
         eventLoginData.hasInspectionTaskList = getHasInspectionTaskList(grants);
         eventLoginData.hasInspectionTaskModify = getHasInspectionTaskModify(grants);
         eventLoginData.hasInspectionDeviceList = getHasInspectionDeviceList(grants);
@@ -113,12 +114,32 @@ public class MenuPageFactory {
     /**
      * 判断是否有子账户权限
      *
-     * @param roles
-     * @param isSupperAccountStr
+     * @param grants
      * @return
      */
-    public static boolean getHasSubMerchant(String roles, String isSupperAccountStr) {
-        return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr) || !"business".equalsIgnoreCase(roles);
+    public static boolean getHasSubMerchant(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> user = grants.getUser();
+            if (user != null) {
+                return user.contains("list");
+            }
+        }
+        return false;
+    }
+    /**
+     * 判断是否有子账户权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasMerchantChange(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> user = grants.getUser();
+            if (user != null) {
+                return user.contains("control");
+            }
+        }
+        return false;
     }
 
     /**

@@ -4,14 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
-import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
-import com.sensoro.smartcity.model.DeployMapModel;
+import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
@@ -20,25 +19,28 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRecordDetailActivityView>
-implements Constants {
+        implements Constants {
     private Activity mActivity;
     private DeployRecordInfo mDeployRecordInfo;
-    private DeployMapModel mDeployMapModel;
+    private DeployAnalyzerModel deployAnalyzerModel;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         mDeployRecordInfo = (DeployRecordInfo) mActivity.getIntent().getSerializableExtra(EXTRA_DEPLOY_RECORD_DETAIL);
-
         refreshUI();
     }
 
     private void initDeployMapModel() {
         List<Double> lonlat = mDeployRecordInfo.getLonlat();
-        mDeployMapModel = new DeployMapModel();
-        mDeployMapModel.deployType = TYPE_SCAN_DEPLOY_POINT_DISPLAY;
-        mDeployMapModel.latLng = new LatLng(lonlat.get(1),lonlat.get(0));
-        mDeployMapModel.signal = mDeployRecordInfo.getSignalQuality();
+        deployAnalyzerModel = new DeployAnalyzerModel();
+        deployAnalyzerModel.isFromDeployRecord = true;
+        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_POINT_DISPLAY;
+        if (lonlat != null) {
+            deployAnalyzerModel.latLng.clear();
+            deployAnalyzerModel.latLng.addAll(lonlat);
+        }
+        deployAnalyzerModel.signal = mDeployRecordInfo.getSignalQuality();
 
     }
 
@@ -48,15 +50,15 @@ implements Constants {
             getView().setDeviceName(mDeployRecordInfo.getDeviceName());
             getView().updateTagList(mDeployRecordInfo.getTags());
             getView().setDeployTime(DateUtil.getStrTime_ymd_hm_ss(mDeployRecordInfo.getCreatedTime()));
-            getView().setPicCount(mActivity.getString(R.string.added)+mDeployRecordInfo.getDeployPics().size()+mActivity.getString(R.string.images));
+            getView().setPicCount(mActivity.getString(R.string.added) + mDeployRecordInfo.getDeployPics().size() + mActivity.getString(R.string.images));
             ArrayList<DeployRecordInfo.NotificationBean> contacts = new ArrayList<>();
-            if(mDeployRecordInfo.getNotification()!=null){
+            if (mDeployRecordInfo.getNotification() != null) {
                 contacts.add(mDeployRecordInfo.getNotification());
             }
             getView().updateContactList(contacts);
-            if(mDeployRecordInfo.getLonlat() != null){
+            if (mDeployRecordInfo.getLonlat() != null) {
                 getView().setPositionStatus(1);
-            }else{
+            } else {
                 getView().setPositionStatus(0);
             }
             getView().refreshSingle(mDeployRecordInfo.getSignalQuality());
@@ -71,7 +73,7 @@ implements Constants {
 
     public void doDeployPic() {
         List<String> deployPics = mDeployRecordInfo.getDeployPics();
-        if(deployPics.size()>0){
+        if (deployPics.size() > 0) {
             ArrayList<ImageItem> items = new ArrayList<>();
             for (String deployPic : deployPics) {
                 ImageItem imageItem = new ImageItem();
@@ -81,10 +83,10 @@ implements Constants {
                 items.add(imageItem);
             }
             Intent intent = new Intent(mActivity, DeployMonitorSettingPhotoActivity.class);
-            intent.putExtra(EXTRA_JUST_DISPLAY_PIC,true);
-            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO,items);
+            intent.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
+            intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, items);
             getView().startAC(intent);
-        }else{
+        } else {
             getView().toastShort(mActivity.getString(R.string.no_photos_added));
         }
     }
@@ -93,8 +95,7 @@ implements Constants {
         Intent intent = new Intent();
         initDeployMapModel();
         intent.setClass(mActivity, DeployMapActivity.class);
-        intent.putExtra(EXTRA_DEPLOY_TO_MAP, mDeployMapModel);
-        intent.putExtra(EXTRA_DEPLOY_DISPLAY_MAP,true);
+        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
 }

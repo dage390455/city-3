@@ -23,6 +23,7 @@ import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
+import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -40,7 +41,6 @@ import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
-import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
@@ -505,7 +505,7 @@ public enum RetrofitServiceHelper {
         return deviceDeployRspObservable;
     }
 
-    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, double longitude, double latitude){
+    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, Double longitude, Double latitude){
         Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude,latitude);
         RxApiManager.getInstance().add("deployDeviceDetail",deployDeviceDetail.subscribe());
         return deployDeviceDetail;
@@ -568,7 +568,7 @@ public enum RetrofitServiceHelper {
      * @param name
      * @return
      */
-    public Observable<StationInfoRsp> doStationDeploy(String sn, double lon, double lat, List<String> tags, String
+    public Observable<DeployStationInfoRsp> doStationDeploy(String sn, double lon, double lat, List<String> tags, String
             name) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -589,7 +589,7 @@ public enum RetrofitServiceHelper {
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<StationInfoRsp> stationInfoRspObservable = retrofitService.doStationDeploy(sn, body);
+        Observable<DeployStationInfoRsp> stationInfoRspObservable = retrofitService.doStationDeploy(sn, body);
         RxApiManager.getInstance().add("doStationDeploy", stationInfoRspObservable.subscribe());
         return stationInfoRspObservable;
     }
@@ -672,8 +672,8 @@ public enum RetrofitServiceHelper {
      * @param sn
      * @return
      */
-    public Observable<StationInfoRsp> getStationDetail(String sn) {
-        Observable<StationInfoRsp> stationDetail = retrofitService.getStationDetail(sn);
+    public Observable<DeployStationInfoRsp> getStationDetail(String sn) {
+        Observable<DeployStationInfoRsp> stationDetail = retrofitService.getStationDetail(sn);
         RxApiManager.getInstance().add("getStationDetail", stationDetail.subscribe());
         return stationDetail;
     }

@@ -48,9 +48,13 @@ public class ImageUtil {
     public static Bitmap createWaterMaskRightBottom(
             Context context, Bitmap src, Bitmap watermark,
             int paddingRight, int paddingBottom) {
+//        return createWaterMaskBitmap(src, watermark,
+//                src.getWidth() - watermark.getWidth() - AppUtils.dp2px(context, paddingRight),
+//                src.getHeight() - watermark.getHeight() - AppUtils.dp2px(context, paddingBottom));
+        //更改为px
         return createWaterMaskBitmap(src, watermark,
-                src.getWidth() - watermark.getWidth() - AppUtils.dp2px(context, paddingRight),
-                src.getHeight() - watermark.getHeight() - AppUtils.dp2px(context, paddingBottom));
+                src.getWidth() - watermark.getWidth() - paddingRight,
+                src.getHeight() - watermark.getHeight() - paddingBottom);
     }
 
     /**
@@ -109,12 +113,16 @@ public class ImageUtil {
         paint.setColor(color);
         //设置加粗
         paint.setTypeface(Typeface.DEFAULT_BOLD);
-        paint.setTextSize(AppUtils.dp2px(context, size));
+        paint.setTextSize(AppUtils.sp2px(context, size));
         Rect bounds = new Rect();
         paint.getTextBounds(text, 0, text.length(), bounds);
+//        return drawTextToBitmap(context, bitmap, text, paint, bounds,
+//                bitmap.getWidth() - bounds.width() - AppUtils.dp2px(context, paddingRight),
+//                bitmap.getHeight() - AppUtils.dp2px(context, paddingBottom));
+        //更改为pix
         return drawTextToBitmap(context, bitmap, text, paint, bounds,
-                bitmap.getWidth() - bounds.width() - AppUtils.dp2px(context, paddingRight),
-                bitmap.getHeight() - AppUtils.dp2px(context, paddingBottom));
+                bitmap.getWidth() - bounds.width() - paddingRight,
+                bitmap.getHeight() - paddingBottom);
     }
 
     /**

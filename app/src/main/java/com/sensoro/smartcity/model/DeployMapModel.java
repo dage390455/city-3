@@ -13,6 +13,7 @@ public class DeployMapModel implements Parcelable {
     public String sn;
     public int deployType;
 
+
     public DeployMapModel() {
 
     }

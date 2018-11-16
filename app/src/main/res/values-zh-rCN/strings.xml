@@ -432,7 +432,7 @@
     <string name="keyboard_clear">清除</string>
     //
     <string name="alarm_contact_btn_save">保存</string>
-    <string name="alarm_contact_tip" >预警联系人</string>
+    <string name="alarm_contact_tip">预警联系人</string>
     <string name="alarm_contact_tip_sample">例：某某</string>
     <string name="alarm_contact_tip_phone">预警电话</string>
     <string name="alarm_contact_tip_phone_sample">例：18600000000</string>
@@ -646,7 +646,7 @@
     <string name="normal_monitor">正常监测</string>
     <string name="inspection_test">巡检测试</string>
     <string name="company">企业</string>
-    <string name="contract_number">已签订</string>
+    <string name="contract_number">合同号</string>
     <string name="contract_created_time">生成时间</string>
     <string name="contract_signed_time">签订时间</string>
     <string name="alarm_log">预警日志</string>
@@ -666,6 +666,8 @@
     <string name="inspection_noraml">正常</string>
     <string name="inspection_exception_remark">异常备注</string>
     <string name="not_obtain_location_infomation">未获取到位置信息</string>
+    <string name="deploy_sub_tip">该设备目前属于上级商户，部署后将归属于本商户下，请谨慎部署</string>
+    <string name="merchant_has_no_change_permission">该商户无切换登录权限</string>
 
 
 </resources>

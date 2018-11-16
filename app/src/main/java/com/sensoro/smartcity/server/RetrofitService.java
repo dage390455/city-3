@@ -27,11 +27,10 @@ import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
-import com.sensoro.smartcity.server.response.StationInfoRsp;
+import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
-import com.tencent.mm.opensdk.modelbase.BaseResp;
 
 import okhttp3.RequestBody;
 import retrofit2.http.Body;
@@ -82,7 +81,6 @@ public interface RetrofitService {
     String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
     String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
     String DEPLOY_DEVICE_DETAIL = "devices/detail";
-
     @FormUrlEncoded
     @POST(LOGIN)
     Observable<LoginRsp> login(@Field("phone") String phone, @Field("password") String pwd, @Field("phoneId") String
@@ -144,7 +142,7 @@ public interface RetrofitService {
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(DEPLOY_DEVICE_DETAIL)
-    Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(@Query("sn") String sn, @Query("longitude") double longitude, @Query("latitude") double latitude);
+    Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(@Query("sn") String sn, @Query("longitude") Double longitude, @Query("latitude") Double latitude);
 
     //    @HTTP(method = "DELETE", path = LOGOUT, hasBody = true)
 //    Observable<ResponseBase> logout(@Header("phoneId") String phoneId, @Header("uid")
@@ -155,11 +153,11 @@ public interface RetrofitService {
             requestBody);
 
     @GET(STATION_INFO + "{sn}")
-    Observable<StationInfoRsp> getStationDetail(@Path("sn") String sn);
+    Observable<DeployStationInfoRsp> getStationDetail(@Path("sn") String sn);
 
     //
     @POST(STATION_DEPLOY + "{sn}")
-    Observable<StationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
+    Observable<DeployStationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(GET_DEPOLY_RECORD_LIST)
     Observable<DeployRecordRsp> getDeployRecordList(@Query("search") String searchText, @Query("beginTime") Long beginTime,

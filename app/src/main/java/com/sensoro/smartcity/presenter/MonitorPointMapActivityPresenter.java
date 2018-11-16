@@ -77,10 +77,12 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     private void initMap() {
-        setMapCustomStyleFile();
+        //自定义地图风格
+//        setMapCustomStyleFile();
         aMap.getUiSettings().setTiltGesturesEnabled(false);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoBottomMargin(-100);
         aMap.setMapCustomEnable(true);
         aMap.setMyLocationEnabled(true);
         aMap.setOnMapLoadedListener(this);
@@ -88,9 +90,8 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //        aMap.getUiSettings().setScaleControlsEnabled(true);
         aMap.setMapType(MAP_TYPE_NORMAL);
 //        aMap.setOnMapTouchListener(this);
-//        String styleName = "custom_config.data";
-//        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
-
+        String styleName = "custom_config.data";
+        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
         myLocationStyle.strokeWidth(0);

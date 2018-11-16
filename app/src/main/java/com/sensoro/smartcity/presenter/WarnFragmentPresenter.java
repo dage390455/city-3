@@ -402,7 +402,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 }
                 break;
             case EVENT_DATA_SEARCH_MERCHANT:
-                requestSearchData(DIRECTION_DOWN, null);
+                if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+                    requestSearchData(DIRECTION_DOWN, null);
+                }
                 break;
             case EVENT_DATA_ALARM_FRESH_ALARM_DATA:
                 //仅在无搜索状态和日历选择时进行刷新
