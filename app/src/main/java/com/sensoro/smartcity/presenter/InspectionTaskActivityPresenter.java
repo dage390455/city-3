@@ -215,7 +215,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                         getView().updateSelectDeviceStatusList(list);
                     }
                     getView().dismissProgressDialog();
-                    getView().setBottomInspectionStateTitle(mContext.getString(R.string.i_have_inspected)+"： " + check, mContext.getString(R.string.not_inspected)+"： " + uncheck);
+                    getView().setBottomInspectionStateTitle(mContext.getString(R.string.i_have_inspected) + "： " + check, mContext.getString(R.string.not_inspected) + "： " + uncheck);
                 }
 
 
@@ -416,18 +416,19 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Override
     public void run() {
-        try {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-        } catch (Exception e) {
-            e.printStackTrace();
-            getView().showBleTips();
-//            getView().toastShort("请检查蓝牙状态");
-        }
-        if (!bleHasOpen) {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
-        }
+        bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
         if (bleHasOpen) {
-            getView().hideBleTips();
+            try {
+                bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().showBleTips();
+            }
+            if (bleHasOpen) {
+                getView().hideBleTips();
+            } else {
+                getView().showBleTips();
+            }
         } else {
             getView().showBleTips();
         }
