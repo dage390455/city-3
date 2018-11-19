@@ -33,6 +33,7 @@ public class InspectionUploadExceptionTagAdapter extends RecyclerView.Adapter<In
         this.tags.addAll(tags);
         notifyDataSetChanged();
     }
+
     @Override
     public InspectionUploadExceptionTagHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_adapter_inspection_upload_exception_tag, parent, false);
@@ -44,11 +45,11 @@ public class InspectionUploadExceptionTagAdapter extends RecyclerView.Adapter<In
         holder.itemAdapterInspectionUploadExceptionTv.setText(tags.get(position));
         Resources resources = mContext.getResources();
         GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_bg_inspection_upload_exception_tag_full_corner);
-        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
+        gd.setBounds(0, 0, gd.getMinimumWidth(), gd.getMinimumHeight());
         if (selectedTags.contains(position)) {
             holder.itemAdapterInspectionUploadExceptionTv.setTextColor(Color.WHITE);
             gd.setColor(resources.getColor(R.color.c_ff8d34));
-        }else{
+        } else {
             gd.setColor(Color.WHITE);
             holder.itemAdapterInspectionUploadExceptionTv.setTextColor(resources.getColor(R.color.c_252525));
         }
@@ -58,8 +59,8 @@ public class InspectionUploadExceptionTagAdapter extends RecyclerView.Adapter<In
             @Override
             public void onClick(View v) {
                 if (selectedTags.contains(position)) {
-                    selectedTags.remove((Integer)position);
-                }else{
+                    selectedTags.remove((Integer) position);
+                } else {
                     selectedTags.add(position);
                 }
                 notifyDataSetChanged();
@@ -80,9 +81,9 @@ public class InspectionUploadExceptionTagAdapter extends RecyclerView.Adapter<In
         @BindView(R.id.item_adapter_inspection_upload_exception_tv)
         TextView itemAdapterInspectionUploadExceptionTv;
 
-        public InspectionUploadExceptionTagHolder(View itemView) {
+        InspectionUploadExceptionTagHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
 
         }
     }

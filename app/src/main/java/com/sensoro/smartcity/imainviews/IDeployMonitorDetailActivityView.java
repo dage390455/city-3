@@ -50,4 +50,5 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void showBleTips();
 
     void hideBleTips();
+    void setNotOwnVisible(boolean isVisible);
 }

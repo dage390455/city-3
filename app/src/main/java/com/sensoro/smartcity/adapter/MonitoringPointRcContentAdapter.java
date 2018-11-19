@@ -3,7 +3,6 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -111,7 +110,7 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                     if (sensorTypeStyles != null) {
                         String name = sensorTypeStyles.getName();
                         if (TextUtils.isEmpty(name)) {
-                            holder.itemMonitoringPointContentTvName.setText("未知");
+                            holder.itemMonitoringPointContentTvName.setText(R.string.unknown);
                         } else {
                             holder.itemMonitoringPointContentTvName.setText(name);
                         }

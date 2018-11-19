@@ -70,6 +70,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     private ProgressUtils mProgressUtils;
     private ProgressDialog progressDialog;
     private int initEtRemarkWidth = -1;
+
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_inspection_upload_exception);
@@ -82,7 +83,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
         acInspectionUploadExceptionScrollView.setNestedScrollingEnabled(false);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
-        includeTextTitleTvTitle.setText("异常上报");
+        includeTextTitleTvTitle.setText(R.string.abnormal_reporting);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
         acInspectionUploadExceptionTvWordCount.setText("0/200");
@@ -120,12 +121,12 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
             @Override
             public void onGlobalLayout() {
 //                if(initEtRemarkWidth!=-1){
-                    int diff = acInspectionUploadExceptionEtRemark.getHeight() - initEtRemarkWidth;
-                    initEtRemarkWidth = acInspectionUploadExceptionEtRemark.getHeight();
-                    if (diff>0 && !TextUtils.isEmpty(acInspectionUploadExceptionEtRemark.getText().toString())) {
+                int diff = acInspectionUploadExceptionEtRemark.getHeight() - initEtRemarkWidth;
+                initEtRemarkWidth = acInspectionUploadExceptionEtRemark.getHeight();
+                if (diff > 0 && !TextUtils.isEmpty(acInspectionUploadExceptionEtRemark.getText().toString())) {
 //                        acInspectionUploadExceptionScrollView.setScrollY(diff);
-                        acInspectionUploadExceptionScrollView.smoothScrollBy(0,diff);
-                    }
+                    acInspectionUploadExceptionScrollView.smoothScrollBy(0, diff);
+                }
 //                }
             }
         });
@@ -144,7 +145,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
 //        builder.setView(view);
 
 //        mExceptionDialog = new ;
-        mExceptionDialog = new CustomCornerDialog(mActivity,R.style.CustomCornerDialogStyle,view);
+        mExceptionDialog = new CustomCornerDialog(mActivity, R.style.CustomCornerDialogStyle, view);
 //        Window window = mExceptionDialog.getWindow();
 //        if (window != null) {
 //            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
@@ -155,7 +156,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     private void initRcPicTag() {
         mRcExceptionPicAdapter = new ImagePickerAdapter(mActivity, mPresenter.getSelImageList());
         mRcExceptionPicAdapter.setMaxImgCount(4);
-        mRcExceptionPicAdapter.setAddTipText("拍照/录像");
+        mRcExceptionPicAdapter.setAddTipText(mActivity.getString(R.string.photo_recording));
         mRcExceptionPicAdapter.setOnItemClickListener(new ImagePickerAdapter.OnRecyclerViewItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
@@ -243,7 +244,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_inspection_upload_exception_tv_upload,R.id.ac_inspection_upload_exception_sf})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_inspection_upload_exception_tv_upload, R.id.ac_inspection_upload_exception_sf})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -252,13 +253,13 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
             case R.id.ac_inspection_upload_exception_tv_upload:
                 List<Integer> selectTags = getSelectTags();
                 if (selectTags.size() == 0) {
-                    toastShort("必须选择一个标签类型");
+                    toastShort(mActivity.getString(R.string.must_select_a_tag_type));
                     return;
                 }
                 if (mPresenter.selImageList.size() > 0) {
                     mExceptionDialog.show();
                 } else {
-                    toastShort("至少上传一张照片或一段视频");
+                    toastShort(mActivity.getString(R.string.upload_at_least_one_photo_or_a_video));
                 }
 
                 break;
@@ -266,7 +267,7 @@ public class InspectionUploadExceptionActivity extends BaseActivity<IInspectionU
                 acInspectionUploadExceptionEtRemark.setFocusable(true);
                 acInspectionUploadExceptionEtRemark.setFocusableInTouchMode(true);
                 acInspectionUploadExceptionEtRemark.requestFocus();
-                InputMethodManager inputManager = (InputMethodManager)mActivity
+                InputMethodManager inputManager = (InputMethodManager) mActivity
                         .getSystemService(mActivity.INPUT_METHOD_SERVICE);
                 inputManager.showSoftInput(acInspectionUploadExceptionEtRemark, 0);
                 break;

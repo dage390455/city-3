@@ -166,7 +166,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="二次验证"
+            android:text="@string/auth_two_step_verification"
             android:textColor="@color/c_252525"
             android:textSize="20sp" />
 
@@ -175,7 +175,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="4dp"
-            android:text="为了账户安全，需要您进行二次验证"
+            android:text="@string/auth_two_step_verification_tip"
             android:textColor="@color/c_b6b6b6"
             android:textSize="12sp" />
 

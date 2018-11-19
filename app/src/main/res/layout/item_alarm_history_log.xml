@@ -25,7 +25,7 @@
         android:padding="5dp"
         android:paddingBottom="10dp"
         android:paddingTop="10dp"
-        android:text="预警确认"
+        android:text="@string/alarm_log_alarm_warn_confirm"
         android:textColor="@color/white"
         android:textSize="12dp" />
 

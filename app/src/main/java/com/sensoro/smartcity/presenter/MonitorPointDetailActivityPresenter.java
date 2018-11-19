@@ -76,23 +76,23 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
-                statusText = "预警";
+                statusText = mContext.getString(R.string.main_page_warm);
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = mContext.getResources().getColor(R.color.c_29c093);
-                statusText = "正常";
+                statusText = mContext.getString(R.string.normal);
                 break;
             case SENSOR_STATUS_LOST:
                 textColor = mContext.getResources().getColor(R.color.c_5d5d5d);
-                statusText = "失联";
+                statusText = mContext.getString(R.string.status_lost);
                 break;
             case SENSOR_STATUS_INACTIVE:
                 textColor = mContext.getResources().getColor(R.color.c_b6b6b6);
-                statusText = "未激活";
+                statusText = mContext.getString(R.string.status_inactive);
                 break;
             default:
                 textColor = mContext.getResources().getColor(R.color.c_29c093);
-                statusText = "正常";
+                statusText = mContext.getString(R.string.normal);
                 break;
         }
         String name = mDeviceInfo.getName();
@@ -119,19 +119,19 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             hasPhoneNumber = false;
         } else {
             if (TextUtils.isEmpty(contact)) {
-                contact = "未设定";
+                contact = mContext.getString(R.string.not_set);
             }
             hasPhoneNumber = !TextUtils.isEmpty(phone);
             getView().setContactPhoneIconVisible(hasPhoneNumber);
             if (hasPhoneNumber) {
                 this.content = phone;
             } else {
-                this.content = "未设定";
+                this.content = mContext.getString(R.string.not_set);
             }
             getView().setContractName(contact);
             getView().setContractPhone(content);
         }
-        getView().setUpdateTime(DateUtil.getStrTimeToday(mDeviceInfo.getUpdatedTime(), 0));
+        getView().setUpdateTime(DateUtil.getStrTimeToday(mContext,mDeviceInfo.getUpdatedTime(), 0));
         String tags[] = mDeviceInfo.getTags();
         if (tags != null && tags.length > 0) {
             List<String> list = Arrays.asList(tags);
@@ -142,18 +142,18 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         if (batteryStruct != null) {
             String battery = batteryStruct.getValue().toString();
             if (battery.equals("-1.0") || battery.equals("-1")) {
-                getView().setBatteryInfo("电源供电");
+                getView().setBatteryInfo(mContext.getString(R.string.power_supply));
             } else {
                 getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
             }
         }
         int interval = mDeviceInfo.getInterval();
-        getView().setInterval(DateUtil.secToTimeBefore(interval));
+        getView().setInterval(DateUtil.secToTimeBefore(mContext,interval));
     }
 
     private void initCurrentDeviceInfo() {
         getView().setSNText(mDeviceInfo.getSn());
-        String typeName = "未知";
+        String typeName = mContext.getString(R.string.power_supply);
         try {
             DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
             String mergeType = mDeviceInfo.getMergeType();
@@ -174,7 +174,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             double v = lonlat[1];
             double v1 = lonlat[0];
             if (v == 0 || v1 == 0) {
-                getView().setDeviceLocation("未定位", false);
+                getView().setDeviceLocation(mContext.getString(R.string.not_positioned), false);
                 getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
                 return;
             }
@@ -182,7 +182,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             geocoderSearch.getFromLocationAsyn(query);
         } catch (Exception e) {
             e.printStackTrace();
-            getView().setDeviceLocation("未定位", false);
+            getView().setDeviceLocation(mContext.getString(R.string.not_positioned), false);
 
         }
 
@@ -324,7 +324,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         String address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
         LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
         if (TextUtils.isEmpty(address)) {
-            address = "未知街道";
+            address = mContext.getString(R.string.unknown_street);
         }
         mDeviceInfo.setAddress(address);
         getView().setDeviceLocation(address, true);
@@ -333,7 +333,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
         LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
-        getView().setDeviceLocation("未知街道", true);
+        getView().setDeviceLocation(mContext.getString(R.string.unknown_street), true);
     }
 
     public void doMore() {
@@ -348,7 +348,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         double v = lonlat[1];
         double v1 = lonlat[0];
         if (lonlat.length > 1 && v == 0 || v1 == 0) {
-            getView().toastShort("未设置定位信息");
+            getView().toastShort(mContext.getString(R.string.location_information_not_set));
             return;
         }
         Intent intent = new Intent();
@@ -359,8 +359,8 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     public void doContact() {
         if (hasPhoneNumber) {
-            if (TextUtils.isEmpty(content) || "未设定".equals(content)) {
-                getView().toastShort("未设置电话联系人");
+            if (TextUtils.isEmpty(content) || mContext.getString(R.string.not_set).equals(content)) {
+                getView().toastShort(mContext.getString(R.string.phone_contact_not_set));
                 return;
             }
             AppUtils.diallPhone(content, mContext);

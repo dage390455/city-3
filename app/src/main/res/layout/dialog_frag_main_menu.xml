@@ -51,7 +51,7 @@
                 style="@style/style_fg_home_dialog_tv"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@+id/iv_main_home_menu_quick_deploy"
-                android:text="快速部署" />
+                android:text="@string/quick_deploy" />
         </RelativeLayout>
 
 
@@ -83,7 +83,7 @@
                 android:layout_below="@id/line1"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/iv_main_home_menu_construction"
-                android:text="新建合同" />
+                android:text="@string/new_contract" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -115,7 +115,7 @@
                 android:layout_below="@id/line2"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/iv_main_home_menu_scan_login"
-                android:text="扫码登录" />
+                android:text="@string/scan_login" />
         </RelativeLayout>
 
 

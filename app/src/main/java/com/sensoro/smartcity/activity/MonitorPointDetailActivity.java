@@ -112,8 +112,8 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeImvTitleTvTitle.setText("监测点详情");
-        includeTextTitleTvSubtitle.setText("预警日志");
+        includeImvTitleTvTitle.setText(R.string.monitoring_point_details);
+        includeTextTitleTvSubtitle.setText(R.string.alert_log);
         //
         mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false) {
@@ -305,7 +305,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
     @Override
     public void setNoContact() {
-        acMonitoringPointTvAlertContactName.setText("未添加联系人");
+        acMonitoringPointTvAlertContactName.setText(R.string.no_contact_added);
         acMonitoringPointTvAlertContactName.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
         acMonitoringPointView.setVisibility(View.GONE);
         acMonitoringPointTvAlertContactPhone.setVisibility(View.GONE);

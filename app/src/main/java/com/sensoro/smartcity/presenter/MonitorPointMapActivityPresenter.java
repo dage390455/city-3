@@ -77,10 +77,12 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     private void initMap() {
-        setMapCustomStyleFile();
+        //自定义地图风格
+//        setMapCustomStyleFile();
         aMap.getUiSettings().setTiltGesturesEnabled(false);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoBottomMargin(-100);
         aMap.setMapCustomEnable(true);
         aMap.setMyLocationEnabled(true);
         aMap.setOnMapLoadedListener(this);
@@ -88,9 +90,8 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //        aMap.getUiSettings().setScaleControlsEnabled(true);
         aMap.setMapType(MAP_TYPE_NORMAL);
 //        aMap.setOnMapTouchListener(this);
-//        String styleName = "custom_config.data";
-//        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
-
+        String styleName = "custom_config.data";
+        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
         myLocationStyle.strokeWidth(0);
@@ -245,7 +246,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     public void doNavigation() {
         if (!AppUtils.doNavigation(mContext, destPosition)) {
-            getView().toastShort("未获取到位置信息");
+            getView().toastShort(mContext.getString(R.string.location_not_obtained));
         }
     }
 
@@ -260,7 +261,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //                getView().toastShort("当前版的微信不支持分享功能");
 //            }
         } else {
-            getView().toastShort("当前手机未安装微信，请安装后重试");
+            getView().toastShort(mContext.getString(R.string.wechat_not_installed));
         }
     }
 
@@ -271,7 +272,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
         miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;
         miniProgramObj.webpageUrl = "https://www.sensoro.com"; // 兼容低版本的网页链接
-        miniProgramObj.userName = "gh_6b7a86071f47";
+        miniProgramObj.userName = "gh_8c58c2d63459";
         miniProgramObj.withShareTicket = false;
         String name = mDeviceInfo.getName();
         if (TextUtils.isEmpty(name)) {
@@ -289,16 +290,16 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         long updatedTime = mDeviceInfo.getUpdatedTime();
         String tempAddress = mDeviceInfo.getAddress();
         if (TextUtils.isEmpty(tempAddress)) {
-            tempAddress = "未知街道";
+            tempAddress = mContext.getString(R.string.unknown_street);
         }
-        final String tempData = "/pages/index?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
+        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
                 [1] +
                 "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
                 updatedTime;
         miniProgramObj.path = tempData;            //小程序页面路径
         final WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
-        msg.title = "传感器位置";                    // 小程序消息title
-        msg.description = "通过此工具，可以查看，以及导航到相应的传感器设备";
+        msg.title = mContext.getString(R.string.sensor_location);                    // 小程序消息title
+        msg.description = mContext.getString(R.string.sensor_location_desc);
         aMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
             @Override
             public void onMapScreenShot(Bitmap bitmap) {

@@ -60,6 +60,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT, eventLoginData.hasContract);
         editor.putBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, eventLoginData.hasScanLogin);
         editor.putBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, eventLoginData.hasSubMerchant);
+        editor.putBoolean(EXTRA_GRANTS_HAS_MERCHANT_CHANGE, eventLoginData.hasMerchantChange);
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST, eventLoginData.hasInspectionTaskList);
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY, eventLoginData.hasInspectionTaskModify);
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, eventLoginData.hasInspectionDeviceList);
@@ -86,7 +87,8 @@ public final class PreferencesHelper implements Constants {
             boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
             boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
             boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
-            boolean hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, true);
+            boolean hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, false);
+            boolean hasMerchantChange = sp.getBoolean(EXTRA_GRANTS_HAS_MERCHANT_CHANGE, false);
             boolean hasInspectionTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST, false);
             boolean hasInspectionTaskModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY, false);
             boolean hasInspectionDeviceList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, false);
@@ -102,6 +104,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.phone = phone;
             eventLoginData.roles = roles;
             eventLoginData.hasSubMerchant = hasSubMerchant;
+            eventLoginData.hasMerchantChange = hasMerchantChange;
             eventLoginData.isSupperAccount = isSupperAccount;
             eventLoginData.hasStation = hasStation;
             eventLoginData.hasContract = hasContract;

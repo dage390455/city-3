@@ -45,7 +45,7 @@
     <Row>
         <Key
             android:codes="-10"
-            android:keyLabel="清除"/>
+            android:keyLabel="@string/keyboard_clear"/>
         <Key
             android:codes="48"
             android:keyLabel="0" />

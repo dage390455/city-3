@@ -20,8 +20,6 @@ import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -58,7 +56,7 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 holder.itemMalfunctionDetailContentTvContent.setText(mContext.getString(R.string.system_upload_malfunction_task));
                 holder.itemMalfunctionDetailContentTvContent.setTextColor(mContext.getResources().getColor(R.color.c_252525));
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.smoke_icon);
-                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(recordsBean.getUpdatedTime(), 0));
+                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext,recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.VISIBLE);
                 holder.itemMalfunctionDetailChildMalfunctionCause.setText(recordsBean.getMalfunctionText());
                 break;
@@ -71,7 +69,7 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 holder.itemMalfunctionDetailContentTvContent.setText(content);
                 holder.itemMalfunctionDetailContentTvContent.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.no_smoke_icon);
-                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(recordsBean.getUpdatedTime(), 0));
+                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext,recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.GONE);
                 break;
             case "sendSMS":
@@ -79,7 +77,7 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 smsContent.append(mContext.getString(R.string.system_sms_send));
                 holder.itemMalfunctionDetailContentTvContent.setText(appendResult(smsContent,recordsBean.getPhoneList()));
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.msg_icon);
-                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(recordsBean.getUpdatedTime(), 0));
+                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext,recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.GONE);
                 break;
         }

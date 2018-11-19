@@ -135,9 +135,9 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         initRcContent();
 
         blackTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle);
-        blackTriangle.setBounds(0,0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
+        blackTriangle.setBounds(0, 0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
         grayTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle_gray);
-        grayTriangle.setBounds(0,0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
+        grayTriangle.setBounds(0, 0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
 
         initSelectDeviceTypePop();
 
@@ -187,12 +187,12 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 acInspectionTaskTvType.setText(mSelectDeviceTypePop.getItem(position).name);
                 mSelectDeviceTypePop.dismiss();
                 Resources resources = mActivity.getResources();
-                if(position==0){
+                if (position == 0) {
                     acInspectionTaskTvType.setTextColor(resources.getColor(R.color.c_a6a6a6));
-                    acInspectionTaskTvType.setCompoundDrawables(null,null,grayTriangle,null);
-                }else{
+                    acInspectionTaskTvType.setCompoundDrawables(null, null, grayTriangle, null);
+                } else {
                     acInspectionTaskTvType.setTextColor(resources.getColor(R.color.c_252525));
-                    acInspectionTaskTvType.setCompoundDrawables(null,null,blackTriangle,null);
+                    acInspectionTaskTvType.setCompoundDrawables(null, null, blackTriangle, null);
                 }
 //                mPresenter.requestDataByDirection(DIRECTION_DOWN);
 
@@ -212,12 +212,12 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 acInspectionTaskTvState.setText(item.statusTitle);
                 mPresenter.doSelectStatusDevice(item);
                 Resources resources = mActivity.getResources();
-                if(position==0){
+                if (position == 0) {
                     acInspectionTaskTvState.setTextColor(resources.getColor(R.color.c_a6a6a6));
-                    acInspectionTaskTvState.setCompoundDrawables(null,null,grayTriangle,null);
-                }else{
+                    acInspectionTaskTvState.setCompoundDrawables(null, null, grayTriangle, null);
+                } else {
                     acInspectionTaskTvState.setTextColor(resources.getColor(R.color.c_252525));
-                    acInspectionTaskTvState.setCompoundDrawables(null,null,blackTriangle,null);
+                    acInspectionTaskTvState.setCompoundDrawables(null, null, blackTriangle, null);
                 }
                 mSelectStatusPop.dismiss();
 
@@ -301,10 +301,14 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     public void onBackPressed() {
-        if (mSelectDeviceTypePop.isShowing()) {
-            mSelectDeviceTypePop.dismiss();
-        } else {
-            super.onBackPressed();
+        try {
+            if (mSelectDeviceTypePop.isShowing()) {
+                mSelectDeviceTypePop.dismiss();
+            } else {
+                super.onBackPressed();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
 

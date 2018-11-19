@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.amap.api.maps.model.LatLng;
-import com.sensoro.libbleserver.ble.utils.LogUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MalfunctionHistoryActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -14,9 +13,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
@@ -51,7 +48,7 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         getView().setDeviceNameText(deviceName);
 
         long createdTime = mMalfunctionInfo.getCreatedTime();
-        getView().setMalfunctionStatus(mMalfunctionInfo.getMalfunctionStatus(),DateUtil.getStrTimeToday(createdTime,1));
+        getView().setMalfunctionStatus(mMalfunctionInfo.getMalfunctionStatus(),DateUtil.getStrTimeToday(mActivity,createdTime,1));
         List<MalfunctionListInfo.RecordsBean> records = mMalfunctionInfo.getRecords();
         getView().updateRcContent(records);
         long current = System.currentTimeMillis();

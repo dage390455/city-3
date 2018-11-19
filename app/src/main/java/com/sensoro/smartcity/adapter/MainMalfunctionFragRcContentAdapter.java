@@ -55,8 +55,8 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
         return mList.size();
     }
 
-    public MalfunctionListInfo getItem(int position){
-        if(mList.size() > position){
+    public MalfunctionListInfo getItem(int position) {
+        if (mList.size() > position) {
             return mList.get(position);
         }
 
@@ -66,24 +66,24 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
     @Override
     public void onBindViewHolder(@NonNull final MainMalfunctionFragViewHolder holder, int position) {
         MalfunctionListInfo malfunctionListInfo = mList.get(position);
-        switch (malfunctionListInfo.getMalfunctionStatus()){
+        switch (malfunctionListInfo.getMalfunctionStatus()) {
             case 1:
                 holder.mainMalfunctionRcContentTvState.setText(mContext.getString(R.string.back_to_normal));
-                setTextColor(holder,R.color.c_29c093);
+                setTextColor(holder, R.color.c_29c093);
                 break;
             case 2:
                 holder.mainMalfunctionRcContentTvState.setText(mContext.getString(R.string.malfunctioning));
-                setTextColor(holder,R.color.c_ff8d34);
+                setTextColor(holder, R.color.c_ff8d34);
                 break;
         }
         Map<String, MalfunctionListInfo.MalfunctionDataBean> malfunctionData = malfunctionListInfo.getMalfunctionData();
         if (malfunctionData.keySet().contains(malfunctionListInfo.getMalfunctionType())) {
             holder.mainMalfunctionRcContentTvReason.setText(malfunctionData.get(malfunctionListInfo.getMalfunctionType()).getDescription());
-        }else{
+        } else {
             holder.mainMalfunctionRcContentTvReason.setText(mContext.getString(R.string.unknown_malfunction));
         }
 
-        holder.mainMalfunctionRcContentTvTime.setText(DateUtil.getStrTimeToday(malfunctionListInfo.getCreatedTime(),0));
+        holder.mainMalfunctionRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext, malfunctionListInfo.getCreatedTime(), 0));
 
         String deviceType = malfunctionListInfo.getDeviceType();
         String deviceTypeStr;
@@ -111,13 +111,13 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
             @Override
             public void onClick(View v) {
                 if (mListener != null) {
-                    mListener.onItemClick(v,holder.getLayoutPosition());
+                    mListener.onItemClick(v, holder.getLayoutPosition());
                 }
             }
         });
     }
 
-    public void setOnItemClickListener(RecycleViewItemClickListener listener){
+    public void setOnItemClickListener(RecycleViewItemClickListener listener) {
         mListener = listener;
     }
 
@@ -138,9 +138,10 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
         TextView mainMalfunctionRcContentTvTime;
         @BindView(R.id.main_malfunction_rc_content_tv_content)
         TextView mainMalfunctionRcContentTvContent;
+
         MainMalfunctionFragViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

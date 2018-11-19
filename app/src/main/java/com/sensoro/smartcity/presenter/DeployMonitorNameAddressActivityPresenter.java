@@ -92,12 +92,12 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
                 e.printStackTrace();
             }
             if (bytes.length > 48) {
-                getView().toastShort("名称/地址最长不能超过16个汉字或48个字符");
+                getView().toastShort(mContext.getString(R.string.name_address_length));
                 return;
             }
 
         } else {
-            getView().toastShort("必须输入名称/地址");
+            getView().toastShort(mContext.getString(R.string.must_enter_name_address));
             return;
         }
         save(text);

@@ -31,7 +31,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView
-        ,  BottomNavigationBar.OnTabSelectedListener {
+        , BottomNavigationBar.OnTabSelectedListener {
 
 
     @BindView(R.id.ac_main_hvp_content)
@@ -142,7 +142,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
 
-
     @Override
     public void setHpCurrentItem(int position) {
         acMainHvpContent.setCurrentItem(position);
@@ -158,18 +157,18 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void setHasDeviceBriefControl(boolean hasDeviceBriefControl) {
-        acMainBottomBar.setBottomNavigationItemVisible(0,hasDeviceBriefControl);
+        acMainBottomBar.setBottomNavigationItemVisible(0, hasDeviceBriefControl);
 
     }
 
     @Override
     public void setHasAlarmInfoControl(boolean hasDeviceAlarmInfoControl) {
-        acMainBottomBar.setBottomNavigationItemVisible(1,hasDeviceAlarmInfoControl);
+        acMainBottomBar.setBottomNavigationItemVisible(1, hasDeviceAlarmInfoControl);
     }
 
     @Override
     public void setHasManagerControl(boolean hasManagerControl) {
-        acMainBottomBar.setBottomNavigationItemVisible(2,hasManagerControl);
+        acMainBottomBar.setBottomNavigationItemVisible(2, hasManagerControl);
     }
 
     @Override

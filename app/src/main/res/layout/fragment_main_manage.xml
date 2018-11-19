@@ -17,7 +17,7 @@
             android:gravity="center_horizontal"
             android:paddingTop="8dp"
             android:paddingBottom="8dp"
-            android:text="管理"
+            android:text="@string/manager_fragment_manager"
             android:textColor="@color/c_030303"
             android:textSize="18sp" />
 
@@ -32,7 +32,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
-                android:text="主要功能"
+                android:text="@string/manager_fragment_main_function"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="12sp" />
 
@@ -62,7 +62,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="商户切换"
+                    android:text="@string/manager_fragment_merchant_switch"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -121,7 +121,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="部署管理"
+                    android:text="@string/manager_fragment_deploy_manager"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -171,7 +171,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="合同管理"
+                    android:text="@string/manager_fragment_contract_manager"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -221,7 +221,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="巡检任务"
+                    android:text="@string/inspection_task"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -273,7 +273,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="维保任务"
+                    android:text="@string/manager_fragment_maintenance_task"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -324,7 +324,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="信号测试"
+                    android:text="@string/signal_test"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -349,7 +349,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
-                    android:text="监控大屏"
+                    android:text="@string/manager_fragment_monitor_big_screen"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="12sp" />
 
@@ -376,7 +376,7 @@
                         android:layout_marginTop="16dp"
                         android:layout_marginBottom="16dp"
                         android:layout_weight="1"
-                        android:text="扫码登录"
+                        android:text="@string/scan_login"
                         android:textColor="@color/c_252525"
                         android:textSize="16sp" />
 
@@ -397,7 +397,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:layout_marginTop="20dp"
-                android:text="其他"
+                android:text="@string/the_ohter"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="12sp" />
 
@@ -424,7 +424,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="关于我们"
+                    android:text="@string/manager_fragment_about_us"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -473,7 +473,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="版本信息"
+                    android:text="@string/manager_fragment_version_information"
                     android:textColor="@color/c_252525"
                     android:textSize="16sp" />
 
@@ -518,7 +518,7 @@
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:layout_weight="1"
-                    android:text="退出账户"
+                    android:text="@string/manager_fragment_exit_account"
                     android:textColor="@color/c_f34a4a"
                     android:textSize="16sp" />
 

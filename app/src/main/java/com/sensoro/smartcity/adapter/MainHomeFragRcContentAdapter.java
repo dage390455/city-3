@@ -234,7 +234,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     }
 
     private void setContentTime(MyViewHolder holder, long updatedTime) {
-        holder.mainRcContentTvTime.setText(DateUtil.getStrTimeTodayByDevice(updatedTime));
+        holder.mainRcContentTvTime.setText(DateUtil.getStrTimeTodayByDevice(mContext,updatedTime));
     }
 
     private void setContentName(MyViewHolder holder, String deviceInfoName, String sn) {

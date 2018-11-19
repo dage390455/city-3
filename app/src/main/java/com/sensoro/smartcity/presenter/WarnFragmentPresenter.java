@@ -217,7 +217,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                         getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
-                            getView().toastShort("没有更多数据了");
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
@@ -256,7 +256,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                 getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
-                    getView().toastShort("没有更多数据了");
+                    getView().toastShort(mContext.getString(R.string.no_more_data));
                 }
                 freshUI(DIRECTION_DOWN, deviceAlarmLogRsp);
                 getView().onPullRefreshComplete();
@@ -291,14 +291,14 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     private void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        //TODO 处理只针对当前集合做处理
         if (mDeviceAlarmLogInfoList.contains(deviceAlarmLogInfo)) {
             for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
                 DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
                 if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
                     AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
                     deviceAlarmLogInfo.setSort(1);
-                    for (int j = 0; j < recordInfoArray.length; j++) {
-                        AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
+                    for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
                         if (recordInfo.getType().equals("recovery")) {
                             deviceAlarmLogInfo.setSort(4);
                             break;
@@ -309,11 +309,13 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     break;
                 }
             }
-        } else {
-            mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
+            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
         }
+//        else {
+//            mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
+//        }
 //        ArrayList<DeviceAlarmLogInfo> tempList = new ArrayList<>(mDeviceAlarmLogInfoList);
-        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+//        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
     }
 
 
@@ -370,7 +372,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 }
                 break;
             case EVENT_DATA_SEARCH_MERCHANT:
-                requestSearchData(DIRECTION_DOWN, null);
+                if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+                    requestSearchData(DIRECTION_DOWN, null);
+                }
                 break;
             case EVENT_DATA_ALARM_FRESH_ALARM_DATA:
                 //仅在无搜索状态和日历选择时进行刷新

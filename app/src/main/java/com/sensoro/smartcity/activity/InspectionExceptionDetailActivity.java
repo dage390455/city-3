@@ -69,7 +69,7 @@ public class InspectionExceptionDetailActivity extends BaseActivity<IInspectionE
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeTextTitleTvTitle.setText("监测点异常详情");
+        includeTextTitleTvTitle.setText(R.string.monitoring_point_exception_details);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mPhotoGridLayoutManager = new GridLayoutManager(mActivity, 3) {
             @Override

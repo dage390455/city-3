@@ -51,7 +51,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
 
     private void iniView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeTextTitleTvTitle.setText("部署位置");
+        includeTextTitleTvTitle.setText(R.string.deploy_device_detail_deploy_location);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mActivity.getWindow().getDecorView().postInvalidate();
     }
@@ -106,20 +106,20 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
         if (signal != null && (time_diff < 300000)) {
             switch (signal) {
                 case "good":
-                    signal_text = "信号：优";
+                    signal_text = mActivity.getString(R.string.signal_excellent);
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
                     break;
                 case "normal":
-                    signal_text = "信号：良";
+                    signal_text = mActivity.getString(R.string.signal_good);
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
                     break;
                 case "bad":
-                    signal_text = "信号：差";
+                    signal_text = mActivity.getString(R.string.signal_weak);
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
             }
         } else {
-            signal_text = "无信号";
+            signal_text = mActivity.getString(R.string.no_signal);
             btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
         }
         btDeployMapSignal.setText(signal_text);
@@ -132,24 +132,24 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
         if (signal != null) {
             switch (signal) {
                 case "good":
-                    signal_text = "信号：优";
+                    signal_text = mActivity.getString(R.string.signal_excellent);
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_good));
                     break;
                 case "normal":
-                    signal_text = "信号：良";
+                    signal_text = mActivity.getString(R.string.signal_good);
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_normal));
                     break;
                 case "bad":
-                    signal_text = "信号：差";
+                    signal_text = mActivity.getString(R.string.signal_weak);
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_bad));
                     break;
                 default:
-                    signal_text = "无信号";
+                    signal_text = mActivity.getString(R.string.no_signal);
                     btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
                     break;
             }
         } else {
-            signal_text = "无信号";
+            signal_text = mActivity.getString(R.string.no_signal);
             btDeployMapSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
         }
         btDeployMapSignal.setText(signal_text);

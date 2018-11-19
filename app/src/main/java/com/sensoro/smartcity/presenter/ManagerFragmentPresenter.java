@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractManagerActivity;
 import com.sensoro.smartcity.activity.DeployRecordActivity;
 import com.sensoro.smartcity.activity.InspectionTaskListActivity;
@@ -140,7 +141,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 return;
             }
         }
-        getView().toastShort("无此权限");
+        getView().toastShort(mContext.getString(R.string.no_such_permission));
 
     }
 
@@ -166,7 +167,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 return;
             }
         }
-        getView().toastShort("无此权限");
+        getView().toastShort(mContext.getString(R.string.no_such_permission));
 
     }
 
@@ -179,7 +180,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 return;
             }
         }
-        getView().toastShort("无此权限");
+        getView().toastShort(mContext.getString(R.string.no_such_permission));
 
     }
 
@@ -191,11 +192,11 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 return;
             }
         }
-        getView().toastShort("无此权限");
+        getView().toastShort(mContext.getString(R.string.no_such_permission));
     }
 
     public void doMaintenanceMission() {
-        getView().toastShort("此功能暂未开放");
+        getView().toastShort(mContext.getString(R.string.this_feature_is_not_yet_open));
     }
 
     public void doAboutUs() {

@@ -48,7 +48,7 @@ public class InspectionTaskAdapter extends RecyclerView.Adapter<InspectionTaskAd
 
         //防止status 后台瞎给 造成崩溃，如status 给个6，索引越界
         try {
-            setTvState(holder,Constants.INSPECTION_STATUS_COLORS[tasksBean.getStatus()],Constants.INSPECTION_STATUS_TEXTS[tasksBean.getStatus()]);
+            setTvState(holder,Constants.INSPECTION_STATUS_COLORS[tasksBean.getStatus()],mContext.getString(Constants.INSPECTION_STATUS_TEXTS[tasksBean.getStatus()]));
         } catch (Exception e) {
             e.printStackTrace();
         }

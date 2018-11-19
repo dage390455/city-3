@@ -47,7 +47,7 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
     }
 
     private void initView() {
-        includeTextTitleTvTitle.setText("位置导航");
+        includeTextTitleTvTitle.setText(R.string.location_navigation);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mPresenter.getMap(tmMonitorMap.getMap());
     }

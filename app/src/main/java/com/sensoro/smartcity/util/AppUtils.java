@@ -9,8 +9,8 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
-import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
@@ -20,12 +20,14 @@ import android.widget.EditText;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.server.bean.AlarmInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class AppUtils {
     public static boolean isAppInstalled(Context context, String packageName) {
@@ -246,14 +248,61 @@ public class AppUtils {
         return line;
     }
 
-    public static int dp2px(Context context, int dpValue) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
+    /**
+     * 根据手机分辨率从DP转成PX
+     *
+     * @param context
+     * @param dpValue
+     * @return
+     */
+    public static int dp2px(Context context, float dpValue) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
-    public static int sp2px(Context context, int spValue) {
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, context.getResources().getDisplayMetrics());
-
+    /**
+     * 将sp值转换为px值，保证文字大小不变
+     *
+     * @param spValue
+     * @return
+     */
+    public static int sp2px(Context context, float spValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (spValue * fontScale + 0.5f);
     }
+
+    /**
+     * 根据手机的分辨率PX(像素)转成DP
+     *
+     * @param context
+     * @param pxValue
+     * @return
+     */
+    public static int px2dip(Context context, float pxValue) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (pxValue / scale + 0.5f);
+    }
+
+    /**
+     * 将px值转换为sp值，保证文字大小不变
+     *
+     * @param pxValue
+     * @return
+     */
+
+    public static int px2sp(Context context, float pxValue) {
+        final float fontScale = context.getResources().getDisplayMetrics().scaledDensity;
+        return (int) (pxValue / fontScale + 0.5f);
+    }
+
+//    public static int dp2px(Context context, int dpValue) {
+//        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dpValue, context.getResources().getDisplayMetrics());
+//    }
+//
+//    public static int sp2px(Context context, int spValue) {
+//        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, spValue, context.getResources().getDisplayMetrics());
+//
+//    }
 
     public static void dismissInputMethodManager(Context context, EditText editText) {
         editText.setCursorVisible(false);
@@ -282,5 +331,77 @@ public class AppUtils {
         }
 
         return -1;
+    }
+
+    public static boolean isChineseLanguage() {
+        String language = getLanguageEnv();
+
+        return language != null && (language.trim().equals("zh-CN") || language.trim().equals("zh-TW"));
+    }
+
+    private static String getLanguageEnv() {
+        Locale l = Locale.getDefault();
+        String language = l.getLanguage();
+        String country = l.getCountry().toLowerCase();
+        if ("zh".equals(language)) {
+            if ("cn".equals(country)) {
+                language = "zh-CN";
+            } else if ("tw".equals(country)) {
+                language = "zh-TW";
+            }
+        } else if ("pt".equals(language)) {
+            if ("br".equals(country)) {
+                language = "pt-BR";
+            } else if ("pt".equals(country)) {
+                language = "pt-PT";
+            }
+        }
+        return language;
+    }
+    public static String getContactPhone(List<AlarmInfo.RecordInfo> list) {
+        String[] contract = new String[3];
+        String tempNumber = null;
+        outer:
+        for (AlarmInfo.RecordInfo recordInfo : list) {
+            String type = recordInfo.getType();
+            if ("sendVoice".equals(type)) {
+                AlarmInfo.RecordInfo.Event[] phoneList = recordInfo.getPhoneList();
+                for (AlarmInfo.RecordInfo.Event event : phoneList) {
+                    String source = event.getSource();
+                    String number = event.getNumber();
+                    if (!TextUtils.isEmpty(number)) {
+                        if ("attach".equals(source)) {
+                            LogUtils.loge("单独联系人：" + number);
+                            if (TextUtils.isEmpty(contract[0])) {
+                                contract[0] = number;
+                            }
+                            break outer;
+
+                        } else if ("group".equals(source)) {
+                            LogUtils.loge("分组联系人：" + number);
+                            if (TextUtils.isEmpty(contract[0])) {
+                                contract[1] = number;
+                            }
+                            break;
+                        } else if ("notification".equals(source)) {
+                            LogUtils.loge("账户联系人：" + number);
+                            if (TextUtils.isEmpty(contract[0])) {
+                                contract[2] = number;
+                            }
+                            break;
+                        }
+
+                    }
+
+                }
+            }
+        }
+        for (String contractStr : contract) {
+            if (!TextUtils.isEmpty(contractStr)) {
+                tempNumber = contractStr;
+                break;
+            }
+        }
+        return tempNumber;
     }
 }

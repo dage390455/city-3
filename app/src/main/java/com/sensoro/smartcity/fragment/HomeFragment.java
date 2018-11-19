@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +99,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.shav_home_alarm_tip)
     SensoroHomeAlarmView shavHomeAlarmTip;
+    @BindView(R.id.nsv_no_content)
+    LinearLayout noContent;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeHeaderAdapter;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
@@ -136,7 +139,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 //选择类型的pop点击事件
                 Resources resources = Objects.requireNonNull(mRootFragment.getActivity()).getResources();
                 if ("全部".equals(item.name)) {
-                    fgMainHomeTvSelectType.setText("全部类型");
+                    fgMainHomeTvSelectType.setText(R.string.all_types);
                     fgMainHomeTvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));
                     Drawable drawable = resources.getDrawable(R.drawable.main_small_triangle_gray);
                     drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
@@ -475,16 +478,24 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void refreshContentData(final boolean isFirstInit,
                                    final List<HomeTopModel> dataList) {
-        if (fgMainHomeRcContent.isComputingLayout()) {
-            fgMainHomeRcContent.post(new Runnable() {
-                @Override
-                public void run() {
-                    freshContent(isFirstInit, dataList);
-                }
-            });
-            return;
+        if (dataList.size() > 0) {
+            fgMainHomeRcContent.setVisibility(View.VISIBLE);
+            noContent.setVisibility(View.GONE);
+            if (fgMainHomeRcContent.isComputingLayout()) {
+                fgMainHomeRcContent.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        freshContent(isFirstInit, dataList);
+                    }
+                });
+                return;
+            }
+            freshContent(isFirstInit, dataList);
+        } else {
+            fgMainHomeRcContent.setVisibility(View.GONE);
+            noContent.setVisibility(View.VISIBLE);
         }
-        freshContent(isFirstInit, dataList);
+
     }
 
     private void freshContent(boolean isFirstInit, List<HomeTopModel> dataList) {
@@ -722,13 +733,15 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
 
     public boolean onBackPressed() {
-        if (mSelectDeviceTypePop.isShowing()) {
-            mSelectDeviceTypePop.dismiss();
-            return true;
-        } else {
-            return false;
+        try {
+            if (mSelectDeviceTypePop.isShowing()) {
+                mSelectDeviceTypePop.dismiss();
+                return true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
-
+        return false;
     }
 
     @Override
@@ -792,7 +805,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 currentPosition = 0;
 
             } else {
-                toastShort("设备预警已解除，请在“预警”界面中查看事件");
+                toastShort(mRootFragment.getString(R.string.device_alert_removed));
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -806,6 +819,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             mPresenter.requestWithDirection(DIRECTION_DOWN, false, homeTopModel);
         } catch (Exception e) {
             e.printStackTrace();
+            if (mMainHomeFragRcContentAdapter.getData().size() == 0) {
+                mPresenter.requestInitData(false);
+            }
         }
     }
 
@@ -816,6 +832,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             mPresenter.requestWithDirection(DIRECTION_UP, false, homeTopModel);
         } catch (Exception e) {
             e.printStackTrace();
+            recycleViewRefreshComplete();
         }
     }
 }

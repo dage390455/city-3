@@ -124,7 +124,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                 if (PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
-                    requestInitData();
+                    requestInitData(true);
                 }
             }
         };
@@ -135,8 +135,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
 
-    private void requestInitData() {
-        getView().showProgressDialog();
+    public void requestInitData(boolean needShowProgressDialog) {
+        if (needShowProgressDialog) {
+            getView().showProgressDialog();
+        }
         LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
                 .io()).flatMap(new Func1<DeviceTypeCountRsp, Observable<DeviceInfoListRsp>>() {
@@ -176,45 +178,52 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }).retryWhen(new RetryWithDelay(2, 100)).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                if (mHomeTopModels.size()>0) {
-                    freshHeaderContentData(mHomeTopModels.get(0));
+                getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+                getView().refreshHeaderData(true, mHomeTopModels);
+                getView().refreshContentData(true, mHomeTopModels);
+                if (mHomeTopModels.size() <= 1) {
+                    getView().setImvHeaderLeftVisible(false);
+                    getView().setImvHeaderRightVisible(false);
+                }
+                if (mHomeTopModels.size() > 0) {
+                    updateHeaderTop(mHomeTopModels.get(0));
                 }
                 getView().dismissProgressDialog();
+                getView().dismissAlarmInfoView();
+                getView().recycleViewRefreshComplete();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                if (mHomeTopModels.size()>0) {
-                    freshHeaderContentData(mHomeTopModels.get(0));
+                getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+                getView().refreshHeaderData(true, mHomeTopModels);
+                getView().refreshContentData(true, mHomeTopModels);
+                if (mHomeTopModels.size() <= 1) {
+                    getView().setImvHeaderLeftVisible(false);
+                    getView().setImvHeaderRightVisible(false);
+                }
+                if (mHomeTopModels.size() > 0) {
+                    updateHeaderTop(mHomeTopModels.get(0));
                 }
                 getView().toastShort(errorMsg);
                 getView().dismissProgressDialog();
+                getView().dismissAlarmInfoView();
+                getView().recycleViewRefreshComplete();
             }
         });
     }
 
-    private void freshHeaderContentData(HomeTopModel homeTopModel) {
+    public void updateHeaderTop(HomeTopModel homeTopModel) {
         try {
-            getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
-            getView().refreshHeaderData(true, mHomeTopModels);
-            getView().refreshContentData(true, mHomeTopModels);
-            if (mHomeTopModels.size() <= 1) {
-                getView().setImvHeaderLeftVisible(false);
-                getView().setImvHeaderRightVisible(false);
-            }
-            updateHeaderTop(homeTopModel);
+            mCurrentHomeTopModel = homeTopModel;
+            String currentDataStr = getCurrentDataStr();
+            int currentColor = getCurrentColor();
+            getView().setToolbarTitleBackgroundColor(currentColor);
+            getView().setToolbarTitleCount(currentDataStr);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-    }
-
-    public void updateHeaderTop(HomeTopModel homeTopModel) {
-        mCurrentHomeTopModel = homeTopModel;
-        String currentDataStr = getCurrentDataStr();
-        int currentColor = getCurrentColor();
-        getView().setToolbarTitleBackgroundColor(currentColor);
-        getView().setToolbarTitleCount(currentDataStr);
     }
 
     @NonNull
@@ -428,7 +437,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        requestInitData();
+                        requestInitData(true);
                     }
                 });
                 break;
@@ -515,7 +524,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             try {
                                 List<DeviceInfo> data = deviceInfoListRsp.getData();
                                 if (data.size() == 0) {
-                                    getView().toastShort("没有更多数据了");
+                                    getView().toastShort(mContext.getString(R.string.no_more_data));
                                 }
                                 freshDataList(homeTopModel);
                             } catch (Exception e) {
@@ -670,11 +679,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     public void requestDataByTypes(int position, final HomeTopModel homeTopModel) {
-
-        if (position == 0) {
+        try {
+            if (position == 0) {
+                mTypeSelectedType = null;
+            } else {
+                mTypeSelectedType = mMergeTypes.get(position - 1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
             mTypeSelectedType = null;
-        } else {
-            mTypeSelectedType = mMergeTypes.get(position - 1);
         }
         page = 1;
         getView().showProgressDialog();
@@ -685,12 +698,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 getView().refreshContentData(false, mHomeTopModels);
                 updateHeaderTop(homeTopModel);
                 getView().dismissProgressDialog();
+                getView().dismissAlarmInfoView();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+                getView().dismissAlarmInfoView();
             }
         });
     }
@@ -710,7 +725,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 return;
             }
         }
-        getView().toastShort("无此权限");
+        getView().toastShort(mContext.getString(R.string.no_such_permission));
     }
 
     public void clickAlarmInfo(int position, HomeTopModel homeTopModel) {
@@ -733,7 +748,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 //                getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
                     getView().dismissProgressDialog();
-                    getView().toastShort("未获取到预警日志信息");
+                    getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
                 } else {
                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);
@@ -775,7 +790,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 return;
             }
         }
-        getView().toastShort("无此权限");
+        getView().toastShort(mContext.getString(R.string.no_such_permission));
     }
 
     public void updateSelectDeviceTypePopAndShow() {
@@ -812,40 +827,48 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private String getCurrentDataStr() {
-        if (mCurrentHomeTopModel == null) {
-            mCurrentHomeTopModel = mHomeTopModels.get(0);
+        try {
+            if (mCurrentHomeTopModel == null) {
+                mCurrentHomeTopModel = mHomeTopModels.get(0);
+            }
+            StringBuilder stringBuilder = new StringBuilder();
+            switch (mCurrentHomeTopModel.type) {
+                case 0:
+                    stringBuilder.append(mContext.getString(R.string.main_page_warm));
+                    break;
+                case 1:
+                    stringBuilder.append(mContext.getString(R.string.normal));
+                    break;
+                case 2:
+                    stringBuilder.append(mContext.getString(R.string.status_lost));
+                    break;
+                case 3:
+                    stringBuilder.append(mContext.getString(R.string.status_inactive));
+                    break;
+            }
+            return stringBuilder.append("(").append(mCurrentHomeTopModel.value).append(")").toString();
+        } catch (Exception e) {
+            return "";
         }
-        StringBuilder stringBuilder = new StringBuilder();
-        switch (mCurrentHomeTopModel.type) {
-            case 0:
-                stringBuilder.append("预警");
-                break;
-            case 1:
-                stringBuilder.append("正常");
-                break;
-            case 2:
-                stringBuilder.append("失联");
-                break;
-            case 3:
-                stringBuilder.append("未激活");
-                break;
-        }
-        return stringBuilder.append("(").append(mCurrentHomeTopModel.value).append(")").toString();
     }
 
     private int getCurrentColor() {
-        if (mCurrentHomeTopModel == null) {
-            mCurrentHomeTopModel = mHomeTopModels.get(0);
-        }
-        switch (mCurrentHomeTopModel.type) {
-            case 0:
-                return R.color.c_f34a4a;
-            case 1:
-                return R.color.c_29c093;
-            case 2:
-                return R.color.c_5d5d5d;
-            case 3:
-                return R.color.c_b6b6b6;
+        try {
+            if (mCurrentHomeTopModel == null) {
+                mCurrentHomeTopModel = mHomeTopModels.get(0);
+            }
+            switch (mCurrentHomeTopModel.type) {
+                case 0:
+                    return R.color.c_f34a4a;
+                case 1:
+                    return R.color.c_29c093;
+                case 2:
+                    return R.color.c_5d5d5d;
+                case 3:
+                    return R.color.c_b6b6b6;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return R.color.c_29c093;
     }

@@ -9,11 +9,9 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.util.DateUtil;
 
-import java.util.AbstractSequentialList;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,7 +37,7 @@ public class MalfunctionHistoryRcContentAdapter extends RecyclerView.Adapter<Mal
     public void onBindViewHolder(@NonNull MalfunctionHistoryRcContentViewHolder holder, int position) {
         MalfunctionListInfo malfunctionListInfo = mData.get(position);
         if (malfunctionListInfo != null) {
-            holder.tvMalfunctionHistoryContent.setText(String.format("%s %s", DateUtil.getStrTimeToday(malfunctionListInfo.getCreatedTime(), 0), mContext.getString(R.string.occour_malfunction_alarm)));
+            holder.tvMalfunctionHistoryContent.setText(String.format("%s %s", DateUtil.getStrTimeToday(mContext, malfunctionListInfo.getCreatedTime(), 0), mContext.getString(R.string.occour_malfunction_alarm)));
         }
     }
 
@@ -60,7 +58,7 @@ public class MalfunctionHistoryRcContentAdapter extends RecyclerView.Adapter<Mal
 
         MalfunctionHistoryRcContentViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

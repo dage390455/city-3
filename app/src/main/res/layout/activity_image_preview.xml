@@ -57,7 +57,7 @@
                 android:layout_height="match_parent"
                 android:layout_marginLeft="10dp"
                 android:paddingLeft="8dp"
-                android:text="原图(3.07M)"
+                android:text="@string/image_preview_original"
                 android:textColor="@color/ip_text_primary_inverted"
                 android:visibility="gone"/>
 
@@ -82,7 +82,7 @@
                 android:minWidth="48dp"
                 android:paddingLeft="16.0dp"
                 android:paddingRight="16.0dp"
-                android:text="完成"
+                android:text="@string/image_preview_finish"
                 android:textColor="#fff"
                 android:textSize="14sp"/>
 
@@ -97,7 +97,7 @@
                 android:drawablePadding="4dp"
                 android:includeFontPadding="true"
                 android:paddingLeft="8dp"
-                android:text="选择"
+                android:text="@string/image_preview_select"
                 android:textColor="@color/ip_text_primary_inverted"/>
         </RelativeLayout>
 

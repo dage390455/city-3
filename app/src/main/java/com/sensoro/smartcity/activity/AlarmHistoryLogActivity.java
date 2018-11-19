@@ -80,11 +80,11 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        mPresenter.handlerActivityResult(requestCode,resultCode,data);
+        mPresenter.handlerActivityResult(requestCode, resultCode, data);
     }
 
     private void initView() {
-        includeImvTitleTvTitle.setText("历史日志");
+        includeImvTitleTvTitle.setText(mActivity.getString(R.string.historical_log));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mAlarmHistoryLogRcContentAdapter = new AlarmHistoryLogRcContentAdapter(mActivity);
         mAlarmHistoryLogRcContentAdapter.setOnAlarmHistoryLogConfirmListener(this);
@@ -231,7 +231,7 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
 
     @Override
     public void updateAlarmListAdapter(List<DeviceAlarmLogInfo> data) {
-        if(data != null && data.size() >0){
+        if (data != null && data.size() > 0) {
             mAlarmHistoryLogRcContentAdapter.updateAdapter(data);
         }
         setNoContentVisible(data == null || data.size() < 1);

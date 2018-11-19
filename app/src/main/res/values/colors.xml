@@ -42,6 +42,7 @@
     <color name="popup_selected_text_color">#48b0f7</color>
     <color name="list_sep_color">#F5F6F7</color>
     <color name="d8d8d8">#d8d8d8</color>
+    <color name="dcdffffff">#cdffffff</color>
     <color name="f7f8f9">#f7f8f9</color>
     <color name="c_1b1b1b">#1b1b1b</color>
     <color name="c_dadada">#dadada</color>

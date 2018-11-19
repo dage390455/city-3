@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:text="姓名"
+            android:text="@string/name"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12sp" />
 
@@ -52,7 +52,7 @@
                 android:paddingTop="4dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="企业"
+                android:text="@string/company"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="10sp" />
 
@@ -67,7 +67,7 @@
                 android:paddingTop="4dp"
                 android:paddingStart="10dp"
                 android:paddingEnd="10dp"
-                android:text="企业"
+                android:text="@string/signed"
                 android:textColor="@color/c_dfdfdf"
                 android:textSize="10sp" />
 
@@ -85,7 +85,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="住址"
+            android:text="@string/address"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12sp" />
 
@@ -121,7 +121,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="合同号"
+            android:text="@string/contract_number"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12sp" />
 
@@ -157,7 +157,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="生成时间"
+            android:text="@string/contract_created_time"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12sp" />
 
@@ -193,7 +193,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="签订时间"
+            android:text="@string/contract_signed_time"
             android:textColor="@color/c_a6a6a6"
             android:textSize="12sp" />
 

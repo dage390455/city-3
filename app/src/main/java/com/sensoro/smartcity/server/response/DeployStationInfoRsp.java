@@ -1,25 +1,27 @@
 package com.sensoro.smartcity.server.response;
 
+import com.sensoro.smartcity.server.bean.DeployStationInfo;
+
 import java.io.Serializable;
 
 /**
  * Created by sensoro on 17/7/26.
  */
 
-public class StationInfoRsp extends ResponseBase implements Serializable {
-    public StationInfo getData() {
+public class DeployStationInfoRsp extends ResponseBase implements Serializable {
+    public DeployStationInfo getData() {
         return data;
     }
 
-    public void setData(StationInfo data) {
+    public void setData(DeployStationInfo data) {
         this.data = data;
     }
 
-    private StationInfo data;
+    private DeployStationInfo data;
 
     @Override
     public String toString() {
-        return "StationInfoRsp{" +
+        return "DeployStationInfoRsp{" +
                 "data=" + data.toString() +
                 ", errcode=" + errcode +
                 ", errmsg='" + errmsg + '\'' +

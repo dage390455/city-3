@@ -151,7 +151,7 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
                     getView().setAlarmSetting(stringBuilder.append("时报警").toString());
                 }
                 int interval = deviceInfo.getInterval();
-                getView().setInterval(DateUtil.secToTimeBefore(interval));
+                getView().setInterval(DateUtil.secToTimeBefore(mContext,interval));
 
                 String name = deviceInfo.getName();
                 if (TextUtils.isEmpty(name)) {
@@ -201,7 +201,7 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
 
                 break;
         }
-        getView().setStatusInfo(DEVICE_STATUS_ARRAY[deviceInfo.getStatus()], statusId);
+        getView().setStatusInfo(mContext.getString(DEVICE_STATUS_ARRAY[deviceInfo.getStatus()]), statusId);
         if (deviceInfo.getUpdatedTime() > 0) {
             getView().setReportText(DateUtil.getFullDatePoint(deviceInfo.getUpdatedTime()));
         }
@@ -226,7 +226,7 @@ public class MonitorMoreActivityPresenter extends BasePresenter<IMonitorMoreActi
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (getView()!=null){
+                        if (getView() != null) {
                             freshStructData(finalTempDeviceInfo);
                         }
 

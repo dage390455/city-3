@@ -1,10 +1,6 @@
 package com.sensoro.smartcity.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.DrawableRes;
@@ -21,7 +17,6 @@ import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IInspectionTaskDetailActivityView;
 import com.sensoro.smartcity.presenter.InspectionTaskDetailActivityPresenter;
-import com.sensoro.smartcity.util.Util;
 import com.sensoro.smartcity.util.ViewHelper;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
@@ -70,7 +65,7 @@ public class InspectionTaskDetailActivity extends BaseActivity<IInspectionTaskDe
 
     private void initView() {
         mProgressDialog = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeTextTitleTvTitle.setText("巡检任务");
+        includeTextTitleTvTitle.setText(R.string.inspection_task);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
         initRcDeviceCountTag();

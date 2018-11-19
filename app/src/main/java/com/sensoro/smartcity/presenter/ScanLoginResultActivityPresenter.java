@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanLoginResultActivityView;
@@ -39,7 +40,7 @@ public class ScanLoginResultActivityPresenter extends BasePresenter<IScanLoginRe
                         eventData.code = EVENT_DATA_SCAN_LOGIN_SUCCESS;
                         EventBus.getDefault().post(eventData);
                     } else {
-                        getView().toastShort("登录失败请重新扫描");
+                        getView().toastShort(mContext.getString(R.string.login_failed_please_rescan));
                     }
                     getView().dismissProgressDialog();
                     getView().finishAc();

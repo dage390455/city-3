@@ -36,7 +36,6 @@
             android:paddingTop="3dp"
             android:paddingBottom="3dp"
             android:paddingRight="10dp"
-            android:text="信号 良"
             android:textColor="@color/white"
             android:textSize="12sp" />
         <ImageView
@@ -64,6 +63,6 @@
         android:background="@drawable/shape_bg_corner_29c_shadow"
         android:gravity="center"
         android:padding="10dp"
-        android:text="保存"
+        android:text="@string/deploy_device_map_save"
         android:textColor="@color/white" />
 </LinearLayout>

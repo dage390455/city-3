@@ -266,7 +266,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                         getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             cur_page--;
-                            getView().toastShort("没有更多数据了");
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                         } else {
                             freshUI(direction, deviceAlarmLogRsp);

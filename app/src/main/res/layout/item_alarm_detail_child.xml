@@ -54,7 +54,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/x20"
-                android:text="预警结果:"
+                android:text="@string/alarm_log_alarm_result"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_size"/>
 
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/x20"
-                android:text="预警成因:"
+                android:text="@string/alarm_log_alarm_cause"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_size"/>
 
@@ -106,7 +106,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/x20"
-                android:text="预警场所:"
+                android:text="@string/alarm_log_alarm_place"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_size"/>
 
@@ -132,7 +132,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="@dimen/x20"
-                android:text="备注说明:"
+                android:text="@string/alarm_log_alarm_remark"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_size"/>
 
