@@ -11,7 +11,7 @@
         android:id="@+id/fixed_bottom_navigation_icon_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="4dp"
         android:layout_gravity="center_horizontal|top">
 
         <ImageView
@@ -41,7 +41,6 @@
         android:layout_gravity="center_horizontal|bottom"
         android:gravity="center"
         android:includeFontPadding="false"
-        android:layout_marginTop="2dp"
         android:lines="1"
         android:scaleX="@dimen/fixed_label_active_to_inactive_ratio"
         android:scaleY="@dimen/fixed_label_active_to_inactive_ratio"
