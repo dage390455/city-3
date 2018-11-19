@@ -21,8 +21,7 @@ public class MenuPageFactory {
         LogUtils.loge("logPresenter", "phoneId = " + phoneId);
         //TODO 处理Character信息
 //                      mCharacter = userInfo.getCharacter();
-        String roles = userInfo.getRoles();
-        eventLoginData.roles = roles;
+        eventLoginData.roles = userInfo.getRoles();
         String isSpecific = userInfo.getIsSpecific();
         eventLoginData.isSupperAccount = getIsSupperAccount(isSpecific);
         eventLoginData.hasStation = getHasStationDeploy(grants);
@@ -35,6 +34,7 @@ public class MenuPageFactory {
         eventLoginData.hasInspectionDeviceList = getHasInspectionDeviceList(grants);
         eventLoginData.hasInspectionDeviceModify = getHasInspectionDeviceModify(grants);
         eventLoginData.hasAlarmInfo = getHasAlarmInfo(grants);
+        eventLoginData.hasMalfunction = getHasMalfunction(grants);
         eventLoginData.hasDeviceBrief = getHasDeviceBriefList(grants);
         eventLoginData.hasSignalCheck = getHasSignalCheck(grants);
         eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
@@ -260,6 +260,21 @@ public class MenuPageFactory {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
                 return grantsDevice.contains("signalConfig");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 故障权限
+     * @param grants
+     * @return
+     */
+    public static boolean getHasMalfunction(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsMalfunction = grants.getMalfunction();
+            if (grantsMalfunction != null) {
+                return grantsMalfunction.contains("list");
             }
         }
         return false;

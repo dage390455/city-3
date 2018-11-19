@@ -723,17 +723,19 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void run() {
-        try {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-        } catch (Exception e) {
-            e.printStackTrace();
-            getView().showBleTips();
-        }
-        if (!bleHasOpen) {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
-        }
+        bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
         if (bleHasOpen) {
-            getView().hideBleTips();
+            try {
+                bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().showBleTips();
+            }
+            if (bleHasOpen) {
+                getView().hideBleTips();
+            } else {
+                getView().showBleTips();
+            }
         } else {
             getView().showBleTips();
         }

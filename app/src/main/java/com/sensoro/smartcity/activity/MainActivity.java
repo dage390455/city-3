@@ -3,13 +3,8 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gyf.barlibrary.ImmersionBar;
@@ -167,7 +162,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     @Override
-    public void setHasManagerControl(boolean hasManagerControl) {
+    public void setHasMalfunctionControl(boolean hasManagerControl) {
         acMainBottomBar.setBottomNavigationItemVisible(2, hasManagerControl);
     }
 
@@ -178,9 +173,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
                 if (count > 0) {
                     if (warnBadgeItem.isHidden()) {
                         warnBadgeItem.show();
-                    }
-                    if (count > 99) {
-                        count = 99;
                     }
                     warnBadgeItem.setText(String.valueOf(count));
                 } else {
@@ -212,7 +204,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     private void initViewPager() {
         mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager());
         acMainHvpContent.setAdapter(mPageAdapter);
-        acMainHvpContent.setOffscreenPageLimit(5);
+        acMainHvpContent.setOffscreenPageLimit(6);
     }
 
     @Override

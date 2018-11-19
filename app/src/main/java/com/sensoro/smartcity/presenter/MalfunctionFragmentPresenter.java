@@ -44,7 +44,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
-        if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+        if (PreferencesHelper.getInstance().getUserData().hasMalfunction) {
             requestSearchData(DIRECTION_DOWN, null);
         }
     }
@@ -168,7 +168,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceMalfunctionLogList(1, null, null, tempSearch, startTime, endTime
-                ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
+        ).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionListRsp>(this) {
 
 
             @Override
@@ -211,8 +211,8 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
     }
 
     public void doMalfunctionDetail(MalfunctionListInfo item) {
-        Intent intent = new Intent(mContext,MalfunctionDetailActivity.class);
-        intent.putExtra(Constants.EXTRA_MALFUNCTION_INFO,item);
+        Intent intent = new Intent(mContext, MalfunctionDetailActivity.class);
+        intent.putExtra(Constants.EXTRA_MALFUNCTION_INFO, item);
         getView().startAC(intent);
 
     }

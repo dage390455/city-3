@@ -25,7 +25,17 @@ public class GrantsInfo implements Serializable {
     private List<String> alarm;
     private List<String> device;
     private List<String> monitor;
+    private List<String> malfunction;
     private List<?> sysLog;
+
+
+    public List<String> getMalfunction() {
+        return malfunction;
+    }
+
+    public void setMalfunction(List<String> malfunction) {
+        this.malfunction = malfunction;
+    }
 
     public List<String> getStation() {
         return station;

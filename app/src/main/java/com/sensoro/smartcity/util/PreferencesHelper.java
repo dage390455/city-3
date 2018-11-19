@@ -66,6 +66,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, eventLoginData.hasInspectionDeviceList);
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY, eventLoginData.hasInspectionDeviceModify);
         editor.putBoolean(EXTRA_GRANTS_HAS_ALARM_LOG_INFO, eventLoginData.hasAlarmInfo);
+        editor.putBoolean(EXTRA_GRANTS_HAS_MALFUNCTION_INFO, eventLoginData.hasMalfunction);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, eventLoginData.hasDeviceBrief);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
@@ -94,6 +95,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasInspectionDeviceList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, false);
             boolean hasInspectionDeviceModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY, false);
             boolean hasAlarmInfo = sp.getBoolean(EXTRA_GRANTS_HAS_ALARM_LOG_INFO, false);
+            boolean hasMalfunction = sp.getBoolean(EXTRA_GRANTS_HAS_MALFUNCTION_INFO, false);
             boolean hasDeviceBrief = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, false);
             boolean hasDeviceSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
             boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
@@ -114,6 +116,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasInspectionDeviceList = hasInspectionDeviceList;
             eventLoginData.hasInspectionDeviceModify = hasInspectionDeviceModify;
             eventLoginData.hasAlarmInfo = hasAlarmInfo;
+            eventLoginData.hasMalfunction = hasMalfunction;
             eventLoginData.hasDeviceBrief = hasDeviceBrief;
             eventLoginData.hasSignalCheck = hasDeviceSignalCheck;
             eventLoginData.hasSignalConfig = hasDeviceSignalConfig;

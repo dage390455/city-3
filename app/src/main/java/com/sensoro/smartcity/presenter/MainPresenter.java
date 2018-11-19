@@ -143,6 +143,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         return PreferencesHelper.getInstance().getUserData().hasAlarmInfo;
     }
 
+    public boolean hasMalfunctionControl() {
+        return PreferencesHelper.getInstance().getUserData().hasMalfunction;
+    }
+
     private final class DeviceInfoListener implements Emitter.Listener {
 
         @Override
@@ -343,14 +347,23 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             getView().setHasDeviceBriefControl(true);
             getView().setBottomBarSelected(0);
             getView().setHasAlarmInfoControl(hasAlarmInfoControl());
+            getView().setHasMalfunctionControl(hasMalfunctionControl());
         } else {
             getView().setHasDeviceBriefControl(false);
             if (hasAlarmInfoControl()) {
                 getView().setBottomBarSelected(1);
                 getView().setHasAlarmInfoControl(true);
+                getView().setHasMalfunctionControl(hasMalfunctionControl());
             } else {
                 getView().setHasAlarmInfoControl(false);
-                getView().setBottomBarSelected(2);
+                if (hasMalfunctionControl()) {
+                    getView().setBottomBarSelected(2);
+                    getView().setHasMalfunctionControl(true);
+                } else {
+                    getView().setHasMalfunctionControl(false);
+                    getView().setBottomBarSelected(3);
+                }
+
             }
         }
 

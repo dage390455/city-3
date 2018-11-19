@@ -18,7 +18,7 @@ public interface IMainView extends IProgressDialog, IToast, IActivityIntent {
 
     void setHasAlarmInfoControl(boolean hasDeviceAlarmInfoControl);
 
-    void setHasManagerControl(boolean hasManagerControl);
+    void setHasMalfunctionControl(boolean hasManagerControl);
 
     void setAlarmWarnCount(int count);
 

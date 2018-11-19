@@ -180,6 +180,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST = "extra_grants_has_inspection_device_list";
     String EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY = "extra_grants_has_inspection_device_modify";
     String EXTRA_GRANTS_HAS_ALARM_LOG_INFO = "extra_grants_has_alarm_log_info";
+    String EXTRA_GRANTS_HAS_MALFUNCTION_INFO = "extra_grants_has_malfunction_info";
     String EXTRA_GRANTS_HAS_DEVICE_BRIEF = "extra_grants_has_device_brief";
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK = "extra_grants_has_device_signal_check";
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG = "extra_grants_has_device_signal_config";
