@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Transformation;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Class description
@@ -76,13 +78,13 @@ class ShiftingBottomNavigationTab extends BottomNavigationTab {
     }
 
     @Override
-    protected void setNoTitleIconContainerParams(FrameLayout.LayoutParams layoutParams) {
+    protected void setNoTitleIconContainerParams(LinearLayout.LayoutParams layoutParams) {
         layoutParams.height = getContext().getResources().getDimensionPixelSize(R.dimen.shifting_no_title_icon_container_height);
         layoutParams.width = getContext().getResources().getDimensionPixelSize(R.dimen.shifting_no_title_icon_container_width);
     }
 
     @Override
-    protected void setNoTitleIconParams(LayoutParams layoutParams) {
+    protected void setNoTitleIconParams(RelativeLayout.LayoutParams layoutParams) {
         layoutParams.height = getContext().getResources().getDimensionPixelSize(R.dimen.shifting_no_title_icon_height);
         layoutParams.width = getContext().getResources().getDimensionPixelSize(R.dimen.shifting_no_title_icon_width);
     }

@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -87,8 +88,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
                         getView().dismissProgressDialog();
                         if (malfunctionListRsp.getData().size() == 0) {
                             cur_page--;
-                            //todo 字符串修改
-                            getView().toastShort("没有更多数据了");
+                            getView().toastShort(mActivity.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                         } else {
                             freshUI(direction, malfunctionListRsp);

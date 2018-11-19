@@ -7,6 +7,8 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 
 /**
  * Class description
@@ -57,26 +59,26 @@ class FixedBottomNavigationTab extends BottomNavigationTab {
 
     @Override
     public void select(boolean setActiveColor, int animationDuration) {
-        labelView.animate().scaleX(1).scaleY(1).setDuration(animationDuration).start();
+//        labelView.animate().scaleX(1).scaleY(1).setDuration(animationDuration).start();
 //        labelView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.fixed_label_active));
         super.select(setActiveColor, animationDuration);
     }
 
     @Override
     public void unSelect(boolean setActiveColor, int animationDuration) {
-        labelView.animate().scaleX(labelScale).scaleY(labelScale).setDuration(animationDuration).start();
+//        labelView.animate().scaleX(labelScale).scaleY(labelScale).setDuration(animationDuration).start();
 //        labelView.setTextSize(TypedValue.COMPLEX_UNIT_PX, getResources().getDimension(R.dimen.fixed_label_inactive));
         super.unSelect(setActiveColor, animationDuration);
     }
 
     @Override
-    protected void setNoTitleIconContainerParams(FrameLayout.LayoutParams layoutParams) {
+    protected void setNoTitleIconContainerParams(LinearLayout.LayoutParams layoutParams) {
         layoutParams.height = getContext().getResources().getDimensionPixelSize(R.dimen.fixed_no_title_icon_container_height);
         layoutParams.width = getContext().getResources().getDimensionPixelSize(R.dimen.fixed_no_title_icon_container_width);
     }
 
     @Override
-    protected void setNoTitleIconParams(LayoutParams layoutParams) {
+    protected void setNoTitleIconParams(RelativeLayout.LayoutParams layoutParams) {
         layoutParams.height = getContext().getResources().getDimensionPixelSize(R.dimen.fixed_no_title_icon_height);
         layoutParams.width = getContext().getResources().getDimensionPixelSize(R.dimen.fixed_no_title_icon_width);
     }

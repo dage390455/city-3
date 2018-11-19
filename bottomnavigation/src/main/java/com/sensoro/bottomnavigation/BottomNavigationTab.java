@@ -13,8 +13,11 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 /**
@@ -51,7 +54,7 @@ abstract class BottomNavigationTab extends FrameLayout {
     View containerView;
     TextView labelView;
     ImageView iconView;
-    FrameLayout iconContainerView;
+    RelativeLayout iconContainerView;
     BadgeTextView badgeView;
 
     public BottomNavigationTab(Context context) {
@@ -153,7 +156,7 @@ abstract class BottomNavigationTab extends FrameLayout {
             }
         });
         animator.setDuration(animationDuration);
-        animator.start();
+//        animator.start();
 
         iconView.setSelected(true);
         if (setActiveColor) {
@@ -181,7 +184,7 @@ abstract class BottomNavigationTab extends FrameLayout {
             }
         });
         animator.setDuration(animationDuration);
-        animator.start();
+//        animator.start();
 
         labelView.setTextColor(mInActiveColor);
         iconView.setSelected(false);
@@ -237,18 +240,18 @@ abstract class BottomNavigationTab extends FrameLayout {
         if (isNoTitleMode) {
             labelView.setVisibility(GONE);
 
-            LayoutParams layoutParams = (LayoutParams) iconContainerView.getLayoutParams();
+            LinearLayout.LayoutParams layoutParams = (LinearLayout.LayoutParams) iconContainerView.getLayoutParams();
             layoutParams.gravity = Gravity.CENTER;
             setNoTitleIconContainerParams(layoutParams);
             iconContainerView.setLayoutParams(layoutParams);
 
-            LayoutParams iconLayoutParams = (LayoutParams) iconView.getLayoutParams();
+            RelativeLayout.LayoutParams iconLayoutParams = (RelativeLayout.LayoutParams) iconView.getLayoutParams();
             setNoTitleIconParams(iconLayoutParams);
             iconView.setLayoutParams(iconLayoutParams);
         }
     }
 
-    protected abstract void setNoTitleIconContainerParams(LayoutParams layoutParams);
+    protected abstract void setNoTitleIconContainerParams(LinearLayout.LayoutParams layoutParams);
 
-    protected abstract void setNoTitleIconParams(LayoutParams layoutParams);
+    protected abstract void setNoTitleIconParams(RelativeLayout.LayoutParams layoutParams);
 }

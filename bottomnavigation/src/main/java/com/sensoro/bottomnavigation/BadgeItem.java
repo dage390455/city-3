@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPropertyAnimatorListener;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.lang.ref.WeakReference;
@@ -105,8 +106,8 @@ abstract class BadgeItem<T extends BadgeItem<T>> {
         bottomNavigationTab.badgeView.setVisibility(View.VISIBLE);
 
         // set layout params based on gravity
-        FrameLayout.LayoutParams layoutParams = (FrameLayout.LayoutParams) bottomNavigationTab.badgeView.getLayoutParams();
-        layoutParams.gravity = getGravity();
+        RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) bottomNavigationTab.badgeView.getLayoutParams();
+//        layoutParams.gravity = getGravity();
         bottomNavigationTab.badgeView.setLayoutParams(layoutParams);
 
         // if hidden hide
