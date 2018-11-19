@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -98,6 +99,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.shav_home_alarm_tip)
     SensoroHomeAlarmView shavHomeAlarmTip;
+    @BindView(R.id.nsv_no_content)
+    LinearLayout noContent;
     private MainHomeFragRcTypeAdapter mMainHomeFragRcTypeHeaderAdapter;
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
@@ -475,16 +478,24 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     @Override
     public void refreshContentData(final boolean isFirstInit,
                                    final List<HomeTopModel> dataList) {
-        if (fgMainHomeRcContent.isComputingLayout()) {
-            fgMainHomeRcContent.post(new Runnable() {
-                @Override
-                public void run() {
-                    freshContent(isFirstInit, dataList);
-                }
-            });
-            return;
+        if (dataList.size() > 0) {
+            fgMainHomeRcContent.setVisibility(View.VISIBLE);
+            noContent.setVisibility(View.GONE);
+            if (fgMainHomeRcContent.isComputingLayout()) {
+                fgMainHomeRcContent.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        freshContent(isFirstInit, dataList);
+                    }
+                });
+                return;
+            }
+            freshContent(isFirstInit, dataList);
+        } else {
+            fgMainHomeRcContent.setVisibility(View.GONE);
+            noContent.setVisibility(View.VISIBLE);
         }
-        freshContent(isFirstInit, dataList);
+
     }
 
     private void freshContent(boolean isFirstInit, List<HomeTopModel> dataList) {
@@ -808,6 +819,9 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             mPresenter.requestWithDirection(DIRECTION_DOWN, false, homeTopModel);
         } catch (Exception e) {
             e.printStackTrace();
+            if (mMainHomeFragRcContentAdapter.getData().size() == 0) {
+                mPresenter.requestInitData(false);
+            }
         }
     }
 
@@ -818,6 +832,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             mPresenter.requestWithDirection(DIRECTION_UP, false, homeTopModel);
         } catch (Exception e) {
             e.printStackTrace();
+            recycleViewRefreshComplete();
         }
     }
 }

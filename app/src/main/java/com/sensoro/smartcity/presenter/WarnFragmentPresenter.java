@@ -323,14 +323,14 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     }
 
     private void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        //TODO 处理只针对当前集合做处理
         if (mDeviceAlarmLogInfoList.contains(deviceAlarmLogInfo)) {
             for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
                 DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
                 if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
                     AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
                     deviceAlarmLogInfo.setSort(1);
-                    for (int j = 0; j < recordInfoArray.length; j++) {
-                        AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
+                    for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
                         if (recordInfo.getType().equals("recovery")) {
                             deviceAlarmLogInfo.setSort(4);
                             break;
@@ -341,11 +341,13 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     break;
                 }
             }
-        } else {
-            mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
+            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
         }
+//        else {
+//            mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
+//        }
 //        ArrayList<DeviceAlarmLogInfo> tempList = new ArrayList<>(mDeviceAlarmLogInfoList);
-        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+//        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
     }
 
 

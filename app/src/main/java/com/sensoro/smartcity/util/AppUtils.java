@@ -9,6 +9,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -19,6 +20,7 @@ import android.widget.EditText;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.server.bean.AlarmInfo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -355,5 +357,51 @@ public class AppUtils {
             }
         }
         return language;
+    }
+    public static String getContactPhone(List<AlarmInfo.RecordInfo> list) {
+        String[] contract = new String[3];
+        String tempNumber = null;
+        outer:
+        for (AlarmInfo.RecordInfo recordInfo : list) {
+            String type = recordInfo.getType();
+            if ("sendVoice".equals(type)) {
+                AlarmInfo.RecordInfo.Event[] phoneList = recordInfo.getPhoneList();
+                for (AlarmInfo.RecordInfo.Event event : phoneList) {
+                    String source = event.getSource();
+                    String number = event.getNumber();
+                    if (!TextUtils.isEmpty(number)) {
+                        if ("attach".equals(source)) {
+                            LogUtils.loge("单独联系人：" + number);
+                            if (TextUtils.isEmpty(contract[0])) {
+                                contract[0] = number;
+                            }
+                            break outer;
+
+                        } else if ("group".equals(source)) {
+                            LogUtils.loge("分组联系人：" + number);
+                            if (TextUtils.isEmpty(contract[0])) {
+                                contract[1] = number;
+                            }
+                            break;
+                        } else if ("notification".equals(source)) {
+                            LogUtils.loge("账户联系人：" + number);
+                            if (TextUtils.isEmpty(contract[0])) {
+                                contract[2] = number;
+                            }
+                            break;
+                        }
+
+                    }
+
+                }
+            }
+        }
+        for (String contractStr : contract) {
+            if (!TextUtils.isEmpty(contractStr)) {
+                tempNumber = contractStr;
+                break;
+            }
+        }
+        return tempNumber;
     }
 }

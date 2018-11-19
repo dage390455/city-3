@@ -181,6 +181,33 @@ public class ImageFactory {
     }
 
     public static byte[] ratio(Bitmap image) {
+        //做5：4的裁剪
+        int newWidth;
+        int newHeight;
+        int deltaWidth;
+        int deltaHeight;
+        int width = image.getWidth();
+        int height = image.getHeight();
+        if (width <= height) {
+            //宽小于高 高变小 宽不变
+            newHeight = width * 4 / 5;
+            newWidth = width;
+            deltaWidth = 0; //width 变化的距离
+            deltaHeight = Math.abs(height - newHeight) / 2;//y
+        } else {
+            //宽大于高 让宽为高度的 5 / 4  高度不变
+            newWidth = height * 5 / 4;
+            newHeight = height;
+            deltaWidth = Math.abs(width - newWidth) / 2;
+            deltaHeight = 0;
+        }
+        Matrix m = new Matrix();
+        image = Bitmap.createBitmap(image
+                , deltaWidth
+                , deltaHeight
+                , newWidth + deltaWidth > width ? width - deltaWidth : newWidth
+                , newHeight + deltaHeight > height ? height - deltaHeight : newHeight
+                , m, false);
         ByteArrayOutputStream os = null;
         try {
             os = new ByteArrayOutputStream();

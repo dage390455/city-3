@@ -124,7 +124,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
                 if (PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
-                    requestInitData();
+                    requestInitData(true);
                 }
             }
         };
@@ -135,8 +135,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
 
-    private void requestInitData() {
-        getView().showProgressDialog();
+    public void requestInitData(boolean needShowProgressDialog) {
+        if (needShowProgressDialog) {
+            getView().showProgressDialog();
+        }
         LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
                 .io()).flatMap(new Func1<DeviceTypeCountRsp, Observable<DeviceInfoListRsp>>() {
@@ -187,6 +189,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     updateHeaderTop(mHomeTopModels.get(0));
                 }
                 getView().dismissProgressDialog();
+                getView().dismissAlarmInfoView();
+                getView().recycleViewRefreshComplete();
             }
 
             @Override
@@ -203,6 +207,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 }
                 getView().toastShort(errorMsg);
                 getView().dismissProgressDialog();
+                getView().dismissAlarmInfoView();
+                getView().recycleViewRefreshComplete();
             }
         });
     }
@@ -431,7 +437,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        requestInitData();
+                        requestInitData(true);
                     }
                 });
                 break;
@@ -692,12 +698,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 getView().refreshContentData(false, mHomeTopModels);
                 updateHeaderTop(homeTopModel);
                 getView().dismissProgressDialog();
+                getView().dismissAlarmInfoView();
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+                getView().dismissAlarmInfoView();
             }
         });
     }

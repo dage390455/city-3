@@ -272,7 +272,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
         miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;
         miniProgramObj.webpageUrl = "https://www.sensoro.com"; // 兼容低版本的网页链接
-        miniProgramObj.userName = "gh_6b7a86071f47";
+        miniProgramObj.userName = "gh_8c58c2d63459";
         miniProgramObj.withShareTicket = false;
         String name = mDeviceInfo.getName();
         if (TextUtils.isEmpty(name)) {
@@ -292,7 +292,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         if (TextUtils.isEmpty(tempAddress)) {
             tempAddress = mContext.getString(R.string.unknown_street);
         }
-        final String tempData = "/pages/index?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
+        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
                 [1] +
                 "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
                 updatedTime;
