@@ -18,6 +18,8 @@ import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -48,8 +50,21 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         getView().setDeviceNameText(deviceName);
 
         long createdTime = mMalfunctionInfo.getCreatedTime();
-        getView().setMalfunctionStatus(mMalfunctionInfo.getMalfunctionStatus(),DateUtil.getStrTimeToday(mActivity,createdTime,1));
+        getView().setMalfunctionStatus(mMalfunctionInfo.getMalfunctionStatus(), DateUtil.getStrTimeToday(mActivity, createdTime, 1));
         List<MalfunctionListInfo.RecordsBean> records = mMalfunctionInfo.getRecords();
+        Collections.sort(records, new Comparator<MalfunctionListInfo.RecordsBean>() {
+            @Override
+            public int compare(MalfunctionListInfo.RecordsBean o1, MalfunctionListInfo.RecordsBean o2) {
+                long b = o2.getUpdatedTime() - o1.getUpdatedTime();
+                if (b > 0) {
+                    return 1;
+                } else if (b < 0) {
+                    return -1;
+                } else {
+                    return 0;
+                }
+            }
+        });
         getView().updateRcContent(records);
         long current = System.currentTimeMillis();
 
@@ -94,13 +109,12 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
                 return;
             }
         }
-        //todo 改成字符串
-        getView().toastShort("未获取到位置信息");
+        getView().toastShort(mActivity.getString(R.string.not_obtain_location_infomation));
     }
 
     public void doMalfunctionHistory() {
         Intent intent = new Intent(mActivity, MalfunctionHistoryActivity.class);
-        intent.putExtra(Constants.EXTRA_SENSOR_SN,mMalfunctionInfo.getDeviceSN());
+        intent.putExtra(Constants.EXTRA_SENSOR_SN, mMalfunctionInfo.getDeviceSN());
         getView().startAC(intent);
     }
 }
