@@ -13,10 +13,7 @@ import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.MalfunctionListRsp;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -30,7 +27,6 @@ import rx.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
-import static com.sensoro.smartcity.constant.Constants.DISPLAY_STATUS_CONFIRM;
 
 public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFragmentView> implements
         CalendarPopUtils.OnCalendarPopupCallbackListener {
@@ -95,7 +91,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                     @Override
                     public void onCompleted(MalfunctionListRsp malfunctionListRsp) {
                         getView().dismissProgressDialog();
-                        freshUI(direction, malfunctionListRsp);
+                        refreshUI(direction, malfunctionListRsp);
                         getView().onPullRefreshComplete();
 
                     }
@@ -124,7 +120,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
-                            freshUI(direction, malfunctionListRsp);
+                            refreshUI(direction, malfunctionListRsp);
                             getView().onPullRefreshComplete();
                         }
 
@@ -181,7 +177,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                 if (malfunctionListRsp.getData().size() == 0) {
                     getView().toastShort("没有更多数据了");
                 }
-                freshUI(DIRECTION_DOWN, malfunctionListRsp);
+                refreshUI(DIRECTION_DOWN, malfunctionListRsp);
                 getView().onPullRefreshComplete();
             }
 
@@ -194,7 +190,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         });
     }
 
-    private void freshUI(int directionDown, MalfunctionListRsp malfunctionListRsp) {
+    private void refreshUI(int directionDown, MalfunctionListRsp malfunctionListRsp) {
         if (directionDown == DIRECTION_DOWN) {
             mMalfunctionInfoList.clear();
         }

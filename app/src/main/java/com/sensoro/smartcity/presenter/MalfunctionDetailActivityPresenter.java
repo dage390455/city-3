@@ -81,37 +81,7 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
     }
 
     public void doContactOwner() {
-        String tempNumber = null;
-        outer:
-        for (MalfunctionListInfo.RecordsBean recordInfo : mMalfunctionInfo.getRecords()) {
-            String type = recordInfo.getType();
-            if ("sendSMS".equals(type)) {
-                List<MalfunctionListInfo.RecordsBean.Event> phoneList = recordInfo.getPhoneList();
-
-                for (MalfunctionListInfo.RecordsBean.Event event : phoneList) {
-                    String source = event.getSource();
-                    String number = event.getNumber();
-                    if (!TextUtils.isEmpty(number)) {
-                        if ("attach".equals(source)) {
-                            LogUtils.loge("单独联系人：" + number);
-                            tempNumber = number;
-                            break outer;
-
-                        } else if ("group".equals(source)) {
-                            LogUtils.loge("分组联系人：" + number);
-                            tempNumber = number;
-                            break;
-                        } else if ("notification".equals(source)) {
-                            LogUtils.loge("账户联系人：" + number);
-                            tempNumber = number;
-                            break;
-                        }
-
-                    }
-
-                }
-            }
-        }
+        String tempNumber = mMalfunctionInfo.getDeviceNotification().getContent();
         if (TextUtils.isEmpty(tempNumber)) {
             getView().toastShort(mActivity.getString(R.string.no_find_contact_phone_number));
         } else {

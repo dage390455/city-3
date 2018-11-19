@@ -48,8 +48,8 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     LinearLayout acScanLlBottom;
     @BindView(R.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
-    @BindView(R.id.ac_scan_imv_scan_line)
-    ImageView acScanImvScanLine;
+    @BindView(R.id.include_text_title_divider)
+    View acScanDivider;
     private boolean isFlashOn;
     private ProgressUtils mProgressUtils;
     private ImmersionBar immersionBar;
@@ -64,8 +64,7 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     private void initView() {
-        initScanLineAnimation();
-
+        acScanDivider.setVisibility(View.GONE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setTextColor(Color.WHITE);
         includeTextTitleTvSubTitle.setVisibility(View.GONE);
@@ -76,15 +75,6 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
         acScanQrView.getScanBoxView().setOnlyDecodeScanBoxArea(true);
         acScanQrView.getCameraPreview().setAutoFocusFailureDelay(0);
 
-    }
-
-    private void initScanLineAnimation() {
-        TranslateAnimation translateAnimation = new TranslateAnimation(Animation.RELATIVE_TO_SELF, 0f, Animation.RELATIVE_TO_SELF, 0f,
-                Animation.RELATIVE_TO_PARENT, -0.25f, Animation.RELATIVE_TO_PARENT, 1f);
-        translateAnimation.setDuration(4000);
-        translateAnimation.setRepeatMode(Animation.RESTART);
-        translateAnimation.setRepeatCount(Animation.INFINITE);
-        acScanImvScanLine.startAnimation(translateAnimation);
     }
 
     private void changeIconArrowsColor() {

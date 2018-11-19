@@ -214,36 +214,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doContactOwner() {
-        String tempNumber = null;
-        outer:
-        for (AlarmInfo.RecordInfo recordInfo : mList) {
-            String type = recordInfo.getType();
-            if ("sendVoice".equals(type)) {
-                AlarmInfo.RecordInfo.Event[] phoneList = recordInfo.getPhoneList();
-                for (AlarmInfo.RecordInfo.Event event : phoneList) {
-                    String source = event.getSource();
-                    String number = event.getNumber();
-                    if (!TextUtils.isEmpty(number)) {
-                        if ("attach".equals(source)) {
-                            LogUtils.loge("单独联系人：" + number);
-                            tempNumber = number;
-                            break outer;
+        String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
 
-                        } else if ("group".equals(source)) {
-                            LogUtils.loge("分组联系人：" + number);
-                            tempNumber = number;
-                            break;
-                        } else if ("notification".equals(source)) {
-                            LogUtils.loge("账户联系人：" + number);
-                            tempNumber = number;
-                            break;
-                        }
-
-                    }
-
-                }
-            }
-        }
         if (TextUtils.isEmpty(tempNumber)) {
             getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         } else {

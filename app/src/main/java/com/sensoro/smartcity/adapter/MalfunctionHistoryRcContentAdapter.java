@@ -39,7 +39,7 @@ public class MalfunctionHistoryRcContentAdapter extends RecyclerView.Adapter<Mal
     public void onBindViewHolder(@NonNull MalfunctionHistoryRcContentViewHolder holder, int position) {
         MalfunctionListInfo malfunctionListInfo = mData.get(position);
         if (malfunctionListInfo != null) {
-            holder.tvMalfunctionHistoryContent.setText(String.format("%s %s", DateUtil.getStrTimeToday(malfunctionListInfo.getUpdatedTime(), 0), mContext.getString(R.string.occour_malfunction_alarm)));
+            holder.tvMalfunctionHistoryContent.setText(String.format("%s %s", DateUtil.getStrTimeToday(malfunctionListInfo.getCreatedTime(), 0), mContext.getString(R.string.occour_malfunction_alarm)));
         }
     }
 

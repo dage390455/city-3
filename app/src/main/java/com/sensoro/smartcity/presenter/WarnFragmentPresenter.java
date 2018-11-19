@@ -66,43 +66,11 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
     public void doContactOwner(int position) {
         DeviceAlarmLogInfo deviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
-        AlarmInfo.RecordInfo[] records = deviceAlarmLogInfo.getRecords();
-        if (records != null && records.length > 0) {
-            String tempNumber = null;
-            outer:
-            for (AlarmInfo.RecordInfo recordInfo : records) {
-                String type = recordInfo.getType();
-                if ("sendVoice".equals(type)) {
-                    AlarmInfo.RecordInfo.Event[] phoneList = recordInfo.getPhoneList();
-                    for (AlarmInfo.RecordInfo.Event event : phoneList) {
-                        String source = event.getSource();
-                        String number = event.getNumber();
-                        if (!TextUtils.isEmpty(number)) {
-                            if ("attach".equals(source)) {
-                                LogUtils.loge("单独联系人：" + number);
-                                tempNumber = number;
-                                break outer;
-
-                            } else if ("group".equals(source)) {
-                                LogUtils.loge("分组联系人：" + number);
-                                tempNumber = number;
-                                break;
-                            } else if ("notification".equals(source)) {
-                                LogUtils.loge("账户联系人：" + number);
-                                tempNumber = number;
-                                break;
-                            }
-
-                        }
-
-                    }
-                }
-            }
-            if (TextUtils.isEmpty(tempNumber)) {
-                getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
-            } else {
-                AppUtils.diallPhone(tempNumber, mContext);
-            }
+        String phoneNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
+        if (TextUtils.isEmpty(phoneNumber)) {
+            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+        } else {
+            AppUtils.diallPhone(phoneNumber, mContext);
         }
 
     }

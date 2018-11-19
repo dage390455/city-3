@@ -24,6 +24,8 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
     private AlarmInfo.RuleInfo[] rules;
     private AlarmInfo.RecordInfo[] records;
     private double[] deviceLonlat;
+
+    private DeviceNotificationBean deviceNotification;
     private AlarmInfo.OwnerInfo owners;
     private boolean isDeleted;
     private int displayStatus;
@@ -180,6 +182,50 @@ public class DeviceAlarmLogInfo implements Serializable, Comparable<DeviceAlarmL
 
     public void setSort(int sort) {
         this.sort = sort;
+    }
+
+    public DeviceNotificationBean getDeviceNotification() {
+        return deviceNotification;
+    }
+
+    public void setDeviceNotification(DeviceNotificationBean deviceNotification) {
+        this.deviceNotification = deviceNotification;
+    }
+
+
+    public static class DeviceNotificationBean implements Serializable {
+
+        /**
+         * types : phone
+         */
+
+        private String types;
+        private String contact;
+        private String content;
+
+        public String getTypes() {
+            return types;
+        }
+
+        public void setTypes(String types) {
+            this.types = types;
+        }
+
+        public String getContact() {
+            return contact;
+        }
+
+        public void setContact(String contact) {
+            this.contact = contact;
+        }
+
+        public String getContent() {
+            return content;
+        }
+
+        public void setContent(String content) {
+            this.content = content;
+        }
     }
 
     @Override
