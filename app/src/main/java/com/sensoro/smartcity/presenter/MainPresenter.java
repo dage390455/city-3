@@ -307,7 +307,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             IO.Options options = new IO.Options();
             options.query = "session=" + sessionId;
             options.forceNew = true;
-            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
+            options.path = "/city";
+            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -403,9 +404,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             }
             String sessionId = RetrofitServiceHelper.INSTANCE.getSessionId();
             IO.Options options = new IO.Options();
+            //
             options.query = "session=" + sessionId;
             options.forceNew = true;
-            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
+            options.path = "/city";
+            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL + "/app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);

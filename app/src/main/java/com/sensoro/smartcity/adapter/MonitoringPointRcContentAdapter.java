@@ -91,6 +91,9 @@ public class MonitoringPointRcContentAdapter extends RecyclerView.Adapter
                 case SENSOR_STATUS_NORMAL:
                     color = R.color.c_29c093;
                     break;
+                case SENSOR_STATUS_MALFUNCTION:
+                    color = R.color.c_fdc83b;
+                    break;
                 default:
                     color = R.color.c_29c093;
                     break;

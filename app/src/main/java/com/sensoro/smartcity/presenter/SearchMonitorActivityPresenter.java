@@ -156,20 +156,23 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                 case SENSOR_STATUS_ALARM:
                     deviceInfo.setSort(1);
                     break;
-                case SENSOR_STATUS_NORMAL:
+                case SENSOR_STATUS_MALFUNCTION:
                     deviceInfo.setSort(2);
                     break;
-                case SENSOR_STATUS_LOST:
+                case SENSOR_STATUS_NORMAL:
                     deviceInfo.setSort(3);
                     break;
-                case SENSOR_STATUS_INACTIVE:
+                case SENSOR_STATUS_LOST:
                     deviceInfo.setSort(4);
+                    break;
+                case SENSOR_STATUS_INACTIVE:
+                    deviceInfo.setSort(5);
                     break;
                 default:
                     break;
             }
 //            if (isMatcher(deviceInfo)) {
-                mDataList.add(deviceInfo);
+            mDataList.add(deviceInfo);
 //            }
         }
 //        getView().refreshContentData(mDataList);

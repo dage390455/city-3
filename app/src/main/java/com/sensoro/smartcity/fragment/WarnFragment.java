@@ -32,6 +32,7 @@ import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
@@ -101,7 +102,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                     // 当按了搜索之后关闭软键盘
                     String text = fgMainWarnEtSearch.getText().toString();
                     mPresenter.requestSearchData(DIRECTION_DOWN, text);
-                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
                     return true;
                 }
                 return false;
@@ -134,8 +135,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             fgMainWarnEtSearch.setFocusableInTouchMode(false);
         }
     }
-
-
 
 
     public void forceOpenSoftKeyboard() {
@@ -342,7 +341,8 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             mRcContentAdapter.setData(deviceAlarmLogInfoList);
             mRcContentAdapter.notifyDataSetChanged();
         }
-        setNoContentVisible(deviceAlarmLogInfoList.size()<1);
+        LogUtils.loge("updateAlarmListAdapter-->> 刷新 " + mRcContentAdapter.getData().size());
+        setNoContentVisible(deviceAlarmLogInfoList.size() < 1);
 
     }
 
@@ -392,7 +392,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         if (isVisible) {
             tvWarnAlarmSearchCancel.setVisibility(View.VISIBLE);
 //            setEditTextState(false);
-            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
         } else {
             tvWarnAlarmSearchCancel.setVisibility(View.GONE);
 //            setEditTextState(true);
@@ -414,17 +414,33 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
-        mPresenter.clickItemByConfirmStatus(position, isReConfirm);
+        try {
+            DeviceAlarmLogInfo deviceAlarmLogInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.clickItemByConfirmStatus(deviceAlarmLogInfo, isReConfirm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public void onCallPhone(View v, int position) {
-        mPresenter.doContactOwner(position);
+        try {
+            DeviceAlarmLogInfo deviceAlarmLogInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.doContactOwner(deviceAlarmLogInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onItemClick(View view, int position, boolean isReConfirm) {
-        mPresenter.clickItem(position, isReConfirm);
-    }
+        try {
+            DeviceAlarmLogInfo deviceAlarmLogInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.clickItem(deviceAlarmLogInfo, isReConfirm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
 }

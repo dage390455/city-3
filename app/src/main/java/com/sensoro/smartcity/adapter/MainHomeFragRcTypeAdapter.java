@@ -182,6 +182,12 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_inactivated);
                 holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_inactivated);
                 break;
+            case 4:
+                currentColor = R.color.c_fdc83b;
+                holder.mainRcTypeTvStateTxt.setText(R.string.malfunction_monitoring_point);
+                holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_trouble);
+                holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_wrong);
+                break;
         }
         holder.mainRcTypeTvStateTxt.setTextColor(Color.WHITE);
         holder.mainRcTypeTvCount.setTextColor(Color.WHITE);
@@ -223,7 +229,6 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
 
     @Override
     public int getItemCount() {
-
         return mData.size();
     }
 

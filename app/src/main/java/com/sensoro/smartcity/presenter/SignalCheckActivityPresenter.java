@@ -78,6 +78,10 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 textColor = R.color.c_b6b6b6;
                 statusText = mActivity.getString(R.string.status_inactive);
                 break;
+            case SENSOR_STATUS_MALFUNCTION:
+                textColor = R.color.c_fdc83b;
+                statusText = mActivity.getString(R.string.status_malfunction);
+                break;
             default:
                 textColor = R.color.c_29c093;
                 statusText = mActivity.getString(R.string.normal);

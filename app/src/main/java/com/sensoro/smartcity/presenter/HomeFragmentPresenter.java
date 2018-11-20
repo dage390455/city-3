@@ -80,6 +80,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private volatile HomeTopModel mCurrentHomeTopModel;
     //
     private final HomeTopModel alarmModel = new HomeTopModel();
+    private final HomeTopModel malfunctionModel = new HomeTopModel();
     private final HomeTopModel normalModel = new HomeTopModel();
     private final HomeTopModel lostModel = new HomeTopModel();
     private final HomeTopModel inactiveModel = new HomeTopModel();
@@ -119,6 +120,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         lostModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
         inactiveModel.type = 3;
         inactiveModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
+        malfunctionModel.type = 4;
+        malfunctionModel.innerAdapter = new MainHomeFragRcContentAdapter(mContext);
         mSoundPool = new SoundPool(5, AudioManager.STREAM_MUSIC, 0);
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
@@ -146,6 +149,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             public Observable<DeviceInfoListRsp> call(DeviceTypeCountRsp deviceTypeCountRsp) {
                 mHomeTopModels.clear();
                 alarmModel.clearData();
+                malfunctionModel.clearData();
                 normalModel.clearData();
                 lostModel.clearData();
                 inactiveModel.clearData();
@@ -153,10 +157,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 int normal = deviceTypeCountRsp.getData().getNormal();
                 int lostCount = deviceTypeCountRsp.getData().getOffline();
                 int inactiveCount = deviceTypeCountRsp.getData().getInactive();
+                int malfunctionCount = deviceTypeCountRsp.getData().getMalfunction();
                 if (alarmCount > 0) {
                     alarmModel.value = alarmCount;
                     tempAlarmCount = alarmCount;
                     mHomeTopModels.add(alarmModel);
+                }
+                if (malfunctionCount > 0) {
+                    malfunctionModel.value = malfunctionCount;
+                    mHomeTopModels.add(malfunctionModel);
                 }
                 if (normal > 0) {
                     normalModel.value = normal;
@@ -171,7 +180,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     mHomeTopModels.add(inactiveModel);
                 }
                 //
-                totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount;
+                totalMonitorPoint = alarmCount + normal + lostCount + inactiveCount + malfunctionCount;
                 page = 1;
                 return getAllDeviceInfoListRspObservable(true);
             }
@@ -240,6 +249,19 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     alarmModel.mDeviceList.clear();
                     alarmModel.mDeviceList.addAll(data);
                 }
+                return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, 4, null);
+            }
+        }).flatMap(new Func1<DeviceInfoListRsp, Observable<DeviceInfoListRsp>>() {
+            @Override
+            public Observable<DeviceInfoListRsp> call(DeviceInfoListRsp deviceInfoListRsp) {
+                List<DeviceInfo> data = deviceInfoListRsp.getData();
+                if (needClear) {
+                    malfunctionModel.mDeviceList.clear();
+                }
+                if (data != null && data.size() > 0) {
+                    malfunctionModel.mDeviceList.clear();
+                    malfunctionModel.mDeviceList.addAll(data);
+                }
                 return RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, mTypeSelectedType, 1, null);
             }
         }).flatMap(new Func1<DeviceInfoListRsp, Observable<DeviceInfoListRsp>>() {
@@ -297,12 +319,13 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             @Override
             public void run() {
                 if (needRefreshContent) {
-                    if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3]) {
+                    if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3] || homeTopModelCacheFresh[4]) {
                         getView().refreshContentData(false, mHomeTopModels);
                         homeTopModelCacheFresh[0] = false;
                         homeTopModelCacheFresh[1] = false;
                         homeTopModelCacheFresh[2] = false;
                         homeTopModelCacheFresh[3] = false;
+                        homeTopModelCacheFresh[4] = false;
                     }
                     needRefreshContent = false;
                 }
@@ -404,10 +427,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     int normalCount = alarmDeviceCountsBean.get_$1();
                     int lostCount = alarmDeviceCountsBean.get_$2();
                     int inactiveCount = alarmDeviceCountsBean.get_$3();
+                    int malfunctionCount = alarmDeviceCountsBean.get_$4();
                     //
                     if (tempAlarmCount == 0 && currentAlarmCount > 0) {
                         needAlarmPlay = true;
                     }
+                    LogUtils.loge("malfunctionCount = " + malfunctionCount);
                     needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
                     LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
                     tempAlarmCount = currentAlarmCount;
@@ -416,6 +441,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     if (currentAlarmCount > 0) {
                         alarmModel.value = tempAlarmCount;
                         mHomeTopModels.add(alarmModel);
+                    }
+                    if (malfunctionCount > 0) {
+                        malfunctionModel.value = malfunctionCount;
+                        mHomeTopModels.add(malfunctionModel);
                     }
                     if (normalCount > 0) {
                         normalModel.value = normalCount;
@@ -429,7 +458,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         inactiveModel.value = inactiveCount;
                         mHomeTopModels.add(inactiveModel);
                     }
-                    totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount;
+                    totalMonitorPoint = currentAlarmCount + normalCount + lostCount + inactiveCount + malfunctionCount;
                     needRefreshHeader = true;
                 }
                 break;
@@ -549,7 +578,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     /**
      * 处理push来的json数据
      */
-    private final boolean[] homeTopModelCacheFresh = {false, false, false, false};
+    private final boolean[] homeTopModelCacheFresh = {false, false, false, false, false};
 
     private void organizeJsonData(DeviceInfo newDeviceInfo) {
         int status = newDeviceInfo.getStatus();
@@ -564,6 +593,20 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                         alarmModel.mDeviceList.remove(i);
                     }
                     homeTopModelCacheFresh[0] = true;
+                    return;
+                }
+            }
+        }
+        synchronized (malfunctionModel.mDeviceList) {
+            for (int i = 0; i < malfunctionModel.mDeviceList.size(); i++) {
+                DeviceInfo currentDeviceInfo = malfunctionModel.mDeviceList.get(i);
+                if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
+                    if (status == SENSOR_STATUS_MALFUNCTION) {
+                        malfunctionModel.mDeviceList.set(i, currentDeviceInfo);
+                    } else {
+                        malfunctionModel.mDeviceList.remove(i);
+                    }
+                    homeTopModelCacheFresh[4] = true;
                     return;
                 }
             }
@@ -644,6 +687,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     synchronized (inactiveModel.mDeviceList) {
                         inactiveModel.mDeviceList.add(0, newDeviceInfo);
                         homeTopModelCacheFresh[3] = true;
+                    }
+                }
+                break;
+            case SENSOR_STATUS_MALFUNCTION:
+                if (!homeTopModelCacheFresh[4]) {
+                    synchronized (inactiveModel.mDeviceList) {
+                        malfunctionModel.mDeviceList.add(0, newDeviceInfo);
+                        homeTopModelCacheFresh[4] = true;
                     }
                 }
                 break;
@@ -845,6 +896,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 case 3:
                     stringBuilder.append(mContext.getString(R.string.status_inactive));
                     break;
+                case 4:
+                    stringBuilder.append(mContext.getString(R.string.status_malfunction));
+                    break;
             }
             return stringBuilder.append("(").append(mCurrentHomeTopModel.value).append(")").toString();
         } catch (Exception e) {
@@ -866,6 +920,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     return R.color.c_5d5d5d;
                 case 3:
                     return R.color.c_b6b6b6;
+                case 4:
+                    return R.color.c_fdc83b;
             }
         } catch (Exception e) {
             e.printStackTrace();

@@ -115,6 +115,7 @@
         <string name="notification_prompt">EN通知中包含了重要报警信息，请前往设置，打开通知选项。</string>
         <string name="status_lost">EN失联</string>
         <string name="status_inactive">EN未激活</string>
+        <string name="status_malfunction">EN故障</string>
         <string name="status_alarm_true">EN报警</string>
         <string name="status_emergency_alarm">EN紧急报警</string>
         <string name="status_timeout_not_reported">EN超时未上报</string>

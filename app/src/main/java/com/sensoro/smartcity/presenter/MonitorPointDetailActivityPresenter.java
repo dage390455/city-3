@@ -90,6 +90,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 textColor = mContext.getResources().getColor(R.color.c_b6b6b6);
                 statusText = mContext.getString(R.string.status_inactive);
                 break;
+            case SENSOR_STATUS_MALFUNCTION:
+                textColor = mContext.getResources().getColor(R.color.c_fdc83b);
+                statusText = mContext.getString(R.string.status_malfunction);
+                break;
             default:
                 textColor = mContext.getResources().getColor(R.color.c_29c093);
                 statusText = mContext.getString(R.string.normal);
@@ -131,7 +135,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             getView().setContractName(contact);
             getView().setContractPhone(content);
         }
-        getView().setUpdateTime(DateUtil.getStrTimeToday(mContext,mDeviceInfo.getUpdatedTime(), 0));
+        getView().setUpdateTime(DateUtil.getStrTimeToday(mContext, mDeviceInfo.getUpdatedTime(), 0));
         String tags[] = mDeviceInfo.getTags();
         if (tags != null && tags.length > 0) {
             List<String> list = Arrays.asList(tags);
@@ -148,7 +152,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             }
         }
         int interval = mDeviceInfo.getInterval();
-        getView().setInterval(DateUtil.secToTimeBefore(mContext,interval));
+        getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
     }
 
     private void initCurrentDeviceInfo() {

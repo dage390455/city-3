@@ -60,7 +60,8 @@ public interface RetrofitService {
     String LOGIN = "sessions";
     String LOGOUT = "sessions/current";
     String USER_ACCOUNT_LIST = "users";
-    String DEVICE_INFO_LIST = "prov1/devices/details/app";
+//    String DEVICE_INFO_LIST = "prov1/devices/details/app";
+    String DEVICE_INFO_LIST = "prov2/devices/details/app";
     //
     String STATION_INFO = "stations/";
     String STATION_DEPLOY = "stations/app/";
@@ -70,8 +71,10 @@ public interface RetrofitService {
     String DEVICE_ALARM_HISTORY = "prov1/alarms/list/app";
     String DEVICE_ALARM_LOG = "alarmplay";
     String DEVICE_MALFUNCTION_LOG = "prov1/malfunctions";
-    String DEVICE_BRIEF_LIST = "stats/device/brief/app";
-    String DEVICE_TYPE_COUNT = "prov1/devices/status/count";
+//    String DEVICE_BRIEF_LIST = "stats/device/brief/app";
+    String DEVICE_BRIEF_LIST = "prov2/stats/device/brief/app";
+//    String DEVICE_TYPE_COUNT = "prov1/devices/status/count";
+    String DEVICE_TYPE_COUNT = "prov2/devices/status/count";
     String DOUBLE_CHECK = "tfa/totp/verify";
     String APP_UPDATE = "http://api.fir" +
             ".im/apps/latest/599519bbca87a829360005f8?api_token=72af8ff1c6587c51e8e9a28209f71713";
@@ -84,7 +87,8 @@ public interface RetrofitService {
     String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
     String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
     String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
-    String DEPLOY_DEVICE_DETAIL = "devices/detail";
+//    String DEPLOY_DEVICE_DETAIL = "devices/detail";
+    String DEPLOY_DEVICE_DETAIL = "prov2/devices/detail";
     @FormUrlEncoded
     @POST(LOGIN)
     Observable<LoginRsp> login(@Field("phone") String phone, @Field("password") String pwd, @Field("phoneId") String
@@ -148,7 +152,7 @@ public interface RetrofitService {
     @POST("users/{uid}/controlling")
     Observable<UserAccountControlRsp> doAccountControl(@Path("uid") String uid, @Body RequestBody requestBody);
 
-    @POST("devices/app/{sn}")
+    @POST("prov2/devices/app/{sn}")
     Observable<DeviceDeployRsp> doDevicePointDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(DEPLOY_DEVICE_DETAIL)

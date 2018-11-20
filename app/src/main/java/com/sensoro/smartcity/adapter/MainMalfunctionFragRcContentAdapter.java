@@ -73,7 +73,7 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
                 break;
             case 2:
                 holder.mainMalfunctionRcContentTvState.setText(mContext.getString(R.string.malfunctioning));
-                setTextColor(holder, R.color.c_ff8d34);
+                setTextColor(holder, R.color.c_fdc83b);
                 break;
         }
         Map<String, MalfunctionListInfo.MalfunctionDataBean> malfunctionData = malfunctionListInfo.getMalfunctionData();

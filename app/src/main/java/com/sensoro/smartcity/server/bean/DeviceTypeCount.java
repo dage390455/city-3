@@ -10,6 +10,15 @@ public class DeviceTypeCount {
     private int inactive;
     private int normal;
     private int offline;
+    private int malfunction;
+
+    public int getMalfunction() {
+        return malfunction;
+    }
+
+    public void setMalfunction(int malfunction) {
+        this.malfunction = malfunction;
+    }
 
     public int getAlarm() {
         return alarm;

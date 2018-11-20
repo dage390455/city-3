@@ -329,8 +329,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
             DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
             AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
             boolean isHaveRecovery = false;
-            for (int j = 0; j < recordInfoArray.length; j++) {
-                AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
+            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
                 if (recordInfo.getType().equals("recovery")) {
                     deviceAlarmLogInfo.setSort(4);
                     isHaveRecovery = true;

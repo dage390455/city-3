@@ -115,6 +115,7 @@
     <string name="notification_prompt">通知中包含了重要报警信息，请前往设置，打开通知选项。</string>
     <string name="status_lost">失联</string>
     <string name="status_inactive">未激活</string>
+    <string name="status_malfunction">故障</string>
     <string name="status_alarm_true">报警</string>
     <string name="status_emergency_alarm">紧急报警</string>
     <string name="status_timeout_not_reported">超时未上报</string>
@@ -292,8 +293,6 @@
     <string name="alarming">报警中</string>
     <string name="true_alarm">真实火警</string>
     <string name="misdescription">误报</string>
-
-
     <string name="exit_main">再按一次退出程序</string>
     <string name="tips_data_error">数据解析错误</string>
     <string name="tips_date_not_null">日期段中的任一日期不能为空</string>

@@ -79,6 +79,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 if (data instanceof DeviceAlarmLogInfo) {
                     if (this.deviceAlarmLogInfo.get_id().equals(((DeviceAlarmLogInfo) data).get_id())) {
                         this.deviceAlarmLogInfo = (DeviceAlarmLogInfo) data;
+                        refreshData(false);
                     }
 
                 }
