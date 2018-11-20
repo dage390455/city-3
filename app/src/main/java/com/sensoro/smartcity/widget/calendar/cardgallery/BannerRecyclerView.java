@@ -27,6 +27,7 @@ public class BannerRecyclerView extends RecyclerView {
     private int currentPosition = 0;
     private float lastY;
     private float lastX;
+    private boolean isContent = false;
 
     public BannerRecyclerView(Context context) {
         super(context);
@@ -111,6 +112,10 @@ public class BannerRecyclerView extends RecyclerView {
     }
 
 
+    public void setContent(boolean content) {
+        isContent = content;
+    }
+
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
         int action = ev.getAction();
@@ -146,8 +151,13 @@ public class BannerRecyclerView extends RecyclerView {
         return super.onInterceptTouchEvent(ev);
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent e) {
+    @Override
+    public boolean onTouchEvent(MotionEvent e) {
+        if(isContent){
+            return true;
+        }else{
+            return super.onTouchEvent(e);
+        }
 //        switch (e.getAction()) {
 //            case MotionEvent.ACTION_DOWN:
 //            case MotionEvent.ACTION_MOVE:
@@ -157,5 +167,5 @@ public class BannerRecyclerView extends RecyclerView {
 //                return true;
 //        }
 //        return super.onTouchEvent(e);
-//    }
+    }
 }

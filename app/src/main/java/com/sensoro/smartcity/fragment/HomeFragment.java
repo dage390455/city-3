@@ -249,6 +249,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         mMainHomeFragRcContentAdapter.setOnLoadInnerListener(this);
         xLinearLayoutManager = new SensoroXLinearLayoutManager(mRootFragment.getActivity());
         xLinearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        fgMainHomeRcContent.setContent(true);
         fgMainHomeRcContent.setLayoutManager(xLinearLayoutManager);
         fgMainHomeRcContent.setNestedScrollingEnabled(true);
         fgMainHomeRcContent.setAdapter(mMainHomeFragRcContentAdapter);
