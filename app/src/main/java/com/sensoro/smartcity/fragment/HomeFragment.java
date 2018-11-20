@@ -612,6 +612,27 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         }
     }
 
+    private void setAlarmScrolled(int index) {
+        int itemCount = mMainHomeFragRcContentAdapter.getItemCount();
+        LogUtils.loge("iv_header_title --->> left currentPosition = " + currentPosition + ",itemCount = " + itemCount);
+        if (index >= 0 && index <= itemCount - 1) {
+
+//            mBannerScaleContentHelper.setCurrentItem(index, true);
+            mBannerScaleHeaderHelper.setCurrentItem(index, true);
+            if (index == 0) {
+                setImvHeaderLeftVisible(false);
+            } else {
+                setImvHeaderLeftVisible(true);
+            }
+            if (index == itemCount - 1) {
+                setImvHeaderRightVisible(false);
+            } else {
+                setImvHeaderRightVisible(true);
+            }
+//                        mBannerScaleHeaderHelper.setCurrentItem(index, true);
+        }
+    }
+
 
     private void showDialog() {
         MenuDialogFragment menuDialogFragment = new MenuDialogFragment();
@@ -801,7 +822,8 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         try {
             HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(0);
             if (homeTopModel.type == 0) {
-                setHeaderTitleLeftArrow(0);
+//                setHeaderTitleLeftArrow(0);
+                setAlarmScrolled(0);
                 mPresenter.updateHeaderTop(homeTopModel);
                 currentPosition = 0;
 

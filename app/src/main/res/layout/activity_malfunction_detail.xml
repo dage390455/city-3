@@ -99,7 +99,7 @@
                 android:layout_marginStart="18dp"
                 android:layout_marginTop="18dp"
                 android:contentDescription="@null"
-                android:src="@drawable/alert_count" />
+                android:src="@drawable/malfunction_count" />
 
             <TextView
                 android:id="@+id/ac_malfunction_detail_tv_count"
