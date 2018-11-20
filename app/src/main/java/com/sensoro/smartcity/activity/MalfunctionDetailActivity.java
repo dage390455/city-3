@@ -184,7 +184,7 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
                 acMalfunctionDetailTvTimeText.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
                 break;
             case 2:
-                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_ff8d_shadow);
+                acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_fdc83b_shadow);
                 acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_white);
                 acMalfunctionDetailTvTime.setTextColor(Color.WHITE);
                 acMalfunctionDetailTvTimeText.setTextColor(Color.WHITE);
