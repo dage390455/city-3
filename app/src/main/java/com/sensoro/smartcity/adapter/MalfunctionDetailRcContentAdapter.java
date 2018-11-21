@@ -28,12 +28,14 @@ import butterknife.ButterKnife;
 
 public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<MalfunctionDetailRcContentAdapter.MalfunctionDetailRcContentViewHolder> {
     private final Context mContext;
+    private String mMalfunctionText;
     private List<MalfunctionListInfo.RecordsBean> mRecordInfoList = new ArrayList<>();
     private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus0 = new ArrayList<>();
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus1 = new ArrayList<>();
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus2 = new ArrayList<>();
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus3 = new ArrayList<>();
+
 
     public MalfunctionDetailRcContentAdapter(Context context) {
         mContext = context;
@@ -58,14 +60,10 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.smoke_icon);
                 holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext,recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.VISIBLE);
-                holder.itemMalfunctionDetailChildMalfunctionCause.setText(recordsBean.getMalfunctionText());
+                holder.itemMalfunctionDetailChildMalfunctionCause.setText(mMalfunctionText);
                 break;
             case "recovery":
-                String malfunctionText = recordsBean.getMalfunctionText();
-                if (TextUtils.isEmpty(malfunctionText)) {
-                    malfunctionText = mContext.getString(R.string.unknown_malfunction);
-                }
-                String content = malfunctionText + mContext.getString(R.string.recover_normal);
+                String content = mMalfunctionText + mContext.getString(R.string.recover_normal);
                 holder.itemMalfunctionDetailContentTvContent.setText(content);
                 holder.itemMalfunctionDetailContentTvContent.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.no_smoke_icon);
@@ -156,9 +154,13 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
     }
 
 
-    public void setData(List<MalfunctionListInfo.RecordsBean> recordInfoList) {
+    public void setData(List<MalfunctionListInfo.RecordsBean> recordInfoList, String malfunctionText) {
         this.mRecordInfoList.clear();
         this.mRecordInfoList.addAll(recordInfoList);
+        mMalfunctionText = malfunctionText;
+        if (TextUtils.isEmpty(mMalfunctionText)) {
+            mMalfunctionText = mContext.getString(R.string.unknown_malfunction);
+        }
         deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
     }
 
