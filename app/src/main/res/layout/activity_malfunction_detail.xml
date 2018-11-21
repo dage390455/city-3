@@ -46,7 +46,7 @@
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:layout_weight="1"
-            android:background="@drawable/shape_bg_corner_f34_shadow"
+            android:background="@drawable/shape_bg_corner_fdc83b_shadow"
             android:orientation="vertical">
 
             <ImageView
@@ -117,7 +117,7 @@
                 android:layout_marginStart="16dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="14dp"
-                android:text="@string/alarm_log_alarm_count"
+                android:text="@string/alarm_log_malfunction_count"
                 android:textColor="@color/c_a6a6a6"
                 android:textSize="12sp" />
 

@@ -97,12 +97,12 @@
     <string name="i_have_inspected">我已巡检</string>
     <string name="unknown">未知</string>
     //
-    <string name="detection_points">检测点数</string>
-    <string name="warning_monitoring_point">预警检测点</string>
-    <string name="normal_monitoring_point">正常检测点</string>
-    <string name="lost_monitoring_point">失联检测点</string>
-    <string name="inactive_monitoring_point">未激活检测点</string>
-    <string name="malfunction_monitoring_point">故障活检测点</string>
+    <string name="detection_points">监测点数</string>
+    <string name="warning_monitoring_point">预警监测点</string>
+    <string name="normal_monitoring_point">正常监测点</string>
+    <string name="lost_monitoring_point">失联监测点</string>
+    <string name="inactive_monitoring_point">未激活监测点</string>
+    <string name="malfunction_monitoring_point">故障监测点</string>
     <string name="all_types">全部类型</string>
     <string name="main_page_home">首页</string>
     <string name="main_page_warm">预警</string>
@@ -349,6 +349,7 @@
     //预警日志xml
     <string name="alarm_log_alarm_time">报警时间</string>
     <string name="alarm_log_alarm_count">半年累计报警次数</string>
+    <string name="alarm_log_malfunction_count">半年累计故障次数</string>
     <string name="alarm_log_alarm_contact_owner">联系业主</string>
     <string name="alarm_log_alarm_quick_navigation">快速导航</string>
     <string name="alarm_log_alarm_warn_confirm">预警确认</string>

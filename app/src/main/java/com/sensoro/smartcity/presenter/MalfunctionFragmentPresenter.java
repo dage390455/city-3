@@ -10,7 +10,9 @@ import com.sensoro.smartcity.activity.MalfunctionDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
@@ -19,16 +21,17 @@ import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
-
-public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFragmentView> implements
+public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFragmentView> implements IOnCreate, Constants,
         CalendarPopUtils.OnCalendarPopupCallbackListener {
     private String tempSearch;
     private long startTime;
@@ -36,7 +39,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
     private Activity mContext;
     private CalendarPopUtils mCalendarPopUtils;
     private int cur_page;
-    private List<MalfunctionListInfo> mMalfunctionInfoList = new ArrayList<>();
+    private final List<MalfunctionListInfo> mMalfunctionInfoList = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
@@ -49,14 +52,6 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         }
     }
 
-    private void onCreate() {
-
-    }
-
-    @Override
-    public void onDestroy() {
-
-    }
 
     public void requestSearchData(final int direction, String searchText) {
         if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
@@ -215,5 +210,30 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         intent.putExtra(Constants.EXTRA_MALFUNCTION_INFO, item);
         getView().startAC(intent);
 
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        mMalfunctionInfoList.clear();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        Object data = eventData.data;
+        switch (code) {
+            case EVENT_DATA_SEARCH_MERCHANT:
+                if (PreferencesHelper.getInstance().getUserData().hasMalfunction) {
+                    requestSearchData(DIRECTION_DOWN, null);
+                }
+                break;
+        }
     }
 }
