@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
                 android:text="@string/malfunction_cause"
-                android:textColor="@color/c_626262"
+                android:textColor="@color/c_252525"
                 android:textSize="@dimen/city_size" />
 
             <TextView
@@ -65,7 +65,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:singleLine="false"
-                android:textColor="@color/c_626262"
+                android:textColor="@color/c_252525"
                 android:textSize="@dimen/city_size" />
         </LinearLayout>
 
