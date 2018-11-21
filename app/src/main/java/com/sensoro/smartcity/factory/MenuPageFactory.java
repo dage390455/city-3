@@ -38,6 +38,7 @@ public class MenuPageFactory {
         eventLoginData.hasDeviceBrief = getHasDeviceBriefList(grants);
         eventLoginData.hasSignalCheck = getHasSignalCheck(grants);
         eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
+        eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
         LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
         //
         UserInfo.Account account = userInfo.getAccount();
@@ -126,6 +127,7 @@ public class MenuPageFactory {
         }
         return false;
     }
+
     /**
      * 判断是否有子账户权限
      *
@@ -267,6 +269,7 @@ public class MenuPageFactory {
 
     /**
      * 故障权限
+     *
      * @param grants
      * @return
      */
@@ -275,6 +278,22 @@ public class MenuPageFactory {
             List<String> grantsMalfunction = grants.getMalfunction();
             if (grantsMalfunction != null) {
                 return grantsMalfunction.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否强制上传
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasBadSignalUpload(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDeploy = grants.getDeploy();
+            if (grantsDeploy != null) {
+                return grantsDeploy.contains("badSignalUpload");
             }
         }
         return false;

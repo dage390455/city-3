@@ -554,7 +554,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         return;
                     }
                     if (needRefreshSignal()) {
-                        getView().showWarnDialog();
+                        if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
+                            getView().showWarnDialog();
+                        } else {
+                            getView().toastShort(mContext.getString(R.string.deploy_result_upload_tip));
+                        }
                     } else {
                         requestUpload();
                     }

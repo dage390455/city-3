@@ -70,6 +70,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, eventLoginData.hasDeviceBrief);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
+        editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasBadSignalUpload);
         //
         editor.apply();
     }
@@ -99,6 +100,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceBrief = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, false);
             boolean hasDeviceSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
             boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
+            boolean hasBadSignalUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -120,6 +122,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasDeviceBrief = hasDeviceBrief;
             eventLoginData.hasSignalCheck = hasDeviceSignalCheck;
             eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
+            eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;

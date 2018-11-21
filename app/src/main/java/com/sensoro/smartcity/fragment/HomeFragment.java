@@ -443,6 +443,7 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         if (isFirstInit) {
             mBannerScaleHeaderHelper.initWidthData();
             mMainHomeFragRcTypeHeaderAdapter.updateData(fgMainHomeRcTypeHeader, data);
+//            mBannerScaleHeaderHelper.setCurrentItem(0, true);
         } else {
 //            HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(0);
 //            if (homeTopModel.type != 0 && data.get(0).type == 0) {
