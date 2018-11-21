@@ -12,7 +12,7 @@ public interface IMalfunctionDetailActivityView extends IToast,IActivityIntent,I
 
     void setMalfunctionStatus(int malfunctionStatus, String strTimeToday);
 
-    void updateRcContent(List<MalfunctionListInfo.RecordsBean> records);
+    void updateRcContent(List<MalfunctionListInfo.RecordsBean> records,String malfunctionText);
 
     void setMalfunctionCount(String count);
 }

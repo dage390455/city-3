@@ -335,7 +335,7 @@
     <string name="malfunction_cause">故障成因：</string>
     <string name="malfunction_data">故障数据</string>
     <string name="system_upload_malfunction_task">系统上报故障任务</string>
-    <string name="recover_normal">恢复正常</string>
+    <string name="recover_normal">设备恢复正常</string>
     <string name="system_sms_send">系统短信发送至：</string>
     <string name="occour_malfunction_alarm">发生故障报警</string>
 
