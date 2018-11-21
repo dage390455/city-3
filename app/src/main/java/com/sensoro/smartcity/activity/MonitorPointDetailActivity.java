@@ -28,6 +28,7 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetailActivityView,
         MonitorPointDetailActivityPresenter> implements IMonitorPointDetailActivityView, View.OnClickListener {
@@ -61,10 +62,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     ImageView acMonitoringPointImvLocation;
     @BindView(R.id.ac_monitoring_point_tv_operation)
     TextView acMonitoringPointTvOperation;
-    @BindView(R.id.ac_monitoring_point_tv_alarm_sound)
-    TextView acMonitoringPointTvAlarmSound;
-    @BindView(R.id.ac_monitoring_point_tv_hardware_upgrade)
-    TextView acMonitoringPointTvHardwareUpgrade;
     @BindView(R.id.ac_monitoring_point_cl_alert_contact)
     ConstraintLayout acMonitoringPointClAlertContact;
     @BindView(R.id.ac_monitoring_point_cl_location_navigation)
@@ -85,6 +82,16 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     View acMonitoringPointImvPhoneView;
     @BindView(R.id.ac_monitoring_point_tv_device_type)
     TextView acMonitoringPointTvDeviceType;
+    @BindView(R.id.ac_monitoring_point_tv_erasure)
+    TextView acMonitoringPointTvErasure;
+    @BindView(R.id.ac_monitoring_point_tv_reset)
+    TextView acMonitoringPointTvReset;
+    @BindView(R.id.ac_monitoring_point_tv_psd)
+    TextView acMonitoringPointTvPsd;
+    @BindView(R.id.ac_monitoring_point_tv_query)
+    TextView acMonitoringPointTvQuery;
+    @BindView(R.id.ac_monitoring_point_tv_self_check)
+    TextView acMonitoringPointTvSelfCheck;
 
     private MonitoringPointRcContentAdapter mContentAdapter;
     private TagAdapter mTagAdapter;
@@ -140,12 +147,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         acMonitoringPointRcContent.setLayoutManager(manager);
         acMonitoringPointRcContent.addItemDecoration(dividerItemDecoration);
         acMonitoringPointRcContent.setAdapter(mContentAdapter);
-        includeTextTitleTvSubtitle.setOnClickListener(this);
-        acMonitoringPointImvLocation.setOnClickListener(this);
-        acMonitoringPointClAlertContact.setOnClickListener(this);
-        acMonitoringPointClLocationNavigation.setOnClickListener(this);
-        acMonitoringPointImvDetail.setOnClickListener(this);
-        includeImvTitleImvArrowsLeft.setOnClickListener(this);
 
 
     }
@@ -322,5 +323,41 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     @Override
     public void setDeviceTypeName(String typeName) {
         acMonitoringPointTvDeviceType.setText(typeName);
+    }
+
+
+    @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
+            R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check,R.id.include_text_title_tv_subtitle,
+            R.id.ac_monitoring_point_cl_alert_contact,R.id.ac_monitoring_point_imv_location,R.id.ac_monitoring_point_cl_location_navigation,
+            R.id.ac_monitoring_point_imv_detail,R.id.include_text_title_imv_arrows_left})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.ac_monitoring_point_tv_erasure:
+                break;
+            case R.id.ac_monitoring_point_tv_reset:
+                break;
+            case R.id.ac_monitoring_point_tv_psd:
+                break;
+            case R.id.ac_monitoring_point_tv_query:
+                break;
+            case R.id.ac_monitoring_point_tv_self_check:
+                break;
+            case R.id.include_text_title_tv_subtitle:
+                mPresenter.doMonitorHistory();
+                break;
+            case R.id.ac_monitoring_point_cl_alert_contact:
+                mPresenter.doContact();
+                break;
+            case R.id.ac_monitoring_point_imv_location:
+            case R.id.ac_monitoring_point_cl_location_navigation:
+                mPresenter.doNavigation();
+                break;
+            case R.id.ac_monitoring_point_imv_detail:
+                //已删除
+                break;
+            case R.id.include_text_title_imv_arrows_left:
+                finishAc();
+                break;
+        }
     }
 }

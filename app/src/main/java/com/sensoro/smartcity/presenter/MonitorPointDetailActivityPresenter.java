@@ -161,12 +161,15 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         try {
             DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
             String mergeType = mDeviceInfo.getMergeType();
+            String deviceType = mDeviceInfo.getDeviceType();
             if (TextUtils.isEmpty(mergeType)) {
-                mergeType = WidgetUtil.handleMergeType(mDeviceInfo.getDeviceType());
+                mergeType = WidgetUtil.handleMergeType(deviceType);
             }
             Map<String, MergeTypeStyles> mergeTypeMap = localDevicesMergeTypes.getMergeType();
             MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(mergeType);
             typeName = mergeTypeStyles.getName();
+
+//            deviceType.equals()
         } catch (Exception e) {
             e.printStackTrace();
         }

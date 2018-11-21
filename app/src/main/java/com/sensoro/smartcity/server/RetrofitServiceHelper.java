@@ -385,7 +385,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<MalfunctionListRsp> getDeviceMalfunctionLogList(int page, String sn, String deviceName, String search, Long beginTime, Long endTime) {
-        Observable<MalfunctionListRsp> deviceMalfunctionLogList = retrofitService.getDeviceMalfunctionLogList(10, page, sn, deviceName, search, beginTime, endTime);
+        Observable<MalfunctionListRsp> deviceMalfunctionLogList = retrofitService.getDeviceMalfunctionLogList(20, page, sn, deviceName, search, beginTime, endTime);
         RxApiManager.getInstance().add("getDeviceMalfunctionLogList", deviceMalfunctionLogList.subscribe());
         return deviceMalfunctionLogList;
     }

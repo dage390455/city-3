@@ -195,8 +195,8 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
     }
 
     @Override
-    public void updateRcContent(List<MalfunctionListInfo.RecordsBean> records) {
-        mContentAdapter.setData(records);
+    public void updateRcContent(List<MalfunctionListInfo.RecordsBean> records,String malfunctionText) {
+        mContentAdapter.setData(records,malfunctionText);
     }
 
     @Override

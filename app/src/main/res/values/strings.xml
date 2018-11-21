@@ -447,8 +447,8 @@
         <string name="monitor_point_map_navigation">EN导航</string>
         //监测点详情
         <string name="monitor_point_detail_monitor_parameter">EN监控参数</string>
-        <string name="monitor_point_detail_operat">EN操作</string>
-        <string name="monitor_point_detail_alarm">EN发声报警</string>
+        <string name="monitor_point_detail_operation">EN操作</string>
+        <string name="monitor_point_detail_erasure">EN消音</string>
         <string name="monitor_point_firmware_upgrade">EN固件升级</string>
         <string name="monitor_point_information">EN基本信息</string>
         //名称和地址
@@ -586,7 +586,11 @@
         <string name="malfunction_cause">故障成因：</string>
         <string name="malfunction_data">故障数据</string>
         <string name="system_upload_malfunction_task">系统上报故障任务</string>
-        <string name="recover_normal">恢复正常</string>
+        <string name="recover_normal">设备恢复正常</string>
         <string name="system_sms_send">系统短信发送至：</string>
         <string name="occour_malfunction_alarm">发生故障报警</string>
+        <string name="monitor_point_detail_self_check">自检</string>
+        <string name="monitor_point_detail_query">查询</string>
+        <string name="monitor_point_detail_psd">修改密码</string>
+        <string name="monitor_point_detail_reset">复位</string>
 </resources>
