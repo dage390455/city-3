@@ -65,7 +65,7 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
                 }
             }
         });
-        getView().updateRcContent(records);
+        getView().updateRcContent(records,mMalfunctionInfo.getMalfunctionData().get(mMalfunctionInfo.getMalfunctionType()).getDescription());
         long current = System.currentTimeMillis();
 
         RetrofitServiceHelper.INSTANCE.getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
