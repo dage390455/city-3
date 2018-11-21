@@ -73,9 +73,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private SoundPool mSoundPool;
     //TODO 联动类型选择
     private volatile String mTypeSelectedType;
+    private final ArrayList<String> mMergeTypes = new ArrayList<>();
+
     private volatile int tempAlarmCount = 0;
     private final List<HomeTopModel> mHomeTopModels = new ArrayList<>();
-    private final ArrayList<String> mMergeTypes = new ArrayList<>();
     //
     private volatile HomeTopModel mCurrentHomeTopModel;
     //
