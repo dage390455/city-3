@@ -262,7 +262,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
     public void requestWithDirection(int direction, String searchText) {
         getView().setSearchHistoryLayoutVisible(false);
-        getView().setRelationLayoutVisible(false);
+//        getView().setRelationLayoutVisible(false);
         getView().setIndexListLayoutVisible(true);
         getView().showProgressDialog();
         if (direction == DIRECTION_DOWN) {

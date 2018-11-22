@@ -503,6 +503,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().setAlarmWarnCount(0);
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }

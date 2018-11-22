@@ -183,6 +183,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
             }
         } catch (Exception e) {
             e.printStackTrace();
+            warnBadgeItem.hide();
         }
 
 

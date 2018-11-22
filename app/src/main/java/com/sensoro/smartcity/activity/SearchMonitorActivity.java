@@ -75,8 +75,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     RecyclerView mSearchHistoryRv;
     @BindView(R.id.search_device_relation_rv)
     RecyclerView mRelationRecyclerView;
-    @BindView(R.id.search_device_tips)
-    LinearLayout tipsLinearLayout;
     @BindView(R.id.search_device_relation_layout)
     LinearLayout mRelationLayout;
     @BindView(R.id.index_return_top)
@@ -257,7 +255,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
             Collections.sort(dataList);
             mSearchRcContentAdapter.updateData(dataList);
         }
-        setNoContentVisible(dataList == null || dataList.size() < 1);
+        setNoContentVisible(dataList == null || dataList.size() == 0);
 
     }
 
@@ -299,8 +297,9 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public boolean getSearchDataListVisible() {
         boolean isListVisible = indexLayoutList.getVisibility() == VISIBLE;
         boolean isSearchHistoryHide = mSearchHistoryLayout.getVisibility() == View.GONE;
-        boolean isRelationLayoutHide = mRelationLayout.getVisibility() == View.GONE;
-        return isListVisible && isSearchHistoryHide && isRelationLayoutHide;
+//        boolean isRelationLayoutHide = mRelationLayout.getVisibility() == View.GONE;
+//        return isListVisible && isSearchHistoryHide && isRelationLayoutHide;
+        return isListVisible && isSearchHistoryHide;
     }
 
     @Override
@@ -404,12 +403,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         indexLayoutList.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
-    @Override
-    public void setTipsLinearLayoutVisible(boolean isVisible) {
-//        tipsLinearLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
-        tipsLinearLayout.setVisibility(View.GONE);
-    }
-
 
     @Override
     public void returnTop() {
@@ -453,7 +446,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
             case R.id.search_device_clear_iv:
                 mKeywordEt.getText().clear();
                 mClearKeywordIv.setVisibility(View.GONE);
-                setTipsLinearLayoutVisible(false);
                 mPresenter.updateSearchHistoryData();
                 break;
             case R.id.index_return_top:
@@ -483,12 +475,12 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (!TextUtils.isEmpty(s.toString())) {
             setSearchHistoryLayoutVisible(false);
-            setRelationLayoutVisible(true);
+//            setRelationLayoutVisible(true);
             mClearKeywordIv.setVisibility(View.VISIBLE);
 //            mPresenter.filterDeviceInfo(s.toString());
         } else {
             setSearchHistoryLayoutVisible(true);
-            setRelationLayoutVisible(false);
+//            setRelationLayoutVisible(false);
             setIndexListLayoutVisible(false);
         }
     }
