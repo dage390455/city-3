@@ -2,6 +2,9 @@ package com.sensoro.smartcity.constant;
 
 import com.sensoro.smartcity.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sensoro on 17/7/27.
  */
@@ -355,5 +358,12 @@ public interface Constants {
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED = -1;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT = -2;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS = 0;
+
+    List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST =new ArrayList<String>(){{
+        add("elec_fire");
+        add("smoke");
+        add("natural_gas");
+        add("lpg");
+    }};
 
 }

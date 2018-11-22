@@ -86,6 +86,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     private ProgressDialog progressDialog;
     private ProgressUtils mLoadBleConfigDialog;
     private ProgressUtils.Builder mLoadBleConfigDialogBuilder;
+    private View line1;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -184,6 +185,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         mDialogTvConfirm = view.findViewById(R.id.dialog_deploy_device_upload_tv_confirm);
         mDialogTvTitle = view.findViewById(R.id.dialog_deploy_device_upload_tv_title);
         mDialogTvMsg = view.findViewById(R.id.dialog_deploy_device_upload_tv_msg);
+        line1 = view.findViewById(R.id.line1);
 
         mDialogTvConfirm.setOnClickListener(this);
         mDialogTvCancel.setOnClickListener(this);
@@ -352,12 +354,28 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void showWarnDialog() {
+    public void showWarnDialog(boolean canForceUpload) {
         if (mUploadDialog == null) {
             initConfirmDialog();
+            setWarDialogStyle(canForceUpload);
             mUploadDialog.show();
         } else {
+            setWarDialogStyle(canForceUpload);
             mUploadDialog.show();
+        }
+    }
+
+    private void setWarDialogStyle(boolean canForceUpload) {
+        if (canForceUpload) {
+            line1.setVisibility(View.VISIBLE);
+            mDialogTvCancel.setVisibility(View.VISIBLE);
+            mDialogTvTitle.setText(R.string.deploy_result_is_upload);
+            mDialogTvConfirm.setBackgroundResource(R.drawable.selector_item_white_ee_corner_right);
+        } else {
+            line1.setVisibility(View.GONE);
+            mDialogTvCancel.setVisibility(View.GONE);
+            mDialogTvTitle.setText(R.string.no_signal_can_not_uploaded);
+            mDialogTvConfirm.setBackgroundResource(R.drawable.selector_item_white_corner_bottom);
         }
     }
 

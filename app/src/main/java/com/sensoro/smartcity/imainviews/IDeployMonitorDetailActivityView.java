@@ -37,7 +37,7 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
 
     void setDeployPhotoText(String text);
 
-    void showWarnDialog();
+    void showWarnDialog(boolean canForceUpload);
 
     void updateUploadTvText(String text);
 
@@ -50,5 +50,6 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void showBleTips();
 
     void hideBleTips();
+
     void setNotOwnVisible(boolean isVisible);
 }
