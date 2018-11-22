@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
 
-public class TipBleDialogUtils {
+public class TipOperationDialogUtils {
 
     //    private AlertDialog mDialog;
     private final TextView mTvMessage;
@@ -21,12 +21,12 @@ public class TipBleDialogUtils {
     private Activity mActivity;
     public static final int REQUEST_CODE_BLUETOOTH_ON = 0x222;
 
-    public TipBleDialogUtils(Activity activity,boolean cancelable) {
+    public TipOperationDialogUtils(Activity activity, boolean cancelable) {
         this(activity);
         mDialog.setCancelable(cancelable);
     }
 
-    public TipBleDialogUtils(Activity activity) {
+    public TipOperationDialogUtils(Activity activity) {
         mActivity = activity;
         View view = View.inflate(activity, R.layout.item_dialog_ble_tip, null);
         mTvTitle = view.findViewById(R.id.dialog_tip_ble_tv_title);
@@ -57,13 +57,7 @@ public class TipBleDialogUtils {
         mTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                Intent intent = new Intent(Settings.ACTION_BLUETOOTH_SETTINGS);
-//                mActivity.startActivity(intent);
-                Intent mIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-                mActivity.startActivityForResult(mIntent, REQUEST_CODE_BLUETOOTH_ON);
-//                if (listener != null) {
-//                    listener.onConfirmClick();
-//                }
+                listener.onConfirmClick();
             }
         });
 
@@ -105,25 +99,6 @@ public class TipBleDialogUtils {
         }
     }
 
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_CODE_BLUETOOTH_ON) {
-            switch (resultCode) {
-                // 点击确认按钮
-                case Activity.RESULT_OK: {
-                    dismiss();
-                    if (listener != null) {
-                        listener.onConfirmClick();
-                    }
-                }
-                break;
-                // 点击取消按钮或点击返回键
-                case Activity.RESULT_CANCELED: {
-                    show();
-                }
-                break;
-            }
-        }
-    }
 
     public void dismiss() {
         if (mDialog != null) {

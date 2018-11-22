@@ -63,6 +63,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     private String content;
     private boolean hasPhoneNumber;
 
+
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
@@ -72,11 +73,13 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     private void freshTopData() {
+        refreshOperationStatus();
         String statusText;
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
                 statusText = mContext.getString(R.string.main_page_warm);
+                getView().setErasureStatus(true);
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = mContext.getResources().getColor(R.color.c_29c093);
@@ -153,6 +156,36 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         }
         int interval = mDeviceInfo.getInterval();
         getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
+    }
+
+    private void refreshOperationStatus() {
+        boolean isContains = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType());
+        getView().setDeviceOperationVisible(isContains);
+        getView().setErasureStatus(false);
+        getView().setResetStatus(false);
+        getView().setPsdStatus(true);
+        getView().setQueryStatus(true);
+        getView().setSelfCheckStatus(true);
+        if(isContains){
+            switch (mDeviceInfo.getStatus()) {
+                case SENSOR_STATUS_ALARM:
+                    getView().setErasureStatus(true);
+                    getView().setResetStatus(true);
+                    break;
+                case SENSOR_STATUS_NORMAL:
+                    break;
+                case SENSOR_STATUS_LOST:
+                case SENSOR_STATUS_INACTIVE:
+                    getView().setPsdStatus(false);
+                    getView().setQueryStatus(false);
+                    getView().setSelfCheckStatus(false);
+                    break;
+                case SENSOR_STATUS_MALFUNCTION:
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 
     private void initCurrentDeviceInfo() {

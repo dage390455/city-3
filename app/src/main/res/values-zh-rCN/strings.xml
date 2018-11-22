@@ -589,6 +589,28 @@
     <string name="monitor_point_detail_query">查询</string>
     <string name="monitor_point_detail_psd">修改密码</string>
     <string name="monitor_point_detail_reset">复位</string>
+    <string name="is_device_erasure">是否将报警设备消音</string>
+    <string name="device_erasure_tip_message">当前设备发声报警中，是否将报警设备消音</string>
+    <string name="back">返回</string>
+    <string name="erasure">消音</string>
+    <string name="is_device_self_check">是否自检设备</string>
+    <string name="device_self_check_tip_message">自检成功后，可通过近距离观察设备指示灯和蜂鸣器工作是否正常</string>
+    <string name="self_check">自检</string>
+    <string name="is_device_reset">是否将报警设备复位</string>
+    <string name="device_reset_tip_message">当前设备发声报警中，复位将解除报警</string>
+    <string name="reset">复位</string>
+    <string name="is_device_psd">是否修改密码</string>
+    <string name="device_psd_tip_message">修改将生成新的随机四位数密码</string>
+    <string name="modify">修改</string>
+    <string name="is_device_query">是否查询设备最新数据</string>
+    <string name="device_query_tip_message">查询设备将上报最新数据</string>
+    <string name="request_time_out">请求超时</string>
+    <string name="operation_request_time_out">操作请求超时</string>
+    <string name="erasuring">消音中</string>
+    <string name="reseting">复位中</string>
+    <string name="psd_modifing">正在修改密码</string>
+    <string name="quering">查询中</string>
+    <string name="self_checking">自检中</string>
     //
 
 </resources>

@@ -2,6 +2,9 @@ package com.sensoro.smartcity.constant;
 
 import com.sensoro.smartcity.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sensoro on 17/7/27.
  */
@@ -355,4 +358,10 @@ public interface Constants {
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT = -2;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS = 0;
 
+    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(2){
+        {
+            add("fhsj_elec_fires");
+            add("acrel_fires");
+        }
+    };
 }

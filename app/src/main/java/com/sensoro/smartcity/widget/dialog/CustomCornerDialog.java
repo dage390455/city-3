@@ -8,24 +8,29 @@ import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.sensoro.smartcity.R;
+
 public class CustomCornerDialog extends Dialog {
     public CustomCornerDialog(@NonNull Context context) {
         super(context);
     }
 
     public CustomCornerDialog(@NonNull Context context, int themeResId,View view) {
+        this(context,themeResId,view,0.88f);
+    }
+
+    public CustomCornerDialog(@NonNull Context context,View view,float percentWidth) {
+        this(context, R.style.CustomCornerDialogStyle,view,percentWidth);
+    }
+
+    public CustomCornerDialog(@NonNull Context context, int themeResId,View view,float percentWidth) {
         super(context, themeResId);
         setContentView(view);
         WindowManager m = getWindow().getWindowManager();
         Display d = m.getDefaultDisplay();
         WindowManager.LayoutParams p = getWindow().getAttributes();
-        p.width = (int) (d.getWidth()*0.88);
+        p.width = (int) (d.getWidth()*percentWidth);
         getWindow().setAttributes(p);
-    }
-
-    public CustomCornerDialog(@NonNull Context context, boolean cancelable, @Nullable OnCancelListener cancelListener) {
-        super(context, cancelable, cancelListener);
-
     }
 
     public void setView(View view) {

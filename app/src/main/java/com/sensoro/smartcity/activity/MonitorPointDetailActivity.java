@@ -1,13 +1,18 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.ColorRes;
+import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,6 +28,9 @@ import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
+import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
+import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 
 import java.util.List;
 
@@ -31,7 +39,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetailActivityView,
-        MonitorPointDetailActivityPresenter> implements IMonitorPointDetailActivityView, View.OnClickListener {
+        MonitorPointDetailActivityPresenter> implements IMonitorPointDetailActivityView, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -92,16 +100,30 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     TextView acMonitoringPointTvQuery;
     @BindView(R.id.ac_monitoring_point_tv_self_check)
     TextView acMonitoringPointTvSelfCheck;
+    @BindView(R.id.ac_monitoring_point_ll_operation)
+    LinearLayout acMonitoringPointLlOperation;
 
     private MonitoringPointRcContentAdapter mContentAdapter;
     private TagAdapter mTagAdapter;
     private ProgressUtils mProgressUtils;
+    private TipOperationDialogUtils mTipUtils;
+    private MonitorPointOperatingDialogUtil mOperatingUtil;
+    private int mTipDialogType;
+    private final int ERASURE = 0x01;
+    private final int RESET = 0x02;
+    private final int PSD = 0x03;
+    private final int QUERY = 0x04;
+    private final int SELF_CHECK = 0x05;
+    private Handler mHandler;
+
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_monitoring_point_detail);
         ButterKnife.bind(this);
         initView();
+        acMonitoringPointTvErasure.setClickable(false);
+        acMonitoringPointTvReset.setClickable(true);
         mPresenter.initData(mActivity);
     }
 
@@ -147,8 +169,20 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         acMonitoringPointRcContent.setLayoutManager(manager);
         acMonitoringPointRcContent.addItemDecoration(dividerItemDecoration);
         acMonitoringPointRcContent.setAdapter(mContentAdapter);
+        //dialog
+        initTipDialog();
+        initOperatingDialog();
+        mHandler = new Handler();
 
+    }
 
+    private void initOperatingDialog() {
+        mOperatingUtil = new MonitorPointOperatingDialogUtil(mActivity,false);
+    }
+
+    private void initTipDialog() {
+        mTipUtils = new TipOperationDialogUtils(mActivity,false);
+        mTipUtils.setTipDialogUtilsClickListener(this);
     }
 
     @Override
@@ -253,30 +287,36 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+        if (mTipUtils!=null) {
+            mTipUtils.destroy();
+        }
+        if (mOperatingUtil != null) {
+            mOperatingUtil.destroy();
+        }
         super.onDestroy();
     }
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.include_text_title_tv_subtitle:
-                mPresenter.doMonitorHistory();
-                break;
-            case R.id.ac_monitoring_point_cl_alert_contact:
-                mPresenter.doContact();
-                break;
-            case R.id.ac_monitoring_point_imv_location:
-            case R.id.ac_monitoring_point_cl_location_navigation:
-                mPresenter.doNavigation();
-                break;
-            case R.id.ac_monitoring_point_imv_detail:
-                //已删除
-                break;
-            case R.id.include_text_title_imv_arrows_left:
-                finishAc();
-                break;
-        }
-    }
+//    @Override
+//    public void onClick(View v) {
+//        switch (v.getId()) {
+//            case R.id.include_text_title_tv_subtitle:
+//                mPresenter.doMonitorHistory();
+//                break;
+//            case R.id.ac_monitoring_point_cl_alert_contact:
+//                mPresenter.doContact();
+//                break;
+//            case R.id.ac_monitoring_point_imv_location:
+//            case R.id.ac_monitoring_point_cl_location_navigation:
+//                mPresenter.doNavigation();
+//                break;
+//            case R.id.ac_monitoring_point_imv_detail:
+//                //已删除
+//                break;
+//            case R.id.include_text_title_imv_arrows_left:
+//                finishAc();
+//                break;
+//        }
+//    }
 
     @Override
     public void updateTags(List<String> list) {
@@ -325,22 +365,102 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         acMonitoringPointTvDeviceType.setText(typeName);
     }
 
+    @Override
+    public void setDeviceOperationVisible(boolean isVisible) {
+        acMonitoringPointLlOperation.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setErasureStatus(boolean isClickable) {
+        Drawable drawable;
+        if (isClickable) {
+            drawable = getResources().getDrawable(R.drawable.erasure_clickable);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.erasure_not_clickable);
+        }
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acMonitoringPointTvErasure.setCompoundDrawables(null, drawable, null, null);
+        acMonitoringPointTvErasure.setClickable(isClickable);
+        acMonitoringPointTvErasure.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
+    }
+
+    @Override
+    public void setResetStatus(boolean isClickable) {
+        Drawable drawable;
+        if (isClickable) {
+            drawable = getResources().getDrawable(R.drawable.reset_clickable);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.reset_not_clickable);
+        }
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acMonitoringPointTvReset.setCompoundDrawables(null, drawable, null, null);
+        acMonitoringPointTvReset.setClickable(isClickable);
+        acMonitoringPointTvReset.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
+    }
+
+    @Override
+    public void setSelfCheckStatus(boolean isClickable) {
+        Drawable drawable;
+        if (isClickable) {
+            drawable = getResources().getDrawable(R.drawable.self_check_clickable);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.self_check_not_clickable);
+        }
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acMonitoringPointTvSelfCheck.setCompoundDrawables(null, drawable, null, null);
+        acMonitoringPointTvSelfCheck.setClickable(isClickable);
+        acMonitoringPointTvSelfCheck.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
+    }
+
+    @Override
+    public void setQueryStatus(boolean isClickable) {
+        Drawable drawable;
+        if (isClickable) {
+            drawable = getResources().getDrawable(R.drawable.query_clickable);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.query_not_clickable);
+        }
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acMonitoringPointTvQuery.setCompoundDrawables(null, drawable, null, null);
+        acMonitoringPointTvQuery.setClickable(isClickable);
+        acMonitoringPointTvQuery.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
+    }
+
+    @Override
+    public void setPsdStatus(boolean isClickable) {
+        Drawable drawable;
+        if (isClickable) {
+            drawable = getResources().getDrawable(R.drawable.psd_clickable);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.psd_not_clickable);
+        }
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acMonitoringPointTvPsd.setCompoundDrawables(null, drawable, null, null);
+        acMonitoringPointTvPsd.setClickable(isClickable);
+        acMonitoringPointTvPsd.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
+    }
+
 
     @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
-            R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check,R.id.include_text_title_tv_subtitle,
-            R.id.ac_monitoring_point_cl_alert_contact,R.id.ac_monitoring_point_imv_location,R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail,R.id.include_text_title_imv_arrows_left})
+            R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check, R.id.include_text_title_tv_subtitle,
+            R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_monitoring_point_tv_erasure:
+                showTipDialog(R.string.is_device_erasure,R.string.device_erasure_tip_message,R.string.erasure,R.color.c_f34a4a,ERASURE);
                 break;
             case R.id.ac_monitoring_point_tv_reset:
+                showTipDialog(R.string.is_device_reset,R.string.device_reset_tip_message,R.string.reset,R.color.c_f34a4a,RESET);
                 break;
             case R.id.ac_monitoring_point_tv_psd:
+                showTipDialog(R.string.is_device_psd,R.string.device_psd_tip_message,R.string.modify,R.color.c_f34a4a,PSD);
                 break;
             case R.id.ac_monitoring_point_tv_query:
+                showTipDialog(R.string.is_device_query,R.string.device_query_tip_message,R.string.query,R.color.c_29c093,QUERY);
                 break;
             case R.id.ac_monitoring_point_tv_self_check:
+                showTipDialog(R.string.is_device_self_check,R.string.device_self_check_tip_message,R.string.self_check,R.color.c_29c093,SELF_CHECK);
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMonitorHistory();
@@ -359,5 +479,70 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
                 finishAc();
                 break;
         }
+    }
+
+    private void showTipDialog(@StringRes int title, @StringRes int message, @StringRes int confirm, @ColorRes int confirmColor ,int type) {
+        if (mTipUtils.isShowing()) {
+            mTipUtils.dismiss();
+        }
+        mTipUtils.setTipTitleText(mActivity.getString(title));
+        mTipUtils.setTipMessageText(mActivity.getString(message));
+        mTipUtils.setTipConfirmVisible(true);
+        mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
+        mTipDialogType = type;
+        mTipUtils.show();
+    }
+
+    //tip dialog 点击事件
+    @Override
+    public void onCancelClick() {
+        if (mTipUtils!=null) {
+            mTipUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void onConfirmClick() {
+        if (mTipUtils!=null) {
+            mTipUtils.dismiss();
+        }
+
+        if (mOperatingUtil != null) {
+            switch (mTipDialogType){
+                case ERASURE:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
+                    break;
+                case RESET:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.reseting));
+                    break;
+                case PSD:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.psd_modifing));
+                    break;
+                case QUERY:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.quering));
+                    break;
+                case SELF_CHECK:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.self_checking));
+                    break;
+            }
+            mOperatingUtil.show();
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (mTipUtils.isShowing()) {
+                        mTipUtils.dismiss();
+                    }
+                    mTipUtils.setTipTitleText(mActivity.getString(R.string.request_time_out));
+                    mTipUtils.setTipMessageText(mActivity.getString(R.string.operation_request_time_out));
+                    mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+                    mTipUtils.setTipConfirmVisible(false);
+                    mTipUtils.show();
+                    mOperatingUtil.dismiss();
+                }
+            }, 3000);
+        }
+
+
     }
 }
