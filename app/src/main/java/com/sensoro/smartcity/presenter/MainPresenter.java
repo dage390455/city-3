@@ -408,7 +408,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             options.query = "session=" + sessionId;
             options.forceNew = true;
             options.path = "/city";
-            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL + "/app", options);
+            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
