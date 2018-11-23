@@ -30,7 +30,7 @@ import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;

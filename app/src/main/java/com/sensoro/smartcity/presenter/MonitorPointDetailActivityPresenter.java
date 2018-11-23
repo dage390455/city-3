@@ -17,6 +17,7 @@ import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.EventData;
@@ -26,9 +27,11 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
+import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
+import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
@@ -54,6 +57,8 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
+import static com.igexin.push.util.EncryptUtils.errorMsg;
+
 public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorPointDetailActivityView> implements IOnStart, Constants, GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
     private DeviceInfo mDeviceInfo;
@@ -62,6 +67,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     private int textColor;
     private String content;
     private boolean hasPhoneNumber;
+    private String mScheduleNo;
 
 
     @Override
@@ -342,6 +348,33 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     }
                 }
                 break;
+            case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
+                if(data instanceof MonitorPointOperationTaskResultInfo){
+                    MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
+                    final String scheduleNo = info.getScheduleNo();
+                    if (!TextUtils.isEmpty(scheduleNo)&& info.getTotal() == info.getComplete()) {
+                        String[] split = scheduleNo.split(",");
+                        if (split.length>0) {
+                            final String temp = split[0];
+                            if (!TextUtils.isEmpty(temp)) {
+                                if (AppUtils.isActivityTop(mContext,MonitorPointDetailActivity.class)){
+                                    mContext.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if(!TextUtils.isEmpty(mScheduleNo)&&scheduleNo.equals(temp)){
+                                                getView().showOperationSuccessToast();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                    }
+
+
+                }
+                break;
         }
     }
 
@@ -413,5 +446,52 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         Intent intent = new Intent(mContext, AlarmHistoryLogActivity.class);
         intent.putExtra(EXTRA_SENSOR_SN, sn);
         getView().startAC(intent);
+    }
+
+    public void doOperation(int type) {
+        mScheduleNo = null;
+        String operationType = null;
+        switch (type){
+            case MonitorPointOperationCode.ERASURE:
+                operationType = "mute";
+                break;
+            case MonitorPointOperationCode.RESET:
+                operationType = "reset";
+                break;
+            case MonitorPointOperationCode.PSD:
+                operationType = "password";
+                break;
+            case MonitorPointOperationCode.QUERY:
+                operationType = "view";
+                break;
+            case MonitorPointOperationCode.SELF_CHECK:
+                operationType = "check";
+                break;
+        }
+        ArrayList<String> sns = new ArrayList<>();
+        sns.add(mDeviceInfo.getSn());
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns,operationType,null,null,null)
+        .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>() {
+            @Override
+            public void onCompleted(MonitorPointOperationRequestRsp response) {
+                String scheduleNo = response.getScheduleNo();
+                if (TextUtils.isEmpty(scheduleNo)) {
+                    getView().showErrorTipDialog(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
+                }else{
+                    String[] split = scheduleNo.split(",");
+                    if (split.length>0) {
+                        mScheduleNo = split[0];
+                    }else{
+                        getView().showErrorTipDialog(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().showErrorTipDialog(errorMsg);
+            }
+        });
     }
 }

@@ -616,4 +616,7 @@
         <string name="psd_modifing">正在修改密码</string>
         <string name="quering">查询中</string>
         <string name="self_checking">自检中</string>
+    <string name="monitor_point_operation_schedule_no_error">任务编码获取失败</string>
+    <string name="request_success">请求成功</string>
+        <string name="request_failed">请求失败</string>
 </resources>

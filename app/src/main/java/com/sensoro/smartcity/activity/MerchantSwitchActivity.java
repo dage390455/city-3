@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +22,7 @@ import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 

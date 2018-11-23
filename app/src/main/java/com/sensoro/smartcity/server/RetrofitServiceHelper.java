@@ -41,6 +41,7 @@ import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
 import com.sensoro.smartcity.server.response.MalfunctionListRsp;
+import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UpdateRsp;
@@ -972,7 +973,6 @@ public enum RetrofitServiceHelper {
      * 获取半年故障次数
      * @param startTime
      * @param endTime
-     * @param displayStatus
      * @param sn
      * @return
      */
@@ -1195,5 +1195,40 @@ public enum RetrofitServiceHelper {
         Observable<DevicesMergeTypesRsp> devicesMergeTypes = retrofitService.getDevicesMergeTypes();
         RxApiManager.getInstance().add("devicesMergeTypes", devicesMergeTypes.subscribe());
         return devicesMergeTypes;
+    }
+
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer ct){
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONArray jsonSnList = new JSONArray();
+            for (String sn : snList) {
+                jsonSnList.put(sn);
+            }
+            jsonObject.put("snList",jsonSnList);
+            jsonObject.put("type",type);
+
+            if(interval != null){
+                jsonObject.put("interval",type);
+            }
+            if(rules != null){
+                JSONArray jsonRules = new JSONArray();
+                for (String rule : rules) {
+                    jsonRules.put(rule);
+                }
+                jsonObject.put("rules",jsonRules);
+            }
+            if(ct != null){
+                jsonObject.put("ct",ct);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation = retrofitService.doMonitorPointOperation(body);
+        RxApiManager.getInstance().add("doMonitorPointOperation", doMonitorPointOperation.subscribe());
+        return doMonitorPointOperation;
     }
 }

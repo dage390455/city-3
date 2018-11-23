@@ -35,7 +35,7 @@ import com.sensoro.smartcity.presenter.InspectionTaskActivityPresenter;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;

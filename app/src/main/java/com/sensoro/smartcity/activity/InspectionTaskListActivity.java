@@ -31,7 +31,7 @@ import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
 import java.util.List;

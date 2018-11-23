@@ -90,5 +90,6 @@
     <color name="ip_color_accent">#29C093</color>
     <color name="ip_text_secondary_inverted">#66ffffff</color>
     <color name="ip_text_primary_inverted">#ff5d5d5d</color>
+    <color name="c_bf000000">#BF000000</color>
 
 </resources>

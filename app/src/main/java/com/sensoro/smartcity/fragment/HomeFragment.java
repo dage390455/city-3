@@ -38,7 +38,7 @@ import com.sensoro.smartcity.presenter.HomeFragmentPresenter;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroHomeAlarmView;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerAlphaHelper;
 import com.sensoro.smartcity.widget.calendar.cardgallery.BannerRecyclerView;

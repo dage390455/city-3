@@ -18,7 +18,7 @@ import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.smartcity.presenter.MalfunctionDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 

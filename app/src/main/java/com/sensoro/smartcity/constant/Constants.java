@@ -14,6 +14,7 @@ public interface Constants {
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
     String SOCKET_EVENT_DEVICE_ALARM_DISPLAY = "city.alarm.display";
+    String SOCKET_EVENT_DEVICE_TASK_RESULT = "city.task.result";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
@@ -341,6 +342,7 @@ public interface Constants {
     int EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE = 0x40;
     int EVENT_DATA_ALARM_FRESH_ALARM_DATA = 0x34;
     int EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS = 0x35;
+    int EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT = 0x43;
     int EVENT_DATA_SCAN_LOGIN_SUCCESS = 0x39;
 
     int EVENT_DATA_ALARM_POP_IMAGES = 0x33;

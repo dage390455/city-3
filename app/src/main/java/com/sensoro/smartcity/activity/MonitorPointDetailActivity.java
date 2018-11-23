@@ -10,6 +10,7 @@ import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -20,16 +21,17 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.MonitorPointOperationSuccessToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
-import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 
 import java.util.List;
@@ -109,11 +111,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     private TipOperationDialogUtils mTipUtils;
     private MonitorPointOperatingDialogUtil mOperatingUtil;
     private int mTipDialogType;
-    private final int ERASURE = 0x01;
-    private final int RESET = 0x02;
-    private final int PSD = 0x03;
-    private final int QUERY = 0x04;
-    private final int SELF_CHECK = 0x05;
     private Handler mHandler;
 
 
@@ -441,6 +438,30 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
 
+    @Override
+    public void showOperationSuccessToast() {
+        mOperatingUtil.dismiss();
+        mHandler.removeCallbacksAndMessages(null);
+        MonitorPointOperationSuccessToast.INSTANCE.showToast(mActivity,Toast.LENGTH_SHORT);
+    }
+
+    @Override
+    public void showErrorTipDialog(String errorMsg) {
+        mOperatingUtil.dismiss();
+        mHandler.removeCallbacksAndMessages(null);
+        if (mTipUtils.isShowing()) {
+            mTipUtils.setTipMessageText(errorMsg);
+            return;
+        }
+        mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
+        mTipUtils.setTipMessageText(errorMsg);
+        mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipConfirmVisible(false);
+        mOperatingUtil.dismiss();
+        mTipUtils.show();
+    }
+
+
     @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
             R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check, R.id.include_text_title_tv_subtitle,
             R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
@@ -448,19 +469,19 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_monitoring_point_tv_erasure:
-                showTipDialog(R.string.is_device_erasure,R.string.device_erasure_tip_message,R.string.erasure,R.color.c_f34a4a,ERASURE);
+                showTipDialog(R.string.is_device_erasure,R.string.device_erasure_tip_message,R.string.erasure,R.color.c_f34a4a,MonitorPointOperationCode.ERASURE);
                 break;
             case R.id.ac_monitoring_point_tv_reset:
-                showTipDialog(R.string.is_device_reset,R.string.device_reset_tip_message,R.string.reset,R.color.c_f34a4a,RESET);
+                showTipDialog(R.string.is_device_reset,R.string.device_reset_tip_message,R.string.reset,R.color.c_f34a4a,MonitorPointOperationCode.RESET);
                 break;
             case R.id.ac_monitoring_point_tv_psd:
-                showTipDialog(R.string.is_device_psd,R.string.device_psd_tip_message,R.string.modify,R.color.c_f34a4a,PSD);
+                showTipDialog(R.string.is_device_psd,R.string.device_psd_tip_message,R.string.modify,R.color.c_f34a4a,MonitorPointOperationCode.PSD);
                 break;
             case R.id.ac_monitoring_point_tv_query:
-                showTipDialog(R.string.is_device_query,R.string.device_query_tip_message,R.string.query,R.color.c_29c093,QUERY);
+                showTipDialog(R.string.is_device_query,R.string.device_query_tip_message,R.string.query,R.color.c_29c093,MonitorPointOperationCode.QUERY);
                 break;
             case R.id.ac_monitoring_point_tv_self_check:
-                showTipDialog(R.string.is_device_self_check,R.string.device_self_check_tip_message,R.string.self_check,R.color.c_29c093,SELF_CHECK);
+                showTipDialog(R.string.is_device_self_check,R.string.device_self_check_tip_message,R.string.self_check,R.color.c_29c093,MonitorPointOperationCode.SELF_CHECK);
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMonitorHistory();
@@ -510,37 +531,32 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
         if (mOperatingUtil != null) {
             switch (mTipDialogType){
-                case ERASURE:
+                case MonitorPointOperationCode.ERASURE:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
                     break;
-                case RESET:
+                case MonitorPointOperationCode.RESET:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.reseting));
                     break;
-                case PSD:
+                case MonitorPointOperationCode.PSD:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.psd_modifing));
                     break;
-                case QUERY:
+                case MonitorPointOperationCode.QUERY:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.quering));
                     break;
-                case SELF_CHECK:
+                case MonitorPointOperationCode.SELF_CHECK:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.self_checking));
                     break;
             }
             mOperatingUtil.show();
+            mPresenter.doOperation(mTipDialogType);
             mHandler.postDelayed(new Runnable() {
                 @Override
                 public void run() {
-                    if (mTipUtils.isShowing()) {
-                        mTipUtils.dismiss();
-                    }
-                    mTipUtils.setTipTitleText(mActivity.getString(R.string.request_time_out));
-                    mTipUtils.setTipMessageText(mActivity.getString(R.string.operation_request_time_out));
-                    mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
-                    mTipUtils.setTipConfirmVisible(false);
-                    mTipUtils.show();
-                    mOperatingUtil.dismiss();
+                    showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
+
+
                 }
-            }, 3000);
+            }, 10000);
         }
 
 

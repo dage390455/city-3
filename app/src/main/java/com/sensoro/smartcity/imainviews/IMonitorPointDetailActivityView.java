@@ -51,4 +51,8 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
     void setQueryStatus(boolean isClickable);
 
     void setPsdStatus(boolean isClickable);
+
+    void showOperationSuccessToast();
+
+    void showErrorTipDialog(String errorMsg);
 }

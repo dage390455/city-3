@@ -2,12 +2,10 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -27,7 +25,6 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainMalfunctionFragRcContentAdapter;
-import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.presenter.MalfunctionFragmentPresenter;
@@ -35,16 +32,13 @@ import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
-import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.Unbinder;
 
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;

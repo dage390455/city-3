@@ -19,7 +19,7 @@ import com.sensoro.smartcity.presenter.AlarmDetailLogActivityPresenter;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;

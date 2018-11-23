@@ -27,7 +27,7 @@ import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.presenter.ContractManagerActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 
 import java.util.List;
