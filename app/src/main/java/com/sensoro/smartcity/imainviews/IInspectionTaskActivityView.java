@@ -32,4 +32,10 @@ public interface IInspectionTaskActivityView extends IToast, IProgressDialog, IA
     void showBleTips();
 
     void hideBleTips();
+
+    void UpdateSearchHistoryList(List<String> data);
+
+    void setSearchHistoryVisible(boolean isVisible);
+
+    void setSearchClearImvVisible(boolean isVisible);
 }

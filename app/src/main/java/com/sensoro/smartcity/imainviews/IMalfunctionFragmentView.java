@@ -21,4 +21,10 @@ public interface IMalfunctionFragmentView extends IToast,IProgressDialog,IActivi
     void setSearchButtonTextVisible(boolean b);
 
     void updateAlarmListAdapter(List<MalfunctionListInfo> mMalfunctionInfoList);
+
+    void UpdateSearchHistoryList(List<String> data);
+
+    void setSearchHistoryVisible(boolean isVisible);
+
+    void setSearchClearImvVisible(boolean isVisible);
 }

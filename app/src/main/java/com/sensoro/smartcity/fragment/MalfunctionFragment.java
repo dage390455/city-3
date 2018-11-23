@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +32,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainMalfunctionFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
+import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.presenter.MalfunctionFragmentPresenter;
@@ -35,8 +40,10 @@ import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
+import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
@@ -54,7 +61,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     @BindView(R.id.fg_main_top_search_et_search)
     EditText fgMainTopSearchEtSearch;
     @BindView(R.id.fg_main_top_search_frame_search)
-    FrameLayout fgMainTopSearchFrameSearch;
+    RelativeLayout fgMainTopSearchFrameSearch;
     @BindView(R.id.tv_top_search_alarm_search_cancel)
     TextView tvTopSearchAlarmSearchCancel;
     @BindView(R.id.fg_main_top_search_imv_calendar)
@@ -79,10 +86,19 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.alarm_return_top)
     ImageView alarmReturnTop;
+    @BindView(R.id.fg_main_top_search_imv_clear)
+    ImageView fgMainWarnFragmentImvClear;
+    @BindView(R.id.rv_search_history)
+    RecyclerView rvSearchHistory;
+    @BindView(R.id.btn_search_clear)
+    ImageView btnSearchClear;
+    @BindView(R.id.ll_search_history)
+    LinearLayout llSearchHistory;
     private ProgressUtils mProgressUtils;
     private Animation returnTopAnimation;
     private boolean isShowDialog = true;
     private MainMalfunctionFragRcContentAdapter mRcContentAdapter;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
 
     @Override
     protected void initData(Context activity) {
@@ -106,15 +122,40 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     // 当按了搜索之后关闭软键盘
                     String text = fgMainTopSearchEtSearch.getText().toString();
+//                    if (TextUtils.isEmpty(text)) {
+//                        SensoroToast.INSTANCE.makeText(mRootFragment.getActivity(), mRootFragment.getString(R.string.enter_search_content), Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+//                                .show();
+//                        return true;
+//                    }
+                    mPresenter.save(text);
+                    fgMainTopSearchEtSearch.clearFocus();
                     mPresenter.requestSearchData(DIRECTION_DOWN, text);
-                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainTopSearchEtSearch);
+                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainTopSearchEtSearch);
+                    setSearchHistoryVisible(false);
                     return true;
                 }
                 return false;
             }
         });
+        fgMainTopSearchEtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setSearchClearImvVisible(s.length()>0);
+            }
+        });
 
         initRcContent();
+        initRcSearchHistory();
 
 
         AppUtils.getInputSoftStatus(mRootView, new AppUtils.InputSoftStatusListener() {
@@ -128,6 +169,46 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                 fgMainTopSearchEtSearch.setCursorVisible(true);
             }
         });
+    }
+
+    private void initRcSearchHistory() {
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mRootFragment.getActivity()){
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+        };
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvSearchHistory.setLayoutManager(layoutManager);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mRootFragment.getActivity(), new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
+                        if (!TextUtils.isEmpty(text)) {
+                            fgMainTopSearchEtSearch.setText(text);
+                            fgMainTopSearchEtSearch.setSelection(fgMainTopSearchEtSearch.getText().toString().length());
+                        }
+                        fgMainWarnFragmentImvClear.setVisibility(View.VISIBLE);
+                        fgMainTopSearchEtSearch.clearFocus();
+                        AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainTopSearchEtSearch);
+                        setSearchHistoryVisible(false);
+                        mPresenter.requestSearchData(DIRECTION_DOWN,text);
+                    }
+                });
+        rvSearchHistory.setAdapter(mSearchHistoryAdapter);
+    }
+
+    @Override
+    public void setSearchClearImvVisible(boolean isVisible) {
+        fgMainWarnFragmentImvClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void initRcContent() {
@@ -204,30 +285,49 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
     }
 
     @OnClick({R.id.fg_main_top_search_frame_search, R.id.fg_main_top_search_et_search, R.id.fg_main_top_search_imv_calendar, R.id.fg_main_warn_top_search_date_close,
-            R.id.tv_top_search_alarm_search_cancel, R.id.alarm_return_top})
+            R.id.tv_top_search_alarm_search_cancel, R.id.alarm_return_top,R.id.fg_main_top_search_imv_clear,R.id.btn_search_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.fg_main_top_search_frame_search:
             case R.id.fg_main_top_search_et_search:
                 fgMainTopSearchEtSearch.requestFocus();
                 fgMainTopSearchEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+//                setSearchButtonTextVisible(true);
 //                forceOpenSoftKeyboard();
                 break;
             case R.id.fg_main_top_search_imv_calendar:
                 mPresenter.doCalendar(fgMainTopSearchTitleRoot);
+                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainTopSearchEtSearch);
                 break;
             case R.id.fg_main_warn_top_search_date_close:
                 fgMainTopSearchRlDateEdit.setVisibility(View.GONE);
                 String text = fgMainTopSearchEtSearch.getText().toString();
+                setSearchHistoryVisible(false);
+                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainTopSearchEtSearch);
                 mPresenter.requestSearchData(DIRECTION_DOWN, text);
                 break;
             case R.id.tv_top_search_alarm_search_cancel:
                 doCancelSearch();
+                setSearchHistoryVisible(false);
+//                setSearchButtonTextVisible(false);
+                AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainTopSearchEtSearch);
                 break;
             case R.id.alarm_return_top:
                 fgMainMalfunctionRcContent.smoothScrollToPosition(0);
                 alarmReturnTop.setVisibility(View.GONE);
                 break;
+            case R.id.btn_search_clear:
+                mPresenter.clearSearchHistory();
+//                setSearchButtonTextVisible(true);
+                break;
+            case R.id.fg_main_top_search_imv_clear:
+                fgMainTopSearchEtSearch.getText().clear();
+                fgMainTopSearchEtSearch.requestFocus();
+                AppUtils.openInputMethodManager(mRootFragment.getActivity(),fgMainTopSearchEtSearch);
+                setSearchHistoryVisible(true);
+                break;
+
         }
     }
 
@@ -351,8 +451,8 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
         if (b) {
             tvTopSearchAlarmSearchCancel.setVisibility(View.VISIBLE);
 //            setEditTextState(false);
-            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainTopSearchEtSearch);
-        } else {
+//            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainTopSearchEtSearch);
+        } else if(TextUtils.isEmpty(fgMainTopSearchEtSearch.getText().toString())){
             tvTopSearchAlarmSearchCancel.setVisibility(View.GONE);
 //            setEditTextState(true);
         }
@@ -365,6 +465,19 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
             mRcContentAdapter.notifyDataSetChanged();
         }
         setNoContentVisible(mMalfunctionInfoList.size()<1);
+    }
+
+    @Override
+    public void UpdateSearchHistoryList(List<String> data) {
+        btnSearchClear.setVisibility(data.size() >0 ? View.VISIBLE : View.GONE);
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
+    }
+
+    @Override
+    public void setSearchHistoryVisible(boolean isVisible) {
+        llSearchHistory.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        refreshLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        setSearchButtonTextVisible(isVisible);
     }
 
     private void setNoContentVisible(boolean b) {

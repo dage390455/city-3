@@ -18,6 +18,7 @@ import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnStart;
@@ -56,6 +57,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private int cur_page = 0;
     private int finish = 2;
     private final List<InspectionTaskDeviceDetail> mDevices = new ArrayList<>();
+    private final List<String> mSearchHistoryList = new ArrayList<>();
     private static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private volatile boolean canFreshBle = true;
@@ -73,6 +75,11 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         if (mTaskInfo != null) {
             requestSearchData(DIRECTION_DOWN, null);
             mHandler.post(this);
+        }
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().UpdateSearchHistoryList(mSearchHistoryList);
         }
 
     }
@@ -352,12 +359,12 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         List<InspectionTaskDeviceDetail> devices = inspectionTaskDeviceDetailRsp.getData().getDevices();
         if (devices != null) {
             mDevices.addAll(devices);
-            if (!TextUtils.isEmpty(tempSearch)) {
-//            getView().setSelectedDateSearchText(searchText);
-                getView().setSearchButtonTextVisible(true);
-            } else {
-                getView().setSearchButtonTextVisible(false);
-            }
+//            if (!TextUtils.isEmpty(tempSearch)) {
+////            getView().setSelectedDateSearchText(searchText);
+//                getView().setSearchButtonTextVisible(true);
+//            } else {
+//                getView().setSearchButtonTextVisible(false);
+//            }
             handlerInspectionTaskDevice();
             getView().updateInspectionTaskDeviceItem(mDevices);
         }
@@ -487,5 +494,20 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             tempDeviceType = stringBuilder.toString();
         }
         requestSearchData(DIRECTION_DOWN, tempSearch);
+    }
+
+    public void clearSearchHistory() {
+        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+        mSearchHistoryList.clear();
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
+    }
+
+    public void save(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+        mSearchHistoryList.add(0, text);
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
 }
