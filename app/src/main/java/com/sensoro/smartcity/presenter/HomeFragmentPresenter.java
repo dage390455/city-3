@@ -127,9 +127,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         final SoundPool.OnLoadCompleteListener listener = new SoundPool.OnLoadCompleteListener() {
             @Override
             public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                if (PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
-                    requestInitData(true);
-                }
+                requestInitData(true);
             }
         };
         mSoundPool.setOnLoadCompleteListener(listener);
@@ -140,6 +138,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
 
     public void requestInitData(boolean needShowProgressDialog) {
+        if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+            return;
+        }
+        if (!PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
+            return;
+        }
         if (needShowProgressDialog) {
             getView().showProgressDialog();
         }
