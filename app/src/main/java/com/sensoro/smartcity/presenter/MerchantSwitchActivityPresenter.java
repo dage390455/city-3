@@ -41,7 +41,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
 
     private final List<UserInfo> mUserInfoList = new ArrayList<>();
     private Activity mContext;
-    private volatile int cur_page = 1;
+    private volatile int cur_page = 0;
     private EventLoginData eventLoginData = null;
 
     @Override
@@ -62,8 +62,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         }
         switch (direction) {
             case DIRECTION_DOWN:
-                cur_page = 1;
-                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, cur_page, null, null).subscribeOn(Schedulers.io()).observeOn
+                cur_page = 0;
+                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
 
@@ -89,7 +89,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, cur_page, null, null).subscribeOn(Schedulers.io()).observeOn
+                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
                     @Override
