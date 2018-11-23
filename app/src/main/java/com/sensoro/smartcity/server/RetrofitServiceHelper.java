@@ -179,27 +179,23 @@ public enum RetrofitServiceHelper {
     public int getBaseUrlType() {
         if (mUrlType == -1) {
             mUrlType = 0;
-            try {
-                mUrlType = PreferencesHelper.getInstance().getBaseUrlType();
-                if (mUrlType != 0) {
-                    switch (mUrlType) {
-                        case 1:
-                            BASE_URL = SCOPE_DEMO;
-                            break;
-                        case 2:
-                            BASE_URL = SCOPE_TEST;
-                            break;
-                        case 3:
-                            BASE_URL = SCOPE_MOCHA;
-                            break;
-                        default:
-                            BASE_URL = SCOPE_MASTER;
-                            break;
-                    }
-                    retrofitService = builder.baseUrl(BASE_URL).build().create(RetrofitService.class);
+            mUrlType = PreferencesHelper.getInstance().getBaseUrlType();
+            if (mUrlType != 0) {
+                switch (mUrlType) {
+                    case 1:
+                        BASE_URL = SCOPE_DEMO;
+                        break;
+                    case 2:
+                        BASE_URL = SCOPE_TEST;
+                        break;
+                    case 3:
+                        BASE_URL = SCOPE_MOCHA;
+                        break;
+                    default:
+                        BASE_URL = SCOPE_MASTER;
+                        break;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                retrofitService = builder.baseUrl(BASE_URL).build().create(RetrofitService.class);
             }
         }
         return mUrlType;
@@ -252,11 +248,11 @@ public enum RetrofitServiceHelper {
                 //重定向
 //                boolean redirect = response.isRedirect();
                 int code = response.code();
-                try {
 //                    if (redirect && (code == 308 || code == 307)) {
-                    //仅针对308和307重定向问题
-                    if (code == 308 || code == 307) {
-                        String location = response.header("Location");
+                //仅针对308和307重定向问题
+                if (code == 308 || code == 307) {
+                    String location = response.header("Location");
+                    if (location != null && location.length() > 1) {
                         if (location.startsWith("/")) {
                             location = location.substring(1);
                         }
@@ -264,8 +260,6 @@ public enum RetrofitServiceHelper {
                                 .build();
                         response = chain.proceed(newRequest);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
                 return response;
             }
