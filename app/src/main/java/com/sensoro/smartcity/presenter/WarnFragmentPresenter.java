@@ -150,6 +150,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
             return;
         }
+        if (!PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+            return;
+        }
         if (TextUtils.isEmpty(searchText)) {
             tempSearch = null;
         } else {
@@ -360,14 +363,12 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 }
                 break;
             case EVENT_DATA_SEARCH_MERCHANT:
-                if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
-                    mContext.runOnUiThread(new Runnable() {
-                        @Override
-                        public void run() {
-                            requestSearchData(DIRECTION_DOWN, null);
-                        }
-                    });
-                }
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        requestSearchData(DIRECTION_DOWN, null);
+                    }
+                });
                 break;
             case EVENT_DATA_ALARM_FRESH_ALARM_DATA:
                 //仅在无搜索状态和日历选择时进行刷新
