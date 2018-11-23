@@ -174,19 +174,28 @@ public class Luban implements Handler.Callback {
             outFile = getImageCustomFile(context, filename);
         }
         //TODO 修改压缩前加入水印 默认改为全部图片处理
+//        if (mCompressionPredicate != null) {
+//            if (mCompressionPredicate.apply(path.getPath())
+//                    && Checker.SINGLE.needCompress(mLeastCompressSize, path.getPath())) {
+//                result = new Engine(path, outFile, focusAlpha).compress();
+//            } else {
+//                result = new File(path.getPath());
+//            }
+//        } else {
+//            result = Checker.SINGLE.needCompress(mLeastCompressSize, path.getPath()) ?
+//                    new Engine(path, outFile, focusAlpha).compress() :
+//                    new File(path.getPath());
+//        }
         if (mCompressionPredicate != null) {
-            if (mCompressionPredicate.apply(path.getPath())
-                    && Checker.SINGLE.needCompress(mLeastCompressSize, path.getPath())) {
+            if (mCompressionPredicate.apply(path.getPath())) {
                 result = new Engine(path, outFile, focusAlpha).compress();
             } else {
+                //对于非标准图片不进行压缩
                 result = new File(path.getPath());
             }
         } else {
-            result = Checker.SINGLE.needCompress(mLeastCompressSize, path.getPath()) ?
-                    new Engine(path, outFile, focusAlpha).compress() :
-                    new File(path.getPath());
+            result = new Engine(path, outFile, focusAlpha).compress();
         }
-
         return result;
     }
 

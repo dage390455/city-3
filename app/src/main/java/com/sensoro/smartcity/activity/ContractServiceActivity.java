@@ -118,8 +118,6 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     RecyclerView rvSensorCount;
     @BindView(R.id.bt_next)
     Button btNext;
-    @BindView(R.id.iv_line1)
-    ImageView ivLine1;
     @BindView(R.id.iv_line_phone)
     ImageView ivLinePhone;
     @BindView(R.id.iv_line2)
@@ -148,17 +146,17 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     }
 
     private void initView() {
-        names.add("小区");
-        names.add("出租房");
-        names.add("工厂");
-        names.add("居民作坊");
-        names.add("仓库");
-        names.add("商铺店面");
-        names.add("商场");
-        names.add("其他");
+        names.add(mActivity.getString(R.string.community));
+        names.add(mActivity.getString(R.string.rental_house));
+        names.add(mActivity.getString(R.string.factory));
+        names.add(mActivity.getString(R.string.resident_workshop));
+        names.add(mActivity.getString(R.string.warehouse));
+        names.add(mActivity.getString(R.string.shop_storefront));
+        names.add(mActivity.getString(R.string.the_mall));
+        names.add(mActivity.getString(R.string.the_ohter));
         //
-        sexList.add("男");
-        sexList.add("女");
+        sexList.add(mActivity.getString(R.string.male));
+        sexList.add(mActivity.getString(R.string.female));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         contractTemplateAdapter = new ContractTemplateAdapter(mActivity);
         rvSensorCount.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, true));
@@ -213,14 +211,14 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 tvContractServiceTitleRetake.setVisibility(View.VISIBLE);
                 break;
             case 2:
-                tvContractServiceLine1.setText("姓名");
+                tvContractServiceLine1.setText(R.string.name);
                 etContractServiceLine1.setText(line1);
                 etContractServiceLine1.setSelection(line1.length());
                 //
                 etContractServicePhone.setText(phone);
                 etContractServicePhone.setSelection(phone.length());
                 //
-                tvContractServiceLine2.setText("性别");
+                tvContractServiceLine2.setText(R.string.sexs);
                 ivContractServiceLine2.setVisibility(View.VISIBLE);
                 tvShowContractService_line2.setVisibility(View.VISIBLE);
                 tvShowContractService_line2.setText(line2);
@@ -237,11 +235,11 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                     }
                 });
                 //
-                tvContractServiceLine3.setText("身份证号码");
+                tvContractServiceLine3.setText(R.string.identification_number);
                 etContractServiceLine3.setText(line3);
                 etContractServiceLine3.setSelection(line3.length());
                 //
-                tvContractServiceLine4.setText("住址");
+                tvContractServiceLine4.setText(R.string.address);
                 etContractServiceLine4.setText(line4);
                 etContractServiceLine4.setSelection(line4.length());
                 //
@@ -254,14 +252,14 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 tvContractServiceTitleRetake.setVisibility(View.VISIBLE);
                 break;
             case 3:
-                tvContractServiceLine1.setText("甲方（客户名称）");
+                tvContractServiceLine1.setText(R.string.party_a_customer_name);
                 etContractServiceLine1.requestFocus();
                 //
-                tvContractServiceLine2.setText("业主姓名");
+                tvContractServiceLine2.setText(R.string.owners_name);
                 //
-                tvContractServiceLine3.setText("手机号");
+                tvContractServiceLine3.setText(R.string.phone_num);
                 //
-                tvContractServiceLine4.setText("住址");
+                tvContractServiceLine4.setText(R.string.address);
                 //已经存在电话 不显示
                 ivLinePhone.setVisibility(View.GONE);
                 llContractServicePhone.setVisibility(View.GONE);

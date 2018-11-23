@@ -1,16 +1,15 @@
 package com.sensoro.smartcity.server.response;
 
-import com.sensoro.smartcity.server.bean.DeployDeviceDetail;
-import com.tencent.mm.opensdk.modelbase.BaseResp;
+import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
 
 public class DeployDeviceDetailRsp extends ResponseBase {
-    private DeployDeviceDetail data;
+    private DeployDeviceInfo data;
 
-    public DeployDeviceDetail getData() {
+    public DeployDeviceInfo getData() {
         return data;
     }
 
-    public void setData(DeployDeviceDetail data) {
+    public void setData(DeployDeviceInfo data) {
         this.data = data;
     }
 }

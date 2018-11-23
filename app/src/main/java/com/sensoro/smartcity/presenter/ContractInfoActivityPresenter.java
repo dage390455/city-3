@@ -16,8 +16,11 @@ import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ContractAddInfo;
+import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
+import com.sensoro.smartcity.server.response.ContractInfoRsp;
+import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
@@ -26,7 +29,9 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -49,12 +54,16 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     //
     private String contract_service_life;
     private ArrayList<ContractsTemplateInfo> deviceList;
+    private ContractListInfo mContractInfo;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        serviceType = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_TYPE, -1);
+        getView().showProgressDialog();
+        int contractId = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_ID, -1);
+        if(contractId == -1){
+            serviceType = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_TYPE, -1);
         contract_service_life = mContext.getIntent().getStringExtra("contract_service_life");
         placeType = mContext.getIntent().getStringExtra("place");
         String signDate = mContext.getIntent().getStringExtra("signDate");
@@ -105,6 +114,120 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         deviceList = (ArrayList<ContractsTemplateInfo>) mContext.getIntent().getSerializableExtra
                 ("contract_template");
         getView().updateContractTemplateAdapterInfo(deviceList);
+        }else{
+            requestData(contractId);
+        }
+
+    }
+
+    private void requestData(int contractId) {
+        RetrofitServiceHelper.INSTANCE.getContractInfo(contractId + "").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<ContractInfoRsp>() {
+                    @Override
+                    public void onCompleted(ContractInfoRsp responseBase) {
+                        mContractInfo = responseBase.getData();
+                        if (mContractInfo != null) {
+                            getView().setConfirmVisible(mContractInfo.isConfirmed());
+                            getView().setConfirmStatus(mContractInfo.isConfirmed());
+                            id = mContractInfo.getId();
+
+                            refreshContentText();
+
+                            String createdAt = mContractInfo.getCreatedAt();
+                            if (TextUtils.isEmpty(createdAt)) {
+                                createdAt = "-";
+                            } else {
+                                try {
+                                    String[] ts = createdAt.split("T");
+                                    createdAt = ts[0];
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    createdAt = "-";
+                                }
+                            }
+                            getView().setContractCreateTime(createdAt);
+
+                            String confirmTime = mContractInfo.getConfirmTime();
+                            if (TextUtils.isEmpty(confirmTime)) {
+                                confirmTime = "-";
+                            } else {
+                                try {
+                                    String[] ts = confirmTime.split("T");
+                                    confirmTime = ts[0];
+                                } catch (Exception e) {
+                                    e.printStackTrace();
+                                    confirmTime = "-";
+                                }
+                            }
+                            getView().setSignTime(confirmTime);
+
+                            getView().updateContractTemplateAdapterInfo(mContractInfo.getDevices());
+                        } else {
+                            getView().toastShort("未获取到合同信息");
+                        }
+                        getView().dismissProgressDialog();
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
+                    }
+                });
+    }
+
+    private void refreshContentText() {
+        int created_type = mContractInfo.getCreated_type();
+        placeType = mContractInfo.getPlace_type();
+        if (TextUtils.isEmpty(placeType)) {
+            placeType = "无";
+        }
+        contract_service_life = mContractInfo.getServiceTime()+"";
+
+        line1 = mContractInfo.getCustomer_name();
+        if (TextUtils.isEmpty(line1)) {
+            line1 = "无";
+        }
+        line2 = mContractInfo.getCustomer_enterprise_name();
+        if (TextUtils.isEmpty(line2)) {
+            line2 = "无";
+        }
+        line3 = mContractInfo.getEnterprise_card_id();
+        if (TextUtils.isEmpty(line3)) {
+            line3 = "无";
+        }
+        line4 = mContractInfo.getEnterprise_register_id();
+        if (TextUtils.isEmpty(line4)) {
+            line4 = "无";
+        }
+        line5 = mContractInfo.getCustomer_address();
+        if (TextUtils.isEmpty(line5)) {
+            line5 = "无";
+        }
+        line6 = mContractInfo.getCustomer_enterprise_validity();
+        if (TextUtils.isEmpty(line6)) {
+            line6 = "无";
+        }
+        phone = mContractInfo.getCustomer_phone();
+        if (TextUtils.isEmpty(phone)) {
+            phone = "无";
+        }
+        switch (created_type) {
+            case 1:
+                break;
+            case 2:
+                line5 = null;
+                line6 = null;
+                break;
+            case 3:
+                line5 = null;
+                line6 = null;
+                phone = null;
+                break;
+        }
+
+        getView().showContentText(created_type, line1, phone, line2, line3, line4,
+    line5, line6, placeType, contract_service_life);
     }
 
     public void startToConfirm(final String text) {

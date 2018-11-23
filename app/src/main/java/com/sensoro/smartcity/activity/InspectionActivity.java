@@ -58,8 +58,8 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeTextTitleTvTitle.setText("巡检监测点");
-        includeTextTitleTvSubtitle.setText("巡检内容");
+        includeTextTitleTvTitle.setText(R.string.patrol_monitoring_point);
+        includeTextTitleTvSubtitle.setText(R.string.inspection_content);
         initRcTag();
         acInspectionTvNormal.setEnabled(false);
         initNormalDialog();
@@ -79,9 +79,9 @@ public class InspectionActivity extends BaseActivity<IInspectionActivityView, In
 
     private void initNormalDialog() {
         mNormalDialog = new TipDialogUtils(mActivity);
-        mNormalDialog.setTipMessageText("确认监测点是否正常");
-        mNormalDialog.setTipCacnleText("我再看看", mActivity.getResources().getColor(R.color.c_a6a6a6));
-        mNormalDialog.setTipConfirmText("正常", mActivity.getResources().getColor(R.color.c_29c093));
+        mNormalDialog.setTipMessageText(mActivity.getString(R.string.confirm_that_the_monitoring_point_is_normal));
+        mNormalDialog.setTipCacnleText(mActivity.getString(R.string.i_will_see_again), mActivity.getResources().getColor(R.color.c_a6a6a6));
+        mNormalDialog.setTipConfirmText(mActivity.getString(R.string.normal), mActivity.getResources().getColor(R.color.c_29c093));
         mNormalDialog.setTipDialogUtilsClickListener(this);
     }
 

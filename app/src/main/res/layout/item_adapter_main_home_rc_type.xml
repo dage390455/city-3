@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/home_status_root"
     android:layout_width="wrap_content"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <android.support.v7.widget.CardView
         android:id="@+id/main_rc_type_cv"
@@ -14,8 +14,7 @@
         app:cardBackgroundColor="@color/c_29c093"
         app:cardCornerRadius="4dp"
         app:cardElevation="6dp"
-        app:cardUseCompatPadding="true"
-        >
+        app:cardUseCompatPadding="true">
 
         <ImageView
             android:id="@+id/iv_home_status_card"
@@ -51,7 +50,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="8dp"
-                    android:text="正常监测"
+                    android:text="@string/normal_monitor"
                     android:textColor="@color/white"
                     android:textSize="12sp" />
             </LinearLayout>

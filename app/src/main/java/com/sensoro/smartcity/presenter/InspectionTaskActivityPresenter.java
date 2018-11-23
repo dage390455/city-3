@@ -11,6 +11,7 @@ import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.InspectionActivity;
 import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
@@ -103,7 +104,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 if (PreferencesHelper.getInstance().getUserData().hasInspectionDeviceModify) {
                     intent.setClass(mContext, InspectionActivity.class);
                 } else {
-                    getView().toastShort("该账户没有巡检设备权限");
+                    getView().toastShort(mContext.getString(R.string.account_no_patrol_device_permissions));
                     return;
                 }
 
@@ -196,25 +197,25 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                     List<InspectionStatusCountModel> list = new ArrayList<>();
                     InspectionStatusCountModel sc1 = new InspectionStatusCountModel();
                     sc1.count = uncheck + normalNum + abnormalNum;
-                    sc1.statusTitle = "全部状态";
+                    sc1.statusTitle = mContext.getString(R.string.all_states);
                     sc1.status = 2;
                     list.add(sc1);
                     InspectionStatusCountModel sc2 = new InspectionStatusCountModel();
                     sc2.count = uncheck;
-                    sc2.statusTitle = "未巡检";
+                    sc2.statusTitle = mContext.getString(R.string.not_inspected);
                     sc2.status = 0;
                     list.add(sc2);
                     InspectionStatusCountModel sc3 = new InspectionStatusCountModel();
                     int check = normalNum + abnormalNum;
                     sc3.count = check;
-                    sc3.statusTitle = "已巡检";
+                    sc3.statusTitle = mContext.getString(R.string.has_inspected);
                     sc3.status = 1;
                     list.add(sc3);
                     if (needPop) {
                         getView().updateSelectDeviceStatusList(list);
                     }
                     getView().dismissProgressDialog();
-                    getView().setBottomInspectionStateTitle("我已巡检： " + check, "未巡检： " + uncheck);
+                    getView().setBottomInspectionStateTitle(mContext.getString(R.string.i_have_inspected) + "： " + check, mContext.getString(R.string.not_inspected) + "： " + uncheck);
                 }
 
 
@@ -312,7 +313,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                     @Override
                     public void onCompleted(InspectionTaskDeviceDetailRsp inspectionTaskDeviceDetailRsp) {
                         if (inspectionTaskDeviceDetailRsp.getData().getDevices().size() == 0) {
-                            getView().toastShort("没有更多数据了");
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                             cur_page--;
                         } else {
@@ -415,18 +416,19 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Override
     public void run() {
-        try {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
-        } catch (Exception e) {
-            e.printStackTrace();
-            getView().showBleTips();
-//            getView().toastShort("请检查蓝牙状态");
-        }
-        if (!bleHasOpen) {
-            bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
-        }
+        bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
         if (bleHasOpen) {
-            getView().hideBleTips();
+            try {
+                bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().showBleTips();
+            }
+            if (bleHasOpen) {
+                getView().hideBleTips();
+            } else {
+                getView().showBleTips();
+            }
         } else {
             getView().showBleTips();
         }
@@ -447,7 +449,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                 return;
             }
         }
-        getView().toastShort("未获取到位置信息");
+        getView().toastShort(mContext.getString(R.string.location_not_obtained));
     }
 
     @Override

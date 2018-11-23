@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fixed_bottom_navigation_container"
+    android:focusable="true"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?selectableItemBackgroundBorderless"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/fixed_bottom_navigation_icon_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_gravity="center_horizontal|top">
+
+        <ImageView
+            android:id="@+id/fixed_bottom_navigation_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/icon"
+            android:layout_centerHorizontal="true"
+            android:gravity="center"
+            android:scaleType="fitXY" />
+
+        <com.sensoro.bottomnavigation.BadgeTextView
+            android:id="@+id/fixed_bottom_navigation_badge"
+            style="@style/BadgeText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/fixed_bottom_navigation_icon"
+            android:layout_gravity="top|end"
+            android:textSize="10sp"
+            android:gravity="center" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/fixed_bottom_navigation_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal|bottom"
+        android:gravity="center"
+        android:includeFontPadding="false"
+        android:lines="1"
+        android:scaleX="@dimen/fixed_label_active_to_inactive_ratio"
+        android:scaleY="@dimen/fixed_label_active_to_inactive_ratio"
+        android:textSize="@dimen/fixed_label_active" />
+
+</LinearLayout>

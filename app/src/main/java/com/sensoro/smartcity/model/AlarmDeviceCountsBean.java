@@ -18,6 +18,16 @@ public class AlarmDeviceCountsBean {
     private int _$2;
     @SerializedName("3")
     private int _$3;
+    @SerializedName("4")
+    private int _$4;
+
+    public int get_$4() {
+        return _$4;
+    }
+
+    public void set_$4(int _$4) {
+        this._$4 = _$4;
+    }
 
     public int get_$0() {
         return _$0;
@@ -58,6 +68,7 @@ public class AlarmDeviceCountsBean {
                 ", _$1=" + _$1 +
                 ", _$2=" + _$2 +
                 ", _$3=" + _$3 +
-                '}';
+                ", _$4=" + _$4 +
+                '}' ;
     }
 }

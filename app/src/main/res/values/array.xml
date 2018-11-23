@@ -32,7 +32,7 @@
     //信号测试相关
     <string-array name="signal_se433_band_array">
         <!--433.3MHz", "433.5MHz", "433.7MHz", "433.9MHz", "434.3MHz", "434.5MHz", "434.7MHz", "434.9MHz-->
-        <item>随机</item>
+        <item>Random</item>
         <item>433.3MHz</item>
         <item>433.5MHz</item>
         <item>433.7MHz</item>
@@ -43,7 +43,7 @@
         <item>434.9MHz</item>
     </string-array>
     <string-array name="signal_se470_band_array">
-        <item>随机</item>
+        <item>Random</item>
         <item>486.3MHz</item>
         <item>486.5MHz</item>
         <item>486.7MHz</item>
@@ -54,7 +54,7 @@
         <item>487.7MHz</item>
     </string-array>
     <string-array name="signal_se780_band_array">
-        <item>随机</item>
+        <item>Random</item>
         <item>779.5MHz</item>
         <item>779.7MHz</item>
         <item>779.9MHz</item>
@@ -65,7 +65,7 @@
         <item>780.9MHz</item>
     </string-array>
     <string-array name="signal_se915_band_array">
-        <item>随机</item>
+        <item>Random</item>
         <item>915.3MHz</item>
         <item>915.5MHz</item>
         <item>915.7MHz</item>
@@ -76,7 +76,7 @@
         <item>916.9MHz</item>
     </string-array>
     <string-array name="signal_us915_band_array">
-        <item>随机</item>
+        <item>Random</item>
         <item>902.3MHz</item>
         <item>902.5MHz</item>
         <item>902.7MHz</item>
@@ -88,7 +88,7 @@
 
     </string-array>
     <string-array name="signal_au915_band_array">
-        <item>随机</item>
+        <item>Random</item>
         <item>915.2MHz</item>
         <item>915.4MHz</item>
         <item>915.6MHz</item>
@@ -100,7 +100,7 @@
 
     </string-array>
     <string-array name="signal_as923_band_array">
-        <item>随机</item>
+        <item>Random</item>
         <item>923.2MHz</item>
         <item>923.4MHz</item>
         <item>923.6MHz</item>
@@ -112,7 +112,7 @@
 
     </string-array>
     <string-array name="signal_eu433_band_array">
-        <item>随机</item>
+        <item>Random</item>
         <item>433.175MHz</item>
         <item>433.375MHz</item>
         <item>433.575MHz</item>
@@ -123,7 +123,7 @@
         <item>434.575MHz</item>
     </string-array>
     <string-array name="signal_eu868_band_array">
-        <item>随机</item>
+        <item>Random</item>
         <item>868.1MHz</item>
         <item>868.3MHz</item>
         <item>868.5MHz</item>

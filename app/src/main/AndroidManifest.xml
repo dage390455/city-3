@@ -342,6 +342,8 @@
             android:name=".widget.imagepicker.ui.ImageAlarmPhotoDetailActivity"
             android:configChanges="orientation|screenSize"
             android:theme="@style/ImagePickerThemeFullScreen" />
+        <activity android:name=".activity.MalfunctionDetailActivity" />
+        <activity android:name=".activity.MalfunctionHistoryActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

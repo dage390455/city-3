@@ -77,7 +77,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
                 getView().setTvbtnStartState(R.drawable.shape_bg_solid_ff_corner, R.color.c_252525, "详情");
                 break;
         }
-        getView().setTvState(INSPECTION_STATUS_COLORS[status], INSPECTION_STATUS_TEXTS[status]);
+        getView().setTvState(INSPECTION_STATUS_COLORS[status], mContext.getString(INSPECTION_STATUS_TEXTS[status]));
     }
 
     @Override
@@ -132,7 +132,7 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
                 getView().startAC(intent);
             }
         } else {
-            getView().toastShort("该账户没有查看巡检设备列表权限");
+            getView().toastShort(mContext.getString(R.string.account_does_not_have_permission_to_view_the_inspection_device_list));
         }
     }
 

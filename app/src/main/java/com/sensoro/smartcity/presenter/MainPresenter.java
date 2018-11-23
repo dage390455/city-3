@@ -15,6 +15,7 @@ import com.sensoro.smartcity.activity.LoginActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.fragment.HomeFragment;
+import com.sensoro.smartcity.fragment.MalfunctionFragment;
 import com.sensoro.smartcity.fragment.ManagerFragment;
 import com.sensoro.smartcity.fragment.WarnFragment;
 import com.sensoro.smartcity.imainviews.IMainView;
@@ -68,6 +69,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private WarnFragment warnFragment;
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
+    private MalfunctionFragment malfunctionFragment;
 
     @Override
     public void initData(Context context) {
@@ -94,11 +96,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         homeFragment = new HomeFragment();
         warnFragment = new WarnFragment();
         managerFragment = new ManagerFragment();
+        malfunctionFragment = new MalfunctionFragment();
         if (mFragmentList.size() > 0) {
             mFragmentList.clear();
         }
         mFragmentList.add(homeFragment);
         mFragmentList.add(warnFragment);
+        mFragmentList.add(malfunctionFragment);
         mFragmentList.add(managerFragment);
         getView().updateMainPageAdapterData(mFragmentList);
         //
@@ -137,6 +141,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     public boolean hasAlarmInfoControl() {
         return PreferencesHelper.getInstance().getUserData().hasAlarmInfo;
+    }
+
+    public boolean hasMalfunctionControl() {
+        return PreferencesHelper.getInstance().getUserData().hasMalfunction;
     }
 
     private final class DeviceInfoListener implements Emitter.Listener {
@@ -281,7 +289,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         @Override
                         public void run() {
                             if (!ping) {
-                                getView().toastShort("似乎断开了网络连接");
+                                getView().toastShort(mContext.getString(R.string.disconnected_from_network));
                             }
                         }
                     });
@@ -299,7 +307,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             IO.Options options = new IO.Options();
             options.query = "session=" + sessionId;
             options.forceNew = true;
-            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
+            options.path = "/city";
+            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL + "app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -337,18 +346,28 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private void freshAccountType() {
         if (hasDeviceBriefControl()) {
             getView().setHasDeviceBriefControl(true);
-            getView().setRbChecked(R.id.ac_main_rb_main);
+            getView().setBottomBarSelected(0);
             getView().setHasAlarmInfoControl(hasAlarmInfoControl());
+            getView().setHasMalfunctionControl(hasMalfunctionControl());
         } else {
             getView().setHasDeviceBriefControl(false);
             if (hasAlarmInfoControl()) {
-                getView().setRbChecked(R.id.ac_main_rb_warning);
+                getView().setBottomBarSelected(1);
                 getView().setHasAlarmInfoControl(true);
+                getView().setHasMalfunctionControl(hasMalfunctionControl());
             } else {
                 getView().setHasAlarmInfoControl(false);
-                getView().setRbChecked(R.id.ac_main_rb_manage);
+                if (hasMalfunctionControl()) {
+                    getView().setBottomBarSelected(2);
+                    getView().setHasMalfunctionControl(true);
+                } else {
+                    getView().setHasMalfunctionControl(false);
+                    getView().setBottomBarSelected(3);
+                }
+
             }
         }
+
     }
 
     public void changeAccount(EventLoginData eventLoginData) {
@@ -385,9 +404,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             }
             String sessionId = RetrofitServiceHelper.INSTANCE.getSessionId();
             IO.Options options = new IO.Options();
+            //
             options.query = "session=" + sessionId;
             options.forceNew = true;
-            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL, options);
+            options.path = "/city";
+            mSocket = IO.socket(RetrofitServiceHelper.INSTANCE.BASE_URL + "/app", options);
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
@@ -442,7 +463,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 //            }
                 break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
-                getView().setRbChecked(R.id.ac_main_rb_main);
+                getView().setBottomBarSelected(0);
                 break;
             case EVENT_DATA_SEARCH_MERCHANT:
                 if (data instanceof EventLoginData) {
@@ -482,6 +503,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().setAlarmWarnCount(0);
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }

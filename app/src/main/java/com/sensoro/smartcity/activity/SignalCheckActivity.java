@@ -82,8 +82,8 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mProgressbuild = new ProgressUtils.Builder(mActivity);
         mProgressUtils = new ProgressUtils(mProgressbuild.build());
-        includeTextTitleTvTitle.setText("信号测试");
-        includeTextTitleTvSubtitle.setText("频点随机");
+        includeTextTitleTvTitle.setText(R.string.signal_test);
+        includeTextTitleTvSubtitle.setText(R.string.frequency_random);
 
         initRcTag();
 
@@ -95,18 +95,18 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     private void initSingleChoiceDialog() {
 
         AlertDialog.Builder builder = new AlertDialog.Builder(mActivity)
-                .setTitle("设置")
+                .setTitle(R.string.setting)
                 .setSingleChoiceItems(mPresenter.getLoraBandText(mActivity), 0, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
-                }).setPositiveButton("确定", new DialogInterface.OnClickListener() {
+                }).setPositiveButton(R.string.determine, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
-                }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                }).setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 

@@ -79,6 +79,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 if (data instanceof DeviceAlarmLogInfo) {
                     if (this.deviceAlarmLogInfo.get_id().equals(((DeviceAlarmLogInfo) data).get_id())) {
                         this.deviceAlarmLogInfo = (DeviceAlarmLogInfo) data;
+                        refreshData(false);
                     }
 
                 }
@@ -111,7 +112,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
         getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        String alarmTime = DateUtil.getStrTimeToday(deviceAlarmLogInfo.getCreatedTime(), 1);
+        String alarmTime = DateUtil.getStrTimeToday(mContext,deviceAlarmLogInfo.getCreatedTime(), 1);
         //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {
@@ -146,7 +147,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     isReConfirm = false;
                     getView().setConfirmColor(mContext.getResources().getColor(R.color.white));
                     getView().setConfirmBg(R.drawable.shape_btn_corner_29c_bg_4dp);
-                    getView().setConfirmText("预警确认");
+                    getView().setConfirmText(mContext.getString(R.string.confirming));
                     break;
                 case DISPLAY_STATUS_ALARM:
                 case DISPLAY_STATUS_MIS_DESCRIPTION:
@@ -155,7 +156,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     isReConfirm = true;
                     getView().setConfirmColor(mContext.getResources().getColor(R.color.c_252525));
                     getView().setConfirmBg(R.drawable.shape_bg_solid_fa_stroke_df_corner_4dp);
-                    getView().setConfirmText("再次确认");
+                    getView().setConfirmText(mContext.getString(R.string.confirming_again));
                     break;
             }
             for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
@@ -214,36 +215,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void doContactOwner() {
-        String tempNumber = null;
-        outer:
-        for (AlarmInfo.RecordInfo recordInfo : mList) {
-            String type = recordInfo.getType();
-            if ("sendVoice".equals(type)) {
-                AlarmInfo.RecordInfo.Event[] phoneList = recordInfo.getPhoneList();
-                for (AlarmInfo.RecordInfo.Event event : phoneList) {
-                    String source = event.getSource();
-                    String number = event.getNumber();
-                    if (!TextUtils.isEmpty(number)) {
-                        if ("attach".equals(source)) {
-                            LogUtils.loge("单独联系人：" + number);
-                            tempNumber = number;
-                            break outer;
+        String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
 
-                        } else if ("group".equals(source)) {
-                            LogUtils.loge("分组联系人：" + number);
-                            tempNumber = number;
-                            break;
-                        } else if ("notification".equals(source)) {
-                            LogUtils.loge("账户联系人：" + number);
-                            tempNumber = number;
-                            break;
-                        }
-
-                    }
-
-                }
-            }
-        }
         if (TextUtils.isEmpty(tempNumber)) {
             getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
         } else {
@@ -259,7 +232,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 return;
             }
         }
-        getView().toastShort("未获取到位置信息");
+        getView().toastShort(mContext.getString(R.string.location_not_obtained));
     }
 
     @Override

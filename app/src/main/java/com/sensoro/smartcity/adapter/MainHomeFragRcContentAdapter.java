@@ -203,6 +203,10 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
                 color = R.color.c_29c093;
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
+            case SENSOR_STATUS_MALFUNCTION:
+                color = R.color.c_fdc83b;
+                holder.ivItemAlarm.setVisibility(View.GONE);
+                break;
             default:
                 holder.ivItemAlarm.setVisibility(View.GONE);
                 break;
@@ -234,7 +238,7 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
     }
 
     private void setContentTime(MyViewHolder holder, long updatedTime) {
-        holder.mainRcContentTvTime.setText(DateUtil.getStrTimeTodayByDevice(updatedTime));
+        holder.mainRcContentTvTime.setText(DateUtil.getStrTimeTodayByDevice(mContext, updatedTime));
     }
 
     private void setContentName(MyViewHolder holder, String deviceInfoName, String sn) {

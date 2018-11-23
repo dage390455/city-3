@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -49,8 +50,6 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
 
     private final List<String> mHistoryKeywords = new ArrayList<>();
-    private int mTypeSelectedIndex = 0;
-    private int mStatusSelectedIndex = 0;
 
     private int page = 1;
     private final List<DeviceInfo> mDataList = new ArrayList<>();
@@ -157,57 +156,26 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                 case SENSOR_STATUS_ALARM:
                     deviceInfo.setSort(1);
                     break;
-                case SENSOR_STATUS_NORMAL:
+                case SENSOR_STATUS_MALFUNCTION:
                     deviceInfo.setSort(2);
                     break;
-                case SENSOR_STATUS_LOST:
+                case SENSOR_STATUS_NORMAL:
                     deviceInfo.setSort(3);
                     break;
-                case SENSOR_STATUS_INACTIVE:
+                case SENSOR_STATUS_LOST:
                     deviceInfo.setSort(4);
+                    break;
+                case SENSOR_STATUS_INACTIVE:
+                    deviceInfo.setSort(5);
                     break;
                 default:
                     break;
             }
-            if (isMatcher(deviceInfo)) {
-                mDataList.add(deviceInfo);
-            }
+//            if (isMatcher(deviceInfo)) {
+            mDataList.add(deviceInfo);
+//            }
         }
 //        getView().refreshContentData(mDataList);
-    }
-
-    private boolean isMatcher(DeviceInfo deviceInfo) {
-        if (mTypeSelectedIndex == 0 && mStatusSelectedIndex == 0) {
-            return true;
-        } else {
-            boolean isMatcherType = false;
-            boolean isMatcherStatus = false;
-            String unionType = deviceInfo.getUnionType();
-            if (unionType != null) {
-                String[] unionTypeArray = unionType.split("\\|");
-                List<String> unionTypeList = Arrays.asList(unionTypeArray);
-                String[] menuTypeArray = SELECT_TYPE_VALUES[mTypeSelectedIndex].split("\\|");
-                if (mTypeSelectedIndex == 0) {
-                    isMatcherType = true;
-                } else {
-                    for (String menuType : menuTypeArray) {
-                        if (unionTypeList.contains(menuType)) {
-                            isMatcherType = true;
-                            break;
-                        }
-                    }
-                }
-            }
-            if (mStatusSelectedIndex != 0) {
-                int status = INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
-                if (deviceInfo.getStatus() == status) {
-                    isMatcherStatus = true;
-                }
-            } else {
-                isMatcherStatus = true;
-            }
-            return isMatcherStatus && isMatcherType;
-        }
     }
 
     public void filterDeviceInfo(final String filter) {
@@ -281,61 +249,6 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
         mEditor.commit();
         //
-//        if (TextUtils.isEmpty(oldText)) {
-//            mEditor.putString(PREFERENCE_KEY_DEVICE, text);
-//        } else {
-//            if (!TextUtils.isEmpty(text)) {
-//                if (mHistoryKeywords.contains(text)) {
-//                    List<String> list = new ArrayList<String>();
-//                    for (String o : oldText.split(",")) {
-//                        if (!o.equalsIgnoreCase(text)) {
-//                            list.add(o);
-//                        }
-//                    }
-//                    list.add(0, text);
-//
-//                    ArrayList<String> tempList = new ArrayList<>();
-//                    for (String str : list) {
-//                        if (tempList.size() < 20) {
-//                            tempList.add(str);
-//                        }
-//                    }
-//                    mHistoryKeywords.clear();
-//                    mHistoryKeywords.addAll(tempList);
-//                    StringBuffer stringBuilder = new StringBuffer();
-//                    for (int i = 0; i < tempList.size(); i++) {
-//                        if (i == (tempList.size() - 1)) {
-//                            stringBuilder.append(tempList.getInstance(i));
-//                        } else {
-//                            stringBuilder.append(tempList.getInstance(i) + ",");
-//                        }
-//                    }
-//                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
-//                    mEditor.commit();
-//                } else {
-//                    mHistoryKeywords.add(0, text);
-//                    ArrayList<String> tempList = new ArrayList<>();
-//                    for (String str : mHistoryKeywords) {
-//                        if (tempList.size() < 20) {
-//                            tempList.add(str);
-//                        }
-//                    }
-//                    mHistoryKeywords.clear();
-//                    mHistoryKeywords.addAll(tempList);
-//
-//                    StringBuffer stringBuilder = new StringBuffer();
-//                    for (int i = 0; i < tempList.size(); i++) {
-//                        if (i == (tempList.size() - 1)) {
-//                            stringBuilder.append(tempList.getInstance(i));
-//                        } else {
-//                            stringBuilder.append(tempList.getInstance(i) + ",");
-//                        }
-//                    }
-//                    mEditor.putString(PREFERENCE_KEY_DEVICE, stringBuilder.toString());
-//                    mEditor.commit();
-//                }
-//            }
-//        }
 
     }
 
@@ -349,14 +262,12 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 
     public void requestWithDirection(int direction, String searchText) {
         getView().setSearchHistoryLayoutVisible(false);
-        getView().setRelationLayoutVisible(false);
+//        getView().setRelationLayoutVisible(false);
         getView().setIndexListLayoutVisible(true);
-        String type = mTypeSelectedIndex == 0 ? null : SELECT_TYPE_VALUES[mTypeSelectedIndex];
-        Integer status = mStatusSelectedIndex == 0 ? null : INDEX_STATUS_VALUES[mStatusSelectedIndex - 1];
         getView().showProgressDialog();
         if (direction == DIRECTION_DOWN) {
             page = 1;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, null, status, searchText).subscribeOn
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
                     (Schedulers.io()).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
                 public void call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -391,7 +302,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             });
         } else {
             page++;
-            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, type, null, status, searchText).subscribeOn
+            RetrofitServiceHelper.INSTANCE.getDeviceBriefInfoList(page, null, null, null, searchText).subscribeOn
                     (Schedulers.io()).doOnNext(new Action1<DeviceInfoListRsp>() {
                 @Override
                 public void call(DeviceInfoListRsp deviceInfoListRsp) {
@@ -413,7 +324,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                 @Override
                 public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                     if (deviceInfoListRsp.getData().size() == 0) {
-                        getView().toastShort("没有更多数据了");
+                        getView().toastShort(mContext.getString(R.string.account_has_been_disabled));
                     } else {
                         getView().refreshData(mDataList);
                     }
@@ -456,18 +367,6 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         searchStrList.clear();
     }
 
-    public void filterByTypeWithRequest(int position, String text) {
-        String statusText = SELECT_TYPE_VALUES[position];
-        getView().setTypeView(statusText);
-        this.mTypeSelectedIndex = position;
-        requestWithDirection(DIRECTION_DOWN, text);
-    }
-
-    public void filterByStatusWithRequest(int position, String text) {
-        String statusText = INDEX_STATUS_ARRAY[position];
-        this.mStatusSelectedIndex = position;
-        requestWithDirection(DIRECTION_DOWN, text);
-    }
 
     public void clickAlarmInfo(int position) {
         DeviceInfo deviceInfo = mDataList.get(position);
@@ -484,7 +383,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                 getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
-                    getView().toastShort("未获取到预警日志信息");
+                    getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
                 } else {
                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);

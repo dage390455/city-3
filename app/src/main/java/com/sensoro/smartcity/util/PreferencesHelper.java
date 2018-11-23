@@ -60,14 +60,17 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_CONTRACT, eventLoginData.hasContract);
         editor.putBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, eventLoginData.hasScanLogin);
         editor.putBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, eventLoginData.hasSubMerchant);
+        editor.putBoolean(EXTRA_GRANTS_HAS_MERCHANT_CHANGE, eventLoginData.hasMerchantChange);
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST, eventLoginData.hasInspectionTaskList);
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY, eventLoginData.hasInspectionTaskModify);
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, eventLoginData.hasInspectionDeviceList);
         editor.putBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY, eventLoginData.hasInspectionDeviceModify);
         editor.putBoolean(EXTRA_GRANTS_HAS_ALARM_LOG_INFO, eventLoginData.hasAlarmInfo);
+        editor.putBoolean(EXTRA_GRANTS_HAS_MALFUNCTION_INFO, eventLoginData.hasMalfunction);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, eventLoginData.hasDeviceBrief);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
+        editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasBadSignalUpload);
         //
         editor.apply();
     }
@@ -86,15 +89,18 @@ public final class PreferencesHelper implements Constants {
             boolean hasStation = sp.getBoolean(EXTRA_GRANTS_HAS_STATION, false);
             boolean hasContract = sp.getBoolean(EXTRA_GRANTS_HAS_CONTRACT, false);
             boolean hasScanLogin = sp.getBoolean(EXTRA_GRANTS_HAS_SCAN_LOGIN, false);
-            boolean hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, true);
+            boolean hasSubMerchant = sp.getBoolean(EXTRA_GRANTS_HAS_SUB_MERCHANT, false);
+            boolean hasMerchantChange = sp.getBoolean(EXTRA_GRANTS_HAS_MERCHANT_CHANGE, false);
             boolean hasInspectionTaskList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST, false);
             boolean hasInspectionTaskModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY, false);
             boolean hasInspectionDeviceList = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST, false);
             boolean hasInspectionDeviceModify = sp.getBoolean(EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY, false);
             boolean hasAlarmInfo = sp.getBoolean(EXTRA_GRANTS_HAS_ALARM_LOG_INFO, false);
+            boolean hasMalfunction = sp.getBoolean(EXTRA_GRANTS_HAS_MALFUNCTION_INFO, false);
             boolean hasDeviceBrief = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_BRIEF, false);
             boolean hasDeviceSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
             boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
+            boolean hasBadSignalUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -102,6 +108,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.phone = phone;
             eventLoginData.roles = roles;
             eventLoginData.hasSubMerchant = hasSubMerchant;
+            eventLoginData.hasMerchantChange = hasMerchantChange;
             eventLoginData.isSupperAccount = isSupperAccount;
             eventLoginData.hasStation = hasStation;
             eventLoginData.hasContract = hasContract;
@@ -111,9 +118,11 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasInspectionDeviceList = hasInspectionDeviceList;
             eventLoginData.hasInspectionDeviceModify = hasInspectionDeviceModify;
             eventLoginData.hasAlarmInfo = hasAlarmInfo;
+            eventLoginData.hasMalfunction = hasMalfunction;
             eventLoginData.hasDeviceBrief = hasDeviceBrief;
             eventLoginData.hasSignalCheck = hasDeviceSignalCheck;
             eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
+            eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;

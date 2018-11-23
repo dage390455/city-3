@@ -35,7 +35,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="名称/地址"
+                        android:text="@string/deploy_record_name_address"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -67,7 +67,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="标签"
+                        android:text="@string/sensor_detail_tag"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -107,7 +107,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="部署时间"
+                        android:text="@string/deploy_record_deploy_time"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -136,7 +136,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="预警联系人"
+                    android:text="@string/alert_contact"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
@@ -177,7 +177,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="部署照片"
+                        android:text="@string/deploy_device_detail_deploy_photo"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -221,7 +221,7 @@
                         android:layout_marginBottom="12dp"
                         android:layout_weight="1"
                         android:gravity="center_vertical"
-                        android:text="部署位置"
+                        android:text="@string/deploy_device_detail_deploy_location"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -238,7 +238,7 @@
                         android:paddingTop="4dp"
                         android:paddingEnd="10dp"
                         android:paddingBottom="4dp"
-                        android:text="信号 无"
+                        android:text="@string/deploy_result_signal"
                         android:textColor="@color/white"
                         android:textSize="12sp" />
 
@@ -249,7 +249,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="14dp"
                         android:gravity="center_vertical"
-                        android:text="未定位"
+                        android:text="@string/not_positioned"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 

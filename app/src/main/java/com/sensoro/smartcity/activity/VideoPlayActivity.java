@@ -75,7 +75,7 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
         topBar.findViewById(R.id.btn_back).setOnClickListener(this);
 
         mTitleCount = (TextView) findViewById(R.id.tv_des);
-        mTitleCount.setText("视频");
+        mTitleCount.setText(R.string.video);
         NavigationBarChangeListener.with(this, NavigationBarChangeListener.ORIENTATION_HORIZONTAL)
                 .setListener(this);
         vv_play.setOnClickListener(this);
@@ -137,10 +137,10 @@ public class VideoPlayActivity extends AppCompatActivity implements View.OnClick
      */
     private void showDeleteDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("提示");
-        builder.setMessage("要删除这个视频吗吗？");
-        builder.setNegativeButton("取消", null);
-        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+        builder.setTitle(R.string.prompt);
+        builder.setMessage(R.string.do_you_want_to_delete_this_video);
+        builder.setNegativeButton(R.string.determine, null);
+        builder.setPositiveButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 deleteFile();

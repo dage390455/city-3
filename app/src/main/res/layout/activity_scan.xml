@@ -11,22 +11,23 @@
         android:layout_height="match_parent"
         app:qrcv_animTime="1000"
         app:qrcv_barcodeRectHeight="120dp"
-        app:qrcv_borderColor="@color/transparent"
-        app:qrcv_borderSize="1dp"
+        app:qrcv_borderColor="@color/colorAccent"
+        app:qrcv_borderSize="0dp"
         app:qrcv_cornerColor="@color/white"
         app:qrcv_cornerLength="20dp"
-        app:qrcv_cornerSize="5dp"
+        app:qrcv_cornerSize="4dp"
         app:qrcv_isBarcode="false"
-        app:qrcv_isShowDefaultGridScanLineDrawable="true"
-        app:qrcv_isShowDefaultScanLineDrawable="true"
+        app:qrcv_isShowDefaultGridScanLineDrawable="false"
+        app:qrcv_isShowDefaultScanLineDrawable="false"
         app:qrcv_isShowTipBackground="false"
         app:qrcv_isShowTipTextAsSingleLine="true"
-        app:qrcv_customGridScanLineDrawable="@drawable/clear_scan_line"
+        app:qrcv_scanLineMargin="-2dp"
         app:qrcv_isTipTextBelowRect="true"
-        app:qrcv_maskColor="#7e000000"
-        app:qrcv_qrCodeTipText="对准二维码，即可自动扫描"
-        app:qrcv_rectWidth="200dp"
+        app:qrcv_scanLineSize="3dp"
         app:qrcv_scanLineColor="@color/c_29c093"
+        app:qrcv_maskColor="#7e000000"
+        app:qrcv_qrCodeTipText="@string/scan_tip"
+        app:qrcv_rectWidth="200dp"
         app:qrcv_toolbarHeight="56dp"
         app:qrcv_topOffset="@dimen/y500"
         app:qrcv_verticalBias="-1" />
@@ -57,7 +58,7 @@
             android:drawablePadding="8dp"
             android:drawableTop="@drawable/input_sn"
             android:gravity="center"
-            android:text="手动输入SN"
+            android:text="@string/scan_input_sn"
             android:textColor="@color/white"
             android:textSize="12sp" />
 
@@ -69,7 +70,7 @@
             android:drawablePadding="8dp"
             android:drawableTop="@drawable/open_flashlight"
             android:gravity="center"
-            android:text="打开手电筒"
+            android:text="@string/scan_open_flashlight"
             android:textColor="@color/white"
             android:textSize="12sp" />
 
@@ -119,11 +120,5 @@
                 android:textSize="12sp"/>
         </LinearLayout>-->
     </LinearLayout>
-<ImageView
-    android:id="@+id/ac_scan_imv_scan_line"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:src="@drawable/grid_scan_line"
-    android:scaleType="fitXY"/>
 
 </RelativeLayout>

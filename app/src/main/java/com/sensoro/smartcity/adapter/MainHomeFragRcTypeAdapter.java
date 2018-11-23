@@ -160,27 +160,33 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         switch (type) {
             case 0:
                 currentColor = R.color.c_f34a4a;
-                holder.mainRcTypeTvStateTxt.setText("预警监测点");
+                holder.mainRcTypeTvStateTxt.setText(R.string.warning_monitoring_point);
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_warning);
                 holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_alarm);
                 break;
             case 1:
                 currentColor = R.color.c_29c093;
-                holder.mainRcTypeTvStateTxt.setText("正常监测点");
+                holder.mainRcTypeTvStateTxt.setText(R.string.normal_monitoring_point);
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_normal);
                 holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_normal);
                 break;
             case 2:
                 currentColor = R.color.c_5d5d5d;
-                holder.mainRcTypeTvStateTxt.setText("失联监测点");
+                holder.mainRcTypeTvStateTxt.setText(R.string.lost_monitoring_point);
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_lose);
                 holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_lost);
                 break;
             case 3:
                 currentColor = R.color.c_b6b6b6;
-                holder.mainRcTypeTvStateTxt.setText("未激活监测点");
+                holder.mainRcTypeTvStateTxt.setText(R.string.inactive_monitoring_point);
                 holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_inactivated);
                 holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_inactivated);
+                break;
+            case 4:
+                currentColor = R.color.c_fdc83b;
+                holder.mainRcTypeTvStateTxt.setText(R.string.malfunction_monitoring_point);
+                holder.mainRcTypeImvState.setImageResource(R.drawable.main_type_trouble);
+                holder.ivHomeStatusCard.setImageResource(R.drawable.home_status_wrong);
                 break;
         }
         holder.mainRcTypeTvStateTxt.setTextColor(Color.WHITE);
@@ -223,7 +229,6 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
 
     @Override
     public int getItemCount() {
-
         return mData.size();
     }
 

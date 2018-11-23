@@ -266,7 +266,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                         getView().dismissProgressDialog();
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             cur_page--;
-                            getView().toastShort("没有更多数据了");
+                            getView().toastShort(mContext.getString(R.string.no_more_data));
                             getView().onPullRefreshCompleteNoMoreData();
                         } else {
                             freshUI(direction, deviceAlarmLogRsp);
@@ -329,8 +329,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
             DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
             AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
             boolean isHaveRecovery = false;
-            for (int j = 0; j < recordInfoArray.length; j++) {
-                AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
+            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
                 if (recordInfo.getType().equals("recovery")) {
                     deviceAlarmLogInfo.setSort(4);
                     isHaveRecovery = true;

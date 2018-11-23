@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_marginTop="16dp">
+
+    <ImageView
+        android:id="@+id/item_malfunction_detail_content_imv_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:contentDescription="@null"
+        android:src="@drawable/phone_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/item_malfunction_detail_content_tv_content"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:layout_marginStart="10dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/alarm_log_alarm_call"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/item_malfunction_detail_content_imv_icon"
+        app:layout_constraintTop_toTopOf="@id/item_malfunction_detail_content_imv_icon" />
+
+
+    <LinearLayout
+        android:id="@+id/ll_confirm"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="@id/item_malfunction_detail_content_tv_content"
+        app:layout_constraintTop_toBottomOf="@id/item_malfunction_detail_content_tv_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:layout_marginEnd="10dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="10dp"
+                android:text="@string/malfunction_cause"
+                android:textColor="@color/c_252525"
+                android:textSize="@dimen/city_size" />
+
+            <TextView
+                android:id="@+id/item_malfunction_detail_child_malfunction_cause"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:singleLine="false"
+                android:textColor="@color/c_252525"
+                android:textSize="@dimen/city_size" />
+        </LinearLayout>
+
+        <!--可能会进行扩展，所以现在外面嵌套一层viewgroup-->
+
+
+    </LinearLayout>
+    <TextView
+        android:id="@+id/item_malfunction_detail_content_tv_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="6dp"
+        android:text="今天 10：14：28"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="@id/item_malfunction_detail_content_tv_content"
+        app:layout_constraintTop_toBottomOf="@id/ll_confirm" />
+
+
+
+</android.support.constraint.ConstraintLayout>

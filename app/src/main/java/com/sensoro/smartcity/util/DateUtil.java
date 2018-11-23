@@ -1,7 +1,9 @@
 package com.sensoro.smartcity.util;
 
+import android.content.Context;
 import android.support.annotation.NonNull;
-import android.text.TextUtils;
+
+import com.sensoro.smartcity.R;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -62,13 +64,10 @@ public class DateUtil {
     /*
      * 将时间戳转为字符串 ，格式：yyyy.MM.dd
      */
-    public static String getStrTime_ymd(String cc_time) {
-        String re_StrTime = null;
+    public static String getStrTime_ymd(long cc_time) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy.MM.dd");
         // 例如：cc_time=1291778220
-        long lcc_time = Long.valueOf(cc_time);
-        re_StrTime = sdf.format(new Date(lcc_time));
-        return re_StrTime;
+        return sdf.format(new Date(cc_time));
     }
 
     /*
@@ -183,18 +182,18 @@ public class DateUtil {
         }
     }
 
-    public static String parseDateToString(String text) {
-        String dateFormat = "yyyy-MM-dd HH:mm:ss";
-        try {
-            if (TextUtils.isEmpty(text)) {
-                return " - ";
-            }
-            text = text.replace("+", " ");
-            return getFullParseDate(new SimpleDateFormat(dateFormat).parse(text).getTime());
-        } catch (ParseException e) {
-            return " - ";
-        }
-    }
+//    public static String parseDateToString(String text) {
+//        String dateFormat = "yyyy-MM-dd HH:mm:ss";
+//        try {
+//            if (TextUtils.isEmpty(text)) {
+//                return " - ";
+//            }
+//            text = text.replace("+", " ");
+//            return getFullParseDate(new SimpleDateFormat(dateFormat).parse(text).getTime());
+//        } catch (ParseException e) {
+//            return " - ";
+//        }
+//    }
 
     public static String parseDateToString(String text, String... format) {
         String dateFormat = (format.length == 0 || format[0] == null) ? "yyyy-MM-dd+HH:mm:ss" : format[0];
@@ -269,37 +268,37 @@ public class DateUtil {
         return list;
     }
 
-    public static String getFullParseDate(long time) {
+//    public static String getFullParseDate(Context context,long time) {
+//        final Calendar mCalendar = Calendar.getInstance();
+//        mCalendar.setTimeInMillis(time);
+//        int apm = mCalendar.get(Calendar.AM_PM);
+//        String apm_text = apm == 0 ? "上午" : "下午";
+//        long now = System.currentTimeMillis();
+//        long diff = now - time;
+//        float day = diff / 3600000 / 24;
+//        String formatTime = new SimpleDateFormat("hh:mm:ss", Locale.ROOT).format(new Date(time));
+//        String other_date = new SimpleDateFormat("MM/dd hh:mm:ss", Locale.ROOT).format(new Date(time));
+//        if (day < 1) {
+//            String nowString = DateUtil.getDayDate(now);
+//            String dataString = DateUtil.getDayDate(time);
+//            if (dataString.equalsIgnoreCase(nowString)) {
+//                return "今天 " + apm_text + formatTime;
+//            } else {
+//                return "昨天 " + apm_text + formatTime;
+//            }
+//        } else if (day < 2) {
+//            return "昨天 " + apm_text + formatTime;
+//        } else {
+//
+//            return other_date.replace(" ", " " + apm_text);
+//        }
+//    }
+
+    public static String getFullParseDatePoint(Context context,long time) {
         final Calendar mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(time);
         int apm = mCalendar.get(Calendar.AM_PM);
-        String apm_text = apm == 0 ? "上午" : "下午";
-        long now = System.currentTimeMillis();
-        long diff = now - time;
-        float day = diff / 3600000 / 24;
-        String formatTime = new SimpleDateFormat("hh:mm:ss", Locale.ROOT).format(new Date(time));
-        String other_date = new SimpleDateFormat("MM/dd hh:mm:ss", Locale.ROOT).format(new Date(time));
-        if (day < 1) {
-            String nowString = DateUtil.getDayDate(now);
-            String dataString = DateUtil.getDayDate(time);
-            if (dataString.equalsIgnoreCase(nowString)) {
-                return "今天 " + apm_text + formatTime;
-            } else {
-                return "昨天 " + apm_text + formatTime;
-            }
-        } else if (day < 2) {
-            return "昨天 " + apm_text + formatTime;
-        } else {
-
-            return other_date.replace(" ", " " + apm_text);
-        }
-    }
-
-    public static String getFullParseDatePoint(long time) {
-        final Calendar mCalendar = Calendar.getInstance();
-        mCalendar.setTimeInMillis(time);
-        int apm = mCalendar.get(Calendar.AM_PM);
-        String apm_text = apm == 0 ? "上午" : "下午";
+        String apm_text = apm == 0 ? context.getString(R.string.am) : context.getString(R.string.pm);
         long now = System.currentTimeMillis();
         long diff = now - time;
         float day = diff / 3600000 / 24;
@@ -309,12 +308,12 @@ public class DateUtil {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);
             if (dataString.equalsIgnoreCase(nowString)) {
-                return "今天 " + apm_text + formatTime;
+                return context.getString(R.string.today) + apm_text + formatTime;
             } else {
-                return "昨天 " + apm_text + formatTime;
+                return context.getString(R.string.yesterday)+ apm_text + formatTime;
             }
         } else if (day < 2) {
-            return "昨天 " + apm_text + formatTime;
+            return context.getString(R.string.yesterday)+ apm_text + formatTime;
         } else {
 
             return other_date.replace(" ", " " + apm_text);
@@ -328,7 +327,7 @@ public class DateUtil {
      * @param status
      * @return
      */
-    public static String getStrTimeToday(long time, int status) {
+    public static String getStrTimeToday(Context context,long time, int status) {
         final Calendar mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(time);
         long now = System.currentTimeMillis();
@@ -352,18 +351,18 @@ public class DateUtil {
             String nowString = DateUtil.getDayDate(now);
             String dataString = DateUtil.getDayDate(time);
             if (dataString.equalsIgnoreCase(nowString)) {
-                return "今天 " + formatTime;
+                return context.getString(R.string.today) + formatTime;
             } else {
-                return "昨天 " + formatTime;
+                return context.getString(R.string.yesterday) + formatTime;
             }
         } else if (day < 2) {
-            return "昨天 " + formatTime;
+            return context.getString(R.string.yesterday) + formatTime;
         } else {
             return other_date;
         }
     }
 
-    public static String getStrTimeTodayByDevice(long time) {
+    public static String getStrTimeTodayByDevice(Context context,long time) {
         final Calendar mCalendar = Calendar.getInstance();
         mCalendar.setTimeInMillis(time);
         long now = System.currentTimeMillis();
@@ -380,10 +379,10 @@ public class DateUtil {
             if (dataString.equalsIgnoreCase(nowString)) {
                 return formatTime;
             } else {
-                return "昨天 " + formatTime;
+                return context.getString(R.string.yesterday) + formatTime;
             }
         } else if (day < 2) {
-            return "昨天 " + formatTime;
+            return context.getString(R.string.yesterday) + formatTime;
         } else {
             return other_date;
         }
@@ -439,7 +438,7 @@ public class DateUtil {
         return strtodate;
     }
 
-    public static String secToTimeBefore(int second) {
+    public static String secToTimeBefore(Context context,int second) {
         int h = 0;
         int d = 0;
         int s = 0;
@@ -466,41 +465,44 @@ public class DateUtil {
         if (h >= 24) {
             int day = h / 24;
             h = day % 24;
-            return day + "天" + getStrTime(h, d, s);
+            return day + context.getString(R.string.day) + getStrTime(context,h, d, s);
         } else {
-            return getStrTime(h, d, s);
+            return getStrTime(context,h, d, s);
         }
     }
 
     @NonNull
-    private static String getStrTime(int hours, int min, int sec) {
+    private static String getStrTime(Context context,int hours, int min, int sec) {
+        String second = context.getString(R.string.second);
+        String minute = context.getString(R.string.minute);
+        String hour = context.getString(R.string.hour);
         if (hours == 0) {
             if (min == 0) {
                 if (sec == 0) {
                     return "";
                 } else {
-                    return sec + "秒";
+                    return sec + second;
                 }
             } else {
                 if (sec == 0) {
-                    return min + "分钟";
+                    return min + minute;
                 } else {
-                    return min + "分钟" + sec + "秒";
+                    return min + minute + sec + second;
                 }
             }
         } else {
             if (min == 0) {
                 if (sec == 0) {
-                    return hours + "小时";
+                    return hours + hour;
                 } else {
-                    return hours + "小时" + sec + "秒";
+                    return hours + hour + sec + second;
                 }
 
             } else {
                 if (sec == 0) {
-                    return hours + "小时" + min + "分钟";
+                    return hours + hour + min + minute;
                 } else {
-                    return hours + "小时" + min + "分钟" + sec + "秒";
+                    return hours + hour + min + minute + sec + second;
                 }
             }
         }

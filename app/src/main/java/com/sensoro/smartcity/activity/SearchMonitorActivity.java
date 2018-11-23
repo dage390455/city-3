@@ -75,8 +75,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     RecyclerView mSearchHistoryRv;
     @BindView(R.id.search_device_relation_rv)
     RecyclerView mRelationRecyclerView;
-    @BindView(R.id.search_device_tips)
-    LinearLayout tipsLinearLayout;
     @BindView(R.id.search_device_relation_layout)
     LinearLayout mRelationLayout;
     @BindView(R.id.index_return_top)
@@ -142,7 +140,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         initRelation();
         initIndex();
 
-        tvNoContentTip.setText("搜索不到相关内容");
+        tvNoContentTip.setText(R.string.cant_find_related_content);
     }
 
 
@@ -225,39 +223,14 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     }
 
 
-    //    public void analyseData(DeviceInfoListRsp deviceInfoListRsp) {
-//        this.mDataList.clear();
-//        this.mRelationLayout.setVisibility(View.GONE);
-//        this.mIndexListLayout.setVisibility(VISIBLE);
-//        for (int i = 0; i < deviceInfoListRsp.getData().size(); i++) {
-//            DeviceInfo deviceInfo = deviceInfoListRsp.getData().getInstance(i);
-//            switch (deviceInfo.getStatus()) {
-//                case SENSOR_STATUS_ALARM:
-//                    deviceInfo.setSort(1);
-//                    break;
-//                case SENSOR_STATUS_NORMAL:
-//                    deviceInfo.setSort(2);
-//                    break;
-//                case SENSOR_STATUS_LOST:
-//                    deviceInfo.setSort(3);
-//                    break;
-//                case SENSOR_STATUS_INACTIVE:
-//                    deviceInfo.setSort(4);
-//                    break;
-//                default:
-//                    break;
-//            }
-//            mDataList.add(deviceInfo);
-//        }
-//        refreshContentData();
-//    }
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
-        if (dataList != null && dataList.size() > 0) {
+        if (dataList != null) {
             Collections.sort(dataList);
             mSearchRcContentAdapter.updateData(dataList);
         }
-        setNoContentVisible(dataList == null || dataList.size() < 1);
+        setIndexListLayoutVisible(true);
+        setNoContentVisible(dataList == null || dataList.size() == 0);
 
     }
 
@@ -265,7 +238,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         acSearchDeviceRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-
     }
 
     @Override
@@ -293,14 +265,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void updateSearchHistoryData(List<String> strHistory) {
         setHistoryClearBtnVisible(strHistory != null && strHistory.size() > 0);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
-    }
-
-    @Override
-    public boolean getSearchDataListVisible() {
-        boolean isListVisible = indexLayoutList.getVisibility() == VISIBLE;
-        boolean isSearchHistoryHide = mSearchHistoryLayout.getVisibility() == View.GONE;
-        boolean isRelationLayoutHide = mRelationLayout.getVisibility() == View.GONE;
-        return isListVisible && isSearchHistoryHide && isRelationLayoutHide;
     }
 
     @Override
@@ -404,12 +368,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         indexLayoutList.setVisibility(isVisible ? VISIBLE : View.GONE);
     }
 
-    @Override
-    public void setTipsLinearLayoutVisible(boolean isVisible) {
-//        tipsLinearLayout.setVisibility(isVisible ? VISIBLE : View.GONE);
-        tipsLinearLayout.setVisibility(View.GONE);
-    }
-
 
     @Override
     public void returnTop() {
@@ -453,7 +411,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
             case R.id.search_device_clear_iv:
                 mKeywordEt.getText().clear();
                 mClearKeywordIv.setVisibility(View.GONE);
-                setTipsLinearLayoutVisible(false);
                 mPresenter.updateSearchHistoryData();
                 break;
             case R.id.index_return_top:
@@ -483,12 +440,10 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (!TextUtils.isEmpty(s.toString())) {
             setSearchHistoryLayoutVisible(false);
-            setRelationLayoutVisible(true);
             mClearKeywordIv.setVisibility(View.VISIBLE);
 //            mPresenter.filterDeviceInfo(s.toString());
         } else {
             setSearchHistoryLayoutVisible(true);
-            setRelationLayoutVisible(false);
             setIndexListLayoutVisible(false);
         }
     }
@@ -503,7 +458,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         if (actionId == EditorInfo.IME_ACTION_SEARCH) {
             String text = mKeywordEt.getText().toString();
             if (TextUtils.isEmpty(text)) {
-                SensoroToast.INSTANCE.makeText(mActivity, "请输入搜索内容", Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+                SensoroToast.INSTANCE.makeText(mActivity, mActivity.getString(R.string.enter_search_content), Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
                         .show();
                 return true;
             }

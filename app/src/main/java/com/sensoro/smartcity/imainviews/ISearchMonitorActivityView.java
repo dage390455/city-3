@@ -18,9 +18,6 @@ public interface ISearchMonitorActivityView extends IToast, IProgressDialog, IAc
 
     void setIndexListLayoutVisible(boolean isVisible);
 
-    void setTipsLinearLayoutVisible(boolean isVisible);
-
-
     void recycleViewRefreshComplete();
 
     void refreshData(List<DeviceInfo> dataList);
@@ -28,8 +25,6 @@ public interface ISearchMonitorActivityView extends IToast, IProgressDialog, IAc
     void updateRelationData(List<String> strList);
 
     void updateSearchHistoryData(List<String> strHistory);
-
-    boolean getSearchDataListVisible();
 
     void setEditText(String text);
 

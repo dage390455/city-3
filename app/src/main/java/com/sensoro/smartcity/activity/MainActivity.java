@@ -4,14 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
-import android.view.View;
 import android.widget.PopupWindow;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.sensoro.bottomnavigation.BottomNavigationBar;
+import com.sensoro.bottomnavigation.BottomNavigationItem;
+import com.sensoro.bottomnavigation.TextBadgeItem;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MainFragmentPageAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
@@ -27,25 +26,18 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView
-        , RadioGroup.OnCheckedChangeListener {
+        , BottomNavigationBar.OnTabSelectedListener {
 
 
     @BindView(R.id.ac_main_hvp_content)
     HomeViewPager acMainHvpContent;
-    @BindView(R.id.ac_main_rb_main)
-    RadioButton acMainRbMain;
-    @BindView(R.id.ac_main_rb_warning)
-    RadioButton acMainRbWarning;
-    @BindView(R.id.ac_main_rb_manage)
-    RadioButton acMainRbManage;
-    @BindView(R.id.ac_main_rl_guide)
-    RadioGroup acMainRlGuide;
-    @BindView(R.id.ac_main_tv_warning_count)
-    TextView acMainTvWarningCount;
+    @BindView(R.id.ac_main_bottom_navigation_bar)
+    BottomNavigationBar acMainBottomBar;
 
     private MainFragmentPageAdapter mPageAdapter;
     private PopupWindow mPopupWindow;
     private int mode;
+    private TextBadgeItem warnBadgeItem;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -63,7 +55,28 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private void initView() {
         initViewPager();
-        acMainRlGuide.setOnCheckedChangeListener(this);
+
+        initBottomBar();
+    }
+
+    private void initBottomBar() {
+        //todo
+        warnBadgeItem = new TextBadgeItem();
+        BottomNavigationItem homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, "首页");
+        BottomNavigationItem warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "预警");
+        BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_malfunction, "故障");
+        BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, "管理");
+        warnItem.setBadgeItem(warnBadgeItem);
+//        warnBadgeItem.hide();
+        acMainBottomBar.setTabSelectedListener(this);
+        acMainBottomBar
+                .addItem(homeItem)
+                .addItem(warnItem)
+                .addItem(malfunctionItem)
+                .addItem(managerItem)
+                .setFirstSelectedPosition(0)
+                .initialise();
+
     }
 
     @Override
@@ -125,39 +138,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
 
     @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        switch (checkedId) {
-            case R.id.ac_main_rb_main:
-                if (acMainRbMain.isChecked()) {
-                    setHpCurrentItem(0);
-                }
-
-                break;
-            case R.id.ac_main_rb_warning:
-                if (acMainRbWarning.isChecked()) {
-                    setHpCurrentItem(1);
-                }
-                break;
-            case R.id.ac_main_rb_manage:
-                if (acMainRbManage.isChecked()) {
-                    setHpCurrentItem(2);
-                }
-                break;
-
-        }
-    }
-
-
-    @Override
     public void setHpCurrentItem(int position) {
         acMainHvpContent.setCurrentItem(position);
 
     }
 
-    @Override
-    public void setRbChecked(int id) {
-        acMainRlGuide.check(id);
-    }
 
     @Override
     public void updateMainPageAdapterData(List<Fragment> fragments) {
@@ -167,18 +152,18 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void setHasDeviceBriefControl(boolean hasDeviceBriefControl) {
-        acMainRbMain.setVisibility(hasDeviceBriefControl ? View.VISIBLE : View.GONE);
+        acMainBottomBar.setBottomNavigationItemVisible(0, hasDeviceBriefControl);
 
     }
 
     @Override
     public void setHasAlarmInfoControl(boolean hasDeviceAlarmInfoControl) {
-        acMainRbWarning.setVisibility(hasDeviceAlarmInfoControl ? View.VISIBLE : View.GONE);
+        acMainBottomBar.setBottomNavigationItemVisible(1, hasDeviceAlarmInfoControl);
     }
 
     @Override
-    public void setHasManagerControl(boolean hasManagerControl) {
-        acMainRbManage.setVisibility(hasManagerControl ? View.VISIBLE : View.GONE);
+    public void setHasMalfunctionControl(boolean hasManagerControl) {
+        acMainBottomBar.setBottomNavigationItemVisible(2, hasManagerControl);
     }
 
     @Override
@@ -186,34 +171,41 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         try {
             if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
                 if (count > 0) {
-                    acMainTvWarningCount.setVisibility(View.VISIBLE);
-                    if (count > 99) {
-                        count = 99;
+                    if (warnBadgeItem.isHidden()) {
+                        warnBadgeItem.show();
                     }
-                    acMainTvWarningCount.setText(String.valueOf(count));
+                    warnBadgeItem.setText(String.valueOf(count));
                 } else {
-                    acMainTvWarningCount.setVisibility(View.GONE);
+                    warnBadgeItem.hide();
                 }
             } else {
-                acMainTvWarningCount.setVisibility(View.GONE);
+                warnBadgeItem.hide();
             }
         } catch (Exception e) {
             e.printStackTrace();
+            warnBadgeItem.hide();
         }
 
 
     }
 
+
+    @Override
+    public void setBottomBarSelected(int position) {
+        acMainBottomBar.selectTab(position);
+    }
+
     @Override
     public boolean isHomeFragmentChecked() {
-        return acMainRbMain.isChecked();
+        int currentItem = acMainHvpContent.getCurrentItem();
+        return currentItem == 0;
     }
 
 
     private void initViewPager() {
         mPageAdapter = new MainFragmentPageAdapter(mActivity.getSupportFragmentManager());
         acMainHvpContent.setAdapter(mPageAdapter);
-        acMainHvpContent.setOffscreenPageLimit(5);
+        acMainHvpContent.setOffscreenPageLimit(6);
     }
 
     @Override
@@ -224,5 +216,20 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
                 .statusBarDarkFont(true)
                 .init();
         return true;
+    }
+
+    @Override
+    public void onTabSelected(int position) {
+        setHpCurrentItem(position);
+    }
+
+    @Override
+    public void onTabUnselected(int position) {
+
+    }
+
+    @Override
+    public void onTabReselected(int position) {
+
     }
 }

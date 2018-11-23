@@ -68,7 +68,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
             EventBus.getDefault().post(eventData);
             getView().finishAc();
         } else {
-            getView().toastShort("请至少添加一张图片");
+            getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
         }
 
     }
@@ -92,8 +92,8 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
 //            updateButton();
         } else if (IMAGE_ITEM_ADD == position) {
             List<String> names = new ArrayList<>();
-            names.add("拍照");
-            names.add("相册");
+            names.add(mContext.getString(R.string.take_photo));
+            names.add(mContext.getString(R.string.album));
             getView().showDialog(this, names);
         } else {
             //打开预览

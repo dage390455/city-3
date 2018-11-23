@@ -1,8 +1,11 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
+import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.constraint.ConstraintLayout;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
@@ -20,10 +23,12 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContractListAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
+import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.presenter.ContractManagerActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 
 import java.util.List;
 
@@ -41,8 +46,8 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     TextView contractTitle;
     @BindView(R.id.contract_iv_add)
     ImageView contractIvAdd;
-    @BindView(R.id.rg_contract_select)
-    RadioGroup rgContractSelect;
+//    @BindView(R.id.rg_contract_select)
+//    RadioGroup rgContractSelect;
     @BindView(R.id.contract_ptr_list)
     ListView contractPtrList;
     @BindView(R.id.contract_return_top)
@@ -53,15 +58,31 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     ImageView imvNoContent;
     @BindView(R.id.ic_no_content)
     LinearLayout icNoContent;
+    @BindView(R.id.contract_tv_select_type)
+    TextView tvSelectType;
+    @BindView(R.id.contract_tv_select_status)
+    TextView tvSelectStatus;
+    @BindView(R.id.contract_cl_select_root)
+    ConstraintLayout clSelectRoot;
 
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
     private ContractListAdapter mContractListAdapter;
+    private InspectionTaskStatePopUtils mSelectStatusPop;
+    private Drawable blackTriangle;
+    private Drawable grayTriangle;
+    private InspectionTaskStatePopUtils mSelectTypePop;
 
+    @Override
+    protected void onCreateInit(Bundle savedInstanceState) {
+        setContentView(R.layout.fragment_contract_list);
+        ButterKnife.bind(mActivity);
+        initView();
+        mPresenter.initData(mActivity);
+    }
 
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        rgContractSelect.setOnCheckedChangeListener(this);
 
         refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
@@ -102,7 +123,69 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         contractIvMenuList.setOnClickListener(this);
         contractIvAdd.setOnClickListener(this);
         contractReturnTop.setOnClickListener(this);
+        tvSelectType.setOnClickListener(this);
+        tvSelectStatus.setOnClickListener(this);
+
+        blackTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle);
+        blackTriangle.setBounds(0,0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
+        grayTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle_gray);
+        grayTriangle.setBounds(0,0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
+        initSelectTypePop();
+        initSelectStatusPop();
     }
+
+    private void initSelectTypePop() {
+        mSelectTypePop = new InspectionTaskStatePopUtils(mActivity);
+        mSelectTypePop.setUpAnimation();
+        mSelectTypePop.clearAnimation();
+        mSelectTypePop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
+            @Override
+            public void onSelectDeviceTypeItemClick(View view, int position) {
+                //选择类型的pop点击事件
+                InspectionStatusCountModel item = mSelectTypePop.getItem(position);
+                mPresenter.doSelectTypeDevice(item);
+                Resources resources = mActivity.getResources();
+                if(position==0){
+                    tvSelectType.setText(R.string.all_contracts);
+                    tvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));
+                    tvSelectType.setCompoundDrawables(null,null,grayTriangle,null);
+                }else{
+                    tvSelectType.setTextColor(resources.getColor(R.color.c_252525));
+                    tvSelectType.setCompoundDrawables(null,null,blackTriangle,null);
+                    tvSelectType.setText(item.statusTitle);
+                }
+                mSelectTypePop.dismiss();
+
+            }
+        });
+    }
+
+    private void initSelectStatusPop() {
+        mSelectStatusPop = new InspectionTaskStatePopUtils(mActivity);
+        mSelectStatusPop.setUpAnimation();
+        mSelectStatusPop.clearAnimation();
+        mSelectStatusPop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
+            @Override
+            public void onSelectDeviceTypeItemClick(View view, int position) {
+                //选择类型的pop点击事件
+                InspectionStatusCountModel item = mSelectStatusPop.getItem(position);
+                mPresenter.doSelectStatusDevice(item);
+                Resources resources = mActivity.getResources();
+                if(position==0){
+                    tvSelectStatus.setTextColor(resources.getColor(R.color.c_a6a6a6));
+                    tvSelectStatus.setCompoundDrawables(null,null,grayTriangle,null);
+                    tvSelectStatus.setText(R.string.all_states);
+                }else{
+                    tvSelectStatus.setTextColor(resources.getColor(R.color.c_252525));
+                    tvSelectStatus.setCompoundDrawables(null,null,blackTriangle,null);
+                    tvSelectStatus.setText(item.statusTitle);
+                }
+                mSelectStatusPop.dismiss();
+
+            }
+        });
+    }
+
 
 
     @Override
@@ -135,6 +218,34 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         contractPtrList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+    }
+
+    @Override
+    public void UpdateSelectStatusPopList(List<InspectionStatusCountModel> list) {
+        if (mSelectStatusPop != null) {
+            mSelectStatusPop.updateSelectDeviceStatusList(list);
+        }
+    }
+
+    @Override
+    public void showSelectStatusPop() {
+        if (mSelectStatusPop!=null) {
+            mSelectStatusPop.showAsDropDown(clSelectRoot);
+        }
+    }
+
+    @Override
+    public void UpdateSelectTypePopList(List<InspectionStatusCountModel> list) {
+        if (mSelectTypePop != null) {
+            mSelectTypePop.updateSelectDeviceStatusList(list);
+        }
+    }
+
+    @Override
+    public void showSelectStTypePop() {
+        if (mSelectTypePop!=null) {
+            mSelectTypePop.showAsDropDown(clSelectRoot);
+        }
     }
 
     @Override
@@ -218,6 +329,15 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 contractPtrList.smoothScrollToPosition(0);
                 closeRefreshHeaderOrFooter();
                 break;
+            case R.id.contract_tv_select_type:
+                if(mSelectStatusPop!=null&&mSelectStatusPop.isShowing()){
+                    mSelectStatusPop.dismiss();
+                }
+                mPresenter.doSelectTypePop();
+                break;
+            case R.id.contract_tv_select_status:
+                mPresenter.doSelectStatusPop();
+                break;
         }
     }
 
@@ -246,20 +366,19 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 //        Toast.makeText(MainActivity.this, "你的性别为：" + output, Toast.LENGTH_SHORT).show();
         //恢复没有数据的状态
         refreshLayout.setNoMoreData(false);
-        switch (id) {
-            case R.id.rb_contract_all:
-                mPresenter.requestContractDataAll();
-                break;
-            case R.id.rb_contract_business:
-
-                mPresenter.requestContractDataBusiness();
-                break;
-            case R.id.rb_contract_person:
-                mPresenter.requestContractDataPerson();
-                break;
-            default:
-                break;
-        }
+//        switch (id) {
+//            case R.id.rb_contract_all:
+//                mPresenter.requestContractDataAll();
+//                break;
+//            case R.id.rb_contract_business:
+//                mPresenter.requestContractDataBusiness();
+//                break;
+//            case R.id.rb_contract_person:
+//                mPresenter.requestContractDataPerson();
+//                break;
+//            default:
+//                break;
+//        }
 
     }
 
@@ -272,13 +391,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         super.onDestroy();
     }
 
-    @Override
-    protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.fragment_contract_list);
-        ButterKnife.bind(mActivity);
-        initView();
-        mPresenter.initData(mActivity);
-    }
+
 
     @Override
     protected ContractManagerActivityPresenter createPresenter() {

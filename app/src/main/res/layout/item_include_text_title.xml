@@ -25,7 +25,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="5dp"
-        android:text="预警日志"
+        android:text="@string/alert_log"
         android:textColor="@color/c_030303"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"
@@ -37,12 +37,19 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="20dp"
-        android:text="历史日志"
+        android:text="@string/historical_log"
         android:textColor="@color/c_a6a6a6"
         android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/include_text_title_imv_arrows_left" />
-
+    <View
+        android:id="@+id/include_text_title_divider"
+        android:layout_width="0dp"
+        android:layout_height="0.5dp"
+        android:background="@color/c_dfdfdf"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

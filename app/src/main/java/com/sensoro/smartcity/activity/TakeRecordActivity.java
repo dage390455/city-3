@@ -251,7 +251,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
 
     private void showProgressDialog(int progress) {
         if (progressDialog != null) {
-            String title = "视频编译中";
+            String title = getString(R.string.video_compilation);
             progressDialog.setTitle(title);
             progressDialog.setProgress(progress);
             progressDialog.show();
@@ -281,7 +281,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
             recordedOver = false;
             startAnim();
         } else {
-            SensoroToast.INSTANCE.makeText("视频录制失败，请重试", Toast.LENGTH_SHORT).show();
+            SensoroToast.INSTANCE.makeText(getString(R.string.video_recording_failed_please_try_again), Toast.LENGTH_SHORT).show();
             finish();
         }
     }

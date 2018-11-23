@@ -22,13 +22,14 @@
             android:cropToPadding="true"
             android:padding="15dp"
             android:src="@drawable/arrows_left"
-            android:visibility="gone" />
+            android:visibility="visible" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:text="二维码"
+            android:layout_centerVertical="true"
+            android:layout_toEndOf="@id/iv_contract_result_back"
+            android:text="@string/contract_result_title"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/city_large_size" />
 
@@ -39,7 +40,8 @@
             android:layout_alignParentEnd="true"
             android:layout_centerInParent="true"
             android:layout_marginRight="10dp"
-            android:text="完成"
+            android:text="@string/contract_result_finish"
+            android:visibility="gone"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/city_tiny_large_size" />
 
@@ -62,7 +64,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
-            android:text="业主扫描此二维码，生成合同预览" />
+            android:text="@string/contract_result_tip" />
 
         <Button
             android:id="@+id/bt_share"
@@ -73,7 +75,7 @@
             android:gravity="center"
             android:paddingStart="50dp"
             android:paddingEnd="50dp"
-            android:text="分享"
+            android:text="@string/contract_result_share"
             android:textColor="@color/c_29c093"
             android:textSize="@dimen/city_btn_text_size" />
     </LinearLayout>

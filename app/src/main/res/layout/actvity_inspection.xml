@@ -57,7 +57,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="监测点标签"
+                android:text="@string/inspection_exception_detail_monitor_point_detail"
                 android:textColor="@color/c_252525"
                 android:textSize="14sp" />
 
@@ -96,7 +96,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="按键测试："
+                android:text="@string/inspection_button_test"
                 android:textSize="14sp"
                 android:textColor="@color/c_252525"
                 />
@@ -104,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:lineSpacingMultiplier="1.5"
-                android:text="长按设备按钮3秒后，确认指示灯和提示音工作正常"
+                android:text="@string/inspection_button_test_tip"
                 android:textSize="14sp"
                 android:textColor="@color/c_252525"
                 />
@@ -118,7 +118,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="检查外观：是否明显损坏及积灰"
+            android:text="@string/inspection_button_check_appearance"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:textSize="14sp"
@@ -135,7 +135,7 @@
         android:textSize="12sp"
         android:textColor="@color/c_a6a6a6"
         android:lineSpacingMultiplier="1.5"
-        android:text="长按按键3秒后，正常按钮将变为可点击，若未变为可点击，则为异常状态，在异常上报中备注蓝牙无效"
+        android:text="@string/inspection_button_check_ble"
         android:layout_marginTop="14dp"
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
@@ -160,7 +160,7 @@
             android:gravity="center_horizontal"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="异常"
+            android:text="@string/inspection_exception"
             android:textColor="@color/white"
             android:textSize="16sp" />
 
@@ -174,7 +174,7 @@
             android:gravity="center_horizontal"
             android:paddingBottom="10dp"
             android:paddingTop="10dp"
-            android:text="正常"
+            android:text="@string/normal"
             android:textColor="@color/white"
             android:textSize="16sp" />
 

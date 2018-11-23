@@ -41,7 +41,7 @@
         android:id="@+id/tv_hint"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="长按摄像"
+        android:text="@string/take_record_camera"
         android:textSize="14sp"
         android:textColor="#fff"
         android:layout_centerHorizontal="true"

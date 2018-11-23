@@ -3,14 +3,12 @@ package com.sensoro.smartcity.fragment;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Rect;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
@@ -23,7 +21,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.gyf.barlibrary.ImmersionBar;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
@@ -35,6 +32,7 @@ import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.presenter.WarnFragmentPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
@@ -50,25 +48,25 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPresenter> implements
         IWarnFragmentView, MainWarnFragRcContentAdapter.AlarmConfirmStatusClickListener {
-    @BindView(R.id.fg_main_warn_title_root)
+    @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
-    @BindView(R.id.fg_main_warn_frame_search)
+    @BindView(R.id.fg_main_top_search_frame_search)
     FrameLayout fgMainWarnFrameSearch;
-    @BindView(R.id.fg_main_warn_et_search)
+    @BindView(R.id.fg_main_top_search_et_search)
     EditText fgMainWarnEtSearch;
-    @BindView(R.id.fg_main_warn_imv_calendar)
+    @BindView(R.id.fg_main_top_search_imv_calendar)
     ImageView fgMainWarnImvCalendar;
     @BindView(R.id.fg_main_warn_rc_content)
     RecyclerView fgMainWarnRcContent;
-    @BindView(R.id.tv_warn_alarm_search_cancel)
+    @BindView(R.id.tv_top_search_alarm_search_cancel)
     TextView tvWarnAlarmSearchCancel;
     @BindView(R.id.refreshLayout)
     SmartRefreshLayout refreshLayout;
-    @BindView(R.id.fg_main_warn_tv_date_edit)
+    @BindView(R.id.fg_main_top_search_tv_date_edit)
     TextView fgMainWarnTvDateEdit;
-    @BindView(R.id.fg_main_warn_imv_date_close)
+    @BindView(R.id.fg_main_warn_top_search_date_close)
     ImageView fgMainWarnImvDateClose;
-    @BindView(R.id.fg_main_warn_rl_date_edit)
+    @BindView(R.id.fg_main_top_search_rl_date_edit)
     RelativeLayout fgMainWarnRlDateEdit;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
@@ -104,7 +102,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
                     // 当按了搜索之后关闭软键盘
                     String text = fgMainWarnEtSearch.getText().toString();
                     mPresenter.requestSearchData(DIRECTION_DOWN, text);
-                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+                    AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
                     return true;
                 }
                 return false;
@@ -137,8 +135,6 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             fgMainWarnEtSearch.setFocusableInTouchMode(false);
         }
     }
-
-
 
 
     public void forceOpenSoftKeyboard() {
@@ -303,25 +299,25 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         super.onDestroyView();
     }
 
-    @OnClick({R.id.fg_main_warn_frame_search, R.id.fg_main_warn_et_search, R.id.fg_main_warn_imv_calendar, R.id.fg_main_warn_imv_date_close,
-            R.id.tv_warn_alarm_search_cancel, R.id.alarm_return_top})
+    @OnClick({R.id.fg_main_top_search_frame_search, R.id.fg_main_top_search_et_search, R.id.fg_main_top_search_imv_calendar, R.id.fg_main_warn_top_search_date_close,
+            R.id.tv_top_search_alarm_search_cancel, R.id.alarm_return_top})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.fg_main_warn_frame_search:
-            case R.id.fg_main_warn_et_search:
+            case R.id.fg_main_top_search_frame_search:
+            case R.id.fg_main_top_search_et_search:
                 fgMainWarnEtSearch.requestFocus();
                 fgMainWarnEtSearch.setCursorVisible(true);
 //                forceOpenSoftKeyboard();
                 break;
-            case R.id.fg_main_warn_imv_calendar:
+            case R.id.fg_main_top_search_imv_calendar:
                 mPresenter.doCalendar(fgMainWarnTitleRoot);
                 break;
-            case R.id.fg_main_warn_imv_date_close:
+            case R.id.fg_main_warn_top_search_date_close:
                 fgMainWarnRlDateEdit.setVisibility(View.GONE);
                 String text = fgMainWarnEtSearch.getText().toString();
                 mPresenter.requestSearchData(DIRECTION_DOWN, text);
                 break;
-            case R.id.tv_warn_alarm_search_cancel:
+            case R.id.tv_top_search_alarm_search_cancel:
                 doCancelSearch();
                 break;
             case R.id.alarm_return_top:
@@ -345,7 +341,8 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             mRcContentAdapter.setData(deviceAlarmLogInfoList);
             mRcContentAdapter.notifyDataSetChanged();
         }
-        setNoContentVisible(deviceAlarmLogInfoList.size()<1);
+        LogUtils.loge("updateAlarmListAdapter-->> 刷新 " + mRcContentAdapter.getData().size());
+        setNoContentVisible(deviceAlarmLogInfoList.size() < 1);
 
     }
 
@@ -395,7 +392,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         if (isVisible) {
             tvWarnAlarmSearchCancel.setVisibility(View.VISIBLE);
 //            setEditTextState(false);
-            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(),fgMainWarnEtSearch);
+            AppUtils.dismissInputMethodManager(mRootFragment.getActivity(), fgMainWarnEtSearch);
         } else {
             tvWarnAlarmSearchCancel.setVisibility(View.GONE);
 //            setEditTextState(true);
@@ -417,17 +414,33 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
 
     @Override
     public void onConfirmStatusClick(View view, int position, boolean isReConfirm) {
-        mPresenter.clickItemByConfirmStatus(position, isReConfirm);
+        try {
+            DeviceAlarmLogInfo deviceAlarmLogInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.clickItemByConfirmStatus(deviceAlarmLogInfo, isReConfirm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
     @Override
     public void onCallPhone(View v, int position) {
-        mPresenter.doContactOwner(position);
+        try {
+            DeviceAlarmLogInfo deviceAlarmLogInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.doContactOwner(deviceAlarmLogInfo);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void onItemClick(View view, int position, boolean isReConfirm) {
-        mPresenter.clickItem(position, isReConfirm);
-    }
+        try {
+            DeviceAlarmLogInfo deviceAlarmLogInfo = mRcContentAdapter.getData().get(position);
+            mPresenter.clickItem(deviceAlarmLogInfo, isReConfirm);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
+    }
 }

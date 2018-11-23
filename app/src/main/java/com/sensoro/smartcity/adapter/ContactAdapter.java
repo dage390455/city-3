@@ -20,6 +20,7 @@ import butterknife.ButterKnife;
 public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactViewHolder> {
     private final Activity mActivity;
     List<DeployRecordInfo.NotificationBean> mList = new ArrayList<>();
+
     public ContactAdapter(Activity activity) {
         mActivity = activity;
     }
@@ -35,7 +36,7 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
     public void onBindViewHolder(@NonNull ContactViewHolder holder, int position) {
         DeployRecordInfo.NotificationBean notificationBean = mList.get(position);
 //        if (notificationBean.getContent()!=null&&notificationBean.getContent()!=null) {
-            holder.itemAdapterContactNamePhone.setText(notificationBean.getContact()+"："+notificationBean.getContent());
+        holder.itemAdapterContactNamePhone.setText(notificationBean.getContact() + "：" + notificationBean.getContent());
 //        }
 
     }
@@ -55,9 +56,10 @@ public class ContactAdapter extends RecyclerView.Adapter<ContactAdapter.ContactV
 
         @BindView(R.id.item_adapter_contact_name_phone)
         TextView itemAdapterContactNamePhone;
-        public ContactViewHolder(View itemView) {
+
+        ContactViewHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
         }
     }
 }

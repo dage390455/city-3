@@ -1,9 +1,8 @@
-package com.sensoro.smartcity.presenter;
+package com.sensoro.smartcity.imainviews;
 
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
-import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
 
 import java.util.List;

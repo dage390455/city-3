@@ -17,7 +17,6 @@
             android:layout_width="@dimen/x250"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/y1"
-            android:text="11/10 21:00:00"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/city_normal_size" />
     </LinearLayout>

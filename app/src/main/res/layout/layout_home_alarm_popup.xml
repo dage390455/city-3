@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_weight="1"
-        android:text="发生新的预警事件"
+        android:text="@string/occur_alarm_event"
         android:paddingEnd="15dp"
         android:textColor="@color/white" />
 
@@ -40,7 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="去查看"
+            android:text="@string/look"
             android:textColor="@color/white" />
         <ImageView
 

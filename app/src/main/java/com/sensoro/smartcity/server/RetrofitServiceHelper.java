@@ -18,10 +18,12 @@ import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.ChangeInspectionTaskStateRsp;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
+import com.sensoro.smartcity.server.response.ContractInfoRsp;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeployRecordRsp;
+import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmItemRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.DeviceAlarmTimeRsp;
@@ -37,12 +39,14 @@ import com.sensoro.smartcity.server.response.InspectionTaskExecutionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskInstructionRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
+import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
+import com.sensoro.smartcity.server.response.MalfunctionListRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
-import com.sensoro.smartcity.server.response.StationInfoRsp;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
@@ -80,6 +84,7 @@ public enum RetrofitServiceHelper {
     private static final long DEFAULT_TIMEOUT = 8 * 1000;
     private final String HEADER_SESSION_ID = "x-session-id";
     private final String HEADER_USER_AGENT = "User-Agent";
+    private final String HEADER_INTERNATIONALIZATION_HEADER = "accept-language";
     private final String HEADER_CONTENT_TYPE = "Content-Type";
     private final String HEADER_ACCEPT = "Accept";
     private volatile int mUrlType = -1;
@@ -98,6 +103,7 @@ public enum RetrofitServiceHelper {
                 .registerTypeAdapter(short.class, new NumberDeserializer())
                 .registerTypeAdapter(Number.class, new NumberDeserializer())
                 .registerTypeAdapter(JsonObject.class, new JsonObjectDeserializer())
+                .registerTypeAdapter(String.class, new JsonStringDeserializer())
                 .registerTypeAdapter(String.class, new StringDeserializer());
         gson = gsonBuilder.create();
         //支持RxJava
@@ -173,27 +179,23 @@ public enum RetrofitServiceHelper {
     public int getBaseUrlType() {
         if (mUrlType == -1) {
             mUrlType = 0;
-            try {
-                mUrlType = PreferencesHelper.getInstance().getBaseUrlType();
-                if (mUrlType != 0) {
-                    switch (mUrlType) {
-                        case 1:
-                            BASE_URL = SCOPE_DEMO;
-                            break;
-                        case 2:
-                            BASE_URL = SCOPE_TEST;
-                            break;
-                        case 3:
-                            BASE_URL = SCOPE_MOCHA;
-                            break;
-                        default:
-                            BASE_URL = SCOPE_MASTER;
-                            break;
-                    }
-                    retrofitService = builder.baseUrl(BASE_URL).build().create(RetrofitService.class);
+            mUrlType = PreferencesHelper.getInstance().getBaseUrlType();
+            if (mUrlType != 0) {
+                switch (mUrlType) {
+                    case 1:
+                        BASE_URL = SCOPE_DEMO;
+                        break;
+                    case 2:
+                        BASE_URL = SCOPE_TEST;
+                        break;
+                    case 3:
+                        BASE_URL = SCOPE_MOCHA;
+                        break;
+                    default:
+                        BASE_URL = SCOPE_MASTER;
+                        break;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                retrofitService = builder.baseUrl(BASE_URL).build().create(RetrofitService.class);
             }
         }
         return mUrlType;
@@ -219,11 +221,22 @@ public enum RetrofitServiceHelper {
                 Request original = chain.request();
                 Request.Builder builder = original.newBuilder();
                 //header
-                builder.headers(original.headers())
-                        .header(HEADER_USER_AGENT, "Android/" +
-                                Build.VERSION.RELEASE);
+                if (AppUtils.isChineseLanguage()) {
+                    builder.headers(original.headers())
+                            .header(HEADER_INTERNATIONALIZATION_HEADER, "zh-CN")
+                            .header(HEADER_USER_AGENT, "Android/" +
+                                    Build.VERSION.RELEASE);
 //                        .addHeader(HEADER_ACCEPT, "application/json")
 //                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
+                } else {
+                    builder.headers(original.headers())
+                            .header(HEADER_INTERNATIONALIZATION_HEADER, "en-US")
+                            .header(HEADER_USER_AGENT, "Android/" +
+                                    Build.VERSION.RELEASE);
+//                        .addHeader(HEADER_ACCEPT, "application/json")
+//                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
+                }
+
                 if (!TextUtils.isEmpty(getSessionId())) {
                     builder.header(HEADER_SESSION_ID, getSessionId());
                 }
@@ -235,11 +248,11 @@ public enum RetrofitServiceHelper {
                 //重定向
 //                boolean redirect = response.isRedirect();
                 int code = response.code();
-                try {
 //                    if (redirect && (code == 308 || code == 307)) {
-                    //仅针对308和307重定向问题
-                    if (code == 308 || code == 307) {
-                        String location = response.header("Location");
+                //仅针对308和307重定向问题
+                if (code == 308 || code == 307) {
+                    String location = response.header("Location");
+                    if (location != null && location.length() > 1) {
                         if (location.startsWith("/")) {
                             location = location.substring(1);
                         }
@@ -247,8 +260,6 @@ public enum RetrofitServiceHelper {
                                 .build();
                         response = chain.proceed(newRequest);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
                 return response;
             }
@@ -368,6 +379,23 @@ public enum RetrofitServiceHelper {
         Observable<DeviceAlarmLogRsp> deviceAlarmLogList = retrofitService.getDeviceAlarmLogList(10, page, sn, deviceName, phone, search, beginTime, endTime, unionTypes);
         RxApiManager.getInstance().add("getDeviceAlarmLogList", deviceAlarmLogList.subscribe());
         return deviceAlarmLogList;
+    }
+
+    /**
+     * 获取故障信息日志
+     *
+     * @param page
+     * @param sn
+     * @param deviceName
+     * @param search
+     * @param beginTime
+     * @param endTime
+     * @return
+     */
+    public Observable<MalfunctionListRsp> getDeviceMalfunctionLogList(int page, String sn, String deviceName, String search, Long beginTime, Long endTime) {
+        Observable<MalfunctionListRsp> deviceMalfunctionLogList = retrofitService.getDeviceMalfunctionLogList(20, page, sn, deviceName, search, beginTime, endTime);
+        RxApiManager.getInstance().add("getDeviceMalfunctionLogList", deviceMalfunctionLogList.subscribe());
+        return deviceMalfunctionLogList;
     }
 
     /**
@@ -504,9 +532,9 @@ public enum RetrofitServiceHelper {
         return deviceDeployRspObservable;
     }
 
-    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, double longitude, double latitude){
-        Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude,latitude);
-        RxApiManager.getInstance().add("deployDeviceDetail",deployDeviceDetail.subscribe());
+    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, Double longitude, Double latitude) {
+        Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude, latitude);
+        RxApiManager.getInstance().add("deployDeviceDetail", deployDeviceDetail.subscribe());
         return deployDeviceDetail;
     }
 
@@ -567,7 +595,7 @@ public enum RetrofitServiceHelper {
      * @param name
      * @return
      */
-    public Observable<StationInfoRsp> doStationDeploy(String sn, double lon, double lat, List<String> tags, String
+    public Observable<DeployStationInfoRsp> doStationDeploy(String sn, double lon, double lat, List<String> tags, String
             name) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -588,7 +616,7 @@ public enum RetrofitServiceHelper {
         }
 
         RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
-        Observable<StationInfoRsp> stationInfoRspObservable = retrofitService.doStationDeploy(sn, body);
+        Observable<DeployStationInfoRsp> stationInfoRspObservable = retrofitService.doStationDeploy(sn, body);
         RxApiManager.getInstance().add("doStationDeploy", stationInfoRspObservable.subscribe());
         return stationInfoRspObservable;
     }
@@ -671,8 +699,8 @@ public enum RetrofitServiceHelper {
      * @param sn
      * @return
      */
-    public Observable<StationInfoRsp> getStationDetail(String sn) {
-        Observable<StationInfoRsp> stationDetail = retrofitService.getStationDetail(sn);
+    public Observable<DeployStationInfoRsp> getStationDetail(String sn) {
+        Observable<DeployStationInfoRsp> stationDetail = retrofitService.getStationDetail(sn);
         RxApiManager.getInstance().add("getStationDetail", stationDetail.subscribe());
         return stationDetail;
     }
@@ -820,6 +848,12 @@ public enum RetrofitServiceHelper {
         return contractAddRspObservable;
     }
 
+    public Observable<ContractInfoRsp> getContractInfo(String id) {
+        Observable<ContractInfoRsp> contractInfo = retrofitService.getContractInfo(id);
+        RxApiManager.getInstance().add("contractInfo", contractInfo.subscribe());
+        return contractInfo;
+    }
+
     /**
      * 合同检索
      *
@@ -830,15 +864,23 @@ public enum RetrofitServiceHelper {
      * @param offset
      * @return
      */
-    public Observable<ContractsListRsp> searchContract(Integer contractType, Long beginTime, Long endTime, Integer
-            limit,
-                                                       Integer offset) {
+    public Observable<ContractsListRsp> searchContract(Integer contractType, Integer confirmed, Long beginTime, Long endTime, Integer
+            limit, Integer offset) {
         JSONObject jsonObject = new JSONObject();
         try {
             JSONObject jsonObject1 = new JSONObject();
             if (contractType != null) {
                 jsonObject1.put("contract_type", contractType);
             }
+
+            if (confirmed != null) {
+                if (confirmed == 1) {
+                    jsonObject1.put("confirmed", false);
+                } else {
+                    jsonObject1.put("confirmed", true);
+                }
+            }
+
             if (beginTime != null) {
                 jsonObject1.put("beginTime", beginTime);
             }
@@ -931,6 +973,33 @@ public enum RetrofitServiceHelper {
             return retrofitService.getAlarmCount(startTime, endTime, null, sn);
         } else {
             return retrofitService.getAlarmCount(startTime, endTime, stringBuilder.toString(), sn);
+        }
+    }
+
+    /**
+     * 获取半年故障次数
+     *
+     * @param startTime
+     * @param endTime
+     * @param displayStatus
+     * @param sn
+     * @return
+     */
+    public Observable<MalfunctionCountRsp> getMalfunctionCount(Long startTime, Long endTime, String[] malfunctionStatus, String sn) {
+        StringBuilder stringBuilder = new StringBuilder();
+        if (malfunctionStatus != null && malfunctionStatus.length > 0) {
+            for (int i = 0; i < malfunctionStatus.length; i++) {
+                if (i == malfunctionStatus.length - 1) {
+                    stringBuilder.append(malfunctionStatus[i]);
+                } else {
+                    stringBuilder.append(malfunctionStatus[i]).append(",");
+                }
+            }
+        }
+        if (TextUtils.isEmpty(stringBuilder)) {
+            return retrofitService.getMalfunctionCount(startTime, endTime, null, sn);
+        } else {
+            return retrofitService.getMalfunctionCount(startTime, endTime, stringBuilder.toString(), sn);
         }
     }
 

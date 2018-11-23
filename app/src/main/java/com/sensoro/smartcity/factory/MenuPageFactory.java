@@ -21,22 +21,24 @@ public class MenuPageFactory {
         LogUtils.loge("logPresenter", "phoneId = " + phoneId);
         //TODO 处理Character信息
 //                      mCharacter = userInfo.getCharacter();
-        String roles = userInfo.getRoles();
-        eventLoginData.roles = roles;
+        eventLoginData.roles = userInfo.getRoles();
         String isSpecific = userInfo.getIsSpecific();
         eventLoginData.isSupperAccount = getIsSupperAccount(isSpecific);
         eventLoginData.hasStation = getHasStationDeploy(grants);
         eventLoginData.hasContract = getHasContract(grants);
         eventLoginData.hasScanLogin = getHasScanLogin(grants);
-        eventLoginData.hasSubMerchant = getHasSubMerchant(roles, isSpecific);
+        eventLoginData.hasSubMerchant = getHasSubMerchant(grants);
+        eventLoginData.hasMerchantChange = getHasMerchantChange(grants);
         eventLoginData.hasInspectionTaskList = getHasInspectionTaskList(grants);
         eventLoginData.hasInspectionTaskModify = getHasInspectionTaskModify(grants);
         eventLoginData.hasInspectionDeviceList = getHasInspectionDeviceList(grants);
         eventLoginData.hasInspectionDeviceModify = getHasInspectionDeviceModify(grants);
         eventLoginData.hasAlarmInfo = getHasAlarmInfo(grants);
+        eventLoginData.hasMalfunction = getHasMalfunction(grants);
         eventLoginData.hasDeviceBrief = getHasDeviceBriefList(grants);
         eventLoginData.hasSignalCheck = getHasSignalCheck(grants);
         eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
+        eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
         LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
         //
         UserInfo.Account account = userInfo.getAccount();
@@ -113,12 +115,33 @@ public class MenuPageFactory {
     /**
      * 判断是否有子账户权限
      *
-     * @param roles
-     * @param isSupperAccountStr
+     * @param grants
      * @return
      */
-    public static boolean getHasSubMerchant(String roles, String isSupperAccountStr) {
-        return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr) || !"business".equalsIgnoreCase(roles);
+    public static boolean getHasSubMerchant(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> user = grants.getUser();
+            if (user != null) {
+                return user.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 判断是否有子账户权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasMerchantChange(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> user = grants.getUser();
+            if (user != null) {
+                return user.contains("control");
+            }
+        }
+        return false;
     }
 
     /**
@@ -239,6 +262,38 @@ public class MenuPageFactory {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
                 return grantsDevice.contains("signalConfig");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 故障权限
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasMalfunction(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsMalfunction = grants.getMalfunction();
+            if (grantsMalfunction != null) {
+                return grantsMalfunction.contains("list");
+            }
+        }
+        return false;
+    }
+
+    /**
+     * 是否强制上传
+     *
+     * @param grants
+     * @return
+     */
+    public static boolean getHasBadSignalUpload(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDeploy = grants.getDeploy();
+            if (grantsDeploy != null) {
+                return grantsDeploy.contains("badSignalUpload");
             }
         }
         return false;

@@ -2,6 +2,9 @@ package com.sensoro.smartcity.constant;
 
 import com.sensoro.smartcity.R;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by sensoro on 17/7/27.
  */
@@ -45,8 +48,8 @@ public interface Constants {
 //            R.mipmap.ic_menu_location};
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
-    String[] DEVICE_STATUS_ARRAY = {"预警", "正常", "失联", "未激活"};
-    String[] STATION_STATUS_ARRAY = {"未激活", "正常", "报警", "紧急报警", "超时未上报", "离线"};
+    int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warm, R.string.normal, R.string.status_lost, R.string.status_inactive,R.string.status_malfunction};
+    int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline,R.string.status_malfunction};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
     //    String[] INDEX_TYPE_ARRAY = {
@@ -58,45 +61,45 @@ public interface Constants {
 //            "PM2.5/10", "烟感", "温湿度",
 //            "消防液压", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
 //    };
-    String[] SELECT_TYPE = {
-            "全部类型",
-            "甲烷", "一氧化碳", "二氧化碳",
-            "二氧化氮", "PM2.5/10", "光线",
-            "井位", "烟感", "温湿度", "倾角", "火焰",
-            "水位监测", "跑冒滴漏", "液化石油气", "紧急呼叫",
-            "追踪器", "消防液压", "地磁",
-            "门锁监测", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
-    };
+//    String[] SELECT_TYPE = {
+//            "全部类型",
+//            "甲烷", "一氧化碳", "二氧化碳",
+//            "二氧化氮", "PM2.5/10", "光线",
+//            "井位", "烟感", "温湿度", "倾角", "火焰",
+//            "水位监测", "跑冒滴漏", "液化石油气", "紧急呼叫",
+//            "追踪器", "消防液压", "地磁",
+//            "门锁监测", "温度贴片", "通断检测", "电表", "电气火灾", "红外线", "手动报警", "声光报警"
+//    };
 
-    Integer[] SELECT_TYPE_RESOURCE = {
-            R.drawable.type_all, R.drawable.type_ch4, R.drawable.type_co, R.drawable.type_co2,
-            R.drawable.type_no2, R.drawable.type_pm, R.drawable.type_light, R.drawable.type_well_position,
-            R.drawable.type_smoke, R.drawable.type_tempature_humidity, R.drawable.type_inclination,
-            R.drawable.type_flame, R.drawable.type_water_monitoring, R.drawable.type_leak,
-            R.drawable.type_gas, R.drawable.type_emergency_call, R.drawable.type_tracking_device,
-            R.drawable.type_fire_hydraulic, R.drawable.type_geomagnetic, R.drawable.type_lock_monitoring,
-            R.drawable.type_tempature, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
-            , R.mipmap.ic_sensor_electric_alarm, R.mipmap.ic_sensor_infrared,
-            R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
-    };
+//    Integer[] SELECT_TYPE_RESOURCE = {
+//            R.drawable.type_all, R.drawable.type_ch4, R.drawable.type_co, R.drawable.type_co2,
+//            R.drawable.type_no2, R.drawable.type_pm, R.drawable.type_light, R.drawable.type_well_position,
+//            R.drawable.type_smoke, R.drawable.type_tempature_humidity, R.drawable.type_inclination,
+//            R.drawable.type_flame, R.drawable.type_water_monitoring, R.drawable.type_leak,
+//            R.drawable.type_gas, R.drawable.type_emergency_call, R.drawable.type_tracking_device,
+//            R.drawable.type_fire_hydraulic, R.drawable.type_geomagnetic, R.drawable.type_lock_monitoring,
+//            R.drawable.type_tempature, R.drawable.type_on_off_monitoring, R.drawable.type_ammeter
+//            , R.mipmap.ic_sensor_electric_alarm, R.mipmap.ic_sensor_infrared,
+//            R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
+//    };
 
-    String SELECT_TYPE_VALUES[] = {
-            "all", "ch4", "co", "co2", "no2", "pm10,pm2_5", "light", "cover,level", "smoke",
-            "humidity,temperature", "collision,pitch,roll", "flame", "distance", "drop", "lpg",
-            "alarm", "altitude,latitude,longitude", "waterPressure", "magnetic", "door",
-            "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
-            "TOTAL_POWER,VOLTAGE_A," +
-            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
-            "manual_alarm", "sound_light_alarm"
-    };
-    String SENSOR_MENU_MATCHER_ARRAY[] = {
-            "all", "ch4", "co", "co2", "no2", "pm10|pm2_5",
-            "light", "cover|level", "smoke", "humidity|temperature", "collision|pitch|roll", "flame",
-            "distance", "drop", "lpg", "alarm", "latitude|longitude|altitude", "waterPressure", "magnetic",
-            "door", "temp1", "connection", "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
-            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
-            "manual_alarm", "sound_light_alarm"
-    };
+//    String SELECT_TYPE_VALUES[] = {
+//            "all", "ch4", "co", "co2", "no2", "pm10,pm2_5", "light", "cover,level", "smoke",
+//            "humidity,temperature", "collision,pitch,roll", "flame", "distance", "drop", "lpg",
+//            "alarm", "altitude,latitude,longitude", "waterPressure", "magnetic", "door",
+//            "humidity,temp1,temperature", "connection", "CURRENT_A,CURRENT_B,CURRENT_C,ID," +
+//            "TOTAL_POWER,VOLTAGE_A," +
+//            "VOLTAGE_B,VOLTAGE_C", "curr_val,elec_energy_val,leakage_val,power_val,temp_val,vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
+//    String SENSOR_MENU_MATCHER_ARRAY[] = {
+//            "all", "ch4", "co", "co2", "no2", "pm10|pm2_5",
+//            "light", "cover|level", "smoke", "humidity|temperature", "collision|pitch|roll", "flame",
+//            "distance", "drop", "lpg", "alarm", "latitude|longitude|altitude", "waterPressure", "magnetic",
+//            "door", "temp1", "connection", "CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C",
+//            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
+//            "manual_alarm", "sound_light_alarm"
+//    };
     //    String INDEX_TYPE_VALUES[] = {
 //            "all",
 //            "alarm", "altitude,latitude,longitude", "ch4",
@@ -122,42 +125,42 @@ public interface Constants {
 //            "curr_val|elec_energy_val|leakage_val|power_val|temp_val|vol_val", "infrared",
 //            "manual_alarm", "sound_light_alarm"
 //    };
-    Integer[] TYPE_MENU_RESOURCE = {
-            R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
-            R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,
-            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_magnetic, R.mipmap.ic_sensor_lock,
-            R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
-            R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
-            R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
-            .ic_sensor_temp_humi, R.mipmap.ic_sensor_connection, R.mipmap.ic_sensor_electric_meter, R.mipmap
-            .ic_sensor_electric_alarm, R.mipmap
-            .ic_sensor_infrared, R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
+//    Integer[] TYPE_MENU_RESOURCE = {
+//            R.mipmap.ic_sensor_call, R.mipmap.ic_sensor_tracker, R.mipmap.ic_sensor_ch4,
+//            R.mipmap.ic_sensor_co, R.mipmap.ic_sensor_co2, R.mipmap.ic_sensor_angle,
+//            R.mipmap.ic_sensor_cover, R.mipmap.ic_sensor_level, R.mipmap.ic_sensor_magnetic, R.mipmap.ic_sensor_lock,
+//            R.mipmap.ic_sensor_drop, R.mipmap.ic_sensor_flame, R.mipmap.ic_sensor_light,
+//            R.mipmap.ic_sensor_lpg, R.mipmap.ic_sensor_no2, R.mipmap.ic_sensor_pm,
+//            R.mipmap.ic_sensor_smoke, R.mipmap.ic_sensor_temp_humi, R.mipmap.ic_sensor_water_pressure, R.mipmap
+//            .ic_sensor_temp_humi, R.mipmap.ic_sensor_connection, R.mipmap.ic_sensor_electric_meter, R.mipmap
+//            .ic_sensor_electric_alarm, R.mipmap
+//            .ic_sensor_infrared, R.mipmap.ic_sensor_manual_alarm, R.mipmap.ic_sensor_sound_light_alarm
+//
+//    };
+//    String[] ALARM_TAG_ARRAY = {"一氧化碳", "二氧化碳", "甲烷", "液化石油气", "二氧化氮", "跑冒滴漏", "灯井监控",
+//            "PM2.5/10", "烟雾", "温湿度", "火焰", "倾角", "水压",
+//            "门锁检测", "追踪器", "水位检测", "光线"
+//    };
+//    String[] ALARM_TAG_EN_ARRAY = {"co", "co2", "ch4", "lpg", "no2", "drop", "cover,level",
+//            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
+//            "magnetic", "tracker", "distance", "light"
+//    };
 
-    };
-    String[] ALARM_TAG_ARRAY = {"一氧化碳", "二氧化碳", "甲烷", "液化石油气", "二氧化氮", "跑冒滴漏", "灯井监控",
-            "PM2.5/10", "烟雾", "温湿度", "火焰", "倾角", "水压",
-            "门锁检测", "追踪器", "水位检测", "光线"
-    };
-    String[] ALARM_TAG_EN_ARRAY = {"co", "co2", "ch4", "lpg", "no2", "drop", "cover,level",
-            "pm2_5,pm10", "smoke", "temperature,humidity", "flame", "collision|pitch|roll", "waterPressure",
-            "magnetic", "tracker", "distance", "light"
-    };
-
-    String[] confirmStatusArray = {"待确认", "真实火警", "误报", "测试/巡检", "安全隐患"};
+    int[] confirmStatusArray = {R.string.to_be_confirmed, R.string.real_warning, R.string.false_positive, R.string.test_patrol, R.string.security_risks};
     int[] confirmStatusTextColorArray = {R.color.c_8058a5, R.color.c_f34a4a, R.color.c_8058a5, R.color.c_8058a5, R.color.c_ff8d34};
 
-    String[] confirmAlarmResultInfoArray = {"", "监测点或附近发生着火，需要立即进行扑救", "无任何火情和烟雾", "相关人员主动测试发出的预警",
-            "未发生着火，但现场确实存在隐患"};
-    String[] confirmAlarmTypeArray = {"其他", "用电异常", "生产作业", "吸烟", "室内生火", "烹饪", "燃气泄漏", "人为放火", "易燃物自燃"};
+    int[] confirmAlarmResultInfoArray = {R.string.text_fire_alarm_empty, R.string.text_fire_alarm, R.string.text_no_fire_alarm, R.string.text_fire_alarm_test,
+            R.string.text_fire_alarm_risk};
+    int[] confirmAlarmTypeArray = {R.string.the_ohter, R.string.alarm_type_bnormal_power, R.string.alarm_type_production_operation, R.string.alarm_type_smoke, R.string.alarm_type_indoor_fire, R.string.alarm_type_cooking, R.string.alarm_type_gas_leak, R.string.alarm_type_artificial_arson};
     //    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房",};
-    String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房"};
-    String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
+    int[] confirmAlarmPlaceArray = {R.string.the_ohter, R.string.community, R.string.factory, R.string.resident_workshop, R.string.warehouse, R.string.shop_storefront, R.string.the_mall, R.string.rental_house};
+//    String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
 
     //巡检任务异常标签
-    String[] INSPECTION_EXCEPTION_TASGS = {"设备拆卸", "设备低电", "设备异常", "传感器异常", "指示灯损坏", "屏幕损坏", "按键损坏", "外观损坏", "设备丢失", "蓝牙异常", "设备松动"};
+    int[] INSPECTION_EXCEPTION_TAGS = {R.string.inspection_exception_tag_equipment_disassembly, R.string.inspection_exception_tag_low_battery, R.string.inspection_exception_tag_device_exception, R.string.inspection_exception_tag_sensor_anomaly, R.string.inspection_exception_tag_damaged_indicator, R.string.inspection_exception_tag_screen_damage, R.string.inspection_exception_tag_button_damage, R.string.inspection_exception_tag_appearance_damage, R.string.inspection_exception_tag_device_lost, R.string.inspection_exception_tag_bluetooth_exception, R.string.inspection_exception_tag_loose_equipment};
     //巡检任务状态颜色值及对应文本
     int[] INSPECTION_STATUS_COLORS = {R.color.c_8058a5, R.color.c_3aa7f0, R.color.c_ff8d34, R.color.c_29c093, R.color.c_a6a6a6};
-    String[] INSPECTION_STATUS_TEXTS = {"待执行", "执行中", "超时未完成", "已完成", "超时完成"};
+    int[] INSPECTION_STATUS_TEXTS = {R.string.inspection_status_text_pending_execution, R.string.inspection_status_text_executing, R.string.inspection_status_text_timeout_not_completed, R.string.inspection_status_text_completed, R.string.inspection_status_text_timeout_completed};
     //
     String EXTRA_USER_ID = "extra_user_id";
     //
@@ -174,19 +177,24 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_CONTRACT = "extra_grants_has_contract";
     String EXTRA_GRANTS_HAS_SCAN_LOGIN = "extra_grants_has_scan_login";
     String EXTRA_GRANTS_HAS_SUB_MERCHANT = "extra_grants_has_sub_merchant";
+    String EXTRA_GRANTS_HAS_MERCHANT_CHANGE = "extra_grants_has_merchant_change";
     String EXTRA_GRANTS_HAS_INSPECTION_TASK_LIST = "extra_grants_has_inspection_task_list";
     String EXTRA_GRANTS_HAS_INSPECTION_TASK_MODIFY = "extra_grants_has_inspection_task_modify";
     String EXTRA_GRANTS_HAS_INSPECTION_DEVICE_LIST = "extra_grants_has_inspection_device_list";
     String EXTRA_GRANTS_HAS_INSPECTION_DEVICE_MODIFY = "extra_grants_has_inspection_device_modify";
     String EXTRA_GRANTS_HAS_ALARM_LOG_INFO = "extra_grants_has_alarm_log_info";
+    String EXTRA_GRANTS_HAS_MALFUNCTION_INFO = "extra_grants_has_malfunction_info";
     String EXTRA_GRANTS_HAS_DEVICE_BRIEF = "extra_grants_has_device_brief";
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK = "extra_grants_has_device_signal_check";
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG = "extra_grants_has_device_signal_config";
+    String EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD = "extra_grants_has_bad_signal_upload";
     String EXTRA_DEVICE_INFO = "extra_device_info";
+    String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO = "extra_inspection_deploy_old_device_info";
     //扫描来源
     String EXTRA_SCAN_ORIGIN_TYPE = "extra_scan_origin_type";
     String EXTRA_DEPLOY_SUCCESS_ADDRESS = "extra_deploy_success_address";
+    String EXTRA_DEPLOY_RESULT_MODEL = "extra_deploy_result_model";
     //
     String EXTRA_SENSOR_SN = "extra_sn";
     String EXTRA_SENSOR_NAME = "extra_name";
@@ -233,6 +241,10 @@ public interface Constants {
 
     //
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
+    String EXTRA_CONTRACT_ID = "EXTRA_CONTRACT_ID";
+    //故障
+    String EXTRA_MALFUNCTION_INFO = "extra_malfunction_info";
+
     //
     String EXTRA_CONTRACT_RESULT_TYPE = "extra_contract_result_type";
     //
@@ -251,6 +263,7 @@ public interface Constants {
     int SENSOR_STATUS_NORMAL = 1;
     int SENSOR_STATUS_LOST = 2;
     int SENSOR_STATUS_INACTIVE = 3;
+    int SENSOR_STATUS_MALFUNCTION = 4;
     int DISPLAY_STATUS_CONFIRM = 0;
     int DISPLAY_STATUS_ALARM = 1;
     int DISPLAY_STATUS_MIS_DESCRIPTION = 2;
@@ -341,5 +354,16 @@ public interface Constants {
     int TYPE_SCAN_INSPECTION = 0X38;
     int TYPE_SCAN_DEPLOY_POINT_DISPLAY = 0x41;
     int TYPE_SCAN_SIGNAL_CHECK = 0x42;
+    //部署结果
+    int DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED = -1;
+    int DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT = -2;
+    int DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS = 0;
+
+    List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST =new ArrayList<String>(){{
+        add("elec_fire");
+        add("smoke");
+        add("natural_gas");
+        add("lpg");
+    }};
 
 }

@@ -13,7 +13,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionInstructionContentAdapter;
 import com.sensoro.smartcity.adapter.InspectionInstructionTabAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.presenter.IInspectionInstructionActivityView;
+import com.sensoro.smartcity.imainviews.IInspectionInstructionActivityView;
 import com.sensoro.smartcity.presenter.InspectionInstructionActivityPresenter;
 import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
@@ -54,7 +54,7 @@ public class InspectionInstructionActivity extends BaseActivity<IInspectionInstr
     }
 
     private void iniView() {
-        includeTextTitleTvTitle.setText("巡检内容");
+        includeTextTitleTvTitle.setText(R.string.inspection_content);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 

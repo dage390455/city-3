@@ -4,6 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
 
+import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.ImageUtil;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,8 +76,18 @@ class Engine {
         options.inSampleSize = computeSize();
 
         Bitmap tagBitmap = BitmapFactory.decodeStream(srcImg.open(), null, options);
-        //TODO 添加日期等
+        //TODO 按像素比例绘制
+        int srcWidth = tagBitmap.getWidth();
+        int srcHeight = tagBitmap.getHeight();
+        final int picPaddingBottom = (int) (50 * srcHeight / 667f + 0.5f);
+        final int textPaddingBottom = (int) (30 * srcHeight / 667f + 0.5f);
+        final int picPaddingRight = (int) (20 * srcWidth / 375f + 0.5f);
+        final int textPaddingRight = (int) (25 * srcWidth / 375f + 0.5f);
+        Bitmap markBitmap = BitmapFactory.decodeResource(SensoroCityApplication.getInstance().getResources(), R.drawable.photo_mark);
+        tagBitmap = ImageUtil.createWaterMaskRightBottom(SensoroCityApplication.getInstance(), tagBitmap, markBitmap, picPaddingRight, picPaddingBottom);
 
+        tagBitmap = ImageUtil.drawTextToRightBottom(SensoroCityApplication.getInstance(), tagBitmap, DateUtil.getStrTime_ymd(System.currentTimeMillis()),
+                21, SensoroCityApplication.getInstance().getResources().getColor(R.color.dcdffffff), textPaddingRight, textPaddingBottom);
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
 
         if (Checker.SINGLE.isJPG(srcImg.open())) {
@@ -80,7 +95,7 @@ class Engine {
         }
         tagBitmap.compress(focusAlpha ? Bitmap.CompressFormat.PNG : Bitmap.CompressFormat.JPEG, 60, stream);
         tagBitmap.recycle();
-
+        markBitmap.recycle();
         FileOutputStream fos = new FileOutputStream(tagImg);
         fos.write(stream.toByteArray());
         fos.flush();

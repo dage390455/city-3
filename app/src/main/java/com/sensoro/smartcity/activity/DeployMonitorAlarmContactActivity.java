@@ -51,7 +51,7 @@ public class DeployMonitorAlarmContactActivity extends BaseActivity<IAlarmContac
     private void initView() {
         //暂不支持多个联系人，所以先不做喽
 //        initRcContent();
-        includeTextTitleTvTitle.setText("预警联系人");
+        includeTextTitleTvTitle.setText(R.string.alert_contact);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 
     }

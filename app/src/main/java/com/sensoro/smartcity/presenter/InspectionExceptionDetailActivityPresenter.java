@@ -53,13 +53,13 @@ public class InspectionExceptionDetailActivityPresenter extends BasePresenter<II
 
                 switch (taskDevice.getStatus()) {
                     case 1:
-                        getView().setTvStatus(R.color.c_29c093, "巡检正常");
+                        getView().setTvStatus(R.color.c_29c093, mContext.getString(R.string.normal_inspection));
                         break;
                     case 2:
-                        getView().setTvStatus(R.color.c_ff8d34, "巡检异常");
+                        getView().setTvStatus(R.color.c_ff8d34, mContext.getString(R.string.inspection_abnormality));
                         break;
                     default:
-                        getView().setTvStatus(R.color.c_a6a6a6, "未巡检");
+                        getView().setTvStatus(R.color.c_a6a6a6, mContext.getString(R.string.not_inspected));
                         break;
                 }
 

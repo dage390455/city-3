@@ -23,24 +23,17 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
-import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
-import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.util.WidgetUtil;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -77,10 +70,12 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     private void initMap() {
+        //自定义地图风格
         setMapCustomStyleFile();
         aMap.getUiSettings().setTiltGesturesEnabled(false);
         aMap.getUiSettings().setZoomControlsEnabled(false);
         aMap.getUiSettings().setMyLocationButtonEnabled(false);
+        aMap.getUiSettings().setLogoBottomMargin(-100);
         aMap.setMapCustomEnable(true);
         aMap.setMyLocationEnabled(true);
         aMap.setOnMapLoadedListener(this);
@@ -90,7 +85,6 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //        aMap.setOnMapTouchListener(this);
 //        String styleName = "custom_config.data";
 //        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
-
         MyLocationStyle myLocationStyle = new MyLocationStyle();
         myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
         myLocationStyle.strokeWidth(0);
@@ -142,31 +136,31 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         refreshMap();
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-    public void onMessageEvent(EventData eventData) {
-        int code = eventData.code;
-        Object data = eventData.data;
-        switch (code) {
-            case EVENT_DATA_SOCKET_DATA_INFO:
-                if (data instanceof DeviceInfo) {
-                    DeviceInfo pushDeviceInfo = (DeviceInfo) data;
-                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
-                        mDeviceInfo = pushDeviceInfo;
-                        if (AppUtils.isActivityTop(mContext, MonitorPointMapActivity.class)) {
-                            mContext.runOnUiThread(new Runnable() {
-                                @Override
-                                public void run() {
-                                    if (getView() != null) {
-                                        freshMarker();
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-                break;
-        }
-    }
+//    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+//    public void onMessageEvent(EventData eventData) {
+//        int code = eventData.code;
+//        Object data = eventData.data;
+//        switch (code) {
+//            case EVENT_DATA_SOCKET_DATA_INFO:
+//                if (data instanceof DeviceInfo) {
+//                    DeviceInfo pushDeviceInfo = (DeviceInfo) data;
+//                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
+//                        mDeviceInfo = pushDeviceInfo;
+//                        if (AppUtils.isActivityTop(mContext, MonitorPointMapActivity.class)) {
+//                            mContext.runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    if (getView() != null) {
+//                                        freshMarker();
+//                                    }
+//                                }
+//                            });
+//                        }
+//                    }
+//                }
+//                break;
+//        }
+//    }
 
     private void refreshMap() {
         double[] lonlat = mDeviceInfo.getLonlat();
@@ -175,7 +169,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             // 通过UISettings.setZoomControlsEnabled(boolean)来设置缩放按钮是否能显示
             uiSettings.setZoomControlsEnabled(false);
             destPosition = new LatLng(lonlat[1], lonlat[0]);
-            if (lonlat[0] == 0 && lonlat[1] == 0) {
+            if (lonlat[0] == 0 || lonlat[1] == 0) {
 //                getView().setMapLayoutVisible(false);
 //                getView().setNotDeployLayoutVisible(true);
 //                mapLayout.setVisibility(View.GONE);
@@ -201,36 +195,38 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     }
 
     private void freshMarker() {
-        int statusId = R.mipmap.ic_sensor_status_normal;
-        switch (mDeviceInfo.getStatus()) {
-            case SENSOR_STATUS_ALARM://alarm
-                statusId = R.mipmap.ic_sensor_status_alarm;
-                break;
-            case SENSOR_STATUS_NORMAL://normal
-                statusId = R.mipmap.ic_sensor_status_normal;
-                break;
-            case SENSOR_STATUS_INACTIVE://inactive
-                statusId = R.mipmap.ic_sensor_status_inactive;
-                break;
-            case SENSOR_STATUS_LOST://lost
-                statusId = R.mipmap.ic_sensor_status_lost;
-                break;
-            default:
-                break;
-        }
+//        int statusId = R.mipmap.ic_sensor_status_normal;
+//        switch (mDeviceInfo.getStatus()) {
+//            case SENSOR_STATUS_ALARM://alarm
+//                statusId = R.mipmap.ic_sensor_status_alarm;
+//                break;
+//            case SENSOR_STATUS_NORMAL://normal
+//                statusId = R.mipmap.ic_sensor_status_normal;
+//                break;
+//            case SENSOR_STATUS_INACTIVE://inactive
+//                statusId = R.mipmap.ic_sensor_status_inactive;
+//                break;
+//            case SENSOR_STATUS_LOST://lost
+//                statusId = R.mipmap.ic_sensor_status_lost;
+//                break;
+//            default:
+//                break;
+//        }
+        int statusId = R.drawable.deploy_map_cur;
         BitmapDescriptor bitmapDescriptor = null;
         Bitmap srcBitmap = BitmapFactory.decodeResource(mContext.getResources(), statusId);
-        if (WidgetUtil.judgeSensorType(mDeviceInfo.getSensorTypes()) != 0) {
-            Bitmap targetBitmap = BitmapFactory.decodeResource(mContext.getResources(), WidgetUtil
-                    .judgeSensorType(mDeviceInfo.getSensorTypes()));
-            Bitmap filterTargetBitmap = WidgetUtil.tintBitmap(targetBitmap, mContext.getResources().getColor
-                    (R.color
-                            .white));
-            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(WidgetUtil.createBitmapDrawable(mContext,
-                    mDeviceInfo.getSensorTypes()[0], srcBitmap, filterTargetBitmap).getBitmap());
-        } else {
-            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
-        }
+//        if (WidgetUtil.judgeSensorType(mDeviceInfo.getSensorTypes()) != 0) {
+//            Bitmap targetBitmap = BitmapFactory.decodeResource(mContext.getResources(), WidgetUtil
+//                    .judgeSensorType(mDeviceInfo.getSensorTypes()));
+//            Bitmap filterTargetBitmap = WidgetUtil.tintBitmap(targetBitmap, mContext.getResources().getColor
+//                    (R.color
+//                            .white));
+//            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(WidgetUtil.createBitmapDrawable(mContext,
+//                    mDeviceInfo.getSensorTypes()[0], srcBitmap, filterTargetBitmap).getBitmap());
+//        } else {
+//            bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
+//        }
+        bitmapDescriptor = BitmapDescriptorFactory.fromBitmap(srcBitmap);
         tempUpBitmap = bitmapDescriptor.getBitmap();
 //        aMap.clear();
 //        destPosition.latitude -=
@@ -245,7 +241,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     public void doNavigation() {
         if (!AppUtils.doNavigation(mContext, destPosition)) {
-            getView().toastShort("未获取到位置信息");
+            getView().toastShort(mContext.getString(R.string.location_not_obtained));
         }
     }
 
@@ -260,7 +256,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //                getView().toastShort("当前版的微信不支持分享功能");
 //            }
         } else {
-            getView().toastShort("当前手机未安装微信，请安装后重试");
+            getView().toastShort(mContext.getString(R.string.wechat_not_installed));
         }
     }
 
@@ -271,7 +267,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         WXMiniProgramObject miniProgramObj = new WXMiniProgramObject();
         miniProgramObj.miniprogramType = WXMiniProgramObject.MINIPTOGRAM_TYPE_RELEASE;
         miniProgramObj.webpageUrl = "https://www.sensoro.com"; // 兼容低版本的网页链接
-        miniProgramObj.userName = "gh_6b7a86071f47";
+        miniProgramObj.userName = "gh_8c58c2d63459";
         miniProgramObj.withShareTicket = false;
         String name = mDeviceInfo.getName();
         if (TextUtils.isEmpty(name)) {
@@ -289,16 +285,16 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         long updatedTime = mDeviceInfo.getUpdatedTime();
         String tempAddress = mDeviceInfo.getAddress();
         if (TextUtils.isEmpty(tempAddress)) {
-            tempAddress = "未知街道";
+            tempAddress = mContext.getString(R.string.unknown_street);
         }
-        final String tempData = "/pages/index?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
+        final String tempData = "/pages/location?lon=" + mDeviceInfo.getLonlat()[0] + "&lat=" + mDeviceInfo.getLonlat()
                 [1] +
                 "&name=" + name + "&address=" + tempAddress + "&status=" + status + "&tags=" + tempTagStr + "&uptime=" +
                 updatedTime;
         miniProgramObj.path = tempData;            //小程序页面路径
         final WXMediaMessage msg = new WXMediaMessage(miniProgramObj);
-        msg.title = "传感器位置";                    // 小程序消息title
-        msg.description = "通过此工具，可以查看，以及导航到相应的传感器设备";
+        msg.title = mContext.getString(R.string.sensor_location);                    // 小程序消息title
+        msg.description = mContext.getString(R.string.sensor_location_desc);
         aMap.getMapScreenShot(new AMap.OnMapScreenShotListener() {
             @Override
             public void onMapScreenShot(Bitmap bitmap) {
@@ -327,12 +323,13 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
     @Override
     public void onStart() {
-        EventBus.getDefault().register(this);
+        //去除地图实时刷新预警状态
+//        EventBus.getDefault().register(this);
     }
 
     @Override
     public void onStop() {
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
     }
 
     public void backToCurrentLocation() {

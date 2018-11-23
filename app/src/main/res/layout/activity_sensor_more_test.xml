@@ -29,7 +29,7 @@
             android:id="@+id/sensor_more_title_sn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="更多详情"
+            android:text="@string/monitor_more_detail"
             android:layout_gravity="center_vertical"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/x60" />
@@ -229,7 +229,7 @@
                             android:paddingRight="@dimen/x20"
                             android:paddingTop="@dimen/y10"
                             android:singleLine="true"
-                            android:text="@string/status_normal"
+                            android:text="@string/normal"
                             android:textColor="@color/white"
                             android:textSize="@dimen/x45" />
 
