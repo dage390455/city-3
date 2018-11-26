@@ -48,11 +48,11 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         SearchMerchantActivityPresenter> implements ISearchMerchantActivityView, View.OnClickListener,
         TextView.OnEditorActionListener, AdapterView.OnItemClickListener {
 
-    @BindView(R.id.search_merchant_et)
+    @BindView(R.id.fg_main_top_search_et_search)
     EditText mKeywordEt;
-    @BindView(R.id.search_merchant_cancel_tv)
+    @BindView(R.id.tv_top_search_alarm_search_cancel)
     TextView mCancelTv;
-    @BindView(R.id.search_merchant_clear_iv)
+    @BindView(R.id.fg_main_top_search_imv_clear)
     ImageView mClearKeywordIv;
     @BindView(R.id.search_merchant_history_ll)
     LinearLayout mSearchHistoryLayout;
@@ -176,11 +176,12 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
             case R.id.search_merchant_clear_btn:
                 mPresenter.cleanHistory();
                 break;
-            case R.id.search_merchant_cancel_tv:
+            case R.id.tv_top_search_alarm_search_cancel:
                 mKeywordEt.clearFocus();
+                AppUtils.dismissInputMethodManager(mActivity,mKeywordEt);
                 finishAc();
                 break;
-            case R.id.search_merchant_clear_iv:
+            case R.id.fg_main_top_search_imv_clear:
                 mKeywordEt.getText().clear();
                 setClearKeywordIvVisible(false);
 //                setTipsLinearLayoutVisible(false);
