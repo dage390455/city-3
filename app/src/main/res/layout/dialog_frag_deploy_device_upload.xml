@@ -46,10 +46,13 @@
             android:textColor="@color/c_a6a6a6"
             android:paddingTop="12dp"
             android:paddingBottom="20dp"
+            android:visibility="gone"
             android:background="@drawable/selector_item_white_ee_corner_left"
             android:gravity="center"/>
         <View
+            android:id="@+id/line1"
             android:layout_width="1dp"
+            android:visibility="gone"
             android:layout_height="match_parent"
             android:background="@color/c_dfdfdf"/>
 

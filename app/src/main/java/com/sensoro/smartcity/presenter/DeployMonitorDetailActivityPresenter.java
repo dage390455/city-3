@@ -39,6 +39,7 @@ import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.RegexUtils;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.UpLoadPhotosUtils;
 
@@ -180,17 +181,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     private void changeDevice(double lon, double lan) {
-        getView().showBleConfigDialog();
         if (!TextUtils.isEmpty(deployAnalyzerModel.blePassword) && deployAnalyzerModel.channelMask.size() > 0) {
             if (BLE_DEVICE_SET.contains(deployAnalyzerModel.sn)) {
+                getView().showBleConfigDialog();
                 connectDevice();
             } else {
-                getView().dismissBleConfigDialog();
                 getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
                 getView().updateUploadState(true);
             }
         } else {
-            getView().dismissBleConfigDialog();
             //TODO 直接上传
             doUploadImages(lon, lan);
         }
@@ -200,7 +199,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
-        mHandler.removeCallbacksAndMessages(null);
         sensoroDeviceConnection = new SensoroDeviceConnectionTest(mContext, bleAddress);
         try {
             sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorDetailActivityPresenter.this);
@@ -498,12 +496,70 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     public void doConfirm() {
         //TODO 所有逻辑拦击
         //姓名地址校验
-        //        例：大悦城20层走廊2号配电箱
+        if (checkHasNameAddress()) return;
+        switch (deployAnalyzerModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                if (checkHasPhoto()) return;
+                //经纬度校验
+                if (checkHasLatLng()) return;
+                requestUpload();
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE:
+            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                //TODO 联系人上传
+                //联系人校验
+                if (checkHasContact()) return;
+                if (checkHasPhoto()) return;
+                //经纬度校验
+                if (checkHasLatLng()) return;
+                if (checkNeedSignal()) {
+                    //判断是否有强制上传权限
+                    checkHasForceUploadPermission();
+                } else {
+                    requestUpload();
+                }
+                break;
+            default:
+                break;
+        }
+    }
+
+    /**
+     * 检查是否能强制上传
+     */
+    private void checkHasForceUploadPermission() {
+        String mergeType = WidgetUtil.handleMergeType(deployAnalyzerModel.deviceType);
+        if (TextUtils.isEmpty(mergeType)) {
+            if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
+                getView().showWarnDialog(true);
+            } else {
+                getView().showWarnDialog(false);
+            }
+        } else {
+            if (Constants.DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST.contains(mergeType)) {
+                if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
+                    getView().showWarnDialog(true);
+                } else {
+                    getView().showWarnDialog(false);
+                }
+            } else {
+                getView().showWarnDialog(false);
+            }
+        }
+    }
+
+    /**
+     * 检测姓名和地址是否填写
+     *
+     * @return
+     */
+    private boolean checkHasNameAddress() {
+        //例：大悦城20层走廊2号配电箱
         String name_default = mContext.getString(R.string.tips_hint_name_address);
         if (TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress) || deployAnalyzerModel.nameAndAddress.equals(name_default)) {
             getView().toastShort(mContext.getResources().getString(R.string.tips_input_name));
             getView().updateUploadState(true);
-            return;
+            return true;
         } else {
             byte[] bytes = new byte[0];
             try {
@@ -514,60 +570,64 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             if (bytes.length > 48) {
                 getView().toastShort(mContext.getString(R.string.name_address_length));
                 getView().updateUploadState(true);
-                return;
+                return true;
             }
         }
-        if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
-            getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
+        return false;
+    }
+
+    /**
+     * 检测是否填写过联系人
+     *
+     * @return
+     */
+    private boolean checkHasContact() {
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
+                getView().toastShort(mContext.getString(R.string.please_enter_contact_phone));
+                getView().updateUploadState(true);
+                return true;
+            }
+            if (!RegexUtils.checkPhone(deployContactModel.phone)) {
+                getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+                getView().updateUploadState(true);
+                return true;
+            }
+        } else {
+            getView().toastShort(mContext.getString(R.string.please_enter_contact_phone));
             getView().updateUploadState(true);
-            return;
+            return true;
         }
-        //经纬度校验
+        return false;
+    }
+
+    /**
+     * 检测是否有经纬度
+     *
+     * @return
+     */
+    private boolean checkHasLatLng() {
         if (deployAnalyzerModel.latLng.size() != 2) {
             getView().toastShort(mContext.getString(R.string.please_specify_the_deployment_location));
             getView().updateUploadState(true);
-        } else {
-            //TODO 背景选择器
-            switch (deployAnalyzerModel.deployType) {
-                case TYPE_SCAN_DEPLOY_STATION:
-                    requestUpload();
-                    break;
-                case TYPE_SCAN_DEPLOY_DEVICE:
-                case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
-                    //TODO 联系人上传
-                    //联系人校验
-                    if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-                        DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
-                        if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
-                            getView().toastShort(mContext.getString(R.string.please_enter_contact_phone));
-                            getView().updateUploadState(true);
-                            return;
-                        }
-                        if (!RegexUtils.checkPhone(deployContactModel.phone)) {
-                            getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
-                            getView().updateUploadState(true);
-                            return;
-                        }
-                    } else {
-                        getView().toastShort(mContext.getString(R.string.please_enter_contact_phone));
-                        getView().updateUploadState(true);
-                        return;
-                    }
-                    if (needRefreshSignal()) {
-                        if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
-                            getView().showWarnDialog();
-                        } else {
-                            getView().toastShort(mContext.getString(R.string.deploy_result_upload_tip));
-                        }
-                    } else {
-                        requestUpload();
-                    }
-                    break;
-                default:
-                    break;
-            }
+            return true;
         }
+        return false;
+    }
 
+    /**
+     * 检测是否有图片
+     *
+     * @return
+     */
+    private boolean checkHasPhoto() {
+        if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+            getView().toastShort(mContext.getString(R.string.please_add_at_least_one_image));
+            getView().updateUploadState(true);
+            return true;
+        }
+        return false;
     }
 
     private void freshSignalInfo() {
@@ -619,7 +679,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     }
 
-    private boolean needRefreshSignal() {
+    /**
+     * 检查信号状态
+     *
+     * @return
+     */
+    private boolean checkNeedSignal() {
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
         if (deployAnalyzerModel.signal != null && (time_diff < 300000)) {
             switch (deployAnalyzerModel.signal) {

@@ -49,19 +49,15 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
-        if (PreferencesHelper.getInstance().getUserData().hasMalfunction) {
-            requestSearchData(DIRECTION_DOWN, null);
-        }
-        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
-        if (list != null) {
-            mSearchHistoryList.addAll(list);
-            getView().UpdateSearchHistoryList(mSearchHistoryList);
-        }
+        requestSearchData(DIRECTION_DOWN, null);
     }
 
 
     public void requestSearchData(final int direction, String searchText) {
         if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+            return;
+        }
+        if (!PreferencesHelper.getInstance().getUserData().hasMalfunction) {
             return;
         }
         if (TextUtils.isEmpty(searchText)) {
@@ -136,7 +132,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
 
     public void doCancelSearch() {
         tempSearch = null;
-        requestSearchData(DIRECTION_DOWN, tempSearch);
+        requestSearchData(DIRECTION_DOWN, null);
     }
 
     public void doCalendar(LinearLayout fgMainTopSearchTitleRoot) {
@@ -244,9 +240,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_SEARCH_MERCHANT:
-                if (PreferencesHelper.getInstance().getUserData().hasMalfunction) {
-                    requestSearchData(DIRECTION_DOWN, null);
-                }
+                requestSearchData(DIRECTION_DOWN, null);
                 break;
         }
     }

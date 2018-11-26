@@ -412,6 +412,7 @@
     <string name="deploy_result_signal">信号 无</string>
     <string name="deploy_result_recent_upload_time">最近上传时间:</string>
     <string name="deploy_result_is_upload">是否上传完成部署？</string>
+    <string name="no_signal_can_not_uploaded">无信号不能上传</string>
     <string name="deploy_result_upload_tip">当前设备无信号或信号差，请按设备自检按钮刷新信号再完成上传部署</string>
     <string name="deploy_result_force_upload">强制上传</string>
     <string name="deploy_result_ok">好的</string>

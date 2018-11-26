@@ -46,6 +46,7 @@ import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UpdateRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
@@ -83,6 +84,7 @@ public enum RetrofitServiceHelper {
     private static final long DEFAULT_TIMEOUT = 8 * 1000;
     private final String HEADER_SESSION_ID = "x-session-id";
     private final String HEADER_USER_AGENT = "User-Agent";
+    private final String HEADER_INTERNATIONALIZATION_HEADER = "accept-language";
     private final String HEADER_CONTENT_TYPE = "Content-Type";
     private final String HEADER_ACCEPT = "Accept";
     private volatile int mUrlType = -1;
@@ -223,11 +225,22 @@ public enum RetrofitServiceHelper {
                 Request original = chain.request();
                 Request.Builder builder = original.newBuilder();
                 //header
-                builder.headers(original.headers())
-                        .header(HEADER_USER_AGENT, "Android/" +
-                                Build.VERSION.RELEASE);
+                if (AppUtils.isChineseLanguage()) {
+                    builder.headers(original.headers())
+                            .header(HEADER_INTERNATIONALIZATION_HEADER, "zh-CN")
+                            .header(HEADER_USER_AGENT, "Android/" +
+                                    Build.VERSION.RELEASE);
 //                        .addHeader(HEADER_ACCEPT, "application/json")
 //                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
+                } else {
+                    builder.headers(original.headers())
+                            .header(HEADER_INTERNATIONALIZATION_HEADER, "en-US")
+                            .header(HEADER_USER_AGENT, "Android/" +
+                                    Build.VERSION.RELEASE);
+//                        .addHeader(HEADER_ACCEPT, "application/json")
+//                        .addHeader(HEADER_CONTENT_TYPE, "application/json;charset=UTF-8");
+                }
+
                 if (!TextUtils.isEmpty(getSessionId())) {
                     builder.header(HEADER_SESSION_ID, getSessionId());
                 }
@@ -376,6 +389,7 @@ public enum RetrofitServiceHelper {
 
     /**
      * 获取故障信息日志
+     *
      * @param page
      * @param sn
      * @param deviceName
@@ -524,9 +538,9 @@ public enum RetrofitServiceHelper {
         return deviceDeployRspObservable;
     }
 
-    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, Double longitude, Double latitude){
-        Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude,latitude);
-        RxApiManager.getInstance().add("deployDeviceDetail",deployDeviceDetail.subscribe());
+    public Observable<DeployDeviceDetailRsp> getDeployDeviceDetail(String sn, Double longitude, Double latitude) {
+        Observable<DeployDeviceDetailRsp> deployDeviceDetail = retrofitService.getDeployDeviceDetail(sn, longitude, latitude);
+        RxApiManager.getInstance().add("deployDeviceDetail", deployDeviceDetail.subscribe());
         return deployDeviceDetail;
     }
 
@@ -840,9 +854,9 @@ public enum RetrofitServiceHelper {
         return contractAddRspObservable;
     }
 
-    public Observable<ContractInfoRsp> getContractInfo(String id){
+    public Observable<ContractInfoRsp> getContractInfo(String id) {
         Observable<ContractInfoRsp> contractInfo = retrofitService.getContractInfo(id);
-        RxApiManager.getInstance().add("contractInfo",contractInfo.subscribe());
+        RxApiManager.getInstance().add("contractInfo", contractInfo.subscribe());
         return contractInfo;
     }
 
@@ -856,7 +870,7 @@ public enum RetrofitServiceHelper {
      * @param offset
      * @return
      */
-    public Observable<ContractsListRsp> searchContract(Integer contractType, Integer confirmed,Long beginTime, Long endTime, Integer
+    public Observable<ContractsListRsp> searchContract(Integer contractType, Integer confirmed, Long beginTime, Long endTime, Integer
             limit, Integer offset) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -865,11 +879,11 @@ public enum RetrofitServiceHelper {
                 jsonObject1.put("contract_type", contractType);
             }
 
-            if(confirmed != null){
-                if(confirmed == 1){
-                    jsonObject1.put("confirmed",false);
-                }else{
-                    jsonObject1.put("confirmed",true);
+            if (confirmed != null) {
+                if (confirmed == 1) {
+                    jsonObject1.put("confirmed", false);
+                } else {
+                    jsonObject1.put("confirmed", true);
                 }
             }
 
@@ -970,6 +984,7 @@ public enum RetrofitServiceHelper {
 
     /**
      * 获取半年故障次数
+     *
      * @param startTime
      * @param endTime
      * @param displayStatus
