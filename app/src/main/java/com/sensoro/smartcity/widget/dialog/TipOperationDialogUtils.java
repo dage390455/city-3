@@ -28,7 +28,7 @@ public class TipOperationDialogUtils {
 
     public TipOperationDialogUtils(Activity activity) {
         mActivity = activity;
-        View view = View.inflate(activity, R.layout.item_dialog_ble_tip, null);
+        View view = View.inflate(activity, R.layout.item_dialog_monitor_point_operation, null);
         mTvTitle = view.findViewById(R.id.dialog_tip_ble_tv_title);
         mTvMessage = view.findViewById(R.id.dialog_tip_ble_tv_message);
         mTvCancel = view.findViewById(R.id.dialog_tip_ble_tv_cancel);

@@ -172,6 +172,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().setPsdStatus(true);
         getView().setQueryStatus(true);
         getView().setSelfCheckStatus(true);
+        getView().setAirSwitchConfigStatus(true);
         if(isContains){
             switch (mDeviceInfo.getStatus()) {
                 case SENSOR_STATUS_ALARM:
@@ -185,6 +186,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     getView().setPsdStatus(false);
                     getView().setQueryStatus(false);
                     getView().setSelfCheckStatus(false);
+                    getView().setAirSwitchConfigStatus(false);
                     break;
                 case SENSOR_STATUS_MALFUNCTION:
                     break;

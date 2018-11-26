@@ -48,6 +48,8 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void setSelfCheckStatus(boolean isClickable);
 
+    void setAirSwitchConfigStatus(boolean isClickable);
+
     void setQueryStatus(boolean isClickable);
 
     void setPsdStatus(boolean isClickable);

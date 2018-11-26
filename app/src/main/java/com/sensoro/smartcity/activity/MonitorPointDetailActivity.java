@@ -102,6 +102,8 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     TextView acMonitoringPointTvQuery;
     @BindView(R.id.ac_monitoring_point_tv_self_check)
     TextView acMonitoringPointTvSelfCheck;
+    @BindView(R.id.ac_monitoring_point_tv_air_switch_config)
+    TextView acMonitoringPointTvAirSwitchConfig;
     @BindView(R.id.ac_monitoring_point_ll_operation)
     LinearLayout acMonitoringPointLlOperation;
 
@@ -168,8 +170,13 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         acMonitoringPointRcContent.setAdapter(mContentAdapter);
         //dialog
         initTipDialog();
+        initEditDialog();
         initOperatingDialog();
         mHandler = new Handler();
+
+    }
+
+    private void initEditDialog() {
 
     }
 
@@ -410,6 +417,20 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     @Override
+    public void setAirSwitchConfigStatus(boolean isClickable) {
+        Drawable drawable;
+        if (isClickable) {
+            drawable = getResources().getDrawable(R.drawable.air_switch_config_clickable);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.air_switch_config_not_clickable);
+        }
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acMonitoringPointTvAirSwitchConfig.setCompoundDrawables(null, drawable, null, null);
+        acMonitoringPointTvAirSwitchConfig.setClickable(isClickable);
+        acMonitoringPointTvAirSwitchConfig.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
+    }
+
+    @Override
     public void setQueryStatus(boolean isClickable) {
         Drawable drawable;
         if (isClickable) {
@@ -465,7 +486,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
 
     @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
-            R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check, R.id.include_text_title_tv_subtitle,
+            R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check,R.id.ac_monitoring_point_tv_air_switch_config, R.id.include_text_title_tv_subtitle,
             R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
             R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
@@ -484,6 +505,9 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
                 break;
             case R.id.ac_monitoring_point_tv_self_check:
                 showTipDialog(R.string.is_device_self_check,R.string.device_self_check_tip_message,R.string.self_check,R.color.c_29c093,MonitorPointOperationCode.SELF_CHECK);
+                break;
+            case R.id.ac_monitoring_point_tv_air_switch_config:
+                showTipDialog(R.string.is_device_self_check,R.string.device_air_switch_config_tip_message,R.string.self_check,R.color.c_29c093,MonitorPointOperationCode.SELF_CHECK);
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMonitorHistory();

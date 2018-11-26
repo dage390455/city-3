@@ -613,6 +613,8 @@
     <string name="self_checking">自检中</string>
     <string name="monitor_point_operation_schedule_no_error">任务编码获取失败</string>
     <string name="request_failed">请求失败</string>
+    <string name="monitor_point_detail_air_switch_config">空开配置</string>
+    <string name="electric_current">电流</string>
     //
 
 </resources>
