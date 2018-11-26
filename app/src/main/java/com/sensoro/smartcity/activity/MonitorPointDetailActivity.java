@@ -441,12 +441,14 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     @Override
     public void showOperationSuccessToast() {
         mOperatingUtil.dismiss();
+        mPresenter.clearScheduleNo();
         mHandler.removeCallbacksAndMessages(null);
         MonitorPointOperationSuccessToast.INSTANCE.showToast(mActivity,Toast.LENGTH_SHORT);
     }
 
     @Override
     public void showErrorTipDialog(String errorMsg) {
+        mPresenter.clearScheduleNo();
         mOperatingUtil.dismiss();
         mHandler.removeCallbacksAndMessages(null);
         if (mTipUtils.isShowing()) {
@@ -553,8 +555,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
                 @Override
                 public void run() {
                     showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
-
-
                 }
             }, 10000);
         }

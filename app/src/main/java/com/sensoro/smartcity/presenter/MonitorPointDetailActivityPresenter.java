@@ -361,7 +361,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                     mContext.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {
-                                            if(!TextUtils.isEmpty(mScheduleNo)&&scheduleNo.equals(temp)){
+                                            if(!TextUtils.isEmpty(mScheduleNo)&&mScheduleNo.equals(temp)){
                                                 getView().showOperationSuccessToast();
                                             }
                                         }
@@ -449,7 +449,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     public void doOperation(int type) {
-        mScheduleNo = null;
         String operationType = null;
         switch (type){
             case MonitorPointOperationCode.ERASURE:
@@ -493,5 +492,9 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 getView().showErrorTipDialog(errorMsg);
             }
         });
+    }
+
+    public void clearScheduleNo() {
+        mScheduleNo = null;
     }
 }
