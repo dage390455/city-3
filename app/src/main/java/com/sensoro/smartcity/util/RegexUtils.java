@@ -17,7 +17,7 @@ public class RegexUtils {
         if (TextUtils.isEmpty(phoneNum)) {
             return false;
         }
-        final String regex = "^((\\+86){0,1}1[3|4|5|6|7|8|9](\\d){9}|(\\d{3,4}-){0,1}(\\d{7,8})(-\\d{1,4}){0,1})$";
+        final String regex = "^((\\+86){0,1}1[2|3|4|5|6|7|8|9](\\d){9}|(\\d{3,4}-){0,1}(\\d{7,8})(-\\d{1,4}){0,1})$";
 //        final String regex = "^(\\+86){0,1}1[3|4|5|6|7|8|9](\\d){9}$";
         Pattern p = Pattern.compile(regex);
         return p.matcher(phoneNum).matches();

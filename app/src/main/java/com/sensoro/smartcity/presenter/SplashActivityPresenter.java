@@ -19,6 +19,7 @@ import com.sensoro.smartcity.push.SensoroPushService;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.tencent.bugly.beta.Beta;
 
 public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> implements Constants {
     private Activity mContext;
@@ -31,6 +32,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
         //TODO 逻辑判断
         initPushSDK();
         checkLoginState();
+        Beta.checkUpgrade(false, false);
         LogUtils.loge("SplashActivityPresenter create ");
     }
 

@@ -20,7 +20,6 @@ import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
@@ -29,9 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -60,67 +57,67 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        getView().showProgressDialog();
         int contractId = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_ID, -1);
-        if(contractId == -1){
+        if (contractId == -1) {
             serviceType = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_TYPE, -1);
-        contract_service_life = mContext.getIntent().getStringExtra("contract_service_life");
-        placeType = mContext.getIntent().getStringExtra("place");
-        String signDate = mContext.getIntent().getStringExtra("signDate");
-        id = mContext.getIntent().getIntExtra("id", -1);
-        if (id == -1) {
-            getView().setConfirmText("确认并生成二维码");
+            contract_service_life = mContext.getIntent().getStringExtra("contract_service_life");
+            placeType = mContext.getIntent().getStringExtra("place");
+            String signDate = mContext.getIntent().getStringExtra("signDate");
+            id = mContext.getIntent().getIntExtra("id", -1);
+            if (id == -1) {
+                getView().setConfirmText("确认并生成二维码");
+            } else {
+                getView().setConfirmText("查看二维码");
+            }
+            if (!TextUtils.isEmpty(signDate)) {
+                getView().setSignTime(signDate);
+            }
+            switch (serviceType) {
+                case 1:
+                    line1 = mContext.getIntent().getStringExtra("line1");
+                    line2 = mContext.getIntent().getStringExtra("line2");
+                    line3 = mContext.getIntent().getStringExtra("line3");
+                    line4 = mContext.getIntent().getStringExtra("line4");
+                    line5 = mContext.getIntent().getStringExtra("line5");
+                    line6 = mContext.getIntent().getStringExtra("line6");
+                    phone = mContext.getIntent().getStringExtra("phone");
+                    //
+                    getView().showContentText(serviceType, line1, phone, line2, line3, line4,
+                            line5, line6, placeType, contract_service_life);
+                    break;
+                case 2:
+                    line1 = mContext.getIntent().getStringExtra("line1");
+                    line2 = mContext.getIntent().getStringExtra("line2");
+                    line3 = mContext.getIntent().getStringExtra("line3");
+                    line4 = mContext.getIntent().getStringExtra("line4");
+                    phone = mContext.getIntent().getStringExtra("phone");
+                    //
+                    getView().showContentText(serviceType, line1, phone, line2, line3, line4,
+                            null, null, placeType, contract_service_life);
+                    break;
+                case 3:
+                    line1 = mContext.getIntent().getStringExtra("line1");
+                    line2 = mContext.getIntent().getStringExtra("line2");
+                    line3 = mContext.getIntent().getStringExtra("line3");
+                    line4 = mContext.getIntent().getStringExtra("line4");
+                    //
+                    getView().showContentText(serviceType, line1, "", line2, line3, line4,
+                            null, null, placeType, contract_service_life);
+                    break;
+                default:
+                    break;
+            }
+            deviceList = (ArrayList<ContractsTemplateInfo>) mContext.getIntent().getSerializableExtra
+                    ("contract_template");
+            getView().updateContractTemplateAdapterInfo(deviceList);
         } else {
-            getView().setConfirmText("查看二维码");
-        }
-        if (!TextUtils.isEmpty(signDate)) {
-            getView().setSignTime(signDate);
-        }
-        switch (serviceType) {
-            case 1:
-                line1 = mContext.getIntent().getStringExtra("line1");
-                line2 = mContext.getIntent().getStringExtra("line2");
-                line3 = mContext.getIntent().getStringExtra("line3");
-                line4 = mContext.getIntent().getStringExtra("line4");
-                line5 = mContext.getIntent().getStringExtra("line5");
-                line6 = mContext.getIntent().getStringExtra("line6");
-                phone = mContext.getIntent().getStringExtra("phone");
-                //
-                getView().showContentText(serviceType, line1, phone, line2, line3, line4,
-                        line5, line6, placeType, contract_service_life);
-                break;
-            case 2:
-                line1 = mContext.getIntent().getStringExtra("line1");
-                line2 = mContext.getIntent().getStringExtra("line2");
-                line3 = mContext.getIntent().getStringExtra("line3");
-                line4 = mContext.getIntent().getStringExtra("line4");
-                phone = mContext.getIntent().getStringExtra("phone");
-                //
-                getView().showContentText(serviceType, line1, phone, line2, line3, line4,
-                        null, null, placeType, contract_service_life);
-                break;
-            case 3:
-                line1 = mContext.getIntent().getStringExtra("line1");
-                line2 = mContext.getIntent().getStringExtra("line2");
-                line3 = mContext.getIntent().getStringExtra("line3");
-                line4 = mContext.getIntent().getStringExtra("line4");
-                //
-                getView().showContentText(serviceType, line1, "", line2, line3, line4,
-                        null, null, placeType, contract_service_life);
-                break;
-            default:
-                break;
-        }
-        deviceList = (ArrayList<ContractsTemplateInfo>) mContext.getIntent().getSerializableExtra
-                ("contract_template");
-        getView().updateContractTemplateAdapterInfo(deviceList);
-        }else{
             requestData(contractId);
         }
 
     }
 
     private void requestData(int contractId) {
+        getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getContractInfo(contractId + "").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<ContractInfoRsp>() {
                     @Override
@@ -182,7 +179,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         if (TextUtils.isEmpty(placeType)) {
             placeType = "无";
         }
-        contract_service_life = mContractInfo.getServiceTime()+"";
+        contract_service_life = mContractInfo.getServiceTime() + "";
 
         line1 = mContractInfo.getCustomer_name();
         if (TextUtils.isEmpty(line1)) {
@@ -227,7 +224,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         }
 
         getView().showContentText(created_type, line1, phone, line2, line3, line4,
-    line5, line6, placeType, contract_service_life);
+                line5, line6, placeType, contract_service_life);
     }
 
     public void startToConfirm(final String text) {
