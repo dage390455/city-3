@@ -621,4 +621,10 @@
         <string name="request_failed">请求失败</string>
     <string name="monitor_point_detail_air_switch_config">空开配置</string>
     <string name="electric_current">电流</string>
+        <string name="device_air_switch_config_tip_message">重新配置将会影响设备报警阈值</string>
+        <string name="air_switch_config">配置</string>
+        <string name="is_device_air_switch_config">是否进行空开配置</string>
+        <string name="configuring">配置中</string>
+        <string name="monitor_point_operation_error_value_range">输入错误，数值范围50至560</string>
+        <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
 </resources>

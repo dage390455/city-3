@@ -57,4 +57,8 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
     void showOperationSuccessToast();
 
     void showErrorTipDialog(String errorMsg);
+
+    void showOperationTipDialog();
+
+    void dismissTipDialog();
 }

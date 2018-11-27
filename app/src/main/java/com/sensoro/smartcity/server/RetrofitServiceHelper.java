@@ -1197,7 +1197,7 @@ public enum RetrofitServiceHelper {
         return devicesMergeTypes;
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer ct){
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec){
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1218,8 +1218,8 @@ public enum RetrofitServiceHelper {
                 }
                 jsonObject.put("rules",jsonRules);
             }
-            if(ct != null){
-                jsonObject.put("ct",ct);
+            if(switchSpec != null){
+                jsonObject.put("switchSpec",switchSpec);
             }
 
         } catch (JSONException e) {

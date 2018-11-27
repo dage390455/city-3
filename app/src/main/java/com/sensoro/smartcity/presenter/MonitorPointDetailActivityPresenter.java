@@ -450,8 +450,9 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().startAC(intent);
     }
 
-    public void doOperation(int type) {
+    public void doOperation(int type, String content) {
         String operationType = null;
+        Integer switchSpec = null;
         switch (type){
             case MonitorPointOperationCode.ERASURE:
                 operationType = "mute";
@@ -467,11 +468,28 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 break;
             case MonitorPointOperationCode.SELF_CHECK:
                 operationType = "check";
+            case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
+                operationType = "config";
+                Integer integer = null;
+                try {
+                    integer = Integer.valueOf(content);
+                    if (integer >= 50 && integer <= 560) {
+                        switchSpec = integer;
+                    }else{
+                        getView().toastShort(mContext.getString(R.string.monitor_point_operation_error_value_range));
+                        return ;
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    getView().toastShort(mContext.getString(R.string.enter_the_correct_number_format));
+                    return ;
+                }
+
                 break;
         }
         ArrayList<String> sns = new ArrayList<>();
         sns.add(mDeviceInfo.getSn());
-        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns,operationType,null,null,null)
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns,operationType,null,null,switchSpec)
         .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>() {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -494,6 +512,8 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 getView().showErrorTipDialog(errorMsg);
             }
         });
+        getView().dismissTipDialog();
+        getView().showOperationTipDialog();
     }
 
     public void clearScheduleNo() {

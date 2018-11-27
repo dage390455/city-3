@@ -6,4 +6,5 @@ public interface MonitorPointOperationCode {
     int PSD = 0x03;
     int QUERY = 0x04;
     int SELF_CHECK = 0x05;
+    int AIR_SWITCH_CONFIG = 0x06;
 }

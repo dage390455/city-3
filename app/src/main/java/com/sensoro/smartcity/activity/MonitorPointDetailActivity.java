@@ -25,6 +25,7 @@ import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.toast.MonitorPointOperationSuccessToast;
@@ -181,11 +182,11 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     private void initOperatingDialog() {
-        mOperatingUtil = new MonitorPointOperatingDialogUtil(mActivity,false);
+        mOperatingUtil = new MonitorPointOperatingDialogUtil(mActivity, false);
     }
 
     private void initTipDialog() {
-        mTipUtils = new TipOperationDialogUtils(mActivity,false);
+        mTipUtils = new TipOperationDialogUtils(mActivity, false);
         mTipUtils.setTipDialogUtilsClickListener(this);
     }
 
@@ -291,7 +292,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
-        if (mTipUtils!=null) {
+        if (mTipUtils != null) {
             mTipUtils.destroy();
         }
         if (mOperatingUtil != null) {
@@ -464,7 +465,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         mOperatingUtil.dismiss();
         mPresenter.clearScheduleNo();
         mHandler.removeCallbacksAndMessages(null);
-        MonitorPointOperationSuccessToast.INSTANCE.showToast(mActivity,Toast.LENGTH_SHORT);
+        MonitorPointOperationSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
     }
 
     @Override
@@ -476,6 +477,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
             mTipUtils.setTipMessageText(errorMsg);
             return;
         }
+        mTipUtils.setTipEtRootVisible(false);
         mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
         mTipUtils.setTipMessageText(errorMsg);
         mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
@@ -484,30 +486,71 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         mTipUtils.show();
     }
 
+    @Override
+    public void showOperationTipDialog() {
+        if (mTipUtils != null) {
+            switch (mTipDialogType) {
+                case MonitorPointOperationCode.ERASURE:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
+                    break;
+                case MonitorPointOperationCode.RESET:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.reseting));
+                    break;
+                case MonitorPointOperationCode.PSD:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.psd_modifing));
+                    break;
+                case MonitorPointOperationCode.QUERY:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.quering));
+                    break;
+                case MonitorPointOperationCode.SELF_CHECK:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.self_checking));
+                    break;
+                case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
+                    break;
+
+            }
+            mOperatingUtil.show();
+        }
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
+            }
+        }, 10000);
+    }
+
+    @Override
+    public void dismissTipDialog() {
+        if (mTipUtils!=null) {
+            mTipUtils.dismiss();
+        }
+    }
+
 
     @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
-            R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check,R.id.ac_monitoring_point_tv_air_switch_config, R.id.include_text_title_tv_subtitle,
+            R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check, R.id.ac_monitoring_point_tv_air_switch_config, R.id.include_text_title_tv_subtitle,
             R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
             R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_monitoring_point_tv_erasure:
-                showTipDialog(R.string.is_device_erasure,R.string.device_erasure_tip_message,R.string.erasure,R.color.c_f34a4a,MonitorPointOperationCode.ERASURE);
+                showTipDialog(false, R.string.is_device_erasure, R.string.device_erasure_tip_message, R.string.erasure, R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
                 break;
             case R.id.ac_monitoring_point_tv_reset:
-                showTipDialog(R.string.is_device_reset,R.string.device_reset_tip_message,R.string.reset,R.color.c_f34a4a,MonitorPointOperationCode.RESET);
+                showTipDialog(false, R.string.is_device_reset, R.string.device_reset_tip_message, R.string.reset, R.color.c_f34a4a, MonitorPointOperationCode.RESET);
                 break;
             case R.id.ac_monitoring_point_tv_psd:
-                showTipDialog(R.string.is_device_psd,R.string.device_psd_tip_message,R.string.modify,R.color.c_f34a4a,MonitorPointOperationCode.PSD);
+                showTipDialog(false, R.string.is_device_psd, R.string.device_psd_tip_message, R.string.modify, R.color.c_f34a4a, MonitorPointOperationCode.PSD);
                 break;
             case R.id.ac_monitoring_point_tv_query:
-                showTipDialog(R.string.is_device_query,R.string.device_query_tip_message,R.string.query,R.color.c_29c093,MonitorPointOperationCode.QUERY);
+                showTipDialog(false, R.string.is_device_query, R.string.device_query_tip_message, R.string.query, R.color.c_29c093, MonitorPointOperationCode.QUERY);
                 break;
             case R.id.ac_monitoring_point_tv_self_check:
-                showTipDialog(R.string.is_device_self_check,R.string.device_self_check_tip_message,R.string.self_check,R.color.c_29c093,MonitorPointOperationCode.SELF_CHECK);
+                showTipDialog(false, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case R.id.ac_monitoring_point_tv_air_switch_config:
-                showTipDialog(R.string.is_device_self_check,R.string.device_air_switch_config_tip_message,R.string.self_check,R.color.c_29c093,MonitorPointOperationCode.SELF_CHECK);
+                showTipDialog(true, R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMonitorHistory();
@@ -528,10 +571,11 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         }
     }
 
-    private void showTipDialog(@StringRes int title, @StringRes int message, @StringRes int confirm, @ColorRes int confirmColor ,int type) {
+    private void showTipDialog(boolean isEdit, @StringRes int title, @StringRes int message, @StringRes int confirm, @ColorRes int confirmColor, int type) {
         if (mTipUtils.isShowing()) {
             mTipUtils.dismiss();
         }
+        mTipUtils.setTipEtRootVisible(isEdit);
         mTipUtils.setTipTitleText(mActivity.getString(title));
         mTipUtils.setTipMessageText(mActivity.getString(message));
         mTipUtils.setTipConfirmVisible(true);
@@ -544,45 +588,13 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     //tip dialog 点击事件
     @Override
     public void onCancelClick() {
-        if (mTipUtils!=null) {
+        if (mTipUtils != null) {
             mTipUtils.dismiss();
         }
     }
 
     @Override
-    public void onConfirmClick() {
-        if (mTipUtils!=null) {
-            mTipUtils.dismiss();
-        }
-
-        if (mOperatingUtil != null) {
-            switch (mTipDialogType){
-                case MonitorPointOperationCode.ERASURE:
-                    mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
-                    break;
-                case MonitorPointOperationCode.RESET:
-                    mOperatingUtil.setTipText(mActivity.getString(R.string.reseting));
-                    break;
-                case MonitorPointOperationCode.PSD:
-                    mOperatingUtil.setTipText(mActivity.getString(R.string.psd_modifing));
-                    break;
-                case MonitorPointOperationCode.QUERY:
-                    mOperatingUtil.setTipText(mActivity.getString(R.string.quering));
-                    break;
-                case MonitorPointOperationCode.SELF_CHECK:
-                    mOperatingUtil.setTipText(mActivity.getString(R.string.self_checking));
-                    break;
-            }
-            mOperatingUtil.show();
-            mPresenter.doOperation(mTipDialogType);
-            mHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
-                }
-            }, 10000);
-        }
-
-
+    public void onConfirmClick(String content) {
+        mPresenter.doOperation(mTipDialogType, content);
     }
 }
