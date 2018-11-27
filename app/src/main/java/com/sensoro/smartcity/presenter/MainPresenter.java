@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
 import com.igexin.sdk.PushManager;
-import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
@@ -75,16 +74,12 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        try {
-            Beta.init(mContext.getApplicationContext(), BuildConfig.DEBUG);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         //提前获取一次
         if (PreferencesHelper.getInstance().getLocalDevicesMergeTypes() == null) {
             openLogin();
             return;
         }
+        Beta.checkUpgrade(false, false);
 //        else {
 //            try {
 //                String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
@@ -431,7 +426,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             mSocket = null;
         }
         mFragmentList.clear();
-        Beta.unInit();
         LogUtils.loge(this, "onDestroy");
     }
 
