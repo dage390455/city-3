@@ -80,14 +80,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         } catch (Exception e) {
             e.printStackTrace();
         }
-        try {
-            String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
-            LogUtils.loge("main ---->> " + log);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        //提前获取一次
+        if (PreferencesHelper.getInstance().getLocalDevicesMergeTypes() == null) {
             openLogin();
             return;
         }
+//        else {
+//            try {
+//                String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
+//                LogUtils.loge("main ---->> " + log);
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//
+//            }
+//        }
         initViewPager();
     }
 
@@ -123,27 +129,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         } else {
             openLogin();
         }
-        LogUtils.loge(this, "refreshContentData");
-        //提前获取一次
     }
 
-    /**
-     * 超级用户
-     *
-     * @return
-     */
-//    private boolean isSupperAccount() {
-//        return PreferencesHelper.getInstance().getUserData() != null && PreferencesHelper.getInstance().getUserData().isSupperAccount;
-//    }
-    public boolean hasDeviceBriefControl() {
+    private boolean hasDeviceBriefControl() {
         return PreferencesHelper.getInstance().getUserData().hasDeviceBrief;
     }
 
-    public boolean hasAlarmInfoControl() {
+    private boolean hasAlarmInfoControl() {
         return PreferencesHelper.getInstance().getUserData().hasAlarmInfo;
     }
 
-    public boolean hasMalfunctionControl() {
+    private boolean hasMalfunctionControl() {
         return PreferencesHelper.getInstance().getUserData().hasMalfunction;
     }
 
@@ -370,22 +366,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     }
 
-    public void changeAccount(EventLoginData eventLoginData) {
+    private void changeAccount(EventLoginData eventLoginData) {
         //
         PreferencesHelper.getInstance().saveUserData(eventLoginData);
-//        getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
-//        if (indexFragment != null) {
         freshAccountType();
         if (hasAlarmInfoControl()) {
             freshAlarmCount();
         }
-        //
-//            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
-//            getView().setCurrentPagerItem(0);
-//            getView().setMenuSelected(0);
         reconnect();
-//        }
-
     }
 
     private void reconnect() {
@@ -457,11 +445,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 RetrofitServiceHelper.INSTANCE.cancelAllRsp();
                 openLogin();
                 break;
-//            case EVENT_DATA_FINISH_CODE:
-            //            if (contractFragment != null) {
-//                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
-//            }
-//                break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().setBottomBarSelected(0);
                 break;
@@ -485,7 +468,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 }
                 break;
         }
-//        LogUtils.loge(this, eventData.toString());
     }
 
     private void freshAlarmCount() {
