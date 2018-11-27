@@ -457,11 +457,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 RetrofitServiceHelper.INSTANCE.cancelAllRsp();
                 openLogin();
                 break;
-            case EVENT_DATA_FINISH_CODE:
-                //            if (contractFragment != null) {
+//            case EVENT_DATA_FINISH_CODE:
+            //            if (contractFragment != null) {
 //                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
 //            }
-                break;
+//                break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().setBottomBarSelected(0);
                 break;

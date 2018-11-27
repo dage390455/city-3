@@ -189,39 +189,42 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         contract_service_life = mContractInfo.getServiceTime() + "";
         contract_service_life_first = mContractInfo.getFirstPayTimes() + "";
         contract_service_life_period = mContractInfo.getPayTimes() + "";
-
-        line1 = mContractInfo.getCustomer_name();
-        if (TextUtils.isEmpty(line1)) {
-            line1 = "无";
-        }
-        line2 = mContractInfo.getCustomer_enterprise_name();
-        if (TextUtils.isEmpty(line2)) {
-            line2 = "无";
-        }
-        line3 = mContractInfo.getEnterprise_card_id();
-        if (TextUtils.isEmpty(line3)) {
-            line3 = "无";
-        }
-        line4 = mContractInfo.getEnterprise_register_id();
-        if (TextUtils.isEmpty(line4)) {
-            line4 = "无";
-        }
-        line5 = mContractInfo.getCustomer_address();
-        if (TextUtils.isEmpty(line5)) {
-            line5 = "无";
-        }
-        line6 = mContractInfo.getCustomer_enterprise_validity();
-        if (TextUtils.isEmpty(line6)) {
-            line6 = "无";
-        }
-        phone = mContractInfo.getCustomer_phone();
-        if (TextUtils.isEmpty(phone)) {
-            phone = "无";
-        }
         switch (created_type) {
             case 1:
+                line1 = mContractInfo.getCustomer_name();
+                if (TextUtils.isEmpty(line1)) {
+                    line1 = "无";
+                }
+                line2 = mContractInfo.getCustomer_enterprise_name();
+                if (TextUtils.isEmpty(line2)) {
+                    line2 = "无";
+                }
+                line3 = mContractInfo.getEnterprise_card_id();
+                if (TextUtils.isEmpty(line3)) {
+                    line3 = "无";
+                }
+                line4 = mContractInfo.getEnterprise_register_id();
+                if (TextUtils.isEmpty(line4)) {
+                    line4 = "无";
+                }
+                line5 = mContractInfo.getCustomer_address();
+                if (TextUtils.isEmpty(line5)) {
+                    line5 = "无";
+                }
+                line6 = mContractInfo.getCustomer_enterprise_validity();
+                if (TextUtils.isEmpty(line6)) {
+                    line6 = "无";
+                }
+                phone = mContractInfo.getCustomer_phone();
+                if (TextUtils.isEmpty(phone)) {
+                    phone = "无";
+                }
                 break;
             case 2:
+                line1 = mContractInfo.getCustomer_name();
+                if (TextUtils.isEmpty(line1)) {
+                    line1 = "无";
+                }
                 int sex = mContractInfo.getSex();
                 switch (sex) {
                     case 1:
@@ -244,6 +247,10 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 }
                 line5 = null;
                 line6 = null;
+                phone = mContractInfo.getCustomer_phone();
+                if (TextUtils.isEmpty(phone)) {
+                    phone = "无";
+                }
                 break;
             case 3:
                 line1 = mContractInfo.getCustomer_enterprise_name();
@@ -262,12 +269,14 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 if (TextUtils.isEmpty(line4)) {
                     line4 = "无";
                 }
+                line5 = mContractInfo.getCustomer_address();
+                if (TextUtils.isEmpty(line5)) {
+                    line5 = "无";
+                }
                 line6 = null;
                 phone = null;
                 break;
         }
-
-
         getView().showContentText(created_type, line1, phone, line2, line3, line4,
                 line5, line6, placeType, contract_service_life, contract_service_life_first, contract_service_life_period);
     }
@@ -303,7 +312,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     private void addContract(final String text) {
         int serviceTime = 1;
         int serviceTimeFirst = 1;
-        int serviceTimePeriod = 0;
+        int serviceTimePeriod = 1;
         try {
             serviceTime = Integer.parseInt(contract_service_life);
             serviceTimeFirst = Integer.parseInt(contract_service_life_first);
