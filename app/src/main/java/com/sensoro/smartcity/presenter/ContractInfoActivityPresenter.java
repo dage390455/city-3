@@ -134,7 +134,6 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             getView().setConfirmVisible(mContractInfo.isConfirmed());
                             getView().setConfirmStatus(mContractInfo.isConfirmed());
                             id = mContractInfo.getId();
-
                             refreshContentText();
 
                             String createdAt = mContractInfo.getCreatedAt();
@@ -181,7 +180,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     }
 
     private void refreshContentText() {
-        int created_type = mContractInfo.getCreated_type();
+        serviceType = mContractInfo.getCreated_type();
         placeType = mContractInfo.getPlace_type();
         if (TextUtils.isEmpty(placeType)) {
             placeType = "无";
@@ -189,7 +188,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         contract_service_life = mContractInfo.getServiceTime() + "";
         contract_service_life_first = mContractInfo.getFirstPayTimes() + "";
         contract_service_life_period = mContractInfo.getPayTimes() + "";
-        switch (created_type) {
+        switch (serviceType) {
             case 1:
                 line1 = mContractInfo.getCustomer_name();
                 if (TextUtils.isEmpty(line1)) {
@@ -277,7 +276,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 phone = null;
                 break;
         }
-        getView().showContentText(created_type, line1, phone, line2, line3, line4,
+        getView().showContentText(serviceType, line1, phone, line2, line3, line4,
                 line5, line6, placeType, contract_service_life, contract_service_life_first, contract_service_life_period);
     }
 
