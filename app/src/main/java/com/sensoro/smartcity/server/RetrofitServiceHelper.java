@@ -788,7 +788,7 @@ public enum RetrofitServiceHelper {
                                                      int payTimes,
                                                      //可选
                                                      Boolean confirmed,
-                                                     int serviceTime) {
+                                                     int serviceTime, int firstPayTimes) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (contractType != null) {
@@ -839,6 +839,7 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("confirmed", confirmed);
             }
             jsonObject.put("serviceTime", serviceTime);
+            jsonObject.put("firstPayTimes", firstPayTimes);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -864,7 +865,7 @@ public enum RetrofitServiceHelper {
      * @param offset
      * @return
      */
-    public Observable<ContractsListRsp> searchContract(Integer contractType, Integer confirmed, Long beginTime, Long endTime, Integer
+    public Observable<ContractsListRsp> searchContract(Integer contractType, String customerName, Integer confirmed, Long beginTime, Long endTime, Integer
             limit, Integer offset) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -880,7 +881,9 @@ public enum RetrofitServiceHelper {
                     jsonObject1.put("confirmed", true);
                 }
             }
-
+            if (!TextUtils.isEmpty(customerName)) {
+                jsonObject1.put("customer_name", customerName);
+            }
             if (beginTime != null) {
                 jsonObject1.put("beginTime", beginTime);
             }

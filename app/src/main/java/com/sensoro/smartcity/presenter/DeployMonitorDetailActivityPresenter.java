@@ -530,11 +530,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private void checkHasForceUploadPermission() {
         String mergeType = WidgetUtil.handleMergeType(deployAnalyzerModel.deviceType);
         if (TextUtils.isEmpty(mergeType)) {
-            if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
-                getView().showWarnDialog(true);
-            } else {
-                getView().showWarnDialog(false);
-            }
+//            if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
+//                getView().showWarnDialog(true);
+//            } else {
+//                getView().showWarnDialog(false);
+//            }
+            getView().showWarnDialog(true);
         } else {
             if (Constants.DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST.contains(mergeType)) {
                 if (PreferencesHelper.getInstance().getUserData().hasBadSignalUpload) {
@@ -543,7 +544,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     getView().showWarnDialog(false);
                 }
             } else {
-                getView().showWarnDialog(false);
+                getView().showWarnDialog(true);
             }
         }
     }

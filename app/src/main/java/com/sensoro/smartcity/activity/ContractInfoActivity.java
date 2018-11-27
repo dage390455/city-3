@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -74,6 +75,14 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     TextView tvServiceAge;
     @BindView(R.id.tv_contract_age)
     TextView tvContractAge;
+    @BindView(R.id.tv_service_age_first)
+    TextView tvServiceAgeFirst;
+    @BindView(R.id.tv_contract_age_first)
+    TextView tvContractAgeFirst;
+    @BindView(R.id.tv_service_age_period)
+    TextView tvServiceAgePeriod;
+    @BindView(R.id.tv_contract_age_period)
+    TextView tvContractAgePeriod;
     @BindView(R.id.rv_sensor_info_count)
     RecyclerView rvSensorInfoCount;
     @BindView(R.id.rl_service_info_sign_time)
@@ -194,7 +203,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
     @Override
     public void showContentText(int type, String line1, String phone, String line2, String line3, String line4,
-                                String line5, String line6, String place, String serviceAge) {
+                                String line5, String line6, String place, String serviceAge, String serviceAgeFirst, String serviceAgePeriod) {
         tvContractServicePlace.setText(place);
         switch (type) {
             case 1:
@@ -212,8 +221,6 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 //
                 etContractInfoLine6.setText(line6);
                 //
-                String year = mActivity.getString(R.string.year);
-                tvContractAge.setText(serviceAge + year);
                 break;
             case 2:
                 tvContractInfoLine1.setText(R.string.name);
@@ -236,7 +243,6 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
                 //
-                tvContractAge.setText(serviceAge + mActivity.getString(R.string.year));
                 break;
             case 3:
                 tvContractInfoLine1.setText(R.string.party_a_customer_name);
@@ -251,22 +257,39 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 tvContractInfoLine3.setText(R.string.phone_num);
                 etContractInfoLine3.setText(line3);
                 //
-                tvContractInfoLine4.setText(R.string.address);
+//                tvContractInfoLine4.setText(R.string.address);
+//                etContractInfoLine4.setText(line4);
+//                //
+//                ivLine5.setVisibility(View.GONE);
+//                llContractInfoLine5.setVisibility(View.GONE);
+
+                tvContractInfoLine4.setText("身份证号");
                 etContractInfoLine4.setText(line4);
                 //
-                ivLine5.setVisibility(View.GONE);
-                llContractInfoLine5.setVisibility(View.GONE);
+                tvContractInfoLine5.setText(R.string.address);
+                etContractInfoLine5.setText(line5);
+
 //                //
                 ivLine6.setVisibility(View.GONE);
                 llContractInfoLine6.setVisibility(View.GONE);
-                //
-
-                tvContractAge.setText(serviceAge + mActivity.getString(R.string.year));
                 //
                 break;
             default:
                 break;
         }
+        String year = mActivity.getString(R.string.year);
+        if (TextUtils.isEmpty(serviceAge)) {
+            serviceAge = "0";
+        }
+        if (TextUtils.isEmpty(serviceAgeFirst)) {
+            serviceAgeFirst = "0";
+        }
+        if (TextUtils.isEmpty(serviceAgePeriod)) {
+            serviceAgePeriod = "0";
+        }
+        tvContractAge.setText(serviceAge + year);
+        tvContractAgeFirst.setText(serviceAgeFirst + year);
+        tvContractAgePeriod.setText(serviceAgePeriod + year);
     }
 
     @Override
@@ -276,6 +299,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
     @Override
     public void setSignTime(String time) {
+        ivLine7.setVisibility(View.VISIBLE);
         rlServiceInfoSignTime.setVisibility(View.VISIBLE);
         tvContractSign.setText(time);
     }
@@ -304,6 +328,8 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
     @Override
     public void setConfirmStatus(boolean confirmed) {
+        ivLine8.setVisibility(View.VISIBLE);
+        rlServiceInfoStatus.setVisibility(View.VISIBLE);
         tvContractStatus.setText(confirmed ? R.string.signed : R.string.not_signed);
         tvContractStatus.setTextColor(confirmed ? getResources().getColor(R.color.c_29c093) :
                 getResources().getColor(R.color.c_ff8d34));
@@ -313,6 +339,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
     @Override
     public void setContractCreateTime(String createdAt) {
+        rlServiceInfoCreateTime.setVisibility(View.VISIBLE);
         tvContractCreteTime.setText(createdAt);
     }
 

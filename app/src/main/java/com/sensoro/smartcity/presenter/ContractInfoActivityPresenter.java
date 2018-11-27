@@ -20,7 +20,6 @@ import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AESUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
@@ -29,9 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -53,6 +50,8 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     private String placeType;
     //
     private String contract_service_life;
+    private String contract_service_life_first;
+    private String contract_service_life_period;
     private ArrayList<ContractsTemplateInfo> deviceList;
     private ContractListInfo mContractInfo;
 
@@ -60,67 +59,72 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        getView().showProgressDialog();
         int contractId = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_ID, -1);
-        if(contractId == -1){
+        if (contractId == -1) {
             serviceType = mContext.getIntent().getIntExtra(EXTRA_CONTRACT_TYPE, -1);
-        contract_service_life = mContext.getIntent().getStringExtra("contract_service_life");
-        placeType = mContext.getIntent().getStringExtra("place");
-        String signDate = mContext.getIntent().getStringExtra("signDate");
-        id = mContext.getIntent().getIntExtra("id", -1);
-        if (id == -1) {
-            getView().setConfirmText("确认并生成二维码");
+            contract_service_life = mContext.getIntent().getStringExtra("contract_service_life");
+            contract_service_life_first = mContext.getIntent().getStringExtra("contract_service_life_first");
+            contract_service_life_period = mContext.getIntent().getStringExtra("contract_service_life_period");
+            placeType = mContext.getIntent().getStringExtra("place");
+            String signDate = mContext.getIntent().getStringExtra("signDate");
+            id = mContext.getIntent().getIntExtra("id", -1);
+            if (id == -1) {
+                getView().setConfirmText("确认并生成二维码");
+            } else {
+                getView().setConfirmText("查看二维码");
+            }
+            if (!TextUtils.isEmpty(signDate)) {
+                getView().setSignTime(signDate);
+            }
+            switch (serviceType) {
+                case 1:
+                    line1 = mContext.getIntent().getStringExtra("line1");
+                    line2 = mContext.getIntent().getStringExtra("line2");
+                    line3 = mContext.getIntent().getStringExtra("line3");
+                    line4 = mContext.getIntent().getStringExtra("line4");
+                    line5 = mContext.getIntent().getStringExtra("line5");
+                    line6 = mContext.getIntent().getStringExtra("line6");
+                    phone = mContext.getIntent().getStringExtra("phone");
+                    //
+                    getView().showContentText(serviceType, line1, phone, line2, line3, line4,
+                            line5, line6, placeType, contract_service_life, contract_service_life_first, contract_service_life_period);
+                    break;
+                case 2:
+                    line1 = mContext.getIntent().getStringExtra("line1");
+                    line2 = mContext.getIntent().getStringExtra("line2");
+                    line3 = mContext.getIntent().getStringExtra("line3");
+                    line4 = mContext.getIntent().getStringExtra("line4");
+                    phone = mContext.getIntent().getStringExtra("phone");
+                    //
+                    getView().showContentText(serviceType, line1, phone, line2, line3, line4,
+                            null, null, placeType, contract_service_life, contract_service_life_first, contract_service_life_period);
+                    break;
+                case 3:
+                    line1 = mContext.getIntent().getStringExtra("line1");
+                    line2 = mContext.getIntent().getStringExtra("line2");
+                    line3 = mContext.getIntent().getStringExtra("line3");
+                    //身份证号
+                    line4 = mContext.getIntent().getStringExtra("line4");
+                    //住址
+                    line5 = mContext.getIntent().getStringExtra("line5");
+                    //
+                    getView().showContentText(serviceType, line1, "", line2, line3, line4,
+                            line5, null, placeType, contract_service_life, contract_service_life_first, contract_service_life_period);
+                    break;
+                default:
+                    break;
+            }
+            deviceList = (ArrayList<ContractsTemplateInfo>) mContext.getIntent().getSerializableExtra
+                    ("contract_template");
+            getView().updateContractTemplateAdapterInfo(deviceList);
         } else {
-            getView().setConfirmText("查看二维码");
-        }
-        if (!TextUtils.isEmpty(signDate)) {
-            getView().setSignTime(signDate);
-        }
-        switch (serviceType) {
-            case 1:
-                line1 = mContext.getIntent().getStringExtra("line1");
-                line2 = mContext.getIntent().getStringExtra("line2");
-                line3 = mContext.getIntent().getStringExtra("line3");
-                line4 = mContext.getIntent().getStringExtra("line4");
-                line5 = mContext.getIntent().getStringExtra("line5");
-                line6 = mContext.getIntent().getStringExtra("line6");
-                phone = mContext.getIntent().getStringExtra("phone");
-                //
-                getView().showContentText(serviceType, line1, phone, line2, line3, line4,
-                        line5, line6, placeType, contract_service_life);
-                break;
-            case 2:
-                line1 = mContext.getIntent().getStringExtra("line1");
-                line2 = mContext.getIntent().getStringExtra("line2");
-                line3 = mContext.getIntent().getStringExtra("line3");
-                line4 = mContext.getIntent().getStringExtra("line4");
-                phone = mContext.getIntent().getStringExtra("phone");
-                //
-                getView().showContentText(serviceType, line1, phone, line2, line3, line4,
-                        null, null, placeType, contract_service_life);
-                break;
-            case 3:
-                line1 = mContext.getIntent().getStringExtra("line1");
-                line2 = mContext.getIntent().getStringExtra("line2");
-                line3 = mContext.getIntent().getStringExtra("line3");
-                line4 = mContext.getIntent().getStringExtra("line4");
-                //
-                getView().showContentText(serviceType, line1, "", line2, line3, line4,
-                        null, null, placeType, contract_service_life);
-                break;
-            default:
-                break;
-        }
-        deviceList = (ArrayList<ContractsTemplateInfo>) mContext.getIntent().getSerializableExtra
-                ("contract_template");
-        getView().updateContractTemplateAdapterInfo(deviceList);
-        }else{
             requestData(contractId);
         }
 
     }
 
     private void requestData(int contractId) {
+        getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getContractInfo(contractId + "").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<ContractInfoRsp>() {
                     @Override
@@ -182,7 +186,9 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         if (TextUtils.isEmpty(placeType)) {
             placeType = "无";
         }
-        contract_service_life = mContractInfo.getServiceTime()+"";
+        contract_service_life = mContractInfo.getServiceTime() + "";
+        contract_service_life_first = mContractInfo.getFirstPayTimes() + "";
+        contract_service_life_period = mContractInfo.getPayTimes() + "";
 
         line1 = mContractInfo.getCustomer_name();
         if (TextUtils.isEmpty(line1)) {
@@ -216,18 +222,54 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
             case 1:
                 break;
             case 2:
+                int sex = mContractInfo.getSex();
+                switch (sex) {
+                    case 1:
+                        line2 = "男";
+                        break;
+                    case 2:
+                        line2 = "女";
+                        break;
+                    default:
+                        line2 = "无";
+                        break;
+                }
+                line3 = mContractInfo.getCard_id();
+                if (TextUtils.isEmpty(line3)) {
+                    line3 = "无";
+                }
+                line4 = mContractInfo.getCustomer_address();
+                if (TextUtils.isEmpty(line4)) {
+                    line4 = "无";
+                }
                 line5 = null;
                 line6 = null;
                 break;
             case 3:
-                line5 = null;
+                line1 = mContractInfo.getCustomer_enterprise_name();
+                if (TextUtils.isEmpty(line1)) {
+                    line1 = "无";
+                }
+                line2 = mContractInfo.getCustomer_name();
+                if (TextUtils.isEmpty(line2)) {
+                    line1 = "无";
+                }
+                line3 = mContractInfo.getCustomer_phone();
+                if (TextUtils.isEmpty(line3)) {
+                    line3 = "无";
+                }
+                line4 = mContractInfo.getCard_id();
+                if (TextUtils.isEmpty(line4)) {
+                    line4 = "无";
+                }
                 line6 = null;
                 phone = null;
                 break;
         }
 
+
         getView().showContentText(created_type, line1, phone, line2, line3, line4,
-    line5, line6, placeType, contract_service_life);
+                line5, line6, placeType, contract_service_life, contract_service_life_first, contract_service_life_period);
     }
 
     public void startToConfirm(final String text) {
@@ -259,9 +301,13 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     }
 
     private void addContract(final String text) {
-        int serviceTime = 2;
+        int serviceTime = 1;
+        int serviceTimeFirst = 1;
+        int serviceTimePeriod = 0;
         try {
             serviceTime = Integer.parseInt(contract_service_life);
+            serviceTimeFirst = Integer.parseInt(contract_service_life_first);
+            serviceTimePeriod = Integer.parseInt(contract_service_life_period);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -275,7 +321,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                     line4 = null;
                 }
                 RetrofitServiceHelper.INSTANCE.getNewContract(1, serviceType, null, null, line3, line4,
-                        line1, line2, line6, line5, phone, placeType, deviceList, 2, null, serviceTime).subscribeOn
+                        line1, line2, line6, line5, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
                     @Override
@@ -303,7 +349,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 }
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line3, sex, null, null,
-                        line1, null, null, line4, phone, placeType, deviceList, 2, null, serviceTime).subscribeOn
+                        line1, null, null, line4, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
                     @Override
@@ -324,8 +370,8 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 break;
             case 3:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, null, null, null, null,
-                        line2, line1, null, line4, line3, placeType, deviceList, 2, null, serviceTime).subscribeOn
+                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line4, null, null, null,
+                        line2, line1, null, line5, line3, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
                         (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
 

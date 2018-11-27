@@ -27,9 +27,9 @@
             android:id="@+id/contract_service_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/contract_info_title"
             android:layout_centerVertical="true"
             android:layout_toEndOf="@id/iv_contract_service_back"
+            android:text="@string/contract_info_title"
             android:textColor="@color/c_252525"
             android:textSize="18sp" />
 
@@ -69,12 +69,12 @@
                     android:id="@+id/ll_contract_service_line1"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="12dp"
-                    android:paddingTop="12dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line1"
@@ -90,13 +90,13 @@
                         android:id="@+id/et_contract_service_line1"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="15dp"
                         android:layout_gravity="end"
-                        android:gravity="end"
+                        android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:gravity="end"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -106,8 +106,8 @@
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
-                        android:padding="8dp"
                         android:gravity="center_vertical"
+                        android:padding="8dp"
                         android:src="@mipmap/ic_et_delete"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -125,12 +125,12 @@
                     android:id="@+id/ll_contract_service_phone"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_contract_service_phone"
@@ -148,10 +148,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:gravity="end"
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:gravity="end"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -161,8 +161,8 @@
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
-                        android:padding="8dp"
                         android:gravity="center_vertical"
+                        android:padding="8dp"
                         android:src="@mipmap/ic_et_delete"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -180,12 +180,12 @@
                     android:id="@+id/ll_contract_service_line2"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line2"
@@ -204,8 +204,8 @@
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
                         android:background="@null"
-                        android:gravity="end"
                         android:cropToPadding="true"
+                        android:gravity="end"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -218,6 +218,7 @@
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:gravity="end"
                         android:textColor="@color/c_626262"
                         android:textSize="14sp"
                         android:visibility="gone" />
@@ -246,12 +247,12 @@
                     android:id="@+id/ll_contract_service_line3"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:paddingBottom="12dp"
-                    android:paddingTop="12dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line3"
@@ -269,10 +270,10 @@
                         android:layout_height="wrap_content"
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
-                        android:gravity="end"
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:gravity="end"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -282,8 +283,8 @@
                         android:layout_height="wrap_content"
                         android:adjustViewBounds="true"
                         android:cropToPadding="true"
-                        android:padding="8dp"
                         android:gravity="center_vertical"
+                        android:padding="8dp"
                         android:src="@mipmap/ic_et_delete"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -303,10 +304,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line4"
@@ -358,9 +359,9 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:paddingBottom="12dp"
+                    android:gravity="center_vertical"
                     android:paddingTop="12dp"
-                    android:gravity="center_vertical">
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line5"
@@ -413,10 +414,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_contract_service_line6"
@@ -435,9 +436,9 @@
                         android:layout_marginStart="15dp"
                         android:layout_weight="1"
                         android:adjustViewBounds="true"
-                        android:gravity="end"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:gravity="end"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -457,9 +458,9 @@
                     android:id="@+id/iv_line_place"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="@color/c_dfdfdf"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf"
                     android:contentDescription="@null" />
 
                 <LinearLayout
@@ -468,10 +469,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
-                    android:paddingTop="12dp"
-                    android:paddingBottom="12dp"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:paddingTop="12dp"
+                    android:paddingBottom="12dp">
 
                     <TextView
                         android:id="@+id/tv_contract_service_place_type_title"
@@ -489,10 +490,10 @@
                         android:layout_marginStart="15dp"
                         android:layout_marginEnd="4dp"
                         android:layout_weight="1"
-                        android:gravity="end"
                         android:adjustViewBounds="true"
                         android:background="@null"
                         android:cropToPadding="true"
+                        android:gravity="end"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -507,82 +508,219 @@
                 </LinearLayout>
             </LinearLayout>
 
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:paddingBottom="12dp"
-                android:paddingTop="12dp"
                 android:background="@color/white"
-                android:gravity="center_vertical">
+                android:orientation="vertical">
 
-                <TextView
-                    android:layout_width="wrap_content"
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
                     android:gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:text="@string/contract_info_contract_service_life"
-                    android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
-
-                <LinearLayout
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="20dp"
-                        android:gravity="center"
-                        android:text="6年"
-                        android:textColor="@color/c_252525"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/contract_info_contract_service_life"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
-                </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="gone">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="20dp"
+                            android:gravity="center"
+                            android:text="1年"
+                            android:textColor="@color/c_252525"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/iv_contract_age_del"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/contact_template_del" />
+
+                        <EditText
+                            android:id="@+id/et_contract_age"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:cropToPadding="true"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxEms="5"
+                            android:maxLength="5"
+                            android:minEms="3"
+                            android:padding="10dp"
+                            android:text="1"
+                            android:textColor="@color/c_626262"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_contract_age_add"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:src="@drawable/contract_template_add" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf"
+                    android:contentDescription="@null" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:visibility="gone">
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
 
-                    <ImageView
-                        android:id="@+id/iv_contract_age_del"
+                    <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:src="@mipmap/ic_contract_del" />
-
-                    <EditText
-                        android:id="@+id/et_contract_age"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:adjustViewBounds="true"
-                        android:background="@null"
-                        android:cropToPadding="true"
-                        android:gravity="center"
-                        android:inputType="number"
-                        android:maxEms="5"
-                        android:maxLength="5"
-                        android:minEms="3"
-                        android:padding="10dp"
-                        android:text="0"
-                        android:textColor="@color/c_626262"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:gravity="center_vertical"
+                        android:text="首次付款"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
-                    <ImageView
-                        android:id="@+id/iv_contract_age_add"
+                    <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginRight="15dp"
-                        android:src="@mipmap/ic_contract_add" />
-                </LinearLayout>
-            </RelativeLayout>
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/iv_contract_age_first_del"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/contact_template_del" />
+
+                        <EditText
+                            android:id="@+id/et_contract_age_first"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:cropToPadding="true"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxEms="5"
+                            android:maxLength="5"
+                            android:minEms="3"
+                            android:padding="10dp"
+                            android:text="1"
+                            android:textColor="@color/c_626262"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_contract_age_first_add"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:src="@drawable/contract_template_add" />
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf"
+                    android:contentDescription="@null" />
+
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:paddingTop="8dp"
+                    android:paddingBottom="8dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="20dp"
+                        android:gravity="center_vertical"
+                        android:text="续费周期"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:id="@+id/iv_contract_age_period_del"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:src="@drawable/contact_template_del" />
+
+                        <EditText
+                            android:id="@+id/et_contract_age_period"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:adjustViewBounds="true"
+                            android:background="@null"
+                            android:cropToPadding="true"
+                            android:gravity="center"
+                            android:inputType="number"
+                            android:maxEms="5"
+                            android:maxLength="5"
+                            android:minEms="3"
+                            android:padding="10dp"
+                            android:text="1"
+                            android:textColor="@color/c_626262"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_contract_age_period_add"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="15dp"
+                            android:src="@drawable/contract_template_add" />
+                    </LinearLayout>
+                </RelativeLayout>
+            </LinearLayout>
+
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -607,10 +745,10 @@
         style="?android:attr/borderlessButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/y50"
         android:layout_marginLeft="18dp"
-        android:layout_marginRight="18dp"
         android:layout_marginTop="@dimen/y50"
+        android:layout_marginRight="18dp"
+        android:layout_marginBottom="@dimen/y50"
         android:background="@drawable/shape_button"
         android:gravity="center"
         android:text="@string/contract_service_next"

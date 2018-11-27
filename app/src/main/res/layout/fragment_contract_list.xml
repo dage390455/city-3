@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/contract_manger_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/c_f4f4f4"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    >
+    android:background="@color/c_f4f4f4">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,6 +29,7 @@
                 android:cropToPadding="true"
                 android:padding="12dp"
                 android:src="@drawable/arrows_left" />
+
             <TextView
                 android:id="@+id/contract_title"
                 android:layout_width="wrap_content"
@@ -52,6 +54,8 @@
                 android:src="@mipmap/main_add" />
         </RelativeLayout>
 
+        <include layout="@layout/item_contract_include_top_search" />
+
         <android.support.constraint.ConstraintLayout
             android:id="@+id/contract_cl_select_root"
             android:layout_width="match_parent"
@@ -62,42 +66,45 @@
                 android:id="@+id/contract_tv_select_type"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/all_contracts"
-                android:textSize="12sp"
-                android:textColor="@color/c_a6a6a6"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="12dp"
                 android:drawableEnd="@drawable/main_small_triangle_gray"
                 android:drawablePadding="4dp"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="4dp"
-                app:layout_constraintStart_toStartOf="parent"
+                android:text="@string/all_contracts"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="@+id/center_line"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
             <View
                 android:id="@+id/center_line"
                 android:layout_width="1dp"
                 android:layout_height="0dp"
                 android:background="@color/c_dfdfdf"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/contract_tv_select_type"
                 app:layout_constraintBottom_toBottomOf="@id/contract_tv_select_type"
-                />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@id/contract_tv_select_type" />
+
             <TextView
                 android:id="@+id/contract_tv_select_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/all_states"
-                android:textSize="12sp"
-                android:textColor="@color/c_a6a6a6"
+                android:layout_marginTop="4dp"
+                android:layout_marginBottom="12dp"
                 android:drawableEnd="@drawable/main_small_triangle_gray"
                 android:drawablePadding="4dp"
-                app:layout_constraintStart_toStartOf="@id/center_line"
+                android:text="@string/all_states"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-
-                app:layout_constraintBottom_toBottomOf="parent"/>
+                app:layout_constraintStart_toStartOf="@id/center_line"
+                app:layout_constraintTop_toTopOf="parent" />
         </android.support.constraint.ConstraintLayout>
+
         <View
             android:layout_width="match_parent"
             android:layout_height="0.5dp"
@@ -109,9 +116,6 @@
             android:layout_marginTop="12dp"
             android:background="@color/c_f4f4f4">
 
-            <include
-                layout="@layout/item_no_content"
-                />
 
             <com.scwang.smartrefresh.layout.SmartRefreshLayout
                 android:id="@+id/refreshLayout"
@@ -124,23 +128,25 @@
                     android:id="@+id/contract_ptr_list"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:divider="@color/c_dfdfdf"
-                    android:dividerHeight="0.5dp"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
+                    android:divider="@color/c_dfdfdf"
+                    android:dividerHeight="0.5dp"
                     android:fadingEdge="none"
                     android:scrollbars="none" />
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+            <include layout="@layout/item_no_content" />
         </RelativeLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
-        android:layout_marginBottom="@dimen/y50"
-        android:layout_marginRight="@dimen/x50">
+        android:layout_alignParentBottom="true"
+        android:layout_marginRight="@dimen/x50"
+        android:layout_marginBottom="@dimen/y50">
 
         <ImageView
             android:id="@+id/contract_return_top"

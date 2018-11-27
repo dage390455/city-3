@@ -3,7 +3,6 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -69,9 +68,9 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
+    public void onBackPressed() {
         mPresenter.finish();
-        return super.onKeyDown(keyCode,event);
+        super.onBackPressed();
     }
 
     @Override

@@ -153,7 +153,7 @@
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="15dp"
                 android:layout_toRightOf="@+id/iv_index_manually"
-                android:text="@string/contract_index_id_card_identification"
+                android:text="@string/contract_index_"
                 android:textColor="@color/c_252525"
                 android:textSize="@dimen/city_tiny_large_size" />
 

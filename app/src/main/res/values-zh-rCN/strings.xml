@@ -234,7 +234,7 @@
     //
 
     //
-    <string name="search_tips">设备名称、设备号、标签</string>
+    <string name="search_tips">设备名称/设备号/标签</string>
 
     <string name="recent">最近搜索</string>
     <string name="clear">清除</string>
@@ -392,8 +392,8 @@
     //部署地图
     <string name="deploy_device_map_save">保存</string>
     //部署记录
-    <string name="deploy_record_search_tip">设备名称、设备号、标签</string>
-    <string name="deploy_record_search_cancel_tip">设备名称、设备号、标签</string>
+    <string name="deploy_record_search_tip">设备名称/设备号/标签</string>
+    <string name="deploy_record_search_cancel_tip">设备名称/设备号/标签</string>
     <string name="deploy_record_new_device">部署新设备</string>
     <string name="deploy_record_device_number">设备号</string>
     <string name="deploy_record_name">名称</string>
@@ -516,7 +516,7 @@
     <string name="manager_fragment_version_information">版本信息</string>
     <string name="manager_fragment_exit_account">退出账户</string>
     //warn framgen
-    <string name="warn_fragment_search_tip">设备名称、设备号、手机号</string>
+    <string name="warn_fragment_search_tip">设备名称/设备号/手机号</string>
 
     //
     <string name="top_bar_image">图片</string>

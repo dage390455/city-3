@@ -254,13 +254,13 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
          * 开发者如果担心sdk初始化影响app启动速度，可以设置为false，
          * 在后面某个时刻手动调用Beta.init(getApplicationContext(),false);
          */
-        Beta.autoInit = false;
+        Beta.autoInit = true;
 
         /**
          * true表示初始化时自动检查升级;
          * false表示不会自动检查升级,需要手动调用Beta.checkUpgrade()方法;
          */
-        Beta.autoCheckUpgrade = false;
+        Beta.autoCheckUpgrade = true;
 
         /**
          * 设置升级检查周期为60s(默认检查周期为0s)，60s内SDK不重复向后台请求策略);
@@ -270,7 +270,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         /**
          * 设置启动延时为1s（默认延时3s），APP启动1s后初始化SDK，避免影响APP启动速度;
          */
-        Beta.initDelay = 3 * 1000;
+        Beta.initDelay = 1 * 1000;
 
         /**
          * 设置通知栏大图标，largeIconId为项目中的图片资源;
