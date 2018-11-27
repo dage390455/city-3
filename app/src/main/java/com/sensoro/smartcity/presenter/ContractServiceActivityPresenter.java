@@ -143,7 +143,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
 
     public void startToNext(String line1, String phone, String line2, String line3, String line4, String line5,
                             String line6,
-                            String contractAge, String place, String sex, ArrayList<ContractsTemplateInfo> data) {
+                            String contractAge, String contractAgeFirst, String contractAgePeriod, String place, String sex, ArrayList<ContractsTemplateInfo> data) {
         Intent intent = new Intent();
         intent.setClass(mContext, ContractInfoActivity.class);
         switch (serviceType) {
@@ -288,12 +288,19 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     getView().toastShort("请输入有效手机号");
                     return;
                 }
-                if (RegexUtils.checkContractNotEmpty(line4)) {
+                //
+                if (RegexUtils.checkUserID(line4)) {
+                    intent.putExtra("line4", line4);
+                } else {
+                    getView().toastShort("请输入有效身份证号码");
+                    return;
+                }
+                if (RegexUtils.checkContractNotEmpty(line5)) {
                     if (line4.length() > 200) {
                         getView().toastShort("住址信息不能超过200个字符");
                         return;
                     }
-                    intent.putExtra("line4", line4);
+                    intent.putExtra("line5", line5);
                 } else {
                     getView().toastShort("请填写住址信息");
                     return;
@@ -307,23 +314,104 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             return;
         }
         intent.putExtra("place", place);
-//        if (TextUtils.isEmpty(contractAge)) {
-//            getView().toastShort("服务年限不能少于1年");
-//            return;
-//        } else {
-//            int serverAge = 0;
-//            try {
-//                serverAge = Integer.parseInt(contractAge);
-//            } catch (Exception e) {
-//                e.printStackTrace();
-//            }
-//            if (serverAge == 0) {
+        int serverAgeTotal = 1;
+        int serverAgeFirst = 1;
+        int serverAgePeriod = 1;
+//        总服务年限校验
+        if (TextUtils.isEmpty(contractAge)) {
+            getView().toastShort("合同服务年限不能少于1年");
+            return;
+        } else {
+            try {
+                serverAgeTotal = Integer.parseInt(contractAge);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            if (serverAgeTotal < 1) {
 //                getView().toastShort("服务年限不能少于1年");
 //                return;
 //            }
-//            intent.putExtra("contract_service_life", String.valueOf(serverAge));
+        }
+        // 首次服务年限校验
+        if (TextUtils.isEmpty(contractAgeFirst)) {
+            getView().toastShort("首次付款年限不能少于1年");
+            return;
+        } else {
+            try {
+                serverAgeFirst = Integer.parseInt(contractAgeFirst);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            if (serverAgeFirst < 1) {
+//                getView().toastShort("首次服务年限不能少于1年");
+//                return;
+//            } else {
+            if (serverAgeFirst > serverAgeTotal) {
+                getView().toastShort("首次付款年限不能超过合同服务年限");
+                return;
+            }
+//            }
+
+        }
+        if (TextUtils.isEmpty(contractAgePeriod)) {
+            getView().toastShort("续费周期年限不能少于1年");
+            return;
+        } else {
+            try {
+                serverAgePeriod = Integer.parseInt(contractAgePeriod);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+//            if (serverAgePeriod < 1) {
+//                getView().toastShort("付费周期年限不能少于1年");
+//                return;
+//            } else {
+            if (serverAgePeriod > serverAgeTotal) {
+                getView().toastShort("续费周期不能超过合同服务年限");
+                return;
+            }
+//            }
+
+        }
+//        int temp = serverAgeTotal - serverAgeFirst;
+//        if (temp > 0) {
+//            if (TextUtils.isEmpty(contractAgePeriod)) {
+//                getView().toastShort("付费周期年限不能少于1年");
+//                return;
+//            } else {
+//                try {
+//                    serverAgePeriod = Integer.parseInt(contractAgePeriod);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                if (serverAgePeriod < 1) {
+//                    getView().toastShort("付费周期年限不能少于1年");
+//                    return;
+//                } else {
+//                    if (temp % serverAgePeriod != 0) {
+//                        getView().toastShort("剩余付款年限需为续费周期的整数倍");
+//                        return;
+//                    }
+//                }
+//
+//            }
+//        } else {
+//            if (!TextUtils.isEmpty(contractAgePeriod)) {
+//                try {
+//                    serverAgePeriod = Integer.parseInt(contractAgePeriod);
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//                if (serverAgePeriod != 0) {
+//                    getView().toastShort("首次付款与付费周期年限相加不能超过合同服务年限");
+//                    return;
+//                }
+//            }
 //        }
-        intent.putExtra("contract_service_life", "6");
+        intent.putExtra("contract_service_life", String.valueOf(serverAgeTotal));
+        intent.putExtra("contract_service_life_first", String.valueOf(serverAgeFirst));
+        intent.putExtra("contract_service_life_period", String.valueOf(serverAgePeriod));
+//        intent.putExtra("contract_service_life", "6");
         if (data != null && data.size() > 0) {
             final ArrayList<ContractsTemplateInfo> dataList = new ArrayList<>(data);
             //去除未选择的设备
