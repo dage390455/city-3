@@ -32,7 +32,7 @@
     <string name="signal_weak">信号：差</string>
     <string name="no_signal">无信号</string>
     <string name="alert_contact">预警联系人</string>
-    <string name="get_the_middle_profile">获取中配置文件</string>
+    <string name="get_the_middle_profile">获取配置文件中</string>
     <string name="live_photo">现场照片</string>
     <string name="positioned">已定位</string>
     <string name="not_positioned">未定位</string>
@@ -297,7 +297,6 @@
     <string name="tips_data_error">数据解析错误</string>
     <string name="tips_date_not_null">日期段中的任一日期不能为空</string>
     <string name="tips_input_machine_sn">请输入机身对应的SN号码</string>
-    <string name="tips_username_empty">请输入账号</string>
     <string name="tips_phone_empty">请输入有效电话号码</string>
     <string name="tips_login_pwd_empty">请输入登录密码</string>
     <string name="tips_deploy_success">恭喜! 传感器点位部署成功</string>
@@ -592,6 +591,7 @@
     <string name="ok_one">好</string>
     <string name="confirm_monitor_point_exception">确认监测点是否异常</string>
     <string name="uploade_exception_change_device">上报异常并更换设备</string>
+    <string name="tips_username_empty">请输入账号</string>
     //
 
 </resources>
