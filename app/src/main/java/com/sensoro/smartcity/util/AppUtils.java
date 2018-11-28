@@ -2,6 +2,8 @@ package com.sensoro.smartcity.util;
 
 import android.app.Activity;
 import android.app.ActivityManager;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -366,6 +368,7 @@ public class AppUtils {
         }
         return language;
     }
+
     public static String getContactPhone(List<AlarmInfo.RecordInfo> list) {
         String[] contract = new String[3];
         String tempNumber = null;
@@ -412,4 +415,24 @@ public class AppUtils {
         }
         return tempNumber;
     }
+
+    public static String getTextFromClip(Context context) {
+        try {
+            ClipboardManager clipboardManager = (ClipboardManager) context.getSystemService(Context.CLIPBOARD_SERVICE);
+            //判断剪切版时候有内容
+            if (!clipboardManager.hasPrimaryClip())
+                return null;
+            ClipData clipData = clipboardManager.getPrimaryClip();
+            //获取 ClipDescription
+//            ClipDescription clipDescription = clipboardManager.getPrimaryClipDescription();
+//            //获取 lable
+//            String lable = clipDescription.getLabel().toString();
+            //获取 text
+            return clipData.getItemAt(0).getText().toString();
+        } catch (Exception e) {
+            return null;
+        }
+
+    }
+
 }
