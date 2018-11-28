@@ -3,14 +3,12 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,15 +23,14 @@ import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.toast.MonitorPointOperationSuccessToast;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
+import com.sensoro.smartcity.widget.toast.MonitorPointOperationSuccessToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -114,7 +111,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     private TipOperationDialogUtils mTipUtils;
     private MonitorPointOperatingDialogUtil mOperatingUtil;
     private int mTipDialogType;
-    private Handler mHandler;
 
 
     @Override
@@ -173,7 +169,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         initTipDialog();
         initEditDialog();
         initOperatingDialog();
-        mHandler = new Handler();
 
     }
 
@@ -462,17 +457,11 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
     @Override
     public void showOperationSuccessToast() {
-        mOperatingUtil.dismiss();
-        mPresenter.clearScheduleNo();
-        mHandler.removeCallbacksAndMessages(null);
         MonitorPointOperationSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
     }
 
     @Override
     public void showErrorTipDialog(String errorMsg) {
-        mPresenter.clearScheduleNo();
-        mOperatingUtil.dismiss();
-        mHandler.removeCallbacksAndMessages(null);
         if (mTipUtils.isShowing()) {
             mTipUtils.setTipMessageText(errorMsg);
             return;
@@ -482,13 +471,12 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         mTipUtils.setTipMessageText(errorMsg);
         mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
         mTipUtils.setTipConfirmVisible(false);
-        mOperatingUtil.dismiss();
         mTipUtils.show();
     }
 
     @Override
-    public void showOperationTipDialog() {
-        if (mTipUtils != null) {
+    public void showOperationTipLoadingDialog() {
+        if (mOperatingUtil != null) {
             switch (mTipDialogType) {
                 case MonitorPointOperationCode.ERASURE:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.erasuring));
@@ -512,18 +500,19 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
             }
             mOperatingUtil.show();
         }
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                showErrorTipDialog(mActivity.getString(R.string.operation_request_time_out));
-            }
-        }, 10000);
     }
 
     @Override
     public void dismissTipDialog() {
-        if (mTipUtils!=null) {
+        if (mTipUtils != null) {
             mTipUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void dismissOperatingLoadingDialog() {
+        if (mOperatingUtil != null) {
+            mOperatingUtil.dismiss();
         }
     }
 

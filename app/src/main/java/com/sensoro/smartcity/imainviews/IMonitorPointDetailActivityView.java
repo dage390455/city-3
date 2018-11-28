@@ -18,7 +18,7 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void setContractPhone(String contractPhone);
 
-    void setDeviceLocation(String location,boolean isArrowsRight);
+    void setDeviceLocation(String location, boolean isArrowsRight);
 
     void updateDeviceInfoAdapter(DeviceInfo deviceInfo);
 
@@ -58,7 +58,9 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void showErrorTipDialog(String errorMsg);
 
-    void showOperationTipDialog();
+    void showOperationTipLoadingDialog();
 
     void dismissTipDialog();
+
+    void dismissOperatingLoadingDialog();
 }
