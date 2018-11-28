@@ -24,7 +24,7 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.FocusSurfaceView;
 import com.sensoro.smartcity.widget.MyVideoView;
 import com.sensoro.smartcity.widget.RecordedButton;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.yixia.camera.MediaRecorderBase;
 import com.yixia.camera.MediaRecorderNative;

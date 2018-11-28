@@ -22,7 +22,7 @@ import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;

@@ -15,7 +15,7 @@ import com.sensoro.smartcity.presenter.AuthActivityPresenter;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.NumKeyboard;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

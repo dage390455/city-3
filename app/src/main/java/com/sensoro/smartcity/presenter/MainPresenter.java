@@ -30,6 +30,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmCount;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -62,6 +63,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private final MainPresenter.DeviceInfoListener mInfoListener = new MainPresenter.DeviceInfoListener();
     private final MainPresenter.DeviceAlarmCountListener mAlarmCountListener = new MainPresenter.DeviceAlarmCountListener();
     private final DeviceAlarmDisplayStatusListener mAlarmDisplayStatusListener = new DeviceAlarmDisplayStatusListener();
+    private final DeviceTaskResultListener mTaskResultListener = new DeviceTaskResultListener();
     private final Handler mHandler = new Handler();
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     //
@@ -267,6 +269,32 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
     }
 
+    private final class DeviceTaskResultListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (MainPresenter.DeviceInfoListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            LogUtils.loge(this, "socket-->>> DeviceTaskResultListener json = " + json);
+                            MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, MonitorPointOperationTaskResultInfo.class);
+                            EventData eventData = new EventData();
+                            eventData.code = EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT;
+                            eventData.data = monitorPointOperationTaskResultInfo;
+                            EventBus.getDefault().post(eventData);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     private final class TaskRunnable implements Runnable {
 
         @Override
@@ -303,6 +331,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);

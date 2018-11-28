@@ -21,6 +21,11 @@ public class TipBleDialogUtils {
     private Activity mActivity;
     public static final int REQUEST_CODE_BLUETOOTH_ON = 0x222;
 
+    public TipBleDialogUtils(Activity activity,boolean cancelable) {
+        this(activity);
+        mDialog.setCancelable(cancelable);
+    }
+
     public TipBleDialogUtils(Activity activity) {
         mActivity = activity;
         View view = View.inflate(activity, R.layout.item_dialog_ble_tip, null);
@@ -81,7 +86,7 @@ public class TipBleDialogUtils {
 
     public void setTipCacnleText(String text, @ColorInt int color) {
         mTvCancel.setText(text);
-        mTvConfirm.setTextColor(color);
+        mTvCancel.setTextColor(color);
     }
 
     public void setTipConfirmText(String text, @ColorInt int color) {
@@ -126,7 +131,7 @@ public class TipBleDialogUtils {
         }
     }
 
-    public void destory() {
+    public void destroy() {
         if (mDialog != null) {
             mDialog.cancel();
             mDialog = null;
@@ -136,6 +141,11 @@ public class TipBleDialogUtils {
     public void setTipDialogUtilsClickListener(TipDialogUtilsClickListener listener) {
         this.listener = listener;
     }
+
+    public void setTipConfirmVisible(boolean isVisible) {
+        mTvConfirm.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
 
     public interface TipDialogUtilsClickListener {
         void onCancelClick();

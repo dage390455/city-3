@@ -459,8 +459,8 @@
     <string name="monitor_point_map_navigation">导航</string>
     //监测点详情
     <string name="monitor_point_detail_monitor_parameter">监控参数</string>
-    <string name="monitor_point_detail_operat">操作</string>
-    <string name="monitor_point_detail_alarm">发声报警</string>
+    <string name="monitor_point_detail_operation">操作</string>
+    <string name="monitor_point_detail_erasure">消音</string>
     <string name="monitor_point_firmware_upgrade">固件升级</string>
     <string name="monitor_point_information">基本信息</string>
     //名称和地址
@@ -587,6 +587,43 @@
     //选择图片
     <string name="permission_forbbidden_not_selected_image">权限被禁止，无法选择本地图片</string>
     <string name="permission_forbbidden_not_open_camera">权限被禁止，无法打开相机</string>
+    <string name="monitor_point_detail_self_check">自检</string>
+    <string name="monitor_point_detail_query">查询</string>
+    <string name="monitor_point_detail_psd">修改密码</string>
+    <string name="monitor_point_detail_reset">复位</string>
+    <string name="is_device_erasure">是否将报警设备消音</string>
+    <string name="device_erasure_tip_message">当前设备发声报警中，是否将报警设备消音</string>
+    <string name="back">返回</string>
+    <string name="erasure">消音</string>
+    <string name="is_device_self_check">是否自检设备</string>
+    <string name="device_self_check_tip_message">自检成功后，可通过近距离观察设备指示灯和蜂鸣器工作是否正常</string>
+    <string name="self_check">自检</string>
+    <string name="is_device_reset">是否将报警设备复位</string>
+    <string name="device_reset_tip_message">当前设备发声报警中，复位将解除报警</string>
+    <string name="reset">复位</string>
+    <string name="is_device_psd">是否修改密码</string>
+    <string name="device_psd_tip_message">修改将生成新的随机四位数密码</string>
+    <string name="modify">修改</string>
+    <string name="is_device_query">是否查询设备最新数据</string>
+    <string name="device_query_tip_message">查询设备将上报最新数据</string>
+    <string name="request_time_out">请求超时</string>
+    <string name="operation_request_time_out">操作请求超时</string>
+    <string name="erasuring">消音中</string>
+    <string name="reseting">复位中</string>
+    <string name="psd_modifing">正在修改密码</string>
+    <string name="quering">查询中</string>
+    <string name="self_checking">自检中</string>
+    <string name="monitor_point_operation_schedule_no_error">任务编码获取失败</string>
+    <string name="request_failed">请求失败</string>
+    <string name="monitor_point_detail_air_switch_config">空开配置</string>
+    <string name="electric_current">电流</string>
+    <string name="device_air_switch_config_tip_message">重新配置将会影响设备报警阈值</string>
+    <string name="air_switch_config">配置</string>
+    <string name="is_device_air_switch_config">是否进行空开配置</string>
+    <string name="configuring">配置中</string>
+    <string name="monitor_point_operation_error_value_range">输入错误，数值范围50至560</string>
+    <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
+    <string name="input_not_null">输入不能为空</string>
     //
 
 </resources>

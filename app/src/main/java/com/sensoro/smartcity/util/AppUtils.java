@@ -311,6 +311,14 @@ public class AppUtils {
         editText.setCursorVisible(false);
     }
 
+    public static void dismissInputMethodManager(Context context) {
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        if (imm != null && imm.isActive()) {
+            imm.toggleSoftInput(0, InputMethodManager.HIDE_NOT_ALWAYS);
+        }
+    }
+
+
     public static int getAndroiodScreenHeight(Context context) {
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         DisplayMetrics dm = new DisplayMetrics();

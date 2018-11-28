@@ -14,7 +14,7 @@ import com.sensoro.smartcity.adapter.AlarmContactRcContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IAlarmContactActivityView;
 import com.sensoro.smartcity.presenter.AlarmContactActivityPresenter;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;

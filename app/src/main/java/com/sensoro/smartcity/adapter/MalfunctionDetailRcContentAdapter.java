@@ -39,6 +39,7 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
 
     public MalfunctionDetailRcContentAdapter(Context context) {
         mContext = context;
+
     }
 
     @NonNull
@@ -58,7 +59,7 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 holder.itemMalfunctionDetailContentTvContent.setText(mContext.getString(R.string.system_upload_malfunction_task));
                 holder.itemMalfunctionDetailContentTvContent.setTextColor(mContext.getResources().getColor(R.color.c_252525));
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.smoke_icon);
-                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext,recordsBean.getUpdatedTime(), 0));
+                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext, recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.VISIBLE);
                 holder.itemMalfunctionDetailChildMalfunctionCause.setText(mMalfunctionText);
                 break;
@@ -67,22 +68,22 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 holder.itemMalfunctionDetailContentTvContent.setText(content);
                 holder.itemMalfunctionDetailContentTvContent.setTextColor(mContext.getResources().getColor(R.color.c_a6a6a6));
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.no_smoke_icon);
-                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext,recordsBean.getUpdatedTime(), 0));
+                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext, recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.GONE);
                 break;
             case "sendSMS":
                 StringBuilder smsContent = new StringBuilder();
                 smsContent.append(mContext.getString(R.string.system_sms_send));
-                holder.itemMalfunctionDetailContentTvContent.setText(appendResult(smsContent,recordsBean.getPhoneList()));
+                holder.itemMalfunctionDetailContentTvContent.setText(appendResult(smsContent, recordsBean.getPhoneList()));
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.msg_icon);
-                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext,recordsBean.getUpdatedTime(), 0));
+                holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext, recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.GONE);
                 break;
         }
 
     }
 
-    private SpannableString appendResult(StringBuilder stringBuffer,List<MalfunctionListInfo.RecordsBean.Event> phoneList) {
+    private SpannableString appendResult(StringBuilder stringBuffer, List<MalfunctionListInfo.RecordsBean.Event> phoneList) {
         //情况集合
         receiveStatusListClear();
         for (int i = 0; i < phoneList.size(); i++) {

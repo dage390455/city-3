@@ -3,6 +3,8 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.amap.api.services.core.LatLonPoint;
@@ -17,6 +19,7 @@ import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.EventData;
@@ -26,9 +29,11 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
+import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.DeviceRecentRsp;
+import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
@@ -62,6 +67,18 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     private int textColor;
     private String content;
     private boolean hasPhoneNumber;
+    private String mScheduleNo;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Runnable DeviceTaskOvertime = new Runnable() {
+        @Override
+        public void run() {
+            mHandler.removeCallbacks(DeviceTaskOvertime);
+            mScheduleNo = null;
+            getView().dismissOperatingLoadingDialog();
+            getView().showErrorTipDialog(mContext.getString(R.string.operation_request_time_out));
+
+        }
+    };
 
     @Override
     public void initData(Context context) {
@@ -72,11 +89,13 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     private void freshTopData() {
+        refreshOperationStatus();
         String statusText;
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
                 statusText = mContext.getString(R.string.main_page_warm);
+                getView().setErasureStatus(true);
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = mContext.getResources().getColor(R.color.c_29c093);
@@ -155,18 +174,53 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
     }
 
+    private void refreshOperationStatus() {
+        boolean isContains = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType());
+        getView().setDeviceOperationVisible(isContains);
+        getView().setErasureStatus(false);
+        getView().setResetStatus(false);
+        getView().setPsdStatus(true);
+        getView().setQueryStatus(true);
+        getView().setSelfCheckStatus(true);
+        getView().setAirSwitchConfigStatus(true);
+        if (isContains) {
+            switch (mDeviceInfo.getStatus()) {
+                case SENSOR_STATUS_ALARM:
+                    getView().setErasureStatus(true);
+                    getView().setResetStatus(true);
+                    break;
+                case SENSOR_STATUS_NORMAL:
+                    break;
+                case SENSOR_STATUS_LOST:
+                case SENSOR_STATUS_INACTIVE:
+                    getView().setPsdStatus(false);
+                    getView().setQueryStatus(false);
+                    getView().setSelfCheckStatus(false);
+                    getView().setAirSwitchConfigStatus(false);
+                    break;
+                case SENSOR_STATUS_MALFUNCTION:
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
     private void initCurrentDeviceInfo() {
         getView().setSNText(mDeviceInfo.getSn());
         String typeName = mContext.getString(R.string.power_supply);
         try {
             DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
             String mergeType = mDeviceInfo.getMergeType();
+            String deviceType = mDeviceInfo.getDeviceType();
             if (TextUtils.isEmpty(mergeType)) {
-                mergeType = WidgetUtil.handleMergeType(mDeviceInfo.getDeviceType());
+                mergeType = WidgetUtil.handleMergeType(deviceType);
             }
             Map<String, MergeTypeStyles> mergeTypeMap = localDevicesMergeTypes.getMergeType();
             MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(mergeType);
             typeName = mergeTypeStyles.getName();
+
+//            deviceType.equals()
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -306,12 +360,42 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     }
                 }
                 break;
+            case EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT:
+                if (data instanceof MonitorPointOperationTaskResultInfo) {
+                    MonitorPointOperationTaskResultInfo info = (MonitorPointOperationTaskResultInfo) data;
+                    final String scheduleNo = info.getScheduleNo();
+                    if (!TextUtils.isEmpty(scheduleNo) && info.getTotal() == info.getComplete()) {
+                        String[] split = scheduleNo.split(",");
+                        if (split.length > 0) {
+                            final String temp = split[0];
+                            if (!TextUtils.isEmpty(temp)) {
+                                if (AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
+                                    mContext.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
+                                                mHandler.removeCallbacks(DeviceTaskOvertime);
+                                                getView().dismissOperatingLoadingDialog();
+                                                getView().showOperationSuccessToast();
+                                            }
+                                        }
+                                    });
+                                }
+                            }
+                        }
+
+                    }
+
+
+                }
+                break;
         }
     }
 
     @Override
     public void onDestroy() {
         mRecentInfoList.clear();
+        mHandler.removeCallbacksAndMessages(null);
 //        if (tempUpBitmap != null) {
 //            tempUpBitmap.recycle();
 //            tempUpBitmap = null;
@@ -377,5 +461,87 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         Intent intent = new Intent(mContext, AlarmHistoryLogActivity.class);
         intent.putExtra(EXTRA_SENSOR_SN, sn);
         getView().startAC(intent);
+    }
+
+    public void doOperation(int type, String content) {
+        String operationType = null;
+        Integer switchSpec = null;
+        switch (type) {
+            case MonitorPointOperationCode.ERASURE:
+                operationType = "mute";
+                break;
+            case MonitorPointOperationCode.RESET:
+                operationType = "reset";
+                break;
+            case MonitorPointOperationCode.PSD:
+                operationType = "password";
+                break;
+            case MonitorPointOperationCode.QUERY:
+                operationType = "view";
+                break;
+            case MonitorPointOperationCode.SELF_CHECK:
+                operationType = "check";
+                break;
+            case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
+                operationType = "config";
+                Integer integer = null;
+                if (TextUtils.isEmpty(content)) {
+                    getView().toastShort(mContext.getString(R.string.input_not_null));
+                    return;
+                }
+                try {
+                    integer = Integer.valueOf(content);
+                    if (integer >= 50 && integer <= 560) {
+                        switchSpec = integer;
+                    } else {
+                        getView().toastShort(mContext.getString(R.string.monitor_point_operation_error_value_range));
+                        return;
+                    }
+                } catch (NumberFormatException e) {
+                    e.printStackTrace();
+                    getView().toastShort(mContext.getString(R.string.enter_the_correct_number_format));
+                    return;
+                }
+
+                break;
+        }
+
+        requestCmd(operationType, switchSpec);
+    }
+
+    private void requestCmd(String operationType, Integer switchSpec) {
+        ArrayList<String> sns = new ArrayList<>();
+        sns.add(mDeviceInfo.getSn());
+        getView().dismissTipDialog();
+        getView().showOperationTipLoadingDialog();
+        mScheduleNo = null;
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec)
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>() {
+            @Override
+            public void onCompleted(MonitorPointOperationRequestRsp response) {
+                String scheduleNo = response.getScheduleNo();
+                if (TextUtils.isEmpty(scheduleNo)) {
+                    getView().dismissOperatingLoadingDialog();
+                    getView().showErrorTipDialog(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
+                } else {
+                    String[] split = scheduleNo.split(",");
+                    if (split.length > 0) {
+                        mScheduleNo = split[0];
+                        mHandler.postDelayed(DeviceTaskOvertime, 10 * 1000);
+                    } else {
+                        getView().dismissOperatingLoadingDialog();
+                        getView().showErrorTipDialog(mContext.getString(R.string.monitor_point_operation_schedule_no_error));
+
+                    }
+                }
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissOperatingLoadingDialog();
+                getView().showErrorTipDialog(errorMsg);
+            }
+        });
+
     }
 }

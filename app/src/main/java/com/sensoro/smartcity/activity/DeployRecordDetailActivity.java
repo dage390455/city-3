@@ -19,7 +19,7 @@ import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployRecordDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.List;

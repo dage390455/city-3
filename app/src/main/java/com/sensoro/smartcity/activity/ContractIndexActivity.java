@@ -12,7 +12,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractIndexActivityView;
 import com.sensoro.smartcity.presenter.ContractIndexActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
