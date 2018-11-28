@@ -587,6 +587,11 @@
     //选择图片
     <string name="permission_forbbidden_not_selected_image">权限被禁止，无法选择本地图片</string>
     <string name="permission_forbbidden_not_open_camera">权限被禁止，无法打开相机</string>
+    <string name="open_ble_contact_device">打开蓝牙来允许“CITY”链接设备</string>
+    <string name="open_ble_to_location">为了您的功能正常使用，请打开蓝牙和定位</string>
+    <string name="ok_one">好</string>
+    <string name="confirm_monitor_point_exception">确认监测点是否异常</string>
+    <string name="uploade_exception_change_device">上报异常并更换设备</string>
     //
 
 </resources>

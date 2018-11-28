@@ -2,102 +2,101 @@
     <string name="app_name">SensoroCity</string>
     <string name="city_name">SENSORO CITY</string>
     //
-    <string name="historical_log">EN历史日志</string>
-    <string name="year">EN年</string>
-    <string name="name">EN姓名</string>
-    <string name="sexs">EN性别</string>
-    <string name="identification_number">EN身份证号码</string>
-    <string name="address">EN住址</string>
-    <string name="party_a_customer_name">EN甲方（客户名称）</string>
-    <string name="owners_name">EN业主姓名</string>
-    <string name="phone_num">EN手机号</string>
-    <string name="company_name">EN企业名称</string>
-    <string name="social_credit_code">EN社会信用代码</string>
-    <string name="signed">EN已签订</string>
-    <string name="not_signed">EN未签订</string>
-    <string name="all_contracts">EN全部合同</string>
-    <string name="all_states">EN全部状态</string>
-    <string name="community">EN小区</string>
-    <string name="rental_house">EN出租房</string>
-    <string name="factory">EN工厂</string>
-    <string name="resident_workshop">EN居民作坊</string>
-    <string name="warehouse">EN仓库</string>
-    <string name="shop_storefront">EN商铺店面</string>
-    <string name="the_mall">EN商场</string>
-    <string name="the_ohter">EN其他</string>
-    <string name="male">EN男</string>
-    <string name="female">EN女</string>
-    <string name="signal_excellent">EN信号：优</string>
-    <string name="signal_good">EN信号：良</string>
-    <string name="signal_weak">EN信号：差</string>
-    <string name="no_signal">EN无信号</string>
-    <string name="alert_contact">EN预警联系人</string>
+    <string name="historical_log">History</string>
+    <string name="year">year</string>
+    <string name="name">name</string>
+    <string name="sexs">sex</string>
+    <string name="identification_number">ID card</string>
+    <string name="party_a_customer_name">party A(name)</string>
+    <string name="owners_name">owner\'s name</string>
+    <string name="phone_num">phone number</string>
+    <string name="company_name">company name</string>
+    <string name="social_credit_code">social credit code</string>
+    <string name="signed">signed</string>
+    <string name="not_signed">unsigned</string>
+    <string name="all_contracts">all contracts</string>
+    <string name="all_states">all</string>
+    <string name="community">community</string>
+    <string name="rental_house">rental property</string>
+    <string name="factory">factory</string>
+    <string name="resident_workshop">workshop</string>
+    <string name="warehouse">warehouse</string>
+    <string name="shop_storefront">store</string>
+    <string name="the_mall">mall</string>
+    <string name="the_ohter">others</string>
+    <string name="male">male</string>
+    <string name="female">female</string>
+    <string name="signal_excellent">Signal: Good</string>
+    <string name="signal_good">Signal: Normal</string>
+    <string name="signal_weak">Signal: Bad</string>
+    <string name="no_signal">Signal: Good</string>
+    <string name="alert_contact">Alarm contact</string>
     <string name="get_the_middle_profile">EN获取中配置文件</string>
-    <string name="live_photo">EN现场照片</string>
-    <string name="positioned">EN已定位</string>
-    <string name="not_positioned">EN未定位</string>
-    <string name="patrol_monitoring_point">EN巡检监测点</string>
-    <string name="inspection_content">EN巡检内容</string>
-    <string name="confirm_that_the_monitoring_point_is_normal">EN确认监测点是否正常</string>
-    <string name="i_will_see_again">EN我再看看</string>
-    <string name="normal">EN正常</string>
-    <string name="monitoring_point_exception_details">EN监测点异常详情</string>
-    <string name="inspection_task">EN巡检任务</string>
-    <string name="abnormal_reporting">EN异常上报</string>
-    <string name="photo_recording">EN拍照/录像</string>
-    <string name="must_select_a_tag_type">EN必须选择一个标签类型</string>
-    <string name="upload_at_least_one_photo_or_a_video">EN至少上传一张照片或一段视频</string>
-    <string name="wrong_password">EN密码错误！</string>
-    <string name="monitoring_point_details">EN监测点详情</string>
-    <string name="alert_log">EN预警日志</string>
-    <string name="no_contact_added">EN未添加联系人</string>
+    <string name="live_photo">site photos</string>
+    <string name="positioned">located</string>
+    <string name="not_positioned">unlocated</string>
+    <string name="patrol_monitoring_point">Inspection Monitoring Point</string>
+    <string name="inspection_content">Inspection Content</string>
+    <string name="confirm_that_the_monitoring_point_is_normal">Verify the point is normal</string>
+    <string name="i_will_see_again">Cancel</string>
+    <string name="normal">Normal</string>
+    <string name="monitoring_point_exception_details">Monitoring Point Exception Details</string>
+    <string name="inspection_task">Inspection</string>
+    <string name="abnormal_reporting">abnormality</string>
+    <string name="photo_recording">photo/video</string>
+    <string name="must_select_a_tag_type">Must select a tag type</string>
+    <string name="upload_at_least_one_photo_or_a_video">upload at least one photo or a video</string>
+    <string name="wrong_password">Password error！</string>
+    <string name="monitoring_point_details">Monitoring point detail</string>
+    <string name="alert_log">Alarm Log</string>
+    <string name="no_contact_added">ContactUser unset</string>
     <string name="location_navigation">EN位置导航</string>
     <string name="cant_find_related_content">EN搜索不到相关内容</string>
-    <string name="enter_search_content">EN请输入搜索内容</string>
+    <string name="enter_search_content">Enter search content</string>
     <string name="signal_test">EN信号测试</string>
-    <string name="signal_test_tip">EN对准设备上的二维码，即可扫码测试</string>
-    <string name="frequency_random">EN频点随机</string>
-    <string name="setting">EN设置</string>
-    <string name="determine">EN确定</string>
-    <string name="cancel">EN取消</string>
+    <string name="signal_test_tip">" Please scan the QRCODE of device"</string>
+    <string name="frequency_random">Random</string>
+    <string name="setting">Setting</string>
+    <string name="determine">Ok</string>
+    <string name="cancel">Cancel</string>
     <string name="video_compilation">EN视频编译中</string>
-    <string name="video_recording_failed_please_try_again">EN视频录制失败，请重试</string>
-    <string name="video">EN视频</string>
-    <string name="prompt">EN提示</string>
-    <string name="do_you_want_to_delete_this_video">EN要删除这个视频吗？</string>
-    <string name="no_one_confirmed_the_system_automatically_confirms">EN小时 无人确认，系统自动确认为: 测试/巡检</string>
-    <string name="test_patrol">EN测试/巡检</string>
-    <string name="security_risks">EN安全隐患</string>
-    <string name="contact">EN联系人</string>
-    <string name="back_to_normal">EN恢复正常</string>
-    <string name="confirm_that_the_alert_type_app_is">EN通过 App 确认本次预警类型为</string>
-    <string name="confirm_that_the_alert_type_web_is">EN通过 Web 确认本次预警类型为</string>
-    <string name="below_the_warning_value">EN低于预警值</string>
-    <string name="achieve_warning_value">EN达到预警值</string>
-    <string name="the_system_calls_to">EN系统拨打电话至</string>
-    <string name="the_system_sends_msg_to">EN系统发送短信至</string>
-    <string name="equipment_warning">EN设备预警</string>
-    <string name="value_is">EN值为</string>
-    <string name="telephone_call">EN电话拨打中</string>
-    <string name="telephone_answer_success">EN电话接听成功</string>
-    <string name="telephone_answer_failed">EN电话接听失败</string>
-    <string name="telephone_answer_unknow">EN电话接听结果未知</string>
-    <string name="sms_sending">EN短信发送中</string>
-    <string name="sms_received_successfully">EN短信接收成功</string>
-    <string name="sms_received_failed">EN短信接收失败</string>
-    <string name="sms_received_unknow">EN短信接收结果未知</string>
-    <string name="personal">EN个人</string>
-    <string name="legal_representative">EN法定代表人</string>
-    <string name="inspection">EN巡检</string>
-    <string name="normal_inspection">EN巡检正常</string>
-    <string name="inspection_abnormality">EN巡检异常</string>
-    <string name="details">EN详情</string>
-    <string name="not_inspected">EN未巡检</string>
-    <string name="has_inspected">EN已巡检</string>
-    <string name="i_have_inspected">EN我已巡检</string>
-    <string name="unknown">EN未知</string>
+    <string name="video_recording_failed_please_try_again">Video recording failed, please try again</string>
+    <string name="video">Video</string>
+    <string name="prompt">tip</string>
+    <string name="do_you_want_to_delete_this_video">Delete this video?</string>
+    <string name="no_one_confirmed_the_system_automatically_confirms">hour no confirm，system auto confirms as: test/inspection</string>
+    <string name="test_patrol">test/inspection</string>
+    <string name="security_risks">security risks</string>
+    <string name="contact">Contact</string>
+    <string name="back_to_normal">recovery</string>
+    <string name="confirm_that_the_alert_type_app_is">confirm that the type of alarm by App</string>
+    <string name="confirm_that_the_alert_type_web_is">Confirm that the type of alarm by Web</string>
+    <string name="below_the_warning_value">below the alarming value</string>
+    <string name="achieve_warning_value">Achieve alarming value</string>
+    <string name="the_system_calls_to">System calls to </string>
+    <string name="the_system_sends_msg_to">System sends SMS to </string>
+    <string name="equipment_warning">device alarming</string>
+    <string name="value_is">value</string>
+    <string name="telephone_call">Phone is dailing</string>
+    <string name="telephone_answer_success">Phone is dailing successfully</string>
+    <string name="telephone_answer_failed">Phone is dailing failed</string>
+    <string name="telephone_answer_unknow">result of calling is unknown</string>
+    <string name="sms_sending">SMS is sending</string>
+    <string name="sms_received_successfully">SMS received successfully</string>
+    <string name="sms_received_failed">SMS received failed</string>
+    <string name="sms_received_unknow">SMS sending result is unknown</string>
+    <string name="personal">Personal</string>
+    <string name="legal_representative">Legal representative</string>
+    <string name="inspection">Inspection</string>
+    <string name="normal_inspection">Inspection normal</string>
+    <string name="inspection_abnormality">Inspection abnormality</string>
+    <string name="details">Deatils</string>
+    <string name="not_inspected">Uninspected</string>
+    <string name="has_inspected">Inspected</string>
+    <string name="i_have_inspected">Inspected</string>
+    <string name="unknown">Unknown</string>
     //
-    <string name="detection_points">EN检测点数</string>
+    <string name="detection_points">Monitoring points</string>
     <string name="warning_monitoring_point">EN预警检测点</string>
     <string name="normal_monitoring_point">EN正常检测点</string>
     <string name="lost_monitoring_point">EN失联检测点</string>
@@ -108,9 +107,9 @@
     <string name="main_page_warm">EN预警</string>
     <string name="confirming">EN预警确认</string>
     <string name="confirming_again">EN再次确认</string>
-    <string name="to_be_confirmed">EN待确认</string>
+    <string name="to_be_confirmed">uncofirmed</string>
     <string name="real_warning">EN真实预警</string>
-    <string name="false_positive">EN误报</string>
+    <string name="false_positive">false alarm</string>
     <string name="go_to_settings">EN前往设置</string>
     <string name="notification_prompt">EN通知中包含了重要报警信息，请前往设置，打开通知选项。</string>
     <string name="status_lost">EN失联</string>
@@ -125,50 +124,50 @@
     <string name="text_no_fire_alarm">EN无任何火情和烟雾</string>
     <string name="text_fire_alarm_test">EN相关人员主动测试发出的预警</string>
     <string name="text_fire_alarm_risk">EN未发生着火，但现场确实存在隐患</string>
-    <string name="alarm_type_bnormal_power">EN用电异常</string>
-    <string name="alarm_type_production_operation">EN生产作业</string>
-    <string name="alarm_type_smoke">EN吸烟</string>
-    <string name="alarm_type_indoor_fire">EN室内生火</string>
-    <string name="alarm_type_cooking">EN烹饪</string>
-    <string name="alarm_type_gas_leak">EN燃气泄漏</string>
-    <string name="alarm_type_artificial_arson">EN人为放火</string>
-    <string name="alarm_type_combustible_self_ignition">EN易燃自燃</string>
-    <string name="inspection_exception_tag_equipment_disassembly">EN设备拆卸</string>
-    <string name="inspection_exception_tag_low_battery">EN设备低电</string>
-    <string name="inspection_exception_tag_device_exception">EN设备异常</string>
-    <string name="inspection_exception_tag_sensor_anomaly">EN传感器异常</string>
-    <string name="inspection_exception_tag_damaged_indicator">EN指示灯损坏</string>
-    <string name="inspection_exception_tag_screen_damage">EN屏幕损坏</string>
-    <string name="inspection_exception_tag_button_damage">EN按键损坏</string>
-    <string name="inspection_exception_tag_appearance_damage">EN外观损坏</string>
-    <string name="inspection_exception_tag_device_lost">EN设备丢失</string>
-    <string name="inspection_exception_tag_bluetooth_exception">EN蓝牙异常</string>
-    <string name="inspection_exception_tag_loose_equipment">EN设备松动</string>
-    <string name="inspection_status_text_pending_execution">EN待执行</string>
-    <string name="inspection_status_text_executing">EN执行中</string>
-    <string name="inspection_status_text_timeout_not_completed">EN超时未完成</string>
-    <string name="inspection_status_text_completed">EN已完成</string>
-    <string name="inspection_status_text_timeout_completed">EN超时完成</string>
-    <string name="device_alert_removed">EN设备预警已解除，请在“预警”界面中查看事件</string>
-    <string name="version_tip_text">EN现在App版本为最新版</string>
+    <string name="alarm_type_bnormal_power">abnormal power consumption</string>
+    <string name="alarm_type_production_operation">Production operation</string>
+    <string name="alarm_type_smoke">smoking</string>
+    <string name="alarm_type_indoor_fire">indoor fire</string>
+    <string name="alarm_type_cooking">cooking</string>
+    <string name="alarm_type_gas_leak">gas leak</string>
+    <string name="alarm_type_artificial_arson">arson</string>
+    <string name="alarm_type_combustible_self_ignition">self-ignite</string>
+    <string name="inspection_exception_tag_equipment_disassembly">disassembly</string>
+    <string name="inspection_exception_tag_low_battery">low power</string>
+    <string name="inspection_exception_tag_device_exception">abnormality</string>
+    <string name="inspection_exception_tag_sensor_anomaly">sensor abnormality</string>
+    <string name="inspection_exception_tag_damaged_indicator">indicator damaged</string>
+    <string name="inspection_exception_tag_screen_damage">screen damaged</string>
+    <string name="inspection_exception_tag_button_damage">keyboard damaged</string>
+    <string name="inspection_exception_tag_appearance_damage">appearance damaged</string>
+    <string name="inspection_exception_tag_device_lost">device lost</string>
+    <string name="inspection_exception_tag_bluetooth_exception">bluetooth abnormality</string>
+    <string name="inspection_exception_tag_loose_equipment">device loose</string>
+    <string name="inspection_status_text_pending_execution">Executory</string>
+    <string name="inspection_status_text_executing">Executoring</string>
+    <string name="inspection_status_text_timeout_not_completed">Timeout not completed</string>
+    <string name="inspection_status_text_completed">Executed</string>
+    <string name="inspection_status_text_timeout_completed">Timeout completed</string>
+    <string name="device_alert_removed">alarm removed,please view the details in the alarm tab</string>
+    <string name="version_tip_text">the app version is now the latest version</string>
     <string name="ok">EN好的</string>
-    <string name="tip_text_login_out">EN确定要退出登录吗？</string>
+    <string name="tip_text_login_out">Sign Out?</string>
     <string name="quit">EN退出</string>
     <string name="business_name">EN商户名称</string>
     <string name="Contact_name_cannot_be_empty">EN联系人姓名不能为空！</string>
     <string name="location_not_obtained">EN未获取到位置信息</string>
     <string name="no_more_data">EN没有更多数据了</string>
-    <string name="secondary_verification_failed">EN二次验证失败</string>
+    <string name="secondary_verification_failed">verification failed</string>
     <string name="no">EN无</string>
     <string name="please_set_the_label">EN请设置标签</string>
     <string name="can_only_add_up_to_limit_labels">EN最多只能添加8个标签</string>
     <string name="label_cannot_be_repeated">EN标签不能重复</string>
     <string name="the_maximum_length_of_the_label">EN标签最长不能超过10个汉字或30个字符</string>
     <string name="please_enter_the_correct_sn">EN请输入正确的SN,SN为16个字符</string>
-    <string name="device_patrolled_status_normal">EN此设备已巡检完毕，且状态正常</string>
-    <string name="device_not_in_inspection_mission">EN此设备未在巡检任务中</string>
+    <string name="device_patrolled_status_normal">this device has been inspected and is in normal condition</string>
+    <string name="device_not_in_inspection_mission">this device is not in the task list</string>
     <string name="no_old_device_information_found">EN未查找到旧设备信息</string>
-    <string name="replacement_equipment">EN更换设备</string>
+    <string name="replacement_equipment">Replace device</string>
     <string name="device_ble_deploy_failed">EN设备配置失败，请常按设备按钮，等设备重新启动后再次配置</string>
     <string name="device_not_found_activate_Bluetooth">EN未发现此设备，请激活部署设备的蓝牙</string>
     <string name="ble_connect_failed">EN蓝牙连接失败,请重试</string>
@@ -181,11 +180,11 @@
     <string name="please_enter_contact_phone">EN请输入联系人名称和电话号码</string>
     <string name="loading_configuration_file">EN正在加载配置文件...</string>
     <string name="must_enter_name_address">EN必须输入名称/地址</string>
-    <string name="album">EN相册</string>
-    <string name="take_photo">EN拍照</string>
+    <string name="album">album</string>
+    <string name="take_photo">photo</string>
     <string name="no_photos_added">EN未添加照片</string>
     <string name="continue_to_replace">EN继续更换</string>
-    <string name="continue_inspection">EN继续巡检</string>
+    <string name="continue_inspection">Continue</string>
     <string name="rescan_code">EN重新扫码</string>
     <string name="scan_code_failed">EN扫码失败</string>
     <string name="failed">EN失败</string>
@@ -196,10 +195,10 @@
     <string name="no_alert_log_information_was_obtained">EN未获取到预警日志信息</string>
     <string name="successful_report">EN上报成功</string>
     <string name="report_failure">EN上报失败</string>
-    <string name="account_no_patrol_device_permissions">EN该账户没有巡检设备权限</string>
-    <string name="account_does_not_have_permission_to_view_the_inspection_device_list">EN该账户没有查看巡检设备列表权限</string>
-    <string name="shooting_video">EN拍摄视频</string>
-    <string name="abnormal_reporting_success">EN异常上报成功</string>
+    <string name="account_no_patrol_device_permissions">Inspection is not authorized</string>
+    <string name="account_does_not_have_permission_to_view_the_inspection_device_list">No permission to view the list of inspection devices</string>
+    <string name="shooting_video">video</string>
+    <string name="abnormal_reporting_success">abnormality uploads successfully</string>
     <string name="abnormal_reporting_failure">EN异常上报失败</string>
     <string name="please_wait">EN请稍后</string>
     <string name="disconnected_from_network">EN似乎断开了网络连接</string>
@@ -211,8 +210,8 @@
     <string name="location_information_not_set">EN未设置定位信息</string>
     <string name="phone_contact_not_set">EN未设置电话联系人</string>
     <string name="wechat_not_installed">EN当前手机未安装微信，请安装后重试</string>
-    <string name="sensor_location">EN传感器位置</string>
-    <string name="sensor_location_desc">EN通过此工具，可以查看，以及导航到相应的传感器设备</string>
+    <string name="sensor_location">sensor location</string>
+    <string name="sensor_location_desc">with this tool, you can view and navigate to the appropriate sensor device</string>
     <string name="device_deployment">EN设备部署</string>
     <string name="device_deployment_tip">EN对准传感器上的二维码，即可自动扫描</string>
     <string name="scan_login">EN扫码登录</string>
@@ -234,7 +233,7 @@
     //
 
     //
-    <string name="search_tips">EN设备名称/设备号/标签</string>
+    <string name="search_tips">EN设备名称/SN/标签</string>
 
     <string name="recent">EN最近搜索</string>
     <string name="clear">EN清除</string>
@@ -248,7 +247,7 @@
     <string name="deploy_photo">EN部署图片</string>
     <string name="input_name">EN输入名称</string>
     <string name="contract_list">EN合同管理</string>
-    <string name="sensor_detail_sn">EN设备号</string>
+    <string name="sensor_detail_sn">SN</string>
     <string name="sensor_detail_name">EN名称</string>
     <string name="sensor_detail_type">EN类型</string>
     <string name="sensor_detail_status">EN状态</string>
@@ -289,9 +288,9 @@
     <string name="invalid_qr_code">EN无效二维码</string>
 
     <string name="remarks">EN备注说明</string>
-    <string name="commit">EN提交</string>
+    <string name="commit">Sumit</string>
     <string name="alarming">EN报警中</string>
-    <string name="true_alarm">EN真实火警</string>
+    <string name="true_alarm">real fire</string>
     <string name="misdescription">EN误报</string>
 
 
@@ -311,7 +310,7 @@
     <string name="tips_hint_name_address">EN例: 大悦城20层走廊2号配电箱</string>
     <string name="tips_hint_name_address_set">EN例: 大悦城20层走廊2号配电箱</string>
     <string name="tips_no_alarm">EN无预警</string>
-    <string name="tips_commit_success">EN提交成功</string>
+    <string name="tips_commit_success">Submitted successfully</string>
     <string name="tips_commit_failed">EN提交失败</string>
     //主页信息相关
     <string name="no_find_contact_phone_number">EN未找到联系人电话</string>
@@ -337,20 +336,20 @@
     <string name="alarm_contact_tip_phone">EN预警电话</string>
     <string name="alarm_contact_tip_phone_sample">EN例：18600000000</string>
     //预警日志xml
-    <string name="alarm_log_alarm_time">EN报警时间</string>
-    <string name="alarm_log_alarm_count">EN半年累计报警次数</string>
-    <string name="alarm_log_malfunction_count">EN半年累计故障次数</string>
-    <string name="alarm_log_alarm_contact_owner">EN联系业主</string>
+    <string name="alarm_log_alarm_time">Alarm Time</string>
+    <string name="alarm_log_alarm_count">Alarm number in half a year</string>
+    <string name="alarm_log_malfunction_count">Malfunction number in half a year</string>
+    <string name="alarm_log_alarm_contact_owner">Call</string>
     <string name="alarm_log_alarm_quick_navigation">EN快速导航</string>
     <string name="alarm_log_alarm_warn_confirm">EN预警确认</string>
     <string name="alarm_log_alarm_call">EN系统将拨打电话至</string>
-    <string name="alarm_log_alarm_result">EN预警结果:</string>
-    <string name="alarm_log_alarm_cause">EN预警成因:</string>
-    <string name="alarm_log_alarm_place">EN预警场所:</string>
-    <string name="alarm_log_alarm_remark">EN备注说明:</string>
+    <string name="alarm_log_alarm_result">alarm result:</string>
+    <string name="alarm_log_alarm_cause">alarm reason:</string>
+    <string name="alarm_log_alarm_place">alarm place:</string>
+    <string name="alarm_log_alarm_remark">alarm remark:</string>
     //二次验证xml
-    <string name="auth_two_step_verification">EN二次验证</string>
-    <string name="auth_two_step_verification_tip">EN为了账户安全，需要您进行二次验证</string>
+    <string name="auth_two_step_verification">Two-Factor Authentication</string>
+    <string name="auth_two_step_verification_tip">For account security, you need to perform a second verification</string>
     //合同index xml
     <string name="contract_index_title">EN合同管理</string>
     <string name="contract_index_business_license_identification">EN营业执照识别</string>
@@ -359,14 +358,14 @@
     //合同info xml
     <string name="contract_info_title">EN物联网消防安全预警服务合同</string>
     <string name="contract_info_phone_number">EN手机号</string>
-    <string name="contract_info_registration_number">EN注册号</string>
+    <string name="contract_info_registration_number">registration code</string>
     <string name="contract_info_validity_period">EN有效期</string>
     <string name="contract_info_site_nature">EN场地性质</string>
     <string name="contract_info_contract_service_life">EN合同服务年限</string>
     <string name="contract_info_contract_status">EN合同状态</string>
-    <string name="contract_info_contract_created_time">EN合同生成时间</string>
-    <string name="contract_info_contract_sign_time">EN合同签订时间</string>
-    <string name="contract_info_contract_qr_code">EN合同二维码</string>
+    <string name="contract_info_contract_created_time">generated date</string>
+    <string name="contract_info_contract_sign_time">signed date</string>
+    <string name="contract_info_contract_qr_code">Qr code</string>
     //合同result xml
     <string name="contract_result_title">EN二维码</string>
     <string name="contract_result_finish">EN完成</string>
@@ -382,19 +381,19 @@
     //部署地图
     <string name="deploy_device_map_save">EN保存</string>
     //部署记录
-    <string name="deploy_record_search_tip">EN设备名称/设备号/标签</string>
-    <string name="deploy_record_search_cancel_tip">EN设备名称/设备号/标签</string>
+    <string name="deploy_record_search_tip">EN设备名称/SN/标签</string>
+    <string name="deploy_record_search_cancel_tip">EN设备名称/SN/标签</string>
     <string name="deploy_record_new_device">EN部署新设备</string>
-    <string name="deploy_record_device_number">EN设备号</string>
+    <string name="deploy_record_device_number">SN</string>
     <string name="deploy_record_name">EN名称</string>
-    <string name="deploy_record_deploy_time">EN部署时间</string>
+    <string name="deploy_record_deploy_time">Deploy date</string>
 
     //部署结果
     <string name="deploy_result_confirm_information">EN确认信息</string>
     <string name="deploy_result_back_home">EN返回主页</string>
     <string name="deploy_result_continue">EN继续部署</string>
     <string name="deploy_result_successed">EN恭喜！传感器点位部署成功</string>
-    <string name="deploy_result_device_number">EN设备号:</string>
+    <string name="deploy_result_device_number">SN:</string>
     <string name="deploy_result_name">EN名称:</string>
     <string name="deploy_result_location">EN位置:</string>
     <string name="deploy_result_contract">EN联系人:</string>
@@ -408,7 +407,7 @@
     <string name="deploy_result_ok">EN好的</string>
 
     //部署选择图片
-    <string name="deploy_setting_photo_save">EN保存</string>
+    <string name="deploy_setting_photo_save">save</string>
     //预览图片
     <string name="image_grid_preview">EN预览(3)</string>
     <string name="image_preview_original">EN原图(3.07M)</string>
@@ -418,17 +417,17 @@
 
     //巡检异常详情
     <string name="inspection_exception_detail_monitor_point_detail">EN监测点标签</string>
-    <string name="inspection_exception_detail_exception_detail">EN异常详情</string>
-    <string name="inspection_exception_detail_inspection_result">EN巡检结果</string>
-    <string name="inspection_exception_detail_exception_type">EN异常类型</string>
+    <string name="inspection_exception_detail_exception_detail">Abnormality Details</string>
+    <string name="inspection_exception_detail_inspection_result">Inspection Results</string>
+    <string name="inspection_exception_detail_exception_type">Abnormality Type</string>
     <string name="inspection_exception_detail_remark">EN备注</string>
-    <string name="inspection_exception_detail_live_video">EN现场录像</string>
+    <string name="inspection_exception_detail_live_video">site videos</string>
     //巡检task
-    <string name="inspection_task_search_hint">EN设备名称/设备号</string>
+    <string name="inspection_task_search_hint">EN设备名称/SN</string>
     //巡检task detail
     <string name="inspection_task_detail_start_inspection">EN开始巡检</string>
     <string name="inspection_task_detail_task_number">EN任务编号</string>
-    <string name="inspection_task_detail_inspection_established">EN既定巡检时间</string>
+    <string name="inspection_task_detail_inspection_established">inspection scheduled time</string>
     <string name="inspection_task_detail_device_counts">EN设备数量</string>
     <string name="inspection_task_detail_status">EN状态</string>
     //巡检task list
@@ -452,14 +451,14 @@
     <string name="monitor_point_detail_operat">EN操作</string>
     <string name="monitor_point_detail_alarm">EN发声报警</string>
     <string name="monitor_point_firmware_upgrade">EN固件升级</string>
-    <string name="monitor_point_information">EN基本信息</string>
+    <string name="monitor_point_information">basic info</string>
     //名称和地址
     <string name="name_address">EN名称/地址</string>
     <string name="name_address_history_tag">EN历史标签</string>
     <string name="name_address_save">EN保存</string>
     //扫描界面
     <string name="scan_tip">EN对准二维码，即可自动扫描</string>
-    <string name="scan_input_sn">EN手动输入SN</string>
+    <string name="scan_input_sn">input SN</string>
     <string name="scan_open_flashlight">EN打开手电筒</string>
     //扫描结果
     <string name="scan_result_login_big_screen">EN登录大屏应用</string>
@@ -474,8 +473,8 @@
     //设备部署 详情
     <string name="deploy_device_detail_name_address">EN名称/地址</string>
     <string name="deploy_device_detail_no_added">EN未添加</string>
-    <string name="deploy_device_detail_deploy_photo">EN部署照片</string>
-    <string name="deploy_device_detail_deploy_location">EN部署位置</string>
+    <string name="deploy_device_detail_deploy_photo">Deploy photos</string>
+    <string name="deploy_device_detail_deploy_location">Deploy location</string>
     <string name="deploy_device_detail_uploade">EN上传</string>
     //部署记录详情
     <string name="deploy_record_name_address">EN名称/地址</string>
@@ -483,13 +482,13 @@
     <string name="inspection_button_test">EN按键测试:</string>
     <string name="inspection_button_test_tip">EN长按设备按钮3秒后，确认指示灯和提示音工作正常</string>
     <string name="inspection_button_check_appearance">EN检查外观：是否明显损坏及积灰</string>
-    <string name="inspection_button_check_ble">EN长按按键3秒后，正常按钮将变为可点击，若未变为可点击，则为异常状态，在异常上报中备注蓝牙无效</string>
-    <string name="inspection_exception">EN异常</string>
+    <string name="inspection_button_check_ble">After pressing the button for 3 seconds, the normal button will become clickable. If it is not clickable, it will be abnormal. Note that bluetooth is invalid in the abnormal report</string>
+    <string name="inspection_exception">Abnormality</string>
     //文件list
     <string name="folder_list_zero">EN共0张</string>
     //主页弹窗
     <string name="quick_deploy">EN快速部署</string>
-    <string name="new_contract">EN新建合同</string>
+    <string name="new_contract">new contract</string>
     //dialog 输入
     <string name="dialog_input_tip_detail">EN请输入密码</string>
     <string name="dialog_input_confirm">EN确认</string>
@@ -497,7 +496,7 @@
     //manager fragment
     <string name="manager_fragment_manager">EN管理</string>
     <string name="manager_fragment_main_function">EN主要功能</string>
-    <string name="manager_fragment_merchant_switch">EN商户切换</string>
+    <string name="manager_fragment_merchant_switch">merchant switching</string>
     <string name="manager_fragment_deploy_manager">EN部署管理</string>
     <string name="manager_fragment_contract_manager">EN合同管理</string>
     <string name="manager_fragment_maintenance_task">EN维保任务</string>
@@ -506,7 +505,7 @@
     <string name="manager_fragment_version_information">EN版本信息</string>
     <string name="manager_fragment_exit_account">EN退出账户</string>
     //warn framgen
-    <string name="warn_fragment_search_tip">EN设备名称/设备号/手机号</string>
+    <string name="warn_fragment_search_tip">EN设备名称/SN/手机号</string>
 
     //
     <string name="top_bar_image">EN图片</string>
@@ -519,18 +518,18 @@
     <string name="contract_signed_time">EN签订时间</string>
     <string name="co2">EN二氧化碳</string>
     <string name="no_content">EN无内容</string>
-    <string name="alarm_result_type">EN预警结果类型</string>
-    <string name="alarm_cause_type">EN预警成因类型</string>
-    <string name="alarm_place">EN预警场所</string>
-    <string name="alarm_descript">EN请对预警事件的实际情况进行描述</string>
-    <string name="occur_alarm_event">EN发生新的预警事件</string>
-    <string name="look">EN去查看</string>
-    <string name="monitor_point_number">EN监测点数</string>
+    <string name="alarm_result_type">alarm result type</string>
+    <string name="alarm_cause_type">alarm reason type</string>
+    <string name="alarm_place">alarm place</string>
+    <string name="alarm_descript">Please describe the actual situation of the warning event</string>
+    <string name="occur_alarm_event">new alarming event</string>
+    <string name="look">go</string>
+    <string name="monitor_point_number">Monitoring points</string>
     <string name="camera_photo">EN视频/照片</string>
-    <string name="select_alarm_cause_site">EN请选择预警成因场所</string>
-    <string name="select_alarm_result_type">EN请选择预警结果类型</string>
-    <string name="select_alarm_cause_type">EN请选择预警成因类型</string>
-    <string name="inspection_exception_remark">EN异常备注</string>
+    <string name="select_alarm_cause_site">please select reason place</string>
+    <string name="select_alarm_result_type">please select result type</string>
+    <string name="select_alarm_cause_type">please select reason type</string>
+    <string name="inspection_exception_remark">abnormality remark</string>
     <string name="not_obtain_location_infomation">EN未获取到位置信息</string>
     <string name="is_delete_image">EN要删除这张照片吗？</string>
     <string name="am">EN上午</string>
@@ -561,16 +560,16 @@
 
 
     // alarm pop
-    <string name="alarm_pop_alarm_result_info_tip1">EN*监测点或附近发生着火，需要立即进行扑救</string>
-    <string name="alarm_pop_alarm_result_info_tip2">EN*未发生着火，但现场确实存在隐患</string>
-    <string name="alarm_pop_alarm_result_info_tip3">EN*无任何火情和烟雾</string>
-    <string name="alarm_pop_alarm_result_info_tip4">EN*相关人员主动测试发出的预警</string>
+    <string name="alarm_pop_alarm_result_info_tip1">*A fire broke out at or near the monitoring station, requiring immediate action</string>
+    <string name="alarm_pop_alarm_result_info_tip2">*There was no fire, but there were real hazards</string>
+    <string name="alarm_pop_alarm_result_info_tip3">*No fire or smoke</string>
+    <string name="alarm_pop_alarm_result_info_tip4">*Relevant personnel take the initiative to test the warning issued</string>
     //上传图片 dialog
     <string name="upload_photo_dialog_append_title1">EN正在上传第</string>
     <string name="upload_photo_dialog_append_title2">EN文件，总共</string>
     <string name="upload_photo_dialog_append_title3">EN个</string>
-    <string name="upload_photo_dialog_upload_video_failed">EN上传视频失败</string>
-    <string name="upload_photo_dialog_upload_thumbnail_failed">EN上传视频缩略图失败</string>
+    <string name="upload_photo_dialog_upload_video_failed">video upload failed</string>
+    <string name="upload_photo_dialog_upload_thumbnail_failed">thumbnail upload failed</string>
     <string name="upload_photo_dialog_upload">EN上传第</string>
     <string name="upload_photo_dialog_upload_count_failed">EN&#160;张失败</string>
     //选择图片
@@ -578,17 +577,23 @@
     <string name="permission_forbbidden_not_open_camera">EN权限被禁止，无法打开相机</string>
     //
     <string name="deploy_sub_tip">EN该设备目前属于上级商户，部署后将归属于本商户下，请谨慎部署</string>
-    <string name="merchant_has_no_change_permission">EN该商户无切换登录权限</string>
-    <string name="malfunctioning">故障中</string>
+    <string name="merchant_has_no_change_permission">unauthorized</string>
+    <string name="malfunctioning">malfunction</string>
     <string name="unknown_malfunction">未知故障</string>
-    <string name="unknown_error">未知错误</string>
-    <string name="malfunction_time">故障时间</string>
-    <string name="malfunction_log">故障日志</string>
+    <string name="unknown_error">unknown error</string>
+    <string name="malfunction_time">Malfunction Time</string>
+    <string name="malfunction_log">malfunction log</string>
     <string name="malfunction_history_log">历史日志</string>
-    <string name="malfunction_cause">故障成因：</string>
+    <string name="malfunction_cause">cause of malfunction：</string>
     <string name="malfunction_data">故障数据</string>
-    <string name="system_upload_malfunction_task">系统上报故障任务</string>
+    <string name="system_upload_malfunction_task">the system reports malfunction</string>
     <string name="recover_normal">设备恢复正常</string>
-    <string name="system_sms_send">系统短信发送至：</string>
-    <string name="occour_malfunction_alarm">发生故障报警</string>
+    <string name="system_sms_send">System sends SMS to </string>
+    <string name="occour_malfunction_alarm">new malfunction event</string>
+    <string name="open_ble_contact_device">Turn on bluetooth to allow "city" to connect devices</string>
+    <string name="open_ble_to_location">For your function to work properly, turn on Bluetooth and locate</string>
+    <string name="ok_one">好</string>
+    <string name="confirm_monitor_point_exception">Verify that the monitoring point is abnormal</string>
+    <string name="uploade_exception_change_device">upload abnormality and replace device</string>
+    <string name="address">address</string>
 </resources>
