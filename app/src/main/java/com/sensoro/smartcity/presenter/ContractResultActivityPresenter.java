@@ -32,7 +32,7 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
     public void initData(Context context) {
         mContext = (Activity) context;
         code = mContext.getIntent().getStringExtra("code");
-        needFinish = mContext.getIntent().getBooleanExtra(EXTRA_CONTRACT_RESULT_TYPE, true);
+        needFinish = mContext.getIntent().getBooleanExtra(EXTRA_CONTRACT_RESULT_TYPE, false);
         if (needFinish) {
             getView().setTextResultInfo("业主扫描此二维码，生成合同预览");
         } else {

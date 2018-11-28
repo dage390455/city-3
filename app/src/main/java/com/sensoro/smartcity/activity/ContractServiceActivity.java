@@ -24,7 +24,7 @@ import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.smartcity.presenter.ContractServiceActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.util.ArrayList;
@@ -194,8 +194,6 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 handleAgeText(text, etContractAge);
             }
         });
-        String contractAge = etContractAge.getText().toString();
-        handleAgeText(contractAge, etContractAge);
         etContractAgeFirst.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -230,13 +228,19 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 handleAgeText(text, etContractAgePeriod);
             }
         });
+        String contractAge = etContractAge.getText().toString();
+        handleAgeText(contractAge, etContractAge);
+        String contractAgeFirst = etContractAgeFirst.getText().toString();
+        handleAgeText(contractAgeFirst, etContractAgeFirst);
+        String contractAgePeriod = etContractAgePeriod.getText().toString();
+        handleAgeText(contractAgePeriod, etContractAgePeriod);
     }
 
     private void handleAgeText(String text, EditText editText) {
         if (!TextUtils.isEmpty(text)) {
             try {
                 int i = Integer.parseInt(text);
-                if (i > 0) {
+                if (i > 1) {
                     editText.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
                 } else {
                     editText.setTextColor(mActivity.getResources().getColor(R.color.c_252525));

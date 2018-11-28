@@ -539,8 +539,6 @@
     <string name="permission_instruction">Need permission! Please reopen the app</string>
     <string name="go_to_setting">The necessary permission are denied</string>
     <string name="open_camera_permission">The open the camera permission</string>
-
-
     // alarm pop
     <string name="alarm_pop_alarm_result_info_tip1">*A fire broke out at or near the monitoring station, requiring immediate action</string>
     <string name="alarm_pop_alarm_result_info_tip2">*There was no fire, but there were real hazards</string>
@@ -594,4 +592,48 @@
     <string name="manager_fragment_main_function">Main</string>
     <string name="co2">Co2</string>
     <string name="necessary_permission_are_denied">The necessary permission are denied</string>
+    <string name="monitor_point_detail_self_check">Self-Test</string>
+    <string name="monitor_point_detail_query">Query</string>
+    <string name="monitor_point_detail_psd">修改密码</string>
+    <string name="monitor_point_detail_reset">Reset</string>
+    <string name="is_device_erasure">Whether to silence the alarm device</string>
+    <string name="device_erasure_tip_message">Whether the alarm device is muted in the current device audible alarm</string>
+    <string name="back">back</string>
+    <string name="erasure">Mute</string>
+    <string name="is_device_self_check">Whether self-test device</string>
+    <string name="device_self_check_tip_message">After the self-test is successful, you can observe the device indicator and the buzzer working normally through close distance</string>
+    <string name="self_check">Self-Test</string>
+    <string name="is_device_reset">Whether to reset the alarm device</string>
+    <string name="device_reset_tip_message">In the current audible alarm of the device, reset will cancel the alarm</string>
+    <string name="reset">Reset</string>
+    <string name="is_device_psd">Whether to change the password</string>
+    <string name="device_psd_tip_message">Changes will generate a new random four-digit password</string>
+    <string name="modify">Change</string>
+    <string name="is_device_query">Whether to query the latest data of the device</string>
+    <string name="device_query_tip_message">The query device will report the latest data</string>
+    <string name="query">Query</string>
+    <string name="request_time_out">Request timed out</string>
+    <string name="operation_request_time_out">Operation request timed out</string>
+    <string name="erasuring">Muting</string>
+    <string name="reseting">Resting</string>
+    <string name="psd_modifing">Changing</string>
+    <string name="quering">Querying</string>
+    <string name="self_checking">Self-Testing</string>
+    <string name="monitor_point_operation_schedule_no_error">Task code acquisition failed</string>
+    <string name="request_success">Request successfully</string>
+    <string name="request_failed">Request failure</string>
+    <string name="monitor_point_detail_air_switch_config">空开配置</string>
+    <string name="electric_current">Current</string>
+    <string name="device_air_switch_config_tip_message">Reconfiguration will affect device alarm thresholds </string>
+    <string name="air_switch_config">Configuration</string>
+    <string name="is_device_air_switch_config">是否进行空开配置</string>
+    <string name="configuring">配置中</string>
+    <string name="monitor_point_operation_error_value_range">Input error,value range 50 to 560</string>
+    <string name="enter_the_correct_number_format">Please enter the correct number format</string>
+    <string name="input_not_null">Input can not be empty</string>
+
+    <string name="upload_photo_dialog_append_title3"></string>
+    <string name="monitor_point_detail_erasure">Mute</string>
+    <string name="monitor_point_detail_operation">Operation</string>
+    <string name="text_fire_alarm_empty"></string>
 </resources>

@@ -4,18 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.baidu.mobstat.StatService;
 import com.gyf.barlibrary.ImmersionBar;
-import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.iwidget.IOnFragmentStart;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.ButterKnife;
 import butterknife.Unbinder;

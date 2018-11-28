@@ -14,6 +14,7 @@ public interface Constants {
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
     String SOCKET_EVENT_DEVICE_ALARM_DISPLAY = "city.alarm.display";
+    String SOCKET_EVENT_DEVICE_TASK_RESULT = "city.task.result";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
@@ -48,8 +49,8 @@ public interface Constants {
 //            R.mipmap.ic_menu_location};
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
-    int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warm, R.string.normal, R.string.status_lost, R.string.status_inactive,R.string.status_malfunction};
-    int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline,R.string.status_malfunction};
+    int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warm, R.string.normal, R.string.status_lost, R.string.status_inactive, R.string.status_malfunction};
+    int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline, R.string.status_malfunction};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
     //    String[] INDEX_TYPE_ARRAY = {
@@ -342,6 +343,7 @@ public interface Constants {
     int EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE = 0x40;
     int EVENT_DATA_ALARM_FRESH_ALARM_DATA = 0x34;
     int EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS = 0x35;
+    int EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT = 0x43;
     int EVENT_DATA_SCAN_LOGIN_SUCCESS = 0x39;
 
     int EVENT_DATA_ALARM_POP_IMAGES = 0x33;
@@ -359,11 +361,17 @@ public interface Constants {
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT = -2;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS = 0;
 
-    List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST =new ArrayList<String>(){{
+    List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
         add("natural_gas");
         add("lpg");
     }};
 
+    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(2) {
+        {
+            add("fhsj_elec_fires");
+            add("acrel_fires");
+        }
+    };
 }

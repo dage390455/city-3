@@ -13,7 +13,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMonitorMoreActivityView;
 import com.sensoro.smartcity.presenter.MonitorMoreActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 
 import java.util.List;

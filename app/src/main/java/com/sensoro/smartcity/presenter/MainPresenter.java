@@ -8,7 +8,6 @@ import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
 
 import com.igexin.sdk.PushManager;
-import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
@@ -31,6 +30,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmCount;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -63,6 +63,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private final MainPresenter.DeviceInfoListener mInfoListener = new MainPresenter.DeviceInfoListener();
     private final MainPresenter.DeviceAlarmCountListener mAlarmCountListener = new MainPresenter.DeviceAlarmCountListener();
     private final DeviceAlarmDisplayStatusListener mAlarmDisplayStatusListener = new DeviceAlarmDisplayStatusListener();
+    private final DeviceTaskResultListener mTaskResultListener = new DeviceTaskResultListener();
     private final Handler mHandler = new Handler();
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     //
@@ -75,19 +76,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        try {
-            Beta.init(mContext.getApplicationContext(), BuildConfig.DEBUG);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
-            LogUtils.loge("main ---->> " + log);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        //提前获取一次
+        if (PreferencesHelper.getInstance().getLocalDevicesMergeTypes() == null) {
             openLogin();
             return;
         }
+        Beta.checkUpgrade(false, false);
+//        else {
+//            try {
+//                String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
+//                LogUtils.loge("main ---->> " + log);
+//            } catch (NullPointerException e) {
+//                e.printStackTrace();
+//
+//            }
+//        }
         initViewPager();
     }
 
@@ -123,27 +126,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         } else {
             openLogin();
         }
-        LogUtils.loge(this, "refreshContentData");
-        //提前获取一次
     }
 
-    /**
-     * 超级用户
-     *
-     * @return
-     */
-//    private boolean isSupperAccount() {
-//        return PreferencesHelper.getInstance().getUserData() != null && PreferencesHelper.getInstance().getUserData().isSupperAccount;
-//    }
-    public boolean hasDeviceBriefControl() {
+    private boolean hasDeviceBriefControl() {
         return PreferencesHelper.getInstance().getUserData().hasDeviceBrief;
     }
 
-    public boolean hasAlarmInfoControl() {
+    private boolean hasAlarmInfoControl() {
         return PreferencesHelper.getInstance().getUserData().hasAlarmInfo;
     }
 
-    public boolean hasMalfunctionControl() {
+    private boolean hasMalfunctionControl() {
         return PreferencesHelper.getInstance().getUserData().hasMalfunction;
     }
 
@@ -276,6 +269,32 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
     }
 
+    private final class DeviceTaskResultListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (MainPresenter.DeviceInfoListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            LogUtils.loge(this, "socket-->>> DeviceTaskResultListener json = " + json);
+                            MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, MonitorPointOperationTaskResultInfo.class);
+                            EventData eventData = new EventData();
+                            eventData.code = EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT;
+                            eventData.data = monitorPointOperationTaskResultInfo;
+                            EventBus.getDefault().post(eventData);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     private final class TaskRunnable implements Runnable {
 
         @Override
@@ -312,6 +331,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -370,22 +390,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     }
 
-    public void changeAccount(EventLoginData eventLoginData) {
+    private void changeAccount(EventLoginData eventLoginData) {
         //
         PreferencesHelper.getInstance().saveUserData(eventLoginData);
-//        getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
-//        if (indexFragment != null) {
         freshAccountType();
         if (hasAlarmInfoControl()) {
             freshAlarmCount();
         }
-        //
-//            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
-//            getView().setCurrentPagerItem(0);
-//            getView().setMenuSelected(0);
         reconnect();
-//        }
-
     }
 
     private void reconnect() {
@@ -443,7 +455,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             mSocket = null;
         }
         mFragmentList.clear();
-        Beta.unInit();
         LogUtils.loge(this, "onDestroy");
     }
 
@@ -456,11 +467,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             case EVENT_DATA_SESSION_ID_OVERTIME:
                 RetrofitServiceHelper.INSTANCE.cancelAllRsp();
                 openLogin();
-                break;
-            case EVENT_DATA_FINISH_CODE:
-                //            if (contractFragment != null) {
-//                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
-//            }
                 break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().setBottomBarSelected(0);
@@ -485,7 +491,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 }
                 break;
         }
-//        LogUtils.loge(this, eventData.toString());
     }
 
     private void freshAlarmCount() {

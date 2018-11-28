@@ -15,7 +15,9 @@ import com.sensoro.smartcity.presenter.AuthActivityPresenter;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.NumKeyboard;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -60,6 +62,18 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
         ButterKnife.bind(mActivity);
         initView();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        mPresenter.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        mPresenter.onStop();
     }
 
     private void initView() {
@@ -172,7 +186,7 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
     @Override
     public void onDeleteKey() {
         if (mInputCode.length() > 0) {
-            switch (mInputCode.length()-1) {
+            switch (mInputCode.length() - 1) {
                 case 0:
                     acAuthTvNum1.setText("");
                     break;
@@ -224,5 +238,24 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
     @Override
     public void updateImvStatus(boolean isSuccess) {
         acAuthImvStatus.setImageResource(isSuccess ? R.drawable.deploy_succeed : R.drawable.deploy_fail);
+    }
+
+    @Override
+    public void autoFillCode(List<String> codes) {
+        if (codes != null && codes.size() == 6) {
+            mInputCode.delete(0, mInputCode.length());
+            acAuthTvNum1.setText(codes.get(0));
+            acAuthTvNum2.setText(codes.get(1));
+            acAuthTvNum3.setText(codes.get(2));
+            acAuthTvNum4.setText(codes.get(3));
+            acAuthTvNum5.setText(codes.get(4));
+            acAuthTvNum6.setText(codes.get(5));
+            mInputCode.append(codes.get(0));
+            mInputCode.append(codes.get(1));
+            mInputCode.append(codes.get(2));
+            mInputCode.append(codes.get(3));
+            mInputCode.append(codes.get(4));
+            mInputCode.append(codes.get(5));
+        }
     }
 }

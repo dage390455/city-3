@@ -7,7 +7,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONException;
