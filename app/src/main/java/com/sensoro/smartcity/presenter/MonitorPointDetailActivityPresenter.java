@@ -468,9 +468,14 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 break;
             case MonitorPointOperationCode.SELF_CHECK:
                 operationType = "check";
+                break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
                 operationType = "config";
                 Integer integer = null;
+                if (TextUtils.isEmpty(content)) {
+                    getView().toastShort(mContext.getString(R.string.input_not_null));
+                    return;
+                }
                 try {
                     integer = Integer.valueOf(content);
                     if (integer >= 50 && integer <= 560) {
@@ -487,6 +492,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
                 break;
         }
+
+        requestCmd(operationType, switchSpec);
+    }
+
+    private void requestCmd(String operationType, Integer switchSpec) {
         ArrayList<String> sns = new ArrayList<>();
         sns.add(mDeviceInfo.getSn());
         RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns,operationType,null,null,switchSpec)
