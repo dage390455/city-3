@@ -1,21 +1,20 @@
 package com.sensoro.smartcity.widget.dialog;
 
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.AppUtils;
 
 public class CustomCornerDialog extends Dialog {
+    private boolean mDismissKeyboard = false;
+
     public CustomCornerDialog(@NonNull Context context) {
         super(context);
     }
@@ -38,6 +37,11 @@ public class CustomCornerDialog extends Dialog {
         getWindow().setAttributes(p);
     }
 
+    public CustomCornerDialog(Activity activity, int customCornerDialogStyle, View view, boolean dismissKeyboard) {
+        this(activity, customCornerDialogStyle, view);
+        mDismissKeyboard = dismissKeyboard;
+    }
+
     public void setView(View view) {
         setContentView(view);
     }
@@ -45,20 +49,19 @@ public class CustomCornerDialog extends Dialog {
     @Override
     public void show() {
         super.show();
-
     }
 
     @Override
     public void dismiss() {
-        View currentFocus = getCurrentFocus();
-        if (currentFocus instanceof EditText) {
-            InputMethodManager imm = (InputMethodManager) currentFocus.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);;
-            if (imm != null && imm.isActive(currentFocus)) {
-                imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+        if (mDismissKeyboard) {
+            View currentFocus = getCurrentFocus();
+            if (currentFocus instanceof EditText) {
+                InputMethodManager imm = (InputMethodManager) currentFocus.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);;
+                if (imm != null && imm.isActive(currentFocus)) {
+                    imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+                }
             }
-
         }
-
         super.dismiss();
     }
 }

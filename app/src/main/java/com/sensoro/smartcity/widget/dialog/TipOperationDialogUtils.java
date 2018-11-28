@@ -52,7 +52,7 @@ public class TipOperationDialogUtils {
 //            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
 
-        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
+        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view,true);
 
         mTvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
