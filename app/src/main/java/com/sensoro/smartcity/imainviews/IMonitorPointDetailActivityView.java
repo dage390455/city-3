@@ -1,9 +1,9 @@
 package com.sensoro.smartcity.imainviews;
 
+import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void setDeviceLocation(String location, boolean isArrowsRight);
 
-    void updateDeviceInfoAdapter(DeviceInfo deviceInfo);
+    void updateDeviceInfoAdapter(List<MonitoringPointRcContentAdapterModel> data);
 
     void setSNText(String sn);
 

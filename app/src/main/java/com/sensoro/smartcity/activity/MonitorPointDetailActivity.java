@@ -18,11 +18,11 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
+import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -268,9 +268,10 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     }
 
     @Override
-    public void updateDeviceInfoAdapter(DeviceInfo deviceInfo) {
-        mContentAdapter.setDeviceInfo(deviceInfo);
-        mContentAdapter.notifyDataSetChanged();
+    public void updateDeviceInfoAdapter(List<MonitoringPointRcContentAdapterModel> data) {
+//        mContentAdapter.setDeviceInfo(deviceInfo);
+//        mContentAdapter.notifyDataSetChanged();
+        mContentAdapter.updateAdapter(data);
     }
 
     @Override
@@ -533,7 +534,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
                 showTipDialog(false, R.string.is_device_psd, R.string.device_psd_tip_message, R.string.modify, R.color.c_f34a4a, MonitorPointOperationCode.PSD);
                 break;
             case R.id.ac_monitoring_point_tv_query:
-                showTipDialog(false, R.string.is_device_query, R.string.device_query_tip_message, R.string.query, R.color.c_29c093, MonitorPointOperationCode.QUERY);
+                showTipDialog(false, R.string.is_device_query, R.string.device_query_tip_message, R.string.monitor_point_detail_query, R.color.c_29c093, MonitorPointOperationCode.QUERY);
                 break;
             case R.id.ac_monitoring_point_tv_self_check:
                 showTipDialog(false, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);

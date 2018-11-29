@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +8,6 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
-import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
@@ -131,12 +129,6 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 //        }
 //    }
 
-
-    private boolean isActivityTop() {
-        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return name.equals(SearchMonitorActivity.class.getName());
-    }
 
     public void clickRelationItem(int position) {
         String s = searchStrList.get(position);

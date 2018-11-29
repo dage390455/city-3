@@ -100,7 +100,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().setDeployPhotoVisible(true);
                 echoDeviceInfo();
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
                 getView().setDeployContactRelativeLayoutVisible(true);
                 getView().setDeployDeviceRlSignalVisible(true);
@@ -167,7 +168,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
                 if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
                     changeDevice(lon, lan);
@@ -288,7 +290,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             }
                         });
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                 //TODO 巡检设备更换
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
@@ -296,6 +298,33 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                        freshPoint(deviceDeployRsp);
+                        getView().dismissProgressDialog();
+                        getView().finishAc();
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().updateUploadState(true);
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                            getView().toastShort(errorMsg);
+                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+                            freshError(deployAnalyzerModel.sn, null, DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT);
+                        } else {
+                            freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
+                        }
+                    }
+                });
+                break;
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
+                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name, deployContactModel.phone, imgUrls).
+                        subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                    @Override
+                    public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                        //
                         freshPoint(deviceDeployRsp);
                         getView().dismissProgressDialog();
                         getView().finishAc();
@@ -505,7 +534,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 requestUpload();
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //TODO 联系人上传
                 //联系人校验
                 if (checkHasContact()) return;
@@ -663,7 +693,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                 if (deployAnalyzerModel.latLng.size() != 2) {
                     getView().refreshSignal(false, signal_text, resId, "未定位");
                 } else {

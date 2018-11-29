@@ -435,8 +435,6 @@
     <string name="monitor_point_map_navigation">Navigation</string>
     //监测点详情
     <string name="monitor_point_detail_monitor_parameter">Monitoring parameters</string>
-    <string name="monitor_point_detail_operat">Operating</string>
-    <string name="monitor_point_detail_alarm">Audible Alarm</string>
     <string name="monitor_point_firmware_upgrade">Firmware upgrade</string>
     <string name="monitor_point_information">basic info</string>
     //名称和地址
@@ -611,7 +609,6 @@
     <string name="modify">Change</string>
     <string name="is_device_query">Whether to query the latest data of the device</string>
     <string name="device_query_tip_message">The query device will report the latest data</string>
-    <string name="query">Query</string>
     <string name="request_time_out">Request timed out</string>
     <string name="operation_request_time_out">Operation request timed out</string>
     <string name="erasuring">Muting</string>

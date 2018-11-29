@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
@@ -76,7 +77,7 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
                 setTextColor(holder, R.color.c_fdc83b);
                 break;
         }
-        Map<String, MalfunctionListInfo.MalfunctionDataBean> malfunctionData = malfunctionListInfo.getMalfunctionData();
+        Map<String, MalfunctionDataBean> malfunctionData = malfunctionListInfo.getMalfunctionData();
         if (malfunctionData.keySet().contains(malfunctionListInfo.getMalfunctionType())) {
             holder.mainMalfunctionRcContentTvReason.setText(malfunctionData.get(malfunctionListInfo.getMalfunctionType()).getDescription());
         } else {

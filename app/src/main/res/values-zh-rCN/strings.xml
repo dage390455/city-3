@@ -629,5 +629,6 @@
     <string name="monitor_point_operation_error_value_range">输入错误，数值范围50至560</string>
     <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
     <string name="input_not_null">输入不能为空</string>
+    <string name="request_success">请求成功</string>
 
 </resources>
