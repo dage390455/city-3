@@ -66,10 +66,20 @@ public class ContractListInfo implements Serializable {
     private int payTimes;
     private boolean confirmed;
     private int serviceTime;
+    private int firstPayTimes;
     private String confirmTime;
     private String createdAt;
     private String updatedAt;
     private List<ContractsTemplateInfo> devices;
+
+
+    public int getFirstPayTimes() {
+        return firstPayTimes;
+    }
+
+    public void setFirstPayTimes(int firstPayTimes) {
+        this.firstPayTimes = firstPayTimes;
+    }
 
     public int getId() {
         return id;

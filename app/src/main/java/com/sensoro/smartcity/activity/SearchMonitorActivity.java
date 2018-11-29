@@ -40,7 +40,7 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
@@ -223,38 +223,13 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     }
 
 
-    //    public void analyseData(DeviceInfoListRsp deviceInfoListRsp) {
-//        this.mDataList.clear();
-//        this.mRelationLayout.setVisibility(View.GONE);
-//        this.mIndexListLayout.setVisibility(VISIBLE);
-//        for (int i = 0; i < deviceInfoListRsp.getData().size(); i++) {
-//            DeviceInfo deviceInfo = deviceInfoListRsp.getData().getInstance(i);
-//            switch (deviceInfo.getStatus()) {
-//                case SENSOR_STATUS_ALARM:
-//                    deviceInfo.setSort(1);
-//                    break;
-//                case SENSOR_STATUS_NORMAL:
-//                    deviceInfo.setSort(2);
-//                    break;
-//                case SENSOR_STATUS_LOST:
-//                    deviceInfo.setSort(3);
-//                    break;
-//                case SENSOR_STATUS_INACTIVE:
-//                    deviceInfo.setSort(4);
-//                    break;
-//                default:
-//                    break;
-//            }
-//            mDataList.add(deviceInfo);
-//        }
-//        refreshContentData();
-//    }
     @Override
     public void refreshData(List<DeviceInfo> dataList) {
-        if (dataList != null && dataList.size() > 0) {
+        if (dataList != null) {
             Collections.sort(dataList);
             mSearchRcContentAdapter.updateData(dataList);
         }
+        setIndexListLayoutVisible(true);
         setNoContentVisible(dataList == null || dataList.size() == 0);
 
     }
@@ -263,7 +238,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         acSearchDeviceRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
-
     }
 
     @Override
@@ -291,15 +265,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void updateSearchHistoryData(List<String> strHistory) {
         setHistoryClearBtnVisible(strHistory != null && strHistory.size() > 0);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(strHistory);
-    }
-
-    @Override
-    public boolean getSearchDataListVisible() {
-        boolean isListVisible = indexLayoutList.getVisibility() == VISIBLE;
-        boolean isSearchHistoryHide = mSearchHistoryLayout.getVisibility() == View.GONE;
-//        boolean isRelationLayoutHide = mRelationLayout.getVisibility() == View.GONE;
-//        return isListVisible && isSearchHistoryHide && isRelationLayoutHide;
-        return isListVisible && isSearchHistoryHide;
     }
 
     @Override
@@ -475,12 +440,10 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     public void onTextChanged(CharSequence s, int start, int before, int count) {
         if (!TextUtils.isEmpty(s.toString())) {
             setSearchHistoryLayoutVisible(false);
-//            setRelationLayoutVisible(true);
             mClearKeywordIv.setVisibility(View.VISIBLE);
 //            mPresenter.filterDeviceInfo(s.toString());
         } else {
             setSearchHistoryLayoutVisible(true);
-//            setRelationLayoutVisible(false);
             setIndexListLayoutVisible(false);
         }
     }

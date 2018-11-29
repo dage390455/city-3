@@ -32,7 +32,7 @@
     <string name="signal_weak">信号：差</string>
     <string name="no_signal">无信号</string>
     <string name="alert_contact">预警联系人</string>
-    <string name="get_the_middle_profile">获取中配置文件</string>
+    <string name="get_the_middle_profile">获取配置文件中</string>
     <string name="live_photo">现场照片</string>
     <string name="positioned">已定位</string>
     <string name="not_positioned">未定位</string>
@@ -234,7 +234,7 @@
     //
 
     //
-    <string name="search_tips">设备名称、设备号、标签</string>
+    <string name="search_tips">设备名称/设备号/标签</string>
 
     <string name="recent">最近搜索</string>
     <string name="clear">清除</string>
@@ -297,7 +297,6 @@
     <string name="tips_data_error">数据解析错误</string>
     <string name="tips_date_not_null">日期段中的任一日期不能为空</string>
     <string name="tips_input_machine_sn">请输入机身对应的SN号码</string>
-    <string name="tips_username_empty">请输入账号</string>
     <string name="tips_phone_empty">请输入有效电话号码</string>
     <string name="tips_login_pwd_empty">请输入登录密码</string>
     <string name="tips_deploy_success">恭喜! 传感器点位部署成功</string>
@@ -392,8 +391,8 @@
     //部署地图
     <string name="deploy_device_map_save">保存</string>
     //部署记录
-    <string name="deploy_record_search_tip">设备名称、设备号、标签</string>
-    <string name="deploy_record_search_cancel_tip">设备名称、设备号、标签</string>
+    <string name="deploy_record_search_tip">设备名称/设备号/标签</string>
+    <string name="deploy_record_search_cancel_tip">设备名称/设备号/标签</string>
     <string name="deploy_record_new_device">部署新设备</string>
     <string name="deploy_record_device_number">设备号</string>
     <string name="deploy_record_name">名称</string>
@@ -459,8 +458,8 @@
     <string name="monitor_point_map_navigation">导航</string>
     //监测点详情
     <string name="monitor_point_detail_monitor_parameter">监控参数</string>
-    <string name="monitor_point_detail_operat">操作</string>
-    <string name="monitor_point_detail_alarm">发声报警</string>
+    <string name="monitor_point_detail_operation">操作</string>
+    <string name="monitor_point_detail_erasure">消音</string>
     <string name="monitor_point_firmware_upgrade">固件升级</string>
     <string name="monitor_point_information">基本信息</string>
     //名称和地址
@@ -516,7 +515,7 @@
     <string name="manager_fragment_version_information">版本信息</string>
     <string name="manager_fragment_exit_account">退出账户</string>
     //warn framgen
-    <string name="warn_fragment_search_tip">设备名称、设备号、手机号</string>
+    <string name="warn_fragment_search_tip">设备名称/设备号/手机号</string>
 
     //
     <string name="top_bar_image">图片</string>
@@ -587,6 +586,48 @@
     //选择图片
     <string name="permission_forbbidden_not_selected_image">权限被禁止，无法选择本地图片</string>
     <string name="permission_forbbidden_not_open_camera">权限被禁止，无法打开相机</string>
-    //
+    <string name="open_ble_contact_device">打开蓝牙来允许“CITY”链接设备</string>
+    <string name="open_ble_to_location">为了您的功能正常使用，请打开蓝牙和定位</string>
+    <string name="ok_one">好</string>
+    <string name="confirm_monitor_point_exception">确认监测点是否异常</string>
+    <string name="uploade_exception_change_device">上报异常并更换设备</string>
+    <string name="tips_username_empty">请输入账号</string>
+    <string name="monitor_point_detail_self_check">自检</string>
+    <string name="monitor_point_detail_query">查询</string>
+    <string name="monitor_point_detail_psd">修改密码</string>
+    <string name="monitor_point_detail_reset">复位</string>
+    <string name="is_device_erasure">是否将报警设备消音</string>
+    <string name="device_erasure_tip_message">当前设备发声报警中，是否将报警设备消音</string>
+    <string name="back">返回</string>
+    <string name="erasure">消音</string>
+    <string name="is_device_self_check">是否自检设备</string>
+    <string name="device_self_check_tip_message">自检成功后，可通过近距离观察设备指示灯和蜂鸣器工作是否正常</string>
+    <string name="self_check">自检</string>
+    <string name="is_device_reset">是否将报警设备复位</string>
+    <string name="device_reset_tip_message">当前设备发声报警中，复位将解除报警</string>
+    <string name="reset">复位</string>
+    <string name="is_device_psd">是否修改密码</string>
+    <string name="device_psd_tip_message">修改将生成新的随机四位数密码</string>
+    <string name="modify">修改</string>
+    <string name="is_device_query">是否查询设备最新数据</string>
+    <string name="device_query_tip_message">查询设备将上报最新数据</string>
+    <string name="request_time_out">请求超时</string>
+    <string name="operation_request_time_out">操作请求超时</string>
+    <string name="erasuring">消音中</string>
+    <string name="reseting">复位中</string>
+    <string name="psd_modifing">正在修改密码</string>
+    <string name="quering">查询中</string>
+    <string name="self_checking">自检中</string>
+    <string name="monitor_point_operation_schedule_no_error">任务编码获取失败</string>
+    <string name="request_failed">请求失败</string>
+    <string name="monitor_point_detail_air_switch_config">空开配置</string>
+    <string name="electric_current">电流</string>
+    <string name="device_air_switch_config_tip_message">重新配置将会影响设备报警阈值</string>
+    <string name="air_switch_config">配置</string>
+    <string name="is_device_air_switch_config">是否进行空开配置</string>
+    <string name="configuring">配置中</string>
+    <string name="monitor_point_operation_error_value_range">输入错误，数值范围50至560</string>
+    <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
+    <string name="input_not_null">输入不能为空</string>
 
 </resources>

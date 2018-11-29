@@ -33,4 +33,8 @@ public interface IContractManagerActivityView extends IProgressDialog, IToast, I
     void UpdateSelectTypePopList(List<InspectionStatusCountModel> list);
 
     void showSelectStTypePop();
+
+    boolean getSearchTextVisible();
+
+    void setSearchButtonTextVisible(boolean isVisible);
 }

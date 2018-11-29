@@ -27,6 +27,7 @@ import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
 import com.sensoro.smartcity.server.response.MalfunctionListRsp;
+import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
@@ -87,6 +88,7 @@ public interface RetrofitService {
     String INSPECTION_TASK_GET_TEMPLATE = "inspect/template";
     String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
     String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
+    String MONITOR_POINT_OPERATION = "devices/list/task";
 //    String DEPLOY_DEVICE_DETAIL = "devices/detail";
     String DEPLOY_DEVICE_DETAIL = "prov2/devices/detail";
     @FormUrlEncoded
@@ -263,6 +265,9 @@ public interface RetrofitService {
     @GET(GET_DEVICES_MERGE_TYPES)
 //    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
     Observable<DevicesMergeTypesRsp> getDevicesMergeTypes();
+
+    @PUT(MONITOR_POINT_OPERATION)
+    Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(@Body RequestBody requestBody);
 
 }
 

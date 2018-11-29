@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -22,7 +24,7 @@ import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.smartcity.presenter.ContractServiceActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.util.ArrayList;
@@ -108,12 +110,25 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     //
     @BindView(R.id.ll_contract_service_layout)
     LinearLayout llContractServiceLayout;
+
     @BindView(R.id.iv_contract_age_del)
     ImageView ivContractAgeDel;
     @BindView(R.id.et_contract_age)
     EditText etContractAge;
     @BindView(R.id.iv_contract_age_add)
     ImageView ivContractAgeAdd;
+    @BindView(R.id.iv_contract_age_first_del)
+    ImageView ivContractAgeFirstDel;
+    @BindView(R.id.et_contract_age_first)
+    EditText etContractAgeFirst;
+    @BindView(R.id.iv_contract_age_first_add)
+    ImageView ivContractAgeFirstAdd;
+    @BindView(R.id.iv_contract_age_period_del)
+    ImageView ivContractAgePeriodDel;
+    @BindView(R.id.et_contract_age_period)
+    EditText etContractAgePeriod;
+    @BindView(R.id.iv_contract_age_period_add)
+    ImageView getIvContractAgePeriodAdd;
     @BindView(R.id.rv_sensor_count)
     RecyclerView rvSensorCount;
     @BindView(R.id.bt_next)
@@ -162,6 +177,78 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
         rvSensorCount.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, true));
         rvSensorCount.setAdapter(contractTemplateAdapter);
         rvSensorCount.setNestedScrollingEnabled(false);
+        etContractAge.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                handleAgeText(text, etContractAge);
+            }
+        });
+        etContractAgeFirst.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                handleAgeText(text, etContractAgeFirst);
+            }
+        });
+        etContractAgePeriod.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                handleAgeText(text, etContractAgePeriod);
+            }
+        });
+        String contractAge = etContractAge.getText().toString();
+        handleAgeText(contractAge, etContractAge);
+        String contractAgeFirst = etContractAgeFirst.getText().toString();
+        handleAgeText(contractAgeFirst, etContractAgeFirst);
+        String contractAgePeriod = etContractAgePeriod.getText().toString();
+        handleAgeText(contractAgePeriod, etContractAgePeriod);
+    }
+
+    private void handleAgeText(String text, EditText editText) {
+        if (!TextUtils.isEmpty(text)) {
+            try {
+                int i = Integer.parseInt(text);
+                if (i > 1) {
+                    editText.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+                } else {
+                    editText.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -259,13 +346,16 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 //
                 tvContractServiceLine3.setText(R.string.phone_num);
                 //
-                tvContractServiceLine4.setText(R.string.address);
+                tvContractServiceLine4.setText("身份证号");
+
                 //已经存在电话 不显示
                 ivLinePhone.setVisibility(View.GONE);
                 llContractServicePhone.setVisibility(View.GONE);
                 //
-                ivLine5.setVisibility(View.GONE);
-                llContractServiceLine5.setVisibility(View.GONE);
+                tvContractServiceLine5.setText(R.string.address);
+                //
+
+
                 //
                 ivLine6.setVisibility(View.GONE);
                 llContractServiceLine6.setVisibility(View.GONE);
@@ -296,7 +386,8 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     @OnClick({R.id.iv_contract_service_back, R.id.tv_contract_service_title_retake, R.id.iv_contract_service_line1, R
             .id.iv_contract_service_line2, R.id.iv_contract_service_line3, R.id.iv_contract_service_line4, R.id
             .iv_contract_service_line5, R.id.iv_contract_service_line6, R.id.ll_contract_service_place_type, R.id
-            .iv_contract_age_del, R.id.iv_contract_age_add, R.id.bt_next})
+            .iv_contract_age_del, R.id.iv_contract_age_add, R.id.bt_next, R.id.iv_contract_age_first_del, R.id.iv_contract_age_first_add
+            , R.id.iv_contract_age_period_del, R.id.iv_contract_age_period_add})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.iv_contract_service_back:
@@ -329,24 +420,73 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 String contractAgeDel = etContractAge.getText().toString();
                 if (!TextUtils.isEmpty(contractAgeDel)) {
                     int i = Integer.parseInt(contractAgeDel);
-                    if (i > 0) {
+                    if (i > 1) {
                         i--;
                         etContractAge.setText(i + "");
                     }
                 } else {
-                    etContractAge.setText(0 + "");
+                    etContractAge.setText(1 + "");
                 }
                 break;
             case R.id.iv_contract_age_add:
                 String contractAgeAdd = etContractAge.getText().toString();
                 if (!TextUtils.isEmpty(contractAgeAdd)) {
                     int i = Integer.parseInt(contractAgeAdd);
-                    if (i >= 0) {
+                    if (i >= 1) {
                         i++;
                         etContractAge.setText(i + "");
                     }
                 } else {
-                    etContractAge.setText(0 + "");
+                    etContractAge.setText(1 + "");
+                }
+                break;
+            //
+            case R.id.iv_contract_age_first_del:
+                String contractAgeFirstDel = etContractAgeFirst.getText().toString();
+                if (!TextUtils.isEmpty(contractAgeFirstDel)) {
+                    int i = Integer.parseInt(contractAgeFirstDel);
+                    if (i > 1) {
+                        i--;
+                        etContractAgeFirst.setText(i + "");
+                    }
+                } else {
+                    etContractAgeFirst.setText(1 + "");
+                }
+                break;
+            case R.id.iv_contract_age_first_add:
+                String contractAgeAddFirst = etContractAgeFirst.getText().toString();
+                if (!TextUtils.isEmpty(contractAgeAddFirst)) {
+                    int i = Integer.parseInt(contractAgeAddFirst);
+                    if (i >= 1) {
+                        i++;
+                        etContractAgeFirst.setText(i + "");
+                    }
+                } else {
+                    etContractAgeFirst.setText(1 + "");
+                }
+                break;
+            case R.id.iv_contract_age_period_del:
+                String contractAgeDelPeriod = etContractAgePeriod.getText().toString();
+                if (!TextUtils.isEmpty(contractAgeDelPeriod)) {
+                    int i = Integer.parseInt(contractAgeDelPeriod);
+                    if (i > 1) {
+                        i--;
+                        etContractAgePeriod.setText(i + "");
+                    }
+                } else {
+                    etContractAgePeriod.setText(1 + "");
+                }
+                break;
+            case R.id.iv_contract_age_period_add:
+                String contractAgeAddPeriod = etContractAgePeriod.getText().toString();
+                if (!TextUtils.isEmpty(contractAgeAddPeriod)) {
+                    int i = Integer.parseInt(contractAgeAddPeriod);
+                    if (i >= 1) {
+                        i++;
+                        etContractAgePeriod.setText(i + "");
+                    }
+                } else {
+                    etContractAgePeriod.setText(1 + "");
                 }
                 break;
             case R.id.bt_next:
@@ -360,10 +500,12 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 String line5 = etContractServiceLine5.getText().toString();
                 String line6 = etContractServiceLine6.getText().toString();
                 String phone = etContractServicePhone.getText().toString();
-                String line7 = etContractAge.getText().toString();
+                String contractAgeStr = etContractAge.getText().toString();
+                String contractAgeFirstStr = etContractAgeFirst.getText().toString();
+                String contractAgePeriodStr = etContractAgePeriod.getText().toString();
                 String placeType = tvContractServicePlace.getText().toString();
                 ArrayList<ContractsTemplateInfo> data = contractTemplateAdapter.getData();
-                mPresenter.startToNext(line1, phone, line2, line3, line4, line5, line6, line7, placeType, sex, data);
+                mPresenter.startToNext(line1, phone, line2, line3, line4, line5, line6, contractAgeStr, contractAgeFirstStr, contractAgePeriodStr, placeType, sex, data);
                 break;
         }
     }

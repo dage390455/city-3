@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
-    def verName = "3.1.0"
+    def verName = "3.2.0"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'

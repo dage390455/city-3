@@ -7,7 +7,6 @@ import android.view.View;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,7 +22,7 @@ import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -75,7 +74,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPullListView = findViewById(R.id.fragment_merchant_list);
-        refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
+        refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
@@ -197,7 +196,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     @Override
     public void showSeperatorView(boolean isShow) {
         if (isShow) {
-            refreshLayout.finishLoadMoreWithNoMoreData();
+//            refreshLayout.finishLoadMoreWithNoMoreData();
         }
 //        if (isShow) {
 //            seperatorView.setVisibility(View.VISIBLE);
@@ -228,7 +227,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 //            }
 //        }
     }
-
 
 
     @Override

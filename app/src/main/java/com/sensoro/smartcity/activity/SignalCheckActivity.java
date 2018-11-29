@@ -22,7 +22,7 @@ import com.sensoro.smartcity.presenter.SignalCheckActivityPresenter;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.List;

@@ -6,13 +6,18 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RadioGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,8 +31,9 @@ import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.presenter.ContractManagerActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 
 import java.util.List;
@@ -42,11 +48,13 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         RadioGroup.OnCheckedChangeListener {
     @BindView(R.id.contract_iv_menu_list)
     ImageView contractIvMenuList;
+    @BindView(R.id.contract_manger_root)
+    RelativeLayout contractMangerRoot;
     @BindView(R.id.contract_title)
     TextView contractTitle;
     @BindView(R.id.contract_iv_add)
     ImageView contractIvAdd;
-//    @BindView(R.id.rg_contract_select)
+    //    @BindView(R.id.rg_contract_select)
 //    RadioGroup rgContractSelect;
     @BindView(R.id.contract_ptr_list)
     ListView contractPtrList;
@@ -64,6 +72,16 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     TextView tvSelectStatus;
     @BindView(R.id.contract_cl_select_root)
     ConstraintLayout clSelectRoot;
+    @BindView(R.id.fg_main_top_search_title_root)
+    LinearLayout fgMainWarnTitleRoot;
+    @BindView(R.id.fg_main_top_search_frame_search)
+    FrameLayout fgMainWarnFrameSearch;
+    @BindView(R.id.fg_main_top_search_et_search)
+    EditText fgMainWarnEtSearch;
+    @BindView(R.id.fg_main_top_search_imv_calendar)
+    ImageView fgMainWarnImvCalendar;
+    @BindView(R.id.tv_top_search_alarm_search_cancel)
+    TextView tvWarnAlarmSearchCancel;
 
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
@@ -88,16 +106,18 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
+////                mPresenter.requestTopData();
                 isShowDialog = false;
-                requestDataByDirection(DIRECTION_DOWN, false);
-//                mPresenter.requestTopData();
+                String text = fgMainWarnEtSearch.getText().toString();
+                mPresenter.requestSearchData(DIRECTION_DOWN, text);
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                requestDataByDirection(DIRECTION_UP, false);
+                String text = fgMainWarnEtSearch.getText().toString();
+                mPresenter.requestSearchData(DIRECTION_UP, text);
             }
         });
 //        contractPtrList.setRefreshing(false);
@@ -125,13 +145,40 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         contractReturnTop.setOnClickListener(this);
         tvSelectType.setOnClickListener(this);
         tvSelectStatus.setOnClickListener(this);
+        fgMainWarnFrameSearch.setOnClickListener(this);
+        fgMainWarnEtSearch.setOnClickListener(this);
+        tvWarnAlarmSearchCancel.setOnClickListener(this);
 
         blackTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle);
-        blackTriangle.setBounds(0,0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
+        blackTriangle.setBounds(0, 0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
         grayTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle_gray);
-        grayTriangle.setBounds(0,0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
+        grayTriangle.setBounds(0, 0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
         initSelectTypePop();
         initSelectStatusPop();
+        fgMainWarnEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    // 当按了搜索之后关闭软键盘
+                    String text = fgMainWarnEtSearch.getText().toString();
+                    mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                    AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
+                    return true;
+                }
+                return false;
+            }
+        });
+        AppUtils.getInputSoftStatus(contractMangerRoot, new AppUtils.InputSoftStatusListener() {
+            @Override
+            public void onKeyBoardClose() {
+                fgMainWarnEtSearch.setCursorVisible(false);
+            }
+
+            @Override
+            public void onKeyBoardOpen() {
+                fgMainWarnEtSearch.setCursorVisible(true);
+            }
+        });
     }
 
     private void initSelectTypePop() {
@@ -145,13 +192,13 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 InspectionStatusCountModel item = mSelectTypePop.getItem(position);
                 mPresenter.doSelectTypeDevice(item);
                 Resources resources = mActivity.getResources();
-                if(position==0){
+                if (position == 0) {
                     tvSelectType.setText(R.string.all_contracts);
                     tvSelectType.setTextColor(resources.getColor(R.color.c_a6a6a6));
-                    tvSelectType.setCompoundDrawables(null,null,grayTriangle,null);
-                }else{
+                    tvSelectType.setCompoundDrawables(null, null, grayTriangle, null);
+                } else {
                     tvSelectType.setTextColor(resources.getColor(R.color.c_252525));
-                    tvSelectType.setCompoundDrawables(null,null,blackTriangle,null);
+                    tvSelectType.setCompoundDrawables(null, null, blackTriangle, null);
                     tvSelectType.setText(item.statusTitle);
                 }
                 mSelectTypePop.dismiss();
@@ -171,13 +218,13 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 InspectionStatusCountModel item = mSelectStatusPop.getItem(position);
                 mPresenter.doSelectStatusDevice(item);
                 Resources resources = mActivity.getResources();
-                if(position==0){
+                if (position == 0) {
                     tvSelectStatus.setTextColor(resources.getColor(R.color.c_a6a6a6));
-                    tvSelectStatus.setCompoundDrawables(null,null,grayTriangle,null);
+                    tvSelectStatus.setCompoundDrawables(null, null, grayTriangle, null);
                     tvSelectStatus.setText(R.string.all_states);
-                }else{
+                } else {
                     tvSelectStatus.setTextColor(resources.getColor(R.color.c_252525));
-                    tvSelectStatus.setCompoundDrawables(null,null,blackTriangle,null);
+                    tvSelectStatus.setCompoundDrawables(null, null, blackTriangle, null);
                     tvSelectStatus.setText(item.statusTitle);
                 }
                 mSelectStatusPop.dismiss();
@@ -185,7 +232,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
             }
         });
     }
-
 
 
     @Override
@@ -229,7 +275,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void showSelectStatusPop() {
-        if (mSelectStatusPop!=null) {
+        if (mSelectStatusPop != null) {
             mSelectStatusPop.showAsDropDown(clSelectRoot);
         }
     }
@@ -243,7 +289,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     @Override
     public void showSelectStTypePop() {
-        if (mSelectTypePop!=null) {
+        if (mSelectTypePop != null) {
             mSelectTypePop.showAsDropDown(clSelectRoot);
         }
     }
@@ -330,7 +376,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 closeRefreshHeaderOrFooter();
                 break;
             case R.id.contract_tv_select_type:
-                if(mSelectStatusPop!=null&&mSelectStatusPop.isShowing()){
+                if (mSelectStatusPop != null && mSelectStatusPop.isShowing()) {
                     mSelectStatusPop.dismiss();
                 }
                 mPresenter.doSelectTypePop();
@@ -338,7 +384,49 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
             case R.id.contract_tv_select_status:
                 mPresenter.doSelectStatusPop();
                 break;
+            case R.id.fg_main_top_search_frame_search:
+            case R.id.fg_main_top_search_et_search:
+                fgMainWarnEtSearch.requestFocus();
+                fgMainWarnEtSearch.setCursorVisible(true);
+//                forceOpenSoftKeyboard();
+                break;
+            case R.id.fg_main_top_search_imv_calendar:
+//                mPresenter.doCalendar(fgMainWarnTitleRoot);
+                break;
+            case R.id.fg_main_warn_top_search_date_close:
+//                fgMainWarnRlDateEdit.setVisibility(View.GONE);
+//                String text = fgMainWarnEtSearch.getText().toString();
+//                mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                break;
+            case R.id.tv_top_search_alarm_search_cancel:
+                doCancelSearch();
+                break;
         }
+    }
+
+    private void doCancelSearch() {
+        if (getSearchTextVisible()) {
+            fgMainWarnEtSearch.getText().clear();
+        }
+        mPresenter.doCancelSearch();
+    }
+
+    @Override
+    public boolean getSearchTextVisible() {
+        return tvWarnAlarmSearchCancel.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void setSearchButtonTextVisible(boolean isVisible) {
+        if (isVisible) {
+            tvWarnAlarmSearchCancel.setVisibility(View.VISIBLE);
+//            setEditTextState(false);
+            AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
+        } else {
+            tvWarnAlarmSearchCancel.setVisibility(View.GONE);
+//            setEditTextState(true);
+        }
+
     }
 
     @Override
@@ -390,7 +478,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         }
         super.onDestroy();
     }
-
 
 
     @Override

@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
@@ -27,7 +28,7 @@ import com.sensoro.smartcity.imainviews.IAlarmHistoryLogActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
 import java.util.List;

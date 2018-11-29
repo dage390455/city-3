@@ -20,7 +20,7 @@ import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorNameAddressActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 

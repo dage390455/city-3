@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/fg_main_top_search_title_root"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="12dp"
+        android:orientation="horizontal">
+
+        <FrameLayout
+            android:id="@+id/fg_main_top_search_frame_search"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@drawable/shape_bg_full_corner">
+
+            <EditText
+                android:id="@+id/fg_main_top_search_et_search"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:background="@null"
+                android:drawableStart="@drawable/main_search"
+                android:drawablePadding="8dp"
+                android:hint="法定代表人/姓名"
+                android:imeOptions="actionSearch"
+                android:singleLine="true"
+                android:textColor="@color/c_252525"
+                android:textColorHint="@color/c_a6a6a6"
+                android:textSize="12sp" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_top_search_alarm_search_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:padding="10dp"
+            android:text="取消"
+            android:textColor="@color/c_252525"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/fg_main_top_search_imv_calendar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/transparent"
+            android:contentDescription="@null"
+            android:padding="10dp"
+            android:src="@drawable/calendar"
+            android:visibility="gone" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        android:id="@+id/fg_main_top_search_rl_date_edit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/white"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/fg_main_top_search_tv_date_edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/y30"
+            android:layout_marginEnd="@dimen/x45"
+            android:layout_marginBottom="@dimen/y30"
+            android:textSize="@dimen/x54" />
+
+        <ImageView
+            android:id="@+id/fg_main_warn_top_search_date_close"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/fg_main_top_search_tv_date_edit"
+            android:layout_alignParentEnd="true"
+            android:contentDescription="@null"
+            android:padding="8dp"
+            android:scaleType="centerInside"
+            android:src="@mipmap/ic_close" />
+    </RelativeLayout>
+</LinearLayout>

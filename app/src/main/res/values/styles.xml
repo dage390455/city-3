@@ -168,5 +168,15 @@
         <item name="android:windowExitAnimation">@anim/hide_to_bottom</item>
     </style>
 
+    <!--监控点详情 操作text-->
+    <style name="style_monitor_point_detail_operation_text">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:textColor">@color/c_252525</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:gravity">center</item>
+    </style>
 
 </resources>

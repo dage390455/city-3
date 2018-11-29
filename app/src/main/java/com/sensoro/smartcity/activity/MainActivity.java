@@ -18,7 +18,7 @@ import com.sensoro.smartcity.imainviews.IMainView;
 import com.sensoro.smartcity.presenter.MainPresenter;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.HomeViewPager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 

@@ -29,6 +29,7 @@ import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -47,6 +48,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        Beta.checkUpgrade(false, false);
         readLoginData();
         initSeverUrl();
     }

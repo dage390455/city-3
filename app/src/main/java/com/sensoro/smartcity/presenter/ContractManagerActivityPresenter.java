@@ -10,6 +10,8 @@ import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
+import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -17,13 +19,17 @@ import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ContractManagerActivityPresenter extends BasePresenter<IContractManagerActivityView> implements Constants {
+public class ContractManagerActivityPresenter extends BasePresenter<IContractManagerActivityView> implements IOnCreate, Constants {
     private Activity mContext;
     private final List<ContractListInfo> dataList = new ArrayList<>();
     private Integer requestDataType = null;
@@ -31,10 +37,12 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     List<InspectionStatusCountModel> mSelectStatuslist = new ArrayList<>();
     List<InspectionStatusCountModel> mSelectTypelist = new ArrayList<>();
     private Integer requestDataConfirmed = null;
+    private String tempSearch;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         initSelectData();
         requestDataByDirection(DIRECTION_DOWN, true);
     }
@@ -82,6 +90,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         if (isFirst) {
             requestDataType = null;
             requestDataConfirmed = null;
+            tempSearch = null;
         }
         refreshData(direction);
     }
@@ -91,7 +100,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
             case DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, requestDataConfirmed,null, null, null, null).subscribeOn
+                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, tempSearch, requestDataConfirmed, null, null, null, null).subscribeOn
                         (Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
 
@@ -104,6 +113,11 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                         if (dataList.size() > 0) {
                             getView().smoothScrollToPosition(0);
                             getView().closeRefreshHeaderOrFooter();
+                        }
+                        if (!TextUtils.isEmpty(tempSearch)) {
+                            getView().setSearchButtonTextVisible(true);
+                        } else {
+                            getView().setSearchButtonTextVisible(false);
                         }
                         getView().updateContractList(dataList);
                         getView().onPullRefreshComplete();
@@ -121,7 +135,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 cur_page++;
                 getView().showProgressDialog();
                 int offset = cur_page * 20;
-                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType,requestDataConfirmed, null, null, null, offset).subscribeOn
+                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, tempSearch, requestDataConfirmed, null, null, null, offset).subscribeOn
                         (Schedulers
                                 .io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
@@ -137,7 +151,13 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                         } else {
                             dataList.addAll(data);
                             getView().updateContractList(dataList);
+                            if (!TextUtils.isEmpty(tempSearch)) {
+                                getView().setSearchButtonTextVisible(true);
+                            } else {
+                                getView().setSearchButtonTextVisible(false);
+                            }
                         }
+
                         getView().onPullRefreshComplete();
                     }
 
@@ -161,7 +181,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         int created_type = contractListInfo.getCreated_type();
         Intent intent = new Intent();
         intent.setClass(mContext, ContractInfoActivity.class);
-        intent.putExtra(EXTRA_CONTRACT_ID,contractListInfo.getId());
+        intent.putExtra(EXTRA_CONTRACT_ID, contractListInfo.getId());
         //
         intent.putExtra(EXTRA_CONTRACT_TYPE, created_type);
         //
@@ -173,6 +193,12 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         //
         int serviceTime = contractListInfo.getServiceTime();
         intent.putExtra("contract_service_life", serviceTime + "");
+
+        int serviceTimeFirst = contractListInfo.getFirstPayTimes();
+        intent.putExtra("contract_service_life_first", serviceTimeFirst + "");
+
+        int serviceTimePeriod = contractListInfo.getPayTimes();
+        intent.putExtra("contract_service_life_period", serviceTimePeriod + "");
         //
         String createdAt = contractListInfo.getCreatedAt();
         if (TextUtils.isEmpty(createdAt)) {
@@ -297,11 +323,16 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 }
                 intent.putExtra("line3", phone2);
                 //
+                String cardId = contractListInfo.getCard_id();
+                if (TextUtils.isEmpty(cardId)) {
+                    cardId = "无";
+                }
+                intent.putExtra("line4", cardId);
                 String customer_address1 = contractListInfo.getCustomer_address();
                 if (TextUtils.isEmpty(customer_address1)) {
                     customer_address1 = "无";
                 }
-                intent.putExtra("line4", customer_address1);
+                intent.putExtra("line5", customer_address1);
                 break;
             default:
                 break;
@@ -326,6 +357,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         dataList.clear();
     }
 
@@ -340,7 +372,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     }
 
     public void doSelectTypeDevice(InspectionStatusCountModel item) {
-        switch (item.status){
+        switch (item.status) {
             case 0:
                 requestDataType = null;
                 break;
@@ -353,7 +385,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     }
 
     public void doSelectStatusDevice(InspectionStatusCountModel item) {
-        switch (item.status){
+        switch (item.status) {
             case 0:
                 requestDataConfirmed = null;
                 break;
@@ -362,6 +394,38 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 requestDataConfirmed = item.status;
                 break;
         }
+        refreshData(DIRECTION_DOWN);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        //TODO 可以修改以此种方式传递，方便管理
+        int code = eventData.code;
+        Object data = eventData.data;
+        switch (code) {
+            case EVENT_DATA_FINISH_CODE:
+                if (data instanceof Boolean) {
+                    boolean needFinish = (boolean) data;
+                    if (needFinish) {
+                        requestDataByDirection(DIRECTION_DOWN, true);
+                    }
+                }
+                break;
+        }
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void requestSearchData(int direction, String text) {
+        tempSearch = text;
+        refreshData(direction);
+    }
+
+    public void doCancelSearch() {
+        tempSearch = null;
         refreshData(DIRECTION_DOWN);
     }
 }

@@ -23,7 +23,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;

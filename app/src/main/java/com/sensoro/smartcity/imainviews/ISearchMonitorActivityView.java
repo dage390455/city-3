@@ -26,8 +26,6 @@ public interface ISearchMonitorActivityView extends IToast, IProgressDialog, IAc
 
     void updateSearchHistoryData(List<String> strHistory);
 
-    boolean getSearchDataListVisible();
-
     void setEditText(String text);
 
 

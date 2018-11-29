@@ -41,6 +41,7 @@ import com.sensoro.smartcity.server.response.InspectionTaskModelRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
 import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
 import com.sensoro.smartcity.server.response.MalfunctionListRsp;
+import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.server.response.QiNiuToken;
 import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.server.response.UpdateRsp;
@@ -179,27 +180,23 @@ public enum RetrofitServiceHelper {
     public int getBaseUrlType() {
         if (mUrlType == -1) {
             mUrlType = 0;
-            try {
-                mUrlType = PreferencesHelper.getInstance().getBaseUrlType();
-                if (mUrlType != 0) {
-                    switch (mUrlType) {
-                        case 1:
-                            BASE_URL = SCOPE_DEMO;
-                            break;
-                        case 2:
-                            BASE_URL = SCOPE_TEST;
-                            break;
-                        case 3:
-                            BASE_URL = SCOPE_MOCHA;
-                            break;
-                        default:
-                            BASE_URL = SCOPE_MASTER;
-                            break;
-                    }
-                    retrofitService = builder.baseUrl(BASE_URL).build().create(RetrofitService.class);
+            mUrlType = PreferencesHelper.getInstance().getBaseUrlType();
+            if (mUrlType != 0) {
+                switch (mUrlType) {
+                    case 1:
+                        BASE_URL = SCOPE_DEMO;
+                        break;
+                    case 2:
+                        BASE_URL = SCOPE_TEST;
+                        break;
+                    case 3:
+                        BASE_URL = SCOPE_MOCHA;
+                        break;
+                    default:
+                        BASE_URL = SCOPE_MASTER;
+                        break;
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                retrofitService = builder.baseUrl(BASE_URL).build().create(RetrofitService.class);
             }
         }
         return mUrlType;
@@ -252,11 +249,11 @@ public enum RetrofitServiceHelper {
                 //重定向
 //                boolean redirect = response.isRedirect();
                 int code = response.code();
-                try {
 //                    if (redirect && (code == 308 || code == 307)) {
-                    //仅针对308和307重定向问题
-                    if (code == 308 || code == 307) {
-                        String location = response.header("Location");
+                //仅针对308和307重定向问题
+                if (code == 308 || code == 307) {
+                    String location = response.header("Location");
+                    if (location != null && location.length() > 1) {
                         if (location.startsWith("/")) {
                             location = location.substring(1);
                         }
@@ -264,8 +261,6 @@ public enum RetrofitServiceHelper {
                                 .build();
                         response = chain.proceed(newRequest);
                     }
-                } catch (Exception e) {
-                    e.printStackTrace();
                 }
                 return response;
             }
@@ -794,7 +789,7 @@ public enum RetrofitServiceHelper {
                                                      int payTimes,
                                                      //可选
                                                      Boolean confirmed,
-                                                     int serviceTime) {
+                                                     int serviceTime, int firstPayTimes) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (contractType != null) {
@@ -845,6 +840,7 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("confirmed", confirmed);
             }
             jsonObject.put("serviceTime", serviceTime);
+            jsonObject.put("firstPayTimes", firstPayTimes);
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -870,7 +866,7 @@ public enum RetrofitServiceHelper {
      * @param offset
      * @return
      */
-    public Observable<ContractsListRsp> searchContract(Integer contractType, Integer confirmed, Long beginTime, Long endTime, Integer
+    public Observable<ContractsListRsp> searchContract(Integer contractType, String customerName, Integer confirmed, Long beginTime, Long endTime, Integer
             limit, Integer offset) {
         JSONObject jsonObject = new JSONObject();
         try {
@@ -886,7 +882,9 @@ public enum RetrofitServiceHelper {
                     jsonObject1.put("confirmed", true);
                 }
             }
-
+            if (!TextUtils.isEmpty(customerName)) {
+                jsonObject1.put("customer_name", customerName);
+            }
             if (beginTime != null) {
                 jsonObject1.put("beginTime", beginTime);
             }
@@ -987,7 +985,6 @@ public enum RetrofitServiceHelper {
      *
      * @param startTime
      * @param endTime
-     * @param displayStatus
      * @param sn
      * @return
      */
@@ -1210,5 +1207,40 @@ public enum RetrofitServiceHelper {
         Observable<DevicesMergeTypesRsp> devicesMergeTypes = retrofitService.getDevicesMergeTypes();
         RxApiManager.getInstance().add("devicesMergeTypes", devicesMergeTypes.subscribe());
         return devicesMergeTypes;
+    }
+
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec){
+        JSONObject jsonObject = new JSONObject();
+
+        try {
+            JSONArray jsonSnList = new JSONArray();
+            for (String sn : snList) {
+                jsonSnList.put(sn);
+            }
+            jsonObject.put("snList",jsonSnList);
+            jsonObject.put("type",type);
+
+            if(interval != null){
+                jsonObject.put("interval",type);
+            }
+            if(rules != null){
+                JSONArray jsonRules = new JSONArray();
+                for (String rule : rules) {
+                    jsonRules.put(rule);
+                }
+                jsonObject.put("rules",jsonRules);
+            }
+            if(switchSpec != null){
+                jsonObject.put("switchSpec",switchSpec);
+            }
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation = retrofitService.doMonitorPointOperation(body);
+        RxApiManager.getInstance().add("doMonitorPointOperation", doMonitorPointOperation.subscribe());
+        return doMonitorPointOperation;
     }
 }

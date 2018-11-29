@@ -27,7 +27,6 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        SensoroCityApplication.getInstance().init();
         //TODO 逻辑判断
         initPushSDK();
         checkLoginState();
@@ -40,7 +39,6 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             String sessionID = RetrofitServiceHelper.INSTANCE.getSessionId();
             LogUtils.loge("sessionID = " + sessionID);
             if (TextUtils.isEmpty(sessionID)) {
-
                 openLogin();
                 return;
             }
@@ -73,6 +71,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     }
 
     private void openMain(final EventLoginData eventLoginData) {
+        //TODO 数据加载
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -93,8 +92,7 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
         // AndroidManifest 对应保留一个即可(如果注册 DemoIntentService, 可以去掉 PushDemoReceiver, 如果注册了
         // IntentService, 必须在 AndroidManifest 中声明)
         PushManager.getInstance().registerPushIntentService(SensoroCityApplication.getInstance(),
-                SensoroPushIntentService
-                        .class);
+                SensoroPushIntentService.class);
         if (PushManager.getInstance().getClientid(SensoroCityApplication.getInstance()) == null) {
             PushManager.getInstance().turnOffPush(SensoroCityApplication.getInstance());
         } else {
