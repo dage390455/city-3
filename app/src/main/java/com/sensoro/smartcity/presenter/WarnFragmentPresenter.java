@@ -7,6 +7,7 @@ import android.opengl.Visibility;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
@@ -441,6 +442,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
             PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+            //为了调整 搜索顺序，所以先删除，再添加
+            mSearchHistoryList.remove(tempSearch);
             mSearchHistoryList.add(0, tempSearch);
             getView().UpdateSearchHistoryList(mSearchHistoryList);
 
@@ -498,6 +501,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         if (TextUtils.isEmpty(text)) {
             return;
         }
+        mSearchHistoryList.remove(text);
         PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
         mSearchHistoryList.add(0, text);
         getView().UpdateSearchHistoryList(mSearchHistoryList);

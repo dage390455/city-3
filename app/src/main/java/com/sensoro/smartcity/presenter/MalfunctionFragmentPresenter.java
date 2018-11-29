@@ -152,6 +152,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
             PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+            mSearchHistoryList.remove(tempSearch);
             mSearchHistoryList.add(0, tempSearch);
             getView().UpdateSearchHistoryList(mSearchHistoryList);
 
@@ -252,10 +253,11 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
     }
 
     public void save(String text) {
-        if (TextUtils.isEmpty(text)) {
+        if (TextUtils.isEmpty(text) && mSearchHistoryList.contains(text)) {
             return;
         }
         PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+        mSearchHistoryList.remove(text);
         mSearchHistoryList.add(0, text);
         getView().UpdateSearchHistoryList(mSearchHistoryList);
     }

@@ -227,9 +227,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         if (!TextUtils.isEmpty(oldText)) {
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
-        if (!oldHistoryList.contains(text)) {
-            oldHistoryList.add(0, text);
-        }
+        oldHistoryList.remove(text);
+        oldHistoryList.add(0, text);
         ArrayList<String> tempList = new ArrayList<>();
         for (String str : oldHistoryList) {
             if (tempList.size() < 20) {

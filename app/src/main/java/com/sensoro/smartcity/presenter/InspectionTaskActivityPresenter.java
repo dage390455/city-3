@@ -507,6 +507,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             return;
         }
         PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+        mSearchHistoryList.remove(text);
         mSearchHistoryList.add(0, text);
         getView().UpdateSearchHistoryList(mSearchHistoryList);
     }

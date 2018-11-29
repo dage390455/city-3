@@ -274,9 +274,8 @@ public final class PreferencesHelper implements Constants {
         if (!TextUtils.isEmpty(oldText)) {
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
-        if (!oldHistoryList.contains(text)) {
-            oldHistoryList.add(0, text);
-        }
+        oldHistoryList.remove(text);
+        oldHistoryList.add(0, text);
         ArrayList<String> tempList = new ArrayList<>();
         for (String str : oldHistoryList) {
             if (tempList.size() < 20) {
@@ -308,6 +307,9 @@ public final class PreferencesHelper implements Constants {
                 break;
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_INSPECTION;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_CONTRACT;
                 break;
         }
         return spFileName;

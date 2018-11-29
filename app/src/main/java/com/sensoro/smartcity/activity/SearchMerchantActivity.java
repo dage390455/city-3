@@ -58,7 +58,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
     LinearLayout mSearchHistoryLayout;
     @BindView(R.id.search_merchant_ll_root)
     LinearLayout mSearchMerchantRoot;
-
+    @BindView(R.id.fg_main_top_search_frame_search)
+    RelativeLayout mSearchRl;
 
     @BindView(R.id.search_merchant_clear_btn)
     ImageView mClearBtn;
@@ -102,6 +103,8 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
         mKeywordEt.setOnEditorActionListener(this);
         mCancelTv.setOnClickListener(this);
         mClearBtn.setOnClickListener(this);
+        mKeywordEt.setOnClickListener(this);
+        mSearchRl.setOnClickListener(this);
 
         AppUtils.getInputSoftStatus(mSearchMerchantRoot, new AppUtils.InputSoftStatusListener() {
             @Override
@@ -187,6 +190,13 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 //                setTipsLinearLayoutVisible(false);
                 setSearchHistoryLayoutVisible(true);
 //                updateSearchHistory();
+                setLlMerchantItemViewVisible(false);
+                break;
+            case R.id.fg_main_top_search_frame_search:
+            case R.id.fg_main_top_search_et_search:
+                mKeywordEt.requestFocus();
+                mKeywordEt.setCursorVisible(true);
+                setSearchHistoryLayoutVisible(true);
                 setLlMerchantItemViewVisible(false);
                 break;
             default:
