@@ -94,7 +94,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
-                statusText = mContext.getString(R.string.main_page_warm);
+                statusText = mContext.getString(R.string.main_page_warn);
                 getView().setErasureStatus(true);
                 break;
             case SENSOR_STATUS_NORMAL:

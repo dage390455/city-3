@@ -105,7 +105,9 @@
     <string name="malfunction_monitoring_point">故障监测点</string>
     <string name="all_types">全部类型</string>
     <string name="main_page_home">首页</string>
-    <string name="main_page_warm">预警</string>
+    <string name="main_page_warn">预警</string>
+    <string name="main_page_malfunction">故障</string>
+    <string name="main_page_manage">管理</string>
     <string name="confirming">预警确认</string>
     <string name="confirming_again">再次确认</string>
     <string name="to_be_confirmed">待确认</string>
@@ -629,5 +631,6 @@
     <string name="monitor_point_operation_error_value_range">输入错误，数值范围50至560</string>
     <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
     <string name="input_not_null">输入不能为空</string>
+    <string name="main_home_menu_scan_login">扫码登录</string>
 
 </resources>

@@ -30,7 +30,7 @@
     <string name="signal_good">Signal: Normal</string>
     <string name="signal_weak">Signal: Bad</string>
     <string name="no_signal">Signal: None</string>
-    <string name="alert_contact">Alarm contact</string>
+    <string name="alert_contact">Alarm Contact</string>
     <string name="get_the_middle_profile">Get the configuration file</string>
     <string name="live_photo">site photos</string>
     <string name="positioned">located</string>
@@ -47,10 +47,10 @@
     <string name="must_select_a_tag_type">Must select a tag type</string>
     <string name="upload_at_least_one_photo_or_a_video">upload at least one photo or a video</string>
     <string name="wrong_password">Password error！</string>
-    <string name="monitoring_point_details">Monitoring point detail</string>
+    <string name="monitoring_point_details">Monitoring Point Detail</string>
     <string name="alert_log">Alarm Log</string>
     <string name="no_contact_added">ContactUser unset</string>
-    <string name="location_navigation">Location navigation</string>
+    <string name="location_navigation">Location Navigation</string>
     <string name="cant_find_related_content">There is not found devices temporarily</string>
     <string name="enter_search_content">Enter search content</string>
     <string name="signal_test">Signal Test</string>
@@ -65,8 +65,8 @@
     <string name="prompt">tip</string>
     <string name="do_you_want_to_delete_this_video">Delete this video?</string>
     <string name="no_one_confirmed_the_system_automatically_confirms">hour no confirm，system auto confirms as: test/inspection</string>
-    <string name="test_patrol">test/inspection</string>
-    <string name="security_risks">security risks</string>
+    <string name="test_patrol">test</string>
+    <string name="security_risks">risks</string>
     <string name="contact">Contact</string>
     <string name="back_to_normal">recovery</string>
     <string name="confirm_that_the_alert_type_app_is">confirm that the type of alarm by App</string>
@@ -97,19 +97,21 @@
     <string name="unknown">Unknown</string>
     //
     <string name="detection_points">Monitoring points</string>
-    <string name="warning_monitoring_point">Alarming monitoring point</string>
-    <string name="normal_monitoring_point">Normal monitoring point</string>
-    <string name="lost_monitoring_point">Offline monitoring point</string>
-    <string name="inactive_monitoring_point">Inactive monitoring point</string>
-    <string name="malfunction_monitoring_point">Malfunction monitoring point</string>
-    <string name="all_types">All type</string>
+    <string name="warning_monitoring_point">Alarming Monitoring Points</string>
+    <string name="normal_monitoring_point">Normal Monitoring Points</string>
+    <string name="lost_monitoring_point">Offline Monitoring Points</string>
+    <string name="inactive_monitoring_point">Inactive Monitoring Points</string>
+    <string name="malfunction_monitoring_point">Malfunction Monitoring Points</string>
+    <string name="all_types">All</string>
     <string name="main_page_home">Home</string>
-    <string name="main_page_warm">Alarm</string>
+    <string name="main_page_warn">Alarm</string>
+    <string name="main_page_malfunction">Malfunction</string>
+    <string name="main_page_manage">Manage</string>
     <string name="confirming">Alarm confirm</string>
     <string name="confirming_again">Reconfirm</string>
     <string name="to_be_confirmed">uncofirmed</string>
-    <string name="real_warning">Real alarm</string>
-    <string name="false_positive">false alarm</string>
+    <string name="real_warning">fire</string>
+    <string name="false_positive">false</string>
     <string name="go_to_settings">Go to settings</string>
     <string name="notification_prompt">The notification includes the important alarm information, Please go to settings to enable it</string>
     <string name="status_lost">Offline</string>
@@ -212,7 +214,7 @@
     <string name="sensor_location_desc">with this tool, you can view and navigate to the appropriate sensor device</string>
     <string name="device_deployment">Device deployment</string>
     <string name="device_deployment_tip">Please scan the QRCODE of device</string>
-    <string name="scan_login">Scan To Login</string>
+    <string name="scan_login">Scan Code Login</string>
     <string name="scan_login_tip">Please scan the QRCODE to login big screen app</string>
     <string name="device_change">Device replacement</string>
     <string name="device_change_tip">Please scan the QRCODE of device</string>
@@ -257,7 +259,7 @@
     <string name="sensor_detail_interval">Interval</string>
     <string name="sensor_detail_recent_alarm">Last alarm</string>
     <string name="sensor_detail_alarm_setting">Alarm condition</string>
-    <string name="loading">Load&#8230;</string>
+    <string name="loading">Loading&#8230;</string>
     <string name="jinggai_false">opend</string>
     <string name="cover_false">On</string>
     <string name="cover_true">Off</string>
@@ -284,7 +286,7 @@
     <string name="name_phone">Name</string>
     <string name="invalid_qr_code">Invalid QRCode</string>
 
-    <string name="remarks">alarm remark</string>
+    <string name="remarks">Remark</string>
     <string name="commit">Submit</string>
     <string name="alarming">Alarming</string>
     <string name="true_alarm">real fire</string>
@@ -333,9 +335,9 @@
     <string name="alarm_contact_tip_phone_sample">e.g.18600000000</string>
     //预警日志xml
     <string name="alarm_log_alarm_time">Alarm Time</string>
-    <string name="alarm_log_alarm_count">Alarm number in half a year</string>
+    <string name="alarm_log_alarm_count">Count in half a year</string>
     <string name="alarm_log_malfunction_count">Malfunction number in half a year</string>
-    <string name="alarm_log_alarm_contact_owner">Call</string>
+    <string name="alarm_log_alarm_contact_owner">Contact User</string>
     <string name="alarm_log_alarm_quick_navigation">Quick Navigation</string>
     <string name="alarm_log_alarm_warn_confirm">Confirm</string>
     <string name="alarm_log_alarm_call">"System calls to "</string>
@@ -431,14 +433,14 @@
     //登录
     //mian
     //监测点地图
-    <string name="monitor_point_map_weixin_share">WeChat sharing</string>
+    <string name="monitor_point_map_weixin_share">WeChat share</string>
     <string name="monitor_point_map_navigation">Navigation</string>
     //监测点详情
-    <string name="monitor_point_detail_monitor_parameter">Monitoring parameters</string>
+    <string name="monitor_point_detail_monitor_parameter">Monitoring Parameters</string>
     <string name="monitor_point_detail_operat">Operating</string>
     <string name="monitor_point_detail_alarm">Audible Alarm</string>
     <string name="monitor_point_firmware_upgrade">Firmware upgrade</string>
-    <string name="monitor_point_information">basic info</string>
+    <string name="monitor_point_information">Basic Info</string>
     //名称和地址
     <string name="name_address">Name/Address</string>
     <string name="name_address_history_tag">History/Tag</string>
@@ -480,7 +482,7 @@
     //合同 列表
     //manager fragment
     <string name="manager_fragment_manager">Manage</string>
-    <string name="manager_fragment_merchant_switch">merchant switching</string>
+    <string name="manager_fragment_merchant_switch">Merchant Switching</string>
     <string name="manager_fragment_deploy_manager">Deploy</string>
     <string name="manager_fragment_contract_manager">Contract</string>
     <string name="manager_fragment_maintenance_task">Maintenance</string>
@@ -489,28 +491,28 @@
     <string name="manager_fragment_version_information">Version</string>
     <string name="manager_fragment_exit_account">Sign out</string>
     //warn framgen
-    <string name="warn_fragment_search_tip">Name/SN/Phone number</string>
+    <string name="warn_fragment_search_tip">Name/SN/Phone Number</string>
 
     //
     <string name="top_bar_image">Image</string>
     <string name="top_bar_finish">Complete(0/3)</string>
-    <string name="normal_monitor">Normal monitoring</string>
+    <string name="normal_monitor">Normal onitoring</string>
     <string name="inspection_test">Inspection Test</string>
     <string name="company">Enterprise</string>
     <string name="contract_number">Contract No</string>
     <string name="contract_created_time">Generated date</string>
     <string name="contract_signed_time">Signed date</string>
     <string name="no_content">No data</string>
-    <string name="alarm_result_type">alarm result type</string>
-    <string name="alarm_cause_type">alarm reason type</string>
-    <string name="alarm_place">alarm place</string>
+    <string name="alarm_result_type">Result Type</string>
+    <string name="alarm_cause_type">Reason Type</string>
+    <string name="alarm_place">Place</string>
     <string name="alarm_descript">Please describe the actual situation of the warning event</string>
     <string name="occur_alarm_event">new alarming event</string>
     <string name="look">go</string>
-    <string name="monitor_point_number">Monitoring points</string>
+    <string name="monitor_point_number">Monitoring Points</string>
     <string name="camera_photo">Video/Photo</string>
-    <string name="select_alarm_cause_site">please select reason place</string>
-    <string name="select_alarm_result_type">please select result type</string>
+    <string name="select_alarm_cause_site">Please select reason place</string>
+    <string name="select_alarm_result_type">Please select result type</string>
     <string name="select_alarm_cause_type">please select reason type</string>
     <string name="inspection_exception_remark">abnormality remark</string>
     <string name="not_obtain_location_infomation">Location not obtained</string>
@@ -521,8 +523,8 @@
     <string name="morning">morning</string>
     <string name="pm">pm</string>
     <string name="night">night</string>
-    <string name="today">today&#160;</string>
-    <string name="yesterday">yesterday&#160;</string>
+    <string name="today">Today&#160;</string>
+    <string name="yesterday">Yesterday&#160;</string>
     <string name="before_yesterday">the day before yesterday&#160;</string>
     <string name="day">day</string>
     <string name="second">second</string>
@@ -594,7 +596,7 @@
     <string name="necessary_permission_are_denied">The necessary permission are denied</string>
     <string name="monitor_point_detail_self_check">Self-Test</string>
     <string name="monitor_point_detail_query">Query</string>
-    <string name="monitor_point_detail_psd">修改密码</string>
+    <string name="monitor_point_detail_psd">Password</string>
     <string name="monitor_point_detail_reset">Reset</string>
     <string name="is_device_erasure">Whether to silence the alarm device</string>
     <string name="device_erasure_tip_message">Whether the alarm device is muted in the current device audible alarm</string>
@@ -636,4 +638,5 @@
     <string name="monitor_point_detail_erasure">Mute</string>
     <string name="monitor_point_detail_operation">Operation</string>
     <string name="text_fire_alarm_empty"></string>
+    <string name="main_home_menu_scan_login">Scan</string>
 </resources>

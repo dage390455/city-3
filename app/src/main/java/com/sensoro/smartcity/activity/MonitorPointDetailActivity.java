@@ -138,7 +138,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleTvTitle.setText(R.string.monitoring_point_details);
-        includeTextTitleTvSubtitle.setText(R.string.alert_log);
+        includeTextTitleTvSubtitle.setText(R.string.historical_log);
         //
         mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false) {

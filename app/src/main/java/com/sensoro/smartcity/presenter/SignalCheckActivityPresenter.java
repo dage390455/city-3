@@ -64,7 +64,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         switch (deployAnalyzerModel.status) {
             case SENSOR_STATUS_ALARM:
                 textColor = R.color.c_f34a4a;
-                statusText = mActivity.getString(R.string.main_page_warm);
+                statusText = mActivity.getString(R.string.main_page_warn);
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = R.color.c_29c093;
