@@ -21,7 +21,6 @@ import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -77,11 +76,14 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     @Override
                     public void onCompleted(UserAccountRsp userAccountRsp) {
                         List<UserInfo> list = userAccountRsp.getData();
-                        mUserInfoList.clear();
-                        mUserInfoList.addAll(list);
-                        getView().setAdapterSelectedIndex(-1);
+                        if (list == null) {
+                            mUserInfoList.clear();
+                        } else {
+                            mUserInfoList.clear();
+                            mUserInfoList.addAll(list);
+                        }
                         getView().updateAdapterUserInfo(mUserInfoList);
-                        getView().showSeperatorView(list.size() != 0);
+                        getView().showSeperatorView(mUserInfoList.size() != 0);
                         getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
                     }
@@ -109,7 +111,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                             getView().showSeperatorView(false);
                         } else {
                             mUserInfoList.addAll(list);
-                            getView().setAdapterSelectedIndex(-1);
                             getView().updateAdapterUserInfo(mUserInfoList);
                             getView().showSeperatorView(true);
                         }
@@ -123,15 +124,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         }
     }
 
-//    private void refreshUI(UserAccountRsp userAccountRsp) {
-//        List<UserInfo> list = userAccountRsp.getData();
-//        mUserInfoList.clear();
-//        mUserInfoList.addAll(list);
-//        getView().setAdapterSelectedIndex(-1);
-//        getView().updateAdapterUserInfo(mUserInfoList);
-//        getView().showSeperatorView(list.size() != 0);
-//    }
-
     private void doAccountSwitch(String uid) {
         getView().showProgressDialog();
         eventLoginData = null;
@@ -143,28 +135,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 RetrofitServiceHelper.INSTANCE.saveSessionId(userInfo.getSessionID());
                 //
                 eventLoginData = MenuPageFactory.createLoginData(userInfo, phoneId);
-
-//                GrantsInfo grants = userInfo.getGrants();
-//                //修改loginData包装
-//                eventLoginData = new EventLoginData();
-//                eventLoginData.userId = userInfo.get_id();
-//                eventLoginData.userName = userInfo.getNickname();
-//                eventLoginData.phone = userInfo.getContacts();
-//                eventLoginData.phoneId = phoneId;
-////            mCharacter = userInfo.getCharacter();
-//                String roles = userInfo.getRoles();
-//                eventLoginData.roles = roles;
-//                String isSpecific = userInfo.getIsSpecific();
-//                eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
-//                eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
-//                eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
-//                eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
-//                eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
-//                eventLoginData.hasInspectionTaskList = MenuPageFactory.getHasInspectionTaskList(grants);
-//                eventLoginData.hasAlarmInfo = MenuPageFactory.getHasAlarmInfo(grants);
-//                eventLoginData.hasDeviceBrief = MenuPageFactory.getHasDeviceBriefList(grants);
-//                eventLoginData.hasSignalCheck = MenuPageFactory.getHasSignalCheck(grants);
-//                eventLoginData.hasSignalConfig = MenuPageFactory.getHasSignalConfig(grants);
                 //
                 return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
             }
@@ -182,9 +152,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 eventData.code = EVENT_DATA_SEARCH_MERCHANT;
                 eventData.data = eventLoginData;
                 EventBus.getDefault().post(eventData);
-                getView().finishAc();
-                LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
                 getView().dismissProgressDialog();
+                getView().finishAc();
             }
 
 
@@ -196,19 +165,19 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         });
     }
 
-    public void clickItem(int position) {
+    public void clickItem(UserInfo userInfo) {
         if (!PreferencesHelper.getInstance().getUserData().hasMerchantChange) {
             getView().toastShort(mContext.getString(R.string.merchant_has_no_change_permission));
             return;
         }
-        if (!mUserInfoList.get(position).isStop()) {
-            getView().setAdapterSelectedIndex(position);
+        if (!userInfo.isStop()) {
+//            getView().setAdapterSelectedIndex(position);
 //            mMerchantAdapter.setSelectedIndex(position);
 //            mMerchantAdapter.notifyDataSetChanged();
 //            getView().updateAdapterUserInfo(mUserInfoList);
 //            getView().setCurrentStatusImageViewVisible(false);
 //            mCurrentStatusImageView.setVisibility(View.GONE);
-            String uid = mUserInfoList.get(position).get_id();
+            String uid = userInfo.get_id();
             doAccountSwitch(uid);
         } else {
             getView().toastShort(mContext.getString(R.string.account_has_been_disabled));

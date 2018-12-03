@@ -21,15 +21,10 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
     private Context mContext;
     private LayoutInflater mInflater;
     private final List<UserInfo> mList = new ArrayList<>();
-    private int selectedIndex = -1;
 
     public MerchantAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-    }
-
-    public void setSelectedIndex(int index) {
-        this.selectedIndex = index;
     }
 
     @Override
@@ -55,7 +50,6 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
             convertView = mInflater.inflate(R.layout.item_merchant, null);
             holder.item_name = (TextView) convertView.findViewById(R.id.item_merchant_name);
             holder.item_phone = (TextView) convertView.findViewById(R.id.item_merchant_phone);
-            holder.item_status = (ImageView) convertView.findViewById(R.id.item_merchant_status);
             holder.item_icon = (ImageView) convertView.findViewById(R.id.item_merchant_icon);
             holder.itemBottomS = convertView.findViewById(R.id.item_bottom_s);
             convertView.setTag(holder);
@@ -71,11 +65,6 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
         holder.item_name.setText(userInfo.getNickname());
         holder.item_phone.setText(userInfo.getContacts());
 
-        if (selectedIndex == position) {
-            holder.item_status.setVisibility(View.VISIBLE);
-        } else {
-            holder.item_status.setVisibility(View.GONE);
-        }
         if (mList.size() != 0 && position == mList.size() - 1) {
             holder.itemBottomS.setVisibility(View.VISIBLE);
         } else {
@@ -89,11 +78,14 @@ public class MerchantAdapter extends BaseAdapter implements Constants {
         mList.addAll(data);
     }
 
+    public List<UserInfo> getData() {
+        return mList;
+    }
+
     static class MerchantViewHolder {
 
         TextView item_name;
         TextView item_phone;
-        ImageView item_status;
         ImageView item_icon;
         View itemBottomS;
 

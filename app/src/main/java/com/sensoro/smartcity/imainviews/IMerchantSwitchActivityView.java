@@ -14,8 +14,6 @@ public interface IMerchantSwitchActivityView extends IProgressDialog, IActivityI
 
     void showSeperatorView(boolean isShow);
 
-    void setAdapterSelectedIndex(int index);
-
     void updateAdapterUserInfo(List<UserInfo> data);
 
     void onPullRefreshComplete();

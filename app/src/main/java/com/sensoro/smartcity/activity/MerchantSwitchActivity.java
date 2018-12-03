@@ -116,7 +116,8 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPresenter.clickItem(position);
+        UserInfo userInfo = mMerchantAdapter.getData().get(position);
+        mPresenter.clickItem(userInfo);
     }
 
     @Override
@@ -189,8 +190,12 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     public void setCurrentNameAndPhone(String name, String phone) {
-        mCurrentNameTextView.setText(name);
-        mCurrentPhoneTextView.setText(phone);
+        if (name != null) {
+            mCurrentNameTextView.setText(name);
+        }
+        if (phone != null) {
+            mCurrentPhoneTextView.setText(phone);
+        }
     }
 
     @Override
@@ -204,11 +209,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 //            seperatorView.setVisibility(View.GONE);
 //            seperatorBottomView.setVisibility(View.GONE);
 //        }
-    }
-
-    @Override
-    public void setAdapterSelectedIndex(int index) {
-        mMerchantAdapter.setSelectedIndex(index);
     }
 
     @Override

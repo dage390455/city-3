@@ -313,6 +313,11 @@ public class AppUtils {
         editText.setCursorVisible(false);
     }
 
+    public static void openInputMethodManager(Context context, EditText editText) {
+        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
+    }
+
     public static void dismissInputMethodManager(Context context) {
         InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
         if (imm != null && imm.isActive()) {

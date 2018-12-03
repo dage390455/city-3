@@ -2,8 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/ac_inspection_task_rl_root"
     android:layout_width="match_parent"
-    android:background="@color/c_f4f4f4"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4">
 
     <RelativeLayout
         android:id="@+id/ac_inspection_task_rl_bottom"
@@ -64,7 +64,7 @@
                     android:padding="8dp"
                     android:src="@drawable/arrows_left" />
 
-                <LinearLayout
+                <RelativeLayout
                     android:id="@+id/ac_inspection_task_ll_search"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -74,8 +74,20 @@
                     android:layout_marginEnd="12dp"
                     android:layout_marginBottom="8dp"
                     android:layout_weight="1"
-                    android:background="@drawable/shape_bg_solid_f7_full_corner"
-                    android:orientation="horizontal">
+                    android:background="@drawable/shape_bg_solid_f7_full_corner">
+
+                    <ImageView
+                        android:id="@+id/fg_main_top_search_imv_clear"
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_marginEnd="6dp"
+                        android:contentDescription="@null"
+                        android:padding="7dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/search_monitor_clear_search"
+                        android:visibility="gone" />
 
                     <EditText
                         android:id="@+id/ac_inspection_task_et_search"
@@ -85,6 +97,7 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp"
+                        android:layout_toStartOf="@id/fg_main_top_search_imv_clear"
                         android:background="@null"
                         android:drawableStart="@drawable/main_search"
                         android:drawablePadding="8dp"
@@ -94,7 +107,7 @@
                         android:textColor="@color/c_252525"
                         android:textColorHint="@color/c_a6a6a6"
                         android:textSize="12sp" />
-                </LinearLayout>
+                </RelativeLayout>
 
                 <TextView
                     android:id="@+id/tv_inspection_task_search_cancel"
@@ -111,8 +124,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="12dp"
                     android:layout_marginStart="4dp"
+                    android:layout_marginEnd="12dp"
                     android:contentDescription="@null"
                     android:padding="8dp"
                     android:src="@drawable/scan_device" />
@@ -185,9 +198,9 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:layout_marginEnd="20dp"
+                    android:contentDescription="@null"
                     android:paddingStart="8dp"
                     android:paddingEnd="8dp"
-                    android:contentDescription="@null"
                     android:src="@drawable/map_mode"
                     android:visibility="invisible" />
             </LinearLayout>
@@ -204,7 +217,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:orientation="vertical"
-
                 >
 
                 <android.support.v7.widget.RecyclerView
@@ -215,6 +227,8 @@
                 </android.support.v7.widget.RecyclerView>
 
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+            <include layout="@layout/item_include_search_history_rv"/>
         </RelativeLayout>
 
     </LinearLayout>
