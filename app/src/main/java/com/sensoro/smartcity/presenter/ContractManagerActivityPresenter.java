@@ -4,13 +4,17 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
+import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.activity.ContractIndexActivity;
 import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
+import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.server.CityObserver;
@@ -18,6 +22,9 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
+import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -29,22 +36,43 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class ContractManagerActivityPresenter extends BasePresenter<IContractManagerActivityView> implements IOnCreate, Constants {
+public class ContractManagerActivityPresenter extends BasePresenter<IContractManagerActivityView> implements IOnCreate, Constants
+,CalendarPopUtils.OnCalendarPopupCallbackListener{
     private Activity mContext;
     private final List<ContractListInfo> dataList = new ArrayList<>();
     private Integer requestDataType = null;
     private volatile int cur_page = 0;
     List<InspectionStatusCountModel> mSelectStatuslist = new ArrayList<>();
     List<InspectionStatusCountModel> mSelectTypelist = new ArrayList<>();
+    private final List<String> mSearchHistoryList = new ArrayList<>();
     private Integer requestDataConfirmed = null;
     private String tempSearch;
+    private long startTime;
+    private long endTime;
+    private CalendarPopUtils mCalendarPopUtils;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
         initSelectData();
+        initSearchHistoryData();
+        initCalendarPop();
         requestDataByDirection(DIRECTION_DOWN, true);
+    }
+
+    private void initCalendarPop() {
+        mCalendarPopUtils = new CalendarPopUtils(mContext);
+        mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+    }
+
+    private void initSearchHistoryData() {
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
+        Log.e("hcs","list:::"+list.size());
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().UpdateSearchHistoryList(mSearchHistoryList);
+        }
     }
 
     private void initSelectData() {
@@ -96,11 +124,17 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     }
 
     private void refreshData(int direction) {
+        Long temp_startTime = null;
+        Long temp_endTime = null;
+        if (getView().isSelectedDateLayoutVisible()) {
+            temp_startTime = startTime;
+            temp_endTime = endTime;
+        }
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 0;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, tempSearch, requestDataConfirmed, null, null, null, null).subscribeOn
+                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, null).subscribeOn
                         (Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
 
@@ -135,7 +169,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 cur_page++;
                 getView().showProgressDialog();
                 int offset = cur_page * 20;
-                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, tempSearch, requestDataConfirmed, null, null, null, offset).subscribeOn
+                RetrofitServiceHelper.INSTANCE.searchContract(requestDataType, tempSearch, requestDataConfirmed, temp_startTime, temp_endTime, null, offset).subscribeOn
                         (Schedulers
                                 .io())
                         .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsListRsp>(this) {
@@ -427,5 +461,50 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     public void doCancelSearch() {
         tempSearch = null;
         refreshData(DIRECTION_DOWN);
+    }
+
+    public void save(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
+        mSearchHistoryList.remove(text);
+        mSearchHistoryList.add(0, text);
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
+    }
+
+    public void doCalendar(LinearLayout fgMainWarnTitleRoot) {
+        long temp_startTime = -1;
+        long temp_endTime = -1;
+        if (getView().isSelectedDateLayoutVisible()) {
+            temp_startTime = startTime;
+            temp_endTime = endTime;
+        }
+
+        mCalendarPopUtils.show(fgMainWarnTitleRoot, temp_startTime, temp_endTime);
+    }
+
+    @Override
+    public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
+        requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
+        getView().setSearchHistoryVisible(false);
+        if (!TextUtils.isEmpty(tempSearch)) {
+            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
+            mSearchHistoryList.remove(tempSearch);
+            mSearchHistoryList.add(0, tempSearch);
+            getView().UpdateSearchHistoryList(mSearchHistoryList);
+
+        }
+    }
+
+    private void requestDataByDate(String startDate, String endDate) {
+        getView().setSelectedDateLayoutVisible(true);
+        startTime = DateUtil.strToDate(startDate).getTime();
+        endTime = DateUtil.strToDate(endDate).getTime();
+        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
+                .getMothDayFormatDate(endTime));
+        endTime += 1000 * 60 * 60 * 24;
+        refreshData(DIRECTION_DOWN);
+
     }
 }
