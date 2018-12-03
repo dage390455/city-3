@@ -64,6 +64,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     private String content;
     private boolean hasPhoneNumber;
     private String mScheduleNo;
+    private GeocodeSearch geocoderSearch;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Runnable DeviceTaskOvertime = new Runnable() {
         @Override
@@ -80,6 +81,8 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     public void initData(Context context) {
         mContext = (Activity) context;
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        geocoderSearch = new GeocodeSearch(mContext);
+        geocoderSearch.setOnGeocodeSearchListener(this);
         requestDeviceRecentLog();
     }
 
@@ -181,8 +184,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
             }
         }
-        int interval = mDeviceInfo.getInterval();
-        getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
+        Integer interval = mDeviceInfo.getInterval();
+        if (interval != null) {
+            getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
+        }
+
     }
 
     private void refreshOperationStatus() {
@@ -218,8 +224,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     private void freshLocationDeviceInfo() {
-        GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
-        geocoderSearch.setOnGeocodeSearchListener(this);
         double[] lonlat = mDeviceInfo.getLonlat();
         try {
             double v = lonlat[1];
@@ -274,24 +278,25 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 if (mDeviceInfo != null) {
                     if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
-                        Set<String> keySet = malfunctionData.keySet();
-                        ArrayList<String> keyList = new ArrayList<>();
-                        for (String key : keySet) {
-                            if (!keyList.contains(key)) {
-                                keyList.add(key);
+                        if (malfunctionData != null) {
+                            Set<String> keySet = malfunctionData.keySet();
+                            ArrayList<String> keyList = new ArrayList<>();
+                            for (String key : keySet) {
+                                if (!keyList.contains(key)) {
+                                    keyList.add(key);
+                                }
+                            }
+                            Collections.sort(keyList);
+                            for (String key : keyList) {
+                                MalfunctionDataBean malfunctionDataBean = malfunctionData.get(key);
+                                MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
+                                monitoringPointRcContentAdapterModel.name = "故障成因";
+                                monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
+                                monitoringPointRcContentAdapterModel.content = malfunctionDataBean.getDescription();
+                                uiData.add(monitoringPointRcContentAdapterModel);
+                                LogUtils.loge("故障成因：key = " + key + "value = " + malfunctionDataBean.getDescription());
                             }
                         }
-                        Collections.sort(keyList);
-                        for (String key : keyList) {
-                            MalfunctionDataBean malfunctionDataBean = malfunctionData.get(key);
-                            MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
-                            monitoringPointRcContentAdapterModel.name = "故障成因";
-                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
-                            monitoringPointRcContentAdapterModel.content = malfunctionDataBean.getDescription();
-                            uiData.add(monitoringPointRcContentAdapterModel);
-                            LogUtils.loge("故障成因：key = " + key + "value = " + malfunctionDataBean.getDescription());
-                        }
-
                     }
                     //
                     String[] sensorTypes = mDeviceInfo.getSensorTypes();
@@ -434,6 +439,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                 public void run() {
                                     if (getView() != null) {
                                         mDeviceInfo = pushDeviceInfo;
+                                        //TODO 单项数值设置
                                         freshLocationDeviceInfo();
                                         freshTopData();
                                         handleDeviceInfoAdapter();

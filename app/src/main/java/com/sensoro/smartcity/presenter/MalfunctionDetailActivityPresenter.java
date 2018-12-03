@@ -50,7 +50,6 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
             refreshUI();
             onCreate();
         }
-
     }
 
     private void refreshUI() {

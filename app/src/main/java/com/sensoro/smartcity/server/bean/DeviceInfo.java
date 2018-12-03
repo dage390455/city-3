@@ -27,7 +27,7 @@ public class DeviceInfo implements Serializable, Comparable {
     private int status;
     private String tags[];
     private SensorInfo sensorData;
-    private int interval;
+    private Integer interval;
     private int alarmStatus;
     private AlarmInfo alarms;
     private int _level;
@@ -167,7 +167,7 @@ public class DeviceInfo implements Serializable, Comparable {
         this.sensorData = sensorData;
     }
 
-    public int getInterval() {
+    public Integer getInterval() {
         return interval;
     }
 
