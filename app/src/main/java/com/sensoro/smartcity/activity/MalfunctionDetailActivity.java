@@ -162,6 +162,7 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
                 mPresenter.doNavigation();
                 break;
             case R.id.ac_malfunction_detail_tv_confirm:
+                mPresenter.doChangeDevice();
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMalfunctionHistory();
@@ -202,6 +203,11 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
     @Override
     public void setMalfunctionCount(String count) {
         acMalfunctionDetailTvCount.setText(count);
+    }
+
+    @Override
+    public void setMalfunctionDetailConfirmVisible(boolean isVisible) {
+        acMalfunctionDetailTvConfirm.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

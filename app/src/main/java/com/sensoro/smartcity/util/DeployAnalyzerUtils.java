@@ -80,8 +80,9 @@ public enum DeployAnalyzerUtils implements Constants {
                 }
                 handleScanLogin(presenter, result, activity, listener);
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
-                //巡检设备更换
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //巡检/故障设备更换
                 if (oldDeviceDetail == null) {
                     listener.onError(0, null, null);
                     return;
@@ -92,7 +93,7 @@ public enum DeployAnalyzerUtils implements Constants {
                     return;
                 } else {
                     if (scanSnNewDevice.length() == 16) {
-                        handleDeviceDeployChange(presenter, oldDeviceDetail, scanSnNewDevice, activity, listener);
+                        handleDeviceDeployChange(scanType, presenter, oldDeviceDetail, scanSnNewDevice, activity, listener);
                     } else {
                         listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
                         return;
@@ -404,7 +405,7 @@ public enum DeployAnalyzerUtils implements Constants {
         });
     }
 
-    private void handleDeviceDeployChange(final BasePresenter presenter, final InspectionTaskDeviceDetail oldDeviceDetail, final String scanSerialNumber, final Activity activity, final OnDeployAnalyzerListener listener) {
+    private void handleDeviceDeployChange(final int scanType, final BasePresenter presenter, final InspectionTaskDeviceDetail oldDeviceDetail, final String scanSerialNumber, final Activity activity, final OnDeployAnalyzerListener listener) {
         //todo 信息替换
         final DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(oldDeviceDetail.getSn(), null, null).subscribeOn
@@ -440,7 +441,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
-                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                            deployResultModel.scanType = scanType;
                             deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
                             deployResultModel.sn = scanSerialNumber;
                             intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
@@ -450,7 +451,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
-                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                            deployResultModel.scanType = scanType;
                             deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
                             deployResultModel.sn = scanSerialNumber;
                             deployResultModel.errorMsg = errorMsg;
@@ -467,7 +468,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
-                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                            deployResultModel.scanType = scanType;
                             deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
                             deployResultModel.sn = scanSerialNumber;
                             intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
@@ -479,7 +480,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                 Intent intent = new Intent();
                                 intent.setClass(activity, DeployResultActivity.class);
                                 DeployResultModel deployResultModel = new DeployResultModel();
-                                deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                                deployResultModel.scanType = scanType;
                                 deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
                                 deployResultModel.sn = scanSerialNumber;
                                 intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
@@ -490,7 +491,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                 deployAnalyzerModel.mDeviceDetail = oldDeviceDetail;
                                 deployAnalyzerModel.blePassword = data.getBlePassword();
                                 List<Integer> channelMask = data.getChannelMask();
-                                if (channelMask.size() > 0) {
+                                if (channelMask != null && channelMask.size() > 0) {
                                     deployAnalyzerModel.channelMask.clear();
                                     deployAnalyzerModel.channelMask.addAll(channelMask);
                                 }
@@ -507,7 +508,7 @@ public enum DeployAnalyzerUtils implements Constants {
             @Override
             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
-                deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                deployAnalyzerModel.deployType = scanType;
                 deployAnalyzerModel.nameAndAddress = data.getName();
                 List<Double> lonlat = data.getLonlat();
                 if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
@@ -654,7 +655,7 @@ public enum DeployAnalyzerUtils implements Constants {
                         }
 
                         break;
-                    case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                    case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
                             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
                             RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
@@ -672,7 +673,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                         deployResultModel.contact = deployContactModel.name;
                                         deployResultModel.phone = deployContactModel.phone;
                                     }
-                                    deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                                    deployResultModel.scanType = TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
                                     deployResultModel.address = deployAnalyzerModel.address;
                                     intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
                                     listener.onSuccess(intent);
@@ -690,7 +691,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                         DeployResultModel deployResultModel = new DeployResultModel();
                                         deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
                                         deployResultModel.sn = deployAnalyzerModel.sn;
-                                        deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                                        deployResultModel.scanType = TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
                                         deployResultModel.errorMsg = errorMsg;
                                         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
                                         listener.onError(errorCode, intent, errorMsg);

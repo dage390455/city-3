@@ -39,6 +39,10 @@ public class DeviceInfo implements Serializable, Comparable {
     private String mergeType;
     private Map<String, SensorStruct> sensoroDetails;
     private List<DeviceAlarmsRecord> alarmsRecords;
+    private String malfunctionType;
+    private Map<String, MalfunctionDataBean> malfunctionData;
+    private String address;
+
 
     public String getAddress() {
         return address;
@@ -48,13 +52,25 @@ public class DeviceInfo implements Serializable, Comparable {
         this.address = address;
     }
 
-    private String address;
-
     public DeviceInfo() {
         isPushDevice = false;
         isNewDevice = false;
     }
+    public String getMalfunctionType() {
+        return malfunctionType;
+    }
 
+    public void setMalfunctionType(String malfunctionType) {
+        this.malfunctionType = malfunctionType;
+    }
+
+    public Map<String, MalfunctionDataBean> getMalfunctionData() {
+        return malfunctionData;
+    }
+
+    public void setMalfunctionData(Map<String, MalfunctionDataBean> malfunctionData) {
+        this.malfunctionData = malfunctionData;
+    }
     public List<DeviceAlarmsRecord> getAlarmsRecords() {
         return alarmsRecords;
     }

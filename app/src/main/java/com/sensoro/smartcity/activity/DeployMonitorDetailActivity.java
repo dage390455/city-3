@@ -74,6 +74,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView acDeployDeviceDetailFixedPointTvNear;
     @BindView(R.id.fl_not_own)
     FrameLayout flNotOwn;
+    @BindView(R.id.last_view)
+    View lastView;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -416,6 +418,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void setNotOwnVisible(boolean isVisible) {
         flNotOwn.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        lastView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

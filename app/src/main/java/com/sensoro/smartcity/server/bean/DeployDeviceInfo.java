@@ -386,7 +386,7 @@ public class DeployDeviceInfo implements Serializable {
     public void setSensorTypes(List<String> sensorTypes) {
         this.sensorTypes = sensorTypes;
     }
-
+    //TODO 是否一样
     public static class MalfunctionDataBean {
     }
 

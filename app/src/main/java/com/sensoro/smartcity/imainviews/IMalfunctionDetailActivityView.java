@@ -7,12 +7,14 @@ import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 
 import java.util.List;
 
-public interface IMalfunctionDetailActivityView extends IToast,IActivityIntent,IProgressDialog {
+public interface IMalfunctionDetailActivityView extends IToast, IActivityIntent, IProgressDialog {
     void setDeviceNameText(String deviceName);
 
     void setMalfunctionStatus(int malfunctionStatus, String strTimeToday);
 
-    void updateRcContent(List<MalfunctionListInfo.RecordsBean> records,String malfunctionText);
+    void updateRcContent(List<MalfunctionListInfo.RecordsBean> records, String malfunctionText);
 
     void setMalfunctionCount(String count);
+
+    void setMalfunctionDetailConfirmVisible(boolean isVisible);
 }

@@ -157,7 +157,7 @@
             android:id="@+id/ac_malfunction_detail_tv_quick_navigation"
             android:layout_width="103.5dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
+            android:layout_marginStart="12dp"
             android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
             android:layout_weight="1"

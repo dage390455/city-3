@@ -17,24 +17,26 @@ import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.MonitorMoreActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
+import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeviceAlarmsRecord;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
-import com.sensoro.smartcity.server.bean.DeviceRecentInfo;
+import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.bean.SensorStruct;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
-import com.sensoro.smartcity.server.response.DeviceRecentRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
@@ -44,31 +46,25 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
-import rx.Observable;
 import rx.android.schedulers.AndroidSchedulers;
-import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
 public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorPointDetailActivityView> implements IOnStart, Constants, GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
     private DeviceInfo mDeviceInfo;
 
-    private final List<DeviceRecentInfo> mRecentInfoList = new ArrayList<>();
-    private int textColor;
     private String content;
     private boolean hasPhoneNumber;
     private String mScheduleNo;
-    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Runnable DeviceTaskOvertime = new Runnable() {
         @Override
         public void run() {
@@ -84,13 +80,31 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     public void initData(Context context) {
         mContext = (Activity) context;
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
-        initCurrentDeviceInfo();
         requestDeviceRecentLog();
     }
 
     private void freshTopData() {
+        String sn = mDeviceInfo.getSn();
+        getView().setSNText(sn);
+        String typeName = mContext.getString(R.string.power_supply);
+        try {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
+            String mergeType = mDeviceInfo.getMergeType();
+            String deviceType = mDeviceInfo.getDeviceType();
+            if (TextUtils.isEmpty(mergeType)) {
+                mergeType = WidgetUtil.handleMergeType(deviceType);
+            }
+            Map<String, MergeTypeStyles> mergeTypeMap = localDevicesMergeTypes.getMergeType();
+            MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(mergeType);
+            typeName = mergeTypeStyles.getName();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        getView().setDeviceTypeName(typeName);
         refreshOperationStatus();
         String statusText;
+        int textColor;
         switch (mDeviceInfo.getStatus()) {
             case SENSOR_STATUS_ALARM:
                 textColor = mContext.getResources().getColor(R.color.c_f34a4a);
@@ -119,10 +133,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 break;
         }
         String name = mDeviceInfo.getName();
-        String sn = mDeviceInfo.getSn();
-        //
         getView().setStatusInfo(statusText, textColor);
-        //TODO 显示sn还是姓名等
         getView().setTitleNameTextView(TextUtils.isEmpty(name) ? sn : name);
         //
         String contact = null;
@@ -206,25 +217,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         }
     }
 
-    private void initCurrentDeviceInfo() {
-        getView().setSNText(mDeviceInfo.getSn());
-        String typeName = mContext.getString(R.string.power_supply);
-        try {
-            DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-            String mergeType = mDeviceInfo.getMergeType();
-            String deviceType = mDeviceInfo.getDeviceType();
-            if (TextUtils.isEmpty(mergeType)) {
-                mergeType = WidgetUtil.handleMergeType(deviceType);
-            }
-            Map<String, MergeTypeStyles> mergeTypeMap = localDevicesMergeTypes.getMergeType();
-            MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(mergeType);
-            typeName = mergeTypeStyles.getName();
-
-//            deviceType.equals()
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        getView().setDeviceTypeName(typeName);
+    private void freshLocationDeviceInfo() {
         GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         double[] lonlat = mDeviceInfo.getLonlat();
@@ -240,6 +233,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             geocoderSearch.getFromLocationAsyn(query);
         } catch (Exception e) {
             e.printStackTrace();
+            getView().setDeviceLocationTextColor(R.color.c_a6a6a6);
             getView().setDeviceLocation(mContext.getString(R.string.not_positioned), false);
 
         }
@@ -247,80 +241,172 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     private void requestDeviceRecentLog() {
-        long endTime = mDeviceInfo.getUpdatedTime();
-        long startTime = endTime - 2 * 1000 * 60 * 60 * 24;
         String sn = mDeviceInfo.getSn();
         getView().showProgressDialog();
         //合并请求
-        Observable<DeviceInfoListRsp> deviceDetailInfoList = RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList
-                (sn, null, 1);
-        Observable<DeviceRecentRsp> deviceHistoryList = RetrofitServiceHelper.INSTANCE.getDeviceHistoryList(sn,
-                startTime, endTime);
-        Observable.merge(deviceDetailInfoList, deviceHistoryList).subscribeOn(Schedulers.io()).doOnNext(new Action1<ResponseBase>() {
-
-
+        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
             @Override
-            public void call(ResponseBase responseBase) {
-                if (responseBase instanceof DeviceInfoListRsp) {
-                    DeviceInfoListRsp response = (DeviceInfoListRsp) responseBase;
-                    if (response.getData().size() > 0) {
-                        DeviceInfo deviceInfo = response.getData().get(0);
-                        String[] tags = deviceInfo.getTags();
-                        mDeviceInfo.setTags(tags);
-                    }
-                } else if (responseBase instanceof DeviceRecentRsp) {
-                    DeviceRecentRsp response = ((DeviceRecentRsp) responseBase);
-                    String data = response.getData().toString();
-                    try {
-//                        String[] sensorTypes = response.getSensorTypes();
-                        JSONObject jsonObject = new JSONObject(data);
-//                        sensorTypesList = SortUtils.sortSensorTypes(sensorTypes);
-                        Iterator<String> iterator = jsonObject.keys();
-                        while (iterator.hasNext()) {
-                            String keyStr = iterator.next();
-                            if (!TextUtils.isEmpty(keyStr)) {
-                                JSONObject object = jsonObject.getJSONObject(keyStr);
-                                if (object != null) {
-                                    DeviceRecentInfo recentInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson
-                                            (object.toString(),
-                                                    DeviceRecentInfo.class);
-                                    recentInfo.setDate(keyStr);
-                                    mRecentInfoList.add(recentInfo);
-                                }
-
-                            }
-                        }
-                        Collections.sort(mRecentInfoList);
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                if (deviceInfoListRsp.getData().size() > 0) {
+                    mDeviceInfo = deviceInfoListRsp.getData().get(0);
                 }
+                freshLocationDeviceInfo();
+                freshTopData();
+                handleDeviceInfoAdapter();
+                getView().dismissProgressDialog();
             }
-        }).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
-
-//            @Override
-//            public void onNext(ResponseBase responseBase) {
-//                getView().setMapLayoutVisible(true);
-//                getView().setMapViewVisible(true);
-//                refreshBatteryLayout();
-//                refreshKLayout();
-
-//            }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
             }
+        });
 
+    }
+
+    private void handleDeviceInfoAdapter() {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
-            public void onCompleted(ResponseBase responseBase) {
-                freshTopData();
-                getView().updateDeviceInfoAdapter(mDeviceInfo);
-                getView().dismissProgressDialog();
+            public void run() {
+                final ArrayList<MonitoringPointRcContentAdapterModel> uiData = new ArrayList<>();
+                if (mDeviceInfo != null) {
+                    if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
+                        Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
+                        Set<String> keySet = malfunctionData.keySet();
+                        ArrayList<String> keyList = new ArrayList<>();
+                        for (String key : keySet) {
+                            if (!keyList.contains(key)) {
+                                keyList.add(key);
+                            }
+                        }
+                        Collections.sort(keyList);
+                        for (String key : keyList) {
+                            MalfunctionDataBean malfunctionDataBean = malfunctionData.get(key);
+                            MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
+                            monitoringPointRcContentAdapterModel.name = "故障成因";
+                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
+                            monitoringPointRcContentAdapterModel.content = malfunctionDataBean.getDescription();
+                            uiData.add(monitoringPointRcContentAdapterModel);
+                            LogUtils.loge("故障成因：key = " + key + "value = " + malfunctionDataBean.getDescription());
+                        }
+
+                    }
+                    //
+                    String[] sensorTypes = mDeviceInfo.getSensorTypes();
+                    Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
+                    Map<String, SensorTypeStyles> sensorTypeMap = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig().getSensorType();
+                    if (sensorTypes != null && sensorTypes.length > 0 && sensorTypeMap != null && sensoroDetails != null) {
+                        List<String> sortSensorTypes = Arrays.asList(sensorTypes);
+                        for (String type : sortSensorTypes) {
+                            if (!TextUtils.isEmpty(type)) {
+                                SensorTypeStyles sensorTypeStyles = sensorTypeMap.get(type);
+                                if (sensorTypeStyles != null) {
+                                    MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
+                                    String name = sensorTypeStyles.getName();
+                                    if (TextUtils.isEmpty(name)) {
+                                        monitoringPointRcContentAdapterModel.name = mContext.getResources().getString(R.string.unknown);
+                                    } else {
+                                        monitoringPointRcContentAdapterModel.name = name;
+                                    }
+                                    boolean bool = sensorTypeStyles.isBool();
+                                    SensorStruct sensorStruct = sensoroDetails.get(type);
+                                    if (sensorStruct != null) {
+                                        Object value = sensorStruct.getValue();
+                                        if (value != null) {
+                                            if (bool) {
+                                                if (value instanceof Boolean) {
+                                                    String trueMean = sensorTypeStyles.getTrueMean();
+                                                    String falseMean = sensorTypeStyles.getFalseMean();
+                                                    if ((Boolean) value) {
+                                                        if (!TextUtils.isEmpty(trueMean)) {
+                                                            monitoringPointRcContentAdapterModel.content = trueMean;
+                                                        }
+                                                    } else {
+                                                        if (!TextUtils.isEmpty(falseMean)) {
+                                                            monitoringPointRcContentAdapterModel.content = falseMean;
+                                                        }
+                                                    }
+
+                                                }
+                                            } else {
+                                                String unit = sensorTypeStyles.getUnit();
+                                                if (!TextUtils.isEmpty(unit)) {
+                                                    monitoringPointRcContentAdapterModel.unit = unit;
+                                                }
+                                                WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, type, value);
+                                            }
+                                        }
+                                    }
+                                    int status = mDeviceInfo.getStatus();
+                                    switch (status) {
+                                        case SENSOR_STATUS_ALARM:
+                                            monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
+                                            break;
+                                        case SENSOR_STATUS_INACTIVE:
+                                            monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_inactive;
+                                            break;
+                                        case SENSOR_STATUS_LOST:
+                                            monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_lost;
+                                            break;
+                                        case SENSOR_STATUS_NORMAL:
+                                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                                            break;
+                                        case SENSOR_STATUS_MALFUNCTION:
+                                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
+                                            break;
+                                        default:
+                                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                                            break;
+                                    }
+                                    switch (status) {
+                                        case SENSOR_STATUS_ALARM:
+                                        case SENSOR_STATUS_NORMAL:
+                                            List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
+                                            try {
+                                                if (alarmsRecords != null) {
+                                                    for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
+                                                        String sensorTypeStr = deviceAlarmsRecord.getSensorTypes();
+                                                        if (type.equalsIgnoreCase(sensorTypeStr)) {
+                                                            int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
+                                                            switch (alarmStatus) {
+                                                                case 1:
+                                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                                                                    break;
+                                                                case 2:
+                                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
+                                                                    break;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } catch (Exception e) {
+                                                e.printStackTrace();
+
+                                            }
+                                            break;
+                                        default:
+                                            break;
+                                    }
+                                    uiData.add(monitoringPointRcContentAdapterModel);
+                                }
+                            }
+
+                        }
+                    }
+                }
+                //
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getView().updateDeviceInfoAdapter(uiData);
+                    }
+                });
+
             }
         });
+
     }
 
     @Override
@@ -340,20 +426,18 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         switch (code) {
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
-                    DeviceInfo pushDeviceInfo = (DeviceInfo) data;
-                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
-                        mDeviceInfo = pushDeviceInfo;
+                    final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
+                    if (pushDeviceInfo.getSn().equals(mDeviceInfo.getSn())) {
                         if (AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (getView() != null) {
+                                        mDeviceInfo = pushDeviceInfo;
+                                        freshLocationDeviceInfo();
                                         freshTopData();
-                                        getView().updateDeviceInfoAdapter(mDeviceInfo);
+                                        handleDeviceInfoAdapter();
                                     }
-
-//                        freshStructData();
-//                        freshMarker();
                                 }
                             });
                         }
@@ -385,8 +469,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                         }
 
                     }
-
-
                 }
                 break;
         }
@@ -394,16 +476,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     @Override
     public void onDestroy() {
-        mRecentInfoList.clear();
         mHandler.removeCallbacksAndMessages(null);
-//        if (tempUpBitmap != null) {
-//            tempUpBitmap.recycle();
-//            tempUpBitmap = null;
-//        }
-//        if (sensorTypesList != null) {
-//            sensorTypesList.clear();
-//            sensorTypesList = null;
-//        }
     }
 
 
@@ -421,7 +494,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
         LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
-        getView().setDeviceLocation(mContext.getString(R.string.unknown_street), true);
     }
 
     public void doMore() {

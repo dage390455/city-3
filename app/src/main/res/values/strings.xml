@@ -613,7 +613,6 @@
     <string name="modify">Change</string>
     <string name="is_device_query">Whether to query the latest data of the device</string>
     <string name="device_query_tip_message">The query device will report the latest data</string>
-    <string name="query">Query</string>
     <string name="request_time_out">Request timed out</string>
     <string name="operation_request_time_out">Operation request timed out</string>
     <string name="erasuring">Muting</string>
@@ -624,15 +623,15 @@
     <string name="monitor_point_operation_schedule_no_error">Task code acquisition failed</string>
     <string name="request_success">Request successfully</string>
     <string name="request_failed">Request failure</string>
-    <string name="monitor_point_detail_air_switch_config">空开配置</string>
+    <string name="monitor_point_detail_air_switch_config">Setting</string>
     <string name="electric_current">Current</string>
-    <string name="device_air_switch_config_tip_message">Reconfiguration will affect device alarm thresholds </string>
+    <string name="device_air_switch_config_tip_message">Resetting this value will change the threshold of alarm</string>
     <string name="air_switch_config">Configuration</string>
-    <string name="is_device_air_switch_config">是否进行空开配置</string>
-    <string name="configuring">配置中</string>
-    <string name="monitor_point_operation_error_value_range">Input error,value range 50 to 560</string>
+    <string name="is_device_air_switch_config">Whether to set</string>
+    <string name="configuring">Setting&#8230;</string>
+    <string name="monitor_point_operation_error_value_range">Please input a number from 50 to 560</string>
     <string name="enter_the_correct_number_format">Please enter the correct number format</string>
-    <string name="input_not_null">Input can not be empty</string>
+    <string name="input_not_null">The input must not be empty</string>
 
     <string name="upload_photo_dialog_append_title3"></string>
     <string name="monitor_point_detail_erasure">Mute</string>

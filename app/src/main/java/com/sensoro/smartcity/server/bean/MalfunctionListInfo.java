@@ -32,7 +32,7 @@ public class MalfunctionListInfo implements Serializable {
 
     private String _id;
     private String malfunctionType;
-        private Map<String,MalfunctionDataBean> malfunctionData;
+    private Map<String, MalfunctionDataBean> malfunctionData;
     private String appId;
     private OwnersBean owners;
     private String deviceSN;
@@ -221,43 +221,6 @@ public class MalfunctionListInfo implements Serializable {
     private java.util.List<?> phoneList;
     private java.util.List<Double> deviceLonlat;
 
-    public static class MalfunctionDataBean implements Serializable {
-        /**
-         * circuitShort : {"description":"传感器短路","typeDescription":"circuitShort","type":6}
-         * lowVoltage : {"description":"低电","typeDescription":"lowVoltage","type":5}
-         * disassembly : {"description":"被拆卸","typeDescription":"disassembly","type":4}
-         * description : diy msg
-         */
-
-        private String description;
-        private String typeDescription;
-        private int type;
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getTypeDescription() {
-            return typeDescription;
-        }
-
-        public void setTypeDescription(String typeDescription) {
-            this.typeDescription = typeDescription;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-    }
-
     public static class OwnersBean implements Serializable {
 
         /**
@@ -324,7 +287,7 @@ public class MalfunctionListInfo implements Serializable {
             this.id = id;
         }
 
-        public static class GrantsBean implements Serializable{
+        public static class GrantsBean implements Serializable {
         }
     }
 
@@ -478,7 +441,7 @@ public class MalfunctionListInfo implements Serializable {
             this._updatedTime = _updatedTime;
         }
 
-        public static class Event implements Serializable{
+        public static class Event implements Serializable {
 
             /**
              * source : notification

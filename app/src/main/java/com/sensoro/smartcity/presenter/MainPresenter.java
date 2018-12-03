@@ -81,7 +81,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             openLogin();
             return;
         }
-        Beta.checkUpgrade(false, false);
 //        else {
 //            try {
 //                String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
@@ -122,7 +121,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
             }
             mHandler.postDelayed(mRunnable, 3000L);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    createSocket();
+                }
+            }, 2000);
             freshAlarmCount();
+
         } else {
             openLogin();
         }
@@ -299,7 +305,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
         @Override
         public void run() {
-            //检查网络状态
+            //检查网络状态和app更新
             ThreadPoolManager.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -310,13 +316,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             if (!ping) {
                                 getView().toastShort(mContext.getString(R.string.disconnected_from_network));
                             }
+                            Beta.checkUpgrade(false, false);
+                            mHandler.postDelayed(mRunnable, 5 * 1000);
+                            LogUtils.loge("TaskRunnable == ping = " + ping + ",检查更新");
                         }
                     });
                 }
             });
-            //检查更新
-//            Beta.checkUpgrade(false, false);
-            createSocket();
         }
     }
 

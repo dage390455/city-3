@@ -156,7 +156,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     private void doUploadAndChange() {
         //TODO 更换设备 上传异常
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE_CHANGE);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
         intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
         getView().startAC(intent);
     }

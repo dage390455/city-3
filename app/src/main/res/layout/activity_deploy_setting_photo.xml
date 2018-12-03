@@ -28,8 +28,9 @@
             android:id="@+id/deploy_setting_photo_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
             android:text="@string/deploy_photo"
+            android:layout_toEndOf="@id/deploy_setting_photo_back"
+            android:layout_centerVertical="true"
             android:textColor="@color/c_626262"
             android:textSize="@dimen/city_large_size" />
 
@@ -60,6 +61,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginEnd="20dp"
             android:layout_weight="1">
 
             <android.support.v7.widget.RecyclerView
