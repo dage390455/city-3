@@ -37,7 +37,7 @@
                 android:layout_marginLeft="24dp"
                 android:text="@string/alarm_result_type"
                 android:textColor="@color/c_a6a6a6"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <Spinner
                 android:id="@+id/spinner_result"

@@ -36,9 +36,9 @@
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:cropToPadding="true"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:textColor="@color/c_252525"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
 
             <TextView
                 android:id="@+id/tv_contacts_manger_type"
@@ -104,9 +104,9 @@
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:cropToPadding="true"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:textColor="@color/c_252525"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -140,9 +140,9 @@
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:cropToPadding="true"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:textColor="@color/c_252525"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -176,9 +176,9 @@
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:cropToPadding="true"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:textColor="@color/c_252525"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
 
@@ -212,9 +212,9 @@
                 android:adjustViewBounds="true"
                 android:background="@null"
                 android:cropToPadding="true"
-                android:padding="8dp"
+                android:padding="4dp"
                 android:textColor="@color/c_252525"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
     </RelativeLayout>
 </LinearLayout>
