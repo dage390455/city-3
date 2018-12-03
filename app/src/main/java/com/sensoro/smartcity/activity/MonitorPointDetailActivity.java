@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -29,6 +28,7 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
+import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.toast.MonitorPointOperationSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -161,7 +161,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
                 return false;
             }
         };
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(mActivity, DividerItemDecoration.VERTICAL);
+        BottomNoDividerItemDecoration dividerItemDecoration = new BottomNoDividerItemDecoration(mActivity, BottomNoDividerItemDecoration.VERTICAL);
         acMonitoringPointRcContent.setLayoutManager(manager);
         acMonitoringPointRcContent.addItemDecoration(dividerItemDecoration);
         acMonitoringPointRcContent.setAdapter(mContentAdapter);

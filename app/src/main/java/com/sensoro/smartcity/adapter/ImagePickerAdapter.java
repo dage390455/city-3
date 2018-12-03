@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageFolder;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.io.File;
@@ -145,6 +146,8 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
         if (isJustDisplay) {
             holder.itemView.setOnClickListener(holder);
             holder.image_delete.setVisibility(View.GONE);
+            holder.ll_add.setVisibility(View.GONE);
+            holder.iv_img.setVisibility(View.VISIBLE);
             ImageItem item = mData.get(position);
             if (item != null) {
                 holder.iv_record_play.setVisibility(item.isRecord ? View.VISIBLE : View.GONE);

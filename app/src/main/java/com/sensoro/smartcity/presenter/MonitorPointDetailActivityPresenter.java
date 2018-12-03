@@ -438,7 +438,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                 @Override
                                 public void run() {
                                     if (getView() != null) {
-                                        mDeviceInfo = pushDeviceInfo;
+                                        mDeviceInfo.cloneSocketData(pushDeviceInfo);
                                         //TODO 单项数值设置
                                         freshLocationDeviceInfo();
                                         freshTopData();

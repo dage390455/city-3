@@ -665,7 +665,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         String signal_text = null;
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
         int resId = 0;
-        if (deployAnalyzerModel.signal != null && (time_diff < 300000)) {
+        if (deployAnalyzerModel.signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (deployAnalyzerModel.signal) {
                 case "good":
                     signal_text = mContext.getString(R.string.signal_excellent);
@@ -717,7 +717,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      */
     private boolean checkNeedSignal() {
         long time_diff = System.currentTimeMillis() - deployAnalyzerModel.updatedTime;
-        if (deployAnalyzerModel.signal != null && (time_diff < 300000)) {
+        if (deployAnalyzerModel.signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (deployAnalyzerModel.signal) {
                 case "good":
                 case "normal":
