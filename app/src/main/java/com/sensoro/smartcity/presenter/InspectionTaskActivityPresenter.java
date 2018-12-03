@@ -74,6 +74,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
             requestSearchData(DIRECTION_DOWN, null);
             mHandler.post(this);
         }
+        doInspectionType(false);
 
     }
 
@@ -211,8 +212,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                     sc3.statusTitle = mContext.getString(R.string.has_inspected);
                     sc3.status = 1;
                     list.add(sc3);
+                    getView().updateSelectDeviceStatusList(list);
                     if (needPop) {
-                        getView().updateSelectDeviceStatusList(list);
+                    getView().showSelectDeviceStatusPop();
                     }
                     getView().dismissProgressDialog();
                     getView().setBottomInspectionStateTitle(mContext.getString(R.string.i_have_inspected) + "： " + check, mContext.getString(R.string.not_inspected) + "： " + uncheck);
@@ -231,7 +233,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void doInspectionType(final boolean needPop) {
-        if (selectDeviceList.size() > 0) {
+        if (selectDeviceList.size() > 0 && needPop) {
             getView().updateSelectDeviceTypeList(selectDeviceList);
             getView().showSelectDeviceTypePop();
             return;

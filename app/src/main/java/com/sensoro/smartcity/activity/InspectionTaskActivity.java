@@ -178,7 +178,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     private void initSelectDeviceTypePop() {
         mSelectDeviceTypePop = new SelectDeviceTypePopUtils(mActivity);
         mSelectDeviceTypePop.setTitleVisible(false);
-        mSelectDeviceTypePop.setUpAnimation();
+//        mSelectDeviceTypePop.setUpAnimation();
         mSelectDeviceTypePop.setSelectDeviceTypeItemClickListener(new SelectDeviceTypePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position, DeviceTypeModel deviceTypeModel) {
@@ -202,8 +202,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     private void initSelectStatusPop() {
         mSelectStatusPop = new InspectionTaskStatePopUtils(mActivity);
-        mSelectStatusPop.setUpAnimation();
-        mSelectStatusPop.clearAnimation();
         mSelectStatusPop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
@@ -304,9 +302,12 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         try {
             if (mSelectDeviceTypePop.isShowing()) {
                 mSelectDeviceTypePop.dismiss();
-            } else {
+            } else if(mSelectStatusPop.isShowing()){
+                mSelectStatusPop.dismiss();
+            }else{
                 super.onBackPressed();
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -386,10 +387,15 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 //                forceOpenSoftKeyboard();
                 break;
             case R.id.ac_inspection_task_fl_state:
-                if (mSelectDeviceTypePop!=null&&mSelectDeviceTypePop.isShowing()) {
-                    mSelectDeviceTypePop.dismiss();
+                if (mSelectDeviceTypePop!=null) {
+                    if (mSelectStatusPop.isData()) {
+                        showSelectDeviceStatusPop();
+                    }else{
+                        mPresenter.doInspectionStatus(true);
+                    }
+
                 }
-                mPresenter.doInspectionStatus(true);
+//
                 break;
             case R.id.ac_inspection_task_fl_type:
                 if(mSelectStatusPop!=null&&mSelectStatusPop.isShowing()){
@@ -464,7 +470,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     public void updateSelectDeviceStatusList(List<InspectionStatusCountModel> data) {
         if (mSelectStatusPop != null) {
             mSelectStatusPop.updateSelectDeviceStatusList(data);
-            mSelectStatusPop.showAsDropDown(acInspectionTaskLlSelect);
         }
     }
 
@@ -493,6 +498,16 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     public void hideBleTips() {
         if (tipBleDialogUtils != null && tipBleDialogUtils.isShowing()) {
             tipBleDialogUtils.dismiss();
+        }
+    }
+
+    @Override
+    public void showSelectDeviceStatusPop() {
+        if (mSelectStatusPop != null) {
+            if (mSelectStatusPop.isShowing()) {
+                mSelectStatusPop.dismiss();
+            }
+            mSelectStatusPop.showAsDropDown(acInspectionTaskLlSelect);
         }
     }
 

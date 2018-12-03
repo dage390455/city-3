@@ -73,7 +73,7 @@ public class SelectDeviceTypePopUtils {
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_B3000000)));
-//        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
+        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
 //        mPopupWindow.setFocusable(true);
 
         initAnimation();
@@ -146,7 +146,19 @@ public class SelectDeviceTypePopUtils {
             }
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
         }
-        mPopupWindow.showAsDropDown(view);
+
+        showAnimation();
+    }
+
+    private void showAnimation() {
+        int i = mTypeSelectAdapter.getItemCount() / 4;
+        i *= 100;
+        if(i<300){
+            i = 300;
+        }
+        showTranslateAnimation.setDuration(i);
+        dismissTranslateAnimation.setDuration(i);
+        mFl.startAnimation(showTranslateAnimation);
     }
 
     public void setTitleVisible(boolean isVisible) {

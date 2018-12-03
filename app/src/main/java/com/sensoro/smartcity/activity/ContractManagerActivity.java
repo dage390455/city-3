@@ -183,8 +183,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     private void initSelectTypePop() {
         mSelectTypePop = new InspectionTaskStatePopUtils(mActivity);
-        mSelectTypePop.setUpAnimation();
-        mSelectTypePop.clearAnimation();
         mSelectTypePop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
@@ -209,8 +207,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     private void initSelectStatusPop() {
         mSelectStatusPop = new InspectionTaskStatePopUtils(mActivity);
-        mSelectStatusPop.setUpAnimation();
-        mSelectStatusPop.clearAnimation();
         mSelectStatusPop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
@@ -233,6 +229,17 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if(mSelectTypePop.isShowing()){
+            mSelectTypePop.dismiss();
+        }else if(mSelectStatusPop.isShowing()){
+            mSelectStatusPop.dismiss();
+        }else{
+            super.onBackPressed();
+        }
+
+    }
 
     @Override
     public void onPullRefreshComplete() {

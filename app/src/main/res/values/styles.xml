@@ -125,6 +125,11 @@
         <item name="android:windowExitAnimation">@anim/anim_pop_up_dismiss</item>
     </style>
 
+    <style name="PopWindowAlphaAnim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/anim_pop_alpha_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_pop_alpha_dismiss</item>
+    </style>
+
     <!--Theme_Holo_Light_NoActionBar-->
     <style name="DialogFragmentThem" parent="@android:style/Theme.Holo.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/DialogFragmentDropDownAnim</item>
