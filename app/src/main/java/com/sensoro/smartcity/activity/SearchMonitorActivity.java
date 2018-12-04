@@ -237,7 +237,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acSearchDeviceRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        indexLayoutList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override
