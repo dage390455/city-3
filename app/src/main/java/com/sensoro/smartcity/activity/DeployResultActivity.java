@@ -99,7 +99,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void refreshSignal(long updateTime, String signal) {
         String signal_text = null;
         long time_diff = System.currentTimeMillis() - updateTime;
-        if (signal != null && (time_diff < 300000)) {
+        if (signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (signal) {
                 case "good":
                     signal_text = mActivity.getString(R.string.signal_excellent);
@@ -256,7 +256,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
 
-    @OnClick({R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue,R.id.ac_deploy_result_imv_arrows_left})
+    @OnClick({R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue, R.id.ac_deploy_result_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_result_tv_back_home:

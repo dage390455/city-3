@@ -190,7 +190,7 @@
     <string name="scan_code_failed">扫码失败</string>
     <string name="failed">失败</string>
     <string name="error">错误</string>
-    <string name="device_exist_under_the_account">账户下不存在此设备,设备已关联\n在本账户下才能够进行测试</string>
+    <string name="device_exist_under_the_account">账户下不存在此设备,设备已关联\n在账户下才能够进行测试</string>
     <string name="success">成功</string>
     <string name="no_such_permission">无此权限</string>
     <string name="no_alert_log_information_was_obtained">未获取到预警日志信息</string>
@@ -303,7 +303,7 @@
     <string name="tips_deploy_station_success">恭喜! 基站部署成功</string>
     <string name="tips_deploy_failed">很遗憾! 传感器点位部署失败</string>
     <string name="tips_deploy_station_failed">很遗憾! 基站部署失败</string>
-    <string name="tips_deploy_not_exist">账户下不存在此设备,设备已关联\n在本账户下才能够进行部署</string>
+    <string name="tips_deploy_not_exist">账户下不存在此设备,设备已关联\n在账户下才能够进行部署</string>
     <string name="tips_input_name">请输入名称/地址</string>
     <string name="tips_hint_name_address">例: 大悦城20层走廊2号配电箱</string>
     <string name="tips_hint_name_address_set">例: 大悦城20层走廊2号配电箱</string>
@@ -631,5 +631,6 @@
     <string name="input_not_null">输入不能为空</string>
     <string name="request_success">请求成功</string>
     <string name="legal_representative_name">法定代表人/姓名</string>
+    <string name="no_search_history">暂无搜索记录</string>
 
 </resources>

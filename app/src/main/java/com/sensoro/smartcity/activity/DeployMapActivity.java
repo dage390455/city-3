@@ -103,7 +103,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     public void refreshSignal(long updateTime, String signal) {
         String signal_text = null;
         long time_diff = System.currentTimeMillis() - updateTime;
-        if (signal != null && (time_diff < 300000)) {
+        if (signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (signal) {
                 case "good":
                     signal_text = mActivity.getString(R.string.signal_excellent);

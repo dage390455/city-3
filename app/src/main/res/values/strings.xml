@@ -634,4 +634,5 @@
     <string name="monitor_point_detail_operation">Operation</string>
     <string name="text_fire_alarm_empty"></string>
     <string name="legal_representative_name">Legal representative/name</string>
+    <string name="no_search_history">No search history</string>
 </resources>

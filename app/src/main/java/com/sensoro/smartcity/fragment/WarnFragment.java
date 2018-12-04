@@ -221,7 +221,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    public void UpdateSearchHistoryList(List<String> data) {
+    public void updateSearchHistoryList(List<String> data) {
         btnSearchClear.setVisibility(data.size() >0 ? View.VISIBLE : View.GONE);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
     }

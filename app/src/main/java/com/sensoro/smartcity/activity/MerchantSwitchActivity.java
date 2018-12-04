@@ -3,28 +3,47 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MerchantAdapter;
+import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 import com.sensoro.smartcity.presenter.MerchantSwitchActivityPresenter;
 import com.sensoro.smartcity.server.bean.UserInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
@@ -33,7 +52,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
     private ListView mPullListView;
     private ImageView mMenuListImageView;
-    private ImageView mSearchImageView;
     private View seperatorView;
     private View seperatorBottomView;
     private TextView mCurrentNameTextView;
@@ -45,8 +63,27 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     //
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
-    private RefreshLayout refreshLayout;
+    private SmartRefreshLayout refreshLayout;
 
+    @BindView(R.id.rv_search_history)
+    RecyclerView rvSearchHistory;
+    @BindView(R.id.btn_search_clear)
+    ImageView btnSearchClear;
+    @BindView(R.id.ll_search_history)
+    LinearLayout llSearchHistory;
+    @BindView(R.id.merchant_et_search)
+    EditText mMerchantEtSearch;
+    @BindView(R.id.merchant_imv_clear)
+    ImageView mMerchantEtClear;
+    @BindView(R.id.no_content)
+    ImageView imvNoContent;
+    @BindView(R.id.no_content_tip)
+    TextView tvContentTip;
+    @BindView(R.id.ic_no_content)
+    LinearLayout icNoContent;
+    @BindView(R.id.merchant_ll_list_root)
+    LinearLayout merchantLlListRoot;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
 
     @Override
     protected void onDestroy() {
@@ -62,8 +99,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         mReturnTopImageView.setOnClickListener(this);
         mMenuListImageView = (ImageView) findViewById(R.id.merchant_iv_menu_list);
         mMenuListImageView.setOnClickListener(this);
-        mSearchImageView = (ImageView) findViewById(R.id.merchant_iv_search);
-        mSearchImageView.setOnClickListener(this);
         mCurrentNameTextView = (TextView) findViewById(R.id.merchant_current_name);
         mCurrentPhoneTextView = (TextView) findViewById(R.id.merchant_current_phone);
         mCurrentStatusImageView = (ImageView) findViewById(R.id.merchant_current_status);
@@ -79,16 +114,19 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                mPresenter.requestDataByDirection(DIRECTION_DOWN, false);
+                mPresenter.requestDataByDirection(DIRECTION_DOWN, false,mMerchantEtSearch.getText().toString());
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                mPresenter.requestDataByDirection(DIRECTION_UP, false);
+                mPresenter.requestDataByDirection(DIRECTION_UP, false,mMerchantEtSearch.getText().toString());
             }
         });
+
+        tvContentTip.setText(mActivity.getString(R.string.no_search_history));
+        mMerchantEtSearch.setCursorVisible(false);
         //
 //        mPullListView.setRefreshing(false);
 //        mPullListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
@@ -110,13 +148,137 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         mPullListView.setAdapter(mMerchantAdapter);
         mPullListView.setOnItemClickListener(this);
 
+        initRcHistorySearch();
 
+        mMerchantEtSearch.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                    // 当按了搜索之后关闭软键盘
+                    String text = mMerchantEtSearch.getText().toString();
+//                    if (TextUtils.isEmpty(text)) {
+//                        SensoroToast.INSTANCE.makeText(mRootFragment.getActivity(), mRootFragment.getString(R.string.enter_search_content), Toast.LENGTH_SHORT).setGravity(Gravity.CENTER, 0, -10)
+//                                .show();
+//                        return true;
+//                    }
+                    mPresenter.save(text);
+                    mMerchantEtSearch.clearFocus();
+                    mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                    AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
+                    setSearchHistoryVisible(false);
+                    return true;
+                }
+                return false;
+            }
+        });
+
+        mMerchantEtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setSearchClearImvVisible(s.length() > 0);
+            }
+        });
+
+
+    }
+
+    private void setRlTitleAccountVisible(boolean isVisible) {
+        rlTitleAccount.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    private void initRcHistorySearch() {
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvSearchHistory.setLayoutManager(layoutManager);
+//        int spacingInPixels = AppUtils.dp2px(mRootFragment.getActivity(),12);
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity, 6)));
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
+                        if (!TextUtils.isEmpty(text)) {
+                            mMerchantEtSearch.setText(text);
+                            mMerchantEtSearch.setSelection(mMerchantEtSearch.getText().toString().length());
+                        }
+                        mMerchantEtClear.setVisibility(View.VISIBLE);
+                        mMerchantEtSearch.clearFocus();
+                        AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
+                        setSearchHistoryVisible(false);
+                        mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                    }
+                });
+        rvSearchHistory.setAdapter(mSearchHistoryAdapter);
+    }
+
+    private void setSearchClearImvVisible(boolean isVisible) {
+        mMerchantEtClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    private void setSearchHistoryVisible(boolean isVisible) {
+        llSearchHistory.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        merchantLlListRoot.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPresenter.clickItem(position);
+        UserInfo userInfo = mMerchantAdapter.getData().get(position);
+        mPresenter.clickItem(userInfo);
+    }
+
+    @OnClick({R.id.merchant_frame_search,R.id.merchant_et_search,R.id.btn_search_clear, R.id.merchant_imv_clear,R.id.merchant_tv_cancel})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.merchant_frame_search:
+            case R.id.merchant_et_search:
+                mMerchantEtSearch.requestFocus();
+                mMerchantEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                setRlTitleAccountVisible(false);
+                break;
+            case R.id.btn_search_clear:
+                mPresenter.clearSearchHistory();
+                break;
+            case R.id.merchant_imv_clear:
+                mMerchantEtSearch.getText().clear();
+                mMerchantEtSearch.requestFocus();
+                AppUtils.openInputMethodManager(mActivity, mMerchantEtSearch);
+                setSearchHistoryVisible(true);
+                break;
+            case R.id.merchant_tv_cancel:
+                doCancelSearch();
+                setSearchHistoryVisible(false);
+                AppUtils.dismissInputMethodManager(mActivity,mMerchantEtSearch);
+                setRlTitleAccountVisible(true);
+                break;
+
+        }
+    }
+
+    private void doCancelSearch() {
+        mMerchantEtSearch.getText().clear();
+        mPresenter.requestSearchData(DIRECTION_DOWN,null);
     }
 
     @Override
@@ -124,9 +286,6 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         switch (v.getId()) {
             case R.id.merchant_iv_menu_list:
                 finishAc();
-                break;
-            case R.id.merchant_iv_search:
-                mPresenter.startToSearchAC();
                 break;
             case R.id.merchant_return_top:
 //                mPullListView.getRefreshableView().smoothScrollToPosition(0);
@@ -189,8 +348,12 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     @Override
     public void setCurrentNameAndPhone(String name, String phone) {
-        mCurrentNameTextView.setText(name);
-        mCurrentPhoneTextView.setText(phone);
+        if (name != null) {
+            mCurrentNameTextView.setText(name);
+        }
+        if (phone != null) {
+            mCurrentPhoneTextView.setText(phone);
+        }
     }
 
     @Override
@@ -207,15 +370,20 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     @Override
-    public void setAdapterSelectedIndex(int index) {
-        mMerchantAdapter.setSelectedIndex(index);
-    }
-
-    @Override
     public void updateAdapterUserInfo(List<UserInfo> data) {
         if (data != null && data.size() > 0) {
+            icNoContent.setVisibility(View.GONE);
+            merchantLlListRoot.setVisibility(View.VISIBLE);
             mMerchantAdapter.setDataList(data);
             mMerchantAdapter.notifyDataSetChanged();
+        }else {
+            if (isRlTitleAccountVisible()) {
+                icNoContent.setVisibility(View.GONE);
+                merchantLlListRoot.setVisibility(View.VISIBLE);
+            }else {
+                icNoContent.setVisibility(View.VISIBLE);
+                merchantLlListRoot.setVisibility(View.GONE);
+            }
         }
 
 //        ViewParent parent = mPullListView.getParent();
@@ -228,12 +396,22 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 //        }
     }
 
+    private boolean isRlTitleAccountVisible() {
+        return rlTitleAccount.getVisibility() == View.VISIBLE;
+    }
+
 
     @Override
     public void onPullRefreshComplete() {
 //        mPullListView.onRefreshComplete();
         refreshLayout.finishLoadMore();
         refreshLayout.finishRefresh();
+    }
+
+    @Override
+    public void updateSearchHistoryList(List<String> data) {
+        btnSearchClear.setVisibility(data.size() > 0 ? View.VISIBLE : View.GONE);
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
     }
 
 
@@ -257,6 +435,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_merchant);
+        ButterKnife.bind(mActivity);
         initView();
         mPresenter.initData(mActivity);
     }

@@ -19,7 +19,6 @@ import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -69,7 +68,6 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         } else {
             getView().setSearchHistoryLayoutVisible(false);
         }
-
         getView().setCurrentNameAndPhone(userName, phone);
         getView().setCurrentStatusImageViewVisible(true);
     }
@@ -113,15 +111,6 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
             @Override
             public void onCompleted(UserAccountRsp userAccountRsp) {
                 refreshUI(userAccountRsp);
-//                List<UserInfo> list = userAccountRsp.getData();
-//                if (list.size() == 0) {
-//                    getView().setTipsLinearLayoutVisible(true);
-//                } else {
-//                    Intent data = new Intent();
-//                    data.putExtra(EXTRA_MERCHANT_INFO, userAccountRsp);
-//                    getView().setIntentResult(RESULT_CODE_CHANGE_MERCHANT, data);
-//                    getView().finishAc();
-//                }
                 getView().dismissProgressDialog();
             }
 
@@ -135,7 +124,7 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
 
     private void refreshUI(UserAccountRsp userAccountRsp) {
         List<UserInfo> list = userAccountRsp.getData();
-        if (list.size() > 0) {
+        if (list != null && list.size() > 0) {
             mUserInfoList.clear();
             mUserInfoList.addAll(list);
             getView().updateMerchantInfo(mUserInfoList);
@@ -173,28 +162,6 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                 //
                 eventLoginData = MenuPageFactory.createLoginData(userInfo, phoneId);
                 //
-//                GrantsInfo grants = userInfo.getGrants();
-//                //修改loginData包装
-//                eventLoginData = new EventLoginData();
-//                eventLoginData.userId = userInfo.get_id();
-//                eventLoginData.userName = userInfo.getNickname();
-//                eventLoginData.phone = userInfo.getContacts();
-//                eventLoginData.phoneId = phoneId;
-////            mCharacter = userInfo.getCharacter();
-//                String roles = userInfo.getRoles();
-//                eventLoginData.roles = roles;
-//                String isSpecific = userInfo.getIsSpecific();
-//                eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
-//                eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
-//                eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
-//                eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
-//                eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
-//                eventLoginData.hasInspectionTaskList = MenuPageFactory.getHasInspectionTaskList(grants);
-//                eventLoginData.hasAlarmInfo = MenuPageFactory.getHasAlarmInfo(grants);
-//                eventLoginData.hasDeviceBrief = MenuPageFactory.getHasDeviceBriefList(grants);
-//                eventLoginData.hasSignalCheck = MenuPageFactory.getHasSignalCheck(grants);
-//                eventLoginData.hasSignalConfig = MenuPageFactory.getHasSignalConfig(grants);
-                //
                 return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
             }
         }).doOnNext(new Action1<DevicesMergeTypesRsp>() {
@@ -211,9 +178,8 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
                 eventData.code = EVENT_DATA_SEARCH_MERCHANT;
                 eventData.data = eventLoginData;
                 EventBus.getDefault().post(eventData);
-                getView().finishAc();
-                LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
                 getView().dismissProgressDialog();
+                getView().finishAc();
             }
 
 
@@ -225,18 +191,18 @@ public class SearchMerchantActivityPresenter extends BasePresenter<ISearchMercha
         });
     }
 
-    public void clickItem(int position) {
+    public void clickItem(UserInfo userInfo) {
         if (!PreferencesHelper.getInstance().getUserData().hasMerchantChange) {
             getView().toastShort(mContext.getString(R.string.merchant_has_no_change_permission));
             return;
         }
-        if (!mUserInfoList.get(position).isStop()) {
+        if (!userInfo.isStop()) {
 //            getView().setAdapterSelectedIndex(position);
 //            mMerchantAdapter.setSelectedIndex(position);
 //            mMerchantAdapter.notifyDataSetChanged();
 //            getView().updateMerchantInfo();
 //            mCurrentStatusImageView.setVisibility(View.GONE);
-            String uid = mUserInfoList.get(position).get_id();
+            String uid = userInfo.get_id();
             doAccountSwitch(uid);
         } else {
             getView().toastShort(mContext.getString(R.string.account_has_been_disabled));

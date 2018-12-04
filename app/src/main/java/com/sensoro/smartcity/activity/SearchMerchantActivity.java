@@ -274,8 +274,12 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
     @Override
     public void setCurrentNameAndPhone(String name, String phone) {
-        merchantCurrentName.setText(name);
-        merchantCurrentPhone.setText(phone);
+        if (name!=null){
+            merchantCurrentName.setText(name);
+        }
+        if (phone!=null){
+            merchantCurrentPhone.setText(phone);
+        }
     }
 
     @Override
@@ -330,6 +334,7 @@ public class SearchMerchantActivity extends BaseActivity<ISearchMerchantActivity
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        mPresenter.clickItem(position);
+        UserInfo userInfo = mMerchantAdapter.getData().get(position);
+        mPresenter.clickItem(userInfo);
     }
 }

@@ -3,11 +3,9 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.opengl.Visibility;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
@@ -89,7 +87,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
         if (list != null) {
             mSearchHistoryList.addAll(list);
-            getView().UpdateSearchHistoryList(mSearchHistoryList);
+            getView().updateSearchHistoryList(mSearchHistoryList);
         }
 
     }
@@ -445,7 +443,7 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             //为了调整 搜索顺序，所以先删除，再添加
             mSearchHistoryList.remove(tempSearch);
             mSearchHistoryList.add(0, tempSearch);
-            getView().UpdateSearchHistoryList(mSearchHistoryList);
+            getView().updateSearchHistoryList(mSearchHistoryList);
 
         }
 
@@ -504,13 +502,13 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         mSearchHistoryList.remove(text);
         PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
         mSearchHistoryList.add(0, text);
-        getView().UpdateSearchHistoryList(mSearchHistoryList);
+        getView().updateSearchHistoryList(mSearchHistoryList);
     }
 
     public void clearSearchHistory() {
             PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
             mSearchHistoryList.clear();
-            getView().UpdateSearchHistoryList(mSearchHistoryList);
+            getView().updateSearchHistoryList(mSearchHistoryList);
     }
     //-------------------------------------------------------------------------------------------
     //去掉按照确认类型排序排序
