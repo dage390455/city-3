@@ -214,7 +214,6 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activity.AuthActivity" />
         <activity android:name=".activity.DeployMapActivity" />
-        <activity android:name=".activity.MonitorMoreActivity" />
         <activity android:name=".activity.MonitorPointMapActivity" />
         <activity android:name=".activity.InspectionTaskListActivity" />
         <activity android:name=".activity.InspectionTaskDetailActivity" />
