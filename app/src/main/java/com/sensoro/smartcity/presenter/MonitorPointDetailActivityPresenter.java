@@ -168,7 +168,12 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             getView().setContractName(contact);
             getView().setContractPhone(content);
         }
-        getView().setUpdateTime(DateUtil.getStrTimeToday(mContext, mDeviceInfo.getUpdatedTime(), 0));
+        long updatedTime = mDeviceInfo.getUpdatedTime();
+        if (updatedTime == 0) {
+            getView().setUpdateTime("-");
+        } else {
+            getView().setUpdateTime(DateUtil.getStrTimeToday(mContext, updatedTime, 0));
+        }
         String tags[] = mDeviceInfo.getTags();
         if (tags != null && tags.length > 0) {
             List<String> list = Arrays.asList(tags);
