@@ -102,7 +102,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
                 getView().setMerchantName(PreferencesHelper.getInstance().getUserData().userName);
             }
 
-            //                getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
+            //                getView().updateMenuPager(UserPermissionFactory.createMenuPageList(mEventLoginData));
             if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
 
 //                    merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);

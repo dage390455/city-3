@@ -504,6 +504,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             return;
         }
         String[] str = {"0"};
+        getView().setAlarmWarnCount(0);
         RetrofitServiceHelper.INSTANCE.getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {

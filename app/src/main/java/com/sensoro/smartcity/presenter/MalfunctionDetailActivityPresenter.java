@@ -16,10 +16,10 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeployDeviceInfo;
+import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.MalfunctionCountRsp;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
@@ -96,18 +96,22 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
 //        });
         final StringBuffer stringBuffer = new StringBuffer();
         RetrofitServiceHelper.INSTANCE.getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
-                .flatMap(new Func1<MalfunctionCountRsp, Observable<DeployDeviceDetailRsp>>() {
+                .flatMap(new Func1<MalfunctionCountRsp, Observable<DeviceInfoListRsp>>() {
                     @Override
-                    public Observable<DeployDeviceDetailRsp> call(MalfunctionCountRsp malfunctionCountRsp) {
+                    public Observable<DeviceInfoListRsp> call(MalfunctionCountRsp malfunctionCountRsp) {
                         stringBuffer.append(malfunctionCountRsp.getCount());
-                        return RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(mMalfunctionInfo.getDeviceSN(), null, null);
+                        return RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(mMalfunctionInfo.getDeviceSN(), null, 1);
                     }
-                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
+                }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+
             @Override
-            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                DeployDeviceInfo data = deployDeviceDetailRsp.getData();
-                if (data != null && mMalfunctionInfo.getDeviceSN().equals(data.getSn())) {
-                    getView().setMalfunctionDetailConfirmVisible(true);
+            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                List<DeviceInfo> data1 = deviceInfoListRsp.getData();
+                if (data1 != null && data1.size() > 0) {
+                    DeviceInfo deviceInfo = data1.get(0);
+                    if (deviceInfo != null && mMalfunctionInfo.getDeviceSN().equals(deviceInfo.getSn())) {
+                        getView().setMalfunctionDetailConfirmVisible(true);
+                    }
                 }
                 String count = stringBuffer.toString();
                 getView().setMalfunctionCount(count);
@@ -129,7 +133,6 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
                 String count = stringBuffer.toString();
                 getView().setMalfunctionCount(count);
                 getView().dismissProgressDialog();
-
             }
         });
     }
