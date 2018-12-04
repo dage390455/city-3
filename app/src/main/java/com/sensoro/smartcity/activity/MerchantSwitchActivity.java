@@ -83,6 +83,8 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     LinearLayout icNoContent;
     @BindView(R.id.merchant_ll_list_root)
     LinearLayout merchantLlListRoot;
+    @BindView(R.id.merchant_tv_cancel)
+    TextView merchantTvCancel;
     private SearchHistoryAdapter mSearchHistoryAdapter;
 
     @Override
@@ -192,6 +194,10 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     }
 
+    private void setTvCancelVisible(boolean isVisible) {
+        merchantTvCancel.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
     private void setRlTitleAccountVisible(boolean isVisible) {
         rlTitleAccount.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -256,6 +262,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                 mMerchantEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);
                 setRlTitleAccountVisible(false);
+                setTvCancelVisible(true);
                 break;
             case R.id.btn_search_clear:
                 mPresenter.clearSearchHistory();
@@ -269,6 +276,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             case R.id.merchant_tv_cancel:
                 doCancelSearch();
                 setSearchHistoryVisible(false);
+                setTvCancelVisible(false);
                 AppUtils.dismissInputMethodManager(mActivity,mMerchantEtSearch);
                 setRlTitleAccountVisible(true);
                 break;

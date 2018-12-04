@@ -107,10 +107,6 @@
             android:name=".activity.DeployManualActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.SearchMerchantActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
 
         <service android:name="com.amap.api.location.APSService" />
 

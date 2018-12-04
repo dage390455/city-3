@@ -26,6 +26,8 @@
                 android:contentDescription="@null"
                 android:padding="8dp"
                 android:layout_marginStart="12dp"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="12dp"
                 android:src="@drawable/arrows_left" />
 
             <RelativeLayout
@@ -35,6 +37,7 @@
                 android:layout_gravity="center_vertical"
                 android:layout_weight="1"
                 android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
                 android:background="@drawable/shape_bg_full_corner">
                 <ImageView
                     android:id="@+id/merchant_imv_clear"
@@ -60,7 +63,7 @@
                     android:background="@null"
                     android:drawableStart="@drawable/main_search"
                     android:drawablePadding="8dp"
-                    android:hint="@string/warn_fragment_search_tip"
+                    android:hint="@string/merchant_name_phone_number"
                     android:imeOptions="actionSearch"
                     android:singleLine="true"
                     android:layout_toStartOf="@id/merchant_imv_clear"
@@ -76,8 +79,8 @@
                 android:text="@string/cancel"
                 android:textColor="@color/c_a6a6a6"
                 android:layout_gravity="center_vertical"
-                android:padding="8dp"
-                android:layout_margin="8dp"
+                android:layout_marginEnd="16dp"
+                android:visibility="gone"
                 />
         </LinearLayout>
 
