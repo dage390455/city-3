@@ -5,16 +5,13 @@
     android:layout_height="wrap_content"
     android:background="@color/white"
     android:orientation="vertical"
-    android:paddingTop="20dp">
+    android:paddingTop="16dp">
 
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginBottom="12dp"
         android:orientation="horizontal">
 
         <RelativeLayout
@@ -76,6 +73,10 @@
             android:background="@color/transparent"
             android:contentDescription="@null"
             android:padding="10dp"
+            android:layout_marginStart="6dp"
+            android:layout_marginEnd="6dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
             android:src="@drawable/calendar" />
 
     </LinearLayout>
