@@ -204,17 +204,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         sensoroDeviceConnection = new SensoroDeviceConnectionTest(mContext, bleAddress);
         try {
             sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorDetailActivityPresenter.this);
-//            stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
             getView().dismissBleConfigDialog();
             getView().updateUploadState(true);
             getView().toastShort(mContext.getString(R.string.ble_connect_failed));
         }
-    }
-
-    private void stopScanService() {
-        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
     }
 
     private void doUploadImages(final double lon, final double lan) {
@@ -401,7 +396,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployAnalyzerModel.tagList.clear();
         deployAnalyzerModel.images.clear();
         mHandler.removeCallbacksAndMessages(null);
-        stopScanService();
+        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
         BleObserver.getInstance().unregisterBleObserver(this);
         BLE_DEVICE_SET.clear();
 
@@ -530,7 +525,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_STATION:
                 if (checkHasPhoto()) return;
                 //经纬度校验
-                if (checkHasLatLng()) return;
+                if (checkHasNoLatLng()) return;
                 requestUpload();
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
@@ -541,9 +536,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (checkHasContact()) return;
                 if (checkHasPhoto()) return;
                 //经纬度校验
-                if (checkHasLatLng()) return;
+                if (checkHasNoLatLng()) return;
                 if (checkNeedSignal()) {
-                    //判断是否有强制上传权限
                     checkHasForceUploadPermission();
                 } else {
                     requestUpload();
@@ -638,7 +632,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
      *
      * @return
      */
-    private boolean checkHasLatLng() {
+    private boolean checkHasNoLatLng() {
         if (deployAnalyzerModel.latLng.size() != 2) {
             getView().toastShort(mContext.getString(R.string.please_specify_the_deployment_location));
             getView().updateUploadState(true);
@@ -687,17 +681,18 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
                 if (deployAnalyzerModel.latLng.size() != 2) {
-                    getView().refreshSignal(true, signal_text, resId, "未定位");
+                    getView().refreshSignal(true, signal_text, resId, mContext.getString(R.string.not_positioned));
                 } else {
-                    getView().refreshSignal(true, signal_text, resId, "已定位");
+                    getView().refreshSignal(true, signal_text, resId, mContext.getString(R.string.positioned));
                 }
                 break;
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 if (deployAnalyzerModel.latLng.size() != 2) {
-                    getView().refreshSignal(false, signal_text, resId, "未定位");
+                    getView().refreshSignal(false, signal_text, resId, mContext.getString(R.string.not_positioned));
                 } else {
-                    getView().refreshSignal(false, signal_text, resId, "已定位");
+                    getView().refreshSignal(false, signal_text, resId, mContext.getString(R.string.positioned));
                 }
                 break;
             case TYPE_SCAN_INSPECTION:

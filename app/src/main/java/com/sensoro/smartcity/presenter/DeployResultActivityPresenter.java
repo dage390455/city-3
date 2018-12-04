@@ -89,7 +89,6 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     if (!TextUtils.isEmpty(deployResultModel.sn)) {
                         getView().setSnTextView(deployResultModel.sn);
                     }
-
                     String text;
                     switch (deployResultModel.scanType) {
                         case TYPE_SCAN_SIGNAL_CHECK:
@@ -104,32 +103,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     break;
                 case DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:
                     //成功
-                    DeviceInfo deviceInfo = deployResultModel.deviceInfo;
-                    String sn = deviceInfo.getSn().toUpperCase();
-                    String name = deviceInfo.getName();
-                    long updatedTime = deviceInfo.getUpdatedTime();
-                    switch (deployResultModel.scanType) {
-                        case TYPE_SCAN_DEPLOY_STATION:
-                            //基站部署
-                            deployStation(sn, name, deployResultModel.address, updatedTime);
-                            break;
-                        case TYPE_SCAN_DEPLOY_DEVICE:
-                            //设备部署
-                            deployDevice(sn, name, deployResultModel.address, updatedTime);
-                            break;
-                        case TYPE_SCAN_LOGIN:
-                            break;
-                        case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-                        case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-                            //TODO 巡检设备更换
-                            deployDevice(sn, name, deployResultModel.address, updatedTime);
-                            break;
-                        case TYPE_SCAN_INSPECTION:
-                            //TODO 扫描巡检设备
-                            break;
-                        default:
-                            break;
-                    }
+                    setDeployResultDetail();
                     break;
             }
 
@@ -138,6 +112,28 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             getView().toastShort(mContext.getResources().getString(R.string.tips_data_error));
         }
 
+    }
+
+    private void setDeployResultDetail() {
+        DeviceInfo deviceInfo = deployResultModel.deviceInfo;
+        String sn = deviceInfo.getSn().toUpperCase();
+        String name = deviceInfo.getName();
+        long updatedTime = deviceInfo.getUpdatedTime();
+        switch (deployResultModel.scanType) {
+            //基站部署
+            case TYPE_SCAN_DEPLOY_STATION:
+                deployStation(sn, name, deployResultModel.address, updatedTime);
+                break;
+            //设备部署/更换
+            case TYPE_SCAN_DEPLOY_DEVICE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //TODO 巡检设备更换
+                deployDevice(sn, name, deployResultModel.address, updatedTime);
+                break;
+            default:
+                break;
+        }
     }
 
     private void deployDevice(String sn, String name, String address, long updatedTime) {
@@ -187,42 +183,28 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
     }
 
     public void gotoContinue() {
+        EventData eventData = new EventData();
+        eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
         switch (deployResultModel.resultCode) {
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:
+                if (deployResultModel.deviceInfo != null) {
+                    eventData.data = deployResultModel.deviceInfo;
+                }
                 break;
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
-                break;
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
+                if ((deployResultModel.scanType == TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE || deployResultModel.scanType == TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE)) {
+                    eventData.code = EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE;
+                }
                 break;
             default:
                 break;
-        }
-        EventData eventData = new EventData();
-        if ((deployResultModel.scanType == TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE || deployResultModel.scanType == TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE) && deployResultModel.resultCode != DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS) {
-            eventData.code = EVENT_DATA_DEPLOY_CHANGE_RESULT_CONTINUE;
-            EventBus.getDefault().post(eventData);
-            getView().finishAc();
-            return;
-        }
-        eventData.code = EVENT_DATA_DEPLOY_RESULT_CONTINUE;
-        if (deployResultModel.resultCode == DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS && deployResultModel.deviceInfo != null) {
-            eventData.data = deployResultModel.deviceInfo;
         }
         EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
 
     public void backHome() {
-        switch (deployResultModel.resultCode) {
-            case DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:
-                break;
-            case DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
-                break;
-            case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
-                break;
-            default:
-                break;
-        }
         EventData eventData = new EventData();
         if (deployResultModel.scanType == TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE || deployResultModel.scanType == TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE) {
             //todo 部署失败，返回巡检
@@ -232,9 +214,17 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
         } else {
             eventData.code = EVENT_DATA_DEPLOY_RESULT_FINISH;
         }
-
-        if (deployResultModel.resultCode == DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS && deployResultModel.deviceInfo != null) {
-            eventData.data = deployResultModel.deviceInfo;
+        switch (deployResultModel.resultCode) {
+            case DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:
+                if (deployResultModel.deviceInfo != null) {
+                    eventData.data = deployResultModel.deviceInfo;
+                }
+                break;
+            case DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
+            case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
+                break;
+            default:
+                break;
         }
         EventBus.getDefault().post(eventData);
         getView().finishAc();

@@ -13,7 +13,7 @@ import com.sensoro.smartcity.activity.AuthActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.factory.MenuPageFactory;
+import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
@@ -122,7 +122,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                     //
                     UserInfo userInfo = loginRsp.getData();
-                    EventLoginData loginData = MenuPageFactory.createLoginData(userInfo, phoneId);
+                    EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                     if (loginData.needAuth) {
                         openNextActivity(loginData);
                         return;

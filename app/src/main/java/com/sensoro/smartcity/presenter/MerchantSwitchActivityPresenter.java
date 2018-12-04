@@ -7,8 +7,8 @@ import android.text.TextUtils;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
-import com.sensoro.smartcity.factory.MenuPageFactory;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
@@ -146,7 +146,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 UserInfo userInfo = userAccountControlRsp.getData();
                 RetrofitServiceHelper.INSTANCE.saveSessionId(userInfo.getSessionID());
                 //
-                eventLoginData = MenuPageFactory.createLoginData(userInfo, phoneId);
+                eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                 //
                 return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
             }

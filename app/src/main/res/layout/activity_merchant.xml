@@ -63,7 +63,7 @@
                     android:background="@null"
                     android:drawableStart="@drawable/main_search"
                     android:drawablePadding="8dp"
-                    android:hint="@string/merchant_name_phone_number"
+                    android:hint="@string/business_name"
                     android:imeOptions="actionSearch"
                     android:singleLine="true"
                     android:layout_toStartOf="@id/merchant_imv_clear"

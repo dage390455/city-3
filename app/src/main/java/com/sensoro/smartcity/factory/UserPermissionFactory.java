@@ -9,7 +9,7 @@ import com.sensoro.smartcity.util.LogUtils;
 
 import java.util.List;
 
-public class MenuPageFactory {
+public class UserPermissionFactory {
     public static EventLoginData createLoginData(UserInfo userInfo, String phoneId) {
         final EventLoginData eventLoginData = new EventLoginData();
         GrantsInfo grants = userInfo.getGrants();
@@ -21,13 +21,14 @@ public class MenuPageFactory {
         LogUtils.loge("logPresenter", "phoneId = " + phoneId);
         //TODO 处理Character信息
 //                      mCharacter = userInfo.getCharacter();
+        boolean addUserEnable = userInfo.isAddUserEnable();
         eventLoginData.roles = userInfo.getRoles();
         String isSpecific = userInfo.getIsSpecific();
         eventLoginData.isSupperAccount = getIsSupperAccount(isSpecific);
         eventLoginData.hasStation = getHasStationDeploy(grants);
         eventLoginData.hasContract = getHasContract(grants);
         eventLoginData.hasScanLogin = getHasScanLogin(grants);
-        eventLoginData.hasSubMerchant = getHasSubMerchant(grants);
+        eventLoginData.hasSubMerchant = getHasSubMerchant(grants) && addUserEnable;
         eventLoginData.hasMerchantChange = getHasMerchantChange(grants);
         eventLoginData.hasInspectionTaskList = getHasInspectionTaskList(grants);
         eventLoginData.hasInspectionTaskModify = getHasInspectionTaskModify(grants);
@@ -59,7 +60,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasStationDeploy(GrantsInfo grants) {
+    private static boolean getHasStationDeploy(GrantsInfo grants) {
         if (grants != null) {
             List<String> station = grants.getStation();
             if (station != null) {
@@ -76,7 +77,7 @@ public class MenuPageFactory {
      * @param isSupperAccountStr
      * @return
      */
-    public static boolean getIsSupperAccount(String isSupperAccountStr) {
+    private static boolean getIsSupperAccount(String isSupperAccountStr) {
         return !TextUtils.isEmpty(isSupperAccountStr) && "true".equalsIgnoreCase(isSupperAccountStr);
     }
 
@@ -86,7 +87,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasContract(GrantsInfo grants) {
+    private static boolean getHasContract(GrantsInfo grants) {
         if (grants != null) {
             List<String> contract = grants.getContract();
             if (contract != null) {
@@ -102,7 +103,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasScanLogin(GrantsInfo grants) {
+    private static boolean getHasScanLogin(GrantsInfo grants) {
         if (grants != null) {
             List<String> tv = grants.getTv();
             if (tv != null) {
@@ -118,7 +119,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasSubMerchant(GrantsInfo grants) {
+    private static boolean getHasSubMerchant(GrantsInfo grants) {
         if (grants != null) {
             List<String> user = grants.getUser();
             if (user != null) {
@@ -134,7 +135,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasMerchantChange(GrantsInfo grants) {
+    private static boolean getHasMerchantChange(GrantsInfo grants) {
         if (grants != null) {
             List<String> user = grants.getUser();
             if (user != null) {
@@ -150,7 +151,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasInspectionTaskList(GrantsInfo grants) {
+    private static boolean getHasInspectionTaskList(GrantsInfo grants) {
         if (grants != null) {
             List<String> inspectTask = grants.getInspectTask();
             if (inspectTask != null) {
@@ -166,7 +167,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasInspectionTaskModify(GrantsInfo grants) {
+    private static boolean getHasInspectionTaskModify(GrantsInfo grants) {
         if (grants != null) {
             List<String> inspectTask = grants.getInspectTask();
             if (inspectTask != null) {
@@ -182,7 +183,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasInspectionDeviceList(GrantsInfo grants) {
+    private static boolean getHasInspectionDeviceList(GrantsInfo grants) {
         if (grants != null) {
             List<String> inspectDevice = grants.getInspectDevice();
             if (inspectDevice != null) {
@@ -198,7 +199,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasInspectionDeviceModify(GrantsInfo grants) {
+    private static boolean getHasInspectionDeviceModify(GrantsInfo grants) {
         if (grants != null) {
             List<String> inspectDevice = grants.getInspectDevice();
             if (inspectDevice != null) {
@@ -215,7 +216,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasAlarmInfo(GrantsInfo grants) {
+    private static boolean getHasAlarmInfo(GrantsInfo grants) {
         if (grants != null) {
             List<String> grantsAlarm = grants.getAlarm();
             if (grantsAlarm != null) {
@@ -225,7 +226,7 @@ public class MenuPageFactory {
         return false;
     }
 
-    public static boolean getHasDeviceBriefList(GrantsInfo grants) {
+    private static boolean getHasDeviceBriefList(GrantsInfo grants) {
         if (grants != null) {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
@@ -241,7 +242,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasSignalCheck(GrantsInfo grants) {
+    private static boolean getHasSignalCheck(GrantsInfo grants) {
         if (grants != null) {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
@@ -257,7 +258,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasSignalConfig(GrantsInfo grants) {
+    private static boolean getHasSignalConfig(GrantsInfo grants) {
         if (grants != null) {
             List<String> grantsDevice = grants.getDevice();
             if (grantsDevice != null) {
@@ -273,7 +274,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasMalfunction(GrantsInfo grants) {
+    private static boolean getHasMalfunction(GrantsInfo grants) {
         if (grants != null) {
             List<String> grantsMalfunction = grants.getMalfunction();
             if (grantsMalfunction != null) {
@@ -289,7 +290,7 @@ public class MenuPageFactory {
      * @param grants
      * @return
      */
-    public static boolean getHasBadSignalUpload(GrantsInfo grants) {
+    private static boolean getHasBadSignalUpload(GrantsInfo grants) {
         if (grants != null) {
             List<String> grantsDeploy = grants.getDeploy();
             if (grantsDeploy != null) {

@@ -14,7 +14,6 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
-import com.sensoro.smartcity.activity.MonitorMoreActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
@@ -168,7 +167,12 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             getView().setContractName(contact);
             getView().setContractPhone(content);
         }
-        getView().setUpdateTime(DateUtil.getStrTimeToday(mContext, mDeviceInfo.getUpdatedTime(), 0));
+        long updatedTime = mDeviceInfo.getUpdatedTime();
+        if (updatedTime == 0) {
+            getView().setUpdateTime("-");
+        } else {
+            getView().setUpdateTime(DateUtil.getStrTimeTodayByDevice(mContext, updatedTime));
+        }
         String tags[] = mDeviceInfo.getTags();
         if (tags != null && tags.length > 0) {
             List<String> list = Arrays.asList(tags);
@@ -194,6 +198,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     private void refreshOperationStatus() {
         boolean isContains = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType());
         getView().setDeviceOperationVisible(isContains);
+        //
         getView().setErasureStatus(false);
         getView().setResetStatus(false);
         getView().setPsdStatus(true);
@@ -202,7 +207,9 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().setAirSwitchConfigStatus(true);
         if (isContains) {
             switch (mDeviceInfo.getStatus()) {
+                //故障和预警显示消音复位
                 case SENSOR_STATUS_ALARM:
+                case SENSOR_STATUS_MALFUNCTION:
                     getView().setErasureStatus(true);
                     getView().setResetStatus(true);
                     break;
@@ -214,8 +221,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     getView().setQueryStatus(false);
                     getView().setSelfCheckStatus(false);
                     getView().setAirSwitchConfigStatus(false);
-                    break;
-                case SENSOR_STATUS_MALFUNCTION:
                     break;
                 default:
                     break;
@@ -315,35 +320,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                     } else {
                                         monitoringPointRcContentAdapterModel.name = name;
                                     }
-                                    boolean bool = sensorTypeStyles.isBool();
-                                    SensorStruct sensorStruct = sensoroDetails.get(type);
-                                    if (sensorStruct != null) {
-                                        Object value = sensorStruct.getValue();
-                                        if (value != null) {
-                                            if (bool) {
-                                                if (value instanceof Boolean) {
-                                                    String trueMean = sensorTypeStyles.getTrueMean();
-                                                    String falseMean = sensorTypeStyles.getFalseMean();
-                                                    if ((Boolean) value) {
-                                                        if (!TextUtils.isEmpty(trueMean)) {
-                                                            monitoringPointRcContentAdapterModel.content = trueMean;
-                                                        }
-                                                    } else {
-                                                        if (!TextUtils.isEmpty(falseMean)) {
-                                                            monitoringPointRcContentAdapterModel.content = falseMean;
-                                                        }
-                                                    }
-
-                                                }
-                                            } else {
-                                                String unit = sensorTypeStyles.getUnit();
-                                                if (!TextUtils.isEmpty(unit)) {
-                                                    monitoringPointRcContentAdapterModel.unit = unit;
-                                                }
-                                                WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, type, value);
-                                            }
-                                        }
-                                    }
+                                    //
                                     int status = mDeviceInfo.getStatus();
                                     switch (status) {
                                         case SENSOR_STATUS_ALARM:
@@ -394,7 +371,39 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                         default:
                                             break;
                                     }
-                                    uiData.add(monitoringPointRcContentAdapterModel);
+                                    boolean bool = sensorTypeStyles.isBool();
+                                    SensorStruct sensorStruct = sensoroDetails.get(type);
+                                    if (sensorStruct != null) {
+                                        Object value = sensorStruct.getValue();
+                                        if (value != null) {
+                                            if (bool) {
+                                                if (value instanceof Boolean) {
+                                                    String trueMean = sensorTypeStyles.getTrueMean();
+                                                    String falseMean = sensorTypeStyles.getFalseMean();
+                                                    if ((Boolean) value) {
+                                                        if (!TextUtils.isEmpty(trueMean)) {
+                                                            monitoringPointRcContentAdapterModel.content = trueMean;
+                                                        }
+                                                    } else {
+                                                        if (!TextUtils.isEmpty(falseMean)) {
+                                                            monitoringPointRcContentAdapterModel.content = falseMean;
+                                                        }
+                                                    }
+
+                                                }
+                                            } else {
+                                                String unit = sensorTypeStyles.getUnit();
+                                                if (!TextUtils.isEmpty(unit)) {
+                                                    monitoringPointRcContentAdapterModel.unit = unit;
+                                                }
+                                                WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, type, value);
+                                            }
+                                        }
+                                        //只在有数据时进行显示
+                                        uiData.add(monitoringPointRcContentAdapterModel);
+                                    }
+
+
                                 }
                             }
 
@@ -500,12 +509,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
         LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
-    }
-
-    public void doMore() {
-        Intent intent = new Intent(mContext, MonitorMoreActivity.class);
-        intent.putExtra(EXTRA_SENSOR_SN, mDeviceInfo.getSn());
-        getView().startAC(intent);
     }
 
     public void doNavigation() {

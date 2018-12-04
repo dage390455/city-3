@@ -632,6 +632,8 @@
     <string name="request_success">请求成功</string>
     <string name="legal_representative_name">法定代表人/姓名</string>
     <string name="no_search_history">暂无搜索记录</string>
-    <string name="merchant_name_phone_number">商户名称/联系人电话</string>
+
+
+    <string name="please_use_different_device_to_replace">请使用不同的设备进行更换</string>
 
 </resources>

@@ -87,13 +87,17 @@ public enum DeployAnalyzerUtils implements Constants {
                     listener.onError(0, null, null);
                     return;
                 }
-                String scanSnNewDevice = parseResultMac(result);
-                if (TextUtils.isEmpty(scanSnNewDevice)) {
+                String scanNewDeviceSN = parseResultMac(result);
+                if (TextUtils.isEmpty(scanNewDeviceSN)) {
                     listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
                     return;
                 } else {
-                    if (scanSnNewDevice.length() == 16) {
-                        handleDeviceDeployChange(scanType, presenter, oldDeviceDetail, scanSnNewDevice, activity, listener);
+                    if (scanNewDeviceSN.length() == 16) {
+                        if (scanNewDeviceSN.equalsIgnoreCase(oldDeviceDetail.getSn())) {
+                            listener.onError(scanType, null, "请使用不同的设备进行更换");
+                            return;
+                        }
+                        handleDeviceDeployChange(scanType, presenter, oldDeviceDetail, scanNewDeviceSN, activity, listener);
                     } else {
                         listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
                         return;
@@ -351,20 +355,22 @@ public enum DeployAnalyzerUtils implements Constants {
                         }
                         deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                         AlarmInfo alarmInfo = data.getAlarms();
-                        AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
-                        if (notification != null) {
-                            String contact = notification.getContact();
-                            String content = notification.getContent();
-                            if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
+                        if (alarmInfo != null) {
+                            AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                            if (notification != null) {
+                                String contact = notification.getContact();
+                                String content = notification.getContent();
+                                if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
 //                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                            } else {
-                                deployAnalyzerModel.deployContactModelList.clear();
-                                DeployContactModel deployContactModel = new DeployContactModel();
-                                deployContactModel.name = contact;
-                                deployContactModel.phone = content;
-                                deployAnalyzerModel.deployContactModelList.add(deployContactModel);
-                            }
+                                } else {
+                                    deployAnalyzerModel.deployContactModelList.clear();
+                                    DeployContactModel deployContactModel = new DeployContactModel();
+                                    deployContactModel.name = contact;
+                                    deployContactModel.phone = content;
+                                    deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                }
 
+                            }
                         }
                         Intent intent = new Intent();
                         intent.setClass(activity, DeployMonitorDetailActivity.class);
@@ -523,20 +529,23 @@ public enum DeployAnalyzerUtils implements Constants {
                 }
                 deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                 AlarmInfo alarmInfo = data.getAlarms();
-                AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
-                if (notification != null) {
-                    String contact = notification.getContact();
-                    String content = notification.getContent();
-                    if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
+                if (alarmInfo != null) {
+                    AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                    if (notification != null) {
+                        String contact = notification.getContact();
+                        String content = notification.getContent();
+                        if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
 //                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                    } else {
-                        deployAnalyzerModel.deployContactModelList.clear();
-                        DeployContactModel deployContactModel = new DeployContactModel();
-                        deployContactModel.name = contact;
-                        deployContactModel.phone = content;
-                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                        } else {
+                            deployAnalyzerModel.deployContactModelList.clear();
+                            DeployContactModel deployContactModel = new DeployContactModel();
+                            deployContactModel.name = contact;
+                            deployContactModel.phone = content;
+                            deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                        }
                     }
                 }
+
                 getNesDeviceInfo();
             }
         });
