@@ -49,6 +49,11 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().UpdateSearchHistoryList(mSearchHistoryList);
+        }
         requestSearchData(DIRECTION_DOWN, null);
     }
 
@@ -151,7 +156,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
-            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
             mSearchHistoryList.remove(tempSearch);
             mSearchHistoryList.add(0, tempSearch);
             getView().UpdateSearchHistoryList(mSearchHistoryList);
@@ -253,7 +258,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
     }
 
     public void save(String text) {
-        if (TextUtils.isEmpty(text) && mSearchHistoryList.contains(text)) {
+        if (TextUtils.isEmpty(text)) {
             return;
         }
         PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);

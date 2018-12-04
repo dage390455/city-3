@@ -201,8 +201,8 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvSearchHistory.setLayoutManager(layoutManager);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity,6)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override

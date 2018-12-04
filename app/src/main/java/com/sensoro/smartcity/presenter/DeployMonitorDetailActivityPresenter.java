@@ -204,17 +204,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         sensoroDeviceConnection = new SensoroDeviceConnectionTest(mContext, bleAddress);
         try {
             sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorDetailActivityPresenter.this);
-//            stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
             getView().dismissBleConfigDialog();
             getView().updateUploadState(true);
             getView().toastShort(mContext.getString(R.string.ble_connect_failed));
         }
-    }
-
-    private void stopScanService() {
-        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
     }
 
     private void doUploadImages(final double lon, final double lan) {
@@ -401,7 +396,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployAnalyzerModel.tagList.clear();
         deployAnalyzerModel.images.clear();
         mHandler.removeCallbacksAndMessages(null);
-        stopScanService();
+        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
         BleObserver.getInstance().unregisterBleObserver(this);
         BLE_DEVICE_SET.clear();
 
@@ -543,7 +538,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //经纬度校验
                 if (checkHasNoLatLng()) return;
                 if (checkNeedSignal()) {
-                    //判断是否有强制上传权限
                     checkHasForceUploadPermission();
                 } else {
                     requestUpload();

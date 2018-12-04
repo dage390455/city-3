@@ -2,14 +2,13 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.SearchMerchantActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.factory.UserPermissionFactory;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
@@ -42,6 +41,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     private Activity mContext;
     private volatile int cur_page = 0;
     private EventLoginData eventLoginData = null;
+    private final List<String> mSearchHistoryList = new ArrayList<>();
+    private String tempSearch;
 
     @Override
     public void initData(Context context) {
@@ -51,18 +52,29 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         if (eventLoginData != null) {
             getView().setCurrentNameAndPhone(eventLoginData.userName, eventLoginData.phone);
             getView().setCurrentStatusImageViewVisible(true);
-            requestDataByDirection(DIRECTION_DOWN, true);
+            requestDataByDirection(DIRECTION_DOWN, true,null);
+        }
+
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().updateSearchHistoryList(mSearchHistoryList);
         }
     }
 
-    public void requestDataByDirection(int direction, boolean isForce) {
+    public void requestDataByDirection(int direction, boolean isForce,String searchText) {
         if (isForce) {
             getView().showProgressDialog();
+        }
+        if (TextUtils.isEmpty(searchText)) {
+            tempSearch = null;
+        }else{
+            tempSearch = searchText;
         }
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 0;
-                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
+                RetrofitServiceHelper.INSTANCE.getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
 
@@ -91,7 +103,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
+                RetrofitServiceHelper.INSTANCE.getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
                     @Override
@@ -184,17 +196,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         }
     }
 
-    public void startToSearchAC() {
-        Intent searchIntent = new Intent(mContext, SearchMerchantActivity.class);
-        searchIntent.putExtra("phone_id", PreferencesHelper.getInstance().getUserData().phoneId);
-        if (!TextUtils.isEmpty(PreferencesHelper.getInstance().getUserData().userName)) {
-            searchIntent.putExtra("user_name", PreferencesHelper.getInstance().getUserData().userName);
-        }
-        if (!TextUtils.isEmpty(PreferencesHelper.getInstance().getUserData().phone)) {
-            searchIntent.putExtra("user_phone", PreferencesHelper.getInstance().getUserData().phone);
-        }
-        getView().startAC(searchIntent);
-    }
 
     @Override
     public void onDestroy() {
@@ -218,5 +219,29 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+    }
+
+    public void save(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        mSearchHistoryList.remove(text);
+        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
+        mSearchHistoryList.add(0, text);
+        getView().updateSearchHistoryList(mSearchHistoryList);
+    }
+
+    public void requestSearchData(int direction, String text) {
+        requestDataByDirection(direction,true,text);
+    }
+
+    public void requestDataByDirection(int direction, boolean isForce) {
+        requestDataByDirection(direction,isForce,tempSearch);
+    }
+
+    public void clearSearchHistory() {
+        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
+        mSearchHistoryList.clear();
+        getView().updateSearchHistoryList(mSearchHistoryList);
     }
 }

@@ -302,8 +302,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
-        mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity,6)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override

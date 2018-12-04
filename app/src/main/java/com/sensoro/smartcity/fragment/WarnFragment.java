@@ -30,6 +30,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.adapter.MainWarnFragRcContentAdapter;
 import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
@@ -48,6 +49,8 @@ import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.crypto.Mac;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -191,8 +194,8 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvSearchHistory.setLayoutManager(layoutManager);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+//        int spacingInPixels = AppUtils.dp2px(mRootFragment.getActivity(),12);
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(),6)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mRootFragment.getActivity(), new
                 RecycleViewItemClickListener() {
                     @Override
@@ -218,7 +221,7 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
     }
 
     @Override
-    public void UpdateSearchHistoryList(List<String> data) {
+    public void updateSearchHistoryList(List<String> data) {
         btnSearchClear.setVisibility(data.size() >0 ? View.VISIBLE : View.GONE);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
     }

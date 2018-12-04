@@ -18,4 +18,5 @@ public interface IMerchantSwitchActivityView extends IProgressDialog, IActivityI
 
     void onPullRefreshComplete();
 
+    void updateSearchHistoryList(List<String> data);
 }

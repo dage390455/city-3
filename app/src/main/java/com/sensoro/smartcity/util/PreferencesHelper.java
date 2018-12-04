@@ -311,6 +311,9 @@ public final class PreferencesHelper implements Constants {
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_CONTRACT;
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_MERCHANT;
+                break;
         }
         return spFileName;
     }

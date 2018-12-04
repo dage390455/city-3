@@ -78,7 +78,7 @@
             android:padding="4dp"
             android:text="@string/cancel"
             android:textColor="@color/c_626262"
-            android:textSize="13sp" />
+            android:textSize="14sp" />
     </LinearLayout>
 
 
@@ -132,17 +132,18 @@
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+        >
 
             <TextView
                 android:id="@+id/search_device_clear_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginTop="@dimen/y60"
                 android:text="@string/recent"
                 android:textColor="@color/c_252525"
-                android:textSize="15sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/search_device_clear_btn"
@@ -162,7 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/x35"
-            android:layout_marginTop="@dimen/y45" />
+            android:layout_marginTop="10dp" />
     </LinearLayout>
 
     <LinearLayout
