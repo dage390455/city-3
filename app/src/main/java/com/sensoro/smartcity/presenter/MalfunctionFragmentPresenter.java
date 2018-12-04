@@ -151,7 +151,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
         getView().setSearchHistoryVisible(false);
         if (!TextUtils.isEmpty(tempSearch)) {
-            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
             mSearchHistoryList.remove(tempSearch);
             mSearchHistoryList.add(0, tempSearch);
             getView().UpdateSearchHistoryList(mSearchHistoryList);

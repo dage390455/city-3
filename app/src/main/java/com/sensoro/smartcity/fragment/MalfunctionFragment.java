@@ -44,6 +44,8 @@ import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
+import javax.crypto.Mac;
+
 import butterknife.BindView;
 import butterknife.OnClick;
 
@@ -179,8 +181,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
         };
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvSearchHistory.setLayoutManager(layoutManager);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mRootFragment.getActivity(),6)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mRootFragment.getActivity(), new
                 RecycleViewItemClickListener() {
                     @Override

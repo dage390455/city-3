@@ -65,6 +65,7 @@
             android:padding="10dp"
             android:textColor="@color/c_252525"
             android:visibility="gone"
+            android:textSize="14sp"
             android:text="@string/cancel"/>
 
         <ImageView
