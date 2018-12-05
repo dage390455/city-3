@@ -14,6 +14,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
 
 import java.lang.ref.WeakReference;
+import java.time.chrono.MinguoChronology;
 
 import butterknife.BindView;
 
@@ -44,9 +45,10 @@ public class ProgressUtils {
     public void destroyProgress() {
         builder.destroyProgressDialog();
     }
-    public void setMessage(String message) {
+
+    public void updateMessage(String message) {
         if (builder != null) {
-            builder.setMessage(message);
+            builder.updateMessage(message);
         }
     }
 
@@ -81,7 +83,7 @@ public class ProgressUtils {
         }
 
         public Builder setMessage(String message) {
-            mTv.setText(message);
+            this.message = message;
             return this;
         }
 
@@ -109,6 +111,12 @@ public class ProgressUtils {
 
         public void stopAnimation() {
             mImv.clearAnimation();
+        }
+
+        public void updateMessage(String message) {
+            if (mTv != null) {
+                mTv.setText(message);
+            }
         }
     }
 }
