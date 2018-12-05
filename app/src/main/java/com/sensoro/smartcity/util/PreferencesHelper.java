@@ -262,7 +262,7 @@ public final class PreferencesHelper implements Constants {
 
     public boolean saveSearchHistoryText(String text, int type) {
         String spFileName = getSearchHistoryFileName(type);
-        if (TextUtils.isEmpty(spFileName)||TextUtils.isEmpty(text)) {
+        if (TextUtils.isEmpty(spFileName) || TextUtils.isEmpty(text)) {
             return false;
         }
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(spFileName, Context
@@ -314,17 +314,20 @@ public final class PreferencesHelper implements Constants {
             case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT:
                 spFileName = SearchHistoryTypeConstants.SP_FILE_MERCHANT;
                 break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_DEPLOY_RECORD;
+                break;
         }
         return spFileName;
     }
 
-    public boolean clearSearchHistory(int type){
+    public boolean clearSearchHistory(int type) {
         String spFileName = getSearchHistoryFileName(type);
         if (TextUtils.isEmpty(spFileName)) {
             return false;
         }
 
-        SharedPreferences.Editor editor =  SensoroCityApplication.getInstance().getSharedPreferences(spFileName, Context
+        SharedPreferences.Editor editor = SensoroCityApplication.getInstance().getSharedPreferences(spFileName, Context
                 .MODE_PRIVATE).edit();
         editor.clear();
         editor.apply();
