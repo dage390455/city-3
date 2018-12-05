@@ -250,7 +250,7 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
 
     @Override
     public void updateProgressDialogMessage(final String content) {
-        mProgressUtils.setMessage(content);
+        mProgressUtils.updateMessage(content);
     }
 
     @Override

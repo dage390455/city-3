@@ -152,14 +152,16 @@
                 <RelativeLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
                     android:layout_weight="1">
 
                     <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
+                        android:layout_marginTop="4dp"
+                        android:layout_marginBottom="4dp"
+                        >
 
                     </com.sensoro.smartcity.widget.TouchRecycleView>
                 </RelativeLayout>

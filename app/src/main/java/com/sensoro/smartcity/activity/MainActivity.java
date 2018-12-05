@@ -61,7 +61,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
         BottomNavigationItem homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, "首页");
         warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "预警");
         warnItem.setBadgeItem(new TextBadgeItem());
-        warnItem.getBadgeItem().hide();
         BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_malfunction, "故障");
         BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, "管理");
         acMainBottomBar.setTabSelectedListener(this);
@@ -72,6 +71,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
                 .addItem(managerItem)
                 .setFirstSelectedPosition(0)
                 .initialise();
+        warnItem.getBadgeItem().hide(false);
 
     }
 
