@@ -61,11 +61,7 @@ public class BluetoothLEHelper4 implements Serializable {
         }
 
         bluetoothAdapter = bluetoothManager.getAdapter();
-        if (bluetoothAdapter == null) {
-//            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
-            return false;
-        }
-        return true;
+        return bluetoothAdapter != null;
     }
 
     /**
@@ -84,7 +80,7 @@ public class BluetoothLEHelper4 implements Serializable {
         }
 
         // Previously connected device. Try to reconnect.
-        if (bluetoothDeviceAddress != null && address.equals(bluetoothDeviceAddress) && bluetoothGatt != null) {
+        if (address.equals(bluetoothDeviceAddress) && bluetoothGatt != null) {
 //            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             return bluetoothGatt.connect();
         }
@@ -146,11 +142,7 @@ public class BluetoothLEHelper4 implements Serializable {
         }
         String nid = uid.substring(0, 20);
         String regex = "[a-f0-9A-F]{20}";
-        if (Pattern.matches(regex, nid)) {
-            //匹配成功
-            return false;
-        }
-        return true;
+        return !Pattern.matches(regex, nid);
     }
 
     private boolean isBIDInValid(String uid) {
@@ -159,11 +151,7 @@ public class BluetoothLEHelper4 implements Serializable {
         }
         String bid = uid.substring(20, 32);
         String regex = "[a-f0-9A-F]{12}";
-        if (Pattern.matches(regex, bid)) {
-            //匹配成功
-            return false;
-        }
-        return true;
+        return !Pattern.matches(regex, bid);
     }
 
     private boolean isURLInValid(String url) {
@@ -174,11 +162,7 @@ public class BluetoothLEHelper4 implements Serializable {
             return false;
         }
         byte[] urlBytes = SensoroUtils.encodeUrl(url);
-        if (urlBytes != null && urlBytes.length <= 17) {
-            return true;
-        } else {
-            return false;
-        }
+        return urlBytes != null && urlBytes.length <= 17;
     }
 
     private boolean isExpired(String broadcastKey) {
@@ -190,9 +174,7 @@ public class BluetoothLEHelper4 implements Serializable {
             } else {
                 long expiryDate = Long.valueOf(Integer.parseInt(decrypt.substring(40, decrypt.length()), 16));
                 long currentDate = System.currentTimeMillis();
-                if (currentDate > expiryDate * 1000) {
-                    return true;
-                }
+                return currentDate > expiryDate * 1000;
             }
         }
         return false;
@@ -281,11 +263,8 @@ public class BluetoothLEHelper4 implements Serializable {
             }
         }
 
-        if (sensoroService != null) {
-            return true;
-        }
+        return sensoroService != null;
 
-        return false;
     }
 
     public boolean checkGattServices(List<BluetoothGattService> gattServiceList, UUID targetServiceUUID) {
@@ -296,11 +275,8 @@ public class BluetoothLEHelper4 implements Serializable {
             }
         }
 
-        if (sensoroService != null) {
-            return true;
-        }
+        return sensoroService != null;
 
-        return false;
     }
 
     public void listenDescriptor(UUID targetReadCharUUID) {
@@ -359,7 +335,10 @@ public class BluetoothLEHelper4 implements Serializable {
             resetSendPacket();
             return true;
         } else {
-            byte[] writePacket = writePackets.get(sendPacketNumber);
+            byte[] writePacket = new byte[0];
+            if (writePackets != null) {
+                writePacket = writePackets.get(sendPacketNumber);
+            }
             // packet not write over.
             writeCharacteristic(characteristic, writePacket);
             sendPacketNumber++;
@@ -388,7 +367,6 @@ public class BluetoothLEHelper4 implements Serializable {
         for (int i = 0; i < uuid.length(); i++) {
             if (uuid.charAt(i) >= 'a' && uuid.charAt(i) <= 'f' || uuid.charAt(i) <= '9' && uuid.charAt(i) >= '0' ||
                     uuid.charAt(i) == '-') {
-                continue;
             } else {
                 return false;
             }

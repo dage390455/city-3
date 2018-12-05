@@ -3,6 +3,7 @@ package com.sensoro.libbleserver.ble.scanner;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
+import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -48,18 +49,18 @@ class BluetoothCrashResolver {
     private boolean recoveryInProgress = false;
     private boolean discoveryStartConfirmed = false;
 
-    private long lastBluetoothOffTime = 0l;
-    private long lastBluetoothTurningOnTime = 0l;
-    private long lastBluetoothCrashDetectionTime = 0l;
+    private long lastBluetoothOffTime = 0L;
+    private long lastBluetoothTurningOnTime = 0L;
+    private long lastBluetoothCrashDetectionTime = 0L;
     private int detectedCrashCount = 0;
     private int recoveryAttemptCount = 0;
     private boolean lastRecoverySucceeded = false;
-    private long lastStateSaveTime = 0l;
-    private static final long MIN_TIME_BETWEEN_STATE_SAVES_MILLIS = 60000l;
+    private long lastStateSaveTime = 0L;
+    private static final long MIN_TIME_BETWEEN_STATE_SAVES_MILLIS = 60000L;
 
-    private Context context = null;
+    private Context context;
     private UpdateNotifier updateNotifier;
-    private final Set<String> distinctBluetoothAddresses = new HashSet<String>();
+    private final Set<String> distinctBluetoothAddresses = new HashSet<>();
     /**
      * // It is very likely a crash if Bluetooth turns off and comes
      * // back on in an extremely short interval.  Testing on a Nexus 4 shows
@@ -74,7 +75,7 @@ class BluetoothCrashResolver {
      * // about 600ms, but it is pretty hard to do.
      * //
      */
-    private static final long SUSPICIOUSLY_SHORT_BLUETOOTH_OFF_INTERVAL_MILLIS = 600l;
+    private static final long SUSPICIOUSLY_SHORT_BLUETOOTH_OFF_INTERVAL_MILLIS = 600L;
     /**
      * The Bluedroid stack can only track only 1990 unique Bluetooth mac addresses without crashing
      */
@@ -161,7 +162,7 @@ class BluetoothCrashResolver {
         if (oldSize != newSize && newSize % 100 == 0) {
             Log.d(TAG, "Distinct Bluetooth devices seen: %s" + distinctBluetoothAddresses.size());
         }
-        if (distinctBluetoothAddresses.size()  > getCrashRiskDeviceCount()) {
+        if (distinctBluetoothAddresses.size() > getCrashRiskDeviceCount()) {
             if (PREEMPTIVE_ACTION_ENABLED && !recoveryInProgress) {
                 Log.w(TAG, "Large number of Bluetooth devices detected: %s Proactively "
                         + "attempting to clear out address list to prevent a crash" +
@@ -184,8 +185,7 @@ class BluetoothCrashResolver {
             Log.d(TAG, "Distinct Bluetooth devices seen at crash: %s" +
                     distinctBluetoothAddresses.size());
         }
-        long nowTimestamp = new Date().getTime();
-        lastBluetoothCrashDetectionTime = nowTimestamp;
+        lastBluetoothCrashDetectionTime = new Date().getTime();
         detectedCrashCount++;
 
         if (recoveryInProgress) {
@@ -295,7 +295,7 @@ class BluetoothCrashResolver {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
 
-            if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_FINISHED)) {
+            if (BluetoothAdapter.ACTION_DISCOVERY_FINISHED.equals(action)) {
                 if (recoveryInProgress) {
                     Log.d(TAG, "Bluetooth discovery finished");
                     finishRecovery();
@@ -303,7 +303,7 @@ class BluetoothCrashResolver {
                     Log.d(TAG, "Bluetooth discovery finished (external)");
                 }
             }
-            if (action.equals(BluetoothAdapter.ACTION_DISCOVERY_STARTED)) {
+            if (BluetoothAdapter.ACTION_DISCOVERY_STARTED.equals(action)) {
                 if (recoveryInProgress) {
                     discoveryStartConfirmed = true;
                     Log.d(TAG, "Bluetooth discovery started");
@@ -312,7 +312,7 @@ class BluetoothCrashResolver {
                 }
             }
 
-            if (action.equals(BluetoothAdapter.ACTION_STATE_CHANGED)) {
+            if (BluetoothAdapter.ACTION_STATE_CHANGED.equals(action)) {
                 final int state = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE,
                         BluetoothAdapter.ERROR);
                 switch (state) {
@@ -416,8 +416,8 @@ class BluetoothCrashResolver {
                 try {
                     reader.close();
                 } catch (IOException e1) {
+                }
             }
-        }
         }
         Log.d(TAG, "Read %s Bluetooth addresses" + distinctBluetoothAddresses.size());
     }

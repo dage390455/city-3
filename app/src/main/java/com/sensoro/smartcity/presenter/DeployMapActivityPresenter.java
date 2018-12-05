@@ -228,8 +228,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     }
                     getView().showProgressDialog();
                     handlerResult();
-
-
                 }
 
                 @Override

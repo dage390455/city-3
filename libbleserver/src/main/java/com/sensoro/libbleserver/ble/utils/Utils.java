@@ -34,9 +34,9 @@ public class Utils {
      */
     private static byte uniteBytes(byte src0, byte src1) {
         try {
-            byte _b0 = Byte.decode("0x" + new String(new byte[]{src0})).byteValue();
+            byte _b0 = Byte.decode("0x" + new String(new byte[]{src0}));
             _b0 = (byte) (_b0 << 4);
-            byte _b1 = Byte.decode("0x" + new String(new byte[]{src1})).byteValue();
+            byte _b1 = Byte.decode("0x" + new String(new byte[]{src1}));
             byte ret = (byte) (_b0 ^ _b1);
             return ret;
         } catch (Exception e) {
