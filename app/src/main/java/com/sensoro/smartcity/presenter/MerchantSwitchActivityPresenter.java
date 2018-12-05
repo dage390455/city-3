@@ -52,7 +52,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         if (eventLoginData != null) {
             getView().setCurrentNameAndPhone(eventLoginData.userName, eventLoginData.phone);
             getView().setCurrentStatusImageViewVisible(true);
-            requestDataByDirection(DIRECTION_DOWN, true,null);
+            requestDataByDirection(DIRECTION_DOWN, true, null);
         }
 
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
@@ -62,13 +62,13 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         }
     }
 
-    public void requestDataByDirection(int direction, boolean isForce,String searchText) {
+    public void requestDataByDirection(int direction, boolean isForce, String searchText) {
         if (isForce) {
             getView().showProgressDialog();
         }
         if (TextUtils.isEmpty(searchText)) {
             tempSearch = null;
-        }else{
+        } else {
             tempSearch = searchText;
         }
         switch (direction) {
@@ -95,7 +95,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                             mUserInfoList.addAll(list);
                         }
                         getView().updateAdapterUserInfo(mUserInfoList);
-                        getView().showSeperatorView(mUserInfoList.size() != 0);
                         getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
                     }
@@ -120,11 +119,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                         if (list == null || list.size() == 0) {
                             cur_page--;
                             getView().toastShort(mContext.getString(R.string.no_more_data));
-                            getView().showSeperatorView(false);
                         } else {
                             mUserInfoList.addAll(list);
                             getView().updateAdapterUserInfo(mUserInfoList);
-                            getView().showSeperatorView(true);
                         }
                         getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
@@ -183,12 +180,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
             return;
         }
         if (!userInfo.isStop()) {
-//            getView().setAdapterSelectedIndex(position);
-//            mMerchantAdapter.setSelectedIndex(position);
-//            mMerchantAdapter.notifyDataSetChanged();
-//            getView().updateAdapterUserInfo(mUserInfoList);
-//            getView().setCurrentStatusImageViewVisible(false);
-//            mCurrentStatusImageView.setVisibility(View.GONE);
             String uid = userInfo.get_id();
             doAccountSwitch(uid);
         } else {
@@ -232,11 +223,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     }
 
     public void requestSearchData(int direction, String text) {
-        requestDataByDirection(direction,true,text);
-    }
-
-    public void requestDataByDirection(int direction, boolean isForce) {
-        requestDataByDirection(direction,isForce,tempSearch);
+        requestDataByDirection(direction, true, text);
     }
 
     public void clearSearchHistory() {

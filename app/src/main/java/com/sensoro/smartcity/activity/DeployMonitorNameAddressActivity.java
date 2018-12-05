@@ -104,7 +104,9 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
 
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        }
     }
 
     @Override
@@ -118,9 +120,9 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     }
 
 
-    @OnClick({R.id.ac_nam_address_tv_save,R.id.include_text_title_imv_arrows_left})
+    @OnClick({R.id.ac_nam_address_tv_save, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.ac_nam_address_tv_save:
                 String text = acNameAddressEt.getText().toString();
                 mPresenter.doChoose(text);

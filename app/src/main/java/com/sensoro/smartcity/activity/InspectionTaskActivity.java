@@ -11,7 +11,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -43,10 +42,10 @@ import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
 import com.sensoro.smartcity.widget.popup.SelectDeviceTypePopUtils;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -153,7 +152,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
             @Override
             public void afterTextChanged(Editable s) {
-                setSearchClearImvVisible(s.length()>0);
+                setSearchClearImvVisible(s.length() > 0);
             }
         });
 
@@ -187,8 +186,9 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
     public void setSearchClearImvVisible(boolean isVisible) {
         acInspectionTaskImvSearchClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
+
     private void initRcSearchHistory() {
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity){
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -202,7 +202,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvSearchHistory.setLayoutManager(layoutManager);
 
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity,6)));
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity, 6)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
@@ -214,9 +214,9 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                         }
                         acInspectionTaskImvSearchClear.setVisibility(View.VISIBLE);
                         acInspectionTaskEtSearch.clearFocus();
-                        AppUtils.dismissInputMethodManager(mActivity,acInspectionTaskEtSearch);
+                        AppUtils.dismissInputMethodManager(mActivity, acInspectionTaskEtSearch);
                         setSearchHistoryVisible(false);
-                        mPresenter.requestSearchData(DIRECTION_DOWN,text);
+                        mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });
         rvSearchHistory.setAdapter(mSearchHistoryAdapter);
@@ -225,14 +225,10 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        }
         acInspectionTaskEtSearch.setCursorVisible(false);
-    }
-
-    public void forceOpenSoftKeyboard() {
-//        acInspectionTaskEtSearch.setCursorVisible(true);
-//        InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-//        imm.toggleSoftInput(InputMethodManager.SHOW_IMPLICIT, InputMethodManager.HIDE_NOT_ALWAYS);
     }
 
     @Override
@@ -263,7 +259,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 //选择类型的pop点击事件
                 setSearchHistoryVisible(false);
                 dismissInputMethodManager(acInspectionTaskEtSearch);
-                mPresenter.doSelectTypeDevice(deviceTypeModel,acInspectionTaskEtSearch.getText().toString());
+                mPresenter.doSelectTypeDevice(deviceTypeModel, acInspectionTaskEtSearch.getText().toString());
                 acInspectionTaskTvType.setText(mSelectDeviceTypePop.getItem(position).name);
                 mSelectDeviceTypePop.dismiss();
                 Resources resources = mActivity.getResources();
@@ -290,7 +286,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 dismissInputMethodManager(acInspectionTaskEtSearch);
                 InspectionStatusCountModel item = mSelectStatusPop.getItem(position);
                 acInspectionTaskTvState.setText(item.statusTitle);
-                mPresenter.doSelectStatusDevice(item,acInspectionTaskEtSearch.getText().toString());
+                mPresenter.doSelectStatusDevice(item, acInspectionTaskEtSearch.getText().toString());
                 Resources resources = mActivity.getResources();
                 if (position == 0) {
                     acInspectionTaskTvState.setTextColor(resources.getColor(R.color.c_a6a6a6));
@@ -384,9 +380,9 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
         try {
             if (mSelectDeviceTypePop.isShowing()) {
                 mSelectDeviceTypePop.dismiss();
-            } else if(mSelectStatusPop.isShowing()){
+            } else if (mSelectStatusPop.isShowing()) {
                 mSelectStatusPop.dismiss();
-            }else{
+            } else {
                 super.onBackPressed();
             }
 
@@ -455,7 +451,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @OnClick({R.id.ac_inspection_task_imv_arrows_left, R.id.ac_inspection_task_ll_search, R.id.ac_inspection_task_et_search,
             R.id.ac_inspection_task_fl_state, R.id.ac_inspection_task_fl_type, R.id.ac_inspection_task_imv_scan, R.id.tv_inspection_task_search_cancel
-            , R.id.ac_inspection_task_imv_map,R.id.fg_main_top_search_imv_clear,R.id.btn_search_clear})
+            , R.id.ac_inspection_task_imv_map, R.id.fg_main_top_search_imv_clear, R.id.btn_search_clear})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_inspection_task_imv_arrows_left:
@@ -467,21 +463,18 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 acInspectionTaskEtSearch.requestFocus();
                 acInspectionTaskEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);
-//                forceOpenSoftKeyboard();
                 break;
             case R.id.ac_inspection_task_fl_state:
-                if (mSelectDeviceTypePop!=null) {
+                if (mSelectDeviceTypePop != null) {
                     if (mSelectStatusPop.isData()) {
                         showSelectDeviceStatusPop();
-                    }else{
+                    } else {
                         mPresenter.doInspectionStatus(true);
                     }
-
                 }
-//
                 break;
             case R.id.ac_inspection_task_fl_type:
-                if(mSelectStatusPop!=null&&mSelectStatusPop.isShowing()){
+                if (mSelectStatusPop != null && mSelectStatusPop.isShowing()) {
                     mSelectStatusPop.dismiss();
                 }
                 mPresenter.doInspectionType(true);
@@ -503,7 +496,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
             case R.id.fg_main_top_search_imv_clear:
                 acInspectionTaskEtSearch.getText().clear();
                 acInspectionTaskEtSearch.requestFocus();
-                AppUtils.openInputMethodManager(mActivity,acInspectionTaskEtSearch);
+                AppUtils.openInputMethodManager(mActivity, acInspectionTaskEtSearch);
                 setSearchHistoryVisible(true);
                 break;
         }
@@ -609,7 +602,7 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
 
     @Override
     public void UpdateSearchHistoryList(List<String> data) {
-        btnSearchClear.setVisibility(data.size() >0 ? View.VISIBLE : View.GONE);
+        btnSearchClear.setVisibility(data.size() > 0 ? View.VISIBLE : View.GONE);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
     }
 

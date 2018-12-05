@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
-import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.activity.ContractIndexActivity;
@@ -37,7 +36,7 @@ import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ContractManagerActivityPresenter extends BasePresenter<IContractManagerActivityView> implements IOnCreate, Constants
-,CalendarPopUtils.OnCalendarPopupCallbackListener{
+        , CalendarPopUtils.OnCalendarPopupCallbackListener {
     private Activity mContext;
     private final List<ContractListInfo> dataList = new ArrayList<>();
     private Integer requestDataType = null;
@@ -68,7 +67,6 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
     private void initSearchHistoryData() {
         List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT);
-        Log.e("hcs","list:::"+list.size());
         if (list != null) {
             mSearchHistoryList.addAll(list);
             getView().UpdateSearchHistoryList(mSearchHistoryList);

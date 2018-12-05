@@ -51,7 +51,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     private static final int maxImgCount = 9;
     private InspectionTaskDeviceDetail mDeviceDetail;
     private ArrayList<ImageItem> tempImages = null;
-    public UpLoadPhotosUtils upLoadPhotosUtils;
+    private UpLoadPhotosUtils upLoadPhotosUtils;
     private boolean needChangeDevice = false;
 
     @Override

@@ -6,13 +6,15 @@ import android.support.annotation.NonNull;
 import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -25,6 +27,7 @@ import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployRecordContentAdapter;
+import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
 import com.sensoro.smartcity.presenter.DeployRecordActivityPresenter;
@@ -32,6 +35,8 @@ import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -52,7 +57,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     @BindView(R.id.ac_deploy_record_et_search)
     EditText acDeployRecordEtSearch;
     @BindView(R.id.ac_deploy_record_frame_search)
-    FrameLayout acDeployRecordFrameSearch;
+    RelativeLayout acDeployRecordFrameSearch;
     @BindView(R.id.tv_deploy_device_search_cancel)
     TextView tvDeployDeviceSearchCancel;
     @BindView(R.id.ac_deploy_record_imv_calendar)
@@ -79,10 +84,20 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     SmartRefreshLayout refreshLayout;
     @BindView(R.id.alarm_return_top)
     ImageView mReturnTopImageView;
+    @BindView(R.id.rv_search_history)
+    RecyclerView rvSearchHistory;
+    @BindView(R.id.btn_search_clear)
+    ImageView btnSearchClear;
+    @BindView(R.id.ll_search_history)
+    LinearLayout llSearchHistory;
+    @BindView(R.id.ac_deploy_record_search_imv_clear)
+    ImageView mDeployRecordSearchEtClear;
+
     private DeployRecordContentAdapter mContentAdapter;
     private Animation returnTopAnimation;
     private ProgressUtils mProgressDialog;
     private boolean isShowDialog = true;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -101,12 +116,32 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                     // 当按了搜索之后关闭软键盘
                     String text = getSearchText();
                     mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                    mPresenter.save(text);
                     AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
+                    setSearchHistoryVisible(false);
                     return true;
                 }
                 return false;
             }
         });
+
+        acDeployRecordEtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mDeployRecordSearchEtClear.setVisibility(s.length()>0 ? View.VISIBLE : View.GONE);
+            }
+        });
+
         AppUtils.getInputSoftStatus(rlRootDeployRecord, new AppUtils.InputSoftStatusListener() {
             @Override
             public void onKeyBoardClose() {
@@ -120,7 +155,44 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
         });
         initRcContent();
 
+        initRcSearchHistory();
+
         initRefreshLayout();
+    }
+
+    private void initRcSearchHistory() {
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity){
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvSearchHistory.setLayoutManager(layoutManager);
+//        int spacingInPixels = AppUtils.dp2px(mRootFragment.getActivity(),12);
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity,6)));
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
+                        if (!TextUtils.isEmpty(text)) {
+                            acDeployRecordEtSearch.setText(text);
+                            acDeployRecordEtSearch.setSelection(acDeployRecordEtSearch.getText().toString().length());
+                        }
+                        mDeployRecordSearchEtClear.setVisibility(View.VISIBLE);
+                        acDeployRecordEtSearch.clearFocus();
+                        AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
+                        setSearchHistoryVisible(false);
+                        mPresenter.requestSearchData(DIRECTION_DOWN,text);
+                    }
+                });
+        rvSearchHistory.setAdapter(mSearchHistoryAdapter);
     }
 
     private void initRefreshLayout() {
@@ -259,13 +331,16 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     }
 
     @OnClick({R.id.ac_deploy_record_imv_finish, R.id.ac_deploy_record_imv_calendar, R.id.ac_deploy_record_deploy_rl_new_device
-            , R.id.alarm_return_top, R.id.ac_deploy_record_imv_date_close, R.id.tv_deploy_device_search_cancel})
+            , R.id.alarm_return_top, R.id.ac_deploy_record_imv_date_close, R.id.tv_deploy_device_search_cancel,
+            R.id.ac_deploy_record_frame_search,R.id.ac_deploy_record_search_imv_clear,R.id.btn_search_clear
+    ,R.id.ac_deploy_record_et_search})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_record_imv_finish:
                 finishAc();
                 break;
             case R.id.ac_deploy_record_imv_calendar:
+                AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
                 mPresenter.doCalendar(acDeployRecordTitleRoot);
                 break;
             case R.id.ac_deploy_record_deploy_rl_new_device:
@@ -277,16 +352,38 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                 break;
             case R.id.ac_deploy_record_imv_date_close:
                 setSelectedDateLayoutVisible(false);
+                setSearchHistoryVisible(false);
                 mPresenter.requestSearchData(DIRECTION_DOWN, getSearchText());
                 break;
             case R.id.tv_deploy_device_search_cancel:
                 doCancelSearch();
+                setSearchHistoryVisible(false);
+                AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
                 break;
+            case R.id.ac_deploy_record_frame_search:
             case R.id.ac_deploy_record_et_search:
                 acDeployRecordEtSearch.requestFocus();
                 acDeployRecordEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                AppUtils.openInputMethodManager(mActivity,acDeployRecordEtSearch);
+                break;
+            case R.id.ac_deploy_record_search_imv_clear:
+                acDeployRecordEtSearch.getText().clear();
+                acDeployRecordEtSearch.requestFocus();
+                AppUtils.openInputMethodManager(mActivity,acDeployRecordEtSearch);
+                setSearchHistoryVisible(true);
+                break;
+            case R.id.btn_search_clear:
+                mPresenter.clearSearchHistory();
                 break;
         }
+    }
+
+    @Override
+    public void setSearchHistoryVisible(boolean isVisible) {
+        llSearchHistory.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        refreshLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        setSearchButtonTextVisible(isVisible);
     }
 
     private void doCancelSearch() {
@@ -353,5 +450,11 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     @Override
     public boolean getSearchTextVisible() {
         return tvDeployDeviceSearchCancel.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void updateSearchHistoryList(List<String> data) {
+        btnSearchClear.setVisibility(data.size() >0 ? View.VISIBLE : View.GONE);
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
     }
 }

@@ -7,6 +7,7 @@ public interface SearchHistoryTypeConstants {
     int TYPE_SEARCH_HISTORY_INSPECTION = 0x03;
     int TYPE_SEARCH_HISTORY_CONTRACT = 0x04;
     int TYPE_SEARCH_HISTORY_MERCHANT = 0X05;
+    int TYPE_SEARCH_HISTORY_DEPLOY_RECORD = 0x06;
 
     String SEARCH_HISTORY_KEY = "search_history_key";
 
@@ -14,6 +15,8 @@ public interface SearchHistoryTypeConstants {
     String SP_FILE_MALFUNCTION = "search_history_malfunction";
     String SP_FILE_INSPECTION = "search_history_inspection";
     String SP_FILE_CONTRACT = "search_history_contract";
-    String SP_FILE_MERCHANT= "search_history_merchat";
+    String SP_FILE_MERCHANT= "search_history_merchant";
+    String SP_FILE_DEPLOY_RECORD= "search_history_deploy_record";
+
 
 }

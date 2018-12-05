@@ -81,15 +81,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             openLogin();
             return;
         }
-//        else {
-//            try {
-//                String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
-//                LogUtils.loge("main ---->> " + log);
-//            } catch (NullPointerException e) {
-//                e.printStackTrace();
-//
-//            }
-//        }
         initViewPager();
     }
 
@@ -128,7 +119,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 }
             }, 2000);
             freshAlarmCount();
-
         } else {
             openLogin();
         }
@@ -413,6 +403,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 if (hasDeviceBriefControl()) {
                     mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                     mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                    mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
                 }
                 if (hasAlarmInfoControl()) {
                     mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -430,6 +421,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -504,7 +496,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             return;
         }
         String[] str = {"0"};
-        getView().setAlarmWarnCount(0);
         RetrofitServiceHelper.INSTANCE.getAlarmCount(null, null, str, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {

@@ -116,14 +116,14 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                mPresenter.requestDataByDirection(DIRECTION_DOWN, false,mMerchantEtSearch.getText().toString());
+                mPresenter.requestDataByDirection(DIRECTION_DOWN, false, mMerchantEtSearch.getText().toString());
             }
         });
         refreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
             @Override
             public void onLoadMore(@NonNull final RefreshLayout refreshLayout) {
                 isShowDialog = false;
-                mPresenter.requestDataByDirection(DIRECTION_UP, false,mMerchantEtSearch.getText().toString());
+                mPresenter.requestDataByDirection(DIRECTION_UP, false, mMerchantEtSearch.getText().toString());
             }
         });
 
@@ -253,7 +253,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
         mPresenter.clickItem(userInfo);
     }
 
-    @OnClick({R.id.merchant_frame_search,R.id.merchant_et_search,R.id.btn_search_clear, R.id.merchant_imv_clear,R.id.merchant_tv_cancel})
+    @OnClick({R.id.merchant_frame_search, R.id.merchant_et_search, R.id.btn_search_clear, R.id.merchant_imv_clear, R.id.merchant_tv_cancel})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.merchant_frame_search:
@@ -277,7 +277,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
                 doCancelSearch();
                 setSearchHistoryVisible(false);
                 setTvCancelVisible(false);
-                AppUtils.dismissInputMethodManager(mActivity,mMerchantEtSearch);
+                AppUtils.dismissInputMethodManager(mActivity, mMerchantEtSearch);
                 setRlTitleAccountVisible(true);
                 break;
 
@@ -286,7 +286,7 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
 
     private void doCancelSearch() {
         mMerchantEtSearch.getText().clear();
-        mPresenter.requestSearchData(DIRECTION_DOWN,null);
+        mPresenter.requestSearchData(DIRECTION_DOWN, null);
     }
 
     @Override
@@ -365,30 +365,17 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     @Override
-    public void showSeperatorView(boolean isShow) {
-        if (isShow) {
-//            refreshLayout.finishLoadMoreWithNoMoreData();
-        }
-//        if (isShow) {
-//            seperatorView.setVisibility(View.VISIBLE);
-//        } else {
-//            seperatorView.setVisibility(View.GONE);
-//            seperatorBottomView.setVisibility(View.GONE);
-//        }
-    }
-
-    @Override
     public void updateAdapterUserInfo(List<UserInfo> data) {
         if (data != null && data.size() > 0) {
             icNoContent.setVisibility(View.GONE);
             merchantLlListRoot.setVisibility(View.VISIBLE);
             mMerchantAdapter.setDataList(data);
             mMerchantAdapter.notifyDataSetChanged();
-        }else {
+        } else {
             if (isRlTitleAccountVisible()) {
                 icNoContent.setVisibility(View.GONE);
                 merchantLlListRoot.setVisibility(View.VISIBLE);
-            }else {
+            } else {
                 icNoContent.setVisibility(View.VISIBLE);
                 merchantLlListRoot.setVisibility(View.GONE);
             }

@@ -13,6 +13,7 @@ import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.model.EventAlarmStatusModel;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
@@ -32,6 +33,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -48,10 +51,25 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
     private AlarmPopUtils alarmPopUtils;
     private DeviceAlarmLogInfo mCurrentDeviceAlarmLogInfo;
+    private final Comparator<DeviceAlarmLogInfo> deviceAlarmLogInfoComparator = new Comparator<DeviceAlarmLogInfo>() {
+        @Override
+        public int compare(DeviceAlarmLogInfo o1, DeviceAlarmLogInfo o2) {
+            long l = o2.getCreatedTime() - o1.getCreatedTime();
+            if (l > 0) {
+                return 1;
+            } else if (l < 0) {
+                return -1;
+            } else {
+                return 0;
+            }
+
+        }
+    };
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         mSn = mContext.getIntent().getStringExtra(EXTRA_SENSOR_SN);
         alarmPopUtils = new AlarmPopUtils(mContext);
         alarmPopUtils.setOnPopupCallbackListener(this);
@@ -67,13 +85,12 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         }
     }
 
-    public void onClickHistoryConfirm(int position) {
-        mCurrentDeviceAlarmLogInfo = mDeviceAlarmLogInfoList.get(position);
+    public void onClickHistoryConfirm(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        mCurrentDeviceAlarmLogInfo = deviceAlarmLogInfo;
         alarmPopUtils.show();
-        //
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
         //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
@@ -83,28 +100,61 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
             case EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS:
                 if (data instanceof EventAlarmStatusModel) {
                     EventAlarmStatusModel tempEventAlarmStatusModel = (EventAlarmStatusModel) data;
-                    if (mCurrentDeviceAlarmLogInfo.getDeviceSN().equals(tempEventAlarmStatusModel.deviceAlarmLogInfo.getDeviceSN())) {
-                        switch (tempEventAlarmStatusModel.status) {
-                            case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
-                                // 做一些预警发生的逻辑
-                                mDeviceAlarmLogInfoList.add(0, tempEventAlarmStatusModel.deviceAlarmLogInfo);
-                                getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
-                                break;
-                            case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
-                                // 做一些预警恢复的逻辑
-                            case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
-                                // 做一些预警被确认的逻辑
-                            case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
-                                freshDeviceAlarmLogInfo(tempEventAlarmStatusModel.deviceAlarmLogInfo);
-                                // 做一些预警被再次确认的逻辑
-                                break;
-                            default:
-                                // 未知逻辑 可以联系我确认 有可能是bug
-                                break;
-                        }
+                    switch (tempEventAlarmStatusModel.status) {
+                        case MODEL_ALARM_STATUS_EVENT_CODE_CREATE:
+                            // 做一些预警发生的逻辑
+                            handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, true);
+                            break;
+                        case MODEL_ALARM_STATUS_EVENT_CODE_RECOVERY:
+                            break;
+                        // 做一些预警恢复的逻辑
+                        case MODEL_ALARM_STATUS_EVENT_CODE_CONFIRM:
+                            handleSocketData(tempEventAlarmStatusModel.deviceAlarmLogInfo, false);
+                            break;
+                        // 做一些预警被确认的逻辑
+                        case MODEL_ALARM_STATUS_EVENT_CODE_RECONFIRM:
+                            // 做一些预警被再次确认的逻辑
+                            break;
+                        default:
+                            // 未知逻辑 可以联系我确认 有可能是bug
+                            break;
                     }
                 }
                 break;
+        }
+    }
+
+    private void handleSocketData(DeviceAlarmLogInfo deviceAlarmLogInfo, boolean isNewInfo) {
+        synchronized (mDeviceAlarmLogInfoList) {
+            // 处理只针对当前集合做处理
+            boolean needAdd = true;
+            for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
+                DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
+                if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
+                    AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
+                    deviceAlarmLogInfo.setSort(1);
+                    for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
+                        if (recordInfo.getType().equals("recovery")) {
+                            deviceAlarmLogInfo.setSort(4);
+                            break;
+                        }
+                    }
+                    mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
+                    needAdd = false;
+                    break;
+                }
+            }
+            if (needAdd && isNewInfo) {
+                mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
+            }
+            Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
+            mContext.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                }
+            });
+
         }
     }
 
@@ -184,44 +234,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         requestDataByFilter(DIRECTION_DOWN);
     }
 
-    /**
-     * 通过回显日期搜索
-     *
-     * @param startDate
-     * @param endDate
-     */
-    private void requestDataByDate(String startDate, String endDate) {
-        startTime = DateUtil.strToDate(startDate).getTime();
-        endTime = DateUtil.strToDate(endDate).getTime();
-//        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-//                .getMothDayFormatDate(endTime));
-        endTime += 1000 * 60 * 60 * 24;
-//        getView().showProgressDialog();
-//        RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, startTime, endTime,
-//                null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
-//
-//
-//            @Override
-//            public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-//                if (deviceAlarmLogRsp.getData().size() == 0) {
-//                    getView().toastShort("没有更多数据了");
-//                }
-//                freshUI(DIRECTION_DOWN, deviceAlarmLogRsp, null);
-//                getView().onPullRefreshComplete();
-//                getView().dismissProgressDialog();
-//            }
-//
-//            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
-//                getView().onPullRefreshComplete();
-//                getView().dismissProgressDialog();
-//                getView().toastShort(errorMsg);
-//            }
-//        });
-    }
-
     public void requestDataByFilter(final int direction) {
-        //
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
@@ -282,35 +295,38 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
     }
 
-//    private void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-//        for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
-//            DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
-//            if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
-//                AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-//                deviceAlarmLogInfo.setSort(1);
-//                for (int j = 0; j < recordInfoArray.length; j++) {
-//                    AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
-//                    if (recordInfo.getType().equals("recovery")) {
-//                        deviceAlarmLogInfo.setSort(4);
-//                        break;
-//                    }
-//                }
-//                mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
-//////                Collections.sort(mDeviceAlarmLogInfoList);
-//                break;
-//            }
-//        }
-//        ArrayList<DeviceAlarmLogInfo> tempList = new ArrayList<>(mDeviceAlarmLogInfoList);
-//        getView().updateAlarmListAdapter(tempList);
-//        pushAlarmCount(tempList);
-//    }
-
     private void freshUI(int direction, DeviceAlarmLogRsp deviceAlarmLogRsp) {
         if (direction == DIRECTION_DOWN) {
             mDeviceAlarmLogInfoList.clear();
         }
-        handleDeviceAlarmLogs(deviceAlarmLogRsp);
-        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+        final List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (mDeviceAlarmLogInfoList) {
+                    out:
+                    for (int i = 0; i < deviceAlarmLogInfoList.size(); i++) {
+                        DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
+                        for (int j = 0; j < mDeviceAlarmLogInfoList.size(); j++) {
+                            if (mDeviceAlarmLogInfoList.get(j).get_id().equals(deviceAlarmLogInfo.get_id())) {
+                                mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
+                                break out;
+                            }
+                        }
+                        mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
+                    }
+                    Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
+                    mContext.runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        }
+                    });
+                }
+            }
+        });
+//        handleDeviceAlarmLogs(deviceAlarmLogRsp);
+//        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
     }
 
     private void pushAlarmFresh(DeviceAlarmLogInfo deviceAlarmLogInfo) {
@@ -320,59 +336,37 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         EventBus.getDefault().post(eventData);
     }
 
-    /**
-     * 处理接收的数据
-     */
-    private void handleDeviceAlarmLogs(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-        List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
-        for (int i = 0; i < deviceAlarmLogInfoList.size(); i++) {
-            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
-            AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-            boolean isHaveRecovery = false;
-            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
-                if (recordInfo.getType().equals("recovery")) {
-                    deviceAlarmLogInfo.setSort(4);
-                    isHaveRecovery = true;
-                    break;
-                } else {
+    private void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+        synchronized (mDeviceAlarmLogInfoList) {
+            // 处理只针对当前集合做处理
+            boolean canRefresh = false;
+            for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
+                DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
+                if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
+                    AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
                     deviceAlarmLogInfo.setSort(1);
+                    for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
+                        if (recordInfo.getType().equals("recovery")) {
+                            deviceAlarmLogInfo.setSort(4);
+                            break;
+                        }
+                    }
+                    mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
+                    canRefresh = true;
+                    break;
                 }
             }
-            switch (deviceAlarmLogInfo.getDisplayStatus()) {
-                case DISPLAY_STATUS_CONFIRM:
-                    if (isHaveRecovery) {
-                        deviceAlarmLogInfo.setSort(2);
-                    } else {
-                        deviceAlarmLogInfo.setSort(1);
+            if (canRefresh) {
+                Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
+                mContext.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
                     }
-                    break;
-                case DISPLAY_STATUS_ALARM:
-                    if (isHaveRecovery) {
-                        deviceAlarmLogInfo.setSort(2);
-                    } else {
-                        deviceAlarmLogInfo.setSort(1);
-                    }
-                    break;
-                case DISPLAY_STATUS_MIS_DESCRIPTION:
-                    if (isHaveRecovery) {
-                        deviceAlarmLogInfo.setSort(3);
-                    } else {
-                        deviceAlarmLogInfo.setSort(1);
-                    }
-                    break;
-                case DISPLAY_STATUS_TEST:
-                    if (isHaveRecovery) {
-                        deviceAlarmLogInfo.setSort(4);
-                    } else {
-                        deviceAlarmLogInfo.setSort(1);
-                    }
-                    break;
-                default:
-                    break;
+                });
             }
-            mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
+
         }
-        //            Collections.sort(mDeviceAlarmLogInfoList);
     }
 
     public void closeDateSearch() {
@@ -427,33 +421,114 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                         });
     }
 
-    private void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        if (mDeviceAlarmLogInfoList.contains(deviceAlarmLogInfo)) {
-            for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
-                DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
-                if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
-                    AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
-                    deviceAlarmLogInfo.setSort(1);
-                    for (int j = 0; j < recordInfoArray.length; j++) {
-                        AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
-                        if (recordInfo.getType().equals("recovery")) {
-                            deviceAlarmLogInfo.setSort(4);
-                            break;
-                        }
-                    }
-                    mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
-                    break;
-                }
-            }
-        } else {
-            mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
-        }
-
-        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
-    }
 
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
     }
+
+    //////////////////////////////////////////////////////////////
+    //    private void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+//        if (mDeviceAlarmLogInfoList.contains(deviceAlarmLogInfo)) {
+//            for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
+//                DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
+//                if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
+//                    AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
+//                    deviceAlarmLogInfo.setSort(1);
+//                    for (int j = 0; j < recordInfoArray.length; j++) {
+//                        AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
+//                        if (recordInfo.getType().equals("recovery")) {
+//                            deviceAlarmLogInfo.setSort(4);
+//                            break;
+//                        }
+//                    }
+//                    mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
+//                    break;
+//                }
+//            }
+//        } else {
+//            mDeviceAlarmLogInfoList.add(0, deviceAlarmLogInfo);
+//        }
+//
+//        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+//    }
+
+    //    /**
+//     * 处理接收的数据
+//     */
+//    private void handleDeviceAlarmLogs(DeviceAlarmLogRsp deviceAlarmLogRsp) {
+//        List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
+//        for (int i = 0; i < deviceAlarmLogInfoList.size(); i++) {
+//            DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogInfoList.get(i);
+//            AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
+//            boolean isHaveRecovery = false;
+//            for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
+//                if (recordInfo.getType().equals("recovery")) {
+//                    deviceAlarmLogInfo.setSort(4);
+//                    isHaveRecovery = true;
+//                    break;
+//                } else {
+//                    deviceAlarmLogInfo.setSort(1);
+//                }
+//            }
+//            switch (deviceAlarmLogInfo.getDisplayStatus()) {
+//                case DISPLAY_STATUS_CONFIRM:
+//                    if (isHaveRecovery) {
+//                        deviceAlarmLogInfo.setSort(2);
+//                    } else {
+//                        deviceAlarmLogInfo.setSort(1);
+//                    }
+//                    break;
+//                case DISPLAY_STATUS_ALARM:
+//                    if (isHaveRecovery) {
+//                        deviceAlarmLogInfo.setSort(2);
+//                    } else {
+//                        deviceAlarmLogInfo.setSort(1);
+//                    }
+//                    break;
+//                case DISPLAY_STATUS_MIS_DESCRIPTION:
+//                    if (isHaveRecovery) {
+//                        deviceAlarmLogInfo.setSort(3);
+//                    } else {
+//                        deviceAlarmLogInfo.setSort(1);
+//                    }
+//                    break;
+//                case DISPLAY_STATUS_TEST:
+//                    if (isHaveRecovery) {
+//                        deviceAlarmLogInfo.setSort(4);
+//                    } else {
+//                        deviceAlarmLogInfo.setSort(1);
+//                    }
+//                    break;
+//                default:
+//                    break;
+//            }
+//            mDeviceAlarmLogInfoList.add(deviceAlarmLogInfo);
+//        }
+//        //            Collections.sort(mDeviceAlarmLogInfoList);
+//    }
+
+    //    private void freshDeviceAlarmLogInfo(DeviceAlarmLogInfo deviceAlarmLogInfo) {
+//        for (int i = 0; i < mDeviceAlarmLogInfoList.size(); i++) {
+//            DeviceAlarmLogInfo tempLogInfo = mDeviceAlarmLogInfoList.get(i);
+//            if (tempLogInfo.get_id().equals(deviceAlarmLogInfo.get_id())) {
+//                AlarmInfo.RecordInfo[] recordInfoArray = deviceAlarmLogInfo.getRecords();
+//                deviceAlarmLogInfo.setSort(1);
+//                for (int j = 0; j < recordInfoArray.length; j++) {
+//                    AlarmInfo.RecordInfo recordInfo = recordInfoArray[j];
+//                    if (recordInfo.getType().equals("recovery")) {
+//                        deviceAlarmLogInfo.setSort(4);
+//                        break;
+//                    }
+//                }
+//                mDeviceAlarmLogInfoList.set(i, deviceAlarmLogInfo);
+//////                Collections.sort(mDeviceAlarmLogInfoList);
+//                break;
+//            }
+//        }
+//        ArrayList<DeviceAlarmLogInfo> tempList = new ArrayList<>(mDeviceAlarmLogInfoList);
+//        getView().updateAlarmListAdapter(tempList);
+//        pushAlarmCount(tempList);
+//    }
+
 }

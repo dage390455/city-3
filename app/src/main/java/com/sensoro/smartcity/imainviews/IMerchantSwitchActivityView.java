@@ -12,8 +12,6 @@ public interface IMerchantSwitchActivityView extends IProgressDialog, IActivityI
 
     void setCurrentNameAndPhone(String name, String phone);
 
-    void showSeperatorView(boolean isShow);
-
     void updateAdapterUserInfo(List<UserInfo> data);
 
     void onPullRefreshComplete();

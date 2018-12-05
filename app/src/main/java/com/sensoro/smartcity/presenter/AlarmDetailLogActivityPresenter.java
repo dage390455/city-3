@@ -112,7 +112,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
         getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        String alarmTime = DateUtil.getStrTimeToday(mContext,deviceAlarmLogInfo.getCreatedTime(), 1);
+        String alarmTime = DateUtil.getStrTimeToday(mContext, deviceAlarmLogInfo.getCreatedTime(), 1);
         //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {
@@ -230,6 +230,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             destPosition = new LatLng(deviceLonlat[1], deviceLonlat[0]);
             if (AppUtils.doNavigation(mContext, destPosition)) {
                 return;
+            } else {
+                getView().toastShort(mContext.getString(R.string.location_not_obtained));
             }
         }
         getView().toastShort(mContext.getString(R.string.location_not_obtained));
@@ -240,10 +242,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         getView().setUpdateButtonClickable(false);
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(deviceAlarmLogInfo.get_id(), statusResult, statusType,
-                statusPlace,
-                remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe
-                        (new CityObserver<DeviceAlarmItemRsp>(this) {
+                statusPlace, remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
 
 
                             @Override

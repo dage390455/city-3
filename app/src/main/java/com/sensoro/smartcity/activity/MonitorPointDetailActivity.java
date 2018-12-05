@@ -297,28 +297,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         super.onDestroy();
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.include_text_title_tv_subtitle:
-//                mPresenter.doMonitorHistory();
-//                break;
-//            case R.id.ac_monitoring_point_cl_alert_contact:
-//                mPresenter.doContact();
-//                break;
-//            case R.id.ac_monitoring_point_imv_location:
-//            case R.id.ac_monitoring_point_cl_location_navigation:
-//                mPresenter.doNavigation();
-//                break;
-//            case R.id.ac_monitoring_point_imv_detail:
-//                //已删除
-//                break;
-//            case R.id.include_text_title_imv_arrows_left:
-//                finishAc();
-//                break;
-//        }
-//    }
-
     @Override
     public void updateTags(List<String> list) {
         mTagAdapter.updateTags(list);

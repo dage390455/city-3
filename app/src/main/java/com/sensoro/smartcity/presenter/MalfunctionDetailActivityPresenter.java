@@ -45,10 +45,10 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        onCreate();
         mMalfunctionInfo = (MalfunctionListInfo) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_MALFUNCTION_INFO);
         if (mMalfunctionInfo != null) {
             refreshUI();
-            onCreate();
         }
     }
 
@@ -78,22 +78,6 @@ public class MalfunctionDetailActivityPresenter extends BasePresenter<IMalfuncti
         });
         getView().updateRcContent(records, mMalfunctionInfo.getMalfunctionData().get(mMalfunctionInfo.getMalfunctionType()).getDescription());
         long current = System.currentTimeMillis();
-
-//        RetrofitServiceHelper.INSTANCE.getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
-//                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MalfunctionCountRsp>(this) {
-//            @Override
-//            public void onCompleted(MalfunctionCountRsp alarmCountRsp) {
-//                int count = alarmCountRsp.getCount();
-//                getView().setMalfunctionCount(count + "");
-//                getView().dismissProgressDialog();
-//            }
-//
-//            @Override
-//            public void onErrorMsg(int errorCode, String errorMsg) {
-//                getView().dismissProgressDialog();
-//                getView().toastShort(errorMsg);
-//            }
-//        });
         final StringBuffer stringBuffer = new StringBuffer();
         RetrofitServiceHelper.INSTANCE.getMalfunctionCount(current - 3600 * 24 * 180 * 1000L, current, null, mMalfunctionInfo.getDeviceSN()).subscribeOn(Schedulers.io())
                 .flatMap(new Func1<MalfunctionCountRsp, Observable<DeviceInfoListRsp>>() {

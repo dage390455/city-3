@@ -135,9 +135,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         for (BLEDevice device : deviceList) {
             if (device != null) {
-                if (!tempBleDevice.contains(device.getSn())) {
-                    tempBleDevice.add(device.getSn());
-                }
+                tempBleDevice.add(device.getSn());
             }
         }
 

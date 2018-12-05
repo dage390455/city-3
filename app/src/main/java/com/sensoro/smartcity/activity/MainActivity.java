@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.KeyEvent;
-import android.widget.PopupWindow;
 import android.widget.Toast;
 
 import com.gyf.barlibrary.ImmersionBar;
+import com.sensoro.bottomnavigation.BadgeItem;
 import com.sensoro.bottomnavigation.BottomNavigationBar;
 import com.sensoro.bottomnavigation.BottomNavigationItem;
 import com.sensoro.bottomnavigation.TextBadgeItem;
@@ -28,16 +28,13 @@ import butterknife.ButterKnife;
 public class MainActivity extends BaseActivity<IMainView, MainPresenter> implements IMainView
         , BottomNavigationBar.OnTabSelectedListener {
 
-
     @BindView(R.id.ac_main_hvp_content)
     HomeViewPager acMainHvpContent;
     @BindView(R.id.ac_main_bottom_navigation_bar)
     BottomNavigationBar acMainBottomBar;
 
     private MainFragmentPageAdapter mPageAdapter;
-    private PopupWindow mPopupWindow;
-    private int mode;
-    private TextBadgeItem warnBadgeItem;
+    private BottomNavigationItem warnItem;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -61,13 +58,12 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     private void initBottomBar() {
         //todo
-        warnBadgeItem = new TextBadgeItem();
         BottomNavigationItem homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, "首页");
-        BottomNavigationItem warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "预警");
+        warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "预警");
+        warnItem.setBadgeItem(new TextBadgeItem());
+        warnItem.getBadgeItem().hide();
         BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_malfunction, "故障");
         BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, "管理");
-        warnItem.setBadgeItem(warnBadgeItem);
-//        warnBadgeItem.hide();
         acMainBottomBar.setTabSelectedListener(this);
         acMainBottomBar
                 .addItem(homeItem)
@@ -168,25 +164,27 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void setAlarmWarnCount(int count) {
-        try {
-            if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
-                if (count > 0) {
-                    if (warnBadgeItem.isHidden()) {
-                        warnBadgeItem.show();
+        BadgeItem badgeItem = warnItem.getBadgeItem();
+        if (badgeItem instanceof TextBadgeItem) {
+            TextBadgeItem warnBadgeItem = (TextBadgeItem) badgeItem;
+            try {
+                if (PreferencesHelper.getInstance().getUserData().hasAlarmInfo) {
+                    if (count > 0) {
+                        if (warnBadgeItem.isHidden()) {
+                            warnBadgeItem.show();
+                        }
+                        warnBadgeItem.setText(String.valueOf(count));
+                    } else {
+                        warnBadgeItem.hide();
                     }
-                    warnBadgeItem.setText(String.valueOf(count));
                 } else {
                     warnBadgeItem.hide();
                 }
-            } else {
+            } catch (Exception e) {
+                e.printStackTrace();
                 warnBadgeItem.hide();
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-            warnBadgeItem.hide();
         }
-
-
     }
 
 
@@ -197,8 +195,7 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public boolean isHomeFragmentChecked() {
-        int currentItem = acMainHvpContent.getCurrentItem();
-        return currentItem == 0;
+        return acMainHvpContent.getCurrentItem() == 0;
     }
 
 
@@ -230,6 +227,6 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
 
     @Override
     public void onTabReselected(int position) {
-
+        //
     }
 }
