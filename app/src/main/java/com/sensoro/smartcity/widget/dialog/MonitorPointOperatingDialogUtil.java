@@ -27,8 +27,9 @@ public class MonitorPointOperatingDialogUtil {
         tvTip = view.findViewById(R.id.dialog_monitor_point_operating_tip);
 
         mDialog = new CustomCornerDialog(activity, view,0.6f);
-        rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotateAnimation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(1000);
+        rotateAnimation.setRepeatCount(Animation.INFINITE);
         rotateAnimation.setRepeatCount(Animation.INFINITE);
     }
 

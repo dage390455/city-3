@@ -261,7 +261,7 @@
     <string name="sensor_detail_interval">传输周期</string>
     <string name="sensor_detail_recent_alarm">最近预警</string>
     <string name="sensor_detail_alarm_setting">预警设置</string>
-    <string name="loading">加载中...</string>
+    <string name="loading">数据加载中</string>
     <string name="jinggai_false">打开</string>
     <string name="cover_false">开</string>
     <string name="cover_true">关</string>

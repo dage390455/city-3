@@ -257,7 +257,7 @@
     <string name="sensor_detail_interval">Interval</string>
     <string name="sensor_detail_recent_alarm">Last alarm</string>
     <string name="sensor_detail_alarm_setting">Alarm condition</string>
-    <string name="loading">Load&#8230;</string>
+    <string name="loading">Loading;</string>
     <string name="jinggai_false">opend</string>
     <string name="cover_false">On</string>
     <string name="cover_true">Off</string>
