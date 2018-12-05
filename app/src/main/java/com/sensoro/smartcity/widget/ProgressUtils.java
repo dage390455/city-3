@@ -64,7 +64,6 @@ public class ProgressUtils {
         }
 
         public Builder build() {
-//            progressDialog = new ProgressDialog(activity.get());
             View view = View.inflate(activity.get(), R.layout.item_progress_dilog, null);
             mImv = view.findViewById(R.id.progress_imv);
             mTv = view.findViewById(R.id.progress_tv);

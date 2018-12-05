@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical"
     android:padding="20dp"
+    android:id="@+id/progress_ll_root"
     android:background="@drawable/shape_progress_dialog_bf_black">
     <ImageView
         android:id="@+id/progress_imv"
