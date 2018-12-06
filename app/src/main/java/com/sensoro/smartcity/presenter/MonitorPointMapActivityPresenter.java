@@ -2,6 +2,7 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -23,10 +24,13 @@ import com.amap.api.maps.model.MarkerOptions;
 import com.amap.api.maps.model.MyLocationStyle;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
 import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.ImageFactory;
@@ -352,5 +356,37 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             Log.e("地图错误", "定位失败, 错误码:" + lastKnownLocation.getErrorCode() + ", 错误信息:"
                     + lastKnownLocation.getErrorInfo());
         }
+    }
+
+    public void doPositionConfirm() {
+        Intent intent = new Intent();
+        DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
+        deployAnalyzerModel.sn = mDeviceInfo.getSn();
+        deployAnalyzerModel.status = mDeviceInfo.getStatus();
+        deployAnalyzerModel.deviceType = mDeviceInfo.getDeviceType();
+        String contact = mDeviceInfo.getContact();
+        String content = mDeviceInfo.getContent();
+        if (!TextUtils.isEmpty(content)) {
+            DeployContactModel deployContactModel = new DeployContactModel();
+            deployContactModel.phone = content;
+            deployContactModel.name = contact;
+            deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+        }
+        double[] lonlat = mDeviceInfo.getLonlat();
+        if (lonlat != null && lonlat.length == 2) {
+            deployAnalyzerModel.latLng.add(lonlat[0]);
+            deployAnalyzerModel.latLng.add(lonlat[1]);
+        }
+        deployAnalyzerModel.updatedTime = mDeviceInfo.getUpdatedTime();
+        deployAnalyzerModel.signal = mDeviceInfo.getSignal();
+        String tempAddress = mDeviceInfo.getAddress();
+        if (TextUtils.isEmpty(tempAddress)) {
+            deployAnalyzerModel.address = tempAddress;
+        }
+        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM;
+        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+        intent.setClass(mContext, DeployMapActivity.class);
+        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+        getView().startAC(intent);
     }
 }

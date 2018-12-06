@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -11,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -22,6 +24,7 @@ import android.widget.EditText;
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 
 import java.io.BufferedReader;
@@ -314,8 +317,8 @@ public class AppUtils {
     }
 
     public static void openInputMethodManager(Context context, EditText editText) {
-        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     public static void dismissInputMethodManager(Context context) {
@@ -438,6 +441,37 @@ public class AppUtils {
             return null;
         }
 
+    }
+
+    public static void addToPhoneContact(final Context context, final String name, final String number) {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+                    ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI);
+                    builder.withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null);
+                    builder.withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null);
+                    ops.add(builder.build());
+                    // Name
+                    builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
+                    builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0);
+                    builder.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
+                    builder.withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name);
+                    ops.add(builder.build());
+                    // Number
+                    builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
+                    builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0);
+                    builder.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+                    builder.withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number);
+                    builder.withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+                    ops.add(builder.build());
+                    context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
 }

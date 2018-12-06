@@ -19,6 +19,7 @@ import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
+import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -193,7 +194,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             }
         } else {
             //TODO 直接上传
-            doUploadImages(lon, lan);
+//            doUploadImages(lon, lan);
+            //修改为不能强制上传
+            getView().toastShort(mContext.getString(R.string.channel_mask_error_tip));
         }
     }
 
@@ -438,6 +441,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     public void doDeployMap() {
         Intent intent = new Intent();
         intent.setClass(mContext, DeployMapActivity.class);
+        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL;
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
@@ -505,6 +509,12 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
+                }
+                break;
+            case EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION:
+                if (data instanceof String) {
+                    deployAnalyzerModel.weChatAccount = (String) data;
+                    getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
                 }
                 break;
             default:
@@ -837,5 +847,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         mHandler.postDelayed(this, 2000);
         getView().setDeployDeviceDetailFixedPointNearVisible(BLE_DEVICE_SET.contains(deployAnalyzerModel.sn));
 
+    }
+
+    public void doWeChatRelation() {
+        Intent intent = new Intent(mContext, DeployMonitorWeChatRelationActivity.class);
+        if (!TextUtils.isEmpty(deployAnalyzerModel.weChatAccount)) {
+            intent.putExtra(EXTRA_SETTING_WE_CHAT_RELATION, deployAnalyzerModel.weChatAccount);
+        }
+        intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
+        getView().startAC(intent);
     }
 }

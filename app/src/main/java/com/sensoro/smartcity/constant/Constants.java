@@ -28,6 +28,7 @@ public interface Constants {
     //
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
     String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
+    String PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION = "preference_key_deploy_we_chat_relation";
     String PREFERENCE_KEY_DEPLOY_TAG = "preference_key_deploy_tag";
     String PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES = "preference_key_local_devices_mergetypes";
     //
@@ -219,6 +220,7 @@ public interface Constants {
     String EXTRA_ALARM_END_DATE = "extra_alarm_end_date";
     String EXTRA_ACTIVITY_CANCEL = "extra_activity_cancel";
     String EXTRA_SETTING_NAME_ADDRESS = "extra_setting_name_address";
+    String EXTRA_SETTING_WE_CHAT_RELATION = "extra_setting_we_chat_relation";
     String EXTRA_SETTING_CONTACT = "extra_setting_contact";
     String EXTRA_SETTING_DEPLOY_CONTACT = "extra_setting_deploy_contact";
     String EXTRA_SETTING_CONTENT = "extra_setting_content";
@@ -354,6 +356,7 @@ public interface Constants {
     int TYPE_SCAN_LOGIN = 0x30;
     int TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE = 0X37;
     int TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE = 0X44;
+    int EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION = 0x45;
     int TYPE_SCAN_INSPECTION = 0X38;
     int TYPE_SCAN_DEPLOY_POINT_DISPLAY = 0x41;
     int TYPE_SCAN_SIGNAL_CHECK = 0x42;
@@ -361,6 +364,10 @@ public interface Constants {
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED = -1;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT = -2;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS = 0;
+    //地图部署回显来源
+    int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL = 1;
+    int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD = 2;
+    int DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM = 3;
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");

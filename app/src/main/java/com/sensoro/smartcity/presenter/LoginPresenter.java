@@ -27,6 +27,7 @@ import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
@@ -51,6 +52,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         Beta.checkUpgrade(false, false);
         readLoginData();
         initSeverUrl();
+        AppUtils.addToPhoneContact(mContext, "升哲安全服务", "（0570）2296646");
     }
 
     private void readLoginData() {

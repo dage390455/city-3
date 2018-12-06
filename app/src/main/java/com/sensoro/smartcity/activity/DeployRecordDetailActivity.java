@@ -45,6 +45,8 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     TextView acDeployRecordDetailTvTime;
     @BindView(R.id.ac_deploy_record_detail_rc_contact)
     RecyclerView acDeployRecordDetailRcContact;
+    @BindView(R.id.ac_deploy_record_detail_tv_we_chat)
+    TextView acDeployRecordDetailTvWeChat;
     @BindView(R.id.ac_deploy_record_detail_tv_pic_count)
     TextView acDeployRecordDetailTvPicCount;
     @BindView(R.id.ac_deploy_record_detail_tv_fixed_point_signal)
@@ -184,6 +186,11 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     @Override
     public void setDeployTime(String time) {
         acDeployRecordDetailTvTime.setText(time);
+    }
+
+    @Override
+    public void seDeployWeChat(String text) {
+        acDeployRecordDetailTvWeChat.setText(text);
     }
 
     @Override

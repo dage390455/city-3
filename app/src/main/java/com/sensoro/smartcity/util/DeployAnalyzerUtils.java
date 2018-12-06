@@ -340,6 +340,7 @@ public enum DeployAnalyzerUtils implements Constants {
                         DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
                         deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
                         deployAnalyzerModel.sn = sn;
+                        deployAnalyzerModel.deviceType = data.getDeviceType();
                         deployAnalyzerModel.nameAndAddress = data.getName();
                         deployAnalyzerModel.notOwn = data.isNotOwn();
                         List<Double> lonlat = data.getLonlat();
@@ -496,6 +497,11 @@ public enum DeployAnalyzerUtils implements Constants {
                                 deployAnalyzerModel.notOwn = data.isNotOwn();
                                 deployAnalyzerModel.mDeviceDetail = oldDeviceDetail;
                                 deployAnalyzerModel.blePassword = data.getBlePassword();
+
+                                String deviceType = data.getDeviceType();
+                                if (!TextUtils.isEmpty(deviceType)) {
+                                    deployAnalyzerModel.deviceType = deviceType;
+                                }
                                 List<Integer> channelMask = data.getChannelMask();
                                 if (channelMask != null && channelMask.size() > 0) {
                                     deployAnalyzerModel.channelMask.clear();
@@ -516,6 +522,7 @@ public enum DeployAnalyzerUtils implements Constants {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
                 deployAnalyzerModel.deployType = scanType;
                 deployAnalyzerModel.nameAndAddress = data.getName();
+                deployAnalyzerModel.deviceType = data.getDeviceType();
                 List<Double> lonlat = data.getLonlat();
                 if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                     deployAnalyzerModel.latLng.clear();

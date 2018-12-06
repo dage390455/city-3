@@ -15,6 +15,8 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     //
     void setNameAddressText(String text);
 
+    void setDeployWeChatText(String text);
+
     void updateContactData(List<DeployContactModel> contacts);
 
     void updateTagsData(List<String> tagList);

@@ -52,6 +52,7 @@
     <string name="alert_log">预警日志</string>
     <string name="no_contact_added">未添加联系人</string>
     <string name="location_navigation">位置导航</string>
+    <string name="location_confirm">位置校准</string>
     <string name="cant_find_related_content">搜索不到相关内容</string>
     <string name="enter_search_content">请输入搜索内容</string>
     <string name="signal_test">信号测试</string>
@@ -307,6 +308,7 @@
     <string name="tips_input_name">请输入名称/地址</string>
     <string name="tips_hint_name_address">例: 大悦城20层走廊2号配电箱</string>
     <string name="tips_hint_name_address_set">例: 大悦城20层走廊2号配电箱</string>
+    <string name="tips_hint_we_chat_relation_set">用于小程序登录的手机号</string>
     <string name="tips_no_alarm">无预警</string>
     <string name="tips_commit_success">提交成功</string>
     <string name="tips_commit_failed">提交失败</string>
@@ -397,6 +399,7 @@
     <string name="deploy_record_device_number">设备号</string>
     <string name="deploy_record_name">名称</string>
     <string name="deploy_record_deploy_time">部署时间</string>
+    <string name="deploy_record_deploy_we_chat">小程序账号（选填）</string>
 
     //部署结果
     <string name="deploy_result_confirm_information">确认信息</string>
@@ -464,6 +467,7 @@
     <string name="monitor_point_information">基本信息</string>
     //名称和地址
     <string name="name_address">名称/地址</string>
+    <string name="we_chat_relation">小程序账号</string>
     <string name="name_address_history_tag">历史标签</string>
     <string name="name_address_save">保存</string>
     //扫描界面
@@ -635,5 +639,5 @@
 
 
     <string name="please_use_different_device_to_replace">请使用不同的设备进行更换</string>
-
+    <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
 </resources>

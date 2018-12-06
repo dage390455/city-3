@@ -7,7 +7,7 @@ import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 
 import java.util.List;
 
-public interface IDeployRecordDetailActivityView extends IToast,IActivityIntent,IProgressDialog {
+public interface IDeployRecordDetailActivityView extends IToast, IActivityIntent, IProgressDialog {
     void setSNTitle(String sn);
 
     void setDeviceName(String deviceName);
@@ -15,6 +15,8 @@ public interface IDeployRecordDetailActivityView extends IToast,IActivityIntent,
     void updateTagList(List<String> tags);
 
     void setDeployTime(String time);
+
+    void seDeployWeChat(String text);
 
     void setPicCount(String content);
 

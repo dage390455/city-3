@@ -34,7 +34,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     private void initDeployMapModel() {
         List<Double> lonlat = mDeployRecordInfo.getLonlat();
         deployAnalyzerModel = new DeployAnalyzerModel();
-        deployAnalyzerModel.isFromDeployRecord = true;
+        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD;
         deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_POINT_DISPLAY;
         if (lonlat != null) {
             deployAnalyzerModel.latLng.clear();

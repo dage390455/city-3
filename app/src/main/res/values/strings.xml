@@ -51,6 +51,7 @@
     <string name="alert_log">Alarm Log</string>
     <string name="no_contact_added">ContactUser unset</string>
     <string name="location_navigation">Location navigation</string>
+    <string name="location_confirm">位置校准</string>
     <string name="cant_find_related_content">There is not found devices temporarily</string>
     <string name="enter_search_content">Enter search content</string>
     <string name="signal_test">Signal Test</string>
@@ -305,6 +306,7 @@
     <string name="tips_input_name">Name/address must not be empty</string>
     <string name="tips_hint_name_address">e.g.Distribution Box 2,20th Floor,Dayue</string>
     <string name="tips_hint_name_address_set">e.g.Distribution Box 2,20th Floor,Dayue</string>
+    <string name="tips_hint_we_chat_relation_set">用于小程序登录的手机号</string>
     <string name="tips_no_alarm">No alarm</string>
     <string name="tips_commit_success">Submitted successfully</string>
     <string name="tips_commit_failed">Submitted Failure</string>
@@ -380,6 +382,7 @@
     <string name="deploy_record_device_number">SN</string>
     <string name="deploy_record_name">Name</string>
     <string name="deploy_record_deploy_time">Deploy date</string>
+    <string name="deploy_record_deploy_we_chat">Deploy WeChat</string>
 
     //部署结果
     <string name="deploy_result_back_home">Back Home</string>
@@ -439,6 +442,7 @@
     <string name="monitor_point_information">basic info</string>
     //名称和地址
     <string name="name_address">Name/Address</string>
+    <string name="we_chat_relation">小程序账号</string>
     <string name="name_address_history_tag">History/Tag</string>
     <string name="name_address_save">Save</string>
     //扫描界面
@@ -637,4 +641,5 @@
 
     <string name="please_use_different_device_to_replace">Please use different device to replace</string>
     <string name="no_search_history">No search history</string>
+    <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
 </resources>
