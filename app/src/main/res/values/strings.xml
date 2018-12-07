@@ -637,4 +637,6 @@
 
     <string name="please_use_different_device_to_replace">Please use different device to replace</string>
     <string name="no_search_history">No search history</string>
+    <string name="title_edit">编辑</string>
+    <string name="identification_number_failed">ID card number identification failed</string>
 </resources>

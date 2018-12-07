@@ -51,6 +51,7 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<ContractTempla
         final String name = mList.get(position).getName();
         holder.nameTextView.setText(name);
         final EditText etContractItemNum = holder.etContractItemNum;
+        etContractItemNum.setText(String.valueOf(mList.get(position).getQuantity()));
         holder.ivContractItemDel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

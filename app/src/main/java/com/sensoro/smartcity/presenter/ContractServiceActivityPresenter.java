@@ -3,7 +3,9 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Parcelable;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -12,6 +14,7 @@ import com.baidu.ocr.sdk.model.IDCardParams;
 import com.baidu.ocr.sdk.model.IDCardResult;
 import com.baidu.ocr.sdk.model.Word;
 import com.baidu.ocr.ui.camera.CameraActivity;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -23,7 +26,9 @@ import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.ContractAddInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
@@ -51,6 +56,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     private String line4;
     private String line5;
     private String line6;
+    private int contractID = -1;
     //
 
     @Override
@@ -63,32 +69,56 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
     }
 
     private void refreshContent() {
+        Intent intent = mContext.getIntent();
+        contractID = intent.getIntExtra(EXTRA_CONTRACT_ID, -1);
+        if (contractID != -1) {
+            getView().setBtnNextText(mContext.getString(R.string.save));
+        }
+        String customer_phone = intent.getStringExtra("customer_phone");
+        if (customer_phone == null) {
+            customer_phone = "";
+        }
+        String place_type = intent.getStringExtra("place_type");
+        if (place_type == null) {
+            place_type = "";
+        }
+        int service_life = intent.getIntExtra("service_life", 1);
+        int service_life_first = intent.getIntExtra("service_life_first", 1);
+        int service_life_period = intent.getIntExtra("service_life_period", 1);
+
+
         switch (serviceType) {
             case 1:
-                line1 = mContext.getIntent().getStringExtra("legal_person");
-                line2 = mContext.getIntent().getStringExtra("company_name");
-                line3 = mContext.getIntent().getStringExtra("credit_code");
-                line4 = mContext.getIntent().getStringExtra("registration_number");
-                line5 = mContext.getIntent().getStringExtra("address");
-                line6 = mContext.getIntent().getStringExtra("validity_period");
+                line1 = intent.getStringExtra("legal_person");
+                line2 = intent.getStringExtra("company_name");
+                line3 = intent.getStringExtra("credit_code");
+                line4 = intent.getStringExtra("registration_number");
+                line5 = intent.getStringExtra("address");
+                line6 = intent.getStringExtra("validity_period");
                 //
-                getView().showContentText(serviceType, line1, "", line2, line3, line4,
-                        line5, line6, 0);
+                getView().showContentText(serviceType, line1, customer_phone, line2, line3, line4,
+                        line5, line6, place_type, service_life, service_life_first, service_life_period);
                 break;
             case 2:
-                line1 = mContext.getIntent().getStringExtra("person_name");
-                line2 = mContext.getIntent().getStringExtra("sex");
-                line3 = mContext.getIntent().getStringExtra("id_number");
-                line4 = mContext.getIntent().getStringExtra("address");
-                getView().showContentText(serviceType, line1, "", line2, line3, line4,
-                        null, null, 0);
+                line1 = intent.getStringExtra("person_name");
+                line2 = intent.getStringExtra("sex");
+                line3 = intent.getStringExtra("id_number");
+                line4 = intent.getStringExtra("address");
+
+                getView().showContentText(serviceType, line1, customer_phone, line2, line3, line4,
+                        null, null, place_type, service_life, service_life_first, service_life_period);
                 break;
             case 3:
-                getView().showContentText(serviceType, "", "", "", "", "", "", "", 0);
+                line1 = intent.getStringExtra("company_name");
+                line2 = intent.getStringExtra("person_name");
+                line3 = intent.getStringExtra("id_number");
+                line4 = intent.getStringExtra("address");
+                getView().showContentText(serviceType, line1, customer_phone, "", "", "", "", "", place_type, service_life, service_life_first, service_life_period);
                 break;
             default:
                 break;
         }
+
     }
 
     private void getContractTemplateInfos() {
@@ -96,12 +126,30 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
         RetrofitServiceHelper.INSTANCE.getContractstemplate().subscribeOn(Schedulers.io()).observeOn
                 (AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractsTemplateRsp>(this) {
 
-
             @Override
             public void onCompleted(ContractsTemplateRsp contractsTemplateRsp) {
+                ArrayList<ContractsTemplateInfo> data = contractsTemplateRsp.getData();
+                Parcelable[] contract_devices = mContext.getIntent().getParcelableArrayExtra("contract_devices");
+                if (contract_devices != null && contract_devices.length > 0) {
+                    for (Parcelable contract : contract_devices) {
+                        try {
+                            ContractsTemplateInfo contract1 = (ContractsTemplateInfo) contract;
+                            for (ContractsTemplateInfo datum : data) {
+                                if (datum.getDeviceType().endsWith(contract1.getDeviceType())) {
+                                    datum.setQuantity(contract1.getQuantity());
+                                    break;
+                                }
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
                 getView().updateContractTemplateAdapterInfo(contractsTemplateRsp.getData());
+
                 getView().dismissProgressDialog();
             }
+
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -430,8 +478,107 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             }
 
         }
-        getView().startAC(intent);
+
+        if (contractID != -1) {
+            //重新编辑的
+//            refreshContractInfo(serverAgeTotal, serverAgeFirst, serverAgePeriod, line1, line2, line3, line4, line5, line6, phone
+//                    , place, sex, data);
+
+        } else {
+            getView().startAC(intent);
+        }
+
+
     }
+
+//    private void refreshContractInfo(int serverAgeTotal, int serverAgeFirst, int serverAgePeriod,
+//                                     String line1, String line2, String line3, String line4, String line5, String line6, String phone,
+//                                     String place, String sex, ArrayList<ContractsTemplateInfo> data) {
+//
+//        switch (serviceType) {
+//            case 1:
+//                getView().showProgressDialog();
+//                if (!RegexUtils.checkContractNotEmpty(this.line3)) {
+//                    this.line3 = null;
+//                }
+//                if (!RegexUtils.checkContractNotEmpty(this.line4)) {
+//                    this.line4 = null;
+//                }
+//                RetrofitServiceHelper.INSTANCE.resetContract(contractID,1, serviceType, null, null, line3, line4,
+//                        line1, line2, line6, line5, phone, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
+//                break;
+//            case 2:
+//                int sexInt = 1;
+//                if (sex.equals(mContext.getString(R.string.male))) {
+//                    sexInt = 1;
+//                }else if(sex.equals(mContext.getString(R.string.female))){
+//                    sexInt = 2;
+//                }
+//                getView().showProgressDialog();
+//                RetrofitServiceHelper.INSTANCE.resetContract(contractID,2, serviceType, line3, sexInt, null, null,
+//                        line1, null, null, line4, phone, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        int id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
+//                break;
+//            case 3:
+//                getView().showProgressDialog();
+//                RetrofitServiceHelper.INSTANCE.resetContract(contractID,2, serviceType, line4, null, null, null,
+//                        line2, line1, null, line5, line3, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        int id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
+//                break;
+//            default:
+//                break;
+//        }
+//    }
 
     public void handleResult(int requestCode, int resultCode, Intent data) {
         // 识别成功回调，营业执照识别
@@ -501,7 +648,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                                     e.printStackTrace();
                                 }
                                 getView().showContentText(serviceType, line1, "", line2, line3, line4,
-                                        line5, line6, 0);
+                                        line5, line6, "");
                             }
                         });
             } catch (Exception e) {
@@ -576,13 +723,13 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     e.printStackTrace();
                 }
                 getView().showContentText(serviceType, line1, "", line2, line3, line4,
-                        null, null, 0);
+                        null, null, "");
             }
 
             @Override
             public void onError(OCRError error) {
                 getView().dismissProgressDialog();
-                getView().toastShort("身份证识别失败：" + error.getMessage());
+                getView().toastShort(mContext.getString(R.string.identification_number_failed) + error.getMessage());
                 LogUtils.loge(this, error.getMessage());
             }
         });

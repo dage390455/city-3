@@ -73,6 +73,7 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
+import rx.Completable;
 import rx.Observable;
 
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEMO;
@@ -1242,5 +1243,9 @@ public enum RetrofitServiceHelper {
         Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation = retrofitService.doMonitorPointOperation(body);
         RxApiManager.getInstance().add("doMonitorPointOperation", doMonitorPointOperation.subscribe());
         return doMonitorPointOperation;
+    }
+
+    public Completable resetContract(int contractID, int i, int serviceType, Object o, Object o1, String line3, String line4, String line1, String line2, String line6, String line5, String phone, String place, ArrayList<ContractsTemplateInfo> data, int serverAgePeriod, Object o2, int serverAgeTotal, int serverAgeFirst) {
+        return null;
     }
 }

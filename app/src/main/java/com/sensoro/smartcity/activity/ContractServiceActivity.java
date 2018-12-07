@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.activity;
 
+import android.animation.TypeEvaluator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -270,8 +271,38 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     @Override
     public void showContentText(int type, String line1, String phone, String line2, String line3, String line4,
                                 String line5,
-                                String line6, int place) {
-        switch (type) {
+                                String line6, String place, int service_life, int service_life_first, int service_life_period) {
+        showContentText(type, line1, phone, line2, line3, line4,
+                line5, line6, place);
+
+        tvContractServicePlace.setText(place);
+        etContractAge.setText(String.valueOf(service_life));
+        etContractAge.setSelection(etContractAge.getText().toString().length());
+        etContractAgeFirst.setText(String.valueOf(service_life_first));
+        etContractAgeFirst.setSelection(etContractAge.getText().toString().length());
+        etContractAgePeriod.setText(String.valueOf(service_life_period));
+        etContractAgePeriod.setSelection(etContractAge.getText().toString().length());
+
+    }
+
+    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> items) {
+        SelectDialog dialog = new SelectDialog(mActivity, R.style
+                .transparentFrameWindowStyle,
+                listener, items);
+        if (!mActivity.isFinishing()) {
+            dialog.show();
+        }
+        return dialog;
+    }
+
+    @Override
+    public void updateContractTemplateAdapterInfo(ArrayList<ContractsTemplateInfo> data) {
+        contractTemplateAdapter.updateList(data);
+    }
+
+    @Override
+    public void showContentText(int serviceType, String line1, String phone, String line2, String line3, String line4, String line5, String line6, String place) {
+        switch (serviceType) {
             case 1:
                 etContractServiceLine1.setText(line1);
                 etContractServiceLine1.setSelection(line1.length());
@@ -346,7 +377,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 //
                 tvContractServiceLine3.setText(R.string.phone_num);
                 //
-                tvContractServiceLine4.setText("身份证号");
+                tvContractServiceLine4.setText(R.string.identification_number);
 
                 //已经存在电话 不显示
                 ivLinePhone.setVisibility(View.GONE);
@@ -365,22 +396,11 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
             default:
                 break;
         }
-
-    }
-
-    private SelectDialog showDialog(SelectDialog.SelectDialogListener listener, List<String> items) {
-        SelectDialog dialog = new SelectDialog(mActivity, R.style
-                .transparentFrameWindowStyle,
-                listener, items);
-        if (!mActivity.isFinishing()) {
-            dialog.show();
-        }
-        return dialog;
     }
 
     @Override
-    public void updateContractTemplateAdapterInfo(ArrayList<ContractsTemplateInfo> data) {
-        contractTemplateAdapter.updateList(data);
+    public void setBtnNextText(String content) {
+        btNext.setText(content);
     }
 
     @OnClick({R.id.iv_contract_service_back, R.id.tv_contract_service_title_retake, R.id.iv_contract_service_line1, R
