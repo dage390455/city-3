@@ -169,6 +169,8 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
         int code = eventData.code;
         switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
+                getView().finishAc();
+                break;
             case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 requestSearchData(DIRECTION_DOWN, null);
                 break;

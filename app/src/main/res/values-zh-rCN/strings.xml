@@ -644,4 +644,8 @@
     <string name="please_enter_a_valid_mobile_number">请输入有效手机号</string>
     <string name="enter_the_phone_number_used_for_applet_login">输入用于小程序登录的手机号</string>
     <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">输入的手机号与签订合同手机号请保持一致</string>
+    <string name="title_edit">编辑</string>
+    <string name="identification_number_failed">身份证识别失败：</string>
+    <string name="contract_modified_success">修改成功</string>
+
 </resources>

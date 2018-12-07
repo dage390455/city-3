@@ -646,4 +646,7 @@
     <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number</string>
     <string name="enter_the_phone_number_used_for_applet_login">Enter the phone number used for applet login</string>
     <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">Please enter the mobile phone number and the contracted mobile phone number</string>
+    <string name="title_edit">Edit</string>
+    <string name="identification_number_failed">ID card number identification failed</string>
+    <string name="contract_modified_success">Modified success</string>
 </resources>
