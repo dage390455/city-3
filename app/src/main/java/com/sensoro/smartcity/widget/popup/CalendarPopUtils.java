@@ -3,7 +3,6 @@ package com.sensoro.smartcity.widget.popup;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.util.Pair;
-import android.support.v7.widget.OrientationHelper;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,25 +16,24 @@ import android.widget.Toast;
 
 import com.applikeysolutions.cosmocalendar.listeners.OnDayRangeSelectedListener;
 import com.applikeysolutions.cosmocalendar.model.Day;
-import com.applikeysolutions.cosmocalendar.selection.RangeSelectionManager;
-import com.applikeysolutions.cosmocalendar.utils.SelectionType;
-import com.applikeysolutions.cosmocalendar.view.CalendarView;
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.calendarview.CalendarView;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.Calendar;
 import java.util.Date;
-import java.util.List;
+import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarView.OnDaySelectObserver
-        , Constants, PopupWindow.OnDismissListener {
+public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarView.OnDaySelectObserver
+        ,*/ Constants, PopupWindow.OnDismissListener {
 
     private PopupWindow mPopupWindow = null;
     private final Activity mActivity;
@@ -61,6 +59,13 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
     LinearLayout sensorCalendarDateLayout;
     @BindView(R.id.ac_calendar_view_dismiss)
     View dismissiView;
+    @BindView(R.id.ac_calendar_imv_arrow_left)
+    ImageView acCalendarImvArrowLeft;
+    @BindView(R.id.ac_calendar_tv_month_year)
+    TextView acCalendarTvMonthYear;
+    @BindView(R.id.ac_calendar_imv_arrow_right)
+    ImageView acCalendarImvArrowRight;
+
     private boolean isMultiple;
     private String startDate;
     private String endDate;
@@ -90,11 +95,11 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
     }
 
     private void initView() {
-        calendarView.setCalendarOrientation(OrientationHelper.HORIZONTAL);
-        calendarView.setSelectionType(SelectionType.RANGE);
-        calendarView.setOnDayRangeSelectedListener(this);
-        calendarView.setOnDayClickListener(this);
-
+//        calendarView.setCalendarOrientation(OrientationHelper.HORIZONTAL);
+//        calendarView.setSelectionType(SelectionType.RANGE);
+//        calendarView.setOnDayRangeSelectedListener(this);
+//        calendarView.setOnDayClickListener(this);
+        acCalendarTvMonthYear.setText(String.format(Locale.CHINA,"%s %d",Constants.MONTHS[calendarView.getCurMonth()-1],calendarView.getCurYear()));
     }
 
     private void setSlectTime(long startTime, long endTime) {
@@ -125,17 +130,17 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
                 setEndDate(DateUtil.getMonth(endTime) + "." + DateUtil.getDayDate(endTime), DateUtil.getYearDate(endTime));
             }
 
-            if (calendarView.getSelectionManager() instanceof RangeSelectionManager) {
-                RangeSelectionManager rangeSelectionManager =
-                        (RangeSelectionManager) calendarView.getSelectionManager();
-                if (onlyOneDay) {
-                    rangeSelectionManager.toggleDay(firstDay);
-                } else {
-                    rangeSelectionManager.toggleDay(firstDay);
-                    rangeSelectionManager.toggleDay(secondDay);
-                }
-                calendarView.update();
-            }
+//            if (calendarView.getSelectionManager() instanceof RangeSelectionManager) {
+//                RangeSelectionManager rangeSelectionManager =
+//                        (RangeSelectionManager) calendarView.getSelectionManager();
+//                if (onlyOneDay) {
+//                    rangeSelectionManager.toggleDay(firstDay);
+//                } else {
+//                    rangeSelectionManager.toggleDay(firstDay);
+//                    rangeSelectionManager.toggleDay(secondDay);
+//                }
+//                calendarView.update();
+//            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -226,29 +231,29 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, CalendarVie
 
     }
 
-    @Override
-    public void onClick(List<Day> dayList) {
-        isMultiple = false;
-        Day day = dayList.get(0);
-        try {
-            Calendar calendarFirst = day.getCalendar();
-            int firstMonth = calendarFirst.get(Calendar.MONTH) + 1;
-            startDate = calendarFirst.get(Calendar.YEAR) + "/" + firstMonth + "/" + calendarFirst.get
-                    (Calendar.DAY_OF_MONTH);
-            String temp_startDate = calendarFirst.get(Calendar.YEAR) + "-" + firstMonth + "-" + calendarFirst
-                    .get(Calendar.DAY_OF_MONTH);
-            setStartDate(firstMonth + "." + calendarFirst.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
-            setEndDate("", "");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+//    @Override
+//    public void onClick(List<Day> dayList) {
+//        isMultiple = false;
+//        Day day = dayList.get(0);
+//        try {
+//            Calendar calendarFirst = day.getCalendar();
+//            int firstMonth = calendarFirst.get(Calendar.MONTH) + 1;
+//            startDate = calendarFirst.get(Calendar.YEAR) + "/" + firstMonth + "/" + calendarFirst.get
+//                    (Calendar.DAY_OF_MONTH);
+//            String temp_startDate = calendarFirst.get(Calendar.YEAR) + "-" + firstMonth + "-" + calendarFirst
+//                    .get(Calendar.DAY_OF_MONTH);
+//            setStartDate(firstMonth + "." + calendarFirst.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
+//            setEndDate("", "");
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     @Override
     public void onDismiss() {
         if (calendarView != null) {
-            calendarView.clearSelections();
+//            calendarView.clearSelections();
         }
 
     }
