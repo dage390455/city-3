@@ -1245,7 +1245,80 @@ public enum RetrofitServiceHelper {
         return doMonitorPointOperation;
     }
 
-    public Completable resetContract(int contractID, int i, int serviceType, Object o, Object o1, String line3, String line4, String line1, String line2, String line6, String line5, String phone, String place, ArrayList<ContractsTemplateInfo> data, int serverAgePeriod, Object o2, int serverAgeTotal, int serverAgeFirst) {
-        return null;
+    public Observable<ResponseBase> modifyContract(Integer contractID, Integer contractType, Integer createType, String cardId, Integer sex, String enterpriseCardId,
+                                      String enterpriseRegisterId,
+                                      String customerName,
+                                      String customerEnterpriseName,
+                                      String customerEnterpriseValidity,
+                                      //必选
+                                      String customerAddress,
+                                      String customerPhone,
+                                      String placeType,
+                                      ArrayList<ContractsTemplateInfo> devicesList,
+                                      int payTimes,
+                                      //可选
+                                      Boolean confirmed,
+                                      int serviceTime, int firstPayTimes) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("id", contractID);
+
+            if (contractType != null) {
+                jsonObject.put("contract_type", contractType);
+            }
+            jsonObject.put("created_type", createType);
+            if (cardId != null) {
+                jsonObject.put("card_id", cardId);
+            }
+            if (sex != null) {
+                jsonObject.put("sex", sex);
+            }
+            if (enterpriseCardId != null) {
+                jsonObject.put("enterprise_card_id", enterpriseCardId);
+            }
+            if (enterpriseRegisterId != null) {
+                jsonObject.put("enterprise_register_id", enterpriseRegisterId);
+            }
+            if (customerName != null) {
+                jsonObject.put("customer_name", customerName);
+            }
+            if (customerEnterpriseName != null) {
+                jsonObject.put("customer_enterprise_name", customerEnterpriseName);
+            }
+            if (customerEnterpriseValidity != null) {
+                jsonObject.put("customer_enterprise_validity", customerEnterpriseValidity);
+            }
+            jsonObject.put("customer_address", customerAddress);
+            jsonObject.put("customer_phone", customerPhone);
+            jsonObject.put("place_type", placeType);
+            JSONArray jsonArray = new JSONArray();
+            if (devicesList != null) {
+                for (ContractsTemplateInfo contractsTemplateInfo : devicesList) {
+                    String deviceType = contractsTemplateInfo.getDeviceType();
+                    String hardwareVersion = contractsTemplateInfo.getHardwareVersion();
+                    int quantity = contractsTemplateInfo.getQuantity();
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("deviceType", deviceType);
+                    jsonObject1.put("hardwareVersion", hardwareVersion);
+                    jsonObject1.put("quantity", quantity);
+                    jsonArray.put(jsonObject1);
+
+                }
+            }
+            jsonObject.put("devices", jsonArray);
+            jsonObject.put("payTimes", payTimes);
+            if (confirmed != null) {
+                jsonObject.put("confirmed", confirmed);
+            }
+            jsonObject.put("serviceTime", serviceTime);
+            jsonObject.put("firstPayTimes", firstPayTimes);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ResponseBase> modifyContract = retrofitService.modifyContract(body);
+        RxApiManager.getInstance().add("modifyContract", modifyContract.subscribe());
+        return modifyContract;
     }
 }

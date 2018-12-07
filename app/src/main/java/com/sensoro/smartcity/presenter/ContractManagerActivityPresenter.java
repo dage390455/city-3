@@ -443,6 +443,10 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                     }
                 }
                 break;
+
+            case EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
+                refreshData(DIRECTION_DOWN);
+                break;
         }
     }
 

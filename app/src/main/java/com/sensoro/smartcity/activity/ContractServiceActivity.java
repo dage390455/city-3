@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContractTemplateAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
+import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractServiceActivityView;
 import com.sensoro.smartcity.presenter.ContractServiceActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
@@ -37,15 +38,12 @@ import butterknife.OnClick;
 
 public class ContractServiceActivity extends BaseActivity<IContractServiceActivityView,
         ContractServiceActivityPresenter> implements IContractServiceActivityView {
-
-    @BindView(R.id.iv_contract_service_back)
-    ImageView ivContractServiceBack;
-    @BindView(R.id.contract_service_title)
-    TextView contractServiceTitle;
-    @BindView(R.id.tv_contract_service_title_retake)
-    TextView tvContractServiceTitleRetake;
-    @BindView(R.id.contract_service_title_layout)
-    RelativeLayout contractServiceTitleLayout;
+    @BindView(R.id.include_text_title_imv_arrows_left)
+    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_title)
+    TextView includeTextTitleTvTitle;
+    @BindView(R.id.include_text_title_tv_subtitle)
+    TextView includeTextTitleTvSubtitle;
     @BindView(R.id.tv_contract_service_line1)
     TextView tvContractServiceLine1;
     @BindView(R.id.et_contract_service_line1)
@@ -174,6 +172,8 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
         sexList.add(mActivity.getString(R.string.male));
         sexList.add(mActivity.getString(R.string.female));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
+        includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_info_title));
+        includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.contract_service_retake));
         contractTemplateAdapter = new ContractTemplateAdapter(mActivity);
         rvSensorCount.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, true));
         rvSensorCount.setAdapter(contractTemplateAdapter);
@@ -241,7 +241,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
         if (!TextUtils.isEmpty(text)) {
             try {
                 int i = Integer.parseInt(text);
-                if (i > 1) {
+                if (i > 0) {
                     editText.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
                 } else {
                     editText.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
@@ -269,12 +269,15 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
     }
 
     @Override
-    public void showContentText(int type, String line1, String phone, String line2, String line3, String line4,
+    public void showContentText(int originType,int type, String line1, String phone, String line2, String line3, String line4,
                                 String line5,
                                 String line6, String place, int service_life, int service_life_first, int service_life_period) {
         showContentText(type, line1, phone, line2, line3, line4,
                 line5, line6, place);
 
+        if(originType == Constants.CONTRACT_ORIGIN_TYPE_EDIT){
+            includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        }
         tvContractServicePlace.setText(place);
         etContractAge.setText(String.valueOf(service_life));
         etContractAge.setSelection(etContractAge.getText().toString().length());
@@ -326,7 +329,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 etContractServiceLine6.setText(line6);
                 etContractServiceLine6.setSelection(line6.length());
                 //
-                tvContractServiceTitleRetake.setVisibility(View.VISIBLE);
+                includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
                 break;
             case 2:
                 tvContractServiceLine1.setText(R.string.name);
@@ -367,23 +370,47 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 ivLine6.setVisibility(View.GONE);
                 llContractServiceLine6.setVisibility(View.GONE);
                 //
-                tvContractServiceTitleRetake.setVisibility(View.VISIBLE);
+                includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
                 break;
             case 3:
                 tvContractServiceLine1.setText(R.string.party_a_customer_name);
-                etContractServiceLine1.requestFocus();
+                if (line1 != null) {
+                    etContractServiceLine1.setText(line1);
+                    etContractServiceLine1.setSelection(line1.length());
+                    etContractServiceLine1.requestFocus();
+                }
+
                 //
                 tvContractServiceLine2.setText(R.string.owners_name);
+                if (line2 != null) {
+                    etContractServiceLine2.setText(line2);
+                    etContractServiceLine2.setSelection(line2.length());
+                }
+
                 //
                 tvContractServiceLine3.setText(R.string.phone_num);
+                if (phone != null) {
+                    etContractServiceLine3.setText(phone);
+                    etContractServiceLine3.setSelection(phone.length());
+                }
+
                 //
                 tvContractServiceLine4.setText(R.string.identification_number);
+                if (line3 != null) {
+                    etContractServiceLine4.setText(line3);
+                    etContractServiceLine4.setSelection(line3.length());
+                }
+
 
                 //已经存在电话 不显示
                 ivLinePhone.setVisibility(View.GONE);
                 llContractServicePhone.setVisibility(View.GONE);
                 //
                 tvContractServiceLine5.setText(R.string.address);
+                if (line4 != null) {
+                    etContractServiceLine5.setText(line4);
+                    etContractServiceLine5.setSelection(line4.length());
+                }
                 //
 
 
@@ -391,7 +418,7 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
                 ivLine6.setVisibility(View.GONE);
                 llContractServiceLine6.setVisibility(View.GONE);
                 //
-                tvContractServiceTitleRetake.setVisibility(View.GONE);
+                includeTextTitleTvSubtitle.setVisibility(View.GONE);
                 break;
             default:
                 break;
@@ -403,17 +430,30 @@ public class ContractServiceActivity extends BaseActivity<IContractServiceActivi
         btNext.setText(content);
     }
 
-    @OnClick({R.id.iv_contract_service_back, R.id.tv_contract_service_title_retake, R.id.iv_contract_service_line1, R
+    @Override
+    public String getPhoneNumber(int createType) {
+        // createTy是3的时候，phone number 跟1 2 不是一个控件，所以这里，用switch 以备扩展
+        switch (createType){
+            case 1:
+            case 2:
+                return etContractServicePhone.getText().toString();
+
+        }
+        return "";
+    }
+
+
+    @OnClick({R.id.include_text_title_imv_arrows_left,R.id.include_text_title_tv_subtitle, R.id.iv_contract_service_line1, R
             .id.iv_contract_service_line2, R.id.iv_contract_service_line3, R.id.iv_contract_service_line4, R.id
             .iv_contract_service_line5, R.id.iv_contract_service_line6, R.id.ll_contract_service_place_type, R.id
             .iv_contract_age_del, R.id.iv_contract_age_add, R.id.bt_next, R.id.iv_contract_age_first_del, R.id.iv_contract_age_first_add
             , R.id.iv_contract_age_period_del, R.id.iv_contract_age_period_add})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.iv_contract_service_back:
+            case R.id.include_text_title_imv_arrows_left:
                 finishAc();
                 break;
-            case R.id.tv_contract_service_title_retake:
+            case R.id.include_text_title_tv_subtitle:
                 mPresenter.retake();
                 break;
             case R.id.iv_contract_service_line1:

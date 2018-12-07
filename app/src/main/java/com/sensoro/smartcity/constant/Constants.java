@@ -239,10 +239,12 @@ public interface Constants {
     String EXTRA_INSPECTION_START_TIME = "extra_inspection_start_time";
     String EXTRA_INSPECTION_INDEX_TASK_INFO = "extra_inspection_index_task_info";
     String EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE = "extra_inspection_instruction_device_type";
+    int CONTRACT_ORIGIN_TYPE_EDIT = 0x200;
 
-    //
+    //合同相关
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
-    String EXTRA_CONTRACT_ID = "EXTRA_CONTRACT_ID";
+    String EXTRA_CONTRACT_ID = "extra_contract_id";
+    String EXTRA_CONTRACT_ORIGIN_TYPE ="extra_contract_origin_type" ;
     //故障
     String EXTRA_MALFUNCTION_INFO = "extra_malfunction_info";
 
@@ -306,6 +308,7 @@ public interface Constants {
     int REQUEST_CODE_PERSON_SERVICE = 0x112;
     int REQUEST_CODE_BUSINESS_LICENSE = 0x113;
     int REQUEST_CODE_CAMERA = 102;
+
     //上传图片相关id
     int IMAGE_ITEM_ADD = -1;
     int REQUEST_CODE_PREVIEW = 0x101;
@@ -348,6 +351,8 @@ public interface Constants {
 
     int EVENT_DATA_ALARM_POP_IMAGES = 0x33;
 
+    int EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE = 0x45;
+
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_DEPLOY_STATION = 0x39;
@@ -375,4 +380,7 @@ public interface Constants {
             add("acrel_fires");
         }
     };
+
+
+
 }

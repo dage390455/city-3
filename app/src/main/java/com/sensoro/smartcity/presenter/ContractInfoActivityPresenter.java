@@ -42,6 +42,7 @@ import rx.schedulers.Schedulers;
 
 public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoActivityView> implements IOnCreate,
         Constants {
+
     private Activity mContext;
     private int serviceType;
     //
@@ -460,6 +461,12 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                     }
                 }
                 break;
+            case EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
+                if(data instanceof  Integer){
+                    requestData((Integer) data);
+                }
+
+                break;
         }
     }
 
@@ -468,6 +475,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         Intent intent = new Intent();
         intent.setClass(mContext, ContractServiceActivity.class);
         int createdType = mContractInfo.getCreated_type();
+        intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,Constants.CONTRACT_ORIGIN_TYPE_EDIT);
         intent.putExtra(EXTRA_CONTRACT_TYPE, createdType);
         intent.putExtra(EXTRA_CONTRACT_ID, mContractInfo.getId());
         String placeType = mContractInfo.getPlace_type();

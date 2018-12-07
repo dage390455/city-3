@@ -151,6 +151,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     private void initView() {
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_info_title));
         includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.title_edit));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         contractTemplateShowAdapter = new ContractTemplateShowAdapter(mActivity);
