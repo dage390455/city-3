@@ -213,6 +213,7 @@
                         android:textColor="@color/c_a6a6a6"
                         android:text="@string/not_added" />
                     <ImageView
+                        android:id="@+id/deploy_detail_iv_arrow_we_chat"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"

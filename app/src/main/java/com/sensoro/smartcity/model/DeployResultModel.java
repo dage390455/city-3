@@ -9,11 +9,14 @@ public class DeployResultModel implements Serializable {
     public int scanType;
     public long updateTime;
     public String errorMsg;
+    public String signal;
+    public int deviceStatus;
     public String sn;
     public String name;
     public String contact;
+    public String wxPhone;
     public String phone;
     public String address;
-    public int deviceStatus;
+    public int stationStatus;
     public DeviceInfo deviceInfo;
 }

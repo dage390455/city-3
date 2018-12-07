@@ -109,6 +109,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().setDeployPhotoVisible(true);
                 getView().updateUploadTvText(mContext.getString(R.string.replacement_equipment));
                 echoDeviceInfo();
+                getView().setDeployDetailArrowWeChatVisible(false);
                 break;
             case TYPE_SCAN_INSPECTION:
                 //扫描巡检设备
@@ -193,7 +194,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().updateUploadState(true);
             }
         } else {
-            //TODO 直接上传
+            //直接上传
 //            doUploadImages(lon, lan);
             //修改为不能强制上传
             getView().toastShort(mContext.getString(R.string.channel_mask_error_tip));
@@ -235,7 +236,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     }
                     getView().dismissUploadProgressDialog();
                     LogUtils.loge(this, "上传成功--- size = " + strings.size());
-                    //TODO 上传结果
+                    // 上传结果
                     doDeployResult(lon, lan, strings);
                 }
 
@@ -264,8 +265,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_DEVICE:
                 //设备部署
                 getView().showProgressDialog();
+                //TODO 暂时不支持添加wx电话
+//                deployAnalyzerModel.weChatAccount = null;
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -289,7 +292,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         });
                 break;
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
-                //TODO 巡检设备更换
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                         deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name, deployContactModel.phone, imgUrls).
@@ -353,42 +355,63 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         Intent intent = new Intent();
         intent.setClass(mContext, DeployResultActivity.class);
         DeployResultModel deployResultModel = new DeployResultModel();
-        deployResultModel.resultCode = resultCode;
         deployResultModel.sn = scanSN;
+        deployResultModel.resultCode = resultCode;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.errorMsg = errorInfo;
+        deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
+        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+            DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+            deployResultModel.contact = deployContactModel.name;
+            deployResultModel.phone = deployContactModel.phone;
+        }
+        deployResultModel.address = deployAnalyzerModel.address;
+        deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
+        deployResultModel.deviceStatus = deployAnalyzerModel.status;
+        deployResultModel.signal = deployAnalyzerModel.signal;
+        deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
     }
 
     private void freshPoint(DeviceDeployRsp deviceDeployRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
-        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
-        deployResultModel.deviceInfo = deviceDeployRsp.getData();
+        DeviceInfo deviceInfo = deviceDeployRsp.getData();
+        deployResultModel.deviceInfo = deviceInfo;
         Intent intent = new Intent(mContext, DeployResultActivity.class);
+        //
+        deployResultModel.sn = deviceInfo.getSn();
+        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+        deployResultModel.scanType = deployAnalyzerModel.deployType;
+        deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
         //TODO 新版联系人
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
             deployResultModel.contact = deployContactModel.name;
             deployResultModel.phone = deployContactModel.phone;
         }
-        deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.address = deployAnalyzerModel.address;
+        deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
+        deployResultModel.deviceStatus = deployAnalyzerModel.status;
+        deployResultModel.signal = deployAnalyzerModel.signal;
+        deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
     }
 
     private void freshStation(DeployStationInfoRsp deployStationInfoRsp) {
         DeployResultModel deployResultModel = new DeployResultModel();
-        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
+        //
+        Intent intent = new Intent(mContext, DeployResultActivity.class);
         DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
         deployResultModel.name = deployStationInfo.getName();
         deployResultModel.sn = deployStationInfo.getSn();
-        deployResultModel.deviceStatus = deployStationInfo.getNormalStatus();
+        deployResultModel.stationStatus = deployStationInfo.getNormalStatus();
         deployResultModel.updateTime = deployStationInfo.getUpdatedTime();
-        Intent intent = new Intent(mContext, DeployResultActivity.class);
+        deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.address = deployAnalyzerModel.address;
+        deployResultModel.signal = deployAnalyzerModel.signal;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
     }
@@ -448,7 +471,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
@@ -528,7 +550,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     public void doConfirm() {
-        //TODO 所有逻辑拦击
         //姓名地址校验
         if (checkHasNameAddress()) return;
         switch (deployAnalyzerModel.deployType) {
@@ -541,7 +562,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
-                //TODO 联系人上传
                 //联系人校验
                 if (checkHasContact()) return;
                 if (checkHasPhoto()) return;
@@ -850,11 +870,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     public void doWeChatRelation() {
-        Intent intent = new Intent(mContext, DeployMonitorWeChatRelationActivity.class);
-        if (!TextUtils.isEmpty(deployAnalyzerModel.weChatAccount)) {
-            intent.putExtra(EXTRA_SETTING_WE_CHAT_RELATION, deployAnalyzerModel.weChatAccount);
+        if (deployAnalyzerModel.deployType == TYPE_SCAN_DEPLOY_DEVICE) {
+            Intent intent = new Intent(mContext, DeployMonitorWeChatRelationActivity.class);
+            if (!TextUtils.isEmpty(deployAnalyzerModel.weChatAccount)) {
+                intent.putExtra(EXTRA_SETTING_WE_CHAT_RELATION, deployAnalyzerModel.weChatAccount);
+            }
+            intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
+            getView().startAC(intent);
         }
-        intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
-        getView().startAC(intent);
     }
 }

@@ -387,12 +387,12 @@
     //部署结果
     <string name="deploy_result_back_home">Back Home</string>
     <string name="deploy_result_continue">Continue</string>
-    <string name="deploy_result_device_number">SN:</string>
-    <string name="deploy_result_name">Name:</string>
-    <string name="deploy_result_location">Location:</string>
-    <string name="deploy_result_contract">Contact:</string>
-    <string name="deploy_result_status">Status:</string>
-    <string name="deploy_result_recent_upload_time">Last upload date:</string>
+    <string name="deploy_result_device_number">SN</string>
+    <string name="deploy_result_name">Name</string>
+    <string name="deploy_result_location">Location</string>
+    <string name="deploy_result_contract">Contact</string>
+    <string name="deploy_result_status">Status</string>
+    <string name="deploy_result_recent_upload_time">Last upload date</string>
     <string name="deploy_result_is_upload">Does deploy this device？</string>
     <string name="no_signal_can_not_uploaded">No signal can not be uploaded</string>
     <string name="deploy_result_upload_tip">The signal of device is bad or none, Please push the self check button of device and try it again.</string>
@@ -442,7 +442,8 @@
     <string name="monitor_point_information">basic info</string>
     //名称和地址
     <string name="name_address">Name/Address</string>
-    <string name="we_chat_relation">小程序账号</string>
+    <string name="we_chat_relation">WeChat No</string>
+    <string name="we_chat_relation_">WeChat No</string>
     <string name="name_address_history_tag">History/Tag</string>
     <string name="name_address_save">Save</string>
     //扫描界面
@@ -586,7 +587,7 @@
     <string name="deploy_result_confirm_information">Confirm The Information</string>
     <string name="deploy_result_successed">Congratulations! Sensor point deployment is succcessful</string>
     <string name="deploy_result_signal">Signal: None</string>
-    <string name="login_tip">生活更便捷 城市更安全</string>
+    <string name="login_tip">Life is more convenient, city is safer</string>
     <string name="login_input_account_tip">Please enter your account</string>
     <string name="login_input_password_tip">Please enter your password</string>
     <string name="deploy_device_detail_no_added">No added</string>
@@ -596,7 +597,7 @@
     <string name="necessary_permission_are_denied">The necessary permission are denied</string>
     <string name="monitor_point_detail_self_check">Self-Test</string>
     <string name="monitor_point_detail_query">Query</string>
-    <string name="monitor_point_detail_psd">修改密码</string>
+    <string name="monitor_point_detail_psd">Change Password</string>
     <string name="monitor_point_detail_reset">Reset</string>
     <string name="is_device_erasure">Whether to silence the alarm device</string>
     <string name="device_erasure_tip_message">Whether the alarm device is muted in the current device audible alarm</string>
@@ -623,15 +624,15 @@
     <string name="monitor_point_operation_schedule_no_error">Task code acquisition failed</string>
     <string name="request_success">Request successfully</string>
     <string name="request_failed">Request failure</string>
-    <string name="monitor_point_detail_air_switch_config">空开配置</string>
+    <string name="monitor_point_detail_air_switch_config">Setting</string>
     <string name="electric_current">Current</string>
-    <string name="device_air_switch_config_tip_message">Reconfiguration will affect device alarm thresholds </string>
+    <string name="device_air_switch_config_tip_message">Resetting this value will change the threshold of alarm</string>
     <string name="air_switch_config">Configuration</string>
-    <string name="is_device_air_switch_config">是否进行空开配置</string>
-    <string name="configuring">配置中</string>
-    <string name="monitor_point_operation_error_value_range">Input error,value range 50 to 560</string>
+    <string name="is_device_air_switch_config">Setting</string>
+    <string name="configuring">Setting...</string>
+    <string name="monitor_point_operation_error_value_range">Please input a number from 50 to 560</string>
     <string name="enter_the_correct_number_format">Please enter the correct number format</string>
-    <string name="input_not_null">Input can not be empty</string>
+    <string name="input_not_null">The input must not be empty</string>
 
     <string name="upload_photo_dialog_append_title3"></string>
     <string name="monitor_point_detail_erasure">Mute</string>
@@ -642,4 +643,7 @@
     <string name="please_use_different_device_to_replace">Please use different device to replace</string>
     <string name="no_search_history">No search history</string>
     <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
+    <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number</string>
+    <string name="enter_the_phone_number_used_for_applet_login">Enter the phone number used for applet login</string>
+    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">Please enter the mobile phone number and the contracted mobile phone number</string>
 </resources>

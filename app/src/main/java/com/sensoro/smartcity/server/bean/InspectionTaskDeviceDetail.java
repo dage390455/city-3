@@ -7,18 +7,6 @@ import java.util.List;
 import java.util.Objects;
 
 public class InspectionTaskDeviceDetail implements Serializable, Comparable<InspectionTaskDeviceDetail> {
-    /**
-     * id : 5ba9b3b2f11db9772ee33026
-     * name : 一个有节操的传感器
-     * taskId : 5ba9b3b2f11db9772ee33021
-     * sn : 01921117C6DC0A6A
-     * deviceType : smoke
-     * status : 0
-     * lonlat : [0,0]
-     * timecost :
-     * tags : ["栋栋真帅","杨哥救我","长寿么么哒"]
-     * malfunction : {"tags":[],"remark":"","handle":-1}
-     */
 
     private String id;
     private String name;

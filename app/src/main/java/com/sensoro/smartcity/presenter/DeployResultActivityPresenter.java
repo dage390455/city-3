@@ -10,7 +10,6 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.DateUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -71,16 +70,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
             switch (deployResultModel.resultCode) {
                 case DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
                     //失败
-                    getView().setResultImageView(R.drawable.deploy_fail);
-                    getView().setStateTextView(mContext.getString(R.string.failed));
-                    if (!TextUtils.isEmpty(deployResultModel.sn)) {
-                        getView().setSnTextView(deployResultModel.sn);
-                    }
-                    if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
-                        getView().setTipsTextView(mContext.getResources().getString(R.string
-                                .tips_deploy_station_failed));
-                        getView().setDeployResultErrorInfo(mContext.getString(R.string.error) + "：" + deployResultModel.errorMsg);
-                    }
+                    setDeployResultFailedDetail();
                     break;
                 case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
                     //不在账户下
@@ -103,7 +93,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     break;
                 case DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS:
                     //成功
-                    setDeployResultDetail();
+                    setDeployResultSuccessDetail();
                     break;
             }
 
@@ -114,71 +104,138 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 
     }
 
-    private void setDeployResultDetail() {
-        DeviceInfo deviceInfo = deployResultModel.deviceInfo;
-        String sn = deviceInfo.getSn().toUpperCase();
-        String name = deviceInfo.getName();
-        long updatedTime = deviceInfo.getUpdatedTime();
+    private void setDeployResultSuccessDetail() {
         switch (deployResultModel.scanType) {
             //基站部署
             case TYPE_SCAN_DEPLOY_STATION:
-                deployStation(sn, name, deployResultModel.address, updatedTime);
+                getView().setResultImageView(R.drawable.deploy_succeed);
+                getView().setStateTextView(mContext.getString(R.string.success));
+                getView().setTipsTextView(mContext.getResources().getString(R.string
+                        .tips_deploy_station_success));
+                if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                    getView().setSnTextView(deployResultModel.sn);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.name)) {
+                    getView().setNameTextView(deployResultModel.name);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.address)) {
+                    getView().setAddressTextView(deployResultModel.address);
+                }
+
+                getView().setContactAndSignalVisible(false);
+                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]));
+                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
+                    getView().setUpdateTextViewVisible(false);
+                } else {
+                    getView().setUpdateTextView(DateUtil
+                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                }
                 break;
             //设备部署/更换
             case TYPE_SCAN_DEPLOY_DEVICE:
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //TODO 巡检设备更换
-                deployDevice(sn, name, deployResultModel.address, updatedTime);
+                getView().setResultImageView(R.drawable.deploy_succeed);
+                getView().setStateTextView(mContext.getString(R.string.success));
+                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
+                if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                    getView().setSnTextView(deployResultModel.sn);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.name)) {
+                    getView().setNameTextView(deployResultModel.name);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.address)) {
+                    getView().setAddressTextView(deployResultModel.address);
+                }
+                getView().setContactAndSignalVisible(true);
+                getView().setContactTextView((TextUtils.isEmpty(deployResultModel.contact) ? mContext.getString(R.string.no)
+                        : deployResultModel.contact) + "(" + (TextUtils.isEmpty
+                        (deployResultModel.phone) ?
+                        mContext.getString(R.string.no) : deployResultModel.phone) + ")");
+                getView().setWeChatTextView((TextUtils.isEmpty(deployResultModel.wxPhone) ?
+                        mContext.getString(R.string.not_added) : deployResultModel.wxPhone));
+                getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
+
+                getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]));
+                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
+                    getView().setUpdateTextViewVisible(false);
+                } else {
+                    getView().setUpdateTextView(DateUtil
+                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                }
                 break;
             default:
                 break;
         }
     }
 
-    private void deployDevice(String sn, String name, String address, long updatedTime) {
-        if (!TextUtils.isEmpty(address)) {
-            getView().setAddressTextView(address);
-        }
-        getView().setContactAndSignalVisible(true);
-        getView().setContactTextView((TextUtils.isEmpty(deployResultModel.contact) ? mContext.getString(R.string.no)
-                : deployResultModel.contact) + "(" + (TextUtils.isEmpty
-                (deployResultModel.phone) ?
-                mContext.getString(R.string.no) : deployResultModel.phone) + ")");
-        getView().refreshSignal(updatedTime, deployResultModel.deviceInfo.getSignal());
-        getView().setResultImageView(R.drawable.deploy_succeed);
-        getView().setStateTextView(mContext.getString(R.string.success));
-        getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_success));
-        getView().setSnTextView(sn);
-        getView().setNameTextView(name);
-        getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceInfo.getStatus()]));
-//                // 修改长传时间
-//                String lastUpdatedTime = deviceInfo.getLastUpdatedTime();
-        if (updatedTime == -1 || updatedTime == 0) {
-            getView().setUpdateTextViewVisible(false);
-        } else {
-            getView().setUpdateTextView(DateUtil
-                    .getFullParseDatePoint(mContext, updatedTime));
-        }
-    }
-
-    private void deployStation(String sn, String name, String address, long updatedTime) {
-        if (!TextUtils.isEmpty(address)) {
-            getView().setAddressTextView(address);
-        }
-        getView().setContactAndSignalVisible(false);
-        getView().setResultImageView(R.drawable.deploy_succeed);
-        getView().setStateTextView(mContext.getString(R.string.success));
-        getView().setTipsTextView(mContext.getResources().getString(R.string
-                .tips_deploy_station_success));
-        getView().setSnTextView(sn);
-        getView().setNameTextView(name);
-        getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.deviceInfo.getStatus() + 1]));
-        if (updatedTime == -1 || updatedTime == 0) {
-            getView().setUpdateTextViewVisible(false);
-        } else {
-            getView().setUpdateTextView(DateUtil
-                    .getFullParseDatePoint(mContext, updatedTime));
+    private void setDeployResultFailedDetail() {
+        switch (deployResultModel.scanType) {
+            //基站部署
+            case TYPE_SCAN_DEPLOY_STATION:
+                getView().setResultImageView(R.drawable.deploy_fail);
+                getView().setTipsTextView(mContext.getResources().getString(R.string
+                        .tips_deploy_station_failed));
+                getView().setStateTextView(mContext.getString(R.string.failed));
+                if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                    getView().setSnTextView(deployResultModel.sn);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
+                    getView().setDeployResultErrorInfo(mContext.getString(R.string.error) + "：" + deployResultModel.errorMsg);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.name)) {
+                    getView().setNameTextView(deployResultModel.name);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.address)) {
+                    getView().setAddressTextView(deployResultModel.address);
+                }
+                getView().setContactAndSignalVisible(false);
+                getView().setStatusTextView(mContext.getString(Constants.STATION_STATUS_ARRAY[deployResultModel.stationStatus + 1]));
+                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
+                    getView().setUpdateTextViewVisible(false);
+                } else {
+                    getView().setUpdateTextView(DateUtil
+                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                }
+                break;
+            //设备部署/更换
+            case TYPE_SCAN_DEPLOY_DEVICE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                getView().setResultImageView(R.drawable.deploy_fail);
+                getView().setStateTextView(mContext.getString(R.string.failed));
+                getView().setTipsTextView(mContext.getResources().getString(R.string.tips_deploy_failed));
+                if (!TextUtils.isEmpty(deployResultModel.sn)) {
+                    getView().setSnTextView(deployResultModel.sn);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.errorMsg)) {
+                    getView().setDeployResultErrorInfo(mContext.getString(R.string.error) + "：" + deployResultModel.errorMsg);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.name)) {
+                    getView().setNameTextView(deployResultModel.name);
+                }
+                if (!TextUtils.isEmpty(deployResultModel.address)) {
+                    getView().setAddressTextView(deployResultModel.address);
+                }
+                getView().setContactAndSignalVisible(true);
+                getView().setContactTextView((TextUtils.isEmpty(deployResultModel.contact) ? mContext.getString(R.string.no)
+                        : deployResultModel.contact) + "(" + (TextUtils.isEmpty
+                        (deployResultModel.phone) ?
+                        mContext.getString(R.string.no) : deployResultModel.phone) + ")");
+                getView().setWeChatTextView((TextUtils.isEmpty(deployResultModel.wxPhone) ?
+                        mContext.getString(R.string.not_added) : deployResultModel.wxPhone));
+                getView().setStatusTextView(mContext.getString(Constants.DEVICE_STATUS_ARRAY[deployResultModel.deviceStatus]));
+                getView().refreshSignal(deployResultModel.updateTime, deployResultModel.signal);
+                if (deployResultModel.updateTime == -1 || deployResultModel.updateTime == 0) {
+                    getView().setUpdateTextViewVisible(false);
+                } else {
+                    getView().setUpdateTextView(DateUtil
+                            .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                }
+                break;
+            default:
+                break;
         }
     }
 

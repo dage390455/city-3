@@ -70,7 +70,6 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         //
@@ -271,7 +270,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO 对照片信息统一处理
+        // 对照片信息统一处理
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
             if (data != null && requestCode == REQUEST_CODE_SELECT) {

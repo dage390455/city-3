@@ -106,7 +106,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        //todo 点击取消，会弹起键盘，这个坑
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(mActivity);
         initView();

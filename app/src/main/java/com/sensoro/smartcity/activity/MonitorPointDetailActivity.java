@@ -123,18 +123,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         mPresenter.initData(mActivity);
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.onStop();
-    }
-
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeImvTitleTvTitle.setText(R.string.monitoring_point_details);

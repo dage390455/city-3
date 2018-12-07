@@ -4,27 +4,6 @@ import java.util.List;
 
 public class InspectionTaskExceptionDeviceModel {
 
-
-    /**
-     * _id : 5ba9b3b2f11db9772ee33025
-     * sn : 01601117C6E3C88D
-     * taskId : 5ba9b3b2f11db9772ee33021
-     * deviceType : smoke
-     * owners : 590c235044aa4369905d455b
-     * imgAndVedio : []
-     * __v : 0
-     * remark : zhnsjs
-     * <p>
-     * finishTime : 2018-09-25T08:15:02.178Z
-     * startTime : 2018-09-25T08:14:16.048Z
-     * imgAndVideo : [{"_id":"5ba9f433b428a3795599a180","url":"https://resource-city.sensoro.com/69CE9436121526FCE5B5084FD64E6972","type":"image"}]
-     * malfunctions : [1,4,2,5]
-     * malfunctionHandle : 0
-     * inService : 1
-     * status : 1
-     * device : {"name":"望京SOHO塔1B座2807-035","unionType":"smoke","alarms":{"notification":{"contact":"wang","content":"17813456890","types":"phone"},"mapping":[]},"lonlat":[116.482118,39.996104],"tags":["SENSORO"],"deviceType":"smoke"}
-     */
-
     private String _id;
     private String sn;
     private String taskId;

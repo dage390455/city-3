@@ -406,13 +406,13 @@
     <string name="deploy_result_back_home">返回主页</string>
     <string name="deploy_result_continue">继续部署</string>
     <string name="deploy_result_successed">恭喜！传感器点位部署成功</string>
-    <string name="deploy_result_device_number">设备号:</string>
-    <string name="deploy_result_name">名称:</string>
-    <string name="deploy_result_location">位置:</string>
-    <string name="deploy_result_contract">联系人:</string>
-    <string name="deploy_result_status">状态:</string>
+    <string name="deploy_result_device_number">设备号</string>
+    <string name="deploy_result_name">名称</string>
+    <string name="deploy_result_location">位置</string>
+    <string name="deploy_result_contract">联系人</string>
+    <string name="deploy_result_status">状态</string>
     <string name="deploy_result_signal">信号 无</string>
-    <string name="deploy_result_recent_upload_time">最近上传时间:</string>
+    <string name="deploy_result_recent_upload_time">最近上传时间</string>
     <string name="deploy_result_is_upload">是否上传完成部署？</string>
     <string name="no_signal_can_not_uploaded">无信号不能上传</string>
     <string name="deploy_result_upload_tip">当前设备无信号或信号差，请按设备自检按钮刷新信号再完成上传部署</string>
@@ -468,6 +468,7 @@
     //名称和地址
     <string name="name_address">名称/地址</string>
     <string name="we_chat_relation">小程序账号</string>
+    <string name="we_chat_relation_">小程序</string>
     <string name="name_address_history_tag">历史标签</string>
     <string name="name_address_save">保存</string>
     //扫描界面
@@ -640,4 +641,7 @@
 
     <string name="please_use_different_device_to_replace">请使用不同的设备进行更换</string>
     <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
+    <string name="please_enter_a_valid_mobile_number">请输入有效手机号</string>
+    <string name="enter_the_phone_number_used_for_applet_login">输入用于小程序登录的手机号</string>
+    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">输入的手机号与签订合同手机号请保持一致</string>
 </resources>

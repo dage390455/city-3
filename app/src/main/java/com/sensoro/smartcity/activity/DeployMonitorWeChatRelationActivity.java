@@ -37,7 +37,7 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
     @BindView(R.id.ac_chat_relation_tv_history)
     TextView acWeChatRelationTvHistory;
     @BindView(R.id.ac_chat_relation_rc_history)
-    RecyclerView acWechatRelationRcHistory;
+    RecyclerView acWeChatRelationRcHistory;
     @BindView(R.id.ac_chat_relation_tv_save)
     TextView acWeChatRelationTvSave;
     @BindView(R.id.include_text_title_imv_arrows_left)
@@ -67,8 +67,8 @@ public class DeployMonitorWeChatRelationActivity extends BaseActivity<IDeployMon
         mHistoryAdapter.setRecycleViewItemClickListener(this);
         SensoroLinearLayoutManager manager = new SensoroLinearLayoutManager(mActivity);
         manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        acWechatRelationRcHistory.setLayoutManager(manager);
-        acWechatRelationRcHistory.setAdapter(mHistoryAdapter);
+        acWeChatRelationRcHistory.setLayoutManager(manager);
+        acWeChatRelationRcHistory.setAdapter(mHistoryAdapter);
         acWeChatRelationEt.requestFocus();
     }
 

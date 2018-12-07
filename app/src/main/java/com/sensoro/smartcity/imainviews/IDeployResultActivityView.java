@@ -16,6 +16,8 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setContactTextView(String content);
 
+    void setWeChatTextView(String content);
+
     void setStatusTextView(String status);
 
     void setUpdateTextView(String update);

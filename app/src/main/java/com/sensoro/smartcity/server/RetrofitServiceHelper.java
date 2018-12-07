@@ -496,7 +496,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -523,6 +523,9 @@ public enum RetrofitServiceHelper {
                     jsonArray.put(url);
                 }
                 jsonObject.put("imgUrls", jsonArray);
+            }
+            if (!TextUtils.isEmpty(wxPhone)) {
+                jsonObject.put("wxPhone", wxPhone);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1209,7 +1212,7 @@ public enum RetrofitServiceHelper {
         return devicesMergeTypes;
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec){
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1217,21 +1220,21 @@ public enum RetrofitServiceHelper {
             for (String sn : snList) {
                 jsonSnList.put(sn);
             }
-            jsonObject.put("snList",jsonSnList);
-            jsonObject.put("type",type);
+            jsonObject.put("snList", jsonSnList);
+            jsonObject.put("type", type);
 
-            if(interval != null){
-                jsonObject.put("interval",type);
+            if (interval != null) {
+                jsonObject.put("interval", type);
             }
-            if(rules != null){
+            if (rules != null) {
                 JSONArray jsonRules = new JSONArray();
                 for (String rule : rules) {
                     jsonRules.put(rule);
                 }
-                jsonObject.put("rules",jsonRules);
+                jsonObject.put("rules", jsonRules);
             }
-            if(switchSpec != null){
-                jsonObject.put("switchSpec",switchSpec);
+            if (switchSpec != null) {
+                jsonObject.put("switchSpec", switchSpec);
             }
 
         } catch (JSONException e) {
@@ -1242,5 +1245,20 @@ public enum RetrofitServiceHelper {
         Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation = retrofitService.doMonitorPointOperation(body);
         RxApiManager.getInstance().add("doMonitorPointOperation", doMonitorPointOperation.subscribe());
         return doMonitorPointOperation;
+    }
+
+    public Observable<DeviceDeployRsp> doDevicePositionCalibration(String sn, Double lon, Double lat) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        Observable<DeviceDeployRsp> doDevicePositionCalibration = retrofitService.doDevicePositionCalibration(sn, body);
+        RxApiManager.getInstance().add("doDevicePositionCalibration", doDevicePositionCalibration.subscribe());
+        return doDevicePositionCalibration;
     }
 }

@@ -54,6 +54,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     LinearLayout acDeployResultTvLlContact;
     @BindView(R.id.ac_deploy_result_tv_contact)
     TextView acDeployResultTvContact;
+    @BindView(R.id.ac_deploy_result_ll_we_chat)
+    LinearLayout acDeployResultLlWeChat;
+    @BindView(R.id.ac_deploy_result_tv_we_chat)
+    TextView acDeployResultTvWeChat;
     @BindView(R.id.ac_deploy_result_tv_signal)
     TextView acDeployResultTvSignal;
     @BindView(R.id.ac_deploy_result_ll_status)
@@ -147,6 +151,12 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void setContactTextView(String content) {
         acDeployResultTvLlContact.setVisibility(View.VISIBLE);
         acDeployResultTvContact.setText(content);
+    }
+
+    @Override
+    public void setWeChatTextView(String content) {
+        acDeployResultLlWeChat.setVisibility(View.VISIBLE);
+        acDeployResultTvWeChat.setText(content);
     }
 
     @Override

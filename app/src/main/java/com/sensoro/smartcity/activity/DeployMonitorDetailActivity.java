@@ -81,6 +81,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     FrameLayout flNotOwn;
     @BindView(R.id.last_view)
     View lastView;
+    @BindView(R.id.deploy_detail_iv_arrow_we_chat)
+    ImageView deployDetailIvArrowWeChat;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -98,7 +100,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.actvity_deploy_device_detail_h);
-        // todo 这个界面的标签要能滑动啊
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
@@ -454,6 +455,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setNotOwnVisible(boolean isVisible) {
         flNotOwn.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         lastView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployDetailArrowWeChatVisible(boolean isVisible) {
+        deployDetailIvArrowWeChat.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

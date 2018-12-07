@@ -10,6 +10,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorWeChatRelationActivityView;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 
@@ -83,25 +84,13 @@ public class DeployMonitorWeChatRelationActivityPresenter extends BasePresenter<
     }
 
     public void doChoose(String text) {
-//        if (!TextUtils.isEmpty(text)) {
-//            byte[] bytes = new byte[0];
-//            try {
-//                bytes = text.getBytes("UTF-8");
-//            } catch (UnsupportedEncodingException e) {
-//                e.printStackTrace();
-//            }
-//            if (bytes.length > 48) {
-////                getView().toastShort(mContext.getString(R.string.name_address_length));
-////                return;
-////                是否有字符限制
-//            }
-//
-//        } else {
-//            getView().toastShort(mContext.getString(R.string.must_enter_name_address));
-//            return;
-//        }
+        if (!TextUtils.isEmpty(text)) {
+            if (!RegexUtils.checkPhone(text)) {
+                getView().toastShort(mContext.getString(R.string.please_enter_a_valid_mobile_number));
+                return;
+            }
+        }
         save(text);
-//        mKeywordEt.clearFocus();
         EventData eventData = new EventData();
         eventData.code = EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION;
         eventData.data = text;

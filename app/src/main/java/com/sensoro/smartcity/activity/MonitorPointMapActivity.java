@@ -49,7 +49,7 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
     private void initView() {
         includeTextTitleTvTitle.setText(R.string.location_navigation);
         includeTextTitleTvSubtitle.setText(R.string.location_confirm);
-        setPositionCalibrationVisible(true);
+        setPositionCalibrationVisible(false);
         mPresenter.getMap(tmMonitorMap.getMap());
     }
 
@@ -59,17 +59,6 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
         tmMonitorMap.onLowMemory();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.onStop();
-    }
 
     /**
      * 方法必须重写

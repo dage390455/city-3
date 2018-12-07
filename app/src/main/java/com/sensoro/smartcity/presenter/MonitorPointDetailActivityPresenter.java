@@ -21,7 +21,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
@@ -56,7 +56,7 @@ import java.util.Set;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorPointDetailActivityView> implements IOnStart, Constants, GeocodeSearch.OnGeocodeSearchListener {
+public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorPointDetailActivityView> implements IOnCreate, Constants, GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
     private DeviceInfo mDeviceInfo;
 
@@ -79,6 +79,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
@@ -179,15 +180,19 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             getView().updateTags(list);
 
         }
-        SensorStruct batteryStruct = mDeviceInfo.getSensoroDetails().get("battery");
-        if (batteryStruct != null) {
-            String battery = batteryStruct.getValue().toString();
-            if (battery.equals("-1.0") || battery.equals("-1")) {
-                getView().setBatteryInfo(mContext.getString(R.string.power_supply));
-            } else {
-                getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
+        Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
+        if (sensoroDetails != null) {
+            SensorStruct batteryStruct = sensoroDetails.get("battery");
+            if (batteryStruct != null) {
+                String battery = batteryStruct.getValue().toString();
+                if (battery.equals("-1.0") || battery.equals("-1")) {
+                    getView().setBatteryInfo(mContext.getString(R.string.power_supply));
+                } else {
+                    getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
+                }
             }
         }
+
         Integer interval = mDeviceInfo.getInterval();
         if (interval != null) {
             getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
@@ -423,15 +428,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     }
 
-    @Override
-    public void onStart() {
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
@@ -441,17 +437,20 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
                     final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
-                    if (pushDeviceInfo.getSn().equals(mDeviceInfo.getSn())) {
+                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
                         if (AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (getView() != null) {
                                         mDeviceInfo.cloneSocketData(pushDeviceInfo);
-                                        //TODO 单项数值设置
-                                        freshLocationDeviceInfo();
-                                        freshTopData();
-                                        handleDeviceInfoAdapter();
+                                        // 单项数值设置
+                                        if (getView() != null) {
+                                            freshLocationDeviceInfo();
+                                            freshTopData();
+                                            handleDeviceInfoAdapter();
+                                        }
+
                                     }
                                 }
                             });
@@ -474,8 +473,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                         public void run() {
                                             if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
                                                 mHandler.removeCallbacks(DeviceTaskOvertime);
-                                                getView().dismissOperatingLoadingDialog();
-                                                getView().showOperationSuccessToast();
+                                                if (getView() != null) {
+                                                    getView().dismissOperatingLoadingDialog();
+                                                    getView().showOperationSuccessToast();
+                                                }
                                             }
                                         }
                                     });
@@ -486,11 +487,32 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     }
                 }
                 break;
+            case EVENT_DATA_DEVICE_POSITION_CALIBRATION:
+                if (data instanceof DeviceInfo) {
+                    final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
+                    if (pushDeviceInfo.getSn().equals(mDeviceInfo.getSn())) {
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (getView() != null) {
+                                    mDeviceInfo.cloneSocketData(pushDeviceInfo);
+                                    freshLocationDeviceInfo();
+                                    freshTopData();
+                                    handleDeviceInfoAdapter();
+                                }
+                            }
+                        });
+                    }
+                }
+
+                break;
+
         }
     }
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -513,10 +535,14 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     public void doNavigation() {
         double[] lonlat = mDeviceInfo.getLonlat();
-
-        double v = lonlat[1];
-        double v1 = lonlat[0];
-        if (lonlat.length > 1 && v == 0 || v1 == 0) {
+        if (lonlat.length == 2) {
+            double v = lonlat[1];
+            double v1 = lonlat[0];
+            if (v == 0 || v1 == 0) {
+                getView().toastShort(mContext.getString(R.string.location_information_not_set));
+                return;
+            }
+        } else {
             getView().toastShort(mContext.getString(R.string.location_information_not_set));
             return;
         }
@@ -624,5 +650,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             }
         });
 
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

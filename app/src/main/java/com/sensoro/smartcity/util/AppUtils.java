@@ -53,8 +53,11 @@ public class AppUtils {
 
     public static boolean isActivityTop(Context context, Class<?> activityClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return name.equals(activityClass.getName());
+        String name = null;
+        if (manager != null) {
+            name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        }
+        return name != null && name.equals(activityClass.getName());
     }
 
     /**

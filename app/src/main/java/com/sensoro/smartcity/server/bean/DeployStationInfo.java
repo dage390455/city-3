@@ -3,34 +3,6 @@ package com.sensoro.smartcity.server.bean;
 import java.util.List;
 
 public class DeployStationInfo {
-    /**
-     * _id : 59cc615d93f92a1e58d3805b
-     * appId : 50I35FhvOAw9
-     * users : {"_id":"590c235044aa4369905d455b","updatedTime":1529484942657,"nickname":"DEMO",
-     * "appId":"50I35FhvOAw9","appKey":"jZuYQtqsQeP1bTVtsI63aBP4cuVKTdJ1Syws0BUrunt",
-     * "appSecret":"LPMKMqgSfTmXGRwd2vcM6jpPgISZ44aW","addBy":"590bfad00771ed116b1df421","contacts":"15210505093",
-     * "contactsName":"是","createdTime":1493967696917,"noticeLevel":"senior","isCopySubUserAlarmMsg":true,
-     * "binding":["5ab366b931e8d506daadc894","5adef07b362c4f2f376b43cb"],"isSpecific":false,"isStop":false,
-     * "isDeleted":false,"showAllDevice":true,"geoFence":[],"character":{"logoUrl1":"http://7u2jeb.com1.z0.glb
-     * .clouddn.com/bb56c20a864b6f2b6658a1fa2f607d07.png","logoUrl":"http://7u2jeb.com1.z0.glb.clouddn
-     * .com/bb56c20a864b6f2b6658a1fa2f607d07.png","sms":{"alarm":1844880,"ok":1844884},"isApply":false,
-     * "domain":"city-pro-test.sensoro.com","shortName":"南京思十亦。","fullName":"南京思十亦电子科技有限公司"},
-     * "config":{"businessCount":6,"businessLimit":10},"cases":["angle","cover,level","light","distance",
-     * "temperature,humidity","smoke","pm2_5,pm10","no2","co2"],"roles":"dealers","province":"北京","city":"北京",
-     * "grants":{},"id":"590c235044aa4369905d455b"}
-     * sn : 01707E17C681E5AE
-     * status : offline
-     * normalStatus : 4
-     * type : gateway
-     * firmwareVersion : 0.7.0
-     * hardwareVersion : F5
-     * netacm : ethernet
-     * updatedTime : 1506566493429
-     * lonlatLabel : [0,0]
-     * lonlat : [0,0]
-     * tags : ["小基站"]
-     * id : 59cc615d93f92a1e58d3805b
-     */
     private String _id;
     private String appId;
     //    private UsersBean users;

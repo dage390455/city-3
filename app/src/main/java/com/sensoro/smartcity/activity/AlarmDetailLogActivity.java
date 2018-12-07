@@ -100,7 +100,6 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //TODO 数据回传
         mPresenter.handlerActivityResult(requestCode, resultCode, data);
     }
 

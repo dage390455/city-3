@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
@@ -62,7 +63,10 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                 getView().setPositionStatus(0);
             }
             getView().refreshSingle(mDeployRecordInfo.getSignalQuality());
-
+            String wxPhone = mDeployRecordInfo.getWxPhone();
+            if (!TextUtils.isEmpty(wxPhone)) {
+                getView().seDeployWeChat(wxPhone);
+            }
         }
     }
 

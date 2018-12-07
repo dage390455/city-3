@@ -39,6 +39,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -214,43 +215,61 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void doSaveLocation() {
-        switch (deployAnalyzerModel.mapSourceType) {
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
-                getView().showProgressDialog();
-                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
-                    RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
-                            .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>() {
-                        @Override
-                        public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                            deployAnalyzerModel.blePassword = deployDeviceDetailRsp.getData().getBlePassword();
-                            List<Integer> channelMask = deployDeviceDetailRsp.getData().getChannelMask();
-                            if (channelMask != null && channelMask.size() > 0) {
-                                deployAnalyzerModel.channelMask.clear();
-                                deployAnalyzerModel.channelMask.addAll(channelMask);
+        if (deployAnalyzerModel.latLng.size() == 2) {
+            switch (deployAnalyzerModel.mapSourceType) {
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+                    getView().showProgressDialog();
+                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                        RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
+                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>() {
+                            @Override
+                            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                                deployAnalyzerModel.blePassword = deployDeviceDetailRsp.getData().getBlePassword();
+                                List<Integer> channelMask = deployDeviceDetailRsp.getData().getChannelMask();
+                                if (channelMask != null && channelMask.size() > 0) {
+                                    deployAnalyzerModel.channelMask.clear();
+                                    deployAnalyzerModel.channelMask.addAll(channelMask);
+                                }
+                                getView().dismissProgressDialog();
+                                handlerResult();
                             }
-                            getView().showProgressDialog();
-                            handlerResult();
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().dismissProgressDialog();
+                                //TODO 可以添加是否需要处理channelmask字段
+                                handlerResult();
+                            }
+                        });
+                    } else {
+                        handlerResult();
+                    }
+                    break;
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                    break;
+                case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                    getView().showProgressDialog();
+                    RetrofitServiceHelper.INSTANCE.doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>() {
+                        @Override
+                        public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                            getView().dismissProgressDialog();
+                            DeviceInfo data = deviceDeployRsp.getData();
+                            EventData eventData = new EventData();
+                            eventData.code = EVENT_DATA_DEVICE_POSITION_CALIBRATION;
+                            eventData.data = data;
+                            EventBus.getDefault().post(eventData);
+                            getView().finishAc();
                         }
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
-                            getView().showProgressDialog();
-                            //TODO 可以添加是否需要处理channelmask字段
-                            handlerResult();
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
                         }
                     });
-                } else {
-                    handlerResult();
-                }
-                break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
-                break;
-            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
-                getView().toastShort("修改位置校准信息");
-                break;
+                    break;
+            }
         }
-
-
     }
 
     private void handlerResult() {
@@ -451,7 +470,6 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功

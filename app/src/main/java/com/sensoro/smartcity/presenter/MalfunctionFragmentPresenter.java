@@ -241,7 +241,6 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {

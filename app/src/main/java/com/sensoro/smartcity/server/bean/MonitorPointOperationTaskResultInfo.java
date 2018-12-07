@@ -4,28 +4,6 @@ import java.util.List;
 
 public class MonitorPointOperationTaskResultInfo {
 
-    /**
-     * refrence : 3f872e1528d93729b7b73b748f8d0ca7
-     * deviceType : acrel_fires
-     * scheduleNo : ED-20181123-163404
-     * type : mute
-     * appId : L3ma0Uut3QnJ
-     * operator : admin
-     * owners : 590bfad00771ed116b1df421
-     * content : {"cmd":4}
-     * total : 1
-     * complete : 1
-     * __v : 0
-     * updatedTime : 1542962044453
-     * unsupportSns : []
-     * unexistSns : []
-     * rules : []
-     * sns : ["02851117C65C1DD6"]
-     * contact : {"name":"杨志强","number":"18611818873"}
-     * id : 5bf7bb7c3f0ef9534fe03d4e
-     * tasklogTranslation : 任务序列号 ED-20181123-163404，报警设备已消音
-     */
-
     private String refrence;
     private String deviceType;
     private String scheduleNo;

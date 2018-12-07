@@ -28,16 +28,23 @@ import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMonitorPointMapActivityView;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.DeployContactModel;
+import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.mm.opensdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.opensdk.modelmsg.WXMediaMessage;
 import com.tencent.mm.opensdk.modelmsg.WXMiniProgramObject;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -46,7 +53,7 @@ import java.io.InputStream;
 
 import static com.amap.api.maps.AMap.MAP_TYPE_NORMAL;
 
-public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements Constants, AMap.OnMapLoadedListener, IOnStart {
+public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPointMapActivityView> implements Constants, AMap.OnMapLoadedListener, IOnCreate {
 
     private Activity mContext;
     private AMap aMap;
@@ -57,12 +64,18 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            getView().setPositionCalibrationVisible(userData.hasDevicePositionCalibration);
+        }
         initMap();
     }
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         if (tempUpBitmap != null) {
             tempUpBitmap.recycle();
             tempUpBitmap = null;
@@ -140,31 +153,22 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         refreshMap();
     }
 
-//    @Subscribe(threadMode = ThreadMode.BACKGROUND)
-//    public void onMessageEvent(EventData eventData) {
-//        int code = eventData.code;
-//        Object data = eventData.data;
-//        switch (code) {
-//            case EVENT_DATA_SOCKET_DATA_INFO:
-//                if (data instanceof DeviceInfo) {
-//                    DeviceInfo pushDeviceInfo = (DeviceInfo) data;
-//                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
-//                        mDeviceInfo = pushDeviceInfo;
-//                        if (AppUtils.isActivityTop(mContext, MonitorPointMapActivity.class)) {
-//                            mContext.runOnUiThread(new Runnable() {
-//                                @Override
-//                                public void run() {
-//                                    if (getView() != null) {
-//                                        freshMarker();
-//                                    }
-//                                }
-//                            });
-//                        }
-//                    }
-//                }
-//                break;
-//        }
-//    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(EventData eventData) {
+        int code = eventData.code;
+        Object data = eventData.data;
+        switch (code) {
+            case EVENT_DATA_DEVICE_POSITION_CALIBRATION:
+                if (data instanceof DeviceInfo) {
+                    DeviceInfo pushDeviceInfo = (DeviceInfo) data;
+                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
+                        mDeviceInfo.cloneSocketData(pushDeviceInfo);
+                        refreshMap();
+                    }
+                }
+                break;
+        }
+    }
 
     private void refreshMap() {
         double[] lonlat = mDeviceInfo.getLonlat();
@@ -185,7 +189,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //                notDeployLayout.setVisibility(View.GONE);
                 //可视化区域，将指定位置指定到屏幕中心位置
                 final CameraUpdate mUpdata = CameraUpdateFactory
-                        .newCameraPosition(new CameraPosition(destPosition, 16, 0, 30));
+                        .newCameraPosition(new CameraPosition(destPosition, 15, 0, 30));
                 aMap.moveCamera(mUpdata);
 
                 freshMarker();
@@ -196,6 +200,7 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
             }
 
         }
+
     }
 
     private void freshMarker() {
@@ -235,9 +240,10 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 //        aMap.clear();
 //        destPosition.latitude -=
         MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
-                .anchor(0.5f, 0.95f)
+                .anchor(0.5f, 1)
                 .position(destPosition)
                 .draggable(true);
+        aMap.clear();
         Marker marker = aMap.addMarker(markerOption);
         marker.setDraggable(false);
         marker.showInfoWindow();
@@ -325,16 +331,6 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         });
     }
 
-    @Override
-    public void onStart() {
-        //去除地图实时刷新预警状态
-//        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-//        EventBus.getDefault().unregister(this);
-    }
 
     public void backToCurrentLocation() {
         AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
@@ -388,5 +384,10 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
         intent.setClass(mContext, DeployMapActivity.class);
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
     }
 }

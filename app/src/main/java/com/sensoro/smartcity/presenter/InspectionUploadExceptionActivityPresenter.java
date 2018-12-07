@@ -206,7 +206,6 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         if (code == EVENT_DATA_ALARM_POP_IMAGES) {
@@ -314,7 +313,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         getView().dismissUploadProgressDialog();
 //        toastShort("上传成功---");
         LogUtils.loge(this, "上传成功---" + s);
-        //TODO 上传结果
+        // 上传结果
         doUploadInspectionException(scenesDataList);
 //        mListener.onPopupCallback(selectResult, selectType, selectPlace, scenesDataList, mRemark);
     }
