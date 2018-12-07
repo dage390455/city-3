@@ -122,6 +122,7 @@ public class ContractTemplateAdapter extends RecyclerView.Adapter<ContractTempla
         };
         etContractItemNum.addTextChangedListener(watcher);
         etContractItemNum.setTag(watcher);
+        etContractItemNum.setText(String.valueOf(mList.get(position).getQuantity()));
     }
 
 

@@ -206,7 +206,10 @@ public interface RetrofitService {
     @POST("contracts")
     Observable<ContractAddRsp> newContract(@Body RequestBody requestBody);
 
-    @GET("contracts/"+"{id}")
+    @PUT("contracts")
+    Observable<ResponseBase> modifyContract(@Body RequestBody requestBody);
+
+    @GET("contracts/{id}")
     Observable<ContractInfoRsp> getContractInfo(@Path("id")String id);
 
     @POST("contracts/_search")

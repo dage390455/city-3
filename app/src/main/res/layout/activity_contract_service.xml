@@ -5,45 +5,7 @@
     android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/contract_service_title_layout"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/y200"
-        android:background="@color/white">
-
-        <ImageView
-            android:id="@+id/iv_contract_service_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
-            android:padding="12dp"
-            android:src="@drawable/arrows_left" />
-
-
-        <TextView
-            android:id="@+id/contract_service_title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/iv_contract_service_back"
-            android:text="@string/contract_info_title"
-            android:textColor="@color/c_252525"
-            android:textSize="18sp" />
-
-        <TextView
-            android:id="@+id/tv_contract_service_title_retake"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:layout_marginEnd="10dp"
-            android:text="@string/contract_service_retake"
-            android:textColor="@color/c_252525"
-            android:textSize="@dimen/city_tiny_large_size" />
-    </RelativeLayout>
+    <include layout="@layout/item_include_text_title" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"

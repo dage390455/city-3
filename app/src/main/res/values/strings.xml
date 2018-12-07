@@ -642,4 +642,7 @@
     <string name="please_use_different_device_to_replace">Please use different device to replace</string>
     <string name="no_search_history">No search history</string>
     <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
+    <string name="title_edit">Edit</string>
+    <string name="identification_number_failed">ID card number identification failed</string>
+    <string name="contract_modified_success">Modified success</string>
 </resources>
