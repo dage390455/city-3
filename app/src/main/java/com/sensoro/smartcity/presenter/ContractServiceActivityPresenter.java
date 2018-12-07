@@ -500,6 +500,7 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
         eventData.code = Constants.EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE;
         eventData.data = contractID;
         EventBus.getDefault().post(eventData);
+        getView().toastShort(mContext.getString(R.string.contract_modified_success));
         getView().finishAc();
     }
 

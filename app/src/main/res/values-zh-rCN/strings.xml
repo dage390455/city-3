@@ -637,5 +637,6 @@
     <string name="please_use_different_device_to_replace">请使用不同的设备进行更换</string>
     <string name="title_edit">编辑</string>
     <string name="identification_number_failed">身份证识别失败：</string>
+    <string name="contract_modified_success">修改成功</string>
 
 </resources>
