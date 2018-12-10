@@ -649,4 +649,11 @@
     <string name="title_edit">Edit</string>
     <string name="identification_number_failed">ID card number identification failed</string>
     <string name="contract_modified_success">Modified success</string>
+    <string name="deploy_pic_device_pic">设备图</string>
+    <string name="deploy_pic_device_pic_tip">需能看清设备号</string>
+    <string name="deploy_pic_take_photo">拍照</string>
+    <string name="deploy_pic_installation_site">安装现场</string>
+    <string name="deploy_pic_shop_pic">店面照片（选填）</string>
+    <string name="please_select_device_pic">请选择一张设备图</string>
+    <string name="please_select_installation_site">请选择一张现场照片</string>
 </resources>

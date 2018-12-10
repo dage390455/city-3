@@ -17,6 +17,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
+import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
@@ -453,7 +454,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     public void doSettingPhoto() {
-        Intent intent = new Intent(mContext, DeployMonitorSettingPhotoActivity.class);
+        Intent intent = new Intent(mContext, DeployMonitorDeployPicActivity.class);
         if (deployAnalyzerModel.images.size() > 0) {
             intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
