@@ -101,8 +101,12 @@
             android:padding="8dp"
             android:contentDescription="@null"
             android:src="@drawable/calendar_arrow_right" />
-    </LinearLayout>
 
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:background="@color/c_dfdfdf"/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
@@ -111,7 +115,7 @@
             android:id="@+id/calendar_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/white"
+            android:background="@color/c_f4f4f4"
             app:calendar_height="46dp"
             app:calendar_padding="12dp"
             app:current_day_text_color="@color/c_252525"
@@ -120,6 +124,11 @@
             app:max_select_range="-1"
             app:min_select_range="3"
             app:min_year="2004"
+            app:scheme_text="假"
+            app:scheme_text_color="#333"
+            app:scheme_theme_color="#333"
+            app:month_view="com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView"
+            app:week_view="com.sensoro.smartcity.calendarview.customview.CustomRangeWeekView"
             app:month_view_show_mode="mode_only_current"
             app:other_month_text_color="@color/c_a6a6a6"
             app:select_mode="range_mode"

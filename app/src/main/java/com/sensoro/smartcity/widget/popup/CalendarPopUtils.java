@@ -20,7 +20,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.calendarview.CalendarView;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -33,7 +32,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarView.OnDaySelectObserver
-        ,*/ Constants, PopupWindow.OnDismissListener {
+        ,*/
+        CalendarView.OnCalendarRangeSelectListener,Constants, PopupWindow.OnDismissListener {
 
     private PopupWindow mPopupWindow = null;
     private final Activity mActivity;
@@ -73,6 +73,9 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
     private long endTime;
     private OnCalendarPopupCallbackListener listener;
     private View view;
+    //控制显示月份，当前月是-1，因为calendarView.getCurMonth的值是1-12；
+    private int mCalendarMonthIndex;
+    private int mCalendarYear;
 
     public CalendarPopUtils(Activity activity) {
         mActivity = activity;
@@ -99,7 +102,26 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
 //        calendarView.setSelectionType(SelectionType.RANGE);
 //        calendarView.setOnDayRangeSelectedListener(this);
 //        calendarView.setOnDayClickListener(this);
-        acCalendarTvMonthYear.setText(String.format(Locale.CHINA,"%s %d",Constants.MONTHS[calendarView.getCurMonth()-1],calendarView.getCurYear()));
+        calendarView.setRange(calendarView.getCurYear(), calendarView.getCurMonth(), calendarView.getCurDay(),
+                calendarView.getCurYear() + 2, 12, 31);
+        calendarView.setOnCalendarRangeSelectListener(this);
+        mCalendarMonthIndex = calendarView.getCurMonth() -1;
+        mCalendarYear = calendarView.getCurYear();
+       setMonthYearText();
+    }
+
+
+    private void setMonthYearText() {
+        if(mCalendarMonthIndex < 0){
+            mCalendarMonthIndex = 11;
+            mCalendarYear--;
+        }else if(mCalendarMonthIndex > 11){
+            mCalendarMonthIndex = 0;
+            mCalendarYear++;
+        }
+
+        acCalendarTvMonthYear.setText(String.format(Locale.CHINA,"%s %d",
+                mActivity.getString(Constants.MONTHS[mCalendarMonthIndex ]), mCalendarYear));
     }
 
     private void setSlectTime(long startTime, long endTime) {
@@ -156,7 +178,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
 
     }
 
-    @OnClick({R.id.ac_calendar_tv_cancel, R.id.ac_calendar_tv_save,R.id.ac_calendar_view_dismiss})
+    @OnClick({R.id.ac_calendar_tv_cancel, R.id.ac_calendar_tv_save,R.id.ac_calendar_view_dismiss,R.id.ac_calendar_imv_arrow_left,R.id.ac_calendar_imv_arrow_right})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_calendar_tv_cancel:
@@ -167,6 +189,16 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
                 break;
             case R.id.ac_calendar_view_dismiss:
                 mPopupWindow.dismiss();
+                break;
+            case R.id.ac_calendar_imv_arrow_left:
+                calendarView.scrollToPre();
+                mCalendarMonthIndex--;
+                setMonthYearText();
+                break;
+            case R.id.ac_calendar_imv_arrow_right:
+                calendarView.scrollToNext();
+                mCalendarMonthIndex++;
+                setMonthYearText();
                 break;
         }
     }
@@ -261,6 +293,22 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
     public void setOnCalendarPopupCallbackListener(OnCalendarPopupCallbackListener listener) {
         this.listener = listener;
     }
+
+    @Override
+    public void onCalendarSelectOutOfRange(com.sensoro.smartcity.calendarview.Calendar calendar) {
+
+    }
+
+    @Override
+    public void onSelectOutOfRange(com.sensoro.smartcity.calendarview.Calendar calendar, boolean isOutOfMinRange) {
+
+    }
+
+    @Override
+    public void onCalendarRangeSelect(com.sensoro.smartcity.calendarview.Calendar calendar, boolean isEnd) {
+
+    }
+
 
     public interface OnCalendarPopupCallbackListener {
         void onCalendarPopupCallback(CalendarDateModel calendarDateModel);
