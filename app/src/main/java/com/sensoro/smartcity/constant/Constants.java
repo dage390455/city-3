@@ -264,6 +264,7 @@ public interface Constants {
 
     String PREFERENCE_KEY_START_TIME = "preference_key_start_time";
     String PREFERENCE_KEY_END_TIME = "preference_key_end_time";
+    String CONTRACT_WE_CHAT_BASE_URL = "https://resource-city.sensoro.com/weapp/contract/";
     //
     int SENSOR_STATUS_ALARM = 0;
     int SENSOR_STATUS_NORMAL = 1;

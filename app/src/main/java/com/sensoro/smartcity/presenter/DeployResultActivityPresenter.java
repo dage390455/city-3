@@ -279,7 +279,6 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 break;
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
             case DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT:
-
                 break;
             default:
                 break;

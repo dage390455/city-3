@@ -22,19 +22,14 @@ import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
-import com.sensoro.smartcity.util.AESUtil;
-import com.sensoro.smartcity.util.ImageFactory;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -414,17 +409,18 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
 
     private void handleCode(String code, String text) {
         Intent intent = new Intent();
+        final String url = CONTRACT_WE_CHAT_BASE_URL + code;
         intent.setClass(mContext, ContractResultActivity.class);
-        switch (serviceType) {
-            case 1:
-            case 2:
-                code = AESUtil.contractEncode(phone, code);
-                break;
-            case 3:
-                code = AESUtil.contractEncode(line3, code);
-                break;
-        }
-        intent.putExtra("code", code);
+//        switch (serviceType) {
+//            case 1:
+//            case 2:
+//                code = AESUtil.contractEncode(phone, code);
+//                break;
+//            case 3:
+//                code = AESUtil.contractEncode(line3, code);
+//                break;
+//        }
+        intent.putExtra("code", url);
         if (text.startsWith("查看")) {
             intent.putExtra(EXTRA_CONTRACT_RESULT_TYPE, false);
         } else {
@@ -462,7 +458,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 }
                 break;
             case EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
-                if(data instanceof  Integer){
+                if (data instanceof Integer) {
                     requestData((Integer) data);
                 }
 
@@ -475,20 +471,20 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         Intent intent = new Intent();
         intent.setClass(mContext, ContractServiceActivity.class);
         int createdType = mContractInfo.getCreated_type();
-        intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,Constants.CONTRACT_ORIGIN_TYPE_EDIT);
+        intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, Constants.CONTRACT_ORIGIN_TYPE_EDIT);
         intent.putExtra(EXTRA_CONTRACT_TYPE, createdType);
         intent.putExtra(EXTRA_CONTRACT_ID, mContractInfo.getId());
         String placeType = mContractInfo.getPlace_type();
         if (TextUtils.isEmpty(placeType)) {
             placeType = no;
         }
-        intent.putExtra("place_type",placeType);
-        intent.putExtra("service_life",mContractInfo.getServiceTime());
-        intent.putExtra("service_life_first",mContractInfo.getFirstPayTimes());
-        intent.putExtra("service_life_period",mContractInfo.getPayTimes());
+        intent.putExtra("place_type", placeType);
+        intent.putExtra("service_life", mContractInfo.getServiceTime());
+        intent.putExtra("service_life_first", mContractInfo.getFirstPayTimes());
+        intent.putExtra("service_life_period", mContractInfo.getPayTimes());
         List<ContractsTemplateInfo> devices = mContractInfo.getDevices();
         ContractsTemplateInfo[] objects = devices.toArray(new ContractsTemplateInfo[0]);
-        intent.putExtra("contract_devices",objects);
+        intent.putExtra("contract_devices", objects);
         switch (createdType) {
             case 1:
                 addExtraCreateType1(intent, no);
@@ -528,7 +524,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         if (TextUtils.isEmpty(card_id)) {
             card_id = no;
         }
-        intent.putExtra("id_number",card_id);
+        intent.putExtra("id_number", card_id);
 
         String customer_address = mContractInfo.getCustomer_address();
         if (TextUtils.isEmpty(customer_address)) {

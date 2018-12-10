@@ -62,7 +62,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private SensoroDeviceConnectionTest sensoroDeviceConnection;
     private Handler mHandler;
     private String bleAddress;
-    private boolean bleHasOpen;
     private static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
     private DeployAnalyzerModel deployAnalyzerModel;
 
@@ -848,7 +847,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void run() {
-        bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
+        boolean bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.isBluetoothEnabled();
         if (bleHasOpen) {
             try {
                 bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.startService();
