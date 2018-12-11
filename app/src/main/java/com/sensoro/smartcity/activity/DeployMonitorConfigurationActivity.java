@@ -32,8 +32,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.include_text_title_divider)
     View includeTextTitleDivider;
-    @BindView(R.id.include_text_title_cl_root)
-    ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.ac_deploy_configuration_et_enter)
     EditText acDeployConfigurationEtEnter;
     @BindView(R.id.ac_deploy_configuration_et_root)
@@ -52,6 +50,8 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     private void initView() {
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        includeTextTitleTvTitle.setText(mActivity.getString(R.string.initial_configuration));
         acDeployConfigurationEtEnter.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -132,6 +132,9 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_configuration_tv_configuration:
+                break;
+            case R.id.include_text_title_imv_arrows_left:
+                finishAc();
                 break;
         }
     }

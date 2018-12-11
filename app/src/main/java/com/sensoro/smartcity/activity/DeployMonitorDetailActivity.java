@@ -194,6 +194,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
             case R.id.ac_deploy_device_detail_tv_upload:
                 //TODO 上传逻辑
                 mPresenter.doConfirm();
+                break;
             case R.id.ac_deploy_device_detail_ll_deploy_setting:
                 mPresenter.doDeployBleSetting();
                 break;

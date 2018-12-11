@@ -17,6 +17,7 @@ import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
+import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
@@ -121,6 +122,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         String deviceTypeName = WidgetUtil.getDeviceTypeName(deployAnalyzerModel.deviceType);
         getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + deviceTypeName);
         boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+        isFire = true;
         getView().setDeployDetailDeploySettingVisible(isFire);
         if (isFire) {
             //TODO 再次部署时暂时不回显电器火灾字段字段
@@ -892,6 +894,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     }
 
     public void doDeployBleSetting() {
-
+        Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+        getView().startAC(intent);
     }
 }

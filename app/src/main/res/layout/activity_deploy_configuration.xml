@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:background="@color/c_f4f4f4">
 
     <include
         android:id="@+id/ac_deploy_configuration_title_root"
@@ -12,42 +13,43 @@
         android:id="@+id/ac_deploy_configuration_et_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/ac_deploy_configuration_title_root"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
         android:paddingStart="20dp"
         android:paddingTop="16dp"
         android:paddingEnd="20dp"
-        android:paddingBottom="16dp"
-        android:layout_marginTop="12dp"
-        android:layout_below="@id/ac_deploy_configuration_title_root"
-        android:background="@color/white">
+        android:paddingBottom="16dp">
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/rated_current"
-            android:textSize="14sp"
             android:textColor="@color/c_a6a6a6"
-            />
+            android:textSize="14sp" />
+
         <EditText
             android:id="@+id/ac_deploy_configuration_et_enter"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@null"
             android:gravity="end"
-            android:textSize="14sp"
+            android:inputType="number"
             android:textColor="@color/c_252525"
-            />
+            android:textSize="14sp" />
     </LinearLayout>
+
     <TextView
         android:id="@+id/ac_deploy_configuration_tv_enter_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:textColor="@color/c_a6a6a6"
-        android:textSize="12sp"
         android:layout_below="@id/ac_deploy_configuration_et_root"
-        android:text="@string/deploy_configuration_enter_tip"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="4dp"
-        />
+        android:layout_marginEnd="20dp"
+        android:text="@string/deploy_configuration_enter_tip"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12sp" />
 
     <TextView
         android:id="@+id/ac_deploy_configuration_tv_configuration"
