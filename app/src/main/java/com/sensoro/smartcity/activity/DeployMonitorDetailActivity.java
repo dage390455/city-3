@@ -83,6 +83,14 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     View lastView;
     @BindView(R.id.deploy_detail_iv_arrow_we_chat)
     ImageView deployDetailIvArrowWeChat;
+    @BindView(R.id.ac_deploy_device_detail_tv_device_type)
+    TextView acDeployDeviceDetailTvDeviceType;
+    @BindView(R.id.ac_deploy_device_detail_deploy_setting_line)
+    View acDeployDeviceDetailDeployettingLine;
+    @BindView(R.id.ac_deploy_device_detail_ll_deploy_setting)
+    LinearLayout acDeployDeviceDetailLlDeploySetting;
+    @BindView(R.id.ac_deploy_device_detail_tv_deploy_setting)
+    TextView acDeployDeviceDetailTvDeploySetting;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -154,7 +162,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_title, R.id.include_text_title_tv_subtitle,
             R.id.ac_deploy_device_detail_ll_name_location, R.id.ac_deploy_device_detail_rl_tag, R.id.ac_deploy_device_detail_ll_alarm_contact,
-            R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload, R.id.deploy_detail_ll_we_chat})
+            R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload, R.id.deploy_detail_ll_we_chat,R.id.ac_deploy_device_detail_ll_deploy_setting})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -186,6 +194,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
             case R.id.ac_deploy_device_detail_tv_upload:
                 //TODO 上传逻辑
                 mPresenter.doConfirm();
+            case R.id.ac_deploy_device_detail_ll_deploy_setting:
+                mPresenter.doDeployBleSetting();
                 break;
         }
     }
@@ -460,6 +470,28 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void setDeployDetailArrowWeChatVisible(boolean isVisible) {
         deployDetailIvArrowWeChat.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployDetailDeploySettingVisible(boolean isVisible) {
+        acDeployDeviceDetailLlDeploySetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployDeviceDetailDeployettingLine.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployDeviceType(String text) {
+        acDeployDeviceDetailTvDeviceType.setText(text);
+    }
+
+    @Override
+    public void setDeployDeviceDetailDeploySetting(boolean setting) {
+        if (setting) {
+            acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.not_setting));
+        } else {
+            acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.had_setting));
+        }
     }
 
     @Override

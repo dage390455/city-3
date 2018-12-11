@@ -221,7 +221,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     getView().showProgressDialog();
                     if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
                         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
-                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>() {
+                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
                             @Override
                             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
                                 deployAnalyzerModel.blePassword = deployDeviceDetailRsp.getData().getBlePassword();
@@ -249,7 +249,7 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                     break;
                 case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     getView().showProgressDialog();
-                    RetrofitServiceHelper.INSTANCE.doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>() {
+                    RetrofitServiceHelper.INSTANCE.doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                         @Override
                         public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
                             getView().dismissProgressDialog();

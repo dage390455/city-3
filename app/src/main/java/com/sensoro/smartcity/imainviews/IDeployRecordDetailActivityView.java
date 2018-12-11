@@ -25,4 +25,10 @@ public interface IDeployRecordDetailActivityView extends IToast, IActivityIntent
     void setPositionStatus(int status);
 
     void refreshSingle(String signalQuality);
+
+    void setDeployDeviceRecordDeviceType(String text);
+
+    void setDeployDetailDeploySettingVisible(boolean isVisible);
+
+    void setDeployDeviceDetailDeploySetting(boolean setting);
 }

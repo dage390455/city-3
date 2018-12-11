@@ -585,7 +585,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                         } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
                             adapter.setMaxImgCount(9);
 //                        selImageList.clear();
-//                        adapter.setImages(selImageList);
+//                        adapter.updateImages(selImageList);
                         }
 
                     }

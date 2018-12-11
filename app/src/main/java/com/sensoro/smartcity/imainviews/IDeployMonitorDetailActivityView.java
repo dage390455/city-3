@@ -56,4 +56,10 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void setNotOwnVisible(boolean isVisible);
 
     void setDeployDetailArrowWeChatVisible(boolean isVisible);
+
+    void setDeployDetailDeploySettingVisible(boolean isVisible);
+
+    void setDeployDeviceType(String text);
+
+    void setDeployDeviceDetailDeploySetting(boolean setting);
 }

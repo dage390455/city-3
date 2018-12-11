@@ -15,7 +15,7 @@ import com.sensoro.smartcity.server.bean.ScenesData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AlarmDetailPhotoAdapter extends RecyclerView.Adapter<AlarmDetailPhotoAdapter.AlarmDetailViewHolder> {
+public class MonitorDeployDetailPhotoAdapter extends RecyclerView.Adapter<MonitorDeployDetailPhotoAdapter.AlarmDetailViewHolder> {
     private Context mContext;
     private final List<ScenesData> mData = new ArrayList<>();
     private LayoutInflater mInflater;
@@ -29,7 +29,7 @@ public class AlarmDetailPhotoAdapter extends RecyclerView.Adapter<AlarmDetailPho
         this.listener = listener;
     }
 
-    public void setImages(List<ScenesData> data) {
+    public void updateImages(List<ScenesData> data) {
         mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
@@ -39,14 +39,14 @@ public class AlarmDetailPhotoAdapter extends RecyclerView.Adapter<AlarmDetailPho
         return mData;
     }
 
-    public AlarmDetailPhotoAdapter(Context mContext) {
+    public MonitorDeployDetailPhotoAdapter(Context mContext) {
         this.mContext = mContext;
         this.mInflater = LayoutInflater.from(mContext);
     }
 
     @Override
     public AlarmDetailViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new AlarmDetailViewHolder(mInflater.inflate(R.layout.list_item_alarm_detail, parent, false));
+        return new AlarmDetailViewHolder(mInflater.inflate(R.layout.list_item_monitor_photo_detail, parent, false));
     }
 
     @Override

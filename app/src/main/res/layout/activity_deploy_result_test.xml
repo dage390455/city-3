@@ -177,8 +177,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -206,8 +206,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -236,8 +236,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -266,8 +266,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -296,8 +296,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -346,12 +346,42 @@
                 </LinearLayout>
 
                 <LinearLayout
+                    android:id="@+id/ac_deploy_result_ll_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/initial_configuration"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_result_tv_setting"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="@string/had_setting"
+                        android:textColor="@color/c_252525"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
                     android:id="@+id/ac_deploy_result_ll_recent_upload_time"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
                     android:orientation="horizontal"
                     android:visibility="gone">
 
@@ -365,10 +395,10 @@
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_recent_upload_time"
                         android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:gravity="end"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />

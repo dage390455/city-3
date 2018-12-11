@@ -26,14 +26,17 @@ import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmsRecord;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
+import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.util.AppUtils;
@@ -41,6 +44,9 @@ import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -259,7 +265,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().showProgressDialog();
         //合并请求
         RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                 if (deviceInfoListRsp.getData().size() > 0) {
@@ -274,6 +280,35 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+        //静默拉取图片记录内容
+        RetrofitServiceHelper.INSTANCE.getDeployRecordList(mDeviceInfo.getSn(), null, null, null, null, null, 1, 0, true).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
+            @Override
+            public void onCompleted(DeployRecordRsp recordRsp) {
+                List<DeployRecordInfo> data = recordRsp.getData();
+                if (data != null && data.size() > 0) {
+                    DeployRecordInfo deployRecordInfo = data.get(0);
+                    if (deployRecordInfo != null) {
+                        List<String> deployPics = deployRecordInfo.getDeployPics();
+                        if (deployPics != null) {
+                            ArrayList<ScenesData> list = new ArrayList<>();
+                            for (String url : deployPics) {
+                                ScenesData scenesData = new ScenesData();
+                                scenesData.url = url;
+                                list.add(scenesData);
+                            }
+                            getView().updateMonitorPhotos(list);
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
                 getView().toastShort(errorMsg);
             }
         });
@@ -623,7 +658,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
         RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>() {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
                 String scheduleNo = response.getScheduleNo();
@@ -655,5 +690,26 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+    }
+
+    public void toPhotoDetail(int position, List<ScenesData> images) {
+        if (images.size() > 0) {
+            ArrayList<ImageItem> items = new ArrayList<>();
+            for (ScenesData scenesData : images) {
+                ImageItem imageItem = new ImageItem();
+                imageItem.isRecord = false;
+                imageItem.fromUrl = true;
+                imageItem.path = scenesData.url;
+                items.add(imageItem);
+            }
+            Intent intentPreview = new Intent(mContext, ImagePreviewDelActivity.class);
+            intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
+            intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
+            intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
+            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+        } else {
+            getView().toastShort(mContext.getString(R.string.no_photos_added));
+        }
     }
 }

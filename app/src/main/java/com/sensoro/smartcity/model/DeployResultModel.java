@@ -17,6 +17,8 @@ public class DeployResultModel implements Serializable {
     public String wxPhone;
     public String phone;
     public String address;
+    public String deviceType;
+    public boolean hasSetting;
     public int stationStatus;
     public DeviceInfo deviceInfo;
 }
