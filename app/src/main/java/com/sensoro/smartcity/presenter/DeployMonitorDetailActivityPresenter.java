@@ -118,6 +118,14 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 break;
         }
         getView().updateUploadState(true);
+        String deviceTypeName = WidgetUtil.getDeviceTypeName(deployAnalyzerModel.deviceType);
+        getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + deviceTypeName);
+        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+        getView().setDeployDetailDeploySettingVisible(isFire);
+        if (isFire) {
+            //TODO 再次部署时暂时不回显电器火灾字段字段
+            getView().setDeployDeviceDetailDeploySetting(false);
+        }
     }
 
     //回显设备信息
@@ -356,6 +364,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         intent.setClass(mContext, DeployResultActivity.class);
         DeployResultModel deployResultModel = new DeployResultModel();
         deployResultModel.sn = scanSN;
+        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
         deployResultModel.resultCode = resultCode;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.errorMsg = errorInfo;
@@ -381,6 +390,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         Intent intent = new Intent(mContext, DeployResultActivity.class);
         //
         deployResultModel.sn = deviceInfo.getSn();
+        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
         deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
@@ -406,6 +416,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
         deployResultModel.name = deployStationInfo.getName();
         deployResultModel.sn = deployStationInfo.getSn();
+        deployResultModel.deviceType = deployAnalyzerModel.deviceType;
         deployResultModel.stationStatus = deployStationInfo.getNormalStatus();
         deployResultModel.updateTime = deployStationInfo.getUpdatedTime();
         deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
@@ -878,5 +889,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
             getView().startAC(intent);
         }
+    }
+
+    public void doDeployBleSetting() {
+
     }
 }

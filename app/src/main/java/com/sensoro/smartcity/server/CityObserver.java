@@ -31,16 +31,20 @@ public abstract class CityObserver<T> implements Observer<T> {
     private final WeakReference<BasePresenter> presenterWeakReference;
     private boolean needPresenter;
 
+    /**
+     * 如果不需要绑定Activity的生命周期，传入null即可
+     *
+     * @param basePresenter
+     */
     public CityObserver(BasePresenter basePresenter) {
-        presenterWeakReference = new WeakReference<>(basePresenter);
-        needPresenter = true;
+        if (basePresenter == null) {
+            presenterWeakReference = null;
+            needPresenter = false;
+        } else {
+            presenterWeakReference = new WeakReference<>(basePresenter);
+            needPresenter = true;
+        }
     }
-
-    public CityObserver() {
-        presenterWeakReference = null;
-        needPresenter = false;
-    }
-
 
     @Override
     public void onError(Throwable e) {

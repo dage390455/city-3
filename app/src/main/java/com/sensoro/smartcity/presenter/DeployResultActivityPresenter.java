@@ -67,6 +67,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
 
     private void init() {
         try {
+            getView().setResultSettingVisible(DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType));
             switch (deployResultModel.resultCode) {
                 case DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED:
                     //失败
@@ -96,6 +97,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                     setDeployResultSuccessDetail();
                     break;
             }
+
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -163,6 +165,9 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 } else {
                     getView().setUpdateTextView(DateUtil
                             .getFullParseDatePoint(mContext, deployResultModel.updateTime));
+                }
+                if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
+                    getView().setDeployResultHasSetting(deployResultModel.hasSetting);
                 }
                 break;
             default:

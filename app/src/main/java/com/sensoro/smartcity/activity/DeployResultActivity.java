@@ -80,6 +80,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     LinearLayout acDeployResultBottom;
     @BindView(R.id.ac_deploy_result_tv_error_msg)
     TextView acDeployResultTvErrorMsg;
+    @BindView(R.id.ac_deploy_result_ll_setting)
+    LinearLayout acDeployResultLlSetting;
+    @BindView(R.id.ac_deploy_result_tv_setting)
+    TextView acDeployResultTvSetting;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -221,6 +225,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
+    public void setResultSettingVisible(boolean isVisible) {
+        acDeployResultLlSetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void setArrowsLeftVisible(boolean isVisible) {
         acDeployResultImvArrowsLeft.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -228,6 +237,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setTitleText(String text) {
         acDeployResultTitle.setText(text);
+    }
+
+    @Override
+    public void setDeployResultHasSetting(boolean setting) {
+        acDeployResultTvSetting.setText(setting ? mActivity.getString(R.string.had_setting) : mActivity.getString(R.string.not_setting));
     }
 
 

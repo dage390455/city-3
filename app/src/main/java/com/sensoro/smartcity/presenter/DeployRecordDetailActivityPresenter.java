@@ -14,6 +14,7 @@ import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.util.ArrayList;
@@ -67,6 +68,16 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             if (!TextUtils.isEmpty(wxPhone)) {
                 getView().seDeployWeChat(wxPhone);
             }
+            String deviceType = mDeployRecordInfo.getDeviceType();
+            String deviceTypeName = WidgetUtil.getDeviceTypeName(deviceType);
+            getView().setDeployDeviceRecordDeviceType(mActivity.getString(R.string.deploy_device_type) + deviceTypeName);
+            boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
+            getView().setDeployDetailDeploySettingVisible(isFire);
+            if (isFire) {
+                //TODO 是否配置过电器火灾字段字段
+                getView().setDeployDeviceDetailDeploySetting(false);
+            }
+
         }
     }
 

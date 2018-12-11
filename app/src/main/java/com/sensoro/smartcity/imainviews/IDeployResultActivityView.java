@@ -40,7 +40,11 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setStateTextViewVisible(boolean isVisible);
 
+    void setResultSettingVisible(boolean isVisible);
+
     void setArrowsLeftVisible(boolean isVisible);
 
     void setTitleText(String text);
+
+    void setDeployResultHasSetting(boolean setting);
 }

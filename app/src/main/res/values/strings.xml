@@ -649,6 +649,11 @@
     <string name="title_edit">Edit</string>
     <string name="identification_number_failed">ID card number identification failed</string>
     <string name="contract_modified_success">Modified success</string>
+    <string name="deploy_device_type">设备类型：</string>
+    <string name="initial_configuration">初始配置</string>
+    <string name="not_setting">未配置</string>
+    <string name="had_setting">已配置</string>
+
     <string name="deploy_pic_device_pic">设备图</string>
     <string name="deploy_pic_device_pic_tip">需能看清设备号</string>
     <string name="deploy_pic_take_photo">拍照</string>

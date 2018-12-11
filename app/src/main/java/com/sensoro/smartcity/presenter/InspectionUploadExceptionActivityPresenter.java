@@ -220,7 +220,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                                 selImageList.clear();
                             }
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     }
@@ -231,7 +231,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 //                            adapter.setMaxImgCount(9);
                             selImageList.clear();
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     }
@@ -241,13 +241,13 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                         if (alarmPopModel.imageItems != null) {
 //                            adapter.setMaxImgCount(9);
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
 //                        adapter.setMaxImgCount(9);
 //                        selImageList.clear();
-//                        adapter.setImages(selImageList);
+//                        adapter.updateImages(selImageList);
                     }
 
                 }

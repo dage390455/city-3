@@ -73,7 +73,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava.RxJavaCallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
-import rx.Completable;
 import rx.Observable;
 
 import static com.sensoro.smartcity.server.RetrofitService.SCOPE_DEMO;
@@ -478,8 +477,8 @@ public enum RetrofitServiceHelper {
      * @param endTime
      * @return
      */
-    public Observable<DeployRecordRsp> getDeployRecordList(String searchText, Long beginTime, Long endTime, String owners, String signalQuality) {
-        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(searchText, beginTime, endTime, owners, signalQuality);
+    public Observable<DeployRecordRsp> getDeployRecordList(String sn, String searchText, Long beginTime, Long endTime, String owners, String signalQuality, Integer limit, Integer offset, Boolean group) {
+        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(sn, searchText, beginTime, endTime, owners, signalQuality, limit, offset, group);
         RxApiManager.getInstance().add("getDeployRecordList", deployRecordList.subscribe());
         return deployRecordList;
     }

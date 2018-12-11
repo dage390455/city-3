@@ -177,8 +177,8 @@ public interface RetrofitService {
     Observable<DeployStationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(GET_DEPOLY_RECORD_LIST)
-    Observable<DeployRecordRsp> getDeployRecordList(@Query("search") String searchText, @Query("beginTime") Long beginTime,
-                                                    @Query("endTime") Long endTime, @Query("owners") String owners, @Query("signalQuality") String signalQuality);
+    Observable<DeployRecordRsp> getDeployRecordList(@Query("sn") String sn, @Query("search") String searchText, @Query("beginTime") Long beginTime,
+                                                    @Query("endTime") Long endTime, @Query("owners") String owners, @Query("signalQuality") String signalQuality, @Query("limit") Integer limit, @Query("offset") Integer offset, @Query("group") Boolean group);
 
     @PUT("alarmplay/{id}")
     Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(@Path("id") String id, @Body RequestBody requestBody);
