@@ -336,6 +336,7 @@
         <activity android:name=".activity.MalfunctionHistoryActivity" />
         <activity android:name=".activity.DeployMonitorWeChatRelationActivity" />
         <activity android:name=".activity.DeployMonitorDeployPicActivity" />
+        <activity android:name=".activity.DeployMonitorConfigurationActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
