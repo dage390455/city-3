@@ -105,7 +105,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
+        startActivityForResult(intent,requestCode);
     }
 
     @Override
@@ -152,19 +152,19 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
                 mPresenter.doAddPic(0);
                 break;
             case R.id.ac_deploy_pic_imv_device_pic:
+                mPresenter.doPreviewPic(0);
                 break;
             case R.id.ac_deploy_pic_imv_device_pic_delete:
                 mPresenter.deletePic(0);
                 acDeployPicRlDevicePic.setVisibility(View.GONE);
                 acDeployPicImvDevicePic.setImageDrawable(null);
                 acDeployPicLlAddDevicePic.setVisibility(View.VISIBLE);
-
-
                 break;
             case R.id.ac_deploy_pic_ll_installation_site:
                 mPresenter.doAddPic(1);
                 break;
             case R.id.ac_deploy_pic_imv_installation_site_pic:
+                mPresenter.doPreviewPic(1);
                 break;
             case R.id.ac_deploy_pic_imv_installation_site_pic_delete:
                 mPresenter.deletePic(1);
@@ -176,6 +176,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
                 mPresenter.doAddPic(2);
                 break;
             case R.id.ac_deploy_pic_imv_shop_pic:
+                mPresenter.doPreviewPic(2);
                 break;
             case R.id.ac_deploy_pic_imv_shop_pic_delete:
                 mPresenter.deletePic(2);

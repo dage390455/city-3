@@ -15,12 +15,15 @@ import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonitorDeployPicView>
@@ -91,21 +94,20 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             if (data != null && requestCode == REQUEST_CODE_SELECT) {
                 ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_RESULT_ITEMS);
                 if (tempImages != null && tempImages.size() > 0) {
-
                     selImages[mAddPicIndex] = tempImages.get(0);
                     getView().displayPic(selImages, mAddPicIndex);
                 }
             }
-//        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-//            //预览图片返回
-//            if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
-//                tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
-//                if (tempImages != null) {
+        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
+            //预览图片返回
+            if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
+                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
+                if (tempImages != null) {
 //                    selImages.clear();
 //                    selImages.addAll(tempImages);
 //                    getView().updateImageList(selImages);
-//                }
-//            }
+                }
+            }
         }
     }
 
@@ -134,5 +136,20 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         eventData.data = imageItems;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
+    }
+
+    public void doPreviewPic(int index) {
+        Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
+        ArrayList<ImageItem> list = new ArrayList<>();
+        for (ImageItem imageItem : selImages) {
+            if (imageItem != null) {
+                list.add(imageItem);
+            }
+        }
+        intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, list);
+        intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, index);
+        intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+        intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC,true);
+        getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
     }
 }
