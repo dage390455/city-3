@@ -664,4 +664,5 @@
     <string name="rated_current">额定电流/A</string>
     <string name="deploy_configuration_enter_tip">请输入安装现场空气开关的额定电流，范围50&#8211;250</string>
     <string name="deploy_configuration">开始配置</string>
+    <string name="if_it_is_a_store_please_upload">若为店面请上传</string>
 </resources>
