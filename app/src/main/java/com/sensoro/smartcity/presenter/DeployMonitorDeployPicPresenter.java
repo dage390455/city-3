@@ -20,11 +20,7 @@ import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import org.greenrobot.eventbus.EventBus;
 
-import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 
 public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonitorDeployPicView>
         implements SelectDialog.SelectDialogListener, Constants {
@@ -98,17 +94,18 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                     getView().displayPic(selImages, mAddPicIndex);
                 }
             }
-        } else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-            //预览图片返回
-            if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
-                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
-                if (tempImages != null) {
-//                    selImages.clear();
-//                    selImages.addAll(tempImages);
-//                    getView().updateImageList(selImages);
-                }
-            }
         }
+//        else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
+            //预览图片返回
+//            if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
+//                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
+//                if (tempImages != null) {
+////                    selImages.clear();
+////                    selImages.addAll(tempImages);
+////                    getView().updateImageList(selImages);
+//                }
+//            }
+//        }
     }
 
     public void deletePic(int index) {

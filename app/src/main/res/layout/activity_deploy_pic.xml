@@ -9,8 +9,8 @@
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_weight="1"
-        android:layout_height="0dp">
+        android:layout_height="0dp"
+        android:layout_weight="1">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -217,7 +217,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/ac_deploy_pic_tv_shop_pic"
                     android:layout_marginTop="4dp"
-                    android:text="@string/deploy_pic_device_pic_tip"
+                    android:text="@string/if_it_is_a_store_please_upload"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="12sp" />
 
@@ -262,14 +262,15 @@
                         android:layout_width="65dp"
                         android:layout_height="65dp"
                         android:visibility="gone">
+
                         <ImageView
                             android:id="@+id/ac_deploy_pic_imv_shop_pic"
                             android:layout_width="55dp"
                             android:layout_height="55dp"
                             android:layout_marginTop="10dp"
                             android:layout_marginEnd="10dp"
-                            android:contentDescription="@null"
                             android:background="@drawable/shape_corner_2"
+                            android:contentDescription="@null"
                             android:scaleType="centerCrop"
                             android:visibility="visible" />
 
