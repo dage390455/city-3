@@ -16,6 +16,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
+import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
@@ -40,6 +41,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     TextView acDeployConfigurationTvEnterTip;
     @BindView(R.id.ac_deploy_configuration_tv_configuration)
     TextView acDeployConfigurationTvConfiguration;
+    private BleConfigurationDialogUtils bleConfigDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -75,7 +77,9 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
             }
         });
+        bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));
     }
+
 
     @Override
     protected DeployMonitorConfigurationPresenter createPresenter() {
@@ -138,5 +142,36 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 finishAc();
                 break;
         }
+    }
+
+    @Override
+    public void showBleConfigurationDialog() {
+        bleConfigDialog.show();
+    }
+
+    @Override
+    public void dismissBleConfigurationDialog() {
+        bleConfigDialog.dismiss();
+    }
+
+    @Override
+    public void updateBtnRetryStatus() {
+        acDeployConfigurationTvConfiguration.setText(mActivity.getString(R.string.retry));
+    }
+
+    @Override
+    public void updateBleConfigurationDialogText(String text) {
+        bleConfigDialog.updateTvText(text);
+    }
+
+    @Override
+    public String getEditTextValue() {
+        return acDeployConfigurationEtEnter.getText().toString();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bleConfigDialog.dismiss();
     }
 }

@@ -666,4 +666,6 @@
     <string name="deploy_configuration">开始配置</string>
     <string name="if_it_is_a_store_please_upload">若为店面请上传</string>
     <string name="check_ble_status">请检查蓝牙状态</string>
+    <string name="retry">重试</string>
+    <string name="now_configuration">正在配置</string>
 </resources>

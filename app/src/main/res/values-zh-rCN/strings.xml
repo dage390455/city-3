@@ -180,7 +180,7 @@
     <string name="please_add_at_least_one_image">请至少添加一张图片</string>
     <string name="please_specify_the_deployment_location">请指定部署位置</string>
     <string name="please_enter_contact_phone">请输入联系人名称和电话号码</string>
-    <string name="loading_configuration_file">正在加载配置文件...</string>
+    <string name="loading_configuration_file">正在加载配置文件&#8230;</string>
     <string name="must_enter_name_address">必须输入名称/地址</string>
     <string name="album">相册</string>
     <string name="take_photo">拍照</string>
@@ -663,4 +663,6 @@
     <string name="deploy_configuration">开始配置</string>
     <string name="if_it_is_a_store_please_upload">若为店面请上传</string>
     <string name="check_ble_status">请检查蓝牙状态</string>
+    <string name="retry">重试</string>
+    <string name="now_configuration">正在配置</string>
 </resources>
