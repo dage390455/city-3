@@ -39,7 +39,7 @@ public class SensoroDeviceConnection {
     public static final byte DATA_VERSION_05 = 0x05;
     private static final String TAG = SensoroDeviceConnection.class.getSimpleName();
     private static final long CONNECT_TIME_OUT = 10000; // 1 minute connect timeout
-    private boolean isDfu;
+    private boolean isDfu = false;
     private Context context;
     private Handler handler = new Handler(Looper.getMainLooper());;
     private SensoroConnectionCallback sensoroConnectionCallback;
@@ -339,7 +339,6 @@ public class SensoroDeviceConnection {
         this.context = context;
         bluetoothLEHelper4 = new BluetoothLEHelper4(context);
         writeCallbackHashMap = new HashMap<>();
-        this.isContainSignal = false;
         this.macAddress = macAddress;
         this.isContainSignal = isContainSignal;
         this.isDfu = isDfu;

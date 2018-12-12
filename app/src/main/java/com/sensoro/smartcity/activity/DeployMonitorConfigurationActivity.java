@@ -132,6 +132,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_configuration_tv_configuration:
+                mPresenter.doConfiguration();
                 break;
             case R.id.include_text_title_imv_arrows_left:
                 finishAc();

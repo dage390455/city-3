@@ -117,12 +117,12 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         } catch (Exception e) {
             e.printStackTrace();
             //TODO 提示
-            getView().toastShort("请检查蓝牙状态");
+            getView().toastShort(mActivity.getString(R.string.check_ble_status));
         }
         if (!bleHasOpen) {
             bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
             if (!bleHasOpen) {
-                getView().toastShort("请检查蓝牙状态");
+                getView().toastShort(mActivity.getString(R.string.check_ble_status));
             }
         }
         mHandler.postDelayed(this, 3000);

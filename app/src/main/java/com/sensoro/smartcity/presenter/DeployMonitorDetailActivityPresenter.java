@@ -896,6 +896,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doDeployBleSetting() {
         Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
+        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL,deployAnalyzerModel);
         getView().startAC(intent);
     }
 }
