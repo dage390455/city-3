@@ -44,7 +44,8 @@ public class SensoroUtils {
 //    }
 
     private static byte toByte(char c) {
-        return (byte) "0123456789ABCDEF".indexOf(c);
+        byte b = (byte) "0123456789ABCDEF".indexOf(c);
+        return b;
     }
 
     /**
@@ -54,15 +55,15 @@ public class SensoroUtils {
      * @return String
      */
     public static String Bytes2HexString(byte[] b) {
-        StringBuilder ret = new StringBuilder();
-        for (byte aB : b) {
-            String hex = Integer.toHexString(aB & 0xFF);
+        String ret = "";
+        for (int i = 0; i < b.length; i++) {
+            String hex = Integer.toHexString(b[i] & 0xFF);
             if (hex.length() == 1) {
                 hex = '0' + hex;
             }
-            ret.append("0x").append(hex.toUpperCase());
+            ret += "0x" + hex.toUpperCase();
         }
-        return ret.toString();
+        return ret;
     }
 
 
@@ -72,8 +73,8 @@ public class SensoroUtils {
         if (src == null || src.length <= 0) {
             return null;
         }
-        for (byte aSrc : src) {
-            int v = aSrc & 0xFF;
+        for (int i = 0; i < src.length; i++) {
+            int v = src[i] & 0xFF;
             String hv = Integer.toHexString(v);
             if (hv.length() < 2) {
                 stringBuilder.append(0);
@@ -116,7 +117,8 @@ public class SensoroUtils {
      */
     public static byte[] convertUUIDToBytes(String uuid) {
         uuid = uuid.replace("-", ""); // 去掉 uuid 中的 '-'
-        return SensoroUtils.HexString2Bytes(uuid);
+        byte[] uuidBytes = SensoroUtils.HexString2Bytes(uuid);
+        return uuidBytes;
     }
 
     /**
@@ -219,10 +221,11 @@ public class SensoroUtils {
      * @return byte
      */
     public static byte uniteBytes(byte src0, byte src1) {
-        byte _b0 = Byte.decode("0x" + new String(new byte[]{src0}));
+        byte _b0 = Byte.decode("0x" + new String(new byte[]{src0})).byteValue();
         _b0 = (byte) (_b0 << 4);
-        byte _b1 = Byte.decode("0x" + new String(new byte[]{src1}));
-        return (byte) (_b0 ^ _b1);
+        byte _b1 = Byte.decode("0x" + new String(new byte[]{src1})).byteValue();
+        byte ret = (byte) (_b0 ^ _b1);
+        return ret;
     }
 
     /**
@@ -319,7 +322,8 @@ public class SensoroUtils {
             cipher.init(Cipher.DECRYPT_MODE, secretKey, ivParameterSpec);
             byte[] decrypedValueBytes = (cipher.doFinal(encrypedPwdBytes));
 
-            return new String(decrypedValueBytes);
+            String decrypedValue = new String(decrypedValueBytes);
+            return decrypedValue;
         } catch (Exception e) {
             return null;
         }
@@ -370,7 +374,8 @@ public class SensoroUtils {
 
 
     public static String parseEddystoneURL(byte[] eddystoneURLBytes) {
-        return null;
+        String url = null;
+        return url;
     }
 
     public static <T> T checkNotNull(T reference, Object errorMessage) {

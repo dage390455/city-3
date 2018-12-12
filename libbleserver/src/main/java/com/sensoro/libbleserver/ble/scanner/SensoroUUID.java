@@ -26,10 +26,11 @@ public class SensoroUUID {
      * @return
      */
     static Integer parseTemperature(byte temperatureByte) {
-        if (0xff == temperatureByte) { // 温度传感器关闭
+        int temperature = temperatureByte;
+        if (temperature == 0xff) { // 温度传感器关闭
             return null;
         } else {
-            return temperatureByte - 10; // 实际温度-10
+            return temperature - 10; // 实际温度-10
         }
     }
 
@@ -64,7 +65,7 @@ public class SensoroUUID {
 
     public static float byteArrayToFloat(byte[] b, int index) {
         int l;
-        l = b[index];
+        l = b[index + 0];
         l &= 0xff;
         l |= ((long) b[index + 1] << 8);
         l &= 0xffff;
@@ -77,14 +78,16 @@ public class SensoroUUID {
     /**
      * byte数组中取int数值，本方法适用于(低位在前，高位在后)的顺序，和和intToBytes（）配套使用
      *
-     * @param src    byte数组
-     * @param offset 从数组的第offset位开始
+     * @param src
+     *            byte数组
+     * @param offset
+     *            从数组的第offset位开始
      * @return int数值
      */
     public static int bytesToInt(byte[] src, int offset) {
         int value;
         value = (int) ((src[offset] & 0xFF)
-                | ((src[offset + 1] & 0xFF) << 8));
+                | ((src[offset+1] & 0xFF)<<8));
         return value;
     }
 
@@ -93,10 +96,10 @@ public class SensoroUUID {
      */
     public static int bytesToInt2(byte[] src, int offset) {
         int value;
-        value = (int) (((src[offset] & 0xFF) << 24)
-                | ((src[offset + 1] & 0xFF) << 16)
-                | ((src[offset + 2] & 0xFF) << 8)
-                | (src[offset + 3] & 0xFF));
+        value = (int) ( ((src[offset] & 0xFF)<<24)
+                |((src[offset+1] & 0xFF)<<16)
+                |((src[offset+2] & 0xFF)<<8)
+                |(src[offset+3] & 0xFF));
         return value;
     }
 
@@ -120,13 +123,13 @@ public class SensoroUUID {
         l |= ((long) b[2] << 16);
         l &= 0xffffff;
         l |= ((long) b[3] << 24);
-        l &= 0xffffffffL;
+        l &= 0xffffffffl;
         l |= ((long) b[4] << 32);
-        l &= 0xffffffffffL;
+        l &= 0xffffffffffl;
         l |= ((long) b[5] << 40);
-        l &= 0xffffffffffffL;
+        l &= 0xffffffffffffl;
         l |= ((long) b[6] << 48);
-        l &= 0xffffffffffffffL;
+        l &= 0xffffffffffffffl;
         l |= ((long) b[7] << 56);
         return Double.longBitsToDouble(l);
     }
@@ -137,6 +140,42 @@ public class SensoroUUID {
             bLocalArr[i] = (byte) (source >> 8 * i & 0xFF);
         }
         return bLocalArr;
+    }
+
+    public static byte[] intToBits(int source,int byteLength){
+        byte[] bytes = new byte[byteLength];
+        if(byteLength<9){
+            for (int i = 0; i < byteLength; i++) {
+                byte bit = (byte) (source >>8*0 &0xff);
+                if((bit>>i&0xff)==0){
+                    bytes[i] = 0;
+                }else{
+                    bytes[i] = 1;
+                }
+            }
+        }else if(byteLength <19){
+            //需要两个字节 比较麻烦 再说吧
+        }
+        return bytes;
+    }
+
+    /**
+     * 目前用到的都是一个字节足够，所以没往下写，需要的时候，再说吧
+     * @param bytes
+     * @return
+     */
+    public static int bitsToInt(byte[] bytes){
+        if(bytes.length<9){
+            byte value = 0;
+            for (int i = 0; i < bytes.length; i++) {
+                if (bytes[i] == 1) {
+                    value ^= (value&(1<<i))^(1<<i);
+
+                }
+            }
+            return value;
+        }
+        return -1;
     }
 
     public static byte[] getBytes(short data) {

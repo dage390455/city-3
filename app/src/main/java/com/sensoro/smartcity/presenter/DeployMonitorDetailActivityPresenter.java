@@ -6,10 +6,11 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
-import com.sensoro.libbleserver.ble.SensoroDeviceConnectionTest;
+import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
 import com.sensoro.libbleserver.ble.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
@@ -61,7 +62,7 @@ import rx.schedulers.Schedulers;
 public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployMonitorDetailActivityView> implements IOnCreate, Constants
         , SensoroConnectionCallback, BLEDeviceListener<BLEDevice>, Runnable {
     private Activity mContext;
-    private SensoroDeviceConnectionTest sensoroDeviceConnection;
+    private SensoroDeviceConnection sensoroDeviceConnection;
     private Handler mHandler;
     private String bleAddress;
     private static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
@@ -76,7 +77,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+        if ( PreferencesHelper.getInstance().getUserData().hasSignalConfig&&deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);
@@ -215,7 +216,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (sensoroDeviceConnection != null) {
             sensoroDeviceConnection.disconnect();
         }
-        sensoroDeviceConnection = new SensoroDeviceConnectionTest(mContext, bleAddress);
+        sensoroDeviceConnection = new SensoroDeviceConnection(mContext, bleAddress);
         try {
             sensoroDeviceConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorDetailActivityPresenter.this);
         } catch (Exception e) {

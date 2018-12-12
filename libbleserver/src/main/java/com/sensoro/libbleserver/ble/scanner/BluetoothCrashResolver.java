@@ -3,7 +3,6 @@ package com.sensoro.libbleserver.ble.scanner;
 import android.annotation.TargetApi;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
-import android.bluetooth.BluetoothManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -58,9 +57,9 @@ class BluetoothCrashResolver {
     private long lastStateSaveTime = 0L;
     private static final long MIN_TIME_BETWEEN_STATE_SAVES_MILLIS = 60000L;
 
-    private Context context;
+    private Context context = null;
     private UpdateNotifier updateNotifier;
-    private final Set<String> distinctBluetoothAddresses = new HashSet<>();
+    private final Set<String> distinctBluetoothAddresses = new HashSet<String>();
     /**
      * // It is very likely a crash if Bluetooth turns off and comes
      * // back on in an extremely short interval.  Testing on a Nexus 4 shows
@@ -162,7 +161,7 @@ class BluetoothCrashResolver {
         if (oldSize != newSize && newSize % 100 == 0) {
             Log.d(TAG, "Distinct Bluetooth devices seen: %s" + distinctBluetoothAddresses.size());
         }
-        if (distinctBluetoothAddresses.size() > getCrashRiskDeviceCount()) {
+        if (distinctBluetoothAddresses.size()  > getCrashRiskDeviceCount()) {
             if (PREEMPTIVE_ACTION_ENABLED && !recoveryInProgress) {
                 Log.w(TAG, "Large number of Bluetooth devices detected: %s Proactively "
                         + "attempting to clear out address list to prevent a crash" +
@@ -185,7 +184,8 @@ class BluetoothCrashResolver {
             Log.d(TAG, "Distinct Bluetooth devices seen at crash: %s" +
                     distinctBluetoothAddresses.size());
         }
-        lastBluetoothCrashDetectionTime = new Date().getTime();
+        long nowTimestamp = new Date().getTime();
+        lastBluetoothCrashDetectionTime = nowTimestamp;
         detectedCrashCount++;
 
         if (recoveryInProgress) {
@@ -416,8 +416,8 @@ class BluetoothCrashResolver {
                 try {
                     reader.close();
                 } catch (IOException e1) {
-                }
             }
+        }
         }
         Log.d(TAG, "Read %s Bluetooth addresses" + distinctBluetoothAddresses.size());
     }

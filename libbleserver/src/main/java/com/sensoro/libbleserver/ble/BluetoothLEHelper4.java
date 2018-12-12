@@ -61,7 +61,11 @@ public class BluetoothLEHelper4 implements Serializable {
         }
 
         bluetoothAdapter = bluetoothManager.getAdapter();
-        return bluetoothAdapter != null;
+        if (bluetoothAdapter == null) {
+//            Log.e(TAG, "Unable to obtain a BluetoothAdapter.");
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -80,7 +84,7 @@ public class BluetoothLEHelper4 implements Serializable {
         }
 
         // Previously connected device. Try to reconnect.
-        if (address.equals(bluetoothDeviceAddress) && bluetoothGatt != null) {
+        if ( address.equals(bluetoothDeviceAddress) && bluetoothGatt != null) {
 //            Log.d(TAG, "Trying to use an existing mBluetoothGatt for connection.");
             return bluetoothGatt.connect();
         }
@@ -142,7 +146,11 @@ public class BluetoothLEHelper4 implements Serializable {
         }
         String nid = uid.substring(0, 20);
         String regex = "[a-f0-9A-F]{20}";
-        return !Pattern.matches(regex, nid);
+        if (Pattern.matches(regex, nid)) {
+            //匹配成功
+            return false;
+        }
+        return true;
     }
 
     private boolean isBIDInValid(String uid) {
@@ -151,7 +159,11 @@ public class BluetoothLEHelper4 implements Serializable {
         }
         String bid = uid.substring(20, 32);
         String regex = "[a-f0-9A-F]{12}";
-        return !Pattern.matches(regex, bid);
+        if (Pattern.matches(regex, bid)) {
+            //匹配成功
+            return false;
+        }
+        return true;
     }
 
     private boolean isURLInValid(String url) {
@@ -162,7 +174,11 @@ public class BluetoothLEHelper4 implements Serializable {
             return false;
         }
         byte[] urlBytes = SensoroUtils.encodeUrl(url);
-        return urlBytes != null && urlBytes.length <= 17;
+        if (urlBytes != null && urlBytes.length <= 17) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private boolean isExpired(String broadcastKey) {
@@ -174,7 +190,9 @@ public class BluetoothLEHelper4 implements Serializable {
             } else {
                 long expiryDate = Long.valueOf(Integer.parseInt(decrypt.substring(40, decrypt.length()), 16));
                 long currentDate = System.currentTimeMillis();
-                return currentDate > expiryDate * 1000;
+                if (currentDate > expiryDate * 1000) {
+                    return true;
+                }
             }
         }
         return false;
@@ -263,8 +281,11 @@ public class BluetoothLEHelper4 implements Serializable {
             }
         }
 
-        return sensoroService != null;
+        if (sensoroService != null) {
+            return true;
+        }
 
+        return false;
     }
 
     public boolean checkGattServices(List<BluetoothGattService> gattServiceList, UUID targetServiceUUID) {
@@ -275,8 +296,11 @@ public class BluetoothLEHelper4 implements Serializable {
             }
         }
 
-        return sensoroService != null;
+        if (sensoroService != null) {
+            return true;
+        }
 
+        return false;
     }
 
     public void listenDescriptor(UUID targetReadCharUUID) {
@@ -367,6 +391,7 @@ public class BluetoothLEHelper4 implements Serializable {
         for (int i = 0; i < uuid.length(); i++) {
             if (uuid.charAt(i) >= 'a' && uuid.charAt(i) <= 'f' || uuid.charAt(i) <= '9' && uuid.charAt(i) >= '0' ||
                     uuid.charAt(i) == '-') {
+                continue;
             } else {
                 return false;
             }

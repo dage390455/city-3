@@ -99,7 +99,7 @@ public class BLEDeviceManager {
 //            if (Build.VERSION.SDK_INT >= 26) {
 //                mContext.startForegroundService(intent);
 //            } else {
-            mContext.startService(intent);
+                mContext.startService(intent);
 //            }
         }
     }
@@ -192,11 +192,15 @@ public class BLEDeviceManager {
      * @return
      */
     public boolean isBluetoothEnabled() {
-        try {
+        if (mContext != null) {
             BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
             bluetoothAdapter = bluetoothManager.getAdapter();
-            return bluetoothAdapter.isEnabled();
-        } catch (Exception e) {
+            if (bluetoothAdapter.isEnabled()) {// 蓝牙开启
+                return true;
+            } else {// 蓝牙关闭
+                return false;
+            }
+        } else {
             return false;
         }
     }

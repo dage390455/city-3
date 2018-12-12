@@ -100,8 +100,10 @@ class BLEScannerForJellyBean extends BLEScanner {
 
         // Manufacturer data match.
         if (scanBLEFilter.getManufacturerId() >= 0) {
-            return matchesPartialData(scanBLEFilter.getManufacturerData(), scanBLEFilter.getManufacturerDataMask(),
-                    scanBLERecord.getManufacturerSpecificData(scanBLEFilter.getManufacturerId()));
+            if (!matchesPartialData(scanBLEFilter.getManufacturerData(), scanBLEFilter.getManufacturerDataMask(),
+                    scanBLERecord.getManufacturerSpecificData(scanBLEFilter.getManufacturerId()))) {
+                return false;
+            }
         }
         // All filters match.
         return true;

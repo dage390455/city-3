@@ -6,6 +6,8 @@ import android.os.Binder;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
+import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.BLEDeviceFactory;
@@ -59,6 +61,7 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
         super.onDestroy();
     }
 
+    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return new BLEDeviceServiceV4Binder();
@@ -94,7 +97,7 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
         }
     }
 
-    private void enterDevice(final BLEDevice device) {
+    private void enterDevice(BLEDevice device) {
         try {
             final BLEDevice newDevice = device.clone();
             if (Looper.myLooper() == Looper.getMainLooper()) {
@@ -110,7 +113,6 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }
-
 
     }
 
@@ -155,7 +157,6 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
                 BLEDevice monitoredDevice = (BLEDevice) entry.getValue();
                 if (System.currentTimeMillis() - monitoredDevice.lastFoundTime > BLEDeviceManager.OUT_OF_RANGE_DELAY) {
                     final BLEDevice goneDevice = monitoredDevice.clone();
-                    //
                     if (Looper.myLooper() == Looper.getMainLooper()) {
                         BLEDeviceManager.getInstance(getApplication()).getBLEDeviceListener().onGoneDevice(goneDevice);
                     } else {

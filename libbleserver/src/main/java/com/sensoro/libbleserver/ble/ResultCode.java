@@ -33,10 +33,10 @@ public class ResultCode {
     public static final int CODE_DEVICE_INVAILD_DTM = 0x0d;
     public static final int CODE_DEVICE_DFU_ERROR = 0x0e;
 
-    public static final int CODE_STATION_RET_NONE = 0;
-    public static final int CODE_STATION_RET_SUCCCESS = 1;
-    public static final int CODE_STATION_RET_INVALID_CMD = 2;
-    public static final int CDOE_STATION_RET_INVALID_ARG = 3;
+    public static final int CODE_STATION_RET_NONE          = 0;
+    public static final int CODE_STATION_RET_SUCCCESS      = 1;
+    public static final int CODE_STATION_RET_INVALID_CMD   = 2;
+    public static final int CDOE_STATION_RET_INVALID_ARG   = 3;
     public static final int CODE_STATION_RET_INVALID_STATE = 4;
 
     public static String errCodeToMsg(int errCode) {

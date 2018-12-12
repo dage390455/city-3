@@ -6,13 +6,14 @@ import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.CmdType;
 import com.sensoro.libbleserver.ble.ResultCode;
 import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.SensoroDevice;
-import com.sensoro.libbleserver.ble.SensoroDeviceConnectionTest;
+import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
 import com.sensoro.libbleserver.ble.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.proto.ProtoMsgTest1U1;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
@@ -38,7 +39,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     private boolean bleHasOpen;
     private String bleAddress;
     private boolean isStartSignalCheck = false;
-    private SensoroDeviceConnectionTest mConnection;
+    private SensoroDeviceConnection mConnection;
     private int sendCount;
     private int receiveCount;
     //随机频点
@@ -200,7 +201,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
 
     private void connectDevice() {
         mHandler.removeCallbacksAndMessages(null);
-        mConnection = new SensoroDeviceConnectionTest(mActivity, bleAddress, true);
+        mConnection = new SensoroDeviceConnection(mActivity, bleAddress, true);
         try {
             mConnection.connect(deployAnalyzerModel.blePassword, SignalCheckActivityPresenter.this);
             getView().updateProgressDialogMessage(mActivity.getString(R.string.connecting));

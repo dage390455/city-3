@@ -187,11 +187,11 @@ final class BluetoothUuid {
         if (uuidA == null && uuidB == null) return true;
 
         if (uuidA == null) {
-            return uuidB.length == 0;
+            return uuidB.length == 0 ? true : false;
         }
 
         if (uuidB == null) {
-            return uuidA.length == 0;
+            return uuidA.length == 0 ? true : false;
         }
 
         HashSet<ParcelUuid> uuidSet = new HashSet<ParcelUuid>(Arrays.asList(uuidA));
@@ -212,7 +212,7 @@ final class BluetoothUuid {
         if (uuidA == null && uuidB == null) return true;
 
         if (uuidA == null) {
-            return uuidB.length == 0;
+            return uuidB.length == 0 ? true : false;
         }
 
         if (uuidB == null) return true;
