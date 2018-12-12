@@ -18,7 +18,7 @@ package com.sensoro.libbleserver.ble.scanner;
 
 import android.os.ParcelUuid;
 import android.support.annotation.Nullable;
-import android.support.v4.util.ArrayMap;
+import android.util.ArrayMap;
 import android.util.Log;
 import android.util.SparseArray;
 
@@ -182,8 +182,8 @@ public final class ScanBLERecord {
         String localName = null;
         int txPowerLevel = Integer.MIN_VALUE;
 
-        SparseArray<byte[]> manufacturerData = new SparseArray<byte[]>();
-        Map<ParcelUuid, byte[]> serviceData = new ArrayMap<ParcelUuid, byte[]>();
+        SparseArray<byte[]> manufacturerData = new SparseArray<>();
+        Map<ParcelUuid, byte[]> serviceData = new ArrayMap<>();
 
         try {
             while (currentPos < ScanBLERecord.length) {

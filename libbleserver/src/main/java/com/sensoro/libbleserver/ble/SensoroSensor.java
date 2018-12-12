@@ -12,7 +12,7 @@ import java.io.Serializable;
  * Created by sensoro on 17/1/19.
  */
 
-public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneable {
+public class SensoroSensor extends BLEDevice implements Parcelable, Cloneable {
 
 
     public SensoroData temperature;// 温度
@@ -89,10 +89,10 @@ public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneabl
     public boolean hasAcrelFires;
     public boolean hasCayMan;
 
-    public SensoroSensorTest() {
+    public SensoroSensor() {
     }
 
-    protected SensoroSensorTest(Parcel in) {
+    protected SensoroSensor(Parcel in) {
         super(in);
         temperature = (SensoroData) in.readSerializable();
         o3 = (SensoroData) in.readSerializable();
@@ -260,24 +260,24 @@ public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneabl
         parcel.writeByte((byte)(hasCayMan?1:0));
     }
 
-    public static final Creator<SensoroSensorTest> CREATOR = new Creator<SensoroSensorTest>() {
+    public static final Creator<SensoroSensor> CREATOR = new Creator<SensoroSensor>() {
 
         @Override
-        public SensoroSensorTest createFromParcel(Parcel parcel) {
-            return new SensoroSensorTest(parcel);
+        public SensoroSensor createFromParcel(Parcel parcel) {
+            return new SensoroSensor(parcel);
         }
 
         @Override
-        public SensoroSensorTest[] newArray(int size) {
-            return new SensoroSensorTest[size];
+        public SensoroSensor[] newArray(int size) {
+            return new SensoroSensor[size];
         }
     };
 
     @Override
-    public SensoroSensorTest clone() throws CloneNotSupportedException {
-        SensoroSensorTest newSensor = null;
+    public SensoroSensor clone() throws CloneNotSupportedException {
+        SensoroSensor newSensor = null;
         try {
-            newSensor = (SensoroSensorTest) super.clone();
+            newSensor = (SensoroSensor) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

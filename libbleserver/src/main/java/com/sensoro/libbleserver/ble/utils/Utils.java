@@ -37,8 +37,7 @@ public class Utils {
             byte _b0 = Byte.decode("0x" + new String(new byte[]{src0}));
             _b0 = (byte) (_b0 << 4);
             byte _b1 = Byte.decode("0x" + new String(new byte[]{src1}));
-            byte ret = (byte) (_b0 ^ _b1);
-            return ret;
+            return (byte) (_b0 ^ _b1);
         } catch (Exception e) {
             throw new IllegalArgumentException("region uuid is invalid");
         }

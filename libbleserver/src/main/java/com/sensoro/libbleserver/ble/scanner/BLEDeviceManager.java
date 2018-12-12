@@ -50,17 +50,10 @@ public class BLEDeviceManager {
     private BluetoothAdapter bluetoothAdapter;
 
     private BLEDeviceManager() {
-        mBoundListener = new SensoroDeviceServiceBoundListener() {
-            @Override
-            public void onSuccess() {
+    }
 
-            }
-
-            @Override
-            public void onFailure(Object errorMessage) {
-
-            }
-        };
+    public void setSensoroDeviceServiceBoundListener(SensoroDeviceServiceBoundListener listener) {
+        this.mBoundListener = listener;
     }
 
     public static BLEDeviceManager getInstance(Context context) {
@@ -79,7 +72,7 @@ public class BLEDeviceManager {
         this.mListener = listener;
     }
 
-    public BLEDeviceListener getBLEDeviceListener() {
+    BLEDeviceListener getBLEDeviceListener() {
         return mListener;
     }
 
@@ -88,7 +81,6 @@ public class BLEDeviceManager {
         if (bleDeviceService != null) {
             bleDeviceService.setBackgroundMode(isBackgroundMode);
         }
-
     }
 
     protected void startService(Intent intent) throws Exception {
@@ -99,24 +91,22 @@ public class BLEDeviceManager {
 //            if (Build.VERSION.SDK_INT >= 26) {
 //                mContext.startForegroundService(intent);
 //            } else {
-                mContext.startService(intent);
+            mContext.startService(intent);
 //            }
         }
     }
 
     public boolean startService() throws Exception {
         if (!isBLESuppotred()) {
-            throw new Exception(BLUETOOTH_IS_NOT_SUPPORT);// 抛出蓝牙关闭异常
+            throw new Exception(BLUETOOTH_IS_NOT_SUPPORT);// 抛出蓝牙不支持异常
         }
 
         isBleEnabled = isBluetoothEnabled();// 获取当前蓝牙状态
 
         if (!isBleEnabled) {
-//            throw new Exception(BLUETOOTH_IS_NOT_ENABLED);// 抛出蓝牙关闭异常
             return false;
         }
-
-        bind(mBoundListener);
+        bind();
         return isBleEnabled;
     }
 
@@ -124,7 +114,7 @@ public class BLEDeviceManager {
         unbind();
     }
 
-    private ServiceConnection deviceServiceConnection = new ServiceConnection() {
+    private final ServiceConnection deviceServiceConnection = new ServiceConnection() {
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
@@ -134,13 +124,17 @@ public class BLEDeviceManager {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
             serviceState = SERVICE_STATE_BOUND;
-            mBoundListener.onSuccess();
-
-            BLEDeviceService.BLEDeviceServiceV4Binder binder = (BLEDeviceService.BLEDeviceServiceV4Binder) service;
-            bleDeviceService = binder.getService();
-            if (bleDeviceService != null) {
-                bleDeviceService.setBackgroundMode(isBackgroundMode);
+            if (service instanceof BLEDeviceService.BLEDeviceServiceV4Binder) {
+                BLEDeviceService.BLEDeviceServiceV4Binder binder = (BLEDeviceService.BLEDeviceServiceV4Binder) service;
+                bleDeviceService = binder.getService();
+                if (bleDeviceService != null) {
+                    bleDeviceService.setBackgroundMode(isBackgroundMode);
+                }
+                if (mBoundListener != null) {
+                    mBoundListener.onSuccess();
+                }
             }
+
 
         }
     };
@@ -194,15 +188,15 @@ public class BLEDeviceManager {
     public boolean isBluetoothEnabled() {
         if (mContext != null) {
             BluetoothManager bluetoothManager = (BluetoothManager) mContext.getSystemService(Context.BLUETOOTH_SERVICE);
-            bluetoothAdapter = bluetoothManager.getAdapter();
-            if (bluetoothAdapter.isEnabled()) {// 蓝牙开启
-                return true;
-            } else {// 蓝牙关闭
-                return false;
+            if (bluetoothManager != null) {
+                bluetoothAdapter = bluetoothManager.getAdapter();
+                if (bluetoothAdapter != null) {
+                    return bluetoothAdapter.isEnabled();
+                }
             }
-        } else {
-            return false;
+
         }
+        return false;
     }
 
     public boolean enEnableBle() {
@@ -217,20 +211,22 @@ public class BLEDeviceManager {
      *
      * @return
      */
-    public boolean isBLESuppotred() {
+    private boolean isBLESuppotred() {
         // Use this check to determine whether BLE is supported on the device. Then
         // you can selectively disable BLE-related features.
         if (mContext != null) {
-            if (!mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE)) {
-                return false;
-            } else {
-                return true;
-            }
-        } else {
-            return false;
+            return mContext.getPackageManager().hasSystemFeature(PackageManager.FEATURE_BLUETOOTH_LE);
         }
+        return false;
     }
 
+    public BluetoothAdapter getBluetoothAdapter() {
+        return bluetoothAdapter;
+    }
+
+    /**
+     * 监听服务是否开启成功
+     */
     private interface SensoroDeviceServiceBoundListener {
         void onSuccess();
 
@@ -238,19 +234,18 @@ public class BLEDeviceManager {
     }
 
 
-    private void bind(SensoroDeviceServiceBoundListener mBoundListener) {
+    private void bind() {
         Log.d(TAG, "bind service");
-
-        SensoroUtils.checkNotNull(mBoundListener, "mBoundListener is null");
-        this.mBoundListener = mBoundListener;
-
+//        SensoroUtils.checkNotNull(mBoundListener, "mBoundListener is null");
         if (serviceState == SERVICE_STATE_BINDING || serviceState == SERVICE_STATE_BOUND) {
             Log.d(TAG, "service is binding or already bound");
             return;
         }
 
         if (!isBleEnabled) {
-            this.mBoundListener.onFailure("bluetooth is not enabled");
+            if (this.mBoundListener != null) {
+                this.mBoundListener.onFailure("bluetooth is not enabled");
+            }
             Log.d(TAG, "bluetooth is not enabled,start failure");
             return;
         }

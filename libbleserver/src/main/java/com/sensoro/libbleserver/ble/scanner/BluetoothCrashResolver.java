@@ -57,7 +57,7 @@ class BluetoothCrashResolver {
     private long lastStateSaveTime = 0L;
     private static final long MIN_TIME_BETWEEN_STATE_SAVES_MILLIS = 60000L;
 
-    private Context context = null;
+    private Context context;
     private UpdateNotifier updateNotifier;
     private final Set<String> distinctBluetoothAddresses = new HashSet<String>();
     /**
@@ -161,13 +161,18 @@ class BluetoothCrashResolver {
         if (oldSize != newSize && newSize % 100 == 0) {
             Log.d(TAG, "Distinct Bluetooth devices seen: %s" + distinctBluetoothAddresses.size());
         }
-        if (distinctBluetoothAddresses.size()  > getCrashRiskDeviceCount()) {
+        if (distinctBluetoothAddresses.size() > getCrashRiskDeviceCount()) {
             if (PREEMPTIVE_ACTION_ENABLED && !recoveryInProgress) {
                 Log.w(TAG, "Large number of Bluetooth devices detected: %s Proactively "
                         + "attempting to clear out address list to prevent a crash" +
                         distinctBluetoothAddresses.size());
                 Log.w(TAG, "Stopping LE Scan");
-                BluetoothAdapter.getDefaultAdapter().stopLeScan(scanner);
+                BluetoothAdapter bluetoothAdapter = BLEDeviceManager.getInstance(context.getApplicationContext()).getBluetoothAdapter();
+                if (bluetoothAdapter==null){
+                    bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+                }
+                bluetoothAdapter.stopLeScan(scanner);
+//                BluetoothAdapter.getDefaultAdapter().stopLeScan(scanner);
                 startRecovery();
                 processStateChange();
             }
@@ -256,7 +261,11 @@ class BluetoothCrashResolver {
         // The discovery operation will start by clearing out the Bluetooth mac list to only the 256
         // most recently seen BLE mac addresses.
         recoveryAttemptCount++;
-        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+//        BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+        BluetoothAdapter adapter = BLEDeviceManager.getInstance(context.getApplicationContext()).getBluetoothAdapter();
+        if (adapter==null){
+            adapter = BluetoothAdapter.getDefaultAdapter();
+        }
         Log.d(TAG, "about to check if discovery is active");
         if (!adapter.isDiscovering()) {
             Log.w(TAG, "Recovery attempt started");
@@ -416,8 +425,8 @@ class BluetoothCrashResolver {
                 try {
                     reader.close();
                 } catch (IOException e1) {
+                }
             }
-        }
         }
         Log.d(TAG, "Read %s Bluetooth addresses" + distinctBluetoothAddresses.size());
     }
@@ -429,7 +438,10 @@ class BluetoothCrashResolver {
                 Log.w(TAG, "BluetoothAdapter.ACTION_DISCOVERY_STARTED never received.  Recovery may fail.");
             }
 
-            final BluetoothAdapter adapter = BluetoothAdapter.getDefaultAdapter();
+            BluetoothAdapter adapter = BLEDeviceManager.getInstance(context.getApplicationContext()).getBluetoothAdapter();
+            if (adapter == null) {
+                adapter = BluetoothAdapter.getDefaultAdapter();
+            }
             if (adapter.isDiscovering()) {
                 Log.d(TAG, "Cancelling discovery");
                 adapter.cancelDiscovery();

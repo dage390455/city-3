@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
@@ -26,8 +27,8 @@ import java.util.concurrent.Executors;
 
 public class BLEDeviceService extends Service implements BLEScanCallback {
 
-    private ConcurrentHashMap<String, BLEDevice> scanDeviceHashMap = new ConcurrentHashMap<>();
-    private ArrayList<BLEDevice> updateDevices = new ArrayList<BLEDevice>();
+    private final ConcurrentHashMap<String, BLEDevice> scanDeviceHashMap = new ConcurrentHashMap<>();
+    private final ArrayList<BLEDevice> updateDevices = new ArrayList<BLEDevice>();
     private BLEScanner bleScanner;
     private ExecutorService executorService;
     private final Handler mainHandler = new Handler(Looper.getMainLooper());
@@ -116,12 +117,21 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
 
     }
 
-    private void updateDeviceInfo(BLEDevice device, BLEDevice containedDevice) {
+    private void updateDeviceInfo(BLEDevice newDevice, BLEDevice containedDevice) {
         try {
-            containedDevice.setSn(device.getSn());
-            containedDevice.setHardwareVersion(device.getHardwareVersion());
-            containedDevice.setFirmwareVersion(device.getFirmwareVersion());
-            containedDevice.lastFoundTime = device.lastFoundTime;
+            containedDevice.setSn(newDevice.getSn());
+            String hardwareVersion = newDevice.getHardwareVersion();
+            if (!TextUtils.isEmpty(hardwareVersion)) {
+                containedDevice.setHardwareVersion(hardwareVersion);
+            }
+            String firmwareVersion = newDevice.getFirmwareVersion();
+            if (!TextUtils.isEmpty(firmwareVersion)) {
+                containedDevice.setFirmwareVersion(firmwareVersion);
+            }
+            containedDevice.lastFoundTime = newDevice.lastFoundTime;
+            containedDevice.setBatteryLevel(newDevice.getBatteryLevel());
+            containedDevice.setRssi(newDevice.getRssi());
+            containedDevice.setType(newDevice.getType());
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -151,9 +161,7 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
         // 清空updateDevices
         try {
             updateDevices.clear();
-            Iterator deviceIterator = scanDeviceHashMap.entrySet().iterator();
-            while (deviceIterator.hasNext()) {
-                Map.Entry entry = (Map.Entry) deviceIterator.next();
+            for (Map.Entry entry : scanDeviceHashMap.entrySet()) {
                 BLEDevice monitoredDevice = (BLEDevice) entry.getValue();
                 if (System.currentTimeMillis() - monitoredDevice.lastFoundTime > BLEDeviceManager.OUT_OF_RANGE_DELAY) {
                     final BLEDevice goneDevice = monitoredDevice.clone();
@@ -178,25 +186,19 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
 
     }
 
-    private void processScanCycleDevices() {
-        synchronized (BLEDeviceService.class) {
-            exitDevice();
-            updateDevices();
-        }
-    }
-
     @Override
     public void onLeScan(final ScanBLEResult scanBLEResult) {
         try {
             executorService.execute(new Runnable() {
                 @Override
                 public void run() {
-                    BLEDeviceFactory deviceFactory = new BLEDeviceFactory(scanBLEResult);
-                    BLEDevice bleDevice = deviceFactory.create();
-                    if (bleDevice != null) {//&& bleDevice.getSn().equals("10310117C5A3FD2D")
-                        processScanDevice(bleDevice);
+                    synchronized (scanDeviceHashMap) {
+                        BLEDeviceFactory deviceFactory = new BLEDeviceFactory(scanBLEResult);
+                        BLEDevice bleDevice = deviceFactory.create();
+                        if (bleDevice != null) {//&& bleDevice.getSn().equals("10310117C5A3FD2D")
+                            processScanDevice(bleDevice);
+                        }
                     }
-
                 }
             });
 
@@ -209,7 +211,21 @@ public class BLEDeviceService extends Service implements BLEScanCallback {
 
     @Override
     public void onScanCycleFinish() {
-        processScanCycleDevices();
+        try {
+            executorService.execute(new Runnable() {
+                @Override
+                public void run() {
+                    synchronized (scanDeviceHashMap) {
+                        exitDevice();
+                        updateDevices();
+                    }
+                }
+            });
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
     }
 
 }
