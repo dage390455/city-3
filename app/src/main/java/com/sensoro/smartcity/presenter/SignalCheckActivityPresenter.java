@@ -6,7 +6,6 @@ import android.content.res.Resources;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.CmdType;
@@ -104,10 +103,11 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     @Override
     public void onDestroy() {
         BleObserver.getInstance().unregisterBleObserver(this);
-        stopScanService();
+        mHandler.removeCallbacksAndMessages(null);
         if (mConnection != null) {
             mConnection.disconnect();
         }
+        stopScanService();
     }
 
     @Override
@@ -200,11 +200,11 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     }
 
     private void connectDevice() {
-        mHandler.removeCallbacksAndMessages(null);
         mConnection = new SensoroDeviceConnection(mActivity, bleAddress, true);
         try {
             mConnection.connect(deployAnalyzerModel.blePassword, SignalCheckActivityPresenter.this);
             getView().updateProgressDialogMessage(mActivity.getString(R.string.connecting));
+            getView().showProgressDialog();
 //            stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
@@ -235,13 +235,16 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                getView().updateProgressDialogMessage(mActivity.getString(R.string.ble_send_data));
-                getView().setLlTestVisible(false);
-                getView().setLlDetailVisible(true);
+                if (getView() != null) {
+                    getView().updateProgressDialogMessage(mActivity.getString(R.string.ble_send_data));
+                    getView().showProgressDialog();
+                    getView().setLlTestVisible(false);
+                    getView().setLlDetailVisible(true);
+                    getView().setSubTitleVisible(false);
+                    sendDetectionCmd((SensoroDevice) bleDevice);
+                }
                 sendCount = 0;
                 receiveCount = 0;
-                getView().setSubTitleVisible(false);
-                sendDetectionCmd((SensoroDevice) bleDevice);
             }
         });
 
@@ -254,18 +257,24 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getView().dismissProgressDialog();
-                getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                getView().toastShort(ResultCode.errCodeToMsg(errorCode));
-                getView().setSubTitleVisible(true);
+                if (getView() != null) {
+                    getView().dismissProgressDialog();
+                    getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
+                    getView().toastShort(ResultCode.errCodeToMsg(errorCode));
+                    getView().setSubTitleVisible(true);
+                }
+
             }
         });
     }
 
     @Override
     public void onDisconnected() {
-        getView().setSubTitleVisible(true);
-        getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
+        if (getView() != null) {
+            getView().setSubTitleVisible(true);
+            getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
+        }
+
     }
 
     @Override
@@ -273,17 +282,18 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getView().dismissProgressDialog();
-                if (cmd == CmdType.CMD_SIGNAL) {
-                    if (o == null) {
-                        getView().setStartBtnIcon(R.drawable.signal_check_stop_btn);
-                    } else {
-                        ProtoMsgTest1U1.MsgTest msgTest = (ProtoMsgTest1U1.MsgTest) o;
-                        refresh(msgTest);
+                if (getView() != null) {
+                    getView().dismissProgressDialog();
+                    if (cmd == CmdType.CMD_SIGNAL) {
+                        if (o == null) {
+                            getView().setStartBtnIcon(R.drawable.signal_check_stop_btn);
+                        } else {
+                            ProtoMsgTest1U1.MsgTest msgTest = (ProtoMsgTest1U1.MsgTest) o;
+                            refresh(msgTest);
+                        }
+
                     }
-
                 }
-
             }
         });
     }
@@ -304,8 +314,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         Calendar calendar = Calendar.getInstance();
         signalData.setDate(DateUtil.getStrTime_ymd_hm_ss(calendar.getTimeInMillis()));
 
-        if (msgTest.getDownlinkSNR() != 0 && msgTest.getDownlinkFreq() != 0 && msgTest.getDownlinkRSSI() != 0 &&
-                msgTest.getDownlinkSNR() != 0 && msgTest.getDownlinkTxPower() != 0) {
+        if (msgTest.getDownlinkSNR() != 0 && msgTest.getDownlinkFreq() != 0 && msgTest.getDownlinkRSSI() != 0 && msgTest.getDownlinkTxPower() != 0) {
             receiveCount++;
         }
         sendCount++;
@@ -323,11 +332,14 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getView().dismissProgressDialog();
-                getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                mConnection.disconnect();
+                if (getView() != null) {
+                    getView().dismissProgressDialog();
+                    getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
+                    mConnection.disconnect();
 
-                getView().toastShort(ResultCode.errCodeToMsg(errorCode));
+                    getView().toastShort(ResultCode.errCodeToMsg(errorCode));
+                }
+
             }
         });
     }

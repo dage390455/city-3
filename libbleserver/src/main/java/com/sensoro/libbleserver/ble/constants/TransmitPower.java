@@ -34,18 +34,16 @@ public enum TransmitPower implements Serializable {
      * @return
      */
     public static Boolean isMicroTX(TransmitPower transmitPower, String model) {
-        if (model.equals(SensoroDevice.HW_A0)) {
-            return false;
-        } else if (model.equals(SensoroDevice.HW_B0)) {
-            return false;
-        } else if (model.equals(SensoroDevice.HW_C0) || model.equals(SensoroDevice.HW_C1)) {
-            if (transmitPower == UNKNOWN) {
-                return null;
-            } else if (transmitPower.compareTo(LEVEL4) < 0) {
-                return true;
-            } else {
+        switch (model) {
+            case SensoroDevice.HW_A0:
                 return false;
-            }
+            case SensoroDevice.HW_B0:
+                return false;
+            case SensoroDevice.HW_C0:
+            case SensoroDevice.HW_C1:
+                if (transmitPower == UNKNOWN) {
+                    return null;
+                } else return transmitPower.compareTo(LEVEL4) < 0;
         }
         return null;
     }
@@ -87,69 +85,71 @@ public enum TransmitPower implements Serializable {
      * @return
      */
     public static Integer getTransmitPowerValue(TransmitPower transmitPower, String model) {
-        if (model.equals(SensoroDevice.HW_A0)) {
-            switch (transmitPower) {
-                case LEVEL0:
-                    return -23;
-                case LEVEL1:
-                    return -6;
-                case LEVEL2:
-                    return 0;
-                default:
-                    return null;
-            }
-        } else if (model.equals(SensoroDevice.HW_B0)) {
-            switch (transmitPower) {
-                case LEVEL0:
-                    return -30;
-                case LEVEL1:
-                    return -20;
-                case LEVEL2:
-                    return -16;
-                case LEVEL3:
-                    return -12;
-                case LEVEL4:
-                    return -8;
-                case LEVEL5:
-                    return -4;
-                case LEVEL6:
-                    return 0;
-                case LEVEL7:
-                    return +4;
-                default:
-                    return null;
-            }
-        } else if (model.equals(SensoroDevice.HW_C0) || model.equals(SensoroDevice.HW_C1)) {
-            switch (transmitPower) {
-                case LEVEL0:
-                    return -30;
-                case LEVEL1:
-                    return -20;
-                case LEVEL2:
-                    return -16;
-                case LEVEL3:
-                    return -12;
-                case LEVEL4:
-                    return -30;
-                case LEVEL5:
-                    return -20;
-                case LEVEL6:
-                    return -16;
-                case LEVEL7:
-                    return -12;
-                case LEVEL8:
-                    return -8;
-                case LEVEL9:
-                    return -4;
-                case LEVEL10:
-                    return 0;
-                case LEVEL11:
-                    return +4;
-                default:
-                    return null;
-            }
-        } else {
-            return null;
+        switch (model) {
+            case SensoroDevice.HW_A0:
+                switch (transmitPower) {
+                    case LEVEL0:
+                        return -23;
+                    case LEVEL1:
+                        return -6;
+                    case LEVEL2:
+                        return 0;
+                    default:
+                        return null;
+                }
+            case SensoroDevice.HW_B0:
+                switch (transmitPower) {
+                    case LEVEL0:
+                        return -30;
+                    case LEVEL1:
+                        return -20;
+                    case LEVEL2:
+                        return -16;
+                    case LEVEL3:
+                        return -12;
+                    case LEVEL4:
+                        return -8;
+                    case LEVEL5:
+                        return -4;
+                    case LEVEL6:
+                        return 0;
+                    case LEVEL7:
+                        return +4;
+                    default:
+                        return null;
+                }
+            case SensoroDevice.HW_C0:
+            case SensoroDevice.HW_C1:
+                switch (transmitPower) {
+                    case LEVEL0:
+                        return -30;
+                    case LEVEL1:
+                        return -20;
+                    case LEVEL2:
+                        return -16;
+                    case LEVEL3:
+                        return -12;
+                    case LEVEL4:
+                        return -30;
+                    case LEVEL5:
+                        return -20;
+                    case LEVEL6:
+                        return -16;
+                    case LEVEL7:
+                        return -12;
+                    case LEVEL8:
+                        return -8;
+                    case LEVEL9:
+                        return -4;
+                    case LEVEL10:
+                        return 0;
+                    case LEVEL11:
+                        return +4;
+                    default:
+                        return null;
+                }
+            default:
+                return null;
         }
     }
 }

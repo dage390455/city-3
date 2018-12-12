@@ -269,7 +269,7 @@ public final class ScanBLEFilter implements Parcelable {
 
         // Service data match
         if (mServiceDataUuid != null) {
-            if (!matchesPartialData(mServiceData, mServiceDataMask,
+            if (scanRecord != null && !matchesPartialData(mServiceData, mServiceDataMask,
                     scanRecord.getServiceData(mServiceDataUuid))) {
                 return false;
             }

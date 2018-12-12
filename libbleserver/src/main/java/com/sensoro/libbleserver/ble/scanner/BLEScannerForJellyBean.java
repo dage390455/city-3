@@ -92,7 +92,7 @@ class BLEScannerForJellyBean extends BLEScanner {
 
         // Service data match
         if (scanBLEFilter.getServiceDataUuid() != null) {
-            if (!matchesPartialData(scanBLEFilter.getServiceData(), scanBLEFilter.getServiceDataMask(),
+            if (scanBLERecord != null && !matchesPartialData(scanBLEFilter.getServiceData(), scanBLEFilter.getServiceDataMask(),
                     scanBLERecord.getServiceData(scanBLEFilter.getServiceDataUuid()))) {
                 return false;
             }
@@ -100,10 +100,9 @@ class BLEScannerForJellyBean extends BLEScanner {
 
         // Manufacturer data match.
         if (scanBLEFilter.getManufacturerId() >= 0) {
-            if (!matchesPartialData(scanBLEFilter.getManufacturerData(), scanBLEFilter.getManufacturerDataMask(),
-                    scanBLERecord.getManufacturerSpecificData(scanBLEFilter.getManufacturerId()))) {
-                return false;
-            }
+            assert scanBLERecord != null;
+            return matchesPartialData(scanBLEFilter.getManufacturerData(), scanBLEFilter.getManufacturerDataMask(),
+                    scanBLERecord.getManufacturerSpecificData(scanBLEFilter.getManufacturerId()));
         }
         // All filters match.
         return true;

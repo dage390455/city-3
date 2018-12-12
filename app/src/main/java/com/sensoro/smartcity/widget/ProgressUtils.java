@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.widget;
 
 import android.app.Activity;
-import android.app.ProgressDialog;
 import android.view.View;
 import android.view.Window;
 import android.view.animation.Animation;
@@ -14,9 +13,6 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
 
 import java.lang.ref.WeakReference;
-import java.time.chrono.MinguoChronology;
-
-import butterknife.BindView;
 
 public class ProgressUtils {
     private Builder builder;
@@ -84,6 +80,13 @@ public class ProgressUtils {
 
         public Builder setMessage(String message) {
             this.message = message;
+            return this;
+        }
+
+        public Builder setCancelable(boolean cancelable) {
+            if (progressDialog != null) {
+                progressDialog.setCancelable(cancelable);
+            }
             return this;
         }
 

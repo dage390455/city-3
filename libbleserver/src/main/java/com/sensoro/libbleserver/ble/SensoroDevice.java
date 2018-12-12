@@ -144,7 +144,7 @@ public class SensoroDevice extends BLEDevice implements Parcelable, Cloneable {
     transient boolean hasMaxEirp;
     SensoroSlot slotArray[];
 //    SensoroSensor sensoroSensor;
-    private SensoroSensorTest sensoroSensorTest;
+    private SensoroSensor sensoroSensorTest;
     public long lastFoundTime;
 
     public Integer getAlarmStepHigh() {
@@ -320,7 +320,7 @@ public class SensoroDevice extends BLEDevice implements Parcelable, Cloneable {
         isDfu = (in.readByte() != 0);
         slotArray = (SensoroSlot[]) in.readParcelableArray(SensoroSlot.class.getClassLoader());
 //        sensoroSensor = in.readParcelable(SensoroSensor.class.getClassLoader());
-        sensoroSensorTest = in.readParcelable(SensoroSensorTest.class.getClassLoader());
+        sensoroSensorTest = in.readParcelable(SensoroSensor.class.getClassLoader());
         classBEnabled = in.readInt();
         classBDataRate = in.readInt();
         classBPeriodicity = in.readInt();
@@ -1025,11 +1025,11 @@ public class SensoroDevice extends BLEDevice implements Parcelable, Cloneable {
 //        this.sensoroSensor = sensoroSensor;
 //    }
 
-    public SensoroSensorTest getSensoroSensorTest() {
+    public SensoroSensor getSensoroSensorTest() {
         return sensoroSensorTest;
     }
 
-    public void setSensoroSensorTest(SensoroSensorTest sensoroSensorTest) {
+    public void setSensoroSensorTest(SensoroSensor sensoroSensorTest) {
         this.sensoroSensorTest = sensoroSensorTest;
     }
 
