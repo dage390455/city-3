@@ -552,6 +552,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
                 }
                 break;
+            case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
+                //目前只要传这个，就是成功了
+                getView().setDeployDeviceDetailDeploySetting(true);
+
+                break;
             default:
                 break;
         }
@@ -890,6 +895,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             }
             intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
             getView().startAC(intent);
+            getView().startACForResult(intent,Constants.REQUEST_CODE_INIT_CONFIG);
         }
     }
 

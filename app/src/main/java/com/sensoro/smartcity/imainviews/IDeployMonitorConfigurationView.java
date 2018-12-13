@@ -9,7 +9,7 @@ public interface IDeployMonitorConfigurationView extends IToast,IActivityIntent,
 
     void dismissBleConfigurationDialog();
 
-    void updateBtnRetryStatus();
+    void updateBtnStatus(boolean canConfig);
 
     void updateBleConfigurationDialogText(String text);
 
@@ -17,5 +17,7 @@ public interface IDeployMonitorConfigurationView extends IToast,IActivityIntent,
 
     void updateBleConfigurationDialogSuccessImv();
 
-    void setTV(String message);
+    void setTvNearVisible(boolean isVisible);
+
+    boolean hasEditTextContent();
 }

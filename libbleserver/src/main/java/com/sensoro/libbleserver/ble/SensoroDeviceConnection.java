@@ -2039,7 +2039,7 @@ public class SensoroDeviceConnection {
     }
 
     public void writeData05Configuration(SensoroDevice sensoroDevice, SensoroWriteCallback
-            writeCallback) throws InvalidProtocolBufferException {
+            writeCallback) {
         writeCallbackHashMap.put(CmdType.CMD_W_CFG, writeCallback);
         MsgNode1V1M5.MsgNode.Builder msgNodeBuilder = MsgNode1V1M5.MsgNode.newBuilder();
         SensoroSensor sensoroSensorTest = sensoroDevice.getSensoroSensorTest();
@@ -2360,9 +2360,9 @@ public class SensoroDeviceConnection {
             if (sensoroSensorTest.acrelFires.hasCt) {
                 builder.setCt(sensoroSensorTest.acrelFires.ct);
             }
-            if (sensoroSensorTest.acrelFires.hasCmd) {
+//            if (sensoroSensorTest.acrelFires.hasCmd) {
                 builder.setCmd(sensoroSensorTest.acrelFires.cmd);
-            }
+//            }
             msgNodeBuilder.setAcrelData(builder);
 
         }
