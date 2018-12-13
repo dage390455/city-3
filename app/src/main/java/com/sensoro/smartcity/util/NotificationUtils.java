@@ -104,20 +104,17 @@ public class NotificationUtils extends ContextWrapper {
 //            aClass = LoginActivity.class;
 //        }
         //只在mainActivity推送通知
-//        if (!isSplashACLived()) {
-            if (Build.VERSION.SDK_INT >= 26) {
-                createNotificationChannel();
-                Notification notification = getChannelNotification
-                        (content).build();
-                getManager().notify(noID++, notification);
-                LogUtils.loge("sendNotification -->> "+noID);
-            } else {
-                Notification notification = getNotification_25(content).build();
-                getManager().notify(noID++, notification);
-                LogUtils.loge("sendNotification -->> "+noID);
-            }
-//        }
-
+        if (Build.VERSION.SDK_INT >= 26) {
+            createNotificationChannel();
+            Notification notification = getChannelNotification
+                    (content).build();
+            getManager().notify(noID++, notification);
+            LogUtils.loge("sendNotification -->> " + noID);
+        } else {
+            Notification notification = getNotification_25(content).build();
+            getManager().notify(noID++, notification);
+            LogUtils.loge("sendNotification -->> " + noID);
+        }
     }
 
     private boolean isMainACLived() {
@@ -125,22 +122,6 @@ public class NotificationUtils extends ContextWrapper {
         Intent intent = new Intent();
         intent.setClassName(getPackageName(), name);
         ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (resolveInfo != null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean isSplashACLived() {
-        final String name = "com.sensoro.smartcity.activity/SplashActivity";
-        Intent intent = new Intent();
-        intent.setClassName(getPackageName(), name);
-        ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (resolveInfo != null) {
-            return false;
-        } else {
-            return true;
-        }
+        return resolveInfo == null;
     }
 }
