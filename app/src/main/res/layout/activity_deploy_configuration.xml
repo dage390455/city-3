@@ -27,6 +27,21 @@
             android:text="@string/rated_current"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp" />
+        <TextView
+            android:id="@+id/ac_deploy_configuration_tv_near"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/signal_check_near"
+            android:textSize="10sp"
+            android:textColor="@color/white"
+            android:background="@drawable/shape_bg_solid_29c_full_corner"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:layout_marginStart="8dp"
+            android:layout_gravity="center_vertical"
+            />
 
         <EditText
             android:id="@+id/ac_deploy_configuration_et_enter"
@@ -35,6 +50,7 @@
             android:background="@null"
             android:gravity="end"
             android:inputType="number"
+            android:layout_marginStart="8dp"
             android:textColor="@color/c_252525"
             android:textSize="14sp" />
     </LinearLayout>
@@ -51,16 +67,7 @@
         android:textColor="@color/c_a6a6a6"
         android:textSize="12sp" />
 
-    <TextView
-        android:id="@+id/tv"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/ac_deploy_configuration_tv_enter_tip"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="20dp"
-        android:textColor="@color/c_a6a6a6"
-        android:textSize="12sp" />
+
     <TextView
         android:id="@+id/ac_deploy_configuration_tv_configuration"
         android:layout_width="match_parent"
@@ -71,6 +78,7 @@
         android:layout_marginBottom="20dp"
         android:background="@drawable/shape_bg_solid_df_corner"
         android:clickable="false"
+        android:enabled="false"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"

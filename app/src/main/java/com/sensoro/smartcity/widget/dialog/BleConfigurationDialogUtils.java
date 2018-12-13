@@ -18,7 +18,7 @@ public class BleConfigurationDialogUtils {
     private final CustomCornerDialog mDialog;
     private final RotateAnimation rotateAnimation;
 
-    public BleConfigurationDialogUtils(Activity activity,String message) {
+    public BleConfigurationDialogUtils(Activity activity, String message) {
         View view = View.inflate(activity, R.layout.item_progress_dilog, null);
         mImv = view.findViewById(R.id.progress_imv);
         mTv = view.findViewById(R.id.progress_tv);
@@ -35,7 +35,7 @@ public class BleConfigurationDialogUtils {
         rotateAnimation.setRepeatCount(Animation.INFINITE);
     }
 
-    public void show(){
+    public void show() {
         if (mDialog != null) {
             mDialog.show();
             mImv.startAnimation(rotateAnimation);
@@ -43,20 +43,27 @@ public class BleConfigurationDialogUtils {
 
     }
 
-    public void dismiss(){
+    public void dismiss() {
         if (mDialog != null) {
             mDialog.dismiss();
             mImv.clearAnimation();
         }
     }
 
-    public void updateTvText(String text){
+    public void onDestroy() {
+        if (mDialog != null) {
+            mDialog.cancel();
+            mImv.clearAnimation();
+        }
+    }
+
+    public void updateTvText(String text) {
         if (mTv != null) {
             mTv.setText(text);
         }
     }
 
-    public void showSuccessImv(){
+    public void showSuccessImv() {
         mImv.clearAnimation();
         mImv.setImageResource(R.drawable.dialog_success);
     }

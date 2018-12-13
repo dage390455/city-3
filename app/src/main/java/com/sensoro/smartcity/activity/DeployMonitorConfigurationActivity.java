@@ -40,8 +40,8 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     TextView acDeployConfigurationTvEnterTip;
     @BindView(R.id.ac_deploy_configuration_tv_configuration)
     TextView acDeployConfigurationTvConfiguration;
-    @BindView(R.id.tv)
-    TextView tv;
+    @BindView(R.id.ac_deploy_configuration_tv_near)
+    TextView acDeployConfigurationTvNear;
     private BleConfigurationDialogUtils bleConfigDialog;
 
     @Override
@@ -69,14 +69,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
             @Override
             public void afterTextChanged(Editable s) {
-                if (s.toString().length()>0) {
-                    acDeployConfigurationTvConfiguration.setClickable(true);
-                    acDeployConfigurationTvConfiguration.setBackgroundResource(R.drawable.shape_bg_corner_29c_shadow);
-                }else{
-                    acDeployConfigurationTvConfiguration.setClickable(false);
-                    acDeployConfigurationTvConfiguration.setBackgroundResource(R.drawable.shape_bg_solid_df_corner);
-                }
-
+                updateBtnStatus(s.toString().length() > 0 && acDeployConfigurationTvNear.getVisibility() == View.VISIBLE);
             }
         });
         bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));
@@ -134,11 +127,11 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
 
-    @OnClick({R.id.ac_deploy_configuration_tv_enter_tip, R.id.ac_deploy_configuration_tv_configuration})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_configuration_tv_configuration})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_configuration_tv_configuration:
-                mPresenter.doConfiguration();
+                mPresenter.doConfiguration(acDeployConfigurationEtEnter.getText().toString());
                 break;
             case R.id.include_text_title_imv_arrows_left:
                 finishAc();
@@ -158,8 +151,10 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     @Override
-    public void updateBtnRetryStatus() {
-        acDeployConfigurationTvConfiguration.setText(mActivity.getString(R.string.retry));
+    public void updateBtnStatus(boolean canConfig) {
+        acDeployConfigurationTvConfiguration.setEnabled(canConfig);
+        acDeployConfigurationTvConfiguration.setBackgroundResource(canConfig ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+
     }
 
     @Override
@@ -168,23 +163,25 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     @Override
-    public String getEditTextValue() {
-        return acDeployConfigurationEtEnter.getText().toString();
-    }
-
-    @Override
     public void updateBleConfigurationDialogSuccessImv() {
         bleConfigDialog.showSuccessImv();
     }
 
     @Override
-    public void setTV(String message) {
-        tv.setText(message);
+    public void setTvNearVisible(boolean isVisible) {
+        acDeployConfigurationTvNear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+
+    @Override
+    public boolean hasEditTextContent() {
+        return acDeployConfigurationEtEnter.getText().toString().length() > 0;
     }
 
     @Override
     protected void onDestroy() {
+        bleConfigDialog.onDestroy();
         super.onDestroy();
-        bleConfigDialog.dismiss();
+
     }
 }

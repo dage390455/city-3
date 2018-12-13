@@ -150,7 +150,7 @@ public class SensoroUUID {
                     bytes[i] = 1;
                 }
             }
-        } else if (byteLength < 19) {
+        } else if (byteLength < 17) {
             //需要两个字节 比较麻烦 再说吧
         }
         return bytes;

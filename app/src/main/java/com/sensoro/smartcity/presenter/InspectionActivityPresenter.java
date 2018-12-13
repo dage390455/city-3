@@ -42,7 +42,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private long startTime;
     private InspectionTaskDeviceDetail mDeviceDetail;
-    private HashSet<String> tempBleDevice = new HashSet<>();
+    private final HashSet<String> tempBleDevice = new HashSet<>();
     private boolean hasBleDevice = false;
 
     @Override

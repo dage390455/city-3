@@ -4,18 +4,18 @@ import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
-public interface IDeployMonitorConfigurationView extends IToast,IActivityIntent,IProgressDialog {
+public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent, IProgressDialog {
     void showBleConfigurationDialog(String message);
 
     void dismissBleConfigurationDialog();
 
-    void updateBtnRetryStatus();
+    void updateBtnStatus(boolean canConfig);
 
     void updateBleConfigurationDialogText(String text);
 
-    String getEditTextValue();
-
     void updateBleConfigurationDialogSuccessImv();
 
-    void setTV(String message);
+    void setTvNearVisible(boolean isVisible);
+
+    boolean hasEditTextContent();
 }
