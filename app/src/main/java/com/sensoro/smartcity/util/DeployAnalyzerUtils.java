@@ -343,6 +343,7 @@ public enum DeployAnalyzerUtils implements Constants {
                         deployAnalyzerModel.deviceType = data.getDeviceType();
                         deployAnalyzerModel.nameAndAddress = data.getName();
                         deployAnalyzerModel.notOwn = data.isNotOwn();
+                        deployAnalyzerModel.blePassword = data.getBlePassword();
                         List<Double> lonlat = data.getLonlat();
                         if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                             deployAnalyzerModel.latLng.clear();

@@ -645,7 +645,7 @@
     <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
     <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number</string>
     <string name="enter_the_phone_number_used_for_applet_login">Enter the phone number used for applet login</string>
-    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">Please enter the mobile phone number and the contracted mobile phone number</string>
+    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">Please enter the mobile phone number in the same way as the applet login account</string>
     <string name="title_edit">Edit</string>
     <string name="identification_number_failed">ID card number identification failed</string>
     <string name="contract_modified_success">Modified success</string>
@@ -666,4 +666,8 @@
     <string name="deploy_configuration">开始配置</string>
     <string name="if_it_is_a_store_please_upload">若为店面请上传</string>
     <string name="check_ble_status">请检查蓝牙状态</string>
+    <string name="retry">重试</string>
+    <string name="now_configuration">正在配置</string>
+    <string name="ble_config_failed">配置失败，请重试</string>
+    <string name="ble_config_success">配置成功</string>
 </resources>

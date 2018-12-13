@@ -52,6 +52,16 @@
         android:textSize="12sp" />
 
     <TextView
+        android:id="@+id/tv"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ac_deploy_configuration_tv_enter_tip"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="20dp"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="12sp" />
+    <TextView
         android:id="@+id/ac_deploy_configuration_tv_configuration"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -16,6 +15,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
+import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
@@ -40,12 +40,16 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     TextView acDeployConfigurationTvEnterTip;
     @BindView(R.id.ac_deploy_configuration_tv_configuration)
     TextView acDeployConfigurationTvConfiguration;
+    @BindView(R.id.tv)
+    TextView tv;
+    private BleConfigurationDialogUtils bleConfigDialog;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.activity_deploy_configuration);
         ButterKnife.bind(this);
         initView();
+        mPresenter.initData(mActivity);
 
     }
 
@@ -75,7 +79,9 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
             }
         });
+        bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));
     }
+
 
     @Override
     protected DeployMonitorConfigurationPresenter createPresenter() {
@@ -138,5 +144,47 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 finishAc();
                 break;
         }
+    }
+
+    @Override
+    public void showBleConfigurationDialog(String message) {
+        bleConfigDialog.updateTvText(message);
+        bleConfigDialog.show();
+    }
+
+    @Override
+    public void dismissBleConfigurationDialog() {
+        bleConfigDialog.dismiss();
+    }
+
+    @Override
+    public void updateBtnRetryStatus() {
+        acDeployConfigurationTvConfiguration.setText(mActivity.getString(R.string.retry));
+    }
+
+    @Override
+    public void updateBleConfigurationDialogText(String text) {
+        bleConfigDialog.updateTvText(text);
+    }
+
+    @Override
+    public String getEditTextValue() {
+        return acDeployConfigurationEtEnter.getText().toString();
+    }
+
+    @Override
+    public void updateBleConfigurationDialogSuccessImv() {
+        bleConfigDialog.showSuccessImv();
+    }
+
+    @Override
+    public void setTV(String message) {
+        tv.setText(message);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        bleConfigDialog.dismiss();
     }
 }

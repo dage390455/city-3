@@ -180,7 +180,7 @@
     <string name="please_add_at_least_one_image">请至少添加一张图片</string>
     <string name="please_specify_the_deployment_location">请指定部署位置</string>
     <string name="please_enter_contact_phone">请输入联系人名称和电话号码</string>
-    <string name="loading_configuration_file">正在加载配置文件...</string>
+    <string name="loading_configuration_file">正在加载配置文件&#8230;</string>
     <string name="must_enter_name_address">必须输入名称/地址</string>
     <string name="album">相册</string>
     <string name="take_photo">拍照</string>
@@ -643,7 +643,7 @@
     <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
     <string name="please_enter_a_valid_mobile_number">请输入有效手机号</string>
     <string name="enter_the_phone_number_used_for_applet_login">输入用于小程序登录的手机号</string>
-    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">输入的手机号与签订合同手机号请保持一致</string>
+    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">输入的手机号请与小程序登录账号保持一致</string>
     <string name="title_edit">编辑</string>
     <string name="identification_number_failed">身份证识别失败：</string>
     <string name="contract_modified_success">修改成功</string>
@@ -663,4 +663,8 @@
     <string name="deploy_configuration">开始配置</string>
     <string name="if_it_is_a_store_please_upload">若为店面请上传</string>
     <string name="check_ble_status">请检查蓝牙状态</string>
+    <string name="retry">重试</string>
+    <string name="now_configuration">正在配置</string>
+    <string name="ble_config_failed">配置失败，请重试</string>
+    <string name="ble_config_success">配置成功</string>
 </resources>

@@ -21,6 +21,9 @@ public class SensoroAcrelFires implements Serializable {
     public boolean hasValLowType;
     public boolean hasCurrHighType;
     public boolean hasCmd;
+    public boolean hasIct;
+    public boolean hasCt;
+
 
 
     public int connectSw;
@@ -38,5 +41,8 @@ public class SensoroAcrelFires implements Serializable {
     public int valLowType;
     public int currHighType;
     public int cmd;
+    public int ict;
+    public int ct;
+
 
 }
