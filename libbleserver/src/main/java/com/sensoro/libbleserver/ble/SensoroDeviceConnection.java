@@ -1499,6 +1499,14 @@ public class SensoroDeviceConnection {
                 if (acrelData.hasCmd()) {
                     sensoroSensorTest.acrelFires.cmd = acrelData.getCmd();
                 }
+                sensoroSensorTest.acrelFires.hasIct = acrelData.hasIct();
+                if(acrelData.hasIct()){
+                    sensoroSensorTest.acrelFires.ict = acrelData.getIct();
+                }
+                sensoroSensorTest.acrelFires.hasCt = acrelData.hasCt();
+                if (acrelData.hasCt()) {
+                    sensoroSensorTest.acrelFires.ct = acrelData.getCt();
+                }
 
                 //嘉德 自研烟感
                 boolean hasCaymanData = msgNode.hasCaymanData();
@@ -2345,6 +2353,12 @@ public class SensoroDeviceConnection {
             }
             if (sensoroSensorTest.acrelFires.hasCurrHighType) {
                 builder.setCurrHighType(sensoroSensorTest.acrelFires.currHighType);
+            }
+            if (sensoroSensorTest.acrelFires.hasIct) {
+                builder.setIct(sensoroSensorTest.acrelFires.ict);
+            }
+            if (sensoroSensorTest.acrelFires.hasCt) {
+                builder.setCt(sensoroSensorTest.acrelFires.ct);
             }
             if (sensoroSensorTest.acrelFires.hasCmd) {
                 builder.setCmd(sensoroSensorTest.acrelFires.cmd);

@@ -487,11 +487,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     public void setDeployDeviceDetailDeploySetting(boolean setting) {
         if (setting) {
-            acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.not_setting));
-        } else {
             acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
             acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.had_setting));
+        } else {
+            acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.not_setting));
         }
     }
 

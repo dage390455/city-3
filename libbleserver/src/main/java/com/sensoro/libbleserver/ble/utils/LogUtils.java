@@ -5,7 +5,7 @@ import android.util.Log;
 public class LogUtils {
     //    private static boolean isShowLog = BuildConfig.DEBUG;
     private static boolean isShowLog = true;
-    private static String TAG = "sensoro_log";
+    private static String TAG = "sensoro_ble";
 
     public static void loge(String msg) {
         if (isShowLog) {

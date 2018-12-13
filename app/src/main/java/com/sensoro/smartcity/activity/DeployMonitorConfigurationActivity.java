@@ -2,7 +2,6 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
@@ -41,6 +40,8 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     TextView acDeployConfigurationTvEnterTip;
     @BindView(R.id.ac_deploy_configuration_tv_configuration)
     TextView acDeployConfigurationTvConfiguration;
+    @BindView(R.id.tv)
+    TextView tv;
     private BleConfigurationDialogUtils bleConfigDialog;
 
     @Override
@@ -48,6 +49,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
         setContentView(R.layout.activity_deploy_configuration);
         ButterKnife.bind(this);
         initView();
+        mPresenter.initData(mActivity);
 
     }
 
@@ -145,7 +147,8 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     @Override
-    public void showBleConfigurationDialog() {
+    public void showBleConfigurationDialog(String message) {
+        bleConfigDialog.updateTvText(message);
         bleConfigDialog.show();
     }
 
@@ -167,6 +170,16 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     @Override
     public String getEditTextValue() {
         return acDeployConfigurationEtEnter.getText().toString();
+    }
+
+    @Override
+    public void updateBleConfigurationDialogSuccessImv() {
+        bleConfigDialog.showSuccessImv();
+    }
+
+    @Override
+    public void setTV(String message) {
+        tv.setText(message);
     }
 
     @Override

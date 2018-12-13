@@ -3,8 +3,10 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.MediaStore;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.TakeRecordActivity;
@@ -35,7 +37,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
         if (imageList != null && imageList.size() > 0 && imageList.size() < 4) {
             for (int i = 0; i < imageList.size(); i++) {
                 selImages[i] = imageList.get(i);
-                getView().displayPic(selImages,i);
+                getView().displayPic(selImages, i);
             }
         }
 
@@ -96,7 +98,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
             }
         }
 //        else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
-            //预览图片返回
+        //预览图片返回
 //            if (data != null && requestCode == REQUEST_CODE_PREVIEW) {
 //                ArrayList<ImageItem> tempImages = (ArrayList<ImageItem>) data.getSerializableExtra(ImagePicker.EXTRA_IMAGE_ITEMS);
 //                if (tempImages != null) {
@@ -138,15 +140,21 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
     public void doPreviewPic(int index) {
         Intent intentPreview = new Intent(mActivity, ImagePreviewDelActivity.class);
         ArrayList<ImageItem> list = new ArrayList<>();
-        for (ImageItem imageItem : selImages) {
-            if (imageItem != null) {
-                list.add(imageItem);
+        for (int i = 0; i < selImages.length; i++) {
+            if (selImages[i] == null) {
+                if (i == 0) {
+                    index = index - 1;
+                } else if (i == 1 && index == 2) {
+                    index = 1;
+                }
+            } else {
+                list.add(selImages[i]);
             }
         }
         intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, list);
         intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, index);
         intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-        intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC,true);
+        intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
         getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
     }
 }

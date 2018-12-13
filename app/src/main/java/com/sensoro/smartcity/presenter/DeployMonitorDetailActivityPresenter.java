@@ -123,7 +123,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         String deviceTypeName = WidgetUtil.getDeviceTypeName(deployAnalyzerModel.deviceType);
         getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + deviceTypeName);
         boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
-        isFire = true;
         getView().setDeployDetailDeploySettingVisible(isFire);
         if (isFire) {
             //TODO 再次部署时暂时不回显电器火灾字段字段
