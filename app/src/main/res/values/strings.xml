@@ -105,7 +105,9 @@
     <string name="malfunction_monitoring_point">Malfunction monitoring point</string>
     <string name="all_types">All type</string>
     <string name="main_page_home">Home</string>
-    <string name="main_page_warm">Alarm</string>
+    <string name="main_page_warn">Alarm</string>
+    <string name="main_page_malfunction">Malfunction</string>
+    <string name="main_page_manage">Manage</string>
     <string name="confirming">Alarm confirm</string>
     <string name="confirming_again">Reconfirm</string>
     <string name="to_be_confirmed">uncofirmed</string>
@@ -587,7 +589,7 @@
     <string name="deploy_result_confirm_information">Confirm The Information</string>
     <string name="deploy_result_successed">Congratulations! Sensor point deployment is succcessful</string>
     <string name="deploy_result_signal">Signal: None</string>
-    <string name="login_tip">Life is more convenient, city is safer</string>
+    <string name="login_tip">Safer city,Easier life</string>
     <string name="login_input_account_tip">Please enter your account</string>
     <string name="login_input_password_tip">Please enter your password</string>
     <string name="deploy_device_detail_no_added">No added</string>
@@ -669,4 +671,5 @@
     <string name="now_configuration">Configuring</string>
     <string name="ble_config_failed">It is failed to configure</string>
     <string name="ble_config_success">Successful</string>
+
 </resources>

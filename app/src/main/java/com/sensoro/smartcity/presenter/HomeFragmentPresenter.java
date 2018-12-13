@@ -889,7 +889,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             StringBuilder stringBuilder = new StringBuilder();
             switch (mCurrentHomeTopModel.type) {
                 case 0:
-                    stringBuilder.append(mContext.getString(R.string.main_page_warm));
+                    stringBuilder.append(mContext.getString(R.string.main_page_warn));
                     break;
                 case 1:
                     stringBuilder.append(mContext.getString(R.string.normal));
