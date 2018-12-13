@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
@@ -44,34 +45,32 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.post(this);
         BleObserver.getInstance().registerBleObserver(this);
-        deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
     }
 
     @Override
     public void onDestroy() {
+        mHandler.removeCallbacksAndMessages(null);
         BleObserver.getInstance().unregisterBleObserver(this);
-        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
         if (mConnection != null) {
             mConnection.disconnect();
         }
-        mHandler.removeCallbacksAndMessages(null);
+        SensoroCityApplication.getInstance().bleDeviceManager.stopService();
     }
 
 
-    public void doConfiguration() {
-
+    public void doConfiguration(String valueStr) {
         if (!bleList.contains(deployAnalyzerModel.sn)) {
             getView().toastShort(mActivity.getString(R.string.device_not_near));
             return;
         }
-
         if (Constants.DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType)) {
             //安科瑞三相电连接
             try {
-                Integer value = Integer.valueOf(getView().getEditTextValue());
+                Integer value = Integer.parseInt(valueStr);
                 if (value < 50 || value > 560) {
                     getView().toastShort(mActivity.getString(R.string.monitor_point_operation_error_value_range));
                     return;
@@ -92,10 +91,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
             }
         } else {
-            //目前也只有泛海三江电气火灾，但没有初始配置，所以只是展示一个loading
-            doFakeDialog();
+            //TODO fhsj 电器设备
         }
-
     }
 
     @Override
@@ -115,10 +112,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         }
         boolean isNearby = bleList.contains(deployAnalyzerModel.sn);
         getView().setTvNearVisible(isNearby);
-
         getView().updateBtnStatus(getView().hasEditTextContent() && isNearby);
-
-
         mHandler.postDelayed(this, 2000);
     }
 
@@ -127,8 +121,11 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         String sn = bleDevice.getSn();
         LogUtils.loge("deployConfig", sn + " " + deployAnalyzerModel.sn.equals(sn));
         bleList.add(sn);
-        if (deployAnalyzerModel.sn.equals(sn)) {
-            mMacAddress = bleDevice.getMacAddress();
+        if (TextUtils.isEmpty(mMacAddress)) {
+            if (deployAnalyzerModel.sn.equals(sn)) {
+                mMacAddress = bleDevice.getMacAddress();
+            }
+
         }
 
     }
@@ -144,8 +141,10 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         for (BLEDevice device : deviceList) {
             String sn = device.getSn();
             bleList.add(sn);
-            if (deployAnalyzerModel.sn.equals(sn)) {
-                mMacAddress = device.getMacAddress();
+            if (TextUtils.isEmpty(mMacAddress)) {
+                if (deployAnalyzerModel.sn.equals(sn)) {
+                    mMacAddress = device.getMacAddress();
+                }
             }
         }
     }
@@ -164,32 +163,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         configAcrelFires();
     }
 
-    private void doFakeDialog() {
-        getView().showBleConfigurationDialog(mActivity.getString(R.string.connecting));
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getView().updateBleConfigurationDialogText(mActivity.getString(R.string.now_configuration));
-
-                mHandler.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        getView().updateBleConfigurationDialogText(mActivity.getString(R.string.ble_config_success));
-                        getView().updateBleConfigurationDialogSuccessImv();
-
-                        mHandler.postDelayed(new Runnable() {
-                            @Override
-                            public void run() {
-                                getView().dismissBleConfigurationDialog();
-                                configCompleted();
-                            }
-                        }, 500);
-                    }
-                }, 2000);
-            }
-        }, 3000);
-    }
-
     private void configCompleted() {
         EventData eventData = new EventData();
         eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
@@ -200,13 +173,12 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
     private void configAcrelFires() {
         //在开始配置的时候，已经校验过，mEnterValue的值是50 到560
-        int dev = 0;
+        int dev;
         if (mEnterValue <= 250) {
             dev = 250;
         } else {
             dev = 400;
         }
-
         sensoroSensor.acrelFires.leakageTh = 1000;//漏电
         sensoroSensor.acrelFires.t1Th = 80;//A项线温度
         sensoroSensor.acrelFires.t2Th = 80;//B项线温度
@@ -229,7 +201,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
     @Override
     public void onConnectedFailure(int errorCode) {
-//        mConnection.disconnect();
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
@@ -268,7 +239,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 getView().dismissBleConfigurationDialog();
                 configCompleted();
             }
-        }, 500);
+        }, 1000);
     }
 
     @Override

@@ -131,7 +131,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_configuration_tv_configuration:
-                mPresenter.doConfiguration();
+                mPresenter.doConfiguration(acDeployConfigurationEtEnter.getText().toString());
                 break;
             case R.id.include_text_title_imv_arrows_left:
                 finishAc();
@@ -163,11 +163,6 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     }
 
     @Override
-    public String getEditTextValue() {
-        return acDeployConfigurationEtEnter.getText().toString();
-    }
-
-    @Override
     public void updateBleConfigurationDialogSuccessImv() {
         bleConfigDialog.showSuccessImv();
     }
@@ -185,7 +180,8 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     protected void onDestroy() {
+        bleConfigDialog.onDestroy();
         super.onDestroy();
-        bleConfigDialog.dismiss();
+
     }
 }

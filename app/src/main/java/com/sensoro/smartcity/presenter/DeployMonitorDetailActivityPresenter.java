@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
@@ -21,7 +20,6 @@ import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
 import com.sensoro.smartcity.activity.DeployMonitorNameAddressActivity;
-import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.activity.DeployMonitorWeChatRelationActivity;
 import com.sensoro.smartcity.activity.DeployResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -65,7 +63,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
     private SensoroDeviceConnection sensoroDeviceConnection;
     private Handler mHandler;
     private String bleAddress;
-    private static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
+    private final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
     private DeployAnalyzerModel deployAnalyzerModel;
 
     @Override
@@ -77,7 +75,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
-        if ( PreferencesHelper.getInstance().getUserData().hasSignalConfig&&deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
             mHandler.post(this);
         }
         BleObserver.getInstance().registerBleObserver(this);
@@ -122,7 +120,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         getView().updateUploadState(true);
         String deviceTypeName = WidgetUtil.getDeviceTypeName(deployAnalyzerModel.deviceType);
         getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + deviceTypeName);
-        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
+        //TODO 暂时只针对ancre的电器火灾
+        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType);
         getView().setDeployDetailDeploySettingVisible(isFire);
         if (isFire) {
             //TODO 再次部署时暂时不回显电器火灾字段字段
@@ -276,6 +275,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //设备部署
                 getView().showProgressDialog();
                 //TODO 暂时不支持添加wx电话
+                //TODO 添加电气火灾配置支持
 //                deployAnalyzerModel.weChatAccount = null;
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
                         deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -371,6 +371,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.errorMsg = errorInfo;
         deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
+        deployResultModel.hasSetting = deployAnalyzerModel.hasSetting;
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
             deployResultModel.contact = deployContactModel.name;
@@ -396,6 +397,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS;
         deployResultModel.scanType = deployAnalyzerModel.deployType;
         deployResultModel.wxPhone = deployAnalyzerModel.weChatAccount;
+        deployResultModel.hasSetting = deployAnalyzerModel.hasSetting;
         //TODO 新版联系人
         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
@@ -554,9 +556,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 break;
             case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
                 //目前只要传这个，就是成功了
-                getView().setDeployDeviceDetailDeploySetting(true);
-
-                break;
+                if (data instanceof Boolean) {
+                    deployAnalyzerModel.hasSetting = (boolean) data;
+                }
+                getView().setDeployDeviceDetailDeploySetting(deployAnalyzerModel.hasSetting);
             default:
                 break;
         }
@@ -849,10 +852,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     @Override
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
-        StringBuilder stringBuilder = new StringBuilder();
         for (BLEDevice device : deviceList) {
             if (device != null) {
-                stringBuilder.append(device.getSn()).append(",");
                 BLE_DEVICE_SET.add(device.getSn());
                 if (TextUtils.isEmpty(bleAddress)) {
                     if (device.getSn().equals(deployAnalyzerModel.sn)) {
@@ -861,7 +862,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
             }
         }
-        LogUtils.loge("onUpdateDevices = " + stringBuilder.toString());
     }
 
     @Override
@@ -895,13 +895,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             }
             intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
             getView().startAC(intent);
-            getView().startACForResult(intent,Constants.REQUEST_CODE_INIT_CONFIG);
+            getView().startACForResult(intent, Constants.REQUEST_CODE_INIT_CONFIG);
         }
     }
 
     public void doDeployBleSetting() {
         Intent intent = new Intent(mContext, DeployMonitorConfigurationActivity.class);
-        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL,deployAnalyzerModel);
+        intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }
 }

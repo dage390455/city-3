@@ -14,6 +14,7 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
+import android.support.v4.app.NotificationManagerCompat;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
@@ -58,14 +59,18 @@ public class NotificationUtils extends ContextWrapper {
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
         final PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-        return new Notification.Builder(getApplicationContext(), id)
+        Notification.Builder builder = new Notification.Builder(getApplicationContext(), id)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setAutoCancel(false)
                 .setContentTitle("Sensoro City")
                 .setContentText(content)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_ALL | Notification.DEFAULT_SOUND)
                 .setContentIntent(pi).setPriority(Notification.PRIORITY_MAX);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+        return builder;
     }
 
     private NotificationCompat.Builder getNotification_25(String content) {
@@ -75,7 +80,6 @@ public class NotificationUtils extends ContextWrapper {
         intent.setComponent(new ComponentName(this, MainActivity.class));//用ComponentName得到class对象
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK
                 | Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);// 关键的一步，设置启动模式，两种情况
-
 //        PendingIntent contentIntent = PendingIntent.getActivity(this, 0, intent, 0);//将经过设置了的Intent绑定给PendingIntent
 //        notification.contentIntent = contentIntent;// 通知绑定 PendingIntent
 //        notification.flags=Notification.FLAG_AUTO_CANCEL;//设置自动取消
@@ -87,14 +91,18 @@ public class NotificationUtils extends ContextWrapper {
 //        final PendingIntent pi = PendingIntent.getActivity(this, 0, intent,
 //                PendingIntent.FLAG_CANCEL_CURRENT);
         final PendingIntent pi = PendingIntent.getActivity(this, 0, intent, 0);
-        return new NotificationCompat.Builder(getApplicationContext())
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.ic_launcher))
                 .setAutoCancel(false)
                 .setContentTitle("Sensoro City")
                 .setContentText(content)
-                .setDefaults(Notification.DEFAULT_SOUND)
+                .setDefaults(Notification.DEFAULT_VIBRATE | Notification.DEFAULT_ALL | Notification.DEFAULT_SOUND)
                 .setContentIntent(pi).setPriority(Notification.PRIORITY_MAX);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            builder.setVisibility(Notification.VISIBILITY_PUBLIC);
+        }
+        return builder;
     }
 
     public void sendNotification(String content) {
@@ -109,9 +117,11 @@ public class NotificationUtils extends ContextWrapper {
             Notification notification = getChannelNotification
                     (content).build();
             getManager().notify(noID++, notification);
+            notification.flags = Notification.FLAG_AUTO_CANCEL;
             LogUtils.loge("sendNotification -->> " + noID);
         } else {
             Notification notification = getNotification_25(content).build();
+            notification.flags = Notification.FLAG_AUTO_CANCEL;
             getManager().notify(noID++, notification);
             LogUtils.loge("sendNotification -->> " + noID);
         }

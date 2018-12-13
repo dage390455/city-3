@@ -20,6 +20,7 @@ public class DeployAnalyzerModel implements Serializable {
     public String blePassword;
     public String deviceType;
     public int mapSourceType = 1;
+    public boolean hasSetting;
     //
     public final List<Double> latLng = new ArrayList<>();
     //

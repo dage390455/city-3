@@ -18,17 +18,16 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.DeployDeviceDetailAlarmContactAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -163,7 +162,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_title, R.id.include_text_title_tv_subtitle,
             R.id.ac_deploy_device_detail_ll_name_location, R.id.ac_deploy_device_detail_rl_tag, R.id.ac_deploy_device_detail_ll_alarm_contact,
-            R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload, R.id.deploy_detail_ll_we_chat,R.id.ac_deploy_device_detail_ll_deploy_setting})
+            R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload, R.id.deploy_detail_ll_we_chat, R.id.ac_deploy_device_detail_ll_deploy_setting})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -252,7 +251,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent,requestCode);
     }
 
     @Override

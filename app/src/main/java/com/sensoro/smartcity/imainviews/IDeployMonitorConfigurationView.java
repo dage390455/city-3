@@ -4,7 +4,7 @@ import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
-public interface IDeployMonitorConfigurationView extends IToast,IActivityIntent,IProgressDialog {
+public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent, IProgressDialog {
     void showBleConfigurationDialog(String message);
 
     void dismissBleConfigurationDialog();
@@ -12,8 +12,6 @@ public interface IDeployMonitorConfigurationView extends IToast,IActivityIntent,
     void updateBtnStatus(boolean canConfig);
 
     void updateBleConfigurationDialogText(String text);
-
-    String getEditTextValue();
 
     void updateBleConfigurationDialogSuccessImv();
 
