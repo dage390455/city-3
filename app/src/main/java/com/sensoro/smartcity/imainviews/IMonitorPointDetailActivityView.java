@@ -4,6 +4,7 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.smartcity.server.bean.ScenesData;
 
 import java.util.List;
 
@@ -25,6 +26,8 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
     void setSNText(String sn);
 
     void updateTags(List<String> list);
+
+    void updateMonitorPhotos(List<ScenesData> data);
 
     void setBatteryInfo(String battery);
 

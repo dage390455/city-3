@@ -27,6 +27,9 @@ public class CustomCornerDialog extends Dialog {
         this(context, R.style.CustomCornerDialogStyle,view,percentWidth);
     }
 
+    /**
+     * 改变dialog的宽度
+     */
     public CustomCornerDialog(@NonNull Context context, int themeResId,View view,float percentWidth) {
         super(context, themeResId);
         setContentView(view);
@@ -35,6 +38,15 @@ public class CustomCornerDialog extends Dialog {
         WindowManager.LayoutParams p = getWindow().getAttributes();
         p.width = (int) (d.getWidth()*percentWidth);
         getWindow().setAttributes(p);
+    }
+
+    /**
+     * 不会设置dilog的总体宽度
+     */
+    public CustomCornerDialog(@NonNull Context context, View view) {
+        super(context, R.style.CustomCornerDialogStyle);
+        setContentView(view);
+
     }
 
     public CustomCornerDialog(Activity activity, int customCornerDialogStyle, View view, boolean dismissKeyboard) {

@@ -54,7 +54,7 @@ public final class UpLoadPhotosUtils {
 
     private void getToken() {
         RetrofitServiceHelper.INSTANCE.getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread()).subscribe(new CityObserver<QiNiuToken>() {
+                .mainThread()).subscribe(new CityObserver<QiNiuToken>(null) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 upLoadPhotoListener.onError(errorMsg);

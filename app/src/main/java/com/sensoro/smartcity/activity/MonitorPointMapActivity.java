@@ -48,7 +48,8 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
 
     private void initView() {
         includeTextTitleTvTitle.setText(R.string.location_navigation);
-        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        includeTextTitleTvSubtitle.setText(R.string.location_confirm);
+        setPositionCalibrationVisible(false);
         mPresenter.getMap(tmMonitorMap.getMap());
     }
 
@@ -58,17 +59,6 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
         tmMonitorMap.onLowMemory();
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.onStop();
-    }
 
     /**
      * 方法必须重写
@@ -115,7 +105,7 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
         return new MonitorPointMapActivityPresenter();
     }
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.iv_monitor_map_location, R.id.tv_monitor_map_share, R.id.tv_monitor_map_guide})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.iv_monitor_map_location, R.id.tv_monitor_map_share, R.id.tv_monitor_map_guide, R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -130,7 +120,10 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
             case R.id.tv_monitor_map_guide:
                 mPresenter.doNavigation();
                 break;
-                
+            case R.id.include_text_title_tv_subtitle:
+                mPresenter.doPositionConfirm();
+                break;
+
         }
     }
 
@@ -167,5 +160,10 @@ public class MonitorPointMapActivity extends BaseActivity<IMonitorPointMapActivi
     @Override
     public void toastLong(String msg) {
 
+    }
+
+    @Override
+    public void setPositionCalibrationVisible(boolean isVisible) {
+        includeTextTitleTvSubtitle.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 }

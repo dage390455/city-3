@@ -252,6 +252,46 @@
 
             </android.support.constraint.ConstraintLayout>
 
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="20dp"
+                android:background="@color/c_dfdfdf" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="@string/deploy_device_detail_deploy_photo"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:layout_weight="1"
+                    android:gravity="end">
+
+                    <com.sensoro.smartcity.widget.TouchRecycleView
+                        android:id="@+id/ac_monitor_deploy_photo"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_marginEnd="20dp" />
+                </RelativeLayout>
+
+            </LinearLayout>
+
 
         </LinearLayout>
         <!--操作-->
@@ -270,19 +310,19 @@
                 android:id="@+id/ac_monitoring_point_tv_operation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/monitor_point_detail_operation"
-                android:textColor="@color/c_a6a6a6"
                 android:paddingStart="20dp"
                 android:paddingEnd="24dp"
+                android:text="@string/monitor_point_detail_operation"
+                android:textColor="@color/c_a6a6a6"
                 android:textSize="12sp" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
+                android:orientation="horizontal"
                 android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:orientation="horizontal">
+                android:paddingEnd="24dp">
 
                 <TextView
                     android:id="@+id/ac_monitoring_point_tv_erasure"
@@ -314,9 +354,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
+                android:orientation="horizontal"
                 android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:orientation="horizontal">
+                android:paddingEnd="24dp">
 
                 <TextView
                     android:id="@+id/ac_monitoring_point_tv_self_check"

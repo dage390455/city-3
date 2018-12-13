@@ -2,12 +2,10 @@ package com.sensoro.libbleserver.ble.utils;
 
 import android.util.Log;
 
-import com.sensoro.libbleserver.BuildConfig;
-
 public class LogUtils {
-//    private static boolean isShowLog = BuildConfig.DEBUG;
+    //    private static boolean isShowLog = BuildConfig.DEBUG;
     private static boolean isShowLog = true;
-    private static String TAG = "sensoro_log";
+    private static String TAG = "sensoro_ble";
 
     public static void loge(String msg) {
         if (isShowLog) {
@@ -23,13 +21,22 @@ public class LogUtils {
 
     public static void loge(Object o, String msg) {
         if (isShowLog) {
-            e(TAG + "-->" + o.getClass().getSimpleName(), msg);
+            if (o instanceof String) {
+                e(TAG + "-->" + o, msg);
+            } else {
+                e(TAG + "-->" + o.getClass().getSimpleName(), msg);
+            }
         }
     }
 
     public static void logd(Object o, String msg) {
         if (isShowLog) {
-            d(TAG + "-->" + o.getClass().getSimpleName(), msg);
+            if (o instanceof String) {
+                d(TAG + "-->" + o, msg);
+            } else {
+                d(TAG + "-->" + o.getClass().getSimpleName(), msg);
+            }
+
         }
     }
 

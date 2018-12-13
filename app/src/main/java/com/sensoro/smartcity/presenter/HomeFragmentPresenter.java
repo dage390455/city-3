@@ -414,7 +414,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     //子线程处理
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
-        //TODO 后台线程处理消息
+        //后台线程处理消息
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
@@ -593,7 +593,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 DeviceInfo currentDeviceInfo = alarmModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == SENSOR_STATUS_ALARM) {
-                        alarmModel.mDeviceList.set(i, currentDeviceInfo);
+                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         alarmModel.mDeviceList.remove(i);
                     }
@@ -607,7 +607,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 DeviceInfo currentDeviceInfo = malfunctionModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == SENSOR_STATUS_MALFUNCTION) {
-                        malfunctionModel.mDeviceList.set(i, currentDeviceInfo);
+                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         malfunctionModel.mDeviceList.remove(i);
                     }
@@ -621,7 +621,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 DeviceInfo currentDeviceInfo = normalModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == SENSOR_STATUS_NORMAL) {
-                        normalModel.mDeviceList.set(i, currentDeviceInfo);
+                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         normalModel.mDeviceList.remove(i);
                     }
@@ -635,7 +635,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 DeviceInfo currentDeviceInfo = lostModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == SENSOR_STATUS_LOST) {
-                        lostModel.mDeviceList.set(i, currentDeviceInfo);
+                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         lostModel.mDeviceList.remove(i);
                     }
@@ -649,7 +649,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 DeviceInfo currentDeviceInfo = inactiveModel.mDeviceList.get(i);
                 if (currentDeviceInfo.getSn().equalsIgnoreCase(sn)) {
                     if (status == SENSOR_STATUS_INACTIVE) {
-                        inactiveModel.mDeviceList.set(i, currentDeviceInfo);
+                        currentDeviceInfo.cloneSocketData(newDeviceInfo);
                     } else {
                         inactiveModel.mDeviceList.remove(i);
                     }
@@ -820,7 +820,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        //TODO 弹起预警记录的dialog
         AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext, this);
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
         mAlarmLogPop.show();

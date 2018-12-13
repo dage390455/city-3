@@ -219,9 +219,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         if (!TextUtils.isEmpty(oldText)) {
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
-        if (!oldHistoryList.contains(text)) {
-            oldHistoryList.add(0, text);
-        }
+        oldHistoryList.remove(text);
+        oldHistoryList.add(0, text);
         ArrayList<String> tempList = new ArrayList<>();
         for (String str : oldHistoryList) {
             if (tempList.size() < 20) {
@@ -399,7 +398,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO 对照片信息统一处理
+        // 对照片信息统一处理
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
             if (data != null && requestCode == REQUEST_CODE_SELECT) {

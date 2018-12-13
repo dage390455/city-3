@@ -2,15 +2,6 @@ package com.sensoro.smartcity.server.bean;
 
 public class ChangeInspectionTaskStateInfo {
 
-    /**
-     * ok : 1
-     * nModified : 1
-     * n : 1
-     * lastOp : 6612879889164926978
-     * electionId : 5b24cf2d5c5e5d7e65a0afa0
-     * status : 1
-     */
-
     private int ok;
     private int nModified;
     private int n;

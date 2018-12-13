@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/white"
-    >
+    android:background="@color/white">
 
     <LinearLayout
         android:id="@+id/ac_deploy_result_ll_title"
@@ -12,26 +11,27 @@
 
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
+
         <ImageView
             android:id="@+id/ac_deploy_result_imv_arrows_left"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:padding="8dp"
-            android:contentDescription="@null"
             android:layout_marginStart="16dp"
-            android:visibility="gone"
+            android:contentDescription="@null"
+            android:padding="8dp"
             android:src="@drawable/arrows_left"
-            />
+            android:visibility="gone" />
+
         <TextView
             android:id="@+id/ac_deploy_result_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/deploy_result_confirm_information"
             android:layout_gravity="center_vertical"
-            android:textSize="18sp"
             android:layout_marginStart="12dp"
-            android:textColor="@color/c_030303"/>
+            android:text="@string/deploy_result_confirm_information"
+            android:textColor="@color/c_030303"
+            android:textSize="18sp" />
     </LinearLayout>
 
 
@@ -40,17 +40,17 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:layout_below="@id/ac_deploy_result_ll_title"
-        android:background="@color/c_dfdfdf"
-        android:layout_marginTop="16dp"/>
+        android:layout_marginTop="16dp"
+        android:background="@color/c_dfdfdf" />
 
     <LinearLayout
         android:id="@+id/ac_deploy_result_bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
-        android:layout_marginStart="20dp">
+        android:layout_marginBottom="20dp">
 
         <TextView
             android:id="@+id/ac_deploy_result_tv_back_home"
@@ -133,12 +133,12 @@
 
             <LinearLayout
                 android:id="@+id/ac_deploy_result_ll_content"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
+                android:layout_marginStart="47.5dp"
                 android:layout_marginTop="24dp"
-                android:paddingStart="50dp"
-                android:paddingEnd="50dp"
+                android:layout_marginEnd="47.5dp"
                 android:background="@drawable/shape_bg_corner_fa_shadow"
                 android:orientation="vertical"
                 android:paddingTop="8dp"
@@ -146,24 +146,26 @@
 
                 <LinearLayout
                     android:id="@+id/ac_deploy_result_ll_sn"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
                     android:orientation="horizontal">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_result_device_number"
-                        android:textColor="@color/c_252525"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_sn"
-                        android:layout_width="wrap_content"
-                        android:layout_marginStart="8dp"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
@@ -172,26 +174,28 @@
 
                 <LinearLayout
                     android:id="@+id/ac_deploy_result_ll_name"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_result_name"
-                        android:textColor="@color/c_252525"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_name"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
@@ -199,27 +203,28 @@
 
                 <LinearLayout
                     android:id="@+id/ac_deploy_result_ll_address"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_result_location"
-                        android:textColor="@color/c_252525"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_address"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginEnd="8dp"
                         android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
@@ -228,26 +233,58 @@
 
                 <LinearLayout
                     android:id="@+id/ac_deploy_result_ll_contact"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_result_contract"
-                        android:textColor="@color/c_252525"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_contact"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="@string/unknown"
+                        android:textColor="@color/c_252525"
+                        android:textSize="14sp" />
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ac_deploy_result_ll_we_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/we_chat_relation_"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_result_tv_we_chat"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
@@ -256,71 +293,112 @@
 
                 <LinearLayout
                     android:id="@+id/ac_deploy_result_ll_status"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="8dp"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:text="@string/deploy_result_status"
-                        android:textColor="@color/c_252525"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/ac_deploy_result_tv_signal"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/shape_bg_solid_b6_full_corner"
+                            android:paddingStart="10dp"
+                            android:paddingTop="4dp"
+                            android:paddingEnd="10dp"
+                            android:paddingBottom="4dp"
+                            android:text="@string/deploy_result_signal"
+                            android:textColor="@color/white"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:id="@+id/ac_deploy_result_tv_status"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/unknown"
+                            android:textColor="@color/c_252525"
+                            android:textSize="14sp" />
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/ac_deploy_result_ll_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/initial_configuration"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/ac_deploy_result_tv_status"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/ac_deploy_result_tv_setting"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:text="@string/unknown"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="@string/had_setting"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
-
-                    <TextView
-                        android:id="@+id/ac_deploy_result_tv_signal"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/shape_bg_solid_b6_full_corner"
-                        android:paddingBottom="4dp"
-                        android:paddingEnd="10dp"
-                        android:paddingStart="10dp"
-                        android:paddingTop="4dp"
-                        android:text="@string/deploy_result_signal"
-                        android:textColor="@color/white"
-                        android:textSize="12sp" />
 
                 </LinearLayout>
 
                 <LinearLayout
                     android:id="@+id/ac_deploy_result_ll_recent_upload_time"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="20dp"
                     android:layout_marginTop="8dp"
-                    android:visibility="gone"
-                    android:orientation="horizontal">
+                    android:layout_marginEnd="20dp"
+                    android:orientation="horizontal"
+                    android:visibility="gone">
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/deploy_result_recent_upload_time"
-                        android:textColor="@color/c_252525"
+                        android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
                     <TextView
                         android:id="@+id/ac_deploy_result_tv_recent_upload_time"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
                         android:text="@string/unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />

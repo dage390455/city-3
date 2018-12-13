@@ -50,7 +50,8 @@
     <string name="monitoring_point_details">Monitoring Point Detail</string>
     <string name="alert_log">Alarm Log</string>
     <string name="no_contact_added">ContactUser unset</string>
-    <string name="location_navigation">Location Navigation</string>
+    <string name="location_navigation">Location navigation</string>
+    <string name="location_confirm">Position calibration</string>
     <string name="cant_find_related_content">There is not found devices temporarily</string>
     <string name="enter_search_content">Enter search content</string>
     <string name="signal_test">Signal Test</string>
@@ -72,7 +73,7 @@
     <string name="confirm_that_the_alert_type_app_is">confirm that the type of alarm by App</string>
     <string name="confirm_that_the_alert_type_web_is">Confirm that the type of alarm by Web</string>
     <string name="below_the_warning_value">below the alarming value</string>
-    <string name="achieve_warning_value">Achieve alarming value</string>
+    <string name="achieve_warning_value">up to threshold</string>
     <string name="the_system_calls_to">System calls to </string>
     <string name="the_system_sends_msg_to">System sends SMS to </string>
     <string name="equipment_warning">device alarming</string>
@@ -259,7 +260,7 @@
     <string name="sensor_detail_interval">Interval</string>
     <string name="sensor_detail_recent_alarm">Last alarm</string>
     <string name="sensor_detail_alarm_setting">Alarm condition</string>
-    <string name="loading">Loading&#8230;</string>
+    <string name="loading">Loading</string>
     <string name="jinggai_false">opend</string>
     <string name="cover_false">On</string>
     <string name="cover_true">Off</string>
@@ -307,6 +308,7 @@
     <string name="tips_input_name">Name/address must not be empty</string>
     <string name="tips_hint_name_address">e.g.Distribution Box 2,20th Floor,Dayue</string>
     <string name="tips_hint_name_address_set">e.g.Distribution Box 2,20th Floor,Dayue</string>
+    <string name="tips_hint_we_chat_relation_set">Phone number for wechat</string>
     <string name="tips_no_alarm">No alarm</string>
     <string name="tips_commit_success">Submitted successfully</string>
     <string name="tips_commit_failed">Submitted Failure</string>
@@ -382,16 +384,17 @@
     <string name="deploy_record_device_number">SN</string>
     <string name="deploy_record_name">Name</string>
     <string name="deploy_record_deploy_time">Deploy date</string>
+    <string name="deploy_record_deploy_we_chat">Deploy WeChat</string>
 
     //部署结果
     <string name="deploy_result_back_home">Back Home</string>
     <string name="deploy_result_continue">Continue</string>
-    <string name="deploy_result_device_number">SN:</string>
-    <string name="deploy_result_name">Name:</string>
-    <string name="deploy_result_location">Location:</string>
-    <string name="deploy_result_contract">Contact:</string>
-    <string name="deploy_result_status">Status:</string>
-    <string name="deploy_result_recent_upload_time">Last upload date:</string>
+    <string name="deploy_result_device_number">SN</string>
+    <string name="deploy_result_name">Name</string>
+    <string name="deploy_result_location">Location</string>
+    <string name="deploy_result_contract">Contact</string>
+    <string name="deploy_result_status">Status</string>
+    <string name="deploy_result_recent_upload_time">Last upload date</string>
     <string name="deploy_result_is_upload">Does deploy this device？</string>
     <string name="no_signal_can_not_uploaded">No signal can not be uploaded</string>
     <string name="deploy_result_upload_tip">The signal of device is bad or none, Please push the self check button of device and try it again.</string>
@@ -443,6 +446,8 @@
     <string name="monitor_point_information">Basic Info</string>
     //名称和地址
     <string name="name_address">Name/Address</string>
+    <string name="we_chat_relation">WeChat No</string>
+    <string name="we_chat_relation_">WeChat No</string>
     <string name="name_address_history_tag">History/Tag</string>
     <string name="name_address_save">Save</string>
     //扫描界面
@@ -586,7 +591,7 @@
     <string name="deploy_result_confirm_information">Confirm The Information</string>
     <string name="deploy_result_successed">Congratulations! Sensor point deployment is succcessful</string>
     <string name="deploy_result_signal">Signal: None</string>
-    <string name="login_tip">生活更便捷 城市更安全</string>
+    <string name="login_tip">Safer city,Easier life</string>
     <string name="login_input_account_tip">Please enter your account</string>
     <string name="login_input_password_tip">Please enter your password</string>
     <string name="deploy_device_detail_no_added">No added</string>
@@ -627,7 +632,7 @@
     <string name="electric_current">Current</string>
     <string name="device_air_switch_config_tip_message">Resetting this value will change the threshold of alarm</string>
     <string name="air_switch_config">Configuration</string>
-    <string name="is_device_air_switch_config">Whether to set</string>
+    <string name="is_device_air_switch_config">Setting</string>
     <string name="configuring">Setting&#8230;</string>
     <string name="monitor_point_operation_error_value_range">Please input a number from 50 to 560</string>
     <string name="enter_the_correct_number_format">Please enter the correct number format</string>
@@ -638,4 +643,36 @@
     <string name="monitor_point_detail_operation">Operation</string>
     <string name="text_fire_alarm_empty"></string>
     <string name="main_home_menu_scan_login">Scan</string>
+    <string name="legal_representative_name">Legal representative/name</string>
+
+    <string name="please_use_different_device_to_replace">Please use different device to replace</string>
+    <string name="no_search_history">No search history</string>
+    <string name="channel_mask_error_tip">Failed to get frequency information when frequency point needs to be configured</string>
+    <string name="please_enter_a_valid_mobile_number">Please enter a valid mobile number</string>
+    <string name="enter_the_phone_number_used_for_applet_login">Enter the phone number used for applet login</string>
+    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">Please enter the mobile phone number in the same way as the applet login account</string>
+    <string name="title_edit">Edit</string>
+    <string name="identification_number_failed">ID card number identification failed</string>
+    <string name="contract_modified_success">Modified success</string>
+    <string name="deploy_device_type">Type：</string>
+    <string name="initial_configuration">Initial Configuration</string>
+    <string name="not_setting">Unset</string>
+    <string name="had_setting">Configured</string>
+
+    <string name="deploy_pic_device_pic">DeviceMap</string>
+    <string name="deploy_pic_device_pic_tip">SN should be recognised</string>
+    <string name="deploy_pic_take_photo">photo</string>
+    <string name="deploy_pic_installation_site">Installation</string>
+    <string name="deploy_pic_shop_pic">Store Picture（Optional）</string>
+    <string name="please_select_device_pic">Please select a device map</string>
+    <string name="please_select_installation_site">Please select a live photo</string>
+    <string name="rated_current">RC/A</string>
+    <string name="deploy_configuration_enter_tip">Input the rated current,Range:50&#8211;560</string>
+    <string name="deploy_configuration">Configuration</string>
+    <string name="if_it_is_a_store_please_upload">Should be uploaded if it is a store</string>
+    <string name="check_ble_status">Please check the bluetooth status</string>
+    <string name="now_configuration">Configuring</string>
+    <string name="ble_config_failed">It is failed to configure</string>
+    <string name="ble_config_success">Successful</string>
+
 </resources>

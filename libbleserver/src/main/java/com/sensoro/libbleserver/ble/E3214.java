@@ -78,17 +78,14 @@ public class E3214 extends SensoroUUID {
                         byte[] hardware = new byte[2];
                         System.arraycopy(e3214Bytes, cur_pos + 1, hardware, 0, hardware.length);
                         int hardwareCode = (int) hardware[0] & 0xff;
-                        String hardwareVersion = Integer.toHexString(hardwareCode).toUpperCase();
-                        e3214.hardwareVersion = hardwareVersion;
+                        e3214.hardwareVersion = Integer.toHexString(hardwareCode).toUpperCase();
                         int firmwareCode = (int) hardware[1] & 0xff;
-                        String firmwareVersion = Integer.toHexString(firmwareCode / 16).toUpperCase() + "." + Integer.toHexString(firmwareCode % 16).toUpperCase();
-                        e3214.firmwareVersion = firmwareVersion;
+                        e3214.firmwareVersion = Integer.toHexString(firmwareCode / 16).toUpperCase() + "." + Integer.toHexString(firmwareCode % 16).toUpperCase();
                         cur_pos += 3;
                         i = cur_pos;
                         break;
                     case CmdType.CMD_BATTERY:
-                        int batteryLevel = ((int) e3214Bytes[cur_pos + 1] & 0xff);
-                        e3214.batteryLevel = batteryLevel;
+                        e3214.batteryLevel = ((int) e3214Bytes[cur_pos + 1] & 0xff);
                         cur_pos += 2;
                         i = cur_pos;
                         break;
@@ -100,8 +97,7 @@ public class E3214 extends SensoroUUID {
                         i = cur_pos;
                         break;
                     case CmdType.CMD_HUMIDITY:
-                        int humidity = ((int) e3214Bytes[cur_pos + 1] & 0xff);
-                        e3214.humidity = humidity;
+                        e3214.humidity = ((int) e3214Bytes[cur_pos + 1] & 0xff);
                         cur_pos += 2;
                         i = cur_pos;
                         break;
@@ -183,8 +179,7 @@ public class E3214 extends SensoroUUID {
                         i = cur_pos;
                         break;
                     case CmdType.CMD_COVER:
-                        int cover = ((int) e3214Bytes[cur_pos + 1] & 0xff);
-                        e3214.coverstatus = cover;
+                        e3214.coverstatus = ((int) e3214Bytes[cur_pos + 1] & 0xff);
                         cur_pos += 2;
                         i = cur_pos;
                         break;
@@ -224,8 +219,7 @@ public class E3214 extends SensoroUUID {
                         i = cur_pos;
                         break;
                     case CmdType.CMD_FLAME:
-                        int flame = ((int) e3214Bytes[cur_pos + 1] & 0xff);
-                        e3214.flame = flame;
+                        e3214.flame = ((int) e3214Bytes[cur_pos + 1] & 0xff);
                         cur_pos += 2;
                         i = cur_pos;
                         break;
@@ -237,8 +231,7 @@ public class E3214 extends SensoroUUID {
                         i = cur_pos;
                         break;
                     case CmdType.CMD_SMOKE:
-                        int smoke = ((int) e3214Bytes[cur_pos + 1] & 0xff);
-                        e3214.smoke = smoke;
+                        e3214.smoke = ((int) e3214Bytes[cur_pos + 1] & 0xff);
                         cur_pos += 2;
                         i = cur_pos;
                         break;

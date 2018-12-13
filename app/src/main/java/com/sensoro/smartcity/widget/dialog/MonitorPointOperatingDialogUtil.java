@@ -3,6 +3,7 @@ package com.sensoro.smartcity.widget.dialog;
 import android.app.Activity;
 import android.view.View;
 import android.view.animation.Animation;
+import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,10 +26,10 @@ public class MonitorPointOperatingDialogUtil {
         View view = View.inflate(activity, R.layout.item_dialog_monitor_point_tip, null);
         imvLoading = view.findViewById(R.id.dialog_monitor_point_operating_imv_loading);
         tvTip = view.findViewById(R.id.dialog_monitor_point_operating_tip);
-
         mDialog = new CustomCornerDialog(activity, view,0.6f);
-        rotateAnimation = new RotateAnimation(0, 360, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
+        rotateAnimation = new RotateAnimation(0, 359, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         rotateAnimation.setDuration(1000);
+        rotateAnimation.setInterpolator(new LinearInterpolator());
         rotateAnimation.setRepeatCount(Animation.INFINITE);
     }
 
@@ -45,8 +46,8 @@ public class MonitorPointOperatingDialogUtil {
 
     public void dismiss(){
         if (mDialog != null) {
-            imvLoading.clearAnimation();
             mDialog.dismiss();
+            imvLoading.clearAnimation();
         }
     }
 

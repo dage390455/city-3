@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
+    android:orientation="vertical">
+
+    <include layout="@layout/item_include_text_title" />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:id="@+id/ac_deploy_pic_tv_device_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/deploy_pic_device_pic"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ac_deploy_pic_tv_device_pic_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ac_deploy_pic_tv_device_pic"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/deploy_pic_device_pic_tip"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/ac_deploy_pic_ll_add_device_pic"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/shape_bg_solid_ff_stroke_df_corner_2dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="12dp"
+                            android:contentDescription="@null"
+                            android:src="@mipmap/pic_add" />
+
+                        <TextView
+                            android:id="@+id/tv_add_content"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/deploy_pic_take_photo"
+                            android:textColor="@color/c_252525"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/ac_deploy_pic_rl_device_pic"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/ac_deploy_pic_imv_device_pic"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@drawable/shape_corner_2"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/ac_deploy_pic_imv_device_pic_delete"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@null"
+                            android:src="@mipmap/picture_del"
+                            android:visibility="visible" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:id="@+id/ac_deploy_pic_tv_installation_site"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/deploy_pic_installation_site"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="14sp" />
+
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/ac_deploy_pic_ll_installation_site"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/shape_bg_solid_ff_stroke_df_corner_2dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="12dp"
+                            android:contentDescription="@null"
+                            android:src="@mipmap/pic_add" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/deploy_pic_take_photo"
+                            android:textColor="@color/c_252525"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/ac_deploy_pic_rl_installation_site_pic"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/ac_deploy_pic_imv_installation_site_pic"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@drawable/shape_corner_2"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/ac_deploy_pic_imv_installation_site_pic_delete"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@null"
+                            android:src="@mipmap/picture_del"
+                            android:visibility="visible" />
+                    </RelativeLayout>
+                </RelativeLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp">
+
+                <TextView
+                    android:id="@+id/ac_deploy_pic_tv_shop_pic"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/deploy_pic_shop_pic"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/ac_deploy_pic_tv_shop_pic_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ac_deploy_pic_tv_shop_pic"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/if_it_is_a_store_please_upload"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12sp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="6dp"
+                    android:layout_marginBottom="16dp">
+
+                    <LinearLayout
+                        android:id="@+id/ac_deploy_pic_ll_shop_pic"
+                        android:layout_width="55dp"
+                        android:layout_height="55dp"
+                        android:layout_marginTop="10dp"
+                        android:layout_marginEnd="10dp"
+                        android:background="@drawable/shape_bg_solid_ff_stroke_df_corner_2dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="12dp"
+                            android:contentDescription="@null"
+                            android:src="@mipmap/pic_add" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/deploy_pic_take_photo"
+                            android:textColor="@color/c_252525"
+                            android:textSize="10sp" />
+
+                    </LinearLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/ac_deploy_pic_rl_shop_pic"
+                        android:layout_width="65dp"
+                        android:layout_height="65dp"
+                        android:visibility="gone">
+
+                        <ImageView
+                            android:id="@+id/ac_deploy_pic_imv_shop_pic"
+                            android:layout_width="55dp"
+                            android:layout_height="55dp"
+                            android:layout_marginTop="10dp"
+                            android:layout_marginEnd="10dp"
+                            android:background="@drawable/shape_corner_2"
+                            android:contentDescription="@null"
+                            android:scaleType="centerCrop"
+                            android:visibility="visible" />
+
+                        <ImageView
+                            android:id="@+id/ac_deploy_pic_imv_shop_pic_delete"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:contentDescription="@null"
+                            android:src="@mipmap/picture_del"
+                            android:visibility="visible" />
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/ac_deploy_pic_tv_save"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="10dp"
+        android:background="@drawable/shape_bg_corner_29c_shadow"
+        android:gravity="center"
+        android:padding="10dp"
+        android:text="@string/deploy_setting_photo_save"
+        android:textColor="@color/white" />
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.sensoro.smartcity.server.bean;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import java.io.Serializable;
 import java.util.List;
@@ -27,7 +28,7 @@ public class DeviceInfo implements Serializable, Comparable {
     private int status;
     private String tags[];
     private SensorInfo sensorData;
-    private int interval;
+    private Integer interval;
     private int alarmStatus;
     private AlarmInfo alarms;
     private int _level;
@@ -56,6 +57,7 @@ public class DeviceInfo implements Serializable, Comparable {
         isPushDevice = false;
         isNewDevice = false;
     }
+
     public String getMalfunctionType() {
         return malfunctionType;
     }
@@ -71,6 +73,7 @@ public class DeviceInfo implements Serializable, Comparable {
     public void setMalfunctionData(Map<String, MalfunctionDataBean> malfunctionData) {
         this.malfunctionData = malfunctionData;
     }
+
     public List<DeviceAlarmsRecord> getAlarmsRecords() {
         return alarmsRecords;
     }
@@ -167,7 +170,7 @@ public class DeviceInfo implements Serializable, Comparable {
         this.sensorData = sensorData;
     }
 
-    public int getInterval() {
+    public Integer getInterval() {
         return interval;
     }
 
@@ -330,6 +333,91 @@ public class DeviceInfo implements Serializable, Comparable {
             e.printStackTrace();
         }
         return super.hashCode();
+    }
+
+    /**
+     * 根据socket推送的对象改变原有对象属性
+     *
+     * @param deviceInfo
+     * @return
+     */
+    public DeviceInfo cloneSocketData(DeviceInfo deviceInfo) {
+        if (deviceInfo != null) {
+            this.status = deviceInfo.getStatus();
+            Map<String, MalfunctionDataBean> malfunctionData = deviceInfo.getMalfunctionData();
+            if (malfunctionData != null) {
+                this.malfunctionData = malfunctionData;
+            }
+            String address = deviceInfo.getAddress();
+            if (!TextUtils.isEmpty(address)) {
+                this.address = address;
+            }
+            AlarmInfo alarms = deviceInfo.getAlarms();
+            if (alarms != null) {
+                if (this.alarms != null) {
+                    AlarmInfo.BatteryInfo[] battery = alarms.getBattery();
+                    if (battery != null) {
+                        this.alarms.setBattery(battery);
+                    }
+                    AlarmInfo.NotificationInfo notification = alarms.getNotification();
+                    if (notification != null) {
+                        this.alarms.setNotification(notification);
+                    }
+                    AlarmInfo.RuleInfo[] rules = alarms.getRules();
+                    if (rules != null) {
+                        this.alarms.setRules(rules);
+                    }
+                } else {
+                    this.alarms = alarms;
+                }
+
+            }
+            List<DeviceAlarmsRecord> alarmsRecords = deviceInfo.getAlarmsRecords();
+            if (alarmsRecords != null) {
+                this.alarmsRecords = alarmsRecords;
+            }
+            String content = deviceInfo.getContent();
+            if (!TextUtils.isEmpty(content)) {
+                this.content = content;
+            }
+            String contact = deviceInfo.getContact();
+            if (!TextUtils.isEmpty(contact)) {
+                this.contact = contact;
+            }
+            Integer interval = deviceInfo.getInterval();
+            if (interval != null) {
+                this.interval = interval;
+            }
+            double[] lonlat = deviceInfo.getLonlat();
+            if (lonlat != null && lonlat.length == 2) {
+                this.lonlat = lonlat;
+            }
+            String name = deviceInfo.getName();
+            if (!TextUtils.isEmpty(name)) {
+                this.name = name;
+            }
+            Map<String, SensorStruct> sensoroDetails = deviceInfo.getSensoroDetails();
+            if (sensoroDetails != null) {
+                this.sensoroDetails = sensoroDetails;
+            }
+            String[] sensorTypes = deviceInfo.getSensorTypes();
+            if (sensorTypes != null) {
+                this.sensorTypes = sensorTypes;
+            }
+            String signal = deviceInfo.getSignal();
+            if (!TextUtils.isEmpty(signal)) {
+                this.signal = signal;
+            }
+            String[] tags = deviceInfo.getTags();
+            if (tags != null) {
+                this.tags = tags;
+            }
+            long updatedTime = deviceInfo.getUpdatedTime();
+            if (updatedTime != 0) {
+                this.updatedTime = updatedTime;
+            }
+        }
+        return this;
     }
 
 }

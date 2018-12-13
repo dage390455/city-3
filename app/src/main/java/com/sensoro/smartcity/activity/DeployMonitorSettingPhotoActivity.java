@@ -82,7 +82,7 @@ public class DeployMonitorSettingPhotoActivity extends BaseActivity<IDeployMonit
     }
 
 
-    @OnClick({R.id.deploy_setting_photo_back, R.id.deploy_setting_photo_finish,R.id.tv_deploy_photo_save})
+    @OnClick({R.id.deploy_setting_photo_back, R.id.deploy_setting_photo_finish, R.id.tv_deploy_photo_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.deploy_setting_photo_back:

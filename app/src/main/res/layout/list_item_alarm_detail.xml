@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:contentDescription="@null"
         android:layout_centerInParent="true"
-        android:scaleType="fitXY" />
+        android:scaleType="centerCrop" />
 
     <ImageView
         android:id="@+id/iv_record"

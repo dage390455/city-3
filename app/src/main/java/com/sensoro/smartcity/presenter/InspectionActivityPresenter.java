@@ -42,7 +42,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private long startTime;
     private InspectionTaskDeviceDetail mDeviceDetail;
-    private HashSet<String> tempBleDevice = new HashSet<>();
+    private final HashSet<String> tempBleDevice = new HashSet<>();
     private boolean hasBleDevice = false;
 
     @Override
@@ -135,9 +135,7 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         for (BLEDevice device : deviceList) {
             if (device != null) {
-                if (!tempBleDevice.contains(device.getSn())) {
-                    tempBleDevice.add(device.getSn());
-                }
+                tempBleDevice.add(device.getSn());
             }
         }
 
@@ -145,7 +143,6 @@ public class InspectionActivityPresenter extends BasePresenter<IInspectionActivi
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功

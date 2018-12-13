@@ -54,6 +54,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     LinearLayout acDeployResultTvLlContact;
     @BindView(R.id.ac_deploy_result_tv_contact)
     TextView acDeployResultTvContact;
+    @BindView(R.id.ac_deploy_result_ll_we_chat)
+    LinearLayout acDeployResultLlWeChat;
+    @BindView(R.id.ac_deploy_result_tv_we_chat)
+    TextView acDeployResultTvWeChat;
     @BindView(R.id.ac_deploy_result_tv_signal)
     TextView acDeployResultTvSignal;
     @BindView(R.id.ac_deploy_result_ll_status)
@@ -76,6 +80,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     LinearLayout acDeployResultBottom;
     @BindView(R.id.ac_deploy_result_tv_error_msg)
     TextView acDeployResultTvErrorMsg;
+    @BindView(R.id.ac_deploy_result_ll_setting)
+    LinearLayout acDeployResultLlSetting;
+    @BindView(R.id.ac_deploy_result_tv_setting)
+    TextView acDeployResultTvSetting;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -99,7 +107,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void refreshSignal(long updateTime, String signal) {
         String signal_text = null;
         long time_diff = System.currentTimeMillis() - updateTime;
-        if (signal != null && (time_diff < 300000)) {
+        if (signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (signal) {
                 case "good":
                     signal_text = mActivity.getString(R.string.signal_excellent);
@@ -147,6 +155,12 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void setContactTextView(String content) {
         acDeployResultTvLlContact.setVisibility(View.VISIBLE);
         acDeployResultTvContact.setText(content);
+    }
+
+    @Override
+    public void setWeChatTextView(String content) {
+        acDeployResultLlWeChat.setVisibility(View.VISIBLE);
+        acDeployResultTvWeChat.setText(content);
     }
 
     @Override
@@ -211,6 +225,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
+    public void setResultSettingVisible(boolean isVisible) {
+        acDeployResultLlSetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void setArrowsLeftVisible(boolean isVisible) {
         acDeployResultImvArrowsLeft.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -218,6 +237,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setTitleText(String text) {
         acDeployResultTitle.setText(text);
+    }
+
+    @Override
+    public void setDeployResultHasSetting(boolean setting) {
+        acDeployResultTvSetting.setText(setting ? mActivity.getString(R.string.had_setting) : mActivity.getString(R.string.not_setting));
     }
 
 
@@ -256,7 +280,7 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
 
-    @OnClick({R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue,R.id.ac_deploy_result_imv_arrows_left})
+    @OnClick({R.id.ac_deploy_result_tv_back_home, R.id.ac_deploy_result_tv_continue, R.id.ac_deploy_result_imv_arrows_left})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_result_tv_back_home:

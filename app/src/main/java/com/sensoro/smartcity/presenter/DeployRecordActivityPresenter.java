@@ -10,6 +10,7 @@ import com.sensoro.smartcity.activity.DeployRecordDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IDeployRecordActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
@@ -26,6 +27,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -39,6 +41,7 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
     private Activity mActivity;
     private CalendarPopUtils mCalendarPopUtils;
     private volatile int cur_page = 1;
+    private final List<String> mSearchHistoryList = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
@@ -46,6 +49,13 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
         mActivity = (Activity) context;
         mCalendarPopUtils = new CalendarPopUtils(mActivity);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD);
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().updateSearchHistoryList(mSearchHistoryList);
+        }
+
         requestSearchData(DIRECTION_DOWN, null);
     }
 
@@ -76,8 +86,8 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
             case DIRECTION_DOWN:
                 cur_page = 1;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeployRecordList(searchText, temp_startTime, temp_endTime, owners, signalQuality).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>() {
+                RetrofitServiceHelper.INSTANCE.getDeployRecordList(null,searchText, temp_startTime, temp_endTime, null, null,null,null,null).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
                     @Override
                     public void onCompleted(DeployRecordRsp recordRsp) {
                         List<DeployRecordInfo> data = recordRsp.getData();
@@ -136,7 +146,17 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
         getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
                 .getMothDayFormatDate(endTime));
+        getView().setSearchHistoryVisible(false);
+        if (!TextUtils.isEmpty(tempSearch)) {
+            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+            //为了调整 搜索顺序，所以先删除，再添加
+            mSearchHistoryList.remove(tempSearch);
+            mSearchHistoryList.add(0, tempSearch);
+            getView().updateSearchHistoryList(mSearchHistoryList);
+
+        }
         requestSearchData(DIRECTION_DOWN, getView().getSearchText());
+
     }
 
     public void doCancelSearch() {
@@ -146,10 +166,11 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
+                getView().finishAc();
+                break;
             case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 requestSearchData(DIRECTION_DOWN, null);
                 break;
@@ -160,5 +181,21 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+    }
+
+    public void save(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        mSearchHistoryList.remove(text);
+        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD);
+        mSearchHistoryList.add(0, text);
+        getView().updateSearchHistoryList(mSearchHistoryList);
+    }
+
+    public void clearSearchHistory() {
+        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD);
+        mSearchHistoryList.clear();
+        getView().updateSearchHistoryList(mSearchHistoryList);
     }
 }

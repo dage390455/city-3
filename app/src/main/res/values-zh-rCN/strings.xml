@@ -52,6 +52,7 @@
     <string name="alert_log">预警日志</string>
     <string name="no_contact_added">未添加联系人</string>
     <string name="location_navigation">位置导航</string>
+    <string name="location_confirm">位置校准</string>
     <string name="cant_find_related_content">搜索不到相关内容</string>
     <string name="enter_search_content">请输入搜索内容</string>
     <string name="signal_test">信号测试</string>
@@ -114,7 +115,7 @@
     <string name="real_warning">真实预警</string>
     <string name="false_positive">误报</string>
     <string name="go_to_settings">前往设置</string>
-    <string name="notification_prompt">通知中包含了重要报警信息，请前往设置，打开通知选项。</string>
+    <string name="notification_prompt">通知中包含了重要报警信息，请前往设置，打开所有通知选项</string>
     <string name="status_lost">失联</string>
     <string name="status_inactive">未激活</string>
     <string name="status_malfunction">故障</string>
@@ -181,7 +182,7 @@
     <string name="please_add_at_least_one_image">请至少添加一张图片</string>
     <string name="please_specify_the_deployment_location">请指定部署位置</string>
     <string name="please_enter_contact_phone">请输入联系人名称和电话号码</string>
-    <string name="loading_configuration_file">正在加载配置文件...</string>
+    <string name="loading_configuration_file">正在加载配置文件&#8230;</string>
     <string name="must_enter_name_address">必须输入名称/地址</string>
     <string name="album">相册</string>
     <string name="take_photo">拍照</string>
@@ -192,7 +193,7 @@
     <string name="scan_code_failed">扫码失败</string>
     <string name="failed">失败</string>
     <string name="error">错误</string>
-    <string name="device_exist_under_the_account">账户下不存在此设备,设备已关联\n在本账户下才能够进行测试</string>
+    <string name="device_exist_under_the_account">账户下不存在此设备,设备已关联\n在账户下才能够进行测试</string>
     <string name="success">成功</string>
     <string name="no_such_permission">无此权限</string>
     <string name="no_alert_log_information_was_obtained">未获取到预警日志信息</string>
@@ -263,7 +264,7 @@
     <string name="sensor_detail_interval">传输周期</string>
     <string name="sensor_detail_recent_alarm">最近预警</string>
     <string name="sensor_detail_alarm_setting">预警设置</string>
-    <string name="loading">加载中...</string>
+    <string name="loading">数据加载中</string>
     <string name="jinggai_false">打开</string>
     <string name="cover_false">开</string>
     <string name="cover_true">关</string>
@@ -305,10 +306,11 @@
     <string name="tips_deploy_station_success">恭喜! 基站部署成功</string>
     <string name="tips_deploy_failed">很遗憾! 传感器点位部署失败</string>
     <string name="tips_deploy_station_failed">很遗憾! 基站部署失败</string>
-    <string name="tips_deploy_not_exist">账户下不存在此设备,设备已关联\n在本账户下才能够进行部署</string>
+    <string name="tips_deploy_not_exist">账户下不存在此设备,设备已关联\n在账户下才能够进行部署</string>
     <string name="tips_input_name">请输入名称/地址</string>
     <string name="tips_hint_name_address">例: 大悦城20层走廊2号配电箱</string>
     <string name="tips_hint_name_address_set">例: 大悦城20层走廊2号配电箱</string>
+    <string name="tips_hint_we_chat_relation_set">用于小程序登录的手机号</string>
     <string name="tips_no_alarm">无预警</string>
     <string name="tips_commit_success">提交成功</string>
     <string name="tips_commit_failed">提交失败</string>
@@ -399,19 +401,20 @@
     <string name="deploy_record_device_number">设备号</string>
     <string name="deploy_record_name">名称</string>
     <string name="deploy_record_deploy_time">部署时间</string>
+    <string name="deploy_record_deploy_we_chat">小程序账号（选填）</string>
 
     //部署结果
     <string name="deploy_result_confirm_information">确认信息</string>
     <string name="deploy_result_back_home">返回主页</string>
     <string name="deploy_result_continue">继续部署</string>
     <string name="deploy_result_successed">恭喜！传感器点位部署成功</string>
-    <string name="deploy_result_device_number">设备号:</string>
-    <string name="deploy_result_name">名称:</string>
-    <string name="deploy_result_location">位置:</string>
-    <string name="deploy_result_contract">联系人:</string>
-    <string name="deploy_result_status">状态:</string>
+    <string name="deploy_result_device_number">设备号</string>
+    <string name="deploy_result_name">名称</string>
+    <string name="deploy_result_location">位置</string>
+    <string name="deploy_result_contract">联系人</string>
+    <string name="deploy_result_status">状态</string>
     <string name="deploy_result_signal">信号 无</string>
-    <string name="deploy_result_recent_upload_time">最近上传时间:</string>
+    <string name="deploy_result_recent_upload_time">最近上传时间</string>
     <string name="deploy_result_is_upload">是否上传完成部署？</string>
     <string name="no_signal_can_not_uploaded">无信号不能上传</string>
     <string name="deploy_result_upload_tip">当前设备无信号或信号差，请按设备自检按钮刷新信号再完成上传部署</string>
@@ -466,6 +469,8 @@
     <string name="monitor_point_information">基本信息</string>
     //名称和地址
     <string name="name_address">名称/地址</string>
+    <string name="we_chat_relation">小程序账号</string>
+    <string name="we_chat_relation_">小程序</string>
     <string name="name_address_history_tag">历史标签</string>
     <string name="name_address_save">保存</string>
     //扫描界面
@@ -633,5 +638,35 @@
     <string name="input_not_null">输入不能为空</string>
     <string name="main_home_menu_scan_login">扫码登录</string>
     <string name="request_success">请求成功</string>
+    <string name="legal_representative_name">法定代表人/姓名</string>
+    <string name="no_search_history">暂无搜索记录</string>
 
+
+    <string name="please_use_different_device_to_replace">请使用不同的设备进行更换</string>
+    <string name="channel_mask_error_tip">在需要配置频点的情况下，未能获取频点信息</string>
+    <string name="please_enter_a_valid_mobile_number">请输入有效手机号</string>
+    <string name="enter_the_phone_number_used_for_applet_login">输入用于小程序登录的手机号</string>
+    <string name="please_enter_the_mobile_phone_number_and_the_contracted_mobile_phone_number">输入的手机号请与小程序登录账号保持一致</string>
+    <string name="title_edit">编辑</string>
+    <string name="identification_number_failed">身份证识别失败：</string>
+    <string name="contract_modified_success">修改成功</string>
+    <string name="deploy_device_type">设备类型：</string>
+    <string name="initial_configuration">初始配置</string>
+    <string name="not_setting">未配置</string>
+    <string name="had_setting">已配置</string>
+    <string name="deploy_pic_device_pic">设备图</string>
+    <string name="deploy_pic_device_pic_tip">需能看清设备号</string>
+    <string name="deploy_pic_take_photo">拍照</string>
+    <string name="deploy_pic_installation_site">安装现场</string>
+    <string name="deploy_pic_shop_pic">店面照片（选填）</string>
+    <string name="please_select_device_pic">请选择一张设备照片</string>
+    <string name="please_select_installation_site">请选择一张现场照片</string>
+    <string name="rated_current">额定电流/A</string>
+    <string name="deploy_configuration_enter_tip">请输入安装现场空气开关的额定电流，范围50&#8211;560</string>
+    <string name="deploy_configuration">开始配置</string>
+    <string name="if_it_is_a_store_please_upload">若为店面请上传</string>
+    <string name="check_ble_status">请检查蓝牙状态</string>
+    <string name="now_configuration">正在配置</string>
+    <string name="ble_config_failed">配置失败，请重试</string>
+    <string name="ble_config_success">配置成功</string>
 </resources>

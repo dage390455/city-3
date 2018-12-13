@@ -8,6 +8,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 
 import com.sensoro.libbleserver.ble.utils.Utils;
+
 import java.util.List;
 
 /**
@@ -107,11 +108,16 @@ public abstract class BLEScanner {
     protected BluetoothAdapter getBluetoothAdapter() {
         if (bluetoothAdapter == null) {
             // Initializes Bluetooth adapter.
-            final BluetoothManager bluetoothManager =
-                    (BluetoothManager) context.getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
-            bluetoothAdapter = bluetoothManager.getAdapter();
-            if (bluetoothAdapter == null) {
-                Log.d(TAG, "Failed to construct a BluetoothAdapter");
+            bluetoothAdapter = BLEDeviceManager.getInstance(context.getApplicationContext()).getBluetoothAdapter();
+            if (bluetoothAdapter==null){
+                final BluetoothManager bluetoothManager =
+                        (BluetoothManager) context.getApplicationContext().getSystemService(Context.BLUETOOTH_SERVICE);
+                if (bluetoothManager != null) {
+                    this.bluetoothAdapter = bluetoothManager.getAdapter();
+                    if (this.bluetoothAdapter == null) {
+                        Log.e(TAG, "Failed to construct a BluetoothAdapter");
+                    }
+                }
             }
         }
         return bluetoothAdapter;

@@ -15,6 +15,8 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     //
     void setNameAddressText(String text);
 
+    void setDeployWeChatText(String text);
+
     void updateContactData(List<DeployContactModel> contacts);
 
     void updateTagsData(List<String> tagList);
@@ -52,4 +54,12 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
     void hideBleTips();
 
     void setNotOwnVisible(boolean isVisible);
+
+    void setDeployDetailArrowWeChatVisible(boolean isVisible);
+
+    void setDeployDetailDeploySettingVisible(boolean isVisible);
+
+    void setDeployDeviceType(String text);
+
+    void setDeployDeviceDetailDeploySetting(boolean setting);
 }

@@ -39,6 +39,7 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
+import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -214,36 +215,61 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void doSaveLocation() {
-        getView().showProgressDialog();
-        if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
-            RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
-                    .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>() {
-                @Override
-                public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
-                    deployAnalyzerModel.blePassword = deployDeviceDetailRsp.getData().getBlePassword();
-                    List<Integer> channelMask = deployDeviceDetailRsp.getData().getChannelMask();
-                    if (channelMask != null && channelMask.size() > 0) {
-                        deployAnalyzerModel.channelMask.clear();
-                        deployAnalyzerModel.channelMask.addAll(channelMask);
+        if (deployAnalyzerModel.latLng.size() == 2) {
+            switch (deployAnalyzerModel.mapSourceType) {
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+                    getView().showProgressDialog();
+                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                        RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
+                                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
+                            @Override
+                            public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                                deployAnalyzerModel.blePassword = deployDeviceDetailRsp.getData().getBlePassword();
+                                List<Integer> channelMask = deployDeviceDetailRsp.getData().getChannelMask();
+                                if (channelMask != null && channelMask.size() > 0) {
+                                    deployAnalyzerModel.channelMask.clear();
+                                    deployAnalyzerModel.channelMask.addAll(channelMask);
+                                }
+                                getView().dismissProgressDialog();
+                                handlerResult();
+                            }
+
+                            @Override
+                            public void onErrorMsg(int errorCode, String errorMsg) {
+                                getView().dismissProgressDialog();
+                                //TODO 可以添加是否需要处理channelmask字段
+                                handlerResult();
+                            }
+                        });
+                    } else {
+                        handlerResult();
                     }
+                    break;
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                    break;
+                case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
                     getView().showProgressDialog();
-                    handlerResult();
+                    RetrofitServiceHelper.INSTANCE.doDevicePositionCalibration(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
+                        @Override
+                        public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+                            getView().dismissProgressDialog();
+                            DeviceInfo data = deviceDeployRsp.getData();
+                            EventData eventData = new EventData();
+                            eventData.code = EVENT_DATA_DEVICE_POSITION_CALIBRATION;
+                            eventData.data = data;
+                            EventBus.getDefault().post(eventData);
+                            getView().finishAc();
+                        }
 
-
-                }
-
-                @Override
-                public void onErrorMsg(int errorCode, String errorMsg) {
-                    getView().showProgressDialog();
-                    //TODO 可以添加是否需要处理channelmask字段
-                    handlerResult();
-                }
-            });
-        } else {
-            handlerResult();
+                        @Override
+                        public void onErrorMsg(int errorCode, String errorMsg) {
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
+                        }
+                    });
+                    break;
+            }
         }
-
-
     }
 
     private void handlerResult() {
@@ -255,60 +281,84 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void refreshSignal() {
-        if (deployAnalyzerModel.isFromDeployRecord) {
-            return;
+        //TODO 哪里能刷新信号
+        switch (deployAnalyzerModel.mapSourceType) {
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(deployAnalyzerModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
+                        (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
+
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
+                    }
+
+                    @Override
+                    public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
+                        if (deviceInfoListRsp.getData().size() > 0) {
+                            DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(0);
+                            String signal = deviceInfo.getSignal();
+                            getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
+                        }
+                        getView().dismissProgressDialog();
+                    }
+                });
+                break;
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                break;
+            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                break;
         }
-        getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(deployAnalyzerModel.sn, null, 1).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
 
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
-            }
-
-            @Override
-            public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                if (deviceInfoListRsp.getData().size() > 0) {
-                    DeviceInfo deviceInfo = deviceInfoListRsp.getData().get(0);
-                    String signal = deviceInfo.getSignal();
-                    getView().refreshSignal(deviceInfo.getUpdatedTime(), signal);
-                }
-                getView().dismissProgressDialog();
-            }
-        });
     }
 
     @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-        if (cameraPosition != null && !deployAnalyzerModel.isFromDeployRecord) {
-            //解决不能回显的bug 不能直接赋值
-            deviceMarker.setPosition(cameraPosition.target);
-            System.out.println("====>onCameraChange");
+        switch (deployAnalyzerModel.mapSourceType) {
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                break;
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                if (cameraPosition != null) {
+                    //解决不能回显的bug 不能直接赋值
+                    deviceMarker.setPosition(cameraPosition.target);
+                    System.out.println("====>onCameraChange");
+                }
+                break;
         }
+
     }
 
     @Override
     public void onCameraChangeFinish(CameraPosition cameraPosition) {
-        if (deployAnalyzerModel.isFromDeployRecord) {
-            deviceMarker.setInfoWindowEnable(true);
-            LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-            System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
-            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-            geocoderSearch.getFromLocationAsyn(query);
-        } else {
-            deployAnalyzerModel.latLng.clear();
-            deployAnalyzerModel.latLng.add(cameraPosition.target.longitude);
-            deployAnalyzerModel.latLng.add(cameraPosition.target.latitude);
-            deviceMarker.setPosition(cameraPosition.target);
-            LatLonPoint lp = new LatLonPoint(cameraPosition.target.latitude, cameraPosition.target.longitude);
-            System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
-            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-            geocoderSearch.getFromLocationAsyn(query);
-        }
+        switch (deployAnalyzerModel.mapSourceType) {
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                if (deployAnalyzerModel.latLng.size() == 2) {
+                    LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+                    RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+                    System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
+                    deviceMarker.setInfoWindowEnable(true);
+                    geocoderSearch.getFromLocationAsyn(query);
+                }
 
+                break;
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                if (cameraPosition != null) {
+                    deployAnalyzerModel.latLng.clear();
+                    deployAnalyzerModel.latLng.add(cameraPosition.target.longitude);
+                    deployAnalyzerModel.latLng.add(cameraPosition.target.latitude);
+                    //
+                    LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+                    RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+                    System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
+                    deviceMarker.setPosition(cameraPosition.target);
+                    geocoderSearch.getFromLocationAsyn(query);
+                }
+                break;
+        }
     }
 
     @Override
@@ -388,40 +438,38 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void backToCurrentLocation() {
-        LatLng latLng = null;
-        if (deployAnalyzerModel.isFromDeployRecord) {
-            if (deployAnalyzerModel.latLng.size() == 2) {
-                latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-            }
-        } else {
-            AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-            if (lastKnownLocation != null) {
-                double lat = lastKnownLocation.getLatitude();//获取纬度
-                double lon = lastKnownLocation.getLongitude();//获取经度
-                latLng = new LatLng(lat, lon);
-            }
-        }
-        if (latLng != null) {
-            //可视化区域，将指定位置指定到屏幕中心位置
-            CameraUpdate update = CameraUpdateFactory
-                    .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
-            aMap.moveCamera(update);
-//                if (isFromDeployRecord) {
-//                    deviceMarker.setInfoWindowEnable(false);
-//                    isBackBtnClick = true;
-//                } else {
-//                    deviceMarker.setPosition(latLng);
-//                }
-            if (!deployAnalyzerModel.isFromDeployRecord) {
-                locationMarker.setPosition(latLng);
-            }
-            deviceMarker.setPosition(latLng);
+        LatLng latLng;
+        CameraUpdate update;
+        switch (deployAnalyzerModel.mapSourceType) {
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                if (deployAnalyzerModel.latLng.size() == 2) {
+                    latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+                    update = CameraUpdateFactory
+                            .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                    aMap.moveCamera(update);
+                    deviceMarker.setPosition(latLng);
+                }
+                break;
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+                if (lastKnownLocation != null) {
+                    double lat = lastKnownLocation.getLatitude();//获取纬度
+                    double lon = lastKnownLocation.getLongitude();//获取经度
+                    latLng = new LatLng(lat, lon);
+                    //可视化区域，将指定位置指定到屏幕中心位置
+                    update = CameraUpdateFactory
+                            .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                    aMap.moveCamera(update);
+                    locationMarker.setPosition(latLng);
+                    deviceMarker.setPosition(latLng);
+                }
+                break;
         }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功

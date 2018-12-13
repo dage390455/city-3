@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
-import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -16,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
@@ -23,6 +23,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
 import com.sensoro.smartcity.presenter.MonitorPointDetailActivityPresenter;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -40,7 +41,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetailActivityView,
-        MonitorPointDetailActivityPresenter> implements IMonitorPointDetailActivityView, TipOperationDialogUtils.TipDialogUtilsClickListener {
+        MonitorPointDetailActivityPresenter> implements IMonitorPointDetailActivityView, TipOperationDialogUtils.TipDialogUtilsClickListener, MonitorDeployDetailPhotoAdapter.OnRecyclerViewItemClickListener {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeImvTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -105,6 +106,9 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     TextView acMonitoringPointTvAirSwitchConfig;
     @BindView(R.id.ac_monitoring_point_ll_operation)
     LinearLayout acMonitoringPointLlOperation;
+    @BindView(R.id.ac_monitor_deploy_photo)
+    TouchRecycleView acMonitorDeployPhoto;
+    MonitorDeployDetailPhotoAdapter mAdapter;
 
     private MonitoringPointRcContentAdapter mContentAdapter;
     private TagAdapter mTagAdapter;
@@ -122,18 +126,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         acMonitoringPointTvErasure.setClickable(false);
         acMonitoringPointTvReset.setClickable(true);
         mPresenter.initData(mActivity);
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-        mPresenter.onStart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        mPresenter.onStop();
     }
 
     private void initView() {
@@ -170,7 +162,28 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         initTipDialog();
         initEditDialog();
         initOperatingDialog();
+        initMonitorPhoto();
 
+    }
+
+    private void initMonitorPhoto() {
+        //
+        acMonitorDeployPhoto.setIntercept(false);
+        mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
+        //
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false) {
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        acMonitorDeployPhoto.setLayoutManager(layoutManager);
+        mAdapter = new MonitorDeployDetailPhotoAdapter(mActivity);
+        acMonitorDeployPhoto.setAdapter(mAdapter);
+        mAdapter.setOnItemClickListener(this);
     }
 
     private void initEditDialog() {
@@ -203,7 +216,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
+        mActivity.startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -298,31 +311,14 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         super.onDestroy();
     }
 
-//    @Override
-//    public void onClick(View v) {
-//        switch (v.getId()) {
-//            case R.id.include_text_title_tv_subtitle:
-//                mPresenter.doMonitorHistory();
-//                break;
-//            case R.id.ac_monitoring_point_cl_alert_contact:
-//                mPresenter.doContact();
-//                break;
-//            case R.id.ac_monitoring_point_imv_location:
-//            case R.id.ac_monitoring_point_cl_location_navigation:
-//                mPresenter.doNavigation();
-//                break;
-//            case R.id.ac_monitoring_point_imv_detail:
-//                //已删除
-//                break;
-//            case R.id.include_text_title_imv_arrows_left:
-//                finishAc();
-//                break;
-//        }
-//    }
-
     @Override
     public void updateTags(List<String> list) {
         mTagAdapter.updateTags(list);
+    }
+
+    @Override
+    public void updateMonitorPhotos(List<ScenesData> data) {
+        mAdapter.updateImages(data);
     }
 
     @Override
@@ -587,5 +583,11 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     @Override
     public void onConfirmClick(String content) {
         mPresenter.doOperation(mTipDialogType, content);
+    }
+
+    @Override
+    public void onItemClick(View view, int position) {
+        List<ScenesData> images = mAdapter.getImages();
+        mPresenter.toPhotoDetail(position, images);
     }
 }

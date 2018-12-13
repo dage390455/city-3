@@ -8,12 +8,6 @@ import java.util.List;
 
 public class DeployDeviceDetail implements Parcelable {
 
-    /**
-     * sn : 10320117C5A0240B
-     * blePassword : 0ff2a23
-     * band : SE470
-     * channelMask : [0,0,0,0,0,255]
-     */
 
     private String sn;
     private String blePassword;

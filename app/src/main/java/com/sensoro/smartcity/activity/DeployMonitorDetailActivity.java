@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -22,11 +23,11 @@ import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.CustomCornerDialog;
 import com.sensoro.smartcity.widget.dialog.TipBleDialogUtils;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -58,6 +59,10 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TouchRecycleView acDeployDeviceDetailRcAlarmContact;
     @BindView(R.id.ac_deploy_device_detail_ll_alarm_contact)
     LinearLayout acDeployDeviceDetailLlAlarmContact;
+    @BindView(R.id.deploy_detail_ll_we_chat)
+    LinearLayout deployDetailLlWeChat;
+    @BindView(R.id.ac_deploy_detail_tv_we_chat)
+    TextView acDeployDetailTvWeChat;
     @BindView(R.id.ac_deploy_device_detail_tv_deploy_pic)
     TextView acDeployDeviceDetailTvDeployPic;
     @BindView(R.id.ac_deploy_device_detail_ll_deploy_pic)
@@ -76,6 +81,16 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     FrameLayout flNotOwn;
     @BindView(R.id.last_view)
     View lastView;
+    @BindView(R.id.deploy_detail_iv_arrow_we_chat)
+    ImageView deployDetailIvArrowWeChat;
+    @BindView(R.id.ac_deploy_device_detail_tv_device_type)
+    TextView acDeployDeviceDetailTvDeviceType;
+    @BindView(R.id.ac_deploy_device_detail_deploy_setting_line)
+    View acDeployDeviceDetailDeployettingLine;
+    @BindView(R.id.ac_deploy_device_detail_ll_deploy_setting)
+    LinearLayout acDeployDeviceDetailLlDeploySetting;
+    @BindView(R.id.ac_deploy_device_detail_tv_deploy_setting)
+    TextView acDeployDeviceDetailTvDeploySetting;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -93,7 +108,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
         setContentView(R.layout.actvity_deploy_device_detail_h);
-        // todo 这个界面的标签要能滑动啊
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
@@ -148,7 +162,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_title, R.id.include_text_title_tv_subtitle,
             R.id.ac_deploy_device_detail_ll_name_location, R.id.ac_deploy_device_detail_rl_tag, R.id.ac_deploy_device_detail_ll_alarm_contact,
-            R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload})
+            R.id.ac_deploy_device_detail_ll_deploy_pic, R.id.ac_deploy_device_detail_ll_fixed_point, R.id.ac_deploy_device_detail_tv_upload, R.id.deploy_detail_ll_we_chat, R.id.ac_deploy_device_detail_ll_deploy_setting})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -167,6 +181,10 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
             case R.id.ac_deploy_device_detail_ll_alarm_contact:
                 mPresenter.doAlarmContact();
                 break;
+            case R.id.deploy_detail_ll_we_chat:
+                //小程序
+                mPresenter.doWeChatRelation();
+                break;
             case R.id.ac_deploy_device_detail_ll_deploy_pic:
                 mPresenter.doSettingPhoto();
                 break;
@@ -176,6 +194,9 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
             case R.id.ac_deploy_device_detail_tv_upload:
                 //TODO 上传逻辑
                 mPresenter.doConfirm();
+                break;
+            case R.id.ac_deploy_device_detail_ll_deploy_setting:
+                mPresenter.doDeployBleSetting();
                 break;
         }
     }
@@ -230,7 +251,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
     }
 
     @Override
@@ -277,7 +297,26 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void setNameAddressText(String text) {
-        acDeployDeviceDetailTvNameLocation.setText(text);
+        if (TextUtils.isEmpty(text)) {
+            acDeployDeviceDetailTvNameLocation.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            acDeployDeviceDetailTvNameLocation.setText(mActivity.getString(R.string.not_added));
+        } else {
+            acDeployDeviceDetailTvNameLocation.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+
+            acDeployDeviceDetailTvNameLocation.setText(text);
+        }
+    }
+
+    @Override
+    public void setDeployWeChatText(String text) {
+        if (TextUtils.isEmpty(text)) {
+            acDeployDetailTvWeChat.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            acDeployDetailTvWeChat.setText(mActivity.getString(R.string.not_added));
+        } else {
+            acDeployDetailTvWeChat.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+
+            acDeployDetailTvWeChat.setText(text);
+        }
     }
 
     @Override
@@ -352,7 +391,14 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void setDeployPhotoText(String text) {
-        acDeployDeviceDetailTvDeployPic.setText(text);
+        if (TextUtils.isEmpty(text)) {
+            acDeployDeviceDetailTvDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            acDeployDeviceDetailTvDeployPic.setText(mActivity.getString(R.string.not_added));
+        } else {
+            acDeployDeviceDetailTvDeployPic.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+
+            acDeployDeviceDetailTvDeployPic.setText(text);
+        }
     }
 
     @Override
@@ -419,6 +465,33 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setNotOwnVisible(boolean isVisible) {
         flNotOwn.setVisibility(isVisible ? View.VISIBLE : View.GONE);
         lastView.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployDetailArrowWeChatVisible(boolean isVisible) {
+        deployDetailIvArrowWeChat.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployDetailDeploySettingVisible(boolean isVisible) {
+        acDeployDeviceDetailLlDeploySetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployDeviceDetailDeployettingLine.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployDeviceType(String text) {
+        acDeployDeviceDetailTvDeviceType.setText(text);
+    }
+
+    @Override
+    public void setDeployDeviceDetailDeploySetting(boolean setting) {
+        if (setting) {
+            acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.had_setting));
+        } else {
+            acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.not_setting));
+        }
     }
 
     @Override

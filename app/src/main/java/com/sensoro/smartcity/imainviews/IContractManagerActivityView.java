@@ -37,4 +37,16 @@ public interface IContractManagerActivityView extends IProgressDialog, IToast, I
     boolean getSearchTextVisible();
 
     void setSearchButtonTextVisible(boolean isVisible);
+
+    void setSearchClearImvVisible(boolean isVisible);
+
+    void setSearchHistoryVisible(boolean isVisible);
+
+    void UpdateSearchHistoryList(List<String> data);
+
+    boolean isSelectedDateLayoutVisible();
+
+    void setSelectedDateLayoutVisible(boolean isVisible);
+
+    void setSelectedDateSearchText(String content);
 }

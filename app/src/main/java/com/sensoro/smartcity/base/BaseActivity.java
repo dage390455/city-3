@@ -114,9 +114,13 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onResume() {
-        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
-        boolean isOpened = manager.areNotificationsEnabled();
-        if (!isNotificationEnabled(mActivity) && !isOpened) {
+        boolean hasNo = NotificationManagerCompat.from(mActivity).areNotificationsEnabled();
+//        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
+//        boolean isOpened = manager.areNotificationsEnabled();
+//        if (!isNotificationEnabled(mActivity) && !isOpened) {
+//            showRationaleDialog();
+//        }
+        if (!hasNo) {
             showRationaleDialog();
         }
         super.onResume();

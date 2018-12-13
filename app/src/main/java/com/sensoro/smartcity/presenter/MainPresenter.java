@@ -81,15 +81,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             openLogin();
             return;
         }
-//        else {
-//            try {
-//                String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
-//                LogUtils.loge("main ---->> " + log);
-//            } catch (NullPointerException e) {
-//                e.printStackTrace();
-//
-//            }
-//        }
         initViewPager();
     }
 
@@ -128,7 +119,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 }
             }, 2000);
             freshAlarmCount();
-
         } else {
             openLogin();
         }
@@ -413,6 +403,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 if (hasDeviceBriefControl()) {
                     mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                     mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                    mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
                 }
                 if (hasAlarmInfoControl()) {
                     mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -430,6 +421,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -466,7 +458,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
@@ -544,7 +535,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO 对照片信息统一处理
+        // 对照片信息统一处理
         AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
         if (managerFragment != null) {
             managerFragment.handlerActivityResult(requestCode, resultCode, data);

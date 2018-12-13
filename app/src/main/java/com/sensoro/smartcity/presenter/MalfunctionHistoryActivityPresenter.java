@@ -4,17 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.DeployManualActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IMalfunctionHistoryActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.AlarmInfo;
-import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
-import com.sensoro.smartcity.server.response.DeviceAlarmLogRsp;
 import com.sensoro.smartcity.server.response.MalfunctionListRsp;
 import com.sensoro.smartcity.util.DateUtil;
 
@@ -26,9 +22,6 @@ import rx.schedulers.Schedulers;
 
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
-import static com.sensoro.smartcity.constant.Constants.DISPLAY_STATUS_ALARM;
-import static com.sensoro.smartcity.constant.Constants.DISPLAY_STATUS_CONFIRM;
-import static com.sensoro.smartcity.constant.Constants.DISPLAY_STATUS_MIS_DESCRIPTION;
 
 public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunctionHistoryActivityView> {
     private Activity mActivity;
@@ -106,15 +99,10 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
         if (direction == DIRECTION_DOWN) {
             mMalfunctionInfoList.clear();
         }
-        handleMalfunctioninfo(malfunctionListRsp);
-        getView().updateMalfunctionListAdapter(mMalfunctionInfoList);
-    }
-
-    private void handleMalfunctioninfo(MalfunctionListRsp malfunctionListRsp) {
         List<MalfunctionListInfo> malfunctionListInfoList = malfunctionListRsp.getData();
         mMalfunctionInfoList.addAll(malfunctionListInfoList);
+        getView().updateMalfunctionListAdapter(mMalfunctionInfoList);
     }
-
 
     @Override
     public void onDestroy() {

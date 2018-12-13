@@ -14,11 +14,13 @@ public class DeployAnalyzerModel implements Serializable {
     public String signal;
     public long updatedTime;
     public String nameAndAddress;
-    public boolean isFromDeployRecord;
+    public String weChatAccount;
     public boolean notOwn;
     public int status;
     public String blePassword;
     public String deviceType;
+    public int mapSourceType = 1;
+    public boolean hasSetting;
     //
     public final List<Double> latLng = new ArrayList<>();
     //

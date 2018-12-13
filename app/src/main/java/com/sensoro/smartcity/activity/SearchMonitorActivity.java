@@ -40,9 +40,9 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SensoroXLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,7 +52,6 @@ import butterknife.ButterKnife;
 
 import static android.view.View.VISIBLE;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
-import static com.sensoro.smartcity.constant.Constants.TYPE_LIST;
 
 /**
  * Created by sensoro on 17/7/11.
@@ -100,7 +99,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     private SearchHistoryAdapter mSearchHistoryAdapter;
     private RelationAdapter mRelationAdapter;
 
-    private int switchType = TYPE_LIST;
     private boolean isShowDialog = true;
     private MainHomeFragRcContentAdapter mSearchRcContentAdapter;
     private SensoroXLinearLayoutManager xLinearLayoutManager;
@@ -108,7 +106,6 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        //todo 点击取消，会弹起键盘，这个坑
         setContentView(R.layout.activity_search_device);
         ButterKnife.bind(mActivity);
         initView();
@@ -237,7 +234,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
     @Override
     public void setNoContentVisible(boolean isVisible) {
         icNoContent.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-        acSearchDeviceRcContent.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        indexLayoutList.setVisibility(isVisible ? View.GONE : View.VISIBLE);
     }
 
     @Override
@@ -302,8 +299,7 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         mSearchHistoryRv.setLayoutManager(layoutManager);
-        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.x10);
-        mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        mSearchHistoryRv.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity, 6)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
@@ -371,17 +367,15 @@ public class SearchMonitorActivity extends BaseActivity<ISearchMonitorActivityVi
 
     @Override
     public void returnTop() {
-        if (switchType == TYPE_LIST) {
-            acSearchDeviceRcContent.smoothScrollToPosition(0);
-        } else {
-            acSearchDeviceRcContent.smoothScrollToPosition(0);
-        }
+        acSearchDeviceRcContent.smoothScrollToPosition(0);
         mReturnTopImageView.setVisibility(View.GONE);
     }
 
     private void dismissInputMethodManager(View view) {
         InputMethodManager imm = (InputMethodManager) mActivity.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        if (imm != null) {
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);//从控件所在的窗口中隐藏
+        }
     }
 
 

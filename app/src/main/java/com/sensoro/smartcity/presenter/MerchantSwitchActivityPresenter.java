@@ -2,14 +2,13 @@ package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.SearchMerchantActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.factory.MenuPageFactory;
+import com.sensoro.smartcity.factory.UserPermissionFactory;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IMerchantSwitchActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
@@ -21,7 +20,6 @@ import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.UserAccountControlRsp;
 import com.sensoro.smartcity.server.response.UserAccountRsp;
-import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -43,6 +41,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     private Activity mContext;
     private volatile int cur_page = 0;
     private EventLoginData eventLoginData = null;
+    private final List<String> mSearchHistoryList = new ArrayList<>();
+    private String tempSearch;
 
     @Override
     public void initData(Context context) {
@@ -52,18 +52,29 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         if (eventLoginData != null) {
             getView().setCurrentNameAndPhone(eventLoginData.userName, eventLoginData.phone);
             getView().setCurrentStatusImageViewVisible(true);
-            requestDataByDirection(DIRECTION_DOWN, true);
+            requestDataByDirection(DIRECTION_DOWN, true, null);
+        }
+
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().updateSearchHistoryList(mSearchHistoryList);
         }
     }
 
-    public void requestDataByDirection(int direction, boolean isForce) {
+    public void requestDataByDirection(int direction, boolean isForce, String searchText) {
         if (isForce) {
             getView().showProgressDialog();
+        }
+        if (TextUtils.isEmpty(searchText)) {
+            tempSearch = null;
+        } else {
+            tempSearch = searchText;
         }
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 0;
-                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
+                RetrofitServiceHelper.INSTANCE.getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
 
@@ -77,11 +88,13 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                     @Override
                     public void onCompleted(UserAccountRsp userAccountRsp) {
                         List<UserInfo> list = userAccountRsp.getData();
-                        mUserInfoList.clear();
-                        mUserInfoList.addAll(list);
-                        getView().setAdapterSelectedIndex(-1);
+                        if (list == null) {
+                            mUserInfoList.clear();
+                        } else {
+                            mUserInfoList.clear();
+                            mUserInfoList.addAll(list);
+                        }
                         getView().updateAdapterUserInfo(mUserInfoList);
-                        getView().showSeperatorView(list.size() != 0);
                         getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
                     }
@@ -89,7 +102,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                RetrofitServiceHelper.INSTANCE.getUserAccountList(null, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
+                RetrofitServiceHelper.INSTANCE.getUserAccountList(tempSearch, null, cur_page * 20, 20).subscribeOn(Schedulers.io()).observeOn
                         (AndroidSchedulers.mainThread()).subscribe(new CityObserver<UserAccountRsp>(this) {
 
                     @Override
@@ -106,12 +119,9 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                         if (list == null || list.size() == 0) {
                             cur_page--;
                             getView().toastShort(mContext.getString(R.string.no_more_data));
-                            getView().showSeperatorView(false);
                         } else {
                             mUserInfoList.addAll(list);
-                            getView().setAdapterSelectedIndex(-1);
                             getView().updateAdapterUserInfo(mUserInfoList);
-                            getView().showSeperatorView(true);
                         }
                         getView().dismissProgressDialog();
                         getView().onPullRefreshComplete();
@@ -123,15 +133,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         }
     }
 
-//    private void refreshUI(UserAccountRsp userAccountRsp) {
-//        List<UserInfo> list = userAccountRsp.getData();
-//        mUserInfoList.clear();
-//        mUserInfoList.addAll(list);
-//        getView().setAdapterSelectedIndex(-1);
-//        getView().updateAdapterUserInfo(mUserInfoList);
-//        getView().showSeperatorView(list.size() != 0);
-//    }
-
     private void doAccountSwitch(String uid) {
         getView().showProgressDialog();
         eventLoginData = null;
@@ -142,29 +143,7 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 UserInfo userInfo = userAccountControlRsp.getData();
                 RetrofitServiceHelper.INSTANCE.saveSessionId(userInfo.getSessionID());
                 //
-                eventLoginData = MenuPageFactory.createLoginData(userInfo, phoneId);
-
-//                GrantsInfo grants = userInfo.getGrants();
-//                //修改loginData包装
-//                eventLoginData = new EventLoginData();
-//                eventLoginData.userId = userInfo.get_id();
-//                eventLoginData.userName = userInfo.getNickname();
-//                eventLoginData.phone = userInfo.getContacts();
-//                eventLoginData.phoneId = phoneId;
-////            mCharacter = userInfo.getCharacter();
-//                String roles = userInfo.getRoles();
-//                eventLoginData.roles = roles;
-//                String isSpecific = userInfo.getIsSpecific();
-//                eventLoginData.isSupperAccount = MenuPageFactory.getIsSupperAccount(isSpecific);
-//                eventLoginData.hasStation = MenuPageFactory.getHasStationDeploy(grants);
-//                eventLoginData.hasContract = MenuPageFactory.getHasContract(grants);
-//                eventLoginData.hasScanLogin = MenuPageFactory.getHasScanLogin(grants);
-//                eventLoginData.hasSubMerchant = MenuPageFactory.getHasSubMerchant(roles, isSpecific);
-//                eventLoginData.hasInspectionTaskList = MenuPageFactory.getHasInspectionTaskList(grants);
-//                eventLoginData.hasAlarmInfo = MenuPageFactory.getHasAlarmInfo(grants);
-//                eventLoginData.hasDeviceBrief = MenuPageFactory.getHasDeviceBriefList(grants);
-//                eventLoginData.hasSignalCheck = MenuPageFactory.getHasSignalCheck(grants);
-//                eventLoginData.hasSignalConfig = MenuPageFactory.getHasSignalConfig(grants);
+                eventLoginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                 //
                 return RetrofitServiceHelper.INSTANCE.getDevicesMergeTypes();
             }
@@ -182,9 +161,8 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
                 eventData.code = EVENT_DATA_SEARCH_MERCHANT;
                 eventData.data = eventLoginData;
                 EventBus.getDefault().post(eventData);
-                getView().finishAc();
-                LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
                 getView().dismissProgressDialog();
+                getView().finishAc();
             }
 
 
@@ -196,36 +174,19 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
         });
     }
 
-    public void clickItem(int position) {
+    public void clickItem(UserInfo userInfo) {
         if (!PreferencesHelper.getInstance().getUserData().hasMerchantChange) {
             getView().toastShort(mContext.getString(R.string.merchant_has_no_change_permission));
             return;
         }
-        if (!mUserInfoList.get(position).isStop()) {
-            getView().setAdapterSelectedIndex(position);
-//            mMerchantAdapter.setSelectedIndex(position);
-//            mMerchantAdapter.notifyDataSetChanged();
-//            getView().updateAdapterUserInfo(mUserInfoList);
-//            getView().setCurrentStatusImageViewVisible(false);
-//            mCurrentStatusImageView.setVisibility(View.GONE);
-            String uid = mUserInfoList.get(position).get_id();
+        if (!userInfo.isStop()) {
+            String uid = userInfo.get_id();
             doAccountSwitch(uid);
         } else {
             getView().toastShort(mContext.getString(R.string.account_has_been_disabled));
         }
     }
 
-    public void startToSearchAC() {
-        Intent searchIntent = new Intent(mContext, SearchMerchantActivity.class);
-        searchIntent.putExtra("phone_id", PreferencesHelper.getInstance().getUserData().phoneId);
-        if (!TextUtils.isEmpty(PreferencesHelper.getInstance().getUserData().userName)) {
-            searchIntent.putExtra("user_name", PreferencesHelper.getInstance().getUserData().userName);
-        }
-        if (!TextUtils.isEmpty(PreferencesHelper.getInstance().getUserData().phone)) {
-            searchIntent.putExtra("user_phone", PreferencesHelper.getInstance().getUserData().phone);
-        }
-        getView().startAC(searchIntent);
-    }
 
     @Override
     public void onDestroy() {
@@ -235,7 +196,6 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
 //        Object data = eventData.data;
         switch (code) {
@@ -249,5 +209,25 @@ public class MerchantSwitchActivityPresenter extends BasePresenter<IMerchantSwit
     @Override
     public void onCreate() {
         EventBus.getDefault().register(this);
+    }
+
+    public void save(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        mSearchHistoryList.remove(text);
+        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
+        mSearchHistoryList.add(0, text);
+        getView().updateSearchHistoryList(mSearchHistoryList);
+    }
+
+    public void requestSearchData(int direction, String text) {
+        requestDataByDirection(direction, true, text);
+    }
+
+    public void clearSearchHistory() {
+        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT);
+        mSearchHistoryList.clear();
+        getView().updateSearchHistoryList(mSearchHistoryList);
     }
 }

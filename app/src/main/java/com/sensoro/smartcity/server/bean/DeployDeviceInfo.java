@@ -5,44 +5,6 @@ import java.util.List;
 
 public class DeployDeviceInfo implements Serializable {
 
-    /**
-     * sn : 01A01117C6DD7F31
-     * owners : 590c235044aa4369905d455b
-     * appId : 50I35FhvOAw9
-     * deviceType : smoke
-     * unionType : smoke
-     * malfunctionData : {}
-     * name : 测试
-     * interval : 8000
-     * hardwareVersion : 0103
-     * updatedTime : 1542180300799
-     * lastUpdatedTime : 2018-11-14T07:24:56.933Z
-     * msgId : 5bebcdccaf501c00118b6ac4
-     * entityNameExist : false
-     * createTime : 1541490923991
-     * deployFlag : true
-     * relationTime : 1541490923991
-     * other : {}
-     * signal : good
-     * hitsRecords : []
-     * malfunctionRecords : []
-     * alarmsRecords : [{"alarmStatus":1,"sensorTypes":"smoke","_id":"5bebcdccb0102c588b0f76e1"},{"alarmStatus":1,"sensorTypes":"battery","_id":"5bebcdccb0102c588b0f76e0"}]
-     * error : {"status":false}
-     * selfCheckStatus : false
-     * malfunctionStatus : 1
-     * alarmStatus : 1
-     * status : 1
-     * alarms : {"createTime":"2018-11-06T07:55:23.991Z","notification":{"contact":"测试","content":"13111111111","types":"phone"},"battery":[{"thresholds":5,"conditionType":"lt","sensorTypes":"battery","_id":"5be1490a7d2d240259223eb9"}],"rules":[{"_id":"5beb951975070047467baaf7","thresholds":0,"sensorTypes":"smoke","conditionType":"gt"}],"mappingList":[],"mapping":[]}
-     * lonlat : [116.45470867013012,39.983445691394984]
-     * tags : ["测试"]
-     * sensorData : {"smoke":false,"battery":100,"interval":8000}
-     * sensorTypes : ["smoke"]
-     * id : 5be148eb2d6a0d7a5b3ccadc
-     * mergeType : smoke
-     * _updatedTime : 2018-11 - 14 15: 25: 00
-     * band : SE470
-     * blePassword : zZgiiHlU2di)kiJp
-     */
 
     private String sn;
     private String owners;

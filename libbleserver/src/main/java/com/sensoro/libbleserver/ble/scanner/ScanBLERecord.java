@@ -17,6 +17,7 @@
 package com.sensoro.libbleserver.ble.scanner;
 
 import android.os.ParcelUuid;
+import android.support.annotation.Nullable;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.SparseArray;
@@ -51,6 +52,7 @@ public final class ScanBLERecord {
     // Flags of the advertising data.
     private final int mAdvertiseFlags;
 
+    @Nullable
     private final List<ParcelUuid> mServiceUuids;
 
     private final SparseArray<byte[]> mManufacturerSpecificData;
@@ -94,6 +96,7 @@ public final class ScanBLERecord {
      * Returns the manufacturer specific data associated with the manufacturer id. Returns
      * {@code null} if the {@code manufacturerId} is not found.
      */
+    @Nullable
     public byte[] getManufacturerSpecificData(int manufacturerId) {
         return mManufacturerSpecificData.get(manufacturerId);
     }
@@ -109,6 +112,7 @@ public final class ScanBLERecord {
      * Returns the service data byte array associated with the {@code serviceUuid}. Returns
      * {@code null} if the {@code serviceDataUuid} is not found.
      */
+    @Nullable
     public byte[] getServiceData(ParcelUuid serviceDataUuid) {
         if (serviceDataUuid == null) {
             return null;
@@ -130,6 +134,7 @@ public final class ScanBLERecord {
     /**
      * Returns the local name of the BLE device. The is a UTF-8 encoded string.
      */
+    @Nullable
     public String getDeviceName() {
         return mDeviceName;
     }
@@ -177,8 +182,8 @@ public final class ScanBLERecord {
         String localName = null;
         int txPowerLevel = Integer.MIN_VALUE;
 
-        SparseArray<byte[]> manufacturerData = new SparseArray<byte[]>();
-        Map<ParcelUuid, byte[]> serviceData = new ArrayMap<ParcelUuid, byte[]>();
+        SparseArray<byte[]> manufacturerData = new SparseArray<>();
+        Map<ParcelUuid, byte[]> serviceData = new ArrayMap<>();
 
         try {
             while (currentPos < ScanBLERecord.length) {

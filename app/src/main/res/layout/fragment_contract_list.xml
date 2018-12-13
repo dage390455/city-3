@@ -137,6 +137,8 @@
             </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
             <include layout="@layout/item_no_content" />
+
+            <include layout="@layout/item_include_search_history_rv"/>
         </RelativeLayout>
     </LinearLayout>
 

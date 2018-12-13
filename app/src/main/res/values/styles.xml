@@ -125,6 +125,11 @@
         <item name="android:windowExitAnimation">@anim/anim_pop_up_dismiss</item>
     </style>
 
+    <style name="PopWindowAlphaAnim" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/anim_pop_alpha_show</item>
+        <item name="android:windowExitAnimation">@anim/anim_pop_alpha_dismiss</item>
+    </style>
+
     <!--Theme_Holo_Light_NoActionBar-->
     <style name="DialogFragmentThem" parent="@android:style/Theme.Holo.Light.NoActionBar">
         <item name="android:windowAnimationStyle">@style/DialogFragmentDropDownAnim</item>
@@ -133,7 +138,7 @@
     <style name="CustomCornerDialogStyle" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <item name="android:windowIsFloating">true</item>
-        <item name="android:windowIsTranslucent">false</item>
+        <item name="android:windowIsTranslucent">true</item>
         <item name="android:windowNoTitle">true</item>
         <item name="android:background">@android:color/transparent</item>
         <item name="android:windowBackground">@android:color/transparent</item>
@@ -177,6 +182,13 @@
         <item name="android:textColor">@color/c_252525</item>
         <item name="android:textSize">12sp</item>
         <item name="android:gravity">center</item>
+    </style>
+    
+    <style name="style_network_dialog" parent="Base.Theme.AppCompat.Dialog">
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowIsFloating">true</item>
     </style>
 
 </resources>

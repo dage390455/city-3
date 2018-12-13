@@ -5,25 +5,6 @@ import java.util.List;
 
 public class DeployRecordInfo implements Serializable {
 
-    /**
-     * _id : 01A01117C6E8055E
-     * id : 5bc9579ff25c5515e9848697
-     * count : 54
-     * sn : 01A01117C6E8055E
-     * deviceName : 望京SOHO园区T1大厦2807
-     * tags : ["刘为强专用"]
-     * createdTime : 1539921823092
-     * deployStaff : 张若南
-     * notification : {"contact":"刘为强","content":"17876856915"}
-     * signalQuality : 无信号
-     * lonlat : [116.48085081984655,39.99690791008479]
-     * deviceType : smoke
-     * deployPics : ["https://resource-city.sensoro.com/543f542ab2c7f655b1515492242fb78b"]
-     * deviceOwners : 590c235044aa4369905d455b
-     * owners : 5b3ae7e3f84e8db53531076a
-     * appId : 50I35FhvOAw9
-     * unionType : smoke
-     */
 
     private String _id;
     private String id;
@@ -39,9 +20,19 @@ public class DeployRecordInfo implements Serializable {
     private String owners;
     private String appId;
     private String unionType;
+    private String wxPhone;
     private List<String> tags;
     private List<Double> lonlat;
     private List<String> deployPics;
+
+
+    public String getWxPhone() {
+        return wxPhone;
+    }
+
+    public void setWxPhone(String wxPhone) {
+        this.wxPhone = wxPhone;
+    }
 
     public String get_id() {
         return _id;
@@ -179,7 +170,7 @@ public class DeployRecordInfo implements Serializable {
         this.deployPics = deployPics;
     }
 
-    public static class NotificationBean implements Serializable{
+    public static class NotificationBean implements Serializable {
         /**
          * contact : 刘为强
          * content : 17876856915

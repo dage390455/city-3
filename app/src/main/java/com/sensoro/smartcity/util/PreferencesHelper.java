@@ -7,11 +7,15 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -71,6 +75,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
         editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasBadSignalUpload);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
         //
         editor.apply();
     }
@@ -101,6 +106,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
             boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
             boolean hasBadSignalUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
+            boolean hasDevicePositionCalibration = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -123,6 +129,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasSignalCheck = hasDeviceSignalCheck;
             eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
             eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
+            eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;
@@ -200,8 +207,16 @@ public final class PreferencesHelper implements Constants {
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, history).apply();
     }
 
+    public void saveDeployWeChatRelationHistory(String history) {
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, history).apply();
+    }
+
     public String getDeployNameAddressHistory() {
         return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, null);
+    }
+
+    public String getDeployWeChatRelationHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, null);
     }
 
     public void saveDeployTagsHistory(String hisory) {
@@ -254,5 +269,97 @@ public final class PreferencesHelper implements Constants {
             editor.apply();
         }
 
+    }
+
+    public boolean saveSearchHistoryText(String text, int type) {
+        String spFileName = getSearchHistoryFileName(type);
+        if (TextUtils.isEmpty(spFileName) || TextUtils.isEmpty(text)) {
+            return false;
+        }
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(spFileName, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor edit = sp.edit();
+        String oldText = sp.getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+        //
+        List<String> oldHistoryList = new ArrayList<String>();
+        if (!TextUtils.isEmpty(oldText)) {
+            oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
+        }
+        oldHistoryList.remove(text);
+        oldHistoryList.add(0, text);
+        ArrayList<String> tempList = new ArrayList<>();
+        for (String str : oldHistoryList) {
+            if (tempList.size() < 20) {
+                tempList.add(str);
+            }
+        }
+        StringBuilder stringBuilder = new StringBuilder();
+        for (int i = 0; i < tempList.size(); i++) {
+            if (i == (tempList.size() - 1)) {
+                stringBuilder.append(tempList.get(i));
+            } else {
+                stringBuilder.append(tempList.get(i)).append(",");
+            }
+        }
+        edit.putString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, stringBuilder.toString());
+        edit.apply();
+        return true;
+
+    }
+
+    private String getSearchHistoryFileName(int type) {
+        String spFileName = null;
+        switch (type) {
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_WARN;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_MALFUNCTION;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_INSPECTION;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_CONTRACT:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_CONTRACT;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MERCHANT:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_MERCHANT;
+                break;
+            case SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_DEPLOY_RECORD:
+                spFileName = SearchHistoryTypeConstants.SP_FILE_DEPLOY_RECORD;
+                break;
+        }
+        return spFileName;
+    }
+
+    public boolean clearSearchHistory(int type) {
+        String spFileName = getSearchHistoryFileName(type);
+        if (TextUtils.isEmpty(spFileName)) {
+            return false;
+        }
+
+        SharedPreferences.Editor editor = SensoroCityApplication.getInstance().getSharedPreferences(spFileName, Context
+                .MODE_PRIVATE).edit();
+        editor.clear();
+        editor.apply();
+        return true;
+
+    }
+
+    public List<String> getSearchHistoryData(int type) {
+        String spFileName = getSearchHistoryFileName(type);
+        if (TextUtils.isEmpty(spFileName)) {
+            return null;
+        }
+
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(spFileName, Context
+                .MODE_PRIVATE);
+        String oldText = sp.getString(SearchHistoryTypeConstants.SEARCH_HISTORY_KEY, "");
+        //
+        List<String> oldHistoryList = new ArrayList<String>();
+        if (!TextUtils.isEmpty(oldText)) {
+            oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
+        }
+        return oldHistoryList;
     }
 }

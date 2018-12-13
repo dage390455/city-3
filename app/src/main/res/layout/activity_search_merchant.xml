@@ -6,67 +6,105 @@
     android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
-    <RelativeLayout
-        android:id="@+id/search_merchant_top_rl"
+    <LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/fg_main_top_search_title_root"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white">
+        android:background="@color/white"
+        android:orientation="vertical">
 
-        <ImageView
-            android:id="@+id/search_merchant_device_icon"
-            android:layout_width="@dimen/x60"
-            android:layout_height="@dimen/y60"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/x30"
-            android:adjustViewBounds="true"
-            android:cropToPadding="true"
-            android:src="@mipmap/ic_search" />
 
-        <EditText
-            android:id="@+id/search_merchant_et"
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="@dimen/y130"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/x10"
-            android:layout_toLeftOf="@+id/search_merchant_cancel_tv"
-            android:layout_toRightOf="@+id/search_merchant_device_icon"
-            android:background="@null"
-            android:drawablePadding="@dimen/x30"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:gravity="left|center_vertical"
-            android:hint="@string/name_phone"
-            android:imeOptions="actionSearch"
-            android:paddingLeft="@dimen/x20"
-            android:paddingRight="@dimen/x30"
-            android:singleLine="true"
-            android:textSize="14sp" />
-
-        <ImageView
-            android:id="@+id/search_merchant_clear_iv"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@id/search_merchant_et"
-            android:layout_centerVertical="true"
-            android:padding="8dp"
-            android:src="@mipmap/ic_et_delete"
-            android:visibility="gone" />
+            android:layout_marginBottom="12dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="20dp"
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/search_merchant_cancel_tv"
-            android:layout_width="wrap_content"
+            <RelativeLayout
+                android:id="@+id/fg_main_top_search_frame_search"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                android:background="@drawable/shape_bg_full_corner">
+                <ImageView
+                    android:id="@+id/fg_main_top_search_imv_clear"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="6dp"
+                    android:padding="7dp"
+                    android:scaleType="centerCrop"
+                    android:contentDescription="@null"
+                    android:src="@drawable/search_monitor_clear_search"
+                    android:visibility="gone" />
+
+                <EditText
+                    android:id="@+id/fg_main_top_search_et_search"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginBottom="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginTop="8dp"
+                    android:background="@null"
+                    android:drawablePadding="8dp"
+                    android:imeOptions="actionSearch"
+                    android:singleLine="true"
+                    android:layout_toStartOf="@id/fg_main_top_search_imv_clear"
+                    android:textColorHint="@color/c_a6a6a6"
+                    android:drawableStart="@drawable/main_search"
+                    android:hint="@string/warn_fragment_search_tip"
+                    android:textColor="@color/c_252525"
+                    android:textSize="12sp" />
+
+            </RelativeLayout>
+            <TextView
+                android:id="@+id/tv_top_search_alarm_search_cancel"
+                android:layout_gravity="center_vertical"
+                android:layout_width="wrap_content"
+                android:padding="10dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/c_252525"
+                android:text="@string/cancel"/>
+
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/fg_main_top_search_rl_date_edit"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@android:color/transparent"
-            android:paddingLeft="15dp"
-            android:paddingTop="14dp"
-            android:paddingRight="14dp"
-            android:paddingBottom="14dp"
-            android:text="@string/cancel"
-            android:textColor="@color/c_626262"
-            android:textSize="13sp" />
-    </RelativeLayout>
+            android:layout_marginEnd="10dp"
+            android:layout_marginStart="20dp"
+            android:background="@color/white"
+            android:visibility="gone">
+
+            <TextView
+                android:id="@+id/fg_main_top_search_tv_date_edit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/y30"
+                android:layout_marginEnd="@dimen/x45"
+                android:layout_marginTop="@dimen/y30"
+                android:textSize="@dimen/x54" />
+
+            <ImageView
+                android:id="@+id/fg_main_warn_top_search_date_close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_alignTop="@+id/fg_main_top_search_tv_date_edit"
+                android:contentDescription="@null"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@mipmap/ic_close" />
+        </RelativeLayout>
+    </LinearLayout>
 
     <View
         android:layout_width="match_parent"
@@ -165,8 +203,9 @@
         android:id="@+id/search_merchant_history_ll"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/white"
         android:orientation="vertical"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:visibility="visible">
 
         <RelativeLayout
@@ -181,7 +220,7 @@
                 android:layout_marginLeft="@dimen/x45"
                 android:layout_marginTop="@dimen/y60"
                 android:text="@string/recent"
-                android:textColor="@color/c_626262"
+                android:textColor="@color/c_252525"
                 android:layout_centerVertical="true"
                 android:textSize="15sp" />
 
@@ -191,7 +230,7 @@
                 android:layout_height="@dimen/y60"
                 android:layout_alignParentRight="true"
                 android:layout_marginTop="@dimen/y20"
-                android:src="@mipmap/ic_rubbish"
+                android:src="@drawable/clear_cache"
                 android:text="@string/clear"
                 android:layout_centerVertical="true"
                 android:textSize="12sp"

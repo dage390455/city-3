@@ -14,7 +14,6 @@ import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
-import com.sensoro.smartcity.activity.MonitorMoreActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
@@ -22,19 +21,22 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointDetailActivityView;
-import com.sensoro.smartcity.iwidget.IOnStart;
+import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmsRecord;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.bean.SensorStruct;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
+import com.sensoro.smartcity.server.response.DeployRecordRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
 import com.sensoro.smartcity.server.response.MonitorPointOperationRequestRsp;
 import com.sensoro.smartcity.util.AppUtils;
@@ -42,6 +44,9 @@ import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
+import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
+import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.imagepicker.ui.ImagePreviewDelActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -57,13 +62,14 @@ import java.util.Set;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorPointDetailActivityView> implements IOnStart, Constants, GeocodeSearch.OnGeocodeSearchListener {
+public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorPointDetailActivityView> implements IOnCreate, Constants, GeocodeSearch.OnGeocodeSearchListener {
     private Activity mContext;
     private DeviceInfo mDeviceInfo;
 
     private String content;
     private boolean hasPhoneNumber;
     private String mScheduleNo;
+    private GeocodeSearch geocoderSearch;
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private final Runnable DeviceTaskOvertime = new Runnable() {
         @Override
@@ -79,7 +85,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
+        onCreate();
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
+        geocoderSearch = new GeocodeSearch(mContext);
+        geocoderSearch.setOnGeocodeSearchListener(this);
         requestDeviceRecentLog();
     }
 
@@ -165,29 +174,42 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             getView().setContractName(contact);
             getView().setContractPhone(content);
         }
-        getView().setUpdateTime(DateUtil.getStrTimeToday(mContext, mDeviceInfo.getUpdatedTime(), 0));
+        long updatedTime = mDeviceInfo.getUpdatedTime();
+        if (updatedTime == 0) {
+            getView().setUpdateTime("-");
+        } else {
+            getView().setUpdateTime(DateUtil.getStrTimeTodayByDevice(mContext, updatedTime));
+        }
         String tags[] = mDeviceInfo.getTags();
         if (tags != null && tags.length > 0) {
             List<String> list = Arrays.asList(tags);
             getView().updateTags(list);
 
         }
-        SensorStruct batteryStruct = mDeviceInfo.getSensoroDetails().get("battery");
-        if (batteryStruct != null) {
-            String battery = batteryStruct.getValue().toString();
-            if (battery.equals("-1.0") || battery.equals("-1")) {
-                getView().setBatteryInfo(mContext.getString(R.string.power_supply));
-            } else {
-                getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
+        Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
+        if (sensoroDetails != null) {
+            SensorStruct batteryStruct = sensoroDetails.get("battery");
+            if (batteryStruct != null) {
+                String battery = batteryStruct.getValue().toString();
+                if (battery.equals("-1.0") || battery.equals("-1")) {
+                    getView().setBatteryInfo(mContext.getString(R.string.power_supply));
+                } else {
+                    getView().setBatteryInfo(WidgetUtil.subZeroAndDot(battery) + "%");
+                }
             }
         }
-        int interval = mDeviceInfo.getInterval();
-        getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
+
+        Integer interval = mDeviceInfo.getInterval();
+        if (interval != null) {
+            getView().setInterval(DateUtil.secToTimeBefore(mContext, interval));
+        }
+
     }
 
     private void refreshOperationStatus() {
         boolean isContains = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType());
         getView().setDeviceOperationVisible(isContains);
+        //
         getView().setErasureStatus(false);
         getView().setResetStatus(false);
         getView().setPsdStatus(true);
@@ -196,7 +218,9 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().setAirSwitchConfigStatus(true);
         if (isContains) {
             switch (mDeviceInfo.getStatus()) {
+                //故障和预警显示消音复位
                 case SENSOR_STATUS_ALARM:
+                case SENSOR_STATUS_MALFUNCTION:
                     getView().setErasureStatus(true);
                     getView().setResetStatus(true);
                     break;
@@ -209,8 +233,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     getView().setSelfCheckStatus(false);
                     getView().setAirSwitchConfigStatus(false);
                     break;
-                case SENSOR_STATUS_MALFUNCTION:
-                    break;
                 default:
                     break;
             }
@@ -218,8 +240,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
     }
 
     private void freshLocationDeviceInfo() {
-        GeocodeSearch geocoderSearch = new GeocodeSearch(mContext);
-        geocoderSearch.setOnGeocodeSearchListener(this);
         double[] lonlat = mDeviceInfo.getLonlat();
         try {
             double v = lonlat[1];
@@ -245,7 +265,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().showProgressDialog();
         //合并请求
         RetrofitServiceHelper.INSTANCE.getDeviceDetailInfoList(sn, null, 1).subscribeOn(Schedulers.io()).observeOn
-                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>() {
+                (AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
             @Override
             public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
                 if (deviceInfoListRsp.getData().size() > 0) {
@@ -263,6 +283,35 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 getView().toastShort(errorMsg);
             }
         });
+        //静默拉取图片记录内容
+        RetrofitServiceHelper.INSTANCE.getDeployRecordList(mDeviceInfo.getSn(), null, null, null, null, null, 1, 0, true).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
+            @Override
+            public void onCompleted(DeployRecordRsp recordRsp) {
+                List<DeployRecordInfo> data = recordRsp.getData();
+                if (data != null && data.size() > 0) {
+                    DeployRecordInfo deployRecordInfo = data.get(0);
+                    if (deployRecordInfo != null) {
+                        List<String> deployPics = deployRecordInfo.getDeployPics();
+                        if (deployPics != null) {
+                            ArrayList<ScenesData> list = new ArrayList<>();
+                            for (String url : deployPics) {
+                                ScenesData scenesData = new ScenesData();
+                                scenesData.url = url;
+                                list.add(scenesData);
+                            }
+                            getView().updateMonitorPhotos(list);
+                        }
+                    }
+                }
+
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().toastShort(errorMsg);
+            }
+        });
 
     }
 
@@ -274,24 +323,25 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 if (mDeviceInfo != null) {
                     if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
-                        Set<String> keySet = malfunctionData.keySet();
-                        ArrayList<String> keyList = new ArrayList<>();
-                        for (String key : keySet) {
-                            if (!keyList.contains(key)) {
-                                keyList.add(key);
+                        if (malfunctionData != null) {
+                            Set<String> keySet = malfunctionData.keySet();
+                            ArrayList<String> keyList = new ArrayList<>();
+                            for (String key : keySet) {
+                                if (!keyList.contains(key)) {
+                                    keyList.add(key);
+                                }
+                            }
+                            Collections.sort(keyList);
+                            for (String key : keyList) {
+                                MalfunctionDataBean malfunctionDataBean = malfunctionData.get(key);
+                                MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
+                                monitoringPointRcContentAdapterModel.name = "故障成因";
+                                monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
+                                monitoringPointRcContentAdapterModel.content = malfunctionDataBean.getDescription();
+                                uiData.add(monitoringPointRcContentAdapterModel);
+                                LogUtils.loge("故障成因：key = " + key + "value = " + malfunctionDataBean.getDescription());
                             }
                         }
-                        Collections.sort(keyList);
-                        for (String key : keyList) {
-                            MalfunctionDataBean malfunctionDataBean = malfunctionData.get(key);
-                            MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
-                            monitoringPointRcContentAdapterModel.name = "故障成因";
-                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
-                            monitoringPointRcContentAdapterModel.content = malfunctionDataBean.getDescription();
-                            uiData.add(monitoringPointRcContentAdapterModel);
-                            LogUtils.loge("故障成因：key = " + key + "value = " + malfunctionDataBean.getDescription());
-                        }
-
                     }
                     //
                     String[] sensorTypes = mDeviceInfo.getSensorTypes();
@@ -310,35 +360,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                     } else {
                                         monitoringPointRcContentAdapterModel.name = name;
                                     }
-                                    boolean bool = sensorTypeStyles.isBool();
-                                    SensorStruct sensorStruct = sensoroDetails.get(type);
-                                    if (sensorStruct != null) {
-                                        Object value = sensorStruct.getValue();
-                                        if (value != null) {
-                                            if (bool) {
-                                                if (value instanceof Boolean) {
-                                                    String trueMean = sensorTypeStyles.getTrueMean();
-                                                    String falseMean = sensorTypeStyles.getFalseMean();
-                                                    if ((Boolean) value) {
-                                                        if (!TextUtils.isEmpty(trueMean)) {
-                                                            monitoringPointRcContentAdapterModel.content = trueMean;
-                                                        }
-                                                    } else {
-                                                        if (!TextUtils.isEmpty(falseMean)) {
-                                                            monitoringPointRcContentAdapterModel.content = falseMean;
-                                                        }
-                                                    }
-
-                                                }
-                                            } else {
-                                                String unit = sensorTypeStyles.getUnit();
-                                                if (!TextUtils.isEmpty(unit)) {
-                                                    monitoringPointRcContentAdapterModel.unit = unit;
-                                                }
-                                                WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, type, value);
-                                            }
-                                        }
-                                    }
+                                    //
                                     int status = mDeviceInfo.getStatus();
                                     switch (status) {
                                         case SENSOR_STATUS_ALARM:
@@ -389,7 +411,39 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                         default:
                                             break;
                                     }
-                                    uiData.add(monitoringPointRcContentAdapterModel);
+                                    boolean bool = sensorTypeStyles.isBool();
+                                    SensorStruct sensorStruct = sensoroDetails.get(type);
+                                    if (sensorStruct != null) {
+                                        Object value = sensorStruct.getValue();
+                                        if (value != null) {
+                                            if (bool) {
+                                                if (value instanceof Boolean) {
+                                                    String trueMean = sensorTypeStyles.getTrueMean();
+                                                    String falseMean = sensorTypeStyles.getFalseMean();
+                                                    if ((Boolean) value) {
+                                                        if (!TextUtils.isEmpty(trueMean)) {
+                                                            monitoringPointRcContentAdapterModel.content = trueMean;
+                                                        }
+                                                    } else {
+                                                        if (!TextUtils.isEmpty(falseMean)) {
+                                                            monitoringPointRcContentAdapterModel.content = falseMean;
+                                                        }
+                                                    }
+
+                                                }
+                                            } else {
+                                                String unit = sensorTypeStyles.getUnit();
+                                                if (!TextUtils.isEmpty(unit)) {
+                                                    monitoringPointRcContentAdapterModel.unit = unit;
+                                                }
+                                                WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, type, value);
+                                            }
+                                        }
+                                        //只在有数据时进行显示
+                                        uiData.add(monitoringPointRcContentAdapterModel);
+                                    }
+
+
                                 }
                             }
 
@@ -409,15 +463,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     }
 
-    @Override
-    public void onStart() {
-        EventBus.getDefault().register(this);
-    }
-
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
@@ -427,16 +472,20 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
                     final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
-                    if (pushDeviceInfo.getSn().equals(mDeviceInfo.getSn())) {
+                    if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
                         if (AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
                                     if (getView() != null) {
-                                        mDeviceInfo = pushDeviceInfo;
-                                        freshLocationDeviceInfo();
-                                        freshTopData();
-                                        handleDeviceInfoAdapter();
+                                        mDeviceInfo.cloneSocketData(pushDeviceInfo);
+                                        // 单项数值设置
+                                        if (getView() != null) {
+                                            freshLocationDeviceInfo();
+                                            freshTopData();
+                                            handleDeviceInfoAdapter();
+                                        }
+
                                     }
                                 }
                             });
@@ -459,8 +508,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                         public void run() {
                                             if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
                                                 mHandler.removeCallbacks(DeviceTaskOvertime);
-                                                getView().dismissOperatingLoadingDialog();
-                                                getView().showOperationSuccessToast();
+                                                if (getView() != null) {
+                                                    getView().dismissOperatingLoadingDialog();
+                                                    getView().showOperationSuccessToast();
+                                                }
                                             }
                                         }
                                     });
@@ -471,11 +522,32 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                     }
                 }
                 break;
+            case EVENT_DATA_DEVICE_POSITION_CALIBRATION:
+                if (data instanceof DeviceInfo) {
+                    final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
+                    if (pushDeviceInfo.getSn().equals(mDeviceInfo.getSn())) {
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (getView() != null) {
+                                    mDeviceInfo.cloneSocketData(pushDeviceInfo);
+                                    freshLocationDeviceInfo();
+                                    freshTopData();
+                                    handleDeviceInfoAdapter();
+                                }
+                            }
+                        });
+                    }
+                }
+
+                break;
+
         }
     }
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -496,18 +568,16 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
     }
 
-    public void doMore() {
-        Intent intent = new Intent(mContext, MonitorMoreActivity.class);
-        intent.putExtra(EXTRA_SENSOR_SN, mDeviceInfo.getSn());
-        getView().startAC(intent);
-    }
-
     public void doNavigation() {
         double[] lonlat = mDeviceInfo.getLonlat();
-
-        double v = lonlat[1];
-        double v1 = lonlat[0];
-        if (lonlat.length > 1 && v == 0 || v1 == 0) {
+        if (lonlat.length == 2) {
+            double v = lonlat[1];
+            double v1 = lonlat[0];
+            if (v == 0 || v1 == 0) {
+                getView().toastShort(mContext.getString(R.string.location_information_not_set));
+                return;
+            }
+        } else {
             getView().toastShort(mContext.getString(R.string.location_information_not_set));
             return;
         }
@@ -588,7 +658,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
         RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec)
-                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>() {
+                .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
                 String scheduleNo = response.getScheduleNo();
@@ -615,5 +685,31 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             }
         });
 
+    }
+
+    @Override
+    public void onCreate() {
+        EventBus.getDefault().register(this);
+    }
+
+    public void toPhotoDetail(int position, List<ScenesData> images) {
+        if (images.size() > 0) {
+            ArrayList<ImageItem> items = new ArrayList<>();
+            for (ScenesData scenesData : images) {
+                ImageItem imageItem = new ImageItem();
+                imageItem.isRecord = false;
+                imageItem.fromUrl = true;
+                imageItem.path = scenesData.url;
+                items.add(imageItem);
+            }
+            Intent intentPreview = new Intent(mContext, ImagePreviewDelActivity.class);
+            intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
+            intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
+            intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
+            intentPreview.putExtra(EXTRA_JUST_DISPLAY_PIC, true);
+            getView().startACForResult(intentPreview, REQUEST_CODE_PREVIEW);
+        } else {
+            getView().toastShort(mContext.getString(R.string.no_photos_added));
+        }
     }
 }

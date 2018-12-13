@@ -13,7 +13,7 @@ import com.sensoro.smartcity.activity.AuthActivity;
 import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
-import com.sensoro.smartcity.factory.MenuPageFactory;
+import com.sensoro.smartcity.factory.UserPermissionFactory;
 import com.sensoro.smartcity.imainviews.ILoginView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
@@ -27,6 +27,7 @@ import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.bean.UserInfo;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
 import com.sensoro.smartcity.server.response.LoginRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.tencent.bugly.beta.Beta;
@@ -51,6 +52,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         Beta.checkUpgrade(false, false);
         readLoginData();
         initSeverUrl();
+        AppUtils.addToPhoneContact(mContext, "升哲安全服务", "（0570）2296646");
     }
 
     private void readLoginData() {
@@ -122,7 +124,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                     PreferencesHelper.getInstance().saveLoginNamePwd(account, pwd);
                     //
                     UserInfo userInfo = loginRsp.getData();
-                    EventLoginData loginData = MenuPageFactory.createLoginData(userInfo, phoneId);
+                    EventLoginData loginData = UserPermissionFactory.createLoginData(userInfo, phoneId);
                     if (loginData.needAuth) {
                         openNextActivity(loginData);
                         return;
@@ -202,7 +204,6 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
 //        Object data = eventData.data;
         switch (code) {

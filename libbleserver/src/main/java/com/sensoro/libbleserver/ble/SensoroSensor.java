@@ -3,13 +3,16 @@ package com.sensoro.libbleserver.ble;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.sensoro.libbleserver.ble.bean.SensoroAcrelFires;
+import com.sensoro.libbleserver.ble.bean.SensoroCayManData;
+
 import java.io.Serializable;
 
 /**
  * Created by sensoro on 17/1/19.
  */
 
-public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneable {
+public class SensoroSensor extends BLEDevice implements Parcelable, Cloneable {
 
 
     public SensoroData temperature;// 温度
@@ -46,6 +49,8 @@ public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneabl
     public SensoroData multiTemperature;
     public SensoroFireData elecFireData;
     public SensoroMantunData mantunData;
+    public SensoroAcrelFires acrelFires;// 安科瑞三相电
+    public SensoroCayManData cayManData;//嘉德 自研烟感
     //
     public boolean hasAccelerometerCount;
     public boolean hasAngle;
@@ -81,11 +86,13 @@ public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneabl
     public boolean hasMethane;
     public boolean hasFireData;
     public boolean hasMantunData;
+    public boolean hasAcrelFires;
+    public boolean hasCayMan;
 
-    public SensoroSensorTest() {
+    public SensoroSensor() {
     }
 
-    protected SensoroSensorTest(Parcel in) {
+    protected SensoroSensor(Parcel in) {
         super(in);
         temperature = (SensoroData) in.readSerializable();
         o3 = (SensoroData) in.readSerializable();
@@ -124,6 +131,16 @@ public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneabl
         if(mantun instanceof SensoroMantunData){
             mantunData = (SensoroMantunData) mantun;
         }
+
+        Serializable  acrelFir = in.readSerializable();
+        if(acrelFir instanceof SensoroAcrelFires){
+            acrelFires = (SensoroAcrelFires) acrelFir;
+        }
+
+        Serializable cayMan = in.readSerializable();
+        if (cayMan instanceof SensoroCayManData) {
+            cayManData = (SensoroCayManData)cayMan;
+        }
         customize = in.createByteArray();
         hasAccelerometerCount = in.readByte() != 0;
         hasAngle = in.readByte() != 0;
@@ -159,6 +176,8 @@ public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneabl
         hasMethane = in.readByte() != 0;
         hasFireData = in.readByte() != 0;
         hasMantunData = in.readByte() != 0;
+        hasAcrelFires = in.readByte() != 0;
+        hasCayMan = in.readByte() != 0;
     }
 
     @Override
@@ -199,6 +218,8 @@ public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneabl
         parcel.writeSerializable(waterPressure);
         parcel.writeSerializable(elecFireData);
         parcel.writeSerializable(mantunData);
+        parcel.writeSerializable(acrelFires);
+        parcel.writeSerializable(cayManData);
         parcel.writeSerializable(multiTemperature);
         parcel.writeByteArray(customize);
         parcel.writeByte((byte) (hasAccelerometerCount ? 1 : 0));
@@ -235,26 +256,28 @@ public class SensoroSensorTest extends BLEDevice implements Parcelable, Cloneabl
         parcel.writeByte((byte) (hasMethane ? 1 : 0));
         parcel.writeByte((byte) (hasFireData ? 1 : 0));
         parcel.writeByte((byte)(hasMantunData?1:0));
+        parcel.writeByte((byte)(hasAcrelFires?1:0));
+        parcel.writeByte((byte)(hasCayMan?1:0));
     }
 
-    public static final Creator<SensoroSensorTest> CREATOR = new Creator<SensoroSensorTest>() {
+    public static final Creator<SensoroSensor> CREATOR = new Creator<SensoroSensor>() {
 
         @Override
-        public SensoroSensorTest createFromParcel(Parcel parcel) {
-            return new SensoroSensorTest(parcel);
+        public SensoroSensor createFromParcel(Parcel parcel) {
+            return new SensoroSensor(parcel);
         }
 
         @Override
-        public SensoroSensorTest[] newArray(int size) {
-            return new SensoroSensorTest[size];
+        public SensoroSensor[] newArray(int size) {
+            return new SensoroSensor[size];
         }
     };
 
     @Override
-    public SensoroSensorTest clone() throws CloneNotSupportedException {
-        SensoroSensorTest newSensor = null;
+    public SensoroSensor clone() throws CloneNotSupportedException {
+        SensoroSensor newSensor = null;
         try {
-            newSensor = (SensoroSensorTest) super.clone();
+            newSensor = (SensoroSensor) super.clone();
         } catch (CloneNotSupportedException e) {
             e.printStackTrace();
         }

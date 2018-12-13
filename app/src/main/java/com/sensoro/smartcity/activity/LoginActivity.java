@@ -78,6 +78,12 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         mPermissionUtils.requestPermission();
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        FloatWindowManager.getInstance().applyOrShowFloatWindow(mActivity);
+    }
+
     private void initView() {
 
         if (acLoginEtAccount.getText().length() > 0 || acLoginEtPsd.getText().length() > 0) {
@@ -295,7 +301,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     private void updateAccountIcon(boolean isEmpty) {
         if (isEmpty) {
-            acLoginImvAccountIcon.setColorFilter(R.color.c_a6a6a6,PorterDuff.Mode.SRC_IN);
+            acLoginImvAccountIcon.setColorFilter(R.color.c_a6a6a6, PorterDuff.Mode.SRC_IN);
         } else {
             acLoginImvAccountIcon.clearColorFilter();
         }
@@ -314,7 +320,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     private void updatePsdIcon(boolean isEmpty) {
         if (isEmpty) {
-            acLoginImvPsdIcon.setColorFilter(R.color.c_a6a6a6,PorterDuff.Mode.SRC_IN);
+            acLoginImvPsdIcon.setColorFilter(R.color.c_a6a6a6, PorterDuff.Mode.SRC_IN);
         } else {
             acLoginImvPsdIcon.clearColorFilter();
         }
