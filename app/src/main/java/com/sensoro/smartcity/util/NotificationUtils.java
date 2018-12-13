@@ -25,7 +25,7 @@ public class NotificationUtils extends ContextWrapper {
     private NotificationManager manager;
     public static final String id = "channel_1";
     public static final String name = "channel_name_1";
-    private volatile int noID = 1;
+    private static volatile int noID = 1;
 //    private Class<?> aClass = MainActivity.class;
 
     public NotificationUtils(Context context) {
@@ -104,18 +104,17 @@ public class NotificationUtils extends ContextWrapper {
 //            aClass = LoginActivity.class;
 //        }
         //只在mainActivity推送通知
-        if (!isSplashACLived()) {
-            if (Build.VERSION.SDK_INT >= 26) {
-                createNotificationChannel();
-                Notification notification = getChannelNotification
-                        (content).build();
-                getManager().notify(noID++, notification);
-            } else {
-                Notification notification = getNotification_25(content).build();
-                getManager().notify(noID++, notification);
-            }
+        if (Build.VERSION.SDK_INT >= 26) {
+            createNotificationChannel();
+            Notification notification = getChannelNotification
+                    (content).build();
+            getManager().notify(noID++, notification);
+            LogUtils.loge("sendNotification -->> " + noID);
+        } else {
+            Notification notification = getNotification_25(content).build();
+            getManager().notify(noID++, notification);
+            LogUtils.loge("sendNotification -->> " + noID);
         }
-
     }
 
     private boolean isMainACLived() {
@@ -123,22 +122,6 @@ public class NotificationUtils extends ContextWrapper {
         Intent intent = new Intent();
         intent.setClassName(getPackageName(), name);
         ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (resolveInfo != null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    private boolean isSplashACLived() {
-        final String name = "com.sensoro.smartcity.activity/SplashActivity";
-        Intent intent = new Intent();
-        intent.setClassName(getPackageName(), name);
-        ResolveInfo resolveInfo = getPackageManager().resolveActivity(intent, PackageManager.MATCH_DEFAULT_ONLY);
-        if (resolveInfo != null) {
-            return false;
-        } else {
-            return true;
-        }
+        return resolveInfo == null;
     }
 }
