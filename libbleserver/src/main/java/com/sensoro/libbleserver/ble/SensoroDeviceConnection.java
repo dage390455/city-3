@@ -77,6 +77,7 @@ public class SensoroDeviceConnection {
             LogUtils.loge("连接状态改变");
             if (newState == BluetoothProfile.STATE_CONNECTED) {//连接成功
                 if (status == BluetoothGatt.GATT_SUCCESS) {
+                    handler.removeCallbacks(connectTimeoutRunnable);
                     LogUtils.loge("连接成功了");
                     if (sensoroDirectWriteDfuCallBack != null && isDfu) {
                         LogUtils.loge("可以直接升级");

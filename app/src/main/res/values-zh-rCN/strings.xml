@@ -650,7 +650,7 @@
     <string name="deploy_device_type">设备类型：</string>
     <string name="initial_configuration">初始配置</string>
     <string name="not_setting">未配置</string>
-    <string name="had_setting">已配置</string>
+    <string name="had_setting">额定电流：</string>
     <string name="deploy_pic_device_pic">设备图</string>
     <string name="deploy_pic_device_pic_tip">需能看清设备号</string>
     <string name="deploy_pic_take_photo">拍照</string>
@@ -667,4 +667,5 @@
     <string name="now_configuration">正在配置</string>
     <string name="ble_config_failed">配置失败，请重试</string>
     <string name="ble_config_success">配置成功</string>
+    <string name="deploy_has_no_configuration_tip">请先配置安装现场空气开关的额定电流</string>
 </resources>

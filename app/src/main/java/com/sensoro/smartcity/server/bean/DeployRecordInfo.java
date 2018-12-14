@@ -2,6 +2,7 @@ package com.sensoro.smartcity.server.bean;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Map;
 
 public class DeployRecordInfo implements Serializable {
 
@@ -24,8 +25,17 @@ public class DeployRecordInfo implements Serializable {
     private List<String> tags;
     private List<Double> lonlat;
     private List<String> deployPics;
+    private Map<String,DeployContralSettingData> config;
 
 
+
+    public Map<String, DeployContralSettingData> getConfig() {
+        return config;
+    }
+
+    public void setConfig(Map<String, DeployContralSettingData> config) {
+        this.config = config;
+    }
     public String getWxPhone() {
         return wxPhone;
     }

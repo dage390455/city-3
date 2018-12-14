@@ -240,8 +240,8 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
-    public void setDeployResultHasSetting(boolean setting) {
-        acDeployResultTvSetting.setText(setting ? mActivity.getString(R.string.had_setting) : mActivity.getString(R.string.not_setting));
+    public void setDeployResultHasSetting(String setting) {
+        acDeployResultTvSetting.setText(setting);
     }
 
 

@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.model;
 
+import com.sensoro.smartcity.server.bean.DeployContralSettingData;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
@@ -20,7 +21,7 @@ public class DeployAnalyzerModel implements Serializable {
     public String blePassword;
     public String deviceType;
     public int mapSourceType = 1;
-    public boolean hasSetting;
+    public DeployContralSettingData settingData;
     //
     public final List<Double> latLng = new ArrayList<>();
     //
