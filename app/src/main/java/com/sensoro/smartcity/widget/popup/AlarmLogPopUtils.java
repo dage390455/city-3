@@ -147,7 +147,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         String name = mDeviceAlarmLogInfo.getDeviceName();
         acAlertLogTvName.setText(TextUtils.isEmpty(name) ? mDeviceAlarmLogInfo.getDeviceSN() : name);
 
-        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity,mDeviceAlarmLogInfo.getUpdatedTime(), 1));
+        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity,mDeviceAlarmLogInfo.getCreatedTime(), 1));
 
         acAlertTvAlertCount.setText(mDeviceAlarmLogInfo.getDisplayStatus() + 10 + "");
 

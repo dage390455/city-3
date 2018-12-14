@@ -16,14 +16,14 @@
     <string name="not_signed">unsigned</string>
     <string name="all_contracts">all contracts</string>
     <string name="all_states">all</string>
-    <string name="community">community</string>
-    <string name="rental_house">rental property</string>
-    <string name="factory">factory</string>
-    <string name="resident_workshop">workshop</string>
-    <string name="warehouse">warehouse</string>
-    <string name="shop_storefront">store</string>
-    <string name="the_mall">mall</string>
-    <string name="the_ohter">others</string>
+    <string name="community">Community</string>
+    <string name="rental_house">Rental property</string>
+    <string name="factory">Factory</string>
+    <string name="resident_workshop">Workshop</string>
+    <string name="warehouse">Warehouse</string>
+    <string name="shop_storefront">Store</string>
+    <string name="the_mall">Mall</string>
+    <string name="the_ohter">Others</string>
     <string name="male">male</string>
     <string name="female">female</string>
     <string name="signal_excellent">Signal: Good</string>
@@ -34,7 +34,7 @@
     <string name="get_the_middle_profile">Get the configuration file</string>
     <string name="live_photo">site photos</string>
     <string name="positioned">located</string>
-    <string name="not_positioned">unlocated</string>
+    <string name="not_positioned">Unlocated</string>
     <string name="patrol_monitoring_point">Inspection Monitoring Point</string>
     <string name="inspection_content">Inspection Content</string>
     <string name="confirm_that_the_monitoring_point_is_normal">Verify the point is normal</string>
@@ -49,7 +49,7 @@
     <string name="wrong_password">Password error！</string>
     <string name="monitoring_point_details">Monitoring Point Detail</string>
     <string name="alert_log">Alarm Log</string>
-    <string name="no_contact_added">ContactUser unset</string>
+    <string name="no_contact_added">Unset</string>
     <string name="location_navigation">Location navigation</string>
     <string name="location_confirm">Position calibration</string>
     <string name="cant_find_related_content">There is not found devices temporarily</string>
@@ -126,14 +126,14 @@
     <string name="text_no_fire_alarm">No fire or smoke</string>
     <string name="text_fire_alarm_test">ALARM_TEST_DESC_TIP</string>
     <string name="text_fire_alarm_risk">There was no fire, but there were real hazards</string>
-    <string name="alarm_type_bnormal_power">abnormal power consumption</string>
+    <string name="alarm_type_bnormal_power">Abnormal power consumption</string>
     <string name="alarm_type_production_operation">Production operation</string>
-    <string name="alarm_type_smoke">smoking</string>
-    <string name="alarm_type_indoor_fire">indoor fire</string>
-    <string name="alarm_type_cooking">cooking</string>
-    <string name="alarm_type_gas_leak">gas leak</string>
-    <string name="alarm_type_artificial_arson">arson</string>
-    <string name="alarm_type_combustible_self_ignition">self-ignite</string>
+    <string name="alarm_type_smoke">Smoking</string>
+    <string name="alarm_type_indoor_fire">Indoor fire</string>
+    <string name="alarm_type_cooking">Cooking</string>
+    <string name="alarm_type_gas_leak">Gas leak</string>
+    <string name="alarm_type_artificial_arson">Arson</string>
+    <string name="alarm_type_combustible_self_ignition">Self-ignite</string>
     <string name="inspection_exception_tag_equipment_disassembly">disassembly</string>
     <string name="inspection_exception_tag_low_battery">low power</string>
     <string name="inspection_exception_tag_device_exception">abnormality</string>
@@ -182,8 +182,8 @@
     <string name="please_enter_contact_phone">Please enter the name and phone number of cotact</string>
     <string name="loading_configuration_file">Loading configuration file</string>
     <string name="must_enter_name_address">Must enter a name/address</string>
-    <string name="album">album</string>
-    <string name="take_photo">photo</string>
+    <string name="album">Album</string>
+    <string name="take_photo">Photo</string>
     <string name="no_photos_added">No photos added</string>
     <string name="continue_to_replace">Continue</string>
     <string name="continue_inspection">Continue</string>
@@ -198,7 +198,7 @@
     <string name="report_failure">Upload failure</string>
     <string name="account_no_patrol_device_permissions">Inspection is not authorized</string>
     <string name="account_does_not_have_permission_to_view_the_inspection_device_list">No permission to view the list of inspection devices</string>
-    <string name="shooting_video">video</string>
+    <string name="shooting_video">Video</string>
     <string name="abnormal_reporting_success">abnormality uploads successfully</string>
     <string name="abnormal_reporting_failure">abnormality uploads failure</string>
     <string name="please_wait">Wait a moment</string>
@@ -336,11 +336,11 @@
     <string name="alarm_contact_tip_phone">Alarm phone</string>
     <string name="alarm_contact_tip_phone_sample">e.g.18600000000</string>
     //预警日志xml
-    <string name="alarm_log_alarm_time">Alarm Time</string>
-    <string name="alarm_log_alarm_count">Count in half a year</string>
+    <string name="alarm_log_alarm_time">ALARM TIME</string>
+    <string name="alarm_log_alarm_count">COUNT IN HALF YEAR</string>
     <string name="alarm_log_malfunction_count">Malfunction number in half a year</string>
-    <string name="alarm_log_alarm_contact_owner">Contact User</string>
-    <string name="alarm_log_alarm_quick_navigation">Quick Navigation</string>
+    <string name="alarm_log_alarm_contact_owner">Contact</string>
+    <string name="alarm_log_alarm_quick_navigation">Navigation</string>
     <string name="alarm_log_alarm_warn_confirm">Confirm</string>
     <string name="alarm_log_alarm_call">"System calls to "</string>
     <string name="alarm_log_alarm_result">alarm result:</string>
@@ -511,7 +511,7 @@
     <string name="alarm_result_type">Result Type</string>
     <string name="alarm_cause_type">Reason Type</string>
     <string name="alarm_place">Place</string>
-    <string name="alarm_descript">Please describe the actual situation of the warning event</string>
+    <string name="alarm_descript">Description of the warning event</string>
     <string name="occur_alarm_event">new alarming event</string>
     <string name="look">go</string>
     <string name="monitor_point_number">Monitoring Points</string>
@@ -547,10 +547,10 @@
     <string name="go_to_setting">The necessary permission are denied</string>
     <string name="open_camera_permission">The open the camera permission</string>
     // alarm pop
-    <string name="alarm_pop_alarm_result_info_tip1">*A fire broke out at or near the monitoring station, requiring immediate action</string>
+    <string name="alarm_pop_alarm_result_info_tip1">*A fire occurs and requires immediate rescue.</string>
     <string name="alarm_pop_alarm_result_info_tip2">*There was no fire, but there were real hazards</string>
     <string name="alarm_pop_alarm_result_info_tip3">*No fire or smoke</string>
-    <string name="alarm_pop_alarm_result_info_tip4">*Relevant personnel take the initiative to test the warning issued</string>
+    <string name="alarm_pop_alarm_result_info_tip4">*Test issued warning</string>
     //上传图片 dialog
     <string name="upload_photo_dialog_append_title1">Uploading number</string>
     <string name="upload_photo_dialog_append_title2">file,total</string>
@@ -640,7 +640,7 @@
 
     <string name="upload_photo_dialog_append_title3"></string>
     <string name="monitor_point_detail_erasure">Mute</string>
-    <string name="monitor_point_detail_operation">Operation</string>
+    <string name="monitor_point_detail_operation">Operate</string>
     <string name="text_fire_alarm_empty"></string>
     <string name="main_home_menu_scan_login">Scan</string>
     <string name="legal_representative_name">Legal representative/name</string>
@@ -674,5 +674,9 @@
     <string name="now_configuration">Configuring</string>
     <string name="ble_config_failed">It is failed to configure</string>
     <string name="ble_config_success">Successful</string>
+    <string name="occur_alarmed"> alarmed</string>
+    <string name="alarm_pop_security_risks">security risk</string>
+    <string name="alarm_pop_misdescription">false alarm</string>
+    <string name="alarm_pop_test_patrol">test/inspection</string>
 
 </resources>

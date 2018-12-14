@@ -190,9 +190,9 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
     private void intData() {
         alarmResult.add(mActivity.getString(R.string.true_alarm));
-        alarmResult.add(mActivity.getString(R.string.security_risks));
-        alarmResult.add(mActivity.getString(R.string.misdescription));
-        alarmResult.add(mActivity.getString(R.string.test_patrol));
+        alarmResult.add(mActivity.getString(R.string.alarm_pop_security_risks));
+        alarmResult.add(mActivity.getString(R.string.alarm_pop_misdescription));
+        alarmResult.add(mActivity.getString(R.string.alarm_pop_test_patrol));
         //
         alarmResultInfo.add("");
         alarmResultInfo.add(mActivity.getString(R.string.alarm_pop_alarm_result_info_tip1));
