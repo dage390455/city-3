@@ -39,6 +39,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                 selImages[i] = imageList.get(i);
                 getView().displayPic(selImages, i);
             }
+            checkCanSave();
         }
 
 
@@ -95,6 +96,7 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
                     selImages[mAddPicIndex] = tempImages.get(0);
                     getView().displayPic(selImages, mAddPicIndex);
                 }
+                checkCanSave();
             }
         }
 //        else if (resultCode == ImagePicker.RESULT_CODE_BACK) {
@@ -110,8 +112,17 @@ public class DeployMonitorDeployPicPresenter extends BasePresenter<IDeployMonito
 //        }
     }
 
+    private void checkCanSave() {
+        if(selImages[0] != null && selImages[1] != null){
+            getView().setSaveBtnStatus(true);
+        }else{
+            getView().setSaveBtnStatus(false);
+        }
+    }
+
     public void deletePic(int index) {
         selImages[index] = null;
+        checkCanSave();
     }
 
     public void doSave() {

@@ -2,21 +2,54 @@
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4">
+    <include
+        android:id="@+id/ac_deploy_detail_title_root"
+        layout="@layout/item_include_text_title" />
+
+    <TextView
+        android:id="@+id/ac_deploy_device_detail_tv_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/shape_bg_solid_df_corner"
+        android:enabled="false"
+        android:gravity="center"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/deploy_device_detail_uploade"
+        android:textColor="@color/white"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/ac_deploy_device_detail_tv_upload_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/deploy_device_detail_add_all_required"
+        android:textSize="14sp"
+        android:textColor="@color/c_a6a6a6"
+        android:layout_marginStart="20dp"
+        android:layout_above="@id/ac_deploy_device_detail_tv_upload"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/white"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ac_deploy_detail_title_root"
+        android:layout_above="@id/ac_deploy_device_detail_tv_upload_tip"
         android:scrollbars="none">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:background="@color/c_f4f4f4"
             android:orientation="vertical">
-
-            <include layout="@layout/item_include_text_title" />
 
             <TextView
                 android:id="@+id/ac_deploy_device_detail_tv_device_type"
@@ -124,12 +157,23 @@
                         android:layout_marginStart="16dp"
                         android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag"
                         android:layout_toEndOf="@id/ac_deploy_device_detail_tv_tag">
+                        <TextView
+                            android:id="@+id/ac_deploy_device_detail_tv_tag_required"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/required"
+                            android:layout_centerVertical="true"
+                            android:textSize="14sp"
+                            android:visibility="visible"
+                            />
 
                         <com.sensoro.smartcity.widget.TouchRecycleView
                             android:id="@+id/ac_deploy_device_detail_rc_tag"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true">
+                            android:layout_alignParentEnd="true"
+                            android:visibility="gone">
 
                         </com.sensoro.smartcity.widget.TouchRecycleView>
                     </RelativeLayout>
@@ -170,12 +214,23 @@
                         android:layout_gravity="center_vertical"
                         android:layout_weight="1">
 
+                        <TextView
+                            android:id="@+id/ac_deploy_device_detail_tv_alarm_contact_required"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/required"
+                            android:layout_centerVertical="true"
+                            android:textSize="14sp"
+                            android:visibility="visible"
+                            />
                         <com.sensoro.smartcity.widget.TouchRecycleView
                             android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:layout_marginBottom="4dp">
+                            android:layout_marginBottom="4dp"
+                            android:visibility="gone">
 
                         </com.sensoro.smartcity.widget.TouchRecycleView>
                     </RelativeLayout>
@@ -224,7 +279,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:text="@string/not_added"
+                        android:text="@string/optional"
                         android:textColor="@color/c_a6a6a6" />
 
                     <ImageView
@@ -271,7 +326,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:text="@string/deploy_device_detail_no_added"
+                        android:text="@string/required"
                         android:textColor="@color/c_a6a6a6" />
 
                     <ImageView
@@ -352,7 +407,7 @@
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="14dp"
                         android:gravity="center_vertical"
-                        android:text="@string/not_positioned"
+                        android:text="@string/required"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -401,7 +456,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_vertical"
                         android:layout_marginStart="8dp"
-                        android:text="@string/not_setting"
+                        android:text="@string/required"
                         android:textColor="@color/c_a6a6a6" />
 
                     <ImageView
@@ -428,8 +483,10 @@
             <FrameLayout
                 android:id="@+id/fl_not_own"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@color/white">
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:visibility="gone"
+                >
 
                 <TextView
                     android:layout_width="match_parent"
@@ -447,19 +504,4 @@
     </android.support.v4.widget.NestedScrollView>
 
 
-    <TextView
-        android:id="@+id/ac_deploy_device_detail_tv_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginStart="20dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/shape_bg_corner_29c_shadow"
-        android:gravity="center"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:text="@string/deploy_device_detail_uploade"
-        android:textColor="@color/white"
-        android:textSize="16sp" />
 </RelativeLayout>

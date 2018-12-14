@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -267,13 +268,13 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     }
 
     @Override
-    public void setDeployDeviceDetailDeploySetting(boolean setting) {
-        if (setting) {
+    public void setDeployDeviceDetailDeploySetting(String setting) {
+        if (TextUtils.isEmpty(setting)) {
             acDeployDeviceDetailTvDeployRecordSetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
             acDeployDeviceDetailTvDeployRecordSetting.setText(mActivity.getString(R.string.not_setting));
         } else {
             acDeployDeviceDetailTvDeployRecordSetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-            acDeployDeviceDetailTvDeployRecordSetting.setText(mActivity.getString(R.string.had_setting));
+            acDeployDeviceDetailTvDeployRecordSetting.setText(setting);
         }
 
     }

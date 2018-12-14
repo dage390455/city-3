@@ -26,11 +26,11 @@
     <string name="the_ohter">Others</string>
     <string name="male">male</string>
     <string name="female">female</string>
-    <string name="signal_excellent">Signal: Good</string>
-    <string name="signal_good">Signal: Normal</string>
-    <string name="signal_weak">Signal: Bad</string>
-    <string name="no_signal">Signal: None</string>
-    <string name="alert_contact">Alarm Contact</string>
+    <string name="signal_excellent">Signal Good</string>
+    <string name="signal_good">Signal Normal</string>
+    <string name="signal_weak">Signal Bad</string>
+    <string name="no_signal">Signal None</string>
+    <string name="alert_contact">Alarm contact</string>
     <string name="get_the_middle_profile">Get the configuration file</string>
     <string name="live_photo">site photos</string>
     <string name="positioned">located</string>
@@ -65,14 +65,14 @@
     <string name="video">Video</string>
     <string name="prompt">tip</string>
     <string name="do_you_want_to_delete_this_video">Delete this video?</string>
-    <string name="no_one_confirmed_the_system_automatically_confirms">hour no confirm，system auto confirms as: test/inspection</string>
+    <string name="no_one_confirmed_the_system_automatically_confirms">&#160;hour no confirm，system auto confirms as: test/inspection</string>
     <string name="test_patrol">test</string>
-    <string name="security_risks">risks</string>
+    <string name="security_risks">risk</string>
     <string name="contact">Contact</string>
     <string name="back_to_normal">recovery</string>
     <string name="confirm_that_the_alert_type_app_is">confirm that the type of alarm by App</string>
     <string name="confirm_that_the_alert_type_web_is">Confirm that the type of alarm by Web</string>
-    <string name="below_the_warning_value">below the alarming value</string>
+    <string name="below_the_warning_value">low level</string>
     <string name="achieve_warning_value">up to threshold</string>
     <string name="the_system_calls_to">System calls to </string>
     <string name="the_system_sends_msg_to">System sends SMS to </string>
@@ -534,7 +534,7 @@
     <string name="day">day</string>
     <string name="second">second</string>
     <string name="minute">minute</string>
-    <string name="hour">hour</string>
+    <string name="hour">&#160;hour</string>
     <string name="sunday">Sunday</string>
     <string name="monday">Monday</string>
     <string name="tuesday">Tuesday</string>
@@ -552,11 +552,11 @@
     <string name="alarm_pop_alarm_result_info_tip3">*No fire or smoke</string>
     <string name="alarm_pop_alarm_result_info_tip4">*Test issued warning</string>
     //上传图片 dialog
-    <string name="upload_photo_dialog_append_title1">Uploading number</string>
-    <string name="upload_photo_dialog_append_title2">file,total</string>
+    <string name="upload_photo_dialog_append_title1">Uploading number&#160;</string>
+    <string name="upload_photo_dialog_append_title2"> &#160;,total&#160; </string>
     <string name="upload_photo_dialog_upload_video_failed">video upload failed</string>
     <string name="upload_photo_dialog_upload_thumbnail_failed">thumbnail upload failed</string>
-    <string name="upload_photo_dialog_upload">Uploading number</string>
+    <string name="upload_photo_dialog_upload">Uploading&#160;</string>
     <string name="upload_photo_dialog_upload_count_failed">&#160;failure</string>
     //选择图片
     <string name="permission_forbbidden_not_selected_image">Permission is prohibited,local image cannot be selected</string>
@@ -634,7 +634,7 @@
     <string name="air_switch_config">Configuration</string>
     <string name="is_device_air_switch_config">Setting</string>
     <string name="configuring">Setting&#8230;</string>
-    <string name="monitor_point_operation_error_value_range">Please input a number from 50 to 560</string>
+    <string name="monitor_point_operation_error_value_range">Input the rated current,Range:50&#8211;560</string>
     <string name="enter_the_correct_number_format">Please enter the correct number format</string>
     <string name="input_not_null">The input must not be empty</string>
 
@@ -657,7 +657,7 @@
     <string name="deploy_device_type">Type：</string>
     <string name="initial_configuration">Initial Configuration</string>
     <string name="not_setting">Unset</string>
-    <string name="had_setting">Configured</string>
+    <string name="had_setting_detail">Configured</string>
 
     <string name="deploy_pic_device_pic">DeviceMap</string>
     <string name="deploy_pic_device_pic_tip">SN should be recognised</string>
@@ -678,5 +678,10 @@
     <string name="alarm_pop_security_risks">security risk</string>
     <string name="alarm_pop_misdescription">false alarm</string>
     <string name="alarm_pop_test_patrol">test/inspection</string>
-
+    <string name="deploy_has_no_configuration_tip">请先配置安装现场空气开关的额定电流</string>
+    <string name="had_setting">Had Setting</string>
+    <string name="optional">Optional</string>
+    <string name="required">Required</string>
+    <string name="deploy_device_detail_add_all_required">Upload after adding the required fields</string>
+    <string name="deploy_configuration_not_discover_device">Not found,try again</string>
 </resources>

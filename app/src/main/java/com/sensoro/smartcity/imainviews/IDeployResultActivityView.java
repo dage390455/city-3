@@ -46,5 +46,5 @@ public interface IDeployResultActivityView extends IToast, IActivityIntent {
 
     void setTitleText(String text);
 
-    void setDeployResultHasSetting(boolean setting);
+    void setDeployResultHasSetting(String setting);
 }

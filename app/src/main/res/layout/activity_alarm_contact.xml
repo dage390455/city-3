@@ -25,18 +25,17 @@
         android:textColor="@color/white"
         android:textSize="16sp" />
     <LinearLayout
-
         android:id="@+id/ac_name_address_ll_add_name_phone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
         android:layout_below="@id/ac_alarm_contact_title"
-        android:layout_above="@id/ac_alarm_contact_tv_save"
         >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:focusableInTouchMode="true"
             android:focusable="true"
             android:background="@color/white"

@@ -45,8 +45,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView includeTextTitleTvTitle;
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
-    @BindView(R.id.include_text_title_cl_root)
-    ConstraintLayout includeTextTitleClRoot;
     @BindView(R.id.ac_deploy_device_detail_tv_name_location)
     TextView acDeployDeviceDetailTvNameLocation;
     @BindView(R.id.ac_deploy_device_detail_ll_name_location)
@@ -91,6 +89,10 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     LinearLayout acDeployDeviceDetailLlDeploySetting;
     @BindView(R.id.ac_deploy_device_detail_tv_deploy_setting)
     TextView acDeployDeviceDetailTvDeploySetting;
+    @BindView(R.id.ac_deploy_device_detail_tv_tag_required)
+    TextView acDeployDeviceDetailTvTagRequired;
+    @BindView(R.id.ac_deploy_device_detail_tv_alarm_contact_required)
+    TextView acDeployDeviceDetailTvAlarmContactRequired;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -121,7 +123,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.get_the_middle_profile)).build());
 
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-        updateUploadState(true);
+//        updateUploadState(true);
         initUploadDialog();
         initRcAlarmContact();
         initRcDeployDeviceTag();
@@ -299,10 +301,9 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setNameAddressText(String text) {
         if (TextUtils.isEmpty(text)) {
             acDeployDeviceDetailTvNameLocation.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-            acDeployDeviceDetailTvNameLocation.setText(mActivity.getString(R.string.not_added));
+            acDeployDeviceDetailTvNameLocation.setText(mActivity.getString(R.string.required));
         } else {
             acDeployDeviceDetailTvNameLocation.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-
             acDeployDeviceDetailTvNameLocation.setText(text);
         }
     }
@@ -321,12 +322,27 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void updateContactData(List<DeployContactModel> contacts) {
-        mAlarmContactAdapter.updateDeployContactModels(contacts);
+        if (contacts.size()>0) {
+            acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.GONE);
+            acDeployDeviceDetailRcAlarmContact.setVisibility(View.VISIBLE);
+            mAlarmContactAdapter.updateDeployContactModels(contacts);
+        }else{
+            acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.VISIBLE);
+            acDeployDeviceDetailRcAlarmContact.setVisibility(View.GONE);
+        }
+
     }
 
     @Override
     public void updateTagsData(List<String> tagList) {
-        mTagAdapter.updateTags(tagList);
+        if (tagList.size()>0) {
+            acDeployDeviceDetailTvTagRequired.setVisibility(View.GONE);
+            acDeployDeviceDetailRcTag.setVisibility(View.VISIBLE);
+            mTagAdapter.updateTags(tagList);
+        }else{
+            acDeployDeviceDetailTvTagRequired.setVisibility(View.VISIBLE);
+            acDeployDeviceDetailRcTag.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -484,14 +500,20 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void setDeployDeviceDetailDeploySetting(boolean setting) {
-        if (setting) {
-            acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.had_setting));
-        } else {
+    public void setDeployDeviceDetailDeploySetting(String setting) {
+        if (TextUtils.isEmpty(setting)) {
             acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.not_setting));
+            acDeployDeviceDetailTvDeploySetting.setText(mActivity.getString(R.string.required));
+        } else {
+            acDeployDeviceDetailTvDeploySetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            acDeployDeviceDetailTvDeploySetting.setText(setting);
         }
+    }
+
+    @Override
+    public void setUploadBtnStatus(boolean isEnable) {
+        acDeployDeviceDetailTvUpload.setEnabled(isEnable);
+        acDeployDeviceDetailTvUpload.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
     }
 
     @Override

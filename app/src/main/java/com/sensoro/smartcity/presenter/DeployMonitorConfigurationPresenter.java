@@ -20,6 +20,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.EventData;
+import com.sensoro.smartcity.server.bean.DeployContralSettingData;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -64,7 +65,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
     public void doConfiguration(String valueStr) {
         if (!bleList.contains(deployAnalyzerModel.sn)) {
-            getView().toastShort(mActivity.getString(R.string.device_not_near));
+            getView().toastShort(mActivity.getString(R.string.deploy_configuration_not_discover_device));
             return;
         }
         if (Constants.DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType)) {
@@ -112,7 +113,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         }
         boolean isNearby = bleList.contains(deployAnalyzerModel.sn);
         getView().setTvNearVisible(isNearby);
-        getView().updateBtnStatus(getView().hasEditTextContent() && isNearby);
         mHandler.postDelayed(this, 2000);
     }
 
@@ -151,22 +151,29 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
     @Override
     public void onConnectedSuccess(BLEDevice bleDevice, int cmd) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getView().updateBleConfigurationDialogText(mActivity.getString(R.string.now_configuration));
-            }
-        });
-        //安科瑞电气火灾初始化配置
-        sensoroDevice = (SensoroDevice) bleDevice;
-        sensoroSensor = sensoroDevice.getSensoroSensorTest();
-        configAcrelFires();
+        if (getView() != null) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getView() != null) {
+                        getView().updateBleConfigurationDialogText(mActivity.getString(R.string.now_configuration));
+                    }
+                }
+            });
+            //安科瑞电气火灾初始化配置
+            sensoroDevice = (SensoroDevice) bleDevice;
+            sensoroSensor = sensoroDevice.getSensoroSensorTest();
+            configAcrelFires();
+        }
+
     }
 
     private void configCompleted() {
         EventData eventData = new EventData();
         eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
-        eventData.data = true;
+        DeployContralSettingData deployContralSettingData = new DeployContralSettingData();
+        deployContralSettingData.setInitValue(mEnterValue);
+        eventData.data = deployContralSettingData;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
@@ -201,55 +208,79 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
     @Override
     public void onConnectedFailure(int errorCode) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getView().dismissBleConfigurationDialog();
-                getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
-            }
-        });
+        if (getView() != null) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getView() != null) {
+                        getView().dismissBleConfigurationDialog();
+                        getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
+                    }
+
+                }
+            });
+        }
 
 
     }
 
     @Override
     public void onDisconnected() {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getView().dismissBleConfigurationDialog();
-                getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
-            }
-        });
+        if (getView() != null) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getView() != null) {
+                        getView().dismissBleConfigurationDialog();
+                        getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
+                    }
 
+                }
+            });
+        }
     }
 
     @Override
     public void onWriteSuccess(Object o, int cmd) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getView().updateBleConfigurationDialogText(mActivity.getString(R.string.ble_config_success));
-                getView().updateBleConfigurationDialogSuccessImv();
-            }
-        });
-        mHandler.postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                getView().dismissBleConfigurationDialog();
-                configCompleted();
-            }
-        }, 1000);
+        if (getView() != null) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getView() != null) {
+                        getView().updateBleConfigurationDialogText(mActivity.getString(R.string.ble_config_success));
+                        getView().updateBleConfigurationDialogSuccessImv();
+                    }
+
+                }
+            });
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    if (getView() != null) {
+                        getView().dismissBleConfigurationDialog();
+                        configCompleted();
+                    }
+
+                }
+            }, 1000);
+        }
+
     }
 
     @Override
     public void onWriteFailure(int errorCode, int cmd) {
-        mActivity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                getView().dismissBleConfigurationDialog();
-                getView().toastShort(mActivity.getString(R.string.ble_config_failed));
-            }
-        });
+        if (getView() != null) {
+            mActivity.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if (getView() != null) {
+                        getView().dismissBleConfigurationDialog();
+                        getView().toastShort(mActivity.getString(R.string.ble_config_failed));
+                    }
+
+                }
+            });
+        }
+
     }
 }

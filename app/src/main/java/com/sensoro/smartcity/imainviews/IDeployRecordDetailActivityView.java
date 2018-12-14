@@ -30,5 +30,5 @@ public interface IDeployRecordDetailActivityView extends IToast, IActivityIntent
 
     void setDeployDetailDeploySettingVisible(boolean isVisible);
 
-    void setDeployDeviceDetailDeploySetting(boolean setting);
+    void setDeployDeviceDetailDeploySetting(String setting);
 }

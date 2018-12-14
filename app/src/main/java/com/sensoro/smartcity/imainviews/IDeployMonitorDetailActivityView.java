@@ -61,5 +61,7 @@ public interface IDeployMonitorDetailActivityView extends IToast, IProgressDialo
 
     void setDeployDeviceType(String text);
 
-    void setDeployDeviceDetailDeploySetting(boolean setting);
+    void setDeployDeviceDetailDeploySetting(String setting);
+
+    void setUploadBtnStatus(boolean isEnable);
 }

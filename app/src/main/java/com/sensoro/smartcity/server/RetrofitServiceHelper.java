@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.server.bean.DeployContralSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
@@ -58,7 +59,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -496,18 +499,18 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, String wxPhone, List<String> imgUrls) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, HashMap<String, DeployContralSettingData> settingMap) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (name != null) {
                 jsonObject.put("name", name);
             }
@@ -518,15 +521,29 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
+                JSONArray jsonArrayImg = new JSONArray();
                 for (String url : imgUrls) {
-                    jsonArray.put(url);
+                    jsonArrayImg.put(url);
                 }
-                jsonObject.put("imgUrls", jsonArray);
+                jsonObject.put("imgUrls", jsonArrayImg);
             }
             if (!TextUtils.isEmpty(wxPhone)) {
                 jsonObject.put("wxPhone", wxPhone);
             }
+            if (settingMap != null) {
+                JSONObject jsonObjectOut = new JSONObject();
+                for (Map.Entry<String, DeployContralSettingData> entrySet : settingMap.entrySet()) {
+                    String key = entrySet.getKey();
+                    if (!TextUtils.isEmpty(key)) {
+                        DeployContralSettingData value = entrySet.getValue();
+                        JSONObject jsonObjectIn = new JSONObject();
+                        jsonObjectIn.put("initValue", value.getInitValue());
+                        jsonObjectOut.put(key, jsonObjectIn);
+                    }
+                }
+                jsonObject.put("config", jsonObjectOut);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -557,13 +574,13 @@ public enum RetrofitServiceHelper {
             }
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (!TextUtils.isEmpty(name)) {
                 jsonObject.put("name", name);
             }
@@ -574,11 +591,11 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
+                JSONArray jsonArrayImg = new JSONArray();
                 for (String url : imgUrls) {
-                    jsonArray.put(url);
+                    jsonArrayImg.put(url);
                 }
-                jsonObject.put("imgUrls", jsonArray);
+                jsonObject.put("imgUrls", jsonArrayImg);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -605,13 +622,13 @@ public enum RetrofitServiceHelper {
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (name != null) {
                 jsonObject.put("name", name);
             }
