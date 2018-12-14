@@ -65,7 +65,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
     public void doConfiguration(String valueStr) {
         if (!bleList.contains(deployAnalyzerModel.sn)) {
-            getView().toastShort(mActivity.getString(R.string.device_not_near));
+            getView().toastShort(mActivity.getString(R.string.deploy_configuration_not_discover_device));
             return;
         }
         if (Constants.DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType)) {
@@ -113,7 +113,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         }
         boolean isNearby = bleList.contains(deployAnalyzerModel.sn);
         getView().setTvNearVisible(isNearby);
-        getView().updateBtnStatus(getView().hasEditTextContent() && isNearby);
         mHandler.postDelayed(this, 2000);
     }
 

@@ -338,17 +338,66 @@ public enum DeployAnalyzerUtils implements Constants {
                         doStation();
                     } else {
                         DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
-                        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
-                        deployAnalyzerModel.sn = sn;
-                        deployAnalyzerModel.deviceType = data.getDeviceType();
-                        deployAnalyzerModel.nameAndAddress = data.getName();
-                        deployAnalyzerModel.notOwn = data.isNotOwn();
-                        deployAnalyzerModel.blePassword = data.getBlePassword();
                         List<Double> lonlat = data.getLonlat();
                         if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                             deployAnalyzerModel.latLng.clear();
                             deployAnalyzerModel.latLng.addAll(lonlat);
+                            getAllDeviceInfo(deployAnalyzerModel);
+                        } else {
+                            deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+                            deployAnalyzerModel.sn = sn;
+                            deployAnalyzerModel.deviceType = data.getDeviceType();
+                            deployAnalyzerModel.nameAndAddress = data.getName();
+                            deployAnalyzerModel.notOwn = data.isNotOwn();
+                            deployAnalyzerModel.blePassword = data.getBlePassword();
+
+                            deployAnalyzerModel.signal = data.getSignal();
+                            List<String> tags = data.getTags();
+                            if (tags != null && tags.size() > 0) {
+                                deployAnalyzerModel.tagList.clear();
+                                deployAnalyzerModel.tagList.addAll(tags);
+                            }
+                            deployAnalyzerModel.updatedTime = data.getUpdatedTime();
+                            AlarmInfo alarmInfo = data.getAlarms();
+                            if (alarmInfo != null) {
+                                AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                                if (notification != null) {
+                                    String contact = notification.getContact();
+                                    String content = notification.getContent();
+                                    if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
+//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
+                                    } else {
+                                        deployAnalyzerModel.deployContactModelList.clear();
+                                        DeployContactModel deployContactModel = new DeployContactModel();
+                                        deployContactModel.name = contact;
+                                        deployContactModel.phone = content;
+                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                    }
+
+                                }
+                            }
+                            Intent intent = new Intent();
+                            intent.setClass(activity, DeployMonitorDetailActivity.class);
+                            intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                            listener.onSuccess(intent);
                         }
+                    }
+
+                }
+            }
+
+            private void getAllDeviceInfo(final DeployAnalyzerModel deployAnalyzerModel) {
+                RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(scanSerialNumber, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+                    @Override
+                    public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                        DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+                        deployAnalyzerModel.sn = data.getSn();
+                        deployAnalyzerModel.deviceType = data.getDeviceType();
+                        deployAnalyzerModel.nameAndAddress = data.getName();
+                        deployAnalyzerModel.notOwn = data.isNotOwn();
+                        deployAnalyzerModel.blePassword = data.getBlePassword();
                         deployAnalyzerModel.signal = data.getSignal();
                         List<String> tags = data.getTags();
                         if (tags != null && tags.size() > 0) {
@@ -356,15 +405,17 @@ public enum DeployAnalyzerUtils implements Constants {
                             deployAnalyzerModel.tagList.addAll(tags);
                         }
                         deployAnalyzerModel.updatedTime = data.getUpdatedTime();
+                        List<Integer> channelMask = data.getChannelMask();
+                        if (channelMask != null && channelMask.size() > 0) {
+                            deployAnalyzerModel.channelMask.addAll(channelMask);
+                        }
                         AlarmInfo alarmInfo = data.getAlarms();
                         if (alarmInfo != null) {
                             AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
                             if (notification != null) {
                                 String contact = notification.getContact();
                                 String content = notification.getContent();
-                                if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
-//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                                } else {
+                                if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
                                     deployAnalyzerModel.deployContactModelList.clear();
                                     DeployContactModel deployContactModel = new DeployContactModel();
                                     deployContactModel.name = contact;
@@ -380,7 +431,27 @@ public enum DeployAnalyzerUtils implements Constants {
                         listener.onSuccess(intent);
                     }
 
-                }
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                            listener.onError(errorCode, null, errorMsg);
+                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+                            //TODO 控制逻辑
+                            doStation();
+                        } else {
+                            //TODO 控制逻辑
+                            Intent intent = new Intent();
+                            intent.setClass(activity, DeployResultActivity.class);
+                            DeployResultModel deployResultModel = new DeployResultModel();
+                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+                            deployResultModel.sn = scanSerialNumber;
+                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
+                            deployResultModel.errorMsg = errorMsg;
+                            intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                            listener.onError(errorCode, intent, errorMsg);
+                        }
+                    }
+                });
             }
         });
 
@@ -542,9 +613,7 @@ public enum DeployAnalyzerUtils implements Constants {
                     if (notification != null) {
                         String contact = notification.getContact();
                         String content = notification.getContent();
-                        if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
-//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                        } else {
+                        if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
                             deployAnalyzerModel.deployContactModelList.clear();
                             DeployContactModel deployContactModel = new DeployContactModel();
                             deployContactModel.name = contact;
@@ -628,7 +697,7 @@ public enum DeployAnalyzerUtils implements Constants {
                         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
                             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
                             RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                                    deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls,null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                                    deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
                                         @Override
                                         public void onErrorMsg(int errorCode, String errorMsg) {
