@@ -504,13 +504,13 @@ public enum RetrofitServiceHelper {
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (name != null) {
                 jsonObject.put("name", name);
             }
@@ -521,11 +521,11 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
+                JSONArray jsonArrayImg = new JSONArray();
                 for (String url : imgUrls) {
-                    jsonArray.put(url);
+                    jsonArrayImg.put(url);
                 }
-                jsonObject.put("imgUrls", jsonArray);
+                jsonObject.put("imgUrls", jsonArrayImg);
             }
             if (!TextUtils.isEmpty(wxPhone)) {
                 jsonObject.put("wxPhone", wxPhone);
@@ -574,13 +574,13 @@ public enum RetrofitServiceHelper {
             }
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (!TextUtils.isEmpty(name)) {
                 jsonObject.put("name", name);
             }
@@ -591,11 +591,11 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
+                JSONArray jsonArrayImg = new JSONArray();
                 for (String url : imgUrls) {
-                    jsonArray.put(url);
+                    jsonArrayImg.put(url);
                 }
-                jsonObject.put("imgUrls", jsonArray);
+                jsonObject.put("imgUrls", jsonArrayImg);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -622,13 +622,13 @@ public enum RetrofitServiceHelper {
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (name != null) {
                 jsonObject.put("name", name);
             }

@@ -170,7 +170,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
                     DeployContralSettingData settingData = deployResultModel.settingData;
                     if (settingData != null) {
-                        getView().setDeployResultHasSetting(mContext.getString(R.string.had_setting) + "(" + settingData.getInitValue() + ")");
+                        getView().setDeployResultHasSetting(mContext.getString(R.string.had_setting));
                     } else {
                         getView().setDeployResultHasSetting(mContext.getString(R.string.not_setting));
                     }
@@ -248,7 +248,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                 if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
                     DeployContralSettingData settingData = deployResultModel.settingData;
                     if (settingData != null) {
-                        getView().setDeployResultHasSetting(mContext.getString(R.string.had_setting) + "(" + settingData.getInitValue() + ")");
+                        getView().setDeployResultHasSetting(mContext.getString(R.string.had_setting));
                     } else {
                         getView().setDeployResultHasSetting(mContext.getString(R.string.not_setting));
                     }

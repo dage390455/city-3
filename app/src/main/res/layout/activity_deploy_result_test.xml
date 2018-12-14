@@ -369,7 +369,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_weight="1"
                         android:gravity="end"
-                        android:text="@string/had_setting"
+                        android:text="@string/had_setting_detail"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 

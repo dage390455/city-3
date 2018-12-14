@@ -299,10 +299,9 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setNameAddressText(String text) {
         if (TextUtils.isEmpty(text)) {
             acDeployDeviceDetailTvNameLocation.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-            acDeployDeviceDetailTvNameLocation.setText(mActivity.getString(R.string.not_added));
+            acDeployDeviceDetailTvNameLocation.setText(mActivity.getString(R.string.required));
         } else {
             acDeployDeviceDetailTvNameLocation.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
-
             acDeployDeviceDetailTvNameLocation.setText(text);
         }
     }

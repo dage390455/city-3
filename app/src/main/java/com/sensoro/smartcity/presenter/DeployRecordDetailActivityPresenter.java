@@ -79,7 +79,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                 if (mDeployRecordInfo.getConfig() != null) {
                     DeployContralSettingData deployContralSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
                     if (deployContralSettingData != null) {
-                        getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting) + deployContralSettingData.getInitValue() + "A");
+                        getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployContralSettingData.getInitValue() + "A");
                         return;
                     }
                 }

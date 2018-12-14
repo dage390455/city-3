@@ -292,9 +292,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 HashMap<String, DeployContralSettingData> map = null;
                 if (isFire) {
                     map = new HashMap<>();
-                    DeployContralSettingData value = new DeployContralSettingData();
-                    value.setInitValue(20);
-                    map.put(deployAnalyzerModel.deviceType, value);
+                    if (deployAnalyzerModel.settingData != null) {
+                        map.put(deployAnalyzerModel.deviceType, deployAnalyzerModel.settingData);
+                    }
                 }
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
                         deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -578,7 +578,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (data instanceof DeployContralSettingData) {
                     deployAnalyzerModel.settingData = (DeployContralSettingData) data;
                     int initValue = deployAnalyzerModel.settingData.getInitValue();
-                    getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.had_setting) + initValue + "A");
+                    getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.had_setting_detail) + initValue + "A");
                 } else {
                     getView().setDeployDeviceDetailDeploySetting(null);
                 }

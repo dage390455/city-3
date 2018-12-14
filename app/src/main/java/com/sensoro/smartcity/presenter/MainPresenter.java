@@ -63,6 +63,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private final MainPresenter.DeviceInfoListener mInfoListener = new MainPresenter.DeviceInfoListener();
     private final MainPresenter.DeviceAlarmCountListener mAlarmCountListener = new MainPresenter.DeviceAlarmCountListener();
     private final DeviceAlarmDisplayStatusListener mAlarmDisplayStatusListener = new DeviceAlarmDisplayStatusListener();
+    private final DeviceFlushListener mDeviceFlushListener = new DeviceFlushListener();
     private final DeviceTaskResultListener mTaskResultListener = new DeviceTaskResultListener();
     private final Handler mHandler = new Handler();
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
@@ -177,7 +178,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         @Override
         public void call(Object... args) {
             try {
-                synchronized (MainPresenter.DeviceInfoListener.class) {
+                synchronized (MainPresenter.DeviceAlarmCountListener.class) {
                     for (Object arg : args) {
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
@@ -213,7 +214,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         @Override
         public void call(Object... args) {
             try {
-                synchronized (MainPresenter.DeviceInfoListener.class) {
+                synchronized (MainPresenter.DeviceAlarmDisplayStatusListener.class) {
                     for (Object arg : args) {
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
@@ -265,12 +266,31 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
     }
 
+    private final class DeviceFlushListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (MainPresenter.DeviceFlushListener.class) {
+                    //TODO 设备删除做的操作
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_DEVICE_SOCKET_FLUSH;
+                    EventBus.getDefault().post(eventData);
+                    LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     private final class DeviceTaskResultListener implements Emitter.Listener {
 
         @Override
         public void call(Object... args) {
             try {
-                synchronized (MainPresenter.DeviceInfoListener.class) {
+                synchronized (MainPresenter.DeviceTaskResultListener.class) {
                     for (Object arg : args) {
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
@@ -328,6 +348,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -404,6 +425,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                     mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                     mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
                     mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                    mSocket.off(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
                 }
                 if (hasAlarmInfoControl()) {
                     mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -421,7 +443,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
-                mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -446,6 +469,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
