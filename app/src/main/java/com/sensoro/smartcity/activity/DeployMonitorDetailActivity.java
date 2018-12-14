@@ -509,7 +509,6 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
                 break;
             case R.id.dialog_deploy_device_upload_tv_cancel:
                 mUploadDialog.dismiss();
-                updateUploadState(false);
                 mPresenter.requestUpload();
                 break;
         }
