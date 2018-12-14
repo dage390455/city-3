@@ -26,10 +26,10 @@
     <string name="the_ohter">others</string>
     <string name="male">male</string>
     <string name="female">female</string>
-    <string name="signal_excellent">Signal: Good</string>
-    <string name="signal_good">Signal: Normal</string>
-    <string name="signal_weak">Signal: Bad</string>
-    <string name="no_signal">Signal: None</string>
+    <string name="signal_excellent">Signal Good</string>
+    <string name="signal_good">Signal Normal</string>
+    <string name="signal_weak">Signal Bad</string>
+    <string name="no_signal">Signal None</string>
     <string name="alert_contact">Alarm contact</string>
     <string name="get_the_middle_profile">Get the configuration file</string>
     <string name="live_photo">site photos</string>
@@ -72,7 +72,7 @@
     <string name="back_to_normal">recovery</string>
     <string name="confirm_that_the_alert_type_app_is">confirm that the type of alarm by App</string>
     <string name="confirm_that_the_alert_type_web_is">Confirm that the type of alarm by Web</string>
-    <string name="below_the_warning_value">below the alarming value</string>
+    <string name="below_the_warning_value">low level</string>
     <string name="achieve_warning_value">Achieve alarming value</string>
     <string name="the_system_calls_to">System calls to </string>
     <string name="the_system_sends_msg_to">System sends SMS to </string>
@@ -632,7 +632,7 @@
     <string name="air_switch_config">Configuration</string>
     <string name="is_device_air_switch_config">Setting</string>
     <string name="configuring">Setting&#8230;</string>
-    <string name="monitor_point_operation_error_value_range">Please input a number from 50 to 560</string>
+    <string name="monitor_point_operation_error_value_range">Input the rated current,Range:50&#8211;560</string>
     <string name="enter_the_correct_number_format">Please enter the correct number format</string>
     <string name="input_not_null">The input must not be empty</string>
 
@@ -675,4 +675,6 @@
     <string name="had_setting">Had Setting</string>
     <string name="optional">Optional</string>
     <string name="required">Required</string>
+    <string name="deploy_device_detail_add_all_required">Upload after adding the required fields</string>
+    <string name="deploy_configuration_not_discover_device">Not found,try again</string>
 </resources>

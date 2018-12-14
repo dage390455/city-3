@@ -69,7 +69,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
             @Override
             public void afterTextChanged(Editable s) {
-                updateBtnStatus(s.toString().length() > 0 && acDeployConfigurationTvNear.getVisibility() == View.VISIBLE);
+                updateBtnStatus(s.toString().length() > 0);
             }
         });
         bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));

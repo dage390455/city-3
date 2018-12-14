@@ -230,6 +230,12 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     }
 
     @Override
+    public void setSaveBtnStatus(boolean isEnable) {
+        acDeployPicTvSave.setEnabled(isEnable);
+        acDeployPicTvSave.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mPresenter.handleActivityResult(requestCode, resultCode, data);

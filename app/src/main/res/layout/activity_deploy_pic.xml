@@ -296,7 +296,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_margin="10dp"
-        android:background="@drawable/shape_bg_corner_29c_shadow"
+        android:background="@drawable/shape_bg_solid_df_corner"
         android:gravity="center"
         android:padding="10dp"
         android:text="@string/deploy_setting_photo_save"

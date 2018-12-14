@@ -119,7 +119,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             default:
                 break;
         }
-        getView().updateUploadState(true);
+//        getView().updateUploadState(true);
         String deviceTypeName = WidgetUtil.getDeviceTypeName(deployAnalyzerModel.deviceType);
         getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + deviceTypeName);
         //TODO 暂时只针对ancre的电器火灾
@@ -137,13 +137,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
         }
-        if (deployAnalyzerModel.deployContactModelList.size() > 0) {
-            getView().updateContactData(deployAnalyzerModel.deployContactModelList);
-        }
-        if (deployAnalyzerModel.tagList.size() > 0) {
-            getView().updateTagsData(deployAnalyzerModel.tagList);
-        }
+        getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+        getView().updateTagsData(deployAnalyzerModel.tagList);
         freshSignalInfo();
+        getView().setUploadBtnStatus(checkCanUpload());
     }
 
     //
@@ -518,6 +515,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     deployAnalyzerModel.nameAndAddress = (String) data;
                     getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
                 }
+                getView().setUploadBtnStatus(checkCanUpload());
                 break;
             case EVENT_DATA_DEPLOY_SETTING_TAG:
                 if (data instanceof List) {
@@ -532,6 +530,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     deployAnalyzerModel.deployContactModelList.clear();
                     deployAnalyzerModel.deployContactModelList.addAll((List<DeployContactModel>) data);
                     getView().updateContactData(deployAnalyzerModel.deployContactModelList);
+                    getView().setUploadBtnStatus(checkCanUpload());
                 }
                 break;
             case EVENT_DATA_DEPLOY_SETTING_PHOTO:
@@ -543,6 +542,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     } else {
                         getView().setDeployPhotoText(mContext.getString(R.string.not_added));
                     }
+                    getView().setUploadBtnStatus(checkCanUpload());
                 }
                 break;
             case EVENT_DATA_DEPLOY_MAP:
@@ -550,6 +550,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     this.deployAnalyzerModel = (DeployAnalyzerModel) data;
                     freshSignalInfo();
                 }
+                getView().setUploadBtnStatus(checkCanUpload());
                 break;
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
@@ -571,6 +572,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (data instanceof String) {
                     deployAnalyzerModel.weChatAccount = (String) data;
                     getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
+                    getView().setUploadBtnStatus(checkCanUpload());
                 }
                 break;
             case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
@@ -582,6 +584,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 } else {
                     getView().setDeployDeviceDetailDeploySetting(null);
                 }
+                getView().setUploadBtnStatus(checkCanUpload());
             default:
                 break;
         }
@@ -594,7 +597,6 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doConfirm() {
         //姓名地址校验
-        if (checkHasNameAddress()) return;
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
                 if (checkHasPhoto()) return;
@@ -613,7 +615,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType);
                 if (isFire) {
                     if (deployAnalyzerModel.settingData == null) {
-                        getView().toastShort(mContext.getString(R.string.deploy_has_no_configuration_tip));
+//                        getView().toastShort(mContext.getString(R.string.deploy_has_no_configuration_tip));
                         return;
                     }
                 }
@@ -622,10 +624,73 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 } else {
                     requestUpload();
                 }
+
                 break;
             default:
                 break;
         }
+
+    }
+
+    private boolean checkCanUpload() {
+        String name_default = mContext.getString(R.string.tips_hint_name_address);
+        if (TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress) || deployAnalyzerModel.nameAndAddress.equals(name_default)) {
+            return false;
+        } else {
+            byte[] bytes = new byte[0];
+            try {
+                bytes = deployAnalyzerModel.nameAndAddress.getBytes("UTF-8");
+            } catch (UnsupportedEncodingException e) {
+                e.printStackTrace();
+            }
+            if (bytes.length > 48) {
+                return false;
+            }
+        }
+        switch (deployAnalyzerModel.deployType) {
+            case TYPE_SCAN_DEPLOY_STATION:
+                if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                    return false;
+                }
+                //经纬度校验
+                if (deployAnalyzerModel.latLng.size() != 2) {
+                    return false;
+                }
+                break;
+            case TYPE_SCAN_DEPLOY_DEVICE:
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //联系人校验
+                if (deployAnalyzerModel.deployContactModelList.size() > 0) {
+                    DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
+                    if (TextUtils.isEmpty(deployContactModel.name) || TextUtils.isEmpty(deployContactModel.phone)) {
+                        return false;
+                    }
+                    if (!RegexUtils.checkPhone(deployContactModel.phone)) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+                //照片校验
+                if (deployAnalyzerModel.images.size() == 0 && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                    return false;
+                }
+                //经纬度校验
+                if (deployAnalyzerModel.latLng.size() != 2) {
+                    return false;
+                }
+                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType);
+                if (isFire) {
+                    if (deployAnalyzerModel.settingData == null) {
+                        return false;
+                    }
+                }
+                break;
+            default:
+                break;
+        }
+        return true;
     }
 
     /**
@@ -770,7 +835,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 if (deployAnalyzerModel.latLng.size() != 2) {
-                    getView().refreshSignal(false, signal_text, resId, mContext.getString(R.string.not_positioned));
+                    getView().refreshSignal(false, signal_text, resId, mContext.getString(R.string.required));
                 } else {
                     getView().refreshSignal(false, signal_text, resId, mContext.getString(R.string.positioned));
                 }

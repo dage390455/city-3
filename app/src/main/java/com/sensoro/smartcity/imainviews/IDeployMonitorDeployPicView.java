@@ -14,4 +14,6 @@ public interface IDeployMonitorDeployPicView extends IToast,IActivityIntent,IPro
     void showSelectDialog(SelectDialog.SelectDialogListener listener, List<String> names);
 
     void displayPic(ImageItem[] selImages, int index);
+
+    void setSaveBtnStatus(boolean isEnable);
 }
