@@ -485,6 +485,10 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         List<ContractsTemplateInfo> devices = mContractInfo.getDevices();
         ContractsTemplateInfo[] objects = devices.toArray(new ContractsTemplateInfo[0]);
         intent.putExtra("contract_devices", objects);
+        String uid = mContractInfo.getUid();
+        if (!TextUtils.isEmpty(uid)) {
+            intent.putExtra("contract_uid", uid);
+        }
         switch (createdType) {
             case 1:
                 addExtraCreateType1(intent, no);

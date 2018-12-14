@@ -185,15 +185,15 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 //巡检设备更换
                 //TODO 暂时对电气火灾设备直接上传
-                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
-                    doUploadImages(lon, lan);
+//                if (Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType)) {
+//                    doUploadImages(lon, lan);
+//                } else {
+                if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
+                    changeDevice(lon, lan);
                 } else {
-                    if (PreferencesHelper.getInstance().getUserData().hasSignalConfig) {
-                        changeDevice(lon, lan);
-                    } else {
-                        doUploadImages(lon, lan);
-                    }
+                    doUploadImages(lon, lan);
                 }
+//                }
 
                 break;
             default:

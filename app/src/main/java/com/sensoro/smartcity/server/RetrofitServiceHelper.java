@@ -1279,7 +1279,7 @@ public enum RetrofitServiceHelper {
         return doDevicePositionCalibration;
     }
 
-    public Observable<ResponseBase> modifyContract(Integer contractID, Integer contractType, Integer createType, String cardId, Integer sex, String enterpriseCardId,
+    public Observable<ResponseBase> modifyContract(String uid, Integer contractID, Integer contractType, Integer createType, String cardId, Integer sex, String enterpriseCardId,
                                                    String enterpriseRegisterId,
                                                    String customerName,
                                                    String customerEnterpriseName,
@@ -1295,31 +1295,34 @@ public enum RetrofitServiceHelper {
                                                    int serviceTime, int firstPayTimes) {
         JSONObject jsonObject = new JSONObject();
         try {
+            if (!TextUtils.isEmpty(uid)) {
+                jsonObject.put("uid", uid);
+            }
             jsonObject.put("id", contractID);
 
             if (contractType != null) {
                 jsonObject.put("contract_type", contractType);
             }
             jsonObject.put("created_type", createType);
-            if (cardId != null) {
+            if (!TextUtils.isEmpty(cardId)) {
                 jsonObject.put("card_id", cardId);
             }
             if (sex != null) {
                 jsonObject.put("sex", sex);
             }
-            if (enterpriseCardId != null) {
+            if (!TextUtils.isEmpty(enterpriseCardId)) {
                 jsonObject.put("enterprise_card_id", enterpriseCardId);
             }
-            if (enterpriseRegisterId != null) {
+            if (!TextUtils.isEmpty(enterpriseRegisterId)) {
                 jsonObject.put("enterprise_register_id", enterpriseRegisterId);
             }
-            if (customerName != null) {
+            if (!TextUtils.isEmpty(customerName)) {
                 jsonObject.put("customer_name", customerName);
             }
-            if (customerEnterpriseName != null) {
+            if (!TextUtils.isEmpty(customerEnterpriseName)) {
                 jsonObject.put("customer_enterprise_name", customerEnterpriseName);
             }
-            if (customerEnterpriseValidity != null) {
+            if (!TextUtils.isEmpty(customerEnterpriseValidity)) {
                 jsonObject.put("customer_enterprise_validity", customerEnterpriseValidity);
             }
             jsonObject.put("customer_address", customerAddress);

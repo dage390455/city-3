@@ -276,7 +276,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                     EventData eventData = new EventData();
                     eventData.code = EVENT_DATA_DEVICE_SOCKET_FLUSH;
                     EventBus.getDefault().post(eventData);
-                    LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
                 }
             } catch (Exception e) {
                 e.printStackTrace();

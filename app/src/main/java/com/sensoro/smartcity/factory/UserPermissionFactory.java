@@ -311,7 +311,7 @@ public class UserPermissionFactory {
         if (grants != null) {
             List<String> grantsDeploy = grants.getDeploy();
             if (grantsDeploy != null) {
-                return grantsDeploy.contains("badSignalUpload");
+                return grantsDeploy.contains("_badSignalUpload");
             }
         }
         return false;
