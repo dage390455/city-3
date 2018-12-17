@@ -1,10 +1,13 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.igexin.sdk.PushManager;
@@ -72,6 +75,47 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
+    private ScreenBroadcastReceiver mScreenReceiver;
+
+    private final class ScreenBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            if (!TextUtils.isEmpty(action)) {
+
+                switch (action) {
+                    case Intent.ACTION_SCREEN_ON:
+                    case Intent.ACTION_USER_PRESENT:
+                        final EventData eventData = new EventData();
+                        eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
+                        eventData.data = true;
+                        EventBus.getDefault().post(eventData);
+                        break;
+                    case Intent.ACTION_SCREEN_OFF:
+                        final EventData eventData1 = new EventData();
+                        eventData1.code = EVENT_DATA_LOCK_SCREEN_ON;
+                        eventData1.data = false;
+                        EventBus.getDefault().post(eventData1);
+                        break;
+
+                }
+            }
+//            if (Intent.ACTION_SCREEN_ON.equals(action)) {
+////                Toast.makeText(context, "屏幕开屏", Toast.LENGTH_SHORT).show();
+//                final EventData eventData = new EventData();
+//                eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
+//
+//            } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+//
+////                Toast.makeText(context, "屏幕关屏", Toast.LENGTH_SHORT).show();
+//            } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
+//                final EventData eventData = new EventData();
+//                eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
+////                Toast.makeText(context, "屏幕解锁", Toast.LENGTH_SHORT).show();
+//            }
+        }
+    }
 
     @Override
     public void initData(Context context) {
@@ -83,6 +127,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             return;
         }
         initViewPager();
+        //注册息屏事件广播
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+        mScreenReceiver = new ScreenBroadcastReceiver();
+        mContext.registerReceiver(mScreenReceiver, intentFilter);
     }
 
     private void initViewPager() {
@@ -458,6 +509,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     @Override
     public void onDestroy() {
+        mContext.unregisterReceiver(mScreenReceiver);
         mHandler.removeCallbacks(mRunnable);
         mHandler.removeCallbacksAndMessages(null);
         if (EventBus.getDefault().isRegistered(this)) {

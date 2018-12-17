@@ -97,7 +97,7 @@
                         android:layout_weight="1"
                         android:background="@null"
                         android:gravity="end"
-                        android:text="@string/deploy_device_detail_no_added"
+                        android:text="@string/required"
                         android:textColor="@color/c_a6a6a6"
                         android:textSize="14sp" />
 
@@ -165,6 +165,7 @@
                             android:text="@string/optional"
                             android:layout_centerVertical="true"
                             android:textSize="14sp"
+                            android:textColor="@color/c_a6a6a6"
                             android:visibility="visible"
                             />
 
@@ -221,6 +222,7 @@
                             android:layout_alignParentEnd="true"
                             android:text="@string/required"
                             android:layout_centerVertical="true"
+                            android:textColor="@color/c_a6a6a6"
                             android:textSize="14sp"
                             android:visibility="visible"
                             />

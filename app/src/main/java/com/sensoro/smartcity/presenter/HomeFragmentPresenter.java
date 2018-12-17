@@ -338,14 +338,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             homeTopModelCacheFresh[2] = false;
                             homeTopModelCacheFresh[3] = false;
                             homeTopModelCacheFresh[4] = false;
-                            if (getView() !=null) {
+                            if (getView() != null) {
                                 getView().refreshContentData(false, mHomeTopModels);
                             }
                         }
                         needRefreshContent = false;
                     }
                     if (needRefreshHeader) {
-                        if (getView()!=null) {
+                        if (getView() != null) {
                             getView().refreshHeaderData(false, mHomeTopModels);
                             getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
                             if (needAlarmPlay) {
@@ -498,6 +498,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 //TODO
                 needFreshAll = true;
                 LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+                break;
+            case EVENT_DATA_LOCK_SCREEN_ON:
+                if (data instanceof Boolean) {
+                    needFreshAll = (boolean) data;
+                }
+                LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
                 break;
         }
     }

@@ -235,4 +235,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         return hasNavigationBar;
     }
 
+
+
 }

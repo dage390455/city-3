@@ -214,7 +214,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().showBleConfigDialog();
                 connectDevice();
             } else {
-                getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
+                getView().toastShort(mContext.getString(R.string.device_not_found_activate_Bluetooth));
                 getView().updateUploadState(true);
             }
         } else {
