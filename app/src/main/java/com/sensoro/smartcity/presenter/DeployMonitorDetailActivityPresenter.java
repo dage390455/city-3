@@ -910,7 +910,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                     if (getView() != null) {
                                         getView().dismissBleConfigDialog();
                                         getView().updateUploadState(true);
-                                        getView().toastShort(mContext.getString(R.string.ble_connect_failed));
+                                        getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
                                     }
 
                                 }

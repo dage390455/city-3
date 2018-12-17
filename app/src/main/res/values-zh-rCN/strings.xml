@@ -172,7 +172,7 @@
     <string name="device_not_in_inspection_mission">此设备未在巡检任务中</string>
     <string name="no_old_device_information_found">未查找到旧设备信息</string>
     <string name="replacement_equipment">更换设备</string>
-    <string name="device_ble_deploy_failed">设备配置失败，请常按设备按钮，等设备重新启动后再次配置</string>
+    <string name="device_ble_deploy_failed">设备配置失败，请长按设备按钮，等设备重新启动后再次配置</string>
     <string name="device_not_found_activate_Bluetooth">未发现此设备，请激活部署设备的蓝牙</string>
     <string name="ble_connect_failed">蓝牙连接失败,请重试</string>
     <string name="not_added">未添加</string>
@@ -338,8 +338,8 @@
     <string name="malfunction_cause">故障成因：</string>
     <string name="malfunction_data">故障数据</string>
     <string name="system_upload_malfunction_task">系统上报故障任务</string>
-    <string name="recover_normal">设备恢复正常</string>
-    <string name="system_sms_send">系统短信发送至：</string>
+    <string name="recover_normal">&#160;设备恢复正常</string>
+    <string name="system_sms_send">&#160;系统短信发送至：</string>
     <string name="occour_malfunction_alarm">发生故障报警</string>
 
     //键盘

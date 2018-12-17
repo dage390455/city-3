@@ -500,8 +500,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
                 break;
             case EVENT_DATA_LOCK_SCREEN_ON:
+                //TODO 暂时不加
                 if (data instanceof Boolean) {
-                    needFreshAll = (boolean) data;
+//                    needFreshAll = (boolean) data;
                 }
                 LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
                 break;

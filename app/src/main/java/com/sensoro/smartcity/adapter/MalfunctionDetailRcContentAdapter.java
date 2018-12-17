@@ -61,7 +61,7 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.smoke_icon);
                 holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext, recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.VISIBLE);
-                holder.itemMalfunctionDetailChildMalfunctionCause.setText(mMalfunctionText);
+                holder.itemMalfunctionDetailChildMalfunctionCause.setText(recordsBean.getMalfunctionText());
                 break;
             case "recovery":
                 String content = mMalfunctionText + mContext.getString(R.string.recover_normal);
