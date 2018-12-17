@@ -333,20 +333,24 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 } else {
                     if (needRefreshContent) {
                         if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3] || homeTopModelCacheFresh[4]) {
-                            getView().refreshContentData(false, mHomeTopModels);
                             homeTopModelCacheFresh[0] = false;
                             homeTopModelCacheFresh[1] = false;
                             homeTopModelCacheFresh[2] = false;
                             homeTopModelCacheFresh[3] = false;
                             homeTopModelCacheFresh[4] = false;
+                            if (getView() !=null) {
+                                getView().refreshContentData(false, mHomeTopModels);
+                            }
                         }
                         needRefreshContent = false;
                     }
                     if (needRefreshHeader) {
-                        getView().refreshHeaderData(false, mHomeTopModels);
-                        getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
-                        if (needAlarmPlay) {
-                            playSound();
+                        if (getView()!=null) {
+                            getView().refreshHeaderData(false, mHomeTopModels);
+                            getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+                            if (needAlarmPlay) {
+                                playSound();
+                            }
                         }
                         shoAlarmWindow();
                         needAlarmPlay = false;

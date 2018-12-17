@@ -238,7 +238,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         } else {
             try {
                 String[] ts = createdAt.split("T");
-                createdAt = ts[0];
+                createdAt = ts[0].replaceAll("-",".");
             } catch (Exception e) {
                 e.printStackTrace();
             }

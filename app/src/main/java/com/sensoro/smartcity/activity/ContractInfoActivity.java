@@ -62,6 +62,8 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     TextView etContractInfoLine4;
     @BindView(R.id.ll_contract_info_line5)
     LinearLayout llContractInfoLine5;
+    @BindView(R.id.ll_contract_info_line3)
+    LinearLayout llContractInfoLine3;
     @BindView(R.id.tv_contract_info_line5)
     TextView tvContractInfoLine5;
     @BindView(R.id.et_contract_info_line5)
@@ -224,9 +226,25 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 //
                 etContractInfoLine2.setText(line2);
                 //
-                etContractInfoLine3.setText(line3);
-                //
-                etContractInfoLine4.setText(line4);
+                //暂时先用这样判断，社会信用号代码
+                if ("无".equals(line3)) {
+                    ivLine3.setVisibility(View.GONE);
+                    llContractInfoLine3.setVisibility(View.GONE);
+                }else{
+                    ivLine3.setVisibility(View.VISIBLE);
+                    llContractInfoLine3.setVisibility(View.VISIBLE);
+                    etContractInfoLine3.setText(line3);
+                }
+                //注册码
+                if ("无".equals(line4)) {
+                    ivLine4.setVisibility(View.GONE);
+                    llContractInfoLine4.setVisibility(View.GONE);
+                }else{
+                    ivLine4.setVisibility(View.VISIBLE);
+                    llContractInfoLine4.setVisibility(View.VISIBLE);
+                    etContractInfoLine4.setText(line4);
+                }
+
                 //
                 etContractInfoLine5.setText(line5);
                 //

@@ -371,7 +371,7 @@
     <string name="contract_info_title">物联网消防安全预警服务合同</string>
     <string name="contract_info_phone_number">手机号</string>
     <string name="contract_info_registration_number">注册号</string>
-    <string name="contract_info_validity_period">有效期</string>
+    <string name="contract_info_validity_period">有效期至</string>
     <string name="contract_info_site_nature">场地性质</string>
     <string name="contract_info_contract_service_life">合同服务年限</string>
     <string name="contract_info_contract_status">合同状态</string>

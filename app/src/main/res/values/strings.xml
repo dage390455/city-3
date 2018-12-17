@@ -583,7 +583,7 @@
     <string name="device_exist_under_the_account">This device does not exist under the account.The device is associated with this account before it can be tested</string>
     <string name="save">Save</string>
     <string name="tips_deploy_not_exist">This device does not exist under the account.The device is associated with this account before it can be tested</string>
-    <string name="contract_info_validity_period">有效期</string>
+    <string name="contract_info_validity_period">有效期至</string>
     <string name="contract_info_title">物联网消防安全预警服务合同</string>
     <string name="contract_info_site_nature">场地性质</string>
     <string name="deploy_result_confirm_information">Confirm The Information</string>
