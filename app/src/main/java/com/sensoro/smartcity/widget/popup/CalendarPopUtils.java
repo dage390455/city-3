@@ -3,6 +3,7 @@ package com.sensoro.smartcity.widget.popup;
 import android.app.Activity;
 import android.graphics.drawable.ColorDrawable;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,7 +34,7 @@ import butterknife.OnClick;
 
 public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarView.OnDaySelectObserver
         ,*/
-        CalendarView.OnCalendarRangeSelectListener,Constants, PopupWindow.OnDismissListener {
+        CalendarView.OnCalendarRangeSelectListener,Constants, PopupWindow.OnDismissListener,CalendarView.OnMonthChangeListener {
 
     private PopupWindow mPopupWindow = null;
     private final Activity mActivity;
@@ -73,9 +74,6 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
     private long endTime;
     private OnCalendarPopupCallbackListener listener;
     private View view;
-    //控制显示月份，当前月是-1，因为calendarView.getCurMonth的值是1-12；
-    private int mCalendarMonthIndex;
-    private int mCalendarYear;
 
     public CalendarPopUtils(Activity activity) {
         mActivity = activity;
@@ -102,26 +100,17 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
 //        calendarView.setSelectionType(SelectionType.RANGE);
 //        calendarView.setOnDayRangeSelectedListener(this);
 //        calendarView.setOnDayClickListener(this);
-        calendarView.setRange(calendarView.getCurYear(), calendarView.getCurMonth(), calendarView.getCurDay(),
-                calendarView.getCurYear() + 2, 12, 31);
+//        calendarView.setRange(calendarView.getCurYear(), calendarView.getCurMonth(), calendarView.getCurDay(),
+//                calendarView.getCurYear() + 2, 12, 31);
         calendarView.setOnCalendarRangeSelectListener(this);
-        mCalendarMonthIndex = calendarView.getCurMonth() -1;
-        mCalendarYear = calendarView.getCurYear();
-       setMonthYearText();
+        calendarView.setOnMonthChangeListener(this);
+       setMonthYearText(calendarView.getCurYear(),calendarView.getCurMonth() -1);
     }
 
 
-    private void setMonthYearText() {
-        if(mCalendarMonthIndex < 0){
-            mCalendarMonthIndex = 11;
-            mCalendarYear--;
-        }else if(mCalendarMonthIndex > 11){
-            mCalendarMonthIndex = 0;
-            mCalendarYear++;
-        }
-
+    private void setMonthYearText(int year,int month) {
         acCalendarTvMonthYear.setText(String.format(Locale.CHINA,"%s %d",
-                mActivity.getString(Constants.MONTHS[mCalendarMonthIndex ]), mCalendarYear));
+                mActivity.getString(Constants.MONTHS[month-1 ]), year));
     }
 
     private void setSlectTime(long startTime, long endTime) {
@@ -152,6 +141,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
                 setEndDate(DateUtil.getMonth(endTime) + "." + DateUtil.getDayDate(endTime), DateUtil.getYearDate(endTime));
             }
 
+
 //            if (calendarView.getSelectionManager() instanceof RangeSelectionManager) {
 //                RangeSelectionManager rangeSelectionManager =
 //                        (RangeSelectionManager) calendarView.getSelectionManager();
@@ -163,6 +153,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
 //                }
 //                calendarView.update();
 //            }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -192,13 +183,9 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
                 break;
             case R.id.ac_calendar_imv_arrow_left:
                 calendarView.scrollToPre();
-                mCalendarMonthIndex--;
-                setMonthYearText();
                 break;
             case R.id.ac_calendar_imv_arrow_right:
                 calendarView.scrollToNext();
-                mCalendarMonthIndex++;
-                setMonthYearText();
                 break;
         }
     }
@@ -307,6 +294,11 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
     @Override
     public void onCalendarRangeSelect(com.sensoro.smartcity.calendarview.Calendar calendar, boolean isEnd) {
 
+    }
+
+    @Override
+    public void onMonthChange(int year, int month) {
+        setMonthYearText(year,month);
     }
 
 
