@@ -3,6 +3,7 @@ package com.sensoro.smartcity.server;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.text.TextUtils;
+import android.widget.TextView;
 
 import com.franmontiel.persistentcookiejar.ClearableCookieJar;
 import com.franmontiel.persistentcookiejar.PersistentCookieJar;
@@ -560,7 +561,7 @@ public enum RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls) {
+            name, String contact, String content, List<String> imgUrls,String wxPhone) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -596,6 +597,9 @@ public enum RetrofitServiceHelper {
                     jsonArrayImg.put(url);
                 }
                 jsonObject.put("imgUrls", jsonArrayImg);
+            }
+            if (!TextUtils.isEmpty(wxPhone)) {
+                jsonObject.put("wxPhone",wxPhone);
             }
         } catch (JSONException e) {
             e.printStackTrace();

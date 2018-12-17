@@ -148,6 +148,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         getView().updateTagsData(deployAnalyzerModel.tagList);
         freshSignalInfo();
         getView().setUploadBtnStatus(checkCanUpload());
+        getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
         LogUtils.loge("channelMask--->> " + deployAnalyzerModel.channelMask.size());
 
     }
@@ -329,7 +330,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                        deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name, deployContactModel.phone, imgUrls).
+                        deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
+                        deployContactModel.name, deployContactModel.phone, imgUrls,deployAnalyzerModel.weChatAccount).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
@@ -355,7 +357,8 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
                 getView().showProgressDialog();
                 RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name, deployContactModel.phone, imgUrls).
+                        null, 2, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name,
+                        deployContactModel.phone, imgUrls,deployAnalyzerModel.weChatAccount).
                         subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(this) {
                     @Override
                     public void onCompleted(DeviceDeployRsp deviceDeployRsp) {

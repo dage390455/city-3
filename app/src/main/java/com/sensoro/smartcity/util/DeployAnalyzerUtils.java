@@ -3,6 +3,7 @@ package com.sensoro.smartcity.util;
 import android.app.Activity;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMonitorDetailActivity;
@@ -350,6 +351,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             deployAnalyzerModel.nameAndAddress = data.getName();
                             deployAnalyzerModel.notOwn = data.isNotOwn();
                             deployAnalyzerModel.blePassword = data.getBlePassword();
+                            deployAnalyzerModel.weChatAccount = data.getWxPhone();
 
                             deployAnalyzerModel.signal = data.getSignal();
                             List<String> tags = data.getTags();
@@ -399,6 +401,7 @@ public enum DeployAnalyzerUtils implements Constants {
                         deployAnalyzerModel.notOwn = data.isNotOwn();
                         deployAnalyzerModel.blePassword = data.getBlePassword();
                         deployAnalyzerModel.signal = data.getSignal();
+                        deployAnalyzerModel.weChatAccount = data.getWxPhone();
                         List<String> tags = data.getTags();
                         if (tags != null && tags.size() > 0) {
                             deployAnalyzerModel.tagList.clear();
@@ -595,6 +598,7 @@ public enum DeployAnalyzerUtils implements Constants {
                 deployAnalyzerModel.deployType = scanType;
                 deployAnalyzerModel.nameAndAddress = data.getName();
                 deployAnalyzerModel.deviceType = data.getDeviceType();
+                deployAnalyzerModel.weChatAccount = data.getWxPhone();
                 List<Double> lonlat = data.getLonlat();
                 if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                     deployAnalyzerModel.latLng.clear();
@@ -745,7 +749,8 @@ public enum DeployAnalyzerUtils implements Constants {
                         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
                             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
                             RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                                    deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name, deployContactModel.phone, imgUrls).
+                                    deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
+                                    deployContactModel.name, deployContactModel.phone, imgUrls,null).
                                     subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
                                 @Override
                                 public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
