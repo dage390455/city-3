@@ -573,8 +573,8 @@
     <string name="malfunction_cause">cause of malfunction：</string>
     <string name="malfunction_data">Malfunction data</string>
     <string name="system_upload_malfunction_task">the system reports malfunction</string>
-    <string name="recover_normal">The device returns to normal</string>
-    <string name="system_sms_send">System sends SMS to </string>
+    <string name="recover_normal">&#160;the device returns to normal</string>
+    <string name="system_sms_send">&#160;system sends SMS to </string>
     <string name="occour_malfunction_alarm">new malfunction event</string>
     <string name="open_ble_contact_device">Turn on bluetooth to allow "city" to connect devices</string>
     <string name="open_ble_to_location">For your function to work properly, turn on Bluetooth and locate</string>
