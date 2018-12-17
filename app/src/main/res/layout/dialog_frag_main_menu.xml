@@ -115,7 +115,7 @@
                 android:layout_below="@id/line2"
                 android:layout_centerVertical="true"
                 android:layout_toEndOf="@id/iv_main_home_menu_scan_login"
-                android:text="@string/scan_login" />
+                android:text="@string/main_home_menu_scan_login" />
         </RelativeLayout>
 
 

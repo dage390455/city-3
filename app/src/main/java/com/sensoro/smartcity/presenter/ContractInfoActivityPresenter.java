@@ -145,7 +145,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             } else {
                                 try {
                                     String[] ts = createdAt.split("T");
-                                    createdAt = ts[0];
+                                    createdAt = ts[0].replaceAll("-",".");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     createdAt = "-";
@@ -159,7 +159,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             } else {
                                 try {
                                     String[] ts = confirmTime.split("T");
-                                    confirmTime = ts[0];
+                                    confirmTime = ts[0].replaceAll("-",".");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     confirmTime = "-";

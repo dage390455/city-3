@@ -575,6 +575,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
                             deployAnalyzerModel.signal = deviceInfo.getSignal();
                             freshSignalInfo();
+//                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
                             LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
                         }
                     } catch (Exception e) {

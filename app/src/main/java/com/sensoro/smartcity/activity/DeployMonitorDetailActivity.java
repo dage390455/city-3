@@ -281,7 +281,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void toastLong(String msg) {
-
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_LONG).show();
     }
 
     @Override
@@ -321,11 +321,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void updateContactData(List<DeployContactModel> contacts) {
-        if (contacts.size()>0) {
+        if (contacts.size() > 0) {
             acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.GONE);
             acDeployDeviceDetailRcAlarmContact.setVisibility(View.VISIBLE);
             mAlarmContactAdapter.updateDeployContactModels(contacts);
-        }else{
+        } else {
             acDeployDeviceDetailTvAlarmContactRequired.setVisibility(View.VISIBLE);
             acDeployDeviceDetailRcAlarmContact.setVisibility(View.GONE);
         }
@@ -334,11 +334,11 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void updateTagsData(List<String> tagList) {
-        if (tagList.size()>0) {
+        if (tagList.size() > 0) {
             acDeployDeviceDetailTvTagRequired.setVisibility(View.GONE);
             acDeployDeviceDetailRcTag.setVisibility(View.VISIBLE);
             mTagAdapter.updateTags(tagList);
-        }else{
+        } else {
             acDeployDeviceDetailTvTagRequired.setVisibility(View.VISIBLE);
             acDeployDeviceDetailRcTag.setVisibility(View.GONE);
         }

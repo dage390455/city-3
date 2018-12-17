@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.EventLoginData;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import butterknife.BindView;
@@ -156,7 +157,6 @@ public class MenuDialogFragment extends DialogFragment {
     }
 
 
-
     @Override
     public void onResume() {
         super.onResume();
@@ -165,7 +165,7 @@ public class MenuDialogFragment extends DialogFragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if(immersionBar != null){
+        if (immersionBar != null) {
             immersionBar.destroy();
         }
         unbinder.unbind();
@@ -192,7 +192,12 @@ public class MenuDialogFragment extends DialogFragment {
             EventLoginData userData = PreferencesHelper.getInstance().getUserData();
             if (userData != null) {
                 if (userData.hasContract) {
-                    rlFastContract.setVisibility(View.VISIBLE);
+                    if (AppUtils.isChineseLanguage()) {
+                        rlFastContract.setVisibility(View.VISIBLE);
+                    } else {
+                        rlFastContract.setVisibility(View.GONE);
+                    }
+
                 } else {
                     rlFastContract.setVisibility(View.GONE);
                 }
