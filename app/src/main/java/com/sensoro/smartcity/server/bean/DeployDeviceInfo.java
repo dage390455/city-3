@@ -43,6 +43,7 @@ public class DeployDeviceInfo implements Serializable {
     private List<String> tags;
     private List<String> sensorTypes;
     private List<Integer> channelMask;
+    private String wxPhone;
     private boolean notOwn;
 
     public boolean isNotOwn() {
@@ -348,6 +349,15 @@ public class DeployDeviceInfo implements Serializable {
     public void setSensorTypes(List<String> sensorTypes) {
         this.sensorTypes = sensorTypes;
     }
+
+    public String getWxPhone() {
+        return wxPhone;
+    }
+
+    public void setWxPhone(String wxPhone) {
+        this.wxPhone = wxPhone;
+    }
+
     //TODO 是否一样
     public static class MalfunctionDataBean {
     }

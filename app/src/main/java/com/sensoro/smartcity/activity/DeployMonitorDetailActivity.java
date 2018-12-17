@@ -311,7 +311,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     public void setDeployWeChatText(String text) {
         if (TextUtils.isEmpty(text)) {
             acDeployDetailTvWeChat.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-            acDeployDetailTvWeChat.setText(mActivity.getString(R.string.not_added));
+            acDeployDetailTvWeChat.setText(mActivity.getString(R.string.optional));
         } else {
             acDeployDetailTvWeChat.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
 

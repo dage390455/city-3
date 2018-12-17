@@ -401,7 +401,7 @@
     <string name="deploy_record_device_number">设备号</string>
     <string name="deploy_record_name">名称</string>
     <string name="deploy_record_deploy_time">部署时间</string>
-    <string name="deploy_record_deploy_we_chat">小程序账号（选填）</string>
+    <string name="deploy_record_deploy_we_chat">小程序账号</string>
 
     //部署结果
     <string name="deploy_result_confirm_information">确认信息</string>
