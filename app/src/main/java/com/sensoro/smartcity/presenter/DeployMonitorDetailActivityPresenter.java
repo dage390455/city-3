@@ -302,11 +302,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         map.put(deployAnalyzerModel.deviceType, deployAnalyzerModel.settingData);
                     }
                 }
+                final long currentTimeMillis = System.currentTimeMillis();
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
                         deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
+                                LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
                                 getView().dismissProgressDialog();
                                 getView().updateUploadState(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -316,10 +318,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 } else {
                                     freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
                                 }
+//                                getView().toastShort("接口速度--->>>" + (System.currentTimeMillis() - currentTimeMillis));
                             }
 
                             @Override
                             public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
+//                                getView().toastShort("接口速度--->>>" + (System.currentTimeMillis() - currentTimeMillis));
+                                LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
                                 freshPoint(deviceDeployRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
