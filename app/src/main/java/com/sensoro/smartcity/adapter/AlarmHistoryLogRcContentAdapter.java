@@ -76,7 +76,7 @@ public class AlarmHistoryLogRcContentAdapter extends RecyclerView.Adapter<AlarmH
                     holder.tvAlarmHistoryLogConfirm.setVisibility(View.GONE);
                     break;
             }
-            holder.tvAlarmHistoryLogContent.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getUpdatedTime(), 0) + " 发生报警");
+            holder.tvAlarmHistoryLogContent.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getUpdatedTime(), 0) + mContext.getString(R.string.occur_alarmed));
         }
 //        AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
 //        boolean isAlarm = false;

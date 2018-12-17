@@ -107,6 +107,8 @@
     <string name="all_types">全部类型</string>
     <string name="main_page_home">首页</string>
     <string name="main_page_warn">预警</string>
+    <string name="main_page_malfunction">故障</string>
+    <string name="main_page_manage">管理</string>
     <string name="confirming">预警确认</string>
     <string name="confirming_again">再次确认</string>
     <string name="to_be_confirmed">待确认</string>
@@ -634,6 +636,7 @@
     <string name="monitor_point_operation_error_value_range">输入错误，数值范围50至560</string>
     <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
     <string name="input_not_null">输入不能为空</string>
+    <string name="main_home_menu_scan_login">扫码登录</string>
     <string name="request_success">请求成功</string>
     <string name="legal_representative_name">法定代表人/姓名</string>
     <string name="no_search_history">暂无搜索记录</string>
@@ -666,9 +669,11 @@
     <string name="now_configuration">正在配置</string>
     <string name="ble_config_failed">配置失败，请重试</string>
     <string name="ble_config_success">配置成功</string>
+    <string name="occur_alarmed"> 发生报警</string>
+    <string name="alarm_pop_security_risks">安全隐患</string>
+    <string name="alarm_pop_misdescription">误报</string>
+    <string name="alarm_pop_test_patrol">测试巡检</string>
     <string name="deploy_has_no_configuration_tip">请先配置安装现场空气开关的额定电流</string>
-    <string name="main_page_malfunction">故障</string>
-    <string name="main_page_manage">管理</string>
     <string name="had_setting">已配置</string>
     <string name="optional">选填</string>
     <string name="required">必填</string>

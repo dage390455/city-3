@@ -208,7 +208,8 @@ public final class UpLoadPhotosUtils {
                             @Override
                             public void progress(String key, double percent) {
                                 LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                String title = "正在上传第" + currentNum + "个文件，总共" + imageItems.size() + "个";
+                                String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum
+                                        + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                 upLoadPhotoListener.onProgress(title, percent);
                             }
                         }, null));
