@@ -99,7 +99,8 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
                 //全局设置主题颜色（优先级第二低，可以覆盖 DefaultRefreshInitializer 的配置，与下面的ClassicsHeader绑定）
                 layout.setPrimaryColorsId(android.R.color.white);
 
-                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat("更新于 %s"));
+                String format = SensoroCityApplication.this.getResources().getString(R.string.update_from) + " %s";
+                return new ClassicsHeader(context).setTimeFormat(new DynamicTimeFormat(format));
             }
         });
         //设置全局的Footer构建器

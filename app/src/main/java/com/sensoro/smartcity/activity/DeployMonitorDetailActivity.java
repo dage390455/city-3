@@ -360,6 +360,13 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 //        signalButton.setPadding(6, 10, 6, 10);
         }
 
+        //定位信息是必填的情况下，颜色a6a6 其他2525
+        if (locationInfo.equals(mActivity.getString(R.string.required))) {
+            acDeployDeviceDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+        }else{
+            acDeployDeviceDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+        }
+
     }
 
     @Override

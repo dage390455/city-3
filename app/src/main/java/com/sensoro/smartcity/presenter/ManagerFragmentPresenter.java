@@ -192,7 +192,12 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doAboutUs() {
-        AppUtils.openNetPage(mContext, "https://www.sensoro.com/zh/about.html");
+        if (AppUtils.isChineseLanguage()) {
+            AppUtils.openNetPage(mContext, "https://www.sensoro.com/zh/about.html");
+        } else {
+            AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
+        }
+
     }
 
     public void doVersionInfo() {

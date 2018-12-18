@@ -340,7 +340,7 @@
     <string name="system_upload_malfunction_task">系统上报故障任务</string>
     <string name="recover_normal">&#160;设备恢复正常</string>
     <string name="system_sms_send">&#160;系统短信发送至：</string>
-    <string name="occour_malfunction_alarm">发生故障报警</string>
+    <string name="occur_malfunction_alarm">发生故障报警</string>
 
     //键盘
     <string name="keyboard_clear">清除</string>
@@ -492,7 +492,7 @@
     <string name="deploy_device_detail_no_added">未添加</string>
     <string name="deploy_device_detail_deploy_photo">部署照片</string>
     <string name="deploy_device_detail_deploy_location">部署位置</string>
-    <string name="deploy_device_detail_uploade">上传</string>
+    <string name="deploy_device_detail_upload">上传</string>
     //部署记录详情
     <string name="deploy_record_name_address">名称/地址</string>
     //巡检
@@ -679,4 +679,10 @@
     <string name="required">必填</string>
     <string name="deploy_device_detail_add_all_required">请补充完必填项后上传</string>
     <string name="deploy_configuration_not_discover_device">未搜索到需要配置的设备，请稍后重试</string>
+    <string name="malfunction_cause_detail">故障成因</string>
+    <string name="update_from">更新于</string>
+    <string name="fg_malfunction_back_to_normal">恢复正常</string>
+    <string name="fg_malfunction_malfunctioning">故障中</string>
+    <string name="deploy_record_detail_alert_contact">预警联系人</string>
+    <string name="deploy_location">部署位置</string>
 </resources>
