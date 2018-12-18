@@ -50,6 +50,11 @@ android {
 //            abiFilters 'armeabi','armeabi-v7a'  //只生成armeabi的so
             abiFilters 'armeabi-v7a'  //只生成armeabi的so
         }
+//        gradle.projectsEvaluated {
+//            tasks.withType(JavaCompile) {
+//                options.compilerArgs << "-Xbootclasspath/a:" + System.properties.get("java.home") + "/lib/rt.jar"
+//            }
+//        }
     }
     buildTypes {
         debug {
@@ -65,9 +70,11 @@ android {
             debuggable false
         }
     }
-//    dexOptions {
-//        javaMaxHeapSize "4g"
-//    }
+    dexOptions {
+
+//        preDexLibraries = false
+//        additionalParameters=['--core-library']
+    }
     android {
         lintOptions {
             abortOnError false
@@ -83,6 +90,7 @@ android {
             exclude 'META-INF/NOTICE.txt'
             exclude 'META-INF/notice.txt'
             exclude 'META-INF/ASL2.0'
+            exclude ''
             doNotStrip '*/mips/*.so'
             doNotStrip '*/mips64/*.so'
             doNotStrip '*/x86/*.so'
@@ -216,4 +224,7 @@ dependencies {
 
     //bottom bar
     compile project(':bottomnavigation')
+    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:6.7.2') {
+        transitive=true
+    }
 }

@@ -16,18 +16,21 @@ allprojects {
             jcenter()
             maven { url "https://jitpack.io" }
             google()
+//            mavenCentral()
         }
     }
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
         google()
+//        mavenCentral()
     }
 }
 buildscript {
     repositories {
         jcenter()
         google()
+//        mavenCentral()
         maven { url "https://jitpack.io" }
     }
     dependencies {
@@ -43,3 +46,4 @@ configurations.all { resolutionStrategy.force 'com.android.support:multidex:1.0.
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

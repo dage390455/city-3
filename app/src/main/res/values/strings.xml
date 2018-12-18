@@ -124,7 +124,7 @@
     <string name="status_offline">Offline</string>
     <string name="text_fire_alarm">A fire broke out at or near the monitoring station, requiring immediate action</string>
     <string name="text_no_fire_alarm">No fire or smoke</string>
-    <string name="text_fire_alarm_test">ALARM_TEST_DESC_TIP</string>
+    <string name="text_fire_alarm_test">Relevant personnel actively test the warning issued</string>
     <string name="text_fire_alarm_risk">There was no fire, but there were real hazards</string>
     <string name="alarm_type_bnormal_power">Abnormal power consumption</string>
     <string name="alarm_type_production_operation">Production operation</string>
@@ -686,4 +686,5 @@
     <string name="deploy_configuration_not_discover_device">Not found,try again</string>
     <string name="malfunction_cause_detail">Reason</string>
     <string name="update_from">update by</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoic2Vuc29yb3poIiwiYSI6ImNqcGttdjI3bjA1MXozeHA1MWFuMmphZXkifQ.cj-u01eRsyRAg6eOht0iBQ</string>
 </resources>

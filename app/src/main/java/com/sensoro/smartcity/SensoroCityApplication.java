@@ -18,6 +18,7 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
+import com.mapbox.mapboxsdk.Mapbox;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
@@ -118,6 +119,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         super.onCreate();
         instance = this;
         init();
+        Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not initView your app in this process.

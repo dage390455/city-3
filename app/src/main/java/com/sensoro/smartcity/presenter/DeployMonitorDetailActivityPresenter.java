@@ -16,6 +16,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
+import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
@@ -38,6 +39,7 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -511,7 +513,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doDeployMap() {
         Intent intent = new Intent();
-        intent.setClass(mContext, DeployMapActivity.class);
+        if (AppUtils.isChineseLanguage()){
+            intent.setClass(mContext, DeployMapActivity.class);
+        }else {
+            intent.setClass(mContext, DeployMapENActivity.class);
+        }
         deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL;
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
