@@ -74,7 +74,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         //
 
         AlarmInfo.RecordInfo recordInfo = timeShaftParentBeans.get(position);
-        String time = DateUtil.getStrTimeToday(mContext,recordInfo.getUpdatedTime(), 0);
+        String time = DateUtil.getStrTimeToday(mContext, recordInfo.getUpdatedTime(), 0);
         holder.itemAlertContentTvTime.setText(time);
         //
         if ("confirm".equals(recordInfo.getType())) {
@@ -334,7 +334,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                             stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_failed));
                             break;
                         default:
-                            stringBuffer.append(temp).append(" 短信接收结果未知").append(mContext.getString(R.string.sms_received_unknow));
+                            stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_unknow));
                             break;
                     }
                 }

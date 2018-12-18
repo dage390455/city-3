@@ -121,16 +121,16 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
 
                 switch (((MalfunctionListInfo.RecordsBean.Event) stautus.get(0)).getReciveStatus()) {
                     case 0:
-                        stringBuffer.append(temp).append(" 短信发送中");
+                        stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_sending));
                         break;
                     case 1:
-                        stringBuffer.append(temp).append(" 短信接收成功");
+                        stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_successfully));
                         break;
                     case 2:
-                        stringBuffer.append(temp).append(" 短信接收失败");
+                        stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_failed));
                         break;
                     default:
-                        stringBuffer.append(temp).append(" 短信接收结果未知");
+                        stringBuffer.append(temp).append(" ").append(mContext.getString(R.string.sms_received_unknow));
                         break;
                 }
                 tempList.add(temp);

@@ -335,7 +335,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                             for (String key : keyList) {
                                 MalfunctionDataBean malfunctionDataBean = malfunctionData.get(key);
                                 MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
-                                monitoringPointRcContentAdapterModel.name = "故障成因";
+                                monitoringPointRcContentAdapterModel.name = mContext.getString(R.string.malfunction_cause_detail);
                                 monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
                                 monitoringPointRcContentAdapterModel.content = malfunctionDataBean.getDescription();
                                 uiData.add(monitoringPointRcContentAdapterModel);

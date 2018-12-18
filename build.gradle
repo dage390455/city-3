@@ -1,5 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-ext{
+ext {
     minSdkVersion = 20
     compileSdkVersion = 21
     targetSdkVersion = 27
@@ -37,7 +37,7 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
+configurations.all { resolutionStrategy.force 'com.android.support:multidex:1.0.3' }
 
 
 task clean(type: Delete) {
