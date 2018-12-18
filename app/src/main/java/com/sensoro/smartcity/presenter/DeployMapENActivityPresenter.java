@@ -14,8 +14,8 @@ import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-import com.mapbox.mapboxsdk.location.LocationComponent;
-import com.mapbox.mapboxsdk.location.modes.RenderMode;
+//import com.mapbox.mapboxsdk.location.LocationComponent;
+//import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
@@ -504,34 +504,34 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
 //        locationComponent = mapboxMap.getLocationComponent();
 //        locationComponent.activateLocationComponent(this, options);
 
-        LocationComponent locationComponent = mapboxMap.getLocationComponent();
-
-        locationComponent.activateLocationComponent(mContext);
-        locationComponent.setLocationComponentEnabled(true);
-        locationComponent.setRenderMode(RenderMode.NORMAL);
+//        LocationComponent locationComponent = mapboxMap.getLocationComponent();
+//
+//        locationComponent.activateLocationComponent(mContext);
+//        locationComponent.setLocationComponentEnabled(true);
+//        locationComponent.setRenderMode(RenderMode.NORMAL);
 
         //
-        IconFactory iconFactory = IconFactory.getInstance(mContext);
-        Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
-        marks = new MarkerViewOptions().position(new com.mapbox.mapboxsdk.geometry.LatLng(-37.821648, 144.978594)).icon(icon);
-        markerView = mapboxMap.addMarker(marks);
-        if (deployAnalyzerModel.latLng.size() == 2) {
-//可视化区域，将指定位置指定到屏幕中心位置
-            LatLng latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-            markerView.setPosition(latLng);
-            CameraPosition position = new CameraPosition.Builder()
-                    .target(latLng)
-                    .zoom(10)
-                    .tilt(20)
-                    .build();
-            mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
-
-//            LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
-//            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-//            geocoderSearch.getFromLocationAsyn(query);
-            LogUtils.loge("latLng = " + latLng.toString());
-        } else {
-            backToCurrentLocation();
-        }
+//        IconFactory iconFactory = IconFactory.getInstance(mContext);
+//        Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
+//        marks = new MarkerViewOptions().position(new com.mapbox.mapboxsdk.geometry.LatLng(-37.821648, 144.978594)).icon(icon);
+//        markerView = mapboxMap.addMarker(marks);
+//        if (deployAnalyzerModel.latLng.size() == 2) {
+////可视化区域，将指定位置指定到屏幕中心位置
+//            LatLng latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+//            markerView.setPosition(latLng);
+//            CameraPosition position = new CameraPosition.Builder()
+//                    .target(latLng)
+//                    .zoom(10)
+//                    .tilt(20)
+//                    .build();
+//            mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+//
+////            LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
+////            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
+////            geocoderSearch.getFromLocationAsyn(query);
+//            LogUtils.loge("latLng = " + latLng.toString());
+//        } else {
+//            backToCurrentLocation();
+//        }
     }
 }
