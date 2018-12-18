@@ -340,7 +340,7 @@
     <string name="system_upload_malfunction_task">系统上报故障任务</string>
     <string name="recover_normal">&#160;设备恢复正常</string>
     <string name="system_sms_send">&#160;系统短信发送至：</string>
-    <string name="occour_malfunction_alarm">发生故障报警</string>
+    <string name="occur_malfunction_alarm">发生故障报警</string>
 
     //键盘
     <string name="keyboard_clear">清除</string>
@@ -492,7 +492,7 @@
     <string name="deploy_device_detail_no_added">未添加</string>
     <string name="deploy_device_detail_deploy_photo">部署照片</string>
     <string name="deploy_device_detail_deploy_location">部署位置</string>
-    <string name="deploy_device_detail_uploade">上传</string>
+    <string name="deploy_device_detail_upload">上传</string>
     //部署记录详情
     <string name="deploy_record_name_address">名称/地址</string>
     //巡检
@@ -669,7 +669,7 @@
     <string name="now_configuration">正在配置</string>
     <string name="ble_config_failed">配置失败，请重试</string>
     <string name="ble_config_success">配置成功</string>
-    <string name="occur_alarmed"> 发生报警</string>
+    <string name="occur_alarmed">&#160;发生报警</string>
     <string name="alarm_pop_security_risks">安全隐患</string>
     <string name="alarm_pop_misdescription">误报</string>
     <string name="alarm_pop_test_patrol">测试巡检</string>
@@ -682,4 +682,8 @@
     <string name="malfunction_cause_detail">故障成因</string>
     <string name="update_from">更新于</string>
     <string name="mapbox_access_token">pk.eyJ1Ijoic2Vuc29yb3poIiwiYSI6ImNqcGttdjI3bjA1MXozeHA1MWFuMmphZXkifQ.cj-u01eRsyRAg6eOht0iBQ</string>
+    <string name="fg_malfunction_back_to_normal">恢复正常</string>
+    <string name="fg_malfunction_malfunctioning">故障中</string>
+    <string name="deploy_record_detail_alert_contact">预警联系人</string>
+    <string name="deploy_location">部署位置</string>
 </resources>

@@ -21,7 +21,7 @@
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
-        android:text="@string/deploy_device_detail_uploade"
+        android:text="@string/deploy_device_detail_upload"
         android:textColor="@color/white"
         android:textSize="16sp" />
 

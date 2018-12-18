@@ -51,7 +51,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
 
     private void iniView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeTextTitleTvTitle.setText(R.string.deploy_device_detail_deploy_location);
+        includeTextTitleTvTitle.setText(R.string.deploy_location);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mActivity.getWindow().getDecorView().postInvalidate();
     }

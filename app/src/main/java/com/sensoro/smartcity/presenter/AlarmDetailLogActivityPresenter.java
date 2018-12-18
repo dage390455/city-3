@@ -146,7 +146,7 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     isReConfirm = false;
                     getView().setConfirmColor(mContext.getResources().getColor(R.color.white));
                     getView().setConfirmBg(R.drawable.shape_btn_corner_29c_bg_4dp);
-                    getView().setConfirmText(mContext.getString(R.string.confirming));
+                    getView().setConfirmText(mContext.getString(R.string.alarm_log_alarm_warn_confirm));
                     break;
                 case DISPLAY_STATUS_ALARM:
                 case DISPLAY_STATUS_MIS_DESCRIPTION:
