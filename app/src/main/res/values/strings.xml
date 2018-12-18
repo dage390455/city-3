@@ -383,7 +383,7 @@
     <string name="deploy_record_new_device">Deploy new Device</string>
     <string name="deploy_record_device_number">SN</string>
     <string name="deploy_record_name">Name</string>
-    <string name="deploy_record_deploy_time">Deploy date</string>
+    <string name="deploy_record_deploy_time">time</string>
     <string name="deploy_record_deploy_we_chat">Deploy WeChat</string>
 
     //部署结果
@@ -487,14 +487,14 @@
     //合同 列表
     //manager fragment
     <string name="manager_fragment_manager">Manage</string>
-    <string name="manager_fragment_merchant_switch">Merchant Switching</string>
+    <string name="manager_fragment_merchant_switch">Merchants Switch</string>
     <string name="manager_fragment_deploy_manager">Deploy</string>
     <string name="manager_fragment_contract_manager">Contract</string>
     <string name="manager_fragment_maintenance_task">Maintenance</string>
     <string name="manager_fragment_monitor_big_screen">Monitor large screen</string>
     <string name="manager_fragment_about_us">About</string>
     <string name="manager_fragment_version_information">Version</string>
-    <string name="manager_fragment_exit_account">Sign out</string>
+    <string name="manager_fragment_exit_account">Sign Out</string>
     //warn framgen
     <string name="warn_fragment_search_tip">Name/SN/Phone Number</string>
 
@@ -674,7 +674,7 @@
     <string name="now_configuration">Configuring</string>
     <string name="ble_config_failed">It is failed to configure</string>
     <string name="ble_config_success">Successful</string>
-    <string name="occur_alarmed"> alarmed</string>
+    <string name="occur_alarmed">&#160;alarmed</string>
     <string name="alarm_pop_security_risks">security risk</string>
     <string name="alarm_pop_misdescription">false alarm</string>
     <string name="alarm_pop_test_patrol">test/inspection</string>
