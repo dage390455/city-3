@@ -66,7 +66,7 @@ class BLEScannerForLollipop extends BLEScanner {
         List<ScanFilter> scanFilters = new ArrayList<>();
         if (scanBLEFilters != null && scanBLEFilters.size() > 0) {
             for (ScanBLEFilter scanBLEFilter : scanBLEFilters) {
-                ScanFilter scanFilter = null;
+                ScanFilter scanFilter;
                 ScanFilter.Builder builder = new ScanFilter.Builder()
                         .setDeviceName(scanBLEFilter.getDeviceName())
                         .setDeviceAddress(scanBLEFilter.getDeviceAddress())

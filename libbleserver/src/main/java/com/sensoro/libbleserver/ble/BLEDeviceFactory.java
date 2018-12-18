@@ -1,7 +1,6 @@
 package com.sensoro.libbleserver.ble;
 
 import android.os.ParcelUuid;
-import android.util.Log;
 
 import com.sensoro.libbleserver.ble.scanner.BLEFilter;
 import com.sensoro.libbleserver.ble.scanner.ScanBLEResult;
@@ -102,14 +101,14 @@ public class BLEDeviceFactory {
     }
 
     @Deprecated
-    public SensoroSensorTest createSensor() {
+    public SensoroSensor createSensor() {
         if (scanBLEResult == null) {
             return null;
         }
         try {
             E3214 e3214 = E3214.createE3214(scanBLEResult);
             if (e3214 != null) {
-                SensoroSensorTest sensoroSensor = new SensoroSensorTest();
+                SensoroSensor sensoroSensor = new SensoroSensor();
                 sensoroSensor.setHardwareVersion(e3214.hardwareVersion);
                 sensoroSensor.setFirmwareVersion(e3214.firmwareVersion);
                 sensoroSensor.setBatteryLevel(e3214.batteryLevel == null ? 0 : e3214.batteryLevel);
@@ -379,11 +378,11 @@ public class BLEDeviceFactory {
         byte sensor_data[] = scanBLEResult.getScanRecord().getServiceData(sensorParcelUuid);
         byte device_data[] = scanBLEResult.getScanRecord().getServiceData(deviceParcelUuid);
         byte station_data[] = scanBLEResult.getScanRecord().getServiceData(stationParcelUuid);
-        SensoroSensorTest sensoroSensor = null;
+        SensoroSensor sensoroSensor = null;
         if (sensor_data != null) {
             E3214 e3214 = E3214.parseE3214(sensor_data);
             if (e3214 != null) {
-                sensoroSensor = new SensoroSensorTest();
+                sensoroSensor = new SensoroSensor();
                 sensoroSensor.setHardwareVersion(e3214.hardwareVersion);
                 sensoroSensor.setFirmwareVersion(e3214.firmwareVersion);
                 sensoroSensor.setBatteryLevel(e3214.batteryLevel == null ? 0 : e3214.batteryLevel);

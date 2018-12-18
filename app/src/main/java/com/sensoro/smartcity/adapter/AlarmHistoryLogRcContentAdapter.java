@@ -21,7 +21,7 @@ import butterknife.ButterKnife;
 public class AlarmHistoryLogRcContentAdapter extends RecyclerView.Adapter<AlarmHistoryLogRcContentAdapter.HistoryLogHolder> implements Constants {
     private Context mContext;
     private OnAlarmHistoryLogConfirmListener listener;
-    private List<DeviceAlarmLogInfo> mData = new ArrayList<>();
+    private final List<DeviceAlarmLogInfo> mData = new ArrayList<>();
 
     public AlarmHistoryLogRcContentAdapter(Context context) {
         mContext = context;
@@ -35,6 +35,10 @@ public class AlarmHistoryLogRcContentAdapter extends RecyclerView.Adapter<AlarmH
         mData.clear();
         mData.addAll(data);
         notifyDataSetChanged();
+    }
+
+    public List<DeviceAlarmLogInfo> getData() {
+        return mData;
     }
 
     public interface OnAlarmHistoryLogConfirmListener {
@@ -72,7 +76,7 @@ public class AlarmHistoryLogRcContentAdapter extends RecyclerView.Adapter<AlarmH
                     holder.tvAlarmHistoryLogConfirm.setVisibility(View.GONE);
                     break;
             }
-            holder.tvAlarmHistoryLogContent.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getUpdatedTime(), 0) + " 发生报警");
+            holder.tvAlarmHistoryLogContent.setText(DateUtil.getStrTimeToday(mContext, alarmLogInfo.getUpdatedTime(), 0) + mContext.getString(R.string.occur_alarmed));
         }
 //        AlarmInfo.RecordInfo[] recordInfoArray = alarmLogInfo.getRecords();
 //        boolean isAlarm = false;

@@ -19,7 +19,7 @@ import com.sensoro.smartcity.presenter.InspectionExceptionDetailActivityPresente
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 

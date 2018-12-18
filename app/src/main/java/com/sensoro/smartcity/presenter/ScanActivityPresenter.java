@@ -61,8 +61,9 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
                 getView().updateQrTipText(mContext.getString(R.string.scan_login_tip));
                 getView().setBottomVisible(false);
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
-                //巡检设备更换
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //巡检/故障设备更换
                 getView().updateTitleText(mContext.getString(R.string.device_change));
                 getView().updateQrTipText(mContext.getString(R.string.device_change_tip));
                 break;
@@ -83,14 +84,13 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().finishAc();
                 break;
             case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
-                if (TYPE_SCAN_DEPLOY_DEVICE_CHANGE == scanType) {
+                if (TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE == scanType || TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE == scanType) {
                     getView().finishAc();
                 }
                 break;

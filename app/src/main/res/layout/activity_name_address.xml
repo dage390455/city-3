@@ -41,7 +41,6 @@
             android:background="@null"
             android:gravity="end"
             android:singleLine="true"
-            android:scrollbars="horizontal"
             android:textColor="@color/c_252525"
             android:textSize="14sp" />
 

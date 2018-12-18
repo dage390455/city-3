@@ -15,12 +15,14 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
+import android.widget.RelativeLayout;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.InspectionTaskStateSelectAdapter;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
+import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 public class InspectionTaskStatePopUtils {
@@ -31,16 +33,18 @@ public class InspectionTaskStatePopUtils {
     private TranslateAnimation showTranslateAnimation;
     private TranslateAnimation dismissTranslateAnimation;
     private final LinearLayout mll;
+    private final RelativeLayout mRl;
 
     public InspectionTaskStatePopUtils(Activity activity) {
         mActivity = activity;
         View view = LayoutInflater.from(activity).inflate(R.layout.item_pop_inspection_task_select_state, null);
         RecyclerView mRcStateSelect = view.findViewById(R.id.pop_inspection_task_rc_select_state);
         mll = view.findViewById(R.id.item_pop_select_state_ll);
+        mRl = view.findViewById(R.id.item_pop_select_state_rl);
         view.findViewById(R.id.pop_inspection_task_view).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mPopupWindow.dismiss();
+                mRl.startAnimation(dismissTranslateAnimation);
             }
         });
 
@@ -60,8 +64,8 @@ public class InspectionTaskStatePopUtils {
         mPopupWindow.setWidth(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setHeight(ViewGroup.LayoutParams.MATCH_PARENT);
         mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_aa000000)));
-//        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
-        mPopupWindow.setFocusable(true);
+        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
+//        mPopupWindow.setFocusable(true);
         initAnimation();
 
     }
@@ -96,14 +100,9 @@ public class InspectionTaskStatePopUtils {
     }
 
     public void dismiss() {
-
-        mll.startAnimation(dismissTranslateAnimation);
-//        mPopupWindow.dismiss();
+        mRl.startAnimation(dismissTranslateAnimation);
     }
 
-    public void showAtLocation(View view,int gravity) {
-        mPopupWindow.showAtLocation(view, gravity,0,0);
-    }
 
     /**
      * poup 展示在某个控件下
@@ -123,11 +122,14 @@ public class InspectionTaskStatePopUtils {
             mPopupWindow.showAtLocation(view, Gravity.NO_GRAVITY, location[0], location[1] + view.getHeight());
         }
         mPopupWindow.showAsDropDown(view);
-        int i = mSelectStateAdapter.getItemCount() / 4;
+        int i = mSelectStateAdapter.getItemCount() / 3;
         i *= 100;
+        if(i<300){
+            i = 300;
+        }
         showTranslateAnimation.setDuration(i);
         dismissTranslateAnimation.setDuration(i);
-        mll.startAnimation(showTranslateAnimation);
+        mRl.startAnimation(showTranslateAnimation);
     }
     public void setUpAnimation() {
         mPopupWindow.setAnimationStyle(R.style.DialogFragmentUpAnim);
@@ -143,6 +145,10 @@ public class InspectionTaskStatePopUtils {
 
     public void clearAnimation() {
         mPopupWindow.setAnimationStyle(-1);
+    }
+
+    public boolean isData() {
+        return mSelectStateAdapter.getItemCount()>0;
     }
 
     public interface SelectDeviceTypeItemClickListener{

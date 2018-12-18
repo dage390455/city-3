@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,7 +8,6 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
-import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
@@ -132,12 +130,6 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
 //    }
 
 
-    private boolean isActivityTop() {
-        ActivityManager manager = (ActivityManager) mContext.getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return name.equals(SearchMonitorActivity.class.getName());
-    }
-
     public void clickRelationItem(int position) {
         String s = searchStrList.get(position);
         save(s);
@@ -227,9 +219,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
         if (!TextUtils.isEmpty(oldText)) {
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
-        if (!oldHistoryList.contains(text)) {
-            oldHistoryList.add(0, text);
-        }
+        oldHistoryList.remove(text);
+        oldHistoryList.add(0, text);
         ArrayList<String> tempList = new ArrayList<>();
         for (String str : oldHistoryList) {
             if (tempList.size() < 20) {
@@ -407,7 +398,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO 对照片信息统一处理
+        // 对照片信息统一处理
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
             if (data != null && requestCode == REQUEST_CODE_SELECT) {

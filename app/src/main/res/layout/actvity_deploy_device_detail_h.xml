@@ -4,310 +4,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4">
-
-    <android.support.v4.widget.NestedScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:scrollbars="none">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical">
-
-            <include layout="@layout/item_include_text_title" />
-
-            <LinearLayout
-                android:id="@+id/ac_deploy_device_detail_ll_name_location"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/deploy_device_detail_name_address"
-                    android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/ac_deploy_device_detail_tv_name_location"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_weight="1"
-                    android:background="@null"
-                    android:gravity="end"
-                    android:text="@string/deploy_device_detail_no_added"
-                    android:textColor="@color/c_252525"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/arrows_right" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/c_dfdfdf" />
-
-            <RelativeLayout
-                android:id="@+id/ac_deploy_device_detail_rl_tag"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white">
-
-                <TextView
-                    android:id="@+id/ac_deploy_device_detail_tv_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="16dp"
-                    android:text="@string/sensor_detail_tag"
-                    android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:id="@+id/ac_deploy_device_detail_imv_tag"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/arrows_right" />
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_centerVertical="true"
-                    android:layout_marginStart="16dp"
-                    android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag"
-                    android:layout_toEndOf="@id/ac_deploy_device_detail_tv_tag">
-
-                    <com.sensoro.smartcity.widget.TouchRecycleView
-                        android:id="@+id/ac_deploy_device_detail_rc_tag"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true">
-
-                    </com.sensoro.smartcity.widget.TouchRecycleView>
-                </RelativeLayout>
-
-
-            </RelativeLayout>
-
-
-            <LinearLayout
-                android:id="@+id/ac_deploy_device_detail_ll_alarm_contact"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:text="@string/alert_contact"
-                    android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
-
-                <RelativeLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1">
-
-                    <com.sensoro.smartcity.widget.TouchRecycleView
-                        android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginBottom="8dp">
-
-                    </com.sensoro.smartcity.widget.TouchRecycleView>
-                </RelativeLayout>
-
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/arrows_right" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ac_deploy_device_detail_ll_deploy_pic"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@color/white"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:layout_weight="1"
-                    android:text="@string/deploy_device_detail_deploy_photo"
-                    android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/ac_deploy_device_detail_tv_deploy_pic"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:text="@string/deploy_device_detail_no_added"
-                    android:textColor="@color/c_252525" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginEnd="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/arrows_right" />
-
-            </LinearLayout>
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/c_dfdfdf" />
-
-            <LinearLayout
-                android:id="@+id/ac_deploy_device_detail_ll_fixed_point"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/white"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="20dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:layout_weight="1"
-                    android:gravity="center_vertical"
-                    android:text="@string/deploy_device_detail_deploy_location"
-                    android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
-
-                <TextView
-                    android:id="@+id/ac_deploy_device_detail_fixed_point_tv_near"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="2dp"
-                    android:background="@drawable/shape_bg_solid_29c_full_corner"
-                    android:paddingStart="10dp"
-                    android:paddingTop="2dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="4dp"
-                    android:text="@string/signal_check_near"
-                    android:textColor="@color/white"
-                    android:textSize="10sp"
-                    android:visibility="gone" />
-
-                <TextView
-                    android:id="@+id/ac_deploy_device_detail_tv_fixed_point_signal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="12dp"
-                    android:background="@drawable/shape_bg_solid_b6_full_corner"
-                    android:paddingStart="10dp"
-                    android:paddingTop="4dp"
-                    android:paddingEnd="10dp"
-                    android:paddingBottom="4dp"
-                    android:text="@string/deploy_result_signal"
-                    android:textColor="@color/white"
-                    android:textSize="12sp" />
-
-                <TextView
-                    android:id="@+id/ac_deploy_device_detail_tv_fixed_point_state"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="14dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/not_positioned"
-                    android:textColor="@color/c_a6a6a6"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="8dp"
-                    android:layout_marginEnd="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/arrows_right" />
-
-            </LinearLayout>
-
-            <FrameLayout
-                android:id="@+id/fl_not_own"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginEnd="20dp"
-                android:background="@color/c_f4f4f4">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/deploy_sub_tip"
-                    android:textColor="@color/c_f34a4a"
-                    android:textSize="12sp" />
-            </FrameLayout>
-
-        </LinearLayout>
-
-    </android.support.v4.widget.NestedScrollView>
+    <include
+        android:id="@+id/ac_deploy_detail_title_root"
+        layout="@layout/item_include_text_title" />
 
     <TextView
         android:id="@+id/ac_deploy_device_detail_tv_upload"
@@ -317,11 +16,494 @@
         android:layout_marginStart="20dp"
         android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:background="@drawable/shape_bg_corner_29c_shadow"
+        android:background="@drawable/shape_bg_solid_df_corner"
+        android:enabled="false"
         android:gravity="center"
         android:paddingTop="10dp"
         android:paddingBottom="10dp"
         android:text="@string/deploy_device_detail_uploade"
         android:textColor="@color/white"
         android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/ac_deploy_device_detail_tv_upload_tip"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/deploy_device_detail_add_all_required"
+        android:textSize="14sp"
+        android:textColor="@color/c_a6a6a6"
+        android:layout_marginStart="20dp"
+        android:layout_above="@id/ac_deploy_device_detail_tv_upload"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        />
+
+    <android.support.v4.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ac_deploy_detail_title_root"
+        android:layout_above="@id/ac_deploy_device_detail_tv_upload_tip"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/c_f4f4f4"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/ac_deploy_device_detail_tv_device_type"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginBottom="20dp"
+                android:textColor="@color/c_a6a6a6"
+                android:textSize="14sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/ac_deploy_device_detail_ll_name_location"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:focusable="true"
+                    android:background="@drawable/selector_item_white_ee"
+                    android:focusableInTouchMode="true"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/deploy_device_detail_name_address"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_device_detail_tv_name_location"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@null"
+                        android:gravity="end"
+                        android:text="@string/required"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+
+                <RelativeLayout
+                    android:id="@+id/ac_deploy_device_detail_rl_tag"
+                    android:layout_width="match_parent"
+                    android:background="@drawable/selector_item_white_ee"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/ac_deploy_device_detail_tv_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/sensor_detail_tag"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:id="@+id/ac_deploy_device_detail_imv_tag"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_marginStart="16dp"
+                        android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag"
+                        android:layout_toEndOf="@id/ac_deploy_device_detail_tv_tag">
+                        <TextView
+                            android:id="@+id/ac_deploy_device_detail_tv_tag_required"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/optional"
+                            android:layout_centerVertical="true"
+                            android:textSize="14sp"
+                            android:textColor="@color/c_a6a6a6"
+                            android:visibility="visible"
+                            />
+
+                        <com.sensoro.smartcity.widget.TouchRecycleView
+                            android:id="@+id/ac_deploy_device_detail_rc_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:visibility="gone">
+
+                        </com.sensoro.smartcity.widget.TouchRecycleView>
+                    </RelativeLayout>
+
+
+                </RelativeLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:id="@+id/ac_deploy_device_detail_ll_alarm_contact"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_item_white_ee"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:text="@string/alert_contact"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <RelativeLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_weight="1">
+
+                        <TextView
+                            android:id="@+id/ac_deploy_device_detail_tv_alarm_contact_required"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:text="@string/required"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/c_a6a6a6"
+                            android:textSize="14sp"
+                            android:visibility="visible"
+                            />
+                        <com.sensoro.smartcity.widget.TouchRecycleView
+                            android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:layout_marginBottom="4dp"
+                            android:visibility="gone">
+
+                        </com.sensoro.smartcity.widget.TouchRecycleView>
+                    </RelativeLayout>
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+
+                <LinearLayout
+                    android:id="@+id/deploy_detail_ll_we_chat"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingStart="20dp"
+                    android:paddingTop="12dp"
+                    android:paddingEnd="20dp"
+                    android:background="@drawable/selector_item_white_ee"
+                    android:paddingBottom="12dp">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/deploy_record_deploy_we_chat"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_detail_tv_we_chat"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="@string/optional"
+                        android:textColor="@color/c_a6a6a6" />
+
+                    <ImageView
+                        android:id="@+id/deploy_detail_iv_arrow_we_chat"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+                </LinearLayout>
+            </LinearLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:id="@+id/ac_deploy_device_detail_ll_deploy_pic"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_item_white_ee"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_weight="1"
+                        android:text="@string/deploy_device_detail_deploy_photo"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_device_detail_tv_deploy_pic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/required"
+                        android:textColor="@color/c_a6a6a6" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+
+                <LinearLayout
+                    android:id="@+id/ac_deploy_device_detail_ll_fixed_point"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/selector_item_white_ee"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_weight="1"
+                        android:gravity="center_vertical"
+                        android:text="@string/deploy_device_detail_deploy_location"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_device_detail_fixed_point_tv_near"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="2dp"
+                        android:background="@drawable/shape_bg_solid_29c_full_corner"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/signal_check_near"
+                        android:textColor="@color/white"
+                        android:textSize="10sp"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_device_detail_tv_fixed_point_signal"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="4dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:background="@drawable/shape_bg_solid_b6_full_corner"
+                        android:paddingStart="10dp"
+                        android:paddingTop="4dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="4dp"
+                        android:text="@string/deploy_result_signal"
+                        android:textColor="@color/white"
+                        android:textSize="10sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_device_detail_tv_fixed_point_state"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="14dp"
+                        android:gravity="center_vertical"
+                        android:text="@string/required"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/ac_deploy_device_detail_deploy_setting_line"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+
+                <LinearLayout
+                    android:id="@+id/ac_deploy_device_detail_ll_deploy_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:background="@drawable/selector_item_white_ee"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="20dp"
+                        android:layout_marginTop="12dp"
+                        android:layout_marginBottom="12dp"
+                        android:layout_weight="1"
+                        android:text="@string/initial_configuration"
+                        android:textColor="@color/c_a6a6a6"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:id="@+id/ac_deploy_device_detail_tv_deploy_setting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/required"
+                        android:textColor="@color/c_a6a6a6" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/arrows_right" />
+
+                </LinearLayout>
+
+                <View
+                    android:id="@+id/last_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:background="@color/c_dfdfdf" />
+            </LinearLayout>
+
+
+            <FrameLayout
+                android:id="@+id/fl_not_own"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white"
+                android:visibility="gone"
+                >
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="@string/deploy_sub_tip"
+                    android:textColor="@color/c_f34a4a"
+                    android:textSize="12sp" />
+            </FrameLayout>
+
+        </LinearLayout>
+
+    </android.support.v4.widget.NestedScrollView>
+
+
 </RelativeLayout>

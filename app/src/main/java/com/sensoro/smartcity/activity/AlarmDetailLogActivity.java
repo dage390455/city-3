@@ -19,7 +19,7 @@ import com.sensoro.smartcity.presenter.AlarmDetailLogActivityPresenter;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
 
 import java.util.List;
@@ -100,7 +100,6 @@ public class AlarmDetailLogActivity extends BaseActivity<IAlarmDetailLogActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        //TODO 数据回传
         mPresenter.handlerActivityResult(requestCode, resultCode, data);
     }
 

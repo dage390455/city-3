@@ -30,7 +30,7 @@ import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageAlarmPhotoDetailActivity;
@@ -147,7 +147,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         String name = mDeviceAlarmLogInfo.getDeviceName();
         acAlertLogTvName.setText(TextUtils.isEmpty(name) ? mDeviceAlarmLogInfo.getDeviceSN() : name);
 
-        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity,mDeviceAlarmLogInfo.getUpdatedTime(), 1));
+        acAlertTvAlertTime.setText(DateUtil.getStrTimeToday(mActivity,mDeviceAlarmLogInfo.getCreatedTime(), 1));
 
         acAlertTvAlertCount.setText(mDeviceAlarmLogInfo.getDisplayStatus() + 10 + "");
 
@@ -189,7 +189,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
         }
         long current = System.currentTimeMillis();
         mProgressUtils.showProgress();
-        RetrofitServiceHelper.INSTANCE.getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, mDeviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>() {
+        RetrofitServiceHelper.INSTANCE.getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, mDeviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(null) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
@@ -292,7 +292,7 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                 statusPlace,
                 remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe
-                        (new CityObserver<DeviceAlarmItemRsp>() {
+                        (new CityObserver<DeviceAlarmItemRsp>(null) {
 
 
                             @Override

@@ -17,7 +17,7 @@ import com.sensoro.smartcity.imainviews.IDeployDeviceTagActivityView;
 import com.sensoro.smartcity.presenter.DeployDeviceTagActivityPresenter;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.dialog.TagDialogUtils;
 
 import java.util.List;
@@ -133,9 +133,9 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
         super.onDestroy();
     }
 
-    @OnClick({R.id.ac_deploy_device_tag_commit,R.id.include_text_title_imv_arrows_left})
+    @OnClick({R.id.ac_deploy_device_tag_commit, R.id.include_text_title_imv_arrows_left})
     public void onViewClicked(View view) {
-        switch (view.getId()){
+        switch (view.getId()) {
             case R.id.ac_deploy_device_tag_commit:
                 mPresenter.doFinish();
                 break;
@@ -172,8 +172,8 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     }
 
     @Override
-    public void showDialogWithEdit(String text,int position) {
-        tagDialogUtils.show(text,position);
+    public void showDialogWithEdit(String text, int position) {
+        tagDialogUtils.show(text, position);
     }
 
     @Override
@@ -187,13 +187,13 @@ public class DeployDeviceTagActivity extends BaseActivity<IDeployDeviceTagActivi
     }
 
     @Override
-    public void onConfirm(int type, String text,int position) {
+    public void onConfirm(int type, String text, int position) {
         switch (type) {
             case DIALOG_TAG_ADD:
                 mPresenter.addTags(text);
                 break;
             case DIALOG_TAG_EDIT:
-                mPresenter.updateEditTag(position,text);
+                mPresenter.updateEditTag(position, text);
                 break;
             default:
                 break;

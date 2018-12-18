@@ -29,7 +29,7 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PermissionUtils;
 import com.sensoro.smartcity.util.PermissionsResultObserve;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -76,6 +76,12 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
         mPermissionUtils.registerObserver(this);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mPermissionUtils.requestPermission();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+//        FloatWindowManager.getInstance().applyOrShowFloatWindow(mActivity);
     }
 
     private void initView() {
@@ -295,7 +301,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     private void updateAccountIcon(boolean isEmpty) {
         if (isEmpty) {
-            acLoginImvAccountIcon.setColorFilter(R.color.c_a6a6a6,PorterDuff.Mode.SRC_IN);
+            acLoginImvAccountIcon.setColorFilter(R.color.c_a6a6a6, PorterDuff.Mode.SRC_IN);
         } else {
             acLoginImvAccountIcon.clearColorFilter();
         }
@@ -314,7 +320,7 @@ public class LoginActivity extends BaseActivity<ILoginView, LoginPresenter> impl
 
     private void updatePsdIcon(boolean isEmpty) {
         if (isEmpty) {
-            acLoginImvPsdIcon.setColorFilter(R.color.c_a6a6a6,PorterDuff.Mode.SRC_IN);
+            acLoginImvPsdIcon.setColorFilter(R.color.c_a6a6a6, PorterDuff.Mode.SRC_IN);
         } else {
             acLoginImvPsdIcon.clearColorFilter();
         }

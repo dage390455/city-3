@@ -18,6 +18,7 @@ import com.sensoro.smartcity.activity.InspectionExceptionDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IInspectionTaskActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.iwidget.IOnStart;
@@ -56,7 +57,8 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private int cur_page = 0;
     private int finish = 2;
     private final List<InspectionTaskDeviceDetail> mDevices = new ArrayList<>();
-    private static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
+    private final List<String> mSearchHistoryList = new ArrayList<>();
+    private final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private volatile boolean canFreshBle = true;
     private InspectionIndexTaskInfo mTaskInfo;
@@ -73,6 +75,12 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         if (mTaskInfo != null) {
             requestSearchData(DIRECTION_DOWN, null);
             mHandler.post(this);
+        }
+        doInspectionType(false);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().UpdateSearchHistoryList(mSearchHistoryList);
         }
 
     }
@@ -146,7 +154,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
@@ -211,8 +218,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                     sc3.statusTitle = mContext.getString(R.string.has_inspected);
                     sc3.status = 1;
                     list.add(sc3);
+                    getView().updateSelectDeviceStatusList(list);
                     if (needPop) {
-                        getView().updateSelectDeviceStatusList(list);
+                        getView().showSelectDeviceStatusPop();
                     }
                     getView().dismissProgressDialog();
                     getView().setBottomInspectionStateTitle(mContext.getString(R.string.i_have_inspected) + "： " + check, mContext.getString(R.string.not_inspected) + "： " + uncheck);
@@ -231,7 +239,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     }
 
     public void doInspectionType(final boolean needPop) {
-        if (selectDeviceList.size() > 0) {
+        if (selectDeviceList.size() > 0 && needPop) {
             getView().updateSelectDeviceTypeList(selectDeviceList);
             getView().showSelectDeviceTypePop();
             return;
@@ -352,12 +360,12 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         List<InspectionTaskDeviceDetail> devices = inspectionTaskDeviceDetailRsp.getData().getDevices();
         if (devices != null) {
             mDevices.addAll(devices);
-            if (!TextUtils.isEmpty(tempSearch)) {
-//            getView().setSelectedDateSearchText(searchText);
-                getView().setSearchButtonTextVisible(true);
-            } else {
-                getView().setSearchButtonTextVisible(false);
-            }
+//            if (!TextUtils.isEmpty(tempSearch)) {
+////            getView().setSelectedDateSearchText(searchText);
+//                getView().setSearchButtonTextVisible(true);
+//            } else {
+//                getView().setSearchButtonTextVisible(false);
+//            }
             handlerInspectionTaskDevice();
             getView().updateInspectionTaskDeviceItem(mDevices);
         }
@@ -409,9 +417,9 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         return BLE_DEVICE_SET.contains(inspectionTaskDeviceDetail.getSn());
     }
 
-    public void doSelectStatusDevice(InspectionStatusCountModel item) {
+    public void doSelectStatusDevice(InspectionStatusCountModel item, String searchText) {
         this.finish = item.status;
-        requestSearchData(DIRECTION_DOWN, tempSearch);
+        requestSearchData(DIRECTION_DOWN, searchText);
     }
 
     @Override
@@ -469,7 +477,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         getView().startAC(intent);
     }
 
-    public void doSelectTypeDevice(DeviceTypeModel deviceTypeModel) {
+    public void doSelectTypeDevice(DeviceTypeModel deviceTypeModel, String searchText) {
         StringBuilder stringBuilder = new StringBuilder();
         List<String> deviceTypes = deviceTypeModel.deviceTypes;
         if (deviceTypes != null && deviceTypes.size() > 0) {
@@ -486,6 +494,22 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         } else {
             tempDeviceType = stringBuilder.toString();
         }
-        requestSearchData(DIRECTION_DOWN, tempSearch);
+        requestSearchData(DIRECTION_DOWN, searchText);
+    }
+
+    public void clearSearchHistory() {
+        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+        mSearchHistoryList.clear();
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
+    }
+
+    public void save(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_INSPECTION);
+        mSearchHistoryList.remove(text);
+        mSearchHistoryList.add(0, text);
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
 }

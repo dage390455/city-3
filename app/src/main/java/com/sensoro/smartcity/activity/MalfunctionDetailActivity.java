@@ -18,7 +18,7 @@ import com.sensoro.smartcity.imainviews.IMalfunctionDetailActivityView;
 import com.sensoro.smartcity.presenter.MalfunctionDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -139,17 +139,17 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_LONG).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_LONG).show();
     }
 
 
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_malfunction_detail_tv_contact_owner, R.id.ac_malfunction_detail_tv_quick_navigation,
-            R.id.ac_malfunction_detail_tv_confirm,R.id.include_text_title_tv_subtitle})
+            R.id.ac_malfunction_detail_tv_confirm, R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -162,6 +162,7 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
                 mPresenter.doNavigation();
                 break;
             case R.id.ac_malfunction_detail_tv_confirm:
+                mPresenter.doChangeDevice();
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMalfunctionHistory();
@@ -176,7 +177,7 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
 
     @Override
     public void setMalfunctionStatus(int malfunctionStatus, String time) {
-        switch (malfunctionStatus){
+        switch (malfunctionStatus) {
             case 1:
                 acMalfunctionDetailLlTime.setBackgroundResource(R.drawable.shape_bg_corner_f4_shadow);
                 acMalfunctionDetailImvIcon.setImageResource(R.drawable.alert_time_normal);
@@ -196,12 +197,17 @@ public class MalfunctionDetailActivity extends BaseActivity<IMalfunctionDetailAc
 
     @Override
     public void updateRcContent(List<MalfunctionListInfo.RecordsBean> records, String malfunctionText) {
-        mContentAdapter.setData(records,malfunctionText);
+        mContentAdapter.setData(records, malfunctionText);
     }
 
     @Override
     public void setMalfunctionCount(String count) {
         acMalfunctionDetailTvCount.setText(count);
+    }
+
+    @Override
+    public void setMalfunctionDetailConfirmVisible(boolean isVisible) {
+        acMalfunctionDetailTvConfirm.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

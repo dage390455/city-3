@@ -3,6 +3,7 @@ package com.sensoro.smartcity.adapter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +13,8 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.InspectionTaskInstructionModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
+import com.sensoro.smartcity.util.AppUtils;
+import com.sensoro.smartcity.widget.divider.TopSpaceItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,29 +53,25 @@ public class InspectionInstructionContentAdapter extends RecyclerView.Adapter<In
             pics.add(scenesData);
         }
 
-        final InspectionExceptionThumbnailAdapter mPhotoAdapter = new InspectionExceptionThumbnailAdapter(mContext);
-        final GridLayoutManager manager = new GridLayoutManager(mContext, 4){
+        final InspectionInstructionImageAdapter mPhotoAdapter = new InspectionInstructionImageAdapter(mContext);
+        LinearLayoutManager manager = new LinearLayoutManager(mContext) {
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+
             @Override
             public boolean canScrollVertically() {
                 return false;
             }
-
         };
+        manager.setOrientation(LinearLayoutManager.VERTICAL);
         holder.itemAdapterInspectionInstructionContentRcPic.setLayoutManager(manager);
         holder.itemAdapterInspectionInstructionContentRcPic.setHasFixedSize(true);
         holder.itemAdapterInspectionInstructionContentRcPic.setNestedScrollingEnabled(false);
-        mPhotoAdapter.updateDataList(pics);
+        holder.itemAdapterInspectionInstructionContentRcPic.addItemDecoration(new TopSpaceItemDecoration(AppUtils.dp2px(mContext,12)));
         holder.itemAdapterInspectionInstructionContentRcPic.setAdapter(mPhotoAdapter);
-
-
-        mPhotoAdapter.setOnExceptionThumbnailItemClickListener(new InspectionExceptionThumbnailAdapter.ExceptionThumbnailItemClickListener() {
-            @Override
-            public void onExceptionThumbnailItemClickListener(int position) {
-                if (mListener != null) {
-                    mListener.onInspectionInstructionContentPicClick(mPhotoAdapter.getDataList(),position);
-                }
-            }
-        });
+        mPhotoAdapter.updateDataList(pics);
     }
 
 

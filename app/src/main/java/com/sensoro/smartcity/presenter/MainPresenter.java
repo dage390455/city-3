@@ -1,14 +1,16 @@
 package com.sensoro.smartcity.presenter;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.KeyEvent;
 
 import com.igexin.sdk.PushManager;
-import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.LoginActivity;
@@ -31,6 +33,7 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceAlarmCount;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -63,6 +66,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private final MainPresenter.DeviceInfoListener mInfoListener = new MainPresenter.DeviceInfoListener();
     private final MainPresenter.DeviceAlarmCountListener mAlarmCountListener = new MainPresenter.DeviceAlarmCountListener();
     private final DeviceAlarmDisplayStatusListener mAlarmDisplayStatusListener = new DeviceAlarmDisplayStatusListener();
+    private final DeviceFlushListener mDeviceFlushListener = new DeviceFlushListener();
+    private final DeviceTaskResultListener mTaskResultListener = new DeviceTaskResultListener();
     private final Handler mHandler = new Handler();
     private final MainPresenter.TaskRunnable mRunnable = new MainPresenter.TaskRunnable();
     //
@@ -70,25 +75,65 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private HomeFragment homeFragment;
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
+    private ScreenBroadcastReceiver mScreenReceiver;
+
+    private final class ScreenBroadcastReceiver extends BroadcastReceiver {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+
+            String action = intent.getAction();
+            if (!TextUtils.isEmpty(action)) {
+
+                switch (action) {
+                    case Intent.ACTION_SCREEN_ON:
+                    case Intent.ACTION_USER_PRESENT:
+                        final EventData eventData = new EventData();
+                        eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
+                        eventData.data = true;
+                        EventBus.getDefault().post(eventData);
+                        break;
+                    case Intent.ACTION_SCREEN_OFF:
+                        final EventData eventData1 = new EventData();
+                        eventData1.code = EVENT_DATA_LOCK_SCREEN_ON;
+                        eventData1.data = false;
+                        EventBus.getDefault().post(eventData1);
+                        break;
+
+                }
+            }
+//            if (Intent.ACTION_SCREEN_ON.equals(action)) {
+////                Toast.makeText(context, "屏幕开屏", Toast.LENGTH_SHORT).show();
+//                final EventData eventData = new EventData();
+//                eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
+//
+//            } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
+//
+////                Toast.makeText(context, "屏幕关屏", Toast.LENGTH_SHORT).show();
+//            } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
+//                final EventData eventData = new EventData();
+//                eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
+////                Toast.makeText(context, "屏幕解锁", Toast.LENGTH_SHORT).show();
+//            }
+        }
+    }
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        try {
-            Beta.init(mContext.getApplicationContext(), BuildConfig.DEBUG);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        try {
-            String log = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().toString();
-            LogUtils.loge("main ---->> " + log);
-        } catch (NullPointerException e) {
-            e.printStackTrace();
+        //提前获取一次
+        if (PreferencesHelper.getInstance().getLocalDevicesMergeTypes() == null) {
             openLogin();
             return;
         }
         initViewPager();
+        //注册息屏事件广播
+        IntentFilter intentFilter = new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+        mScreenReceiver = new ScreenBroadcastReceiver();
+        mContext.registerReceiver(mScreenReceiver, intentFilter);
     }
 
     private void initViewPager() {
@@ -119,31 +164,27 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 PushManager.getInstance().turnOnPush(SensoroCityApplication.getInstance());
             }
             mHandler.postDelayed(mRunnable, 3000L);
+            mHandler.postDelayed(new Runnable() {
+                @Override
+                public void run() {
+                    createSocket();
+                }
+            }, 2000);
             freshAlarmCount();
         } else {
             openLogin();
         }
-        LogUtils.loge(this, "refreshContentData");
-        //提前获取一次
     }
 
-    /**
-     * 超级用户
-     *
-     * @return
-     */
-//    private boolean isSupperAccount() {
-//        return PreferencesHelper.getInstance().getUserData() != null && PreferencesHelper.getInstance().getUserData().isSupperAccount;
-//    }
-    public boolean hasDeviceBriefControl() {
+    private boolean hasDeviceBriefControl() {
         return PreferencesHelper.getInstance().getUserData().hasDeviceBrief;
     }
 
-    public boolean hasAlarmInfoControl() {
+    private boolean hasAlarmInfoControl() {
         return PreferencesHelper.getInstance().getUserData().hasAlarmInfo;
     }
 
-    public boolean hasMalfunctionControl() {
+    private boolean hasMalfunctionControl() {
         return PreferencesHelper.getInstance().getUserData().hasMalfunction;
     }
 
@@ -188,7 +229,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         @Override
         public void call(Object... args) {
             try {
-                synchronized (MainPresenter.DeviceInfoListener.class) {
+                synchronized (MainPresenter.DeviceAlarmCountListener.class) {
                     for (Object arg : args) {
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
@@ -224,7 +265,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         @Override
         public void call(Object... args) {
             try {
-                synchronized (MainPresenter.DeviceInfoListener.class) {
+                synchronized (MainPresenter.DeviceAlarmDisplayStatusListener.class) {
                     for (Object arg : args) {
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
@@ -276,11 +317,55 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
     }
 
+    private final class DeviceFlushListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (MainPresenter.DeviceFlushListener.class) {
+                    //TODO 设备删除做的操作
+                    EventData eventData = new EventData();
+                    eventData.code = EVENT_DATA_DEVICE_SOCKET_FLUSH;
+                    EventBus.getDefault().post(eventData);
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    private final class DeviceTaskResultListener implements Emitter.Listener {
+
+        @Override
+        public void call(Object... args) {
+            try {
+                synchronized (MainPresenter.DeviceTaskResultListener.class) {
+                    for (Object arg : args) {
+                        if (arg instanceof JSONObject) {
+                            JSONObject jsonObject = (JSONObject) arg;
+                            String json = jsonObject.toString();
+                            LogUtils.loge(this, "socket-->>> DeviceTaskResultListener json = " + json);
+                            MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, MonitorPointOperationTaskResultInfo.class);
+                            EventData eventData = new EventData();
+                            eventData.code = EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT;
+                            eventData.data = monitorPointOperationTaskResultInfo;
+                            EventBus.getDefault().post(eventData);
+                        }
+                    }
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
     private final class TaskRunnable implements Runnable {
 
         @Override
         public void run() {
-            //检查网络状态
+            //检查网络状态和app更新
             ThreadPoolManager.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
@@ -291,13 +376,13 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             if (!ping) {
                                 getView().toastShort(mContext.getString(R.string.disconnected_from_network));
                             }
+                            Beta.checkUpgrade(false, false);
+                            mHandler.postDelayed(mRunnable, 5 * 1000);
+                            LogUtils.loge("TaskRunnable == ping = " + ping + ",检查更新");
                         }
                     });
                 }
             });
-            //检查更新
-//            Beta.checkUpgrade(false, false);
-            createSocket();
         }
     }
 
@@ -312,6 +397,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -370,22 +457,14 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     }
 
-    public void changeAccount(EventLoginData eventLoginData) {
+    private void changeAccount(EventLoginData eventLoginData) {
         //
         PreferencesHelper.getInstance().saveUserData(eventLoginData);
-//        getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
-//        if (indexFragment != null) {
         freshAccountType();
         if (hasAlarmInfoControl()) {
             freshAlarmCount();
         }
-        //
-//            getView().updateMenuPager(MenuPageFactory.createMenuPageList(mEventLoginData));
-//            getView().setCurrentPagerItem(0);
-//            getView().setMenuSelected(0);
         reconnect();
-//        }
-
     }
 
     private void reconnect() {
@@ -395,6 +474,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 if (hasDeviceBriefControl()) {
                     mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                     mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                    mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                    mSocket.off(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
                 }
                 if (hasAlarmInfoControl()) {
                     mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -412,6 +493,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.on(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.on(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -426,6 +509,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     @Override
     public void onDestroy() {
+        mContext.unregisterReceiver(mScreenReceiver);
         mHandler.removeCallbacks(mRunnable);
         mHandler.removeCallbacksAndMessages(null);
         if (EventBus.getDefault().isRegistered(this)) {
@@ -436,6 +520,8 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             if (hasDeviceBriefControl()) {
                 mSocket.off(SOCKET_EVENT_DEVICE_INFO, mInfoListener);
                 mSocket.off(SOCKET_EVENT_DEVICE_ALARM_COUNT, mAlarmCountListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_TASK_RESULT, mTaskResultListener);
+                mSocket.off(SOCKET_EVENT_DEVICE_FLUSH, mDeviceFlushListener);
             }
             if (hasAlarmInfoControl()) {
                 mSocket.off(SOCKET_EVENT_DEVICE_ALARM_DISPLAY, mAlarmDisplayStatusListener);
@@ -443,24 +529,17 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             mSocket = null;
         }
         mFragmentList.clear();
-        Beta.unInit();
         LogUtils.loge(this, "onDestroy");
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_SESSION_ID_OVERTIME:
                 RetrofitServiceHelper.INSTANCE.cancelAllRsp();
                 openLogin();
-                break;
-            case EVENT_DATA_FINISH_CODE:
-                //            if (contractFragment != null) {
-//                contractFragment.requestDataByDirection(DIRECTION_DOWN, false);
-//            }
                 break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().setBottomBarSelected(0);
@@ -485,7 +564,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 }
                 break;
         }
-//        LogUtils.loge(this, eventData.toString());
     }
 
     private void freshAlarmCount() {
@@ -533,7 +611,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     }
 
     public void handleActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO 对照片信息统一处理
+        // 对照片信息统一处理
         AlarmPopUtils.handlePhotoIntent(requestCode, resultCode, data);
         if (managerFragment != null) {
             managerFragment.handlerActivityResult(requestCode, resultCode, data);

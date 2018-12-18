@@ -80,19 +80,24 @@ public enum DeployAnalyzerUtils implements Constants {
                 }
                 handleScanLogin(presenter, result, activity, listener);
                 break;
-            case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
-                //巡检设备更换
+            case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
+            case TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE:
+                //巡检/故障设备更换
                 if (oldDeviceDetail == null) {
                     listener.onError(0, null, null);
                     return;
                 }
-                String scanSnNewDevice = parseResultMac(result);
-                if (TextUtils.isEmpty(scanSnNewDevice)) {
+                String scanNewDeviceSN = parseResultMac(result);
+                if (TextUtils.isEmpty(scanNewDeviceSN)) {
                     listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
                     return;
                 } else {
-                    if (scanSnNewDevice.length() == 16) {
-                        handleDeviceDeployChange(presenter, oldDeviceDetail, scanSnNewDevice, activity, listener);
+                    if (scanNewDeviceSN.length() == 16) {
+                        if (scanNewDeviceSN.equalsIgnoreCase(oldDeviceDetail.getSn())) {
+                            listener.onError(scanType, null, "请使用不同的设备进行更换");
+                            return;
+                        }
+                        handleDeviceDeployChange(scanType, presenter, oldDeviceDetail, scanNewDeviceSN, activity, listener);
                     } else {
                         listener.onError(0, null, activity.getResources().getString(R.string.invalid_qr_code));
                         return;
@@ -333,37 +338,94 @@ public enum DeployAnalyzerUtils implements Constants {
                         doStation();
                     } else {
                         DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
-                        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
-                        deployAnalyzerModel.sn = sn;
-                        deployAnalyzerModel.nameAndAddress = data.getName();
-                        deployAnalyzerModel.notOwn = data.isNotOwn();
                         List<Double> lonlat = data.getLonlat();
                         if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                             deployAnalyzerModel.latLng.clear();
                             deployAnalyzerModel.latLng.addAll(lonlat);
+                            getAllDeviceInfo(deployAnalyzerModel);
+                        } else {
+                            deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+                            deployAnalyzerModel.sn = sn;
+                            deployAnalyzerModel.deviceType = data.getDeviceType();
+                            deployAnalyzerModel.nameAndAddress = data.getName();
+                            deployAnalyzerModel.notOwn = data.isNotOwn();
+                            deployAnalyzerModel.blePassword = data.getBlePassword();
+                            deployAnalyzerModel.weChatAccount = data.getWxPhone();
+
+                            deployAnalyzerModel.signal = data.getSignal();
+                            List<String> tags = data.getTags();
+                            if (tags != null && tags.size() > 0) {
+                                deployAnalyzerModel.tagList.clear();
+                                deployAnalyzerModel.tagList.addAll(tags);
+                            }
+                            deployAnalyzerModel.updatedTime = data.getUpdatedTime();
+                            AlarmInfo alarmInfo = data.getAlarms();
+                            if (alarmInfo != null) {
+                                AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                                if (notification != null) {
+                                    String contact = notification.getContact();
+                                    String content = notification.getContent();
+                                    if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
+//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
+                                    } else {
+                                        deployAnalyzerModel.deployContactModelList.clear();
+                                        DeployContactModel deployContactModel = new DeployContactModel();
+                                        deployContactModel.name = contact;
+                                        deployContactModel.phone = content;
+                                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                    }
+
+                                }
+                            }
+                            Intent intent = new Intent();
+                            intent.setClass(activity, DeployMonitorDetailActivity.class);
+                            intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
+                            listener.onSuccess(intent);
                         }
+                    }
+
+                }
+            }
+
+            private void getAllDeviceInfo(final DeployAnalyzerModel deployAnalyzerModel) {
+                RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(scanSerialNumber, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1)).subscribeOn
+                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(presenter) {
+                    @Override
+                    public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
+                        DeployDeviceInfo data = deployDeviceDetailRsp.getData();
+                        deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE;
+                        deployAnalyzerModel.sn = data.getSn();
+                        deployAnalyzerModel.deviceType = data.getDeviceType();
+                        deployAnalyzerModel.nameAndAddress = data.getName();
+                        deployAnalyzerModel.notOwn = data.isNotOwn();
+                        deployAnalyzerModel.blePassword = data.getBlePassword();
                         deployAnalyzerModel.signal = data.getSignal();
+                        deployAnalyzerModel.weChatAccount = data.getWxPhone();
                         List<String> tags = data.getTags();
                         if (tags != null && tags.size() > 0) {
                             deployAnalyzerModel.tagList.clear();
                             deployAnalyzerModel.tagList.addAll(tags);
                         }
                         deployAnalyzerModel.updatedTime = data.getUpdatedTime();
+                        List<Integer> channelMask = data.getChannelMask();
+                        if (channelMask != null && channelMask.size() > 0) {
+                            deployAnalyzerModel.channelMask.addAll(channelMask);
+                        }
                         AlarmInfo alarmInfo = data.getAlarms();
-                        AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
-                        if (notification != null) {
-                            String contact = notification.getContact();
-                            String content = notification.getContent();
-                            if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
-//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                            } else {
-                                deployAnalyzerModel.deployContactModelList.clear();
-                                DeployContactModel deployContactModel = new DeployContactModel();
-                                deployContactModel.name = contact;
-                                deployContactModel.phone = content;
-                                deployAnalyzerModel.deployContactModelList.add(deployContactModel);
-                            }
+                        if (alarmInfo != null) {
+                            AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                            if (notification != null) {
+                                String contact = notification.getContact();
+                                String content = notification.getContent();
+                                if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
+                                    deployAnalyzerModel.deployContactModelList.clear();
+                                    DeployContactModel deployContactModel = new DeployContactModel();
+                                    deployContactModel.name = contact;
+                                    deployContactModel.phone = content;
+                                    deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                                }
 
+                            }
                         }
                         Intent intent = new Intent();
                         intent.setClass(activity, DeployMonitorDetailActivity.class);
@@ -371,7 +433,27 @@ public enum DeployAnalyzerUtils implements Constants {
                         listener.onSuccess(intent);
                     }
 
-                }
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
+                            listener.onError(errorCode, null, errorMsg);
+                        } else if (errorCode == 4013101 || errorCode == 4000013) {
+                            //TODO 控制逻辑
+                            doStation();
+                        } else {
+                            //TODO 控制逻辑
+                            Intent intent = new Intent();
+                            intent.setClass(activity, DeployResultActivity.class);
+                            DeployResultModel deployResultModel = new DeployResultModel();
+                            deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
+                            deployResultModel.sn = scanSerialNumber;
+                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE;
+                            deployResultModel.errorMsg = errorMsg;
+                            intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
+                            listener.onError(errorCode, intent, errorMsg);
+                        }
+                    }
+                });
             }
         });
 
@@ -404,7 +486,7 @@ public enum DeployAnalyzerUtils implements Constants {
         });
     }
 
-    private void handleDeviceDeployChange(final BasePresenter presenter, final InspectionTaskDeviceDetail oldDeviceDetail, final String scanSerialNumber, final Activity activity, final OnDeployAnalyzerListener listener) {
+    private void handleDeviceDeployChange(final int scanType, final BasePresenter presenter, final InspectionTaskDeviceDetail oldDeviceDetail, final String scanSerialNumber, final Activity activity, final OnDeployAnalyzerListener listener) {
         //todo 信息替换
         final DeployAnalyzerModel deployAnalyzerModel = new DeployAnalyzerModel();
         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(oldDeviceDetail.getSn(), null, null).subscribeOn
@@ -440,7 +522,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
-                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                            deployResultModel.scanType = scanType;
                             deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
                             deployResultModel.sn = scanSerialNumber;
                             intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
@@ -450,7 +532,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
-                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                            deployResultModel.scanType = scanType;
                             deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
                             deployResultModel.sn = scanSerialNumber;
                             deployResultModel.errorMsg = errorMsg;
@@ -467,7 +549,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             Intent intent = new Intent();
                             intent.setClass(activity, DeployResultActivity.class);
                             DeployResultModel deployResultModel = new DeployResultModel();
-                            deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                            deployResultModel.scanType = scanType;
                             deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
                             deployResultModel.sn = scanSerialNumber;
                             intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
@@ -479,7 +561,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                 Intent intent = new Intent();
                                 intent.setClass(activity, DeployResultActivity.class);
                                 DeployResultModel deployResultModel = new DeployResultModel();
-                                deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                                deployResultModel.scanType = scanType;
                                 deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT;
                                 deployResultModel.sn = scanSerialNumber;
                                 intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
@@ -489,8 +571,13 @@ public enum DeployAnalyzerUtils implements Constants {
                                 deployAnalyzerModel.notOwn = data.isNotOwn();
                                 deployAnalyzerModel.mDeviceDetail = oldDeviceDetail;
                                 deployAnalyzerModel.blePassword = data.getBlePassword();
+
+                                String deviceType = data.getDeviceType();
+                                if (!TextUtils.isEmpty(deviceType)) {
+                                    deployAnalyzerModel.deviceType = deviceType;
+                                }
                                 List<Integer> channelMask = data.getChannelMask();
-                                if (channelMask.size() > 0) {
+                                if (channelMask != null && channelMask.size() > 0) {
                                     deployAnalyzerModel.channelMask.clear();
                                     deployAnalyzerModel.channelMask.addAll(channelMask);
                                 }
@@ -507,8 +594,10 @@ public enum DeployAnalyzerUtils implements Constants {
             @Override
             public void onCompleted(DeployDeviceDetailRsp deployDeviceDetailRsp) {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
-                deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                deployAnalyzerModel.deployType = scanType;
                 deployAnalyzerModel.nameAndAddress = data.getName();
+                deployAnalyzerModel.deviceType = data.getDeviceType();
+                deployAnalyzerModel.weChatAccount = data.getWxPhone();
                 List<Double> lonlat = data.getLonlat();
                 if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                     deployAnalyzerModel.latLng.clear();
@@ -522,20 +611,21 @@ public enum DeployAnalyzerUtils implements Constants {
                 }
                 deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                 AlarmInfo alarmInfo = data.getAlarms();
-                AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
-                if (notification != null) {
-                    String contact = notification.getContact();
-                    String content = notification.getContent();
-                    if (TextUtils.isEmpty(contact) || TextUtils.isEmpty(content)) {
-//                        getView().setContactEditText(mContext.getResources().getString(R.string.tips_hint_contact));
-                    } else {
-                        deployAnalyzerModel.deployContactModelList.clear();
-                        DeployContactModel deployContactModel = new DeployContactModel();
-                        deployContactModel.name = contact;
-                        deployContactModel.phone = content;
-                        deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                if (alarmInfo != null) {
+                    AlarmInfo.NotificationInfo notification = alarmInfo.getNotification();
+                    if (notification != null) {
+                        String contact = notification.getContact();
+                        String content = notification.getContent();
+                        if (!TextUtils.isEmpty(contact) && !TextUtils.isEmpty(content)) {
+                            deployAnalyzerModel.deployContactModelList.clear();
+                            DeployContactModel deployContactModel = new DeployContactModel();
+                            deployContactModel.name = contact;
+                            deployContactModel.phone = content;
+                            deployAnalyzerModel.deployContactModelList.add(deployContactModel);
+                        }
                     }
                 }
+
                 getNesDeviceInfo();
             }
         });
@@ -594,7 +684,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                         DeployStationInfo deployStationInfo = deployStationInfoRsp.getData();
                                         deployResultModel.name = deployStationInfo.getName();
                                         deployResultModel.sn = deployStationInfo.getSn();
-                                        deployResultModel.deviceStatus = deployStationInfo.getNormalStatus();
+                                        deployResultModel.stationStatus = deployStationInfo.getNormalStatus();
                                         deployResultModel.updateTime = deployStationInfo.getUpdatedTime();
                                         deployResultModel.scanType = TYPE_SCAN_DEPLOY_STATION;
                                         deployResultModel.address = deployAnalyzerModel.address;
@@ -610,7 +700,7 @@ public enum DeployAnalyzerUtils implements Constants {
                         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
                             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
                             RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                                    deployContactModel.name, deployContactModel.phone, imgUrls).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                                    deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                                     .subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
                                         @Override
                                         public void onErrorMsg(int errorCode, String errorMsg) {
@@ -654,11 +744,12 @@ public enum DeployAnalyzerUtils implements Constants {
                         }
 
                         break;
-                    case TYPE_SCAN_DEPLOY_DEVICE_CHANGE:
+                    case TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE:
                         if (deployAnalyzerModel.deployContactModelList.size() > 0) {
                             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
                             RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
-                                    deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress, deployContactModel.name, deployContactModel.phone, imgUrls).
+                                    deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
+                                    deployContactModel.name, deployContactModel.phone, imgUrls,null).
                                     subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
                                 @Override
                                 public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
@@ -672,7 +763,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                         deployResultModel.contact = deployContactModel.name;
                                         deployResultModel.phone = deployContactModel.phone;
                                     }
-                                    deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                                    deployResultModel.scanType = TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
                                     deployResultModel.address = deployAnalyzerModel.address;
                                     intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
                                     listener.onSuccess(intent);
@@ -690,7 +781,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                         DeployResultModel deployResultModel = new DeployResultModel();
                                         deployResultModel.resultCode = DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED;
                                         deployResultModel.sn = deployAnalyzerModel.sn;
-                                        deployResultModel.scanType = TYPE_SCAN_DEPLOY_DEVICE_CHANGE;
+                                        deployResultModel.scanType = TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE;
                                         deployResultModel.errorMsg = errorMsg;
                                         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
                                         listener.onError(errorCode, intent, errorMsg);

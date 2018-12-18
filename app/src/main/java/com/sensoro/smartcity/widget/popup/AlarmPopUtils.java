@@ -30,7 +30,7 @@ import com.sensoro.smartcity.model.AlarmPopModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.util.LogUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.imagepicker.ui.ImageGridActivity;
@@ -190,9 +190,9 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
 
     private void intData() {
         alarmResult.add(mActivity.getString(R.string.true_alarm));
-        alarmResult.add(mActivity.getString(R.string.security_risks));
-        alarmResult.add(mActivity.getString(R.string.misdescription));
-        alarmResult.add(mActivity.getString(R.string.test_patrol));
+        alarmResult.add(mActivity.getString(R.string.alarm_pop_security_risks));
+        alarmResult.add(mActivity.getString(R.string.alarm_pop_misdescription));
+        alarmResult.add(mActivity.getString(R.string.alarm_pop_test_patrol));
         //
         alarmResultInfo.add("");
         alarmResultInfo.add(mActivity.getString(R.string.alarm_pop_alarm_result_info_tip1));
@@ -585,7 +585,7 @@ public class AlarmPopUtils implements View.OnClickListener, Constants,
                         } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
                             adapter.setMaxImgCount(9);
 //                        selImageList.clear();
-//                        adapter.setImages(selImageList);
+//                        adapter.updateImages(selImageList);
                         }
 
                     }

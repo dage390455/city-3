@@ -19,7 +19,7 @@ import java.lang.ref.WeakReference;
  * @version 1.0
  * @since 21 Apr 2016
  */
-abstract class BadgeItem<T extends BadgeItem<T>> {
+public abstract class BadgeItem<T extends BadgeItem<T>> {
 
     private int mGravity = Gravity.TOP | Gravity.END;
     private boolean mHideOnSelect;

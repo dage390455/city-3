@@ -58,7 +58,7 @@ public class DeployDeviceTagActivityPresenter extends BasePresenter<IDeployDevic
     public void addTags(String tag) {
         if (TextUtils.isEmpty(tag)) {
             getView().toastShort(mContext.getString(R.string
-            .please_set_the_label));
+                    .please_set_the_label));
             return;
         }
         if (mTagList.size() >= 8) {

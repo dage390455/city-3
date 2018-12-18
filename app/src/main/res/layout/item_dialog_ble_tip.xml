@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="24dp"
-        android:text="打开蓝牙来允许“CITY”链接设备"
+        android:text="@string/open_ble_contact_device"
         android:textColor="@color/c_25292d"
         android:textSize="18sp" />
 
@@ -21,7 +21,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="10dp"
-        android:text="为了您的功能正常使用，请打开蓝牙和定位"
+        android:text="@string/open_ble_to_location"
         android:textColor="@color/c_a6a6a6"
         android:textSize="14sp" />
 
@@ -46,7 +46,7 @@
             android:gravity="center"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:text="好"
+            android:text="@string/ok_one"
             android:textColor="@color/c_a6a6a6"
             android:textSize="16sp" />
 
@@ -64,7 +64,7 @@
             android:gravity="center"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:text="设置"
+            android:text="@string/setting"
             android:textColor="@color/c_29c093"
             android:textSize="16sp" />
 

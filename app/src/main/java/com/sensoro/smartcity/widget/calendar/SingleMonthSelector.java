@@ -102,7 +102,7 @@ public class SingleMonthSelector implements Parcelable {
     private void segmentSelect(MonthView monthView, FullDay ssDay) {
         if(segmentSelectListener.onInterceptSelect(ssDay)) return;
 
-        if(startSelectedRecord.day == null && endSelectedRecord.day == null){ // init status
+        if(startSelectedRecord.day == null && endSelectedRecord.day == null){ // init deviceStatus
             startSelectedRecord.day = ssDay;
             monthView.addSelectedDay(ssDay);
         }else if(endSelectedRecord.day == null){ // start day is ok, but end day not

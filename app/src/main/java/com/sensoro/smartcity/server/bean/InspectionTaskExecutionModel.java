@@ -8,7 +8,7 @@ public class InspectionTaskExecutionModel {
      * baseInfo : {"identifier":"XJ201809251209020498","name":"北京市望京soho一期巡检任务","beginTime":1536768000000,"endTime":1538323200000,"startTime":0,"finishTime":0,"status":0}
      * inspectors : [{"id":"5ba5ef9668efebd21a61a063","name":"李仲元","contact":"13051321203"}]
      * deviceTypes : [{"deviceType":"smoke","num":4}]
-     * deviceStatus : [{"type":"uncheck","num":1},{"type":"normal","num":3},{"type":"abnormal","num":0}]
+     * stationStatus : [{"type":"uncheck","num":1},{"type":"normal","num":3},{"type":"abnormal","num":0}]
      */
 
     private BaseInfoBean baseInfo;
@@ -50,15 +50,6 @@ public class InspectionTaskExecutionModel {
     }
 
     public static class BaseInfoBean {
-        /**
-         * identifier : XJ201809251209020498
-         * name : 北京市望京soho一期巡检任务
-         * beginTime : 1536768000000
-         * endTime : 1538323200000
-         * startTime : 0
-         * finishTime : 0
-         * status : 0
-         */
 
         private String identifier;
         private String name;

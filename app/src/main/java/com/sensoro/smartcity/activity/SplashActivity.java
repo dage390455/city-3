@@ -4,14 +4,19 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 
 import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.ISplashActivityView;
 import com.sensoro.smartcity.presenter.SplashActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
+
+import java.util.Locale;
 
 public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActivityPresenter> implements ISplashActivityView {
 
@@ -22,6 +27,10 @@ public class SplashActivity extends BaseActivity<ISplashActivityView, SplashActi
 //        setWindowStatusBarColor(this, R.color.white);
 //        cancelFullScreen(this);
         setContentView(R.layout.activity_splash);
+        if (!AppUtils.isChineseLanguage()) {
+            FrameLayout bgFrame = findViewById(R.id.ac_splash_bg);
+            bgFrame.setBackgroundResource(R.drawable.bg_splash_launcher_en);
+        }
         mPresenter.initData(mActivity);
     }
 

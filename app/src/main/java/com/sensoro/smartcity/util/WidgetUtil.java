@@ -33,6 +33,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
@@ -691,6 +692,38 @@ public class WidgetUtil {
             }
 
         }
+    }
+
+    public static void judgeIndexSensorType(MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel, String
+            sensorType, Object value) {
+        if (value instanceof String) {
+            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
+                monitoringPointRcContentAdapterModel.content = (String) value;
+            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+                    .equalsIgnoreCase
+                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
+                monitoringPointRcContentAdapterModel.content = (String) value;
+            } else {
+                monitoringPointRcContentAdapterModel.content = (String) value;
+            }
+        } else if (value instanceof Number) {
+            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
+                DecimalFormat df = new DecimalFormat("###.##");
+                monitoringPointRcContentAdapterModel.content = df.format(value);
+            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+                    .equalsIgnoreCase
+                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
+                DecimalFormat df = new DecimalFormat("###.#");
+                monitoringPointRcContentAdapterModel.content = df.format(value);
+            } else {
+                monitoringPointRcContentAdapterModel.content = String.format("%.0f", Double.valueOf(value
+                        .toString()));
+
+            }
+        }
+
     }
 
     public static void judgeIndexSensorType(TextView valueTextView, TextView unitTextView, String

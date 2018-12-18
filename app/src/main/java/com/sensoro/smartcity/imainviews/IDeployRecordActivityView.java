@@ -24,4 +24,7 @@ public interface IDeployRecordActivityView extends IToast, IProgressDialog, IAct
 
     boolean getSearchTextVisible();
 
+    void updateSearchHistoryList(List<String> data);
+
+    void setSearchHistoryVisible(boolean isVisible);
 }

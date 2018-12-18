@@ -12,7 +12,7 @@ import com.sensoro.libbleserver.ble.CmdType;
 import com.sensoro.libbleserver.ble.ResultCode;
 import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.SensoroDevice;
-import com.sensoro.libbleserver.ble.SensoroDeviceConnectionTest;
+import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
 import com.sensoro.libbleserver.ble.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.proto.ProtoMsgTest1U1;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
@@ -38,7 +38,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     private boolean bleHasOpen;
     private String bleAddress;
     private boolean isStartSignalCheck = false;
-    private SensoroDeviceConnectionTest mConnection;
+    private SensoroDeviceConnection mConnection;
     private int sendCount;
     private int receiveCount;
     //随机频点
@@ -64,7 +64,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         switch (deployAnalyzerModel.status) {
             case SENSOR_STATUS_ALARM:
                 textColor = R.color.c_f34a4a;
-                statusText = mActivity.getString(R.string.main_page_warm);
+                statusText = mActivity.getString(R.string.main_page_warn);
                 break;
             case SENSOR_STATUS_NORMAL:
                 textColor = R.color.c_29c093;
@@ -103,10 +103,11 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     @Override
     public void onDestroy() {
         BleObserver.getInstance().unregisterBleObserver(this);
-        stopScanService();
+        mHandler.removeCallbacksAndMessages(null);
         if (mConnection != null) {
             mConnection.disconnect();
         }
+        stopScanService();
     }
 
     @Override
@@ -116,12 +117,12 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         } catch (Exception e) {
             e.printStackTrace();
             //TODO 提示
-            getView().toastShort("请检查蓝牙状态");
+            getView().toastShort(mActivity.getString(R.string.check_ble_status));
         }
         if (!bleHasOpen) {
             bleHasOpen = SensoroCityApplication.getInstance().bleDeviceManager.enEnableBle();
             if (!bleHasOpen) {
-                getView().toastShort("请检查蓝牙状态");
+                getView().toastShort(mActivity.getString(R.string.check_ble_status));
             }
         }
         mHandler.postDelayed(this, 3000);
@@ -199,11 +200,11 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
     }
 
     private void connectDevice() {
-        mHandler.removeCallbacksAndMessages(null);
-        mConnection = new SensoroDeviceConnectionTest(mActivity, bleAddress, true);
+        mConnection = new SensoroDeviceConnection(mActivity, bleAddress, true);
         try {
             mConnection.connect(deployAnalyzerModel.blePassword, SignalCheckActivityPresenter.this);
             getView().updateProgressDialogMessage(mActivity.getString(R.string.connecting));
+            getView().showProgressDialog();
 //            stopScanService();
         } catch (Exception e) {
             e.printStackTrace();
@@ -234,13 +235,16 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                getView().updateProgressDialogMessage(mActivity.getString(R.string.ble_send_data));
-                getView().setLlTestVisible(false);
-                getView().setLlDetailVisible(true);
+                if (getView() != null) {
+                    getView().updateProgressDialogMessage(mActivity.getString(R.string.ble_send_data));
+                    getView().showProgressDialog();
+                    getView().setLlTestVisible(false);
+                    getView().setLlDetailVisible(true);
+                    getView().setSubTitleVisible(false);
+                    sendDetectionCmd((SensoroDevice) bleDevice);
+                }
                 sendCount = 0;
                 receiveCount = 0;
-                getView().setSubTitleVisible(false);
-                sendDetectionCmd((SensoroDevice) bleDevice);
             }
         });
 
@@ -253,18 +257,24 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getView().dismissProgressDialog();
-                getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                getView().toastShort(ResultCode.errCodeToMsg(errorCode));
-                getView().setSubTitleVisible(true);
+                if (getView() != null) {
+                    getView().dismissProgressDialog();
+                    getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
+                    getView().toastShort(ResultCode.errCodeToMsg(errorCode));
+                    getView().setSubTitleVisible(true);
+                }
+
             }
         });
     }
 
     @Override
     public void onDisconnected() {
-        getView().setSubTitleVisible(true);
-        getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
+        if (getView() != null) {
+            getView().setSubTitleVisible(true);
+            getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
+        }
+
     }
 
     @Override
@@ -272,17 +282,18 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getView().dismissProgressDialog();
-                if (cmd == CmdType.CMD_SIGNAL) {
-                    if (o == null) {
-                        getView().setStartBtnIcon(R.drawable.signal_check_stop_btn);
-                    } else {
-                        ProtoMsgTest1U1.MsgTest msgTest = (ProtoMsgTest1U1.MsgTest) o;
-                        refresh(msgTest);
+                if (getView() != null) {
+                    getView().dismissProgressDialog();
+                    if (cmd == CmdType.CMD_SIGNAL) {
+                        if (o == null) {
+                            getView().setStartBtnIcon(R.drawable.signal_check_stop_btn);
+                        } else {
+                            ProtoMsgTest1U1.MsgTest msgTest = (ProtoMsgTest1U1.MsgTest) o;
+                            refresh(msgTest);
+                        }
+
                     }
-
                 }
-
             }
         });
     }
@@ -303,8 +314,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         Calendar calendar = Calendar.getInstance();
         signalData.setDate(DateUtil.getStrTime_ymd_hm_ss(calendar.getTimeInMillis()));
 
-        if (msgTest.getDownlinkSNR() != 0 && msgTest.getDownlinkFreq() != 0 && msgTest.getDownlinkRSSI() != 0 &&
-                msgTest.getDownlinkSNR() != 0 && msgTest.getDownlinkTxPower() != 0) {
+        if (msgTest.getDownlinkSNR() != 0 && msgTest.getDownlinkFreq() != 0 && msgTest.getDownlinkRSSI() != 0 && msgTest.getDownlinkTxPower() != 0) {
             receiveCount++;
         }
         sendCount++;
@@ -322,11 +332,14 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                getView().dismissProgressDialog();
-                getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
-                mConnection.disconnect();
+                if (getView() != null) {
+                    getView().dismissProgressDialog();
+                    getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
+                    mConnection.disconnect();
 
-                getView().toastShort(ResultCode.errCodeToMsg(errorCode));
+                    getView().toastShort(ResultCode.errCodeToMsg(errorCode));
+                }
+
             }
         });
     }

@@ -22,7 +22,7 @@ import com.sensoro.smartcity.presenter.SignalCheckActivityPresenter;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
 
 import java.util.List;
@@ -81,7 +81,7 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     private void initView() {
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mProgressbuild = new ProgressUtils.Builder(mActivity);
-        mProgressUtils = new ProgressUtils(mProgressbuild.build());
+        mProgressUtils = new ProgressUtils(mProgressbuild.build().setCancelable(false));
         includeTextTitleTvTitle.setText(R.string.signal_test);
         includeTextTitleTvSubtitle.setText(R.string.frequency_random);
 
@@ -173,14 +173,14 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
 
     @Override
     public void showProgressDialog() {
-        if (mProgressUtils!=null) {
+        if (mProgressUtils != null) {
             mProgressUtils.showProgress();
         }
     }
 
     @Override
     public void dismissProgressDialog() {
-        if (mProgressUtils!=null) {
+        if (mProgressUtils != null) {
             mProgressUtils.dismissProgress();
         }
     }
@@ -220,7 +220,7 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
     public void setStatus(String statusText, int textColor) {
 //        acSignalCheckTvState.setText(statusText);
 //        acSignalCheckTvState.setTextColor(textColor);
-        WidgetUtil.changeTvState(mActivity,acSignalCheckTvState,textColor,statusText);
+        WidgetUtil.changeTvState(mActivity, acSignalCheckTvState, textColor, statusText);
     }
 
     @Override
@@ -235,9 +235,9 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
 
     @Override
     public void updateTag(List<String> tags) {
-        if (tags.size()>0) {
+        if (tags.size() > 0) {
             mTagAdapter.updateTags(tags);
-        }else{
+        } else {
             acSignalCheckTvRcTag.setVisibility(View.GONE);
         }
     }
@@ -250,7 +250,7 @@ public class SignalCheckActivity extends BaseActivity<ISignalCheckActivityView, 
 
     @Override
     public void updateProgressDialogMessage(final String content) {
-        mProgressUtils.setMessage(content);
+        mProgressUtils.updateMessage(content);
     }
 
     @Override

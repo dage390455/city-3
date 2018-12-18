@@ -6,26 +6,31 @@ import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.ContractListAdapter;
+import com.sensoro.smartcity.adapter.SearchHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
@@ -33,8 +38,11 @@ import com.sensoro.smartcity.presenter.ContractManagerActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
+import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
+import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.popup.InspectionTaskStatePopUtils;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -44,8 +52,8 @@ import butterknife.ButterKnife;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_DOWN;
 import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
-public class ContractManagerActivity extends BaseActivity<IContractManagerActivityView, ContractManagerActivityPresenter> implements IContractManagerActivityView, AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener,
-        RadioGroup.OnCheckedChangeListener {
+public class ContractManagerActivity extends BaseActivity<IContractManagerActivityView, ContractManagerActivityPresenter> implements IContractManagerActivityView,
+        AdapterView.OnItemClickListener, View.OnClickListener, AbsListView.OnScrollListener {
     @BindView(R.id.contract_iv_menu_list)
     ImageView contractIvMenuList;
     @BindView(R.id.contract_manger_root)
@@ -54,14 +62,12 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     TextView contractTitle;
     @BindView(R.id.contract_iv_add)
     ImageView contractIvAdd;
-    //    @BindView(R.id.rg_contract_select)
-//    RadioGroup rgContractSelect;
     @BindView(R.id.contract_ptr_list)
     ListView contractPtrList;
     @BindView(R.id.contract_return_top)
     ImageView contractReturnTop;
     @BindView(R.id.refreshLayout)
-    RefreshLayout refreshLayout;
+    SmartRefreshLayout refreshLayout;
     @BindView(R.id.no_content)
     ImageView imvNoContent;
     @BindView(R.id.ic_no_content)
@@ -75,13 +81,27 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
     @BindView(R.id.fg_main_top_search_frame_search)
-    FrameLayout fgMainWarnFrameSearch;
+    RelativeLayout fgMainWarnFrameSearch;
     @BindView(R.id.fg_main_top_search_et_search)
     EditText fgMainWarnEtSearch;
     @BindView(R.id.fg_main_top_search_imv_calendar)
     ImageView fgMainWarnImvCalendar;
     @BindView(R.id.tv_top_search_alarm_search_cancel)
     TextView tvWarnAlarmSearchCancel;
+    @BindView(R.id.rv_search_history)
+    RecyclerView rvSearchHistory;
+    @BindView(R.id.btn_search_clear)
+    ImageView btnSearchClear;
+    @BindView(R.id.ll_search_history)
+    LinearLayout llSearchHistory;
+    @BindView(R.id.fg_main_top_search_imv_clear)
+    ImageView fgMainWarnFragmentImvClear;
+    @BindView(R.id.fg_main_top_search_tv_date_edit)
+    TextView fgMainWarnTvDateEdit;
+    @BindView(R.id.fg_main_warn_top_search_date_close)
+    ImageView fgMainWarnImvDateClose;
+    @BindView(R.id.fg_main_top_search_rl_date_edit)
+    RelativeLayout fgMainWarnRlDateEdit;
 
     private ProgressUtils mProgressUtils;
     private boolean isShowDialog = true;
@@ -90,6 +110,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     private Drawable blackTriangle;
     private Drawable grayTriangle;
     private InspectionTaskStatePopUtils mSelectTypePop;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -102,6 +123,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
 
+        fgMainWarnEtSearch.setHint(R.string.legal_representative_name);
         refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
@@ -120,21 +142,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 mPresenter.requestSearchData(DIRECTION_UP, text);
             }
         });
-//        contractPtrList.setRefreshing(false);
-//        contractPtrList.setMode(PullToRefreshBase.Mode.BOTH);
-//        contractPtrList.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener2<ListView>() {
-//            @Override
-//            public void onPullDownToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                isShowDialog = false;
-//                requestDataByDirection(DIRECTION_DOWN, false);
-//            }
-//
-//            @Override
-//            public void onPullUpToRefresh(PullToRefreshBase<ListView> refreshView) {
-//                isShowDialog = false;
-//                requestDataByDirection(DIRECTION_UP, false);
-//            }
-//        });
         mContractListAdapter = new ContractListAdapter(mActivity);
         contractPtrList.setOnScrollListener(this);
         contractPtrList.setAdapter(mContractListAdapter);
@@ -148,6 +155,9 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         fgMainWarnFrameSearch.setOnClickListener(this);
         fgMainWarnEtSearch.setOnClickListener(this);
         tvWarnAlarmSearchCancel.setOnClickListener(this);
+        fgMainWarnFragmentImvClear.setOnClickListener(this);
+        fgMainWarnImvCalendar.setOnClickListener(this);
+        fgMainWarnImvDateClose.setOnClickListener(this);
 
         blackTriangle = mActivity.getResources().getDrawable(R.drawable.main_small_triangle);
         blackTriangle.setBounds(0, 0, blackTriangle.getMinimumWidth(), blackTriangle.getMinimumHeight());
@@ -161,11 +171,30 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     // 当按了搜索之后关闭软键盘
                     String text = fgMainWarnEtSearch.getText().toString();
+                    mPresenter.save(text);
+                    fgMainWarnEtSearch.clearFocus();
                     mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
+                    setSearchHistoryVisible(false);
                     return true;
                 }
                 return false;
+            }
+        });
+        fgMainWarnEtSearch.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                setSearchClearImvVisible(s.length() > 0);
             }
         });
         AppUtils.getInputSoftStatus(contractMangerRoot, new AppUtils.InputSoftStatusListener() {
@@ -179,12 +208,52 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 fgMainWarnEtSearch.setCursorVisible(true);
             }
         });
+
+        //搜索历史的recyclerview
+        initRcSearchHistory();
+    }
+
+    private void initRcSearchHistory() {
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity) {
+            @Override
+            public boolean canScrollVertically() {
+                return false;
+            }
+
+            @Override
+            public boolean canScrollHorizontally() {
+                return false;
+            }
+        };
+        layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        rvSearchHistory.setLayoutManager(layoutManager);
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity, 6)));
+        mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
+                RecycleViewItemClickListener() {
+                    @Override
+                    public void onItemClick(View view, int position) {
+                        String text = mSearchHistoryAdapter.getSearchHistoryList().get(position);
+                        if (!TextUtils.isEmpty(text)) {
+                            fgMainWarnEtSearch.setText(text);
+                            fgMainWarnEtSearch.setSelection(fgMainWarnEtSearch.getText().toString().length());
+                        }
+                        fgMainWarnFragmentImvClear.setVisibility(View.VISIBLE);
+                        fgMainWarnEtSearch.clearFocus();
+                        AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
+                        setSearchHistoryVisible(false);
+                        mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                    }
+                });
+        rvSearchHistory.setAdapter(mSearchHistoryAdapter);
+    }
+
+    @Override
+    public void setSearchClearImvVisible(boolean isVisible) {
+        fgMainWarnFragmentImvClear.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     private void initSelectTypePop() {
         mSelectTypePop = new InspectionTaskStatePopUtils(mActivity);
-        mSelectTypePop.setUpAnimation();
-        mSelectTypePop.clearAnimation();
         mSelectTypePop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
@@ -209,8 +278,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
     private void initSelectStatusPop() {
         mSelectStatusPop = new InspectionTaskStatePopUtils(mActivity);
-        mSelectStatusPop.setUpAnimation();
-        mSelectStatusPop.clearAnimation();
         mSelectStatusPop.setSelectDeviceTypeItemClickListener(new InspectionTaskStatePopUtils.SelectDeviceTypeItemClickListener() {
             @Override
             public void onSelectDeviceTypeItemClick(View view, int position) {
@@ -233,6 +300,17 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         });
     }
 
+    @Override
+    public void onBackPressed() {
+        if (mSelectTypePop.isShowing()) {
+            mSelectTypePop.dismiss();
+        } else if (mSelectStatusPop.isShowing()) {
+            mSelectStatusPop.dismiss();
+        } else {
+            super.onBackPressed();
+        }
+
+    }
 
     @Override
     public void onPullRefreshComplete() {
@@ -379,29 +457,72 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 if (mSelectStatusPop != null && mSelectStatusPop.isShowing()) {
                     mSelectStatusPop.dismiss();
                 }
+                AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 mPresenter.doSelectTypePop();
                 break;
             case R.id.contract_tv_select_status:
+                AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 mPresenter.doSelectStatusPop();
                 break;
             case R.id.fg_main_top_search_frame_search:
             case R.id.fg_main_top_search_et_search:
                 fgMainWarnEtSearch.requestFocus();
                 fgMainWarnEtSearch.setCursorVisible(true);
+                setSearchHistoryVisible(true);
+                AppUtils.openInputMethodManager(mActivity, fgMainWarnEtSearch);
 //                forceOpenSoftKeyboard();
                 break;
             case R.id.fg_main_top_search_imv_calendar:
 //                mPresenter.doCalendar(fgMainWarnTitleRoot);
+                mPresenter.doCalendar(fgMainWarnTitleRoot);
+                AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 break;
             case R.id.fg_main_warn_top_search_date_close:
-//                fgMainWarnRlDateEdit.setVisibility(View.GONE);
-//                String text = fgMainWarnEtSearch.getText().toString();
-//                mPresenter.requestSearchData(DIRECTION_DOWN, text);
+                fgMainWarnRlDateEdit.setVisibility(View.GONE);
+                String text = fgMainWarnEtSearch.getText().toString();
+                setSearchHistoryVisible(false);
+                AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
+                mPresenter.requestSearchData(DIRECTION_DOWN, text);
                 break;
             case R.id.tv_top_search_alarm_search_cancel:
                 doCancelSearch();
+                setSearchHistoryVisible(false);
+                AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
+                break;
+            case R.id.fg_main_top_search_imv_clear:
+                fgMainWarnEtSearch.getText().clear();
+                fgMainWarnEtSearch.requestFocus();
+                AppUtils.openInputMethodManager(mActivity, fgMainWarnEtSearch);
                 break;
         }
+    }
+
+    @Override
+    public void setSearchHistoryVisible(boolean isVisible) {
+        llSearchHistory.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        refreshLayout.setVisibility(isVisible ? View.GONE : View.VISIBLE);
+        setSearchButtonTextVisible(isVisible);
+    }
+
+    @Override
+    public void UpdateSearchHistoryList(List<String> data) {
+        btnSearchClear.setVisibility(data.size() > 0 ? View.VISIBLE : View.GONE);
+        mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
+    }
+
+    @Override
+    public boolean isSelectedDateLayoutVisible() {
+        return fgMainWarnRlDateEdit.getVisibility() == View.VISIBLE;
+    }
+
+    @Override
+    public void setSelectedDateLayoutVisible(boolean isVisible) {
+        fgMainWarnRlDateEdit.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setSelectedDateSearchText(String content) {
+        fgMainWarnTvDateEdit.setText(content);
     }
 
     private void doCancelSearch() {
@@ -442,32 +563,6 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         } else {
             contractReturnTop.setVisibility(View.GONE);
         }
-    }
-
-    @Override
-    public void onCheckedChanged(RadioGroup group, int checkedId) {
-        int id = group.getCheckedRadioButtonId();
-        // 通过id实例化选中的这个RadioButton
-//        RadioButton choise = (RadioButton) mRootView.findViewById(id);
-//        // 获取这个RadioButton的text内容
-//        String output = choise.getText().toString();
-//        Toast.makeText(MainActivity.this, "你的性别为：" + output, Toast.LENGTH_SHORT).show();
-        //恢复没有数据的状态
-        refreshLayout.setNoMoreData(false);
-//        switch (id) {
-//            case R.id.rb_contract_all:
-//                mPresenter.requestContractDataAll();
-//                break;
-//            case R.id.rb_contract_business:
-//                mPresenter.requestContractDataBusiness();
-//                break;
-//            case R.id.rb_contract_person:
-//                mPresenter.requestContractDataPerson();
-//                break;
-//            default:
-//                break;
-//        }
-
     }
 
     @Override

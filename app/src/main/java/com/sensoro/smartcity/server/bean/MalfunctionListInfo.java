@@ -6,33 +6,9 @@ import java.util.Map;
 
 public class MalfunctionListInfo implements Serializable {
 
-    /**
-     * _id : 5bcecdd6efa52e6a329b06c7
-     * malfunctionType : circuitShort
-     * malfunctionData : {"circuitShort":{"description":"传感器短路","typeDescription":"circuitShort","type":6},"lowVoltage":{"description":"低电","typeDescription":"lowVoltage","type":5},"disassembly":{"description":"被拆卸","typeDescription":"disassembly","type":4},"description":"diy msg"}
-     * appId : appId123890
-     * owners : {"_id":"507f1f77bcf86cd799100001","nickname":"dealers1","appId":"appId123890","roles":"dealers","grants":{},"id":"507f1f77bcf86cd799100001"}
-     * deviceSN : 10B10117C69F5A65
-     * deviceName :
-     * deviceType : smoke
-     * unionType : smoke
-     * __v : 0
-     * createdTime : 1540279766620
-     * updatedTime : 1540279771587
-     * isDeleted : false
-     * records : [{"_id":"5bcecdd6efa52e6a329b06c8","malfunctions":"5bcecdd6efa52e6a329b06c7","malfunctionType":"circuitShort","malfunctionText":"传感器短路","__v":0,"updatedTime":1540279766624,"type":"malfunction","id":"5bcecdd6efa52e6a329b06c8","_updatedTime":"2018-10-23 15:29:26"},{"_id":"5bcecddbefa52e6a329b06cd","malfunctions":"5bcecdd6efa52e6a329b06c7","malfunctionType":"circuitShort","__v":0,"updatedTime":1540279771565,"type":"recovery","id":"5bcecddbefa52e6a329b06cd","_updatedTime":"2018-10-23 15:29:31"},{"_id":"5bd292a38ea78451461cc7a3","malfunctions":"5bcecdd6efa52e6a329b06c7","status":"malfunction","phoneList":[{"source":"notification","name":"nathan","level":0,"number":"13363294078","IS_OVER_LIMIT":false,"sid":"13363294078","count":1,"reciveStatus":0,"_id":"5bd292a38ea78451461cc7a4","retry":0}],"__v":0,"updatedTime":1540526755846,"type":"sendSMS","id":"5bd292a38ea78451461cc7a3","_updatedTime":"2018-10-26 12:05:55"}]
-     * phoneList : []
-     * deviceLonlat : [0,0]
-     * deviceNotification : {"types":"phone"}
-     * malfunctionStatus : 1
-     * id : 5bcecdd6efa52e6a329b06c7
-     * _updatedTime : 2018-10-23 15:29:31
-     * _createdTime : 2018-10-23 15:29:26
-     */
-
     private String _id;
     private String malfunctionType;
-        private Map<String,MalfunctionDataBean> malfunctionData;
+    private Map<String, MalfunctionDataBean> malfunctionData;
     private String appId;
     private OwnersBean owners;
     private String deviceSN;
@@ -221,43 +197,6 @@ public class MalfunctionListInfo implements Serializable {
     private java.util.List<?> phoneList;
     private java.util.List<Double> deviceLonlat;
 
-    public static class MalfunctionDataBean implements Serializable {
-        /**
-         * circuitShort : {"description":"传感器短路","typeDescription":"circuitShort","type":6}
-         * lowVoltage : {"description":"低电","typeDescription":"lowVoltage","type":5}
-         * disassembly : {"description":"被拆卸","typeDescription":"disassembly","type":4}
-         * description : diy msg
-         */
-
-        private String description;
-        private String typeDescription;
-        private int type;
-
-        public String getDescription() {
-            return description;
-        }
-
-        public void setDescription(String description) {
-            this.description = description;
-        }
-
-        public String getTypeDescription() {
-            return typeDescription;
-        }
-
-        public void setTypeDescription(String typeDescription) {
-            this.typeDescription = typeDescription;
-        }
-
-        public int getType() {
-            return type;
-        }
-
-        public void setType(int type) {
-            this.type = type;
-        }
-    }
-
     public static class OwnersBean implements Serializable {
 
         /**
@@ -324,7 +263,7 @@ public class MalfunctionListInfo implements Serializable {
             this.id = id;
         }
 
-        public static class GrantsBean implements Serializable{
+        public static class GrantsBean implements Serializable {
         }
     }
 
@@ -478,7 +417,7 @@ public class MalfunctionListInfo implements Serializable {
             this._updatedTime = _updatedTime;
         }
 
-        public static class Event implements Serializable{
+        public static class Event implements Serializable {
 
             /**
              * source : notification

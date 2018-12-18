@@ -23,7 +23,7 @@ import android.text.TextUtils;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.lang.ref.SoftReference;
 import java.util.ArrayList;
@@ -42,6 +42,8 @@ public final class PermissionUtils {
             add(Manifest.permission.READ_EXTERNAL_STORAGE);
             add(Manifest.permission.READ_PHONE_STATE);
             add(Manifest.permission.CALL_PHONE);
+            add(Manifest.permission.READ_CONTACTS);
+            add(Manifest.permission.WRITE_CONTACTS);
         }
     };
     private volatile PermissionsResultObserve mListener;
@@ -382,7 +384,7 @@ public final class PermissionUtils {
                 Camera.Parameters param = camera.getParameters();
                 if (param != null) {
                     return true;
-                } else if(mContext.get() != null){
+                } else if (mContext.get() != null) {
                     SensoroToast.INSTANCE.makeText(mContext.get().getString(R.string.open_camera_permission), Toast.LENGTH_SHORT).show();
                 }
 

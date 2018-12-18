@@ -14,6 +14,8 @@ public interface Constants {
     String SOCKET_EVENT_DEVICE_INFO = "city-device-update-series";
     String SOCKET_EVENT_DEVICE_ALARM_COUNT = "city.device.stat";
     String SOCKET_EVENT_DEVICE_ALARM_DISPLAY = "city.alarm.display";
+    String SOCKET_EVENT_DEVICE_TASK_RESULT = "city.task.result";
+    String SOCKET_EVENT_DEVICE_FLUSH = "city.device.flush";
     String PREFERENCE_SCOPE = "alpha_tool_scope";
     String PREFERENCE_KEY_URL = "url";
     String PREFERENCE_DEVICE_HISTORY = "city_device_history";
@@ -27,6 +29,7 @@ public interface Constants {
     //
     String PREFERENCE_KEY_DEPLOY_NAME = "preference_key_deploy_name";
     String PREFERENCE_KEY_DEPLOY_NAME_ADDRESS = "preference_key_deploy_name_address";
+    String PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION = "preference_key_deploy_we_chat_relation";
     String PREFERENCE_KEY_DEPLOY_TAG = "preference_key_deploy_tag";
     String PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES = "preference_key_local_devices_mergetypes";
     //
@@ -48,8 +51,8 @@ public interface Constants {
 //            R.mipmap.ic_menu_location};
 //    //
 //    int LEFT_MENU_ICON_UNSELECT_SUPPER = R.mipmap.ic_menu_switch;
-    int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warm, R.string.normal, R.string.status_lost, R.string.status_inactive,R.string.status_malfunction};
-    int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline,R.string.status_malfunction};
+    int[] DEVICE_STATUS_ARRAY = {R.string.main_page_warn, R.string.normal, R.string.status_lost, R.string.status_inactive, R.string.status_malfunction};
+    int[] STATION_STATUS_ARRAY = {R.string.status_inactive, R.string.normal, R.string.status_alarm_true, R.string.status_emergency_alarm, R.string.status_timeout_not_reported, R.string.status_offline, R.string.status_malfunction};
     String[] INDEX_STATUS_ARRAY = {"全部状态", "预警", "正常", "失联", "未激活"};
     int[] INDEX_STATUS_VALUES = {0, 1, 2, 3};
     //    String[] INDEX_TYPE_ARRAY = {
@@ -188,6 +191,7 @@ public interface Constants {
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK = "extra_grants_has_device_signal_check";
     String EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG = "extra_grants_has_device_signal_config";
     String EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD = "extra_grants_has_bad_signal_upload";
+    String EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION = "extra_grants_has_device_position_calibration";
     String EXTRA_DEVICE_INFO = "extra_device_info";
     String EXTRA_DEPLOY_ANALYZER_MODEL = "extra_deploy_analyzer_model";
     String EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO = "extra_inspection_deploy_old_device_info";
@@ -218,6 +222,7 @@ public interface Constants {
     String EXTRA_ALARM_END_DATE = "extra_alarm_end_date";
     String EXTRA_ACTIVITY_CANCEL = "extra_activity_cancel";
     String EXTRA_SETTING_NAME_ADDRESS = "extra_setting_name_address";
+    String EXTRA_SETTING_WE_CHAT_RELATION = "extra_setting_we_chat_relation";
     String EXTRA_SETTING_CONTACT = "extra_setting_contact";
     String EXTRA_SETTING_DEPLOY_CONTACT = "extra_setting_deploy_contact";
     String EXTRA_SETTING_CONTENT = "extra_setting_content";
@@ -238,10 +243,12 @@ public interface Constants {
     String EXTRA_INSPECTION_START_TIME = "extra_inspection_start_time";
     String EXTRA_INSPECTION_INDEX_TASK_INFO = "extra_inspection_index_task_info";
     String EXTRA_INSPECTION_INSTRUCTION_DEVICE_TYPE = "extra_inspection_instruction_device_type";
+    int CONTRACT_ORIGIN_TYPE_EDIT = 0x200;
 
-    //
+    //合同相关
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
-    String EXTRA_CONTRACT_ID = "EXTRA_CONTRACT_ID";
+    String EXTRA_CONTRACT_ID = "extra_contract_id";
+    String EXTRA_CONTRACT_ORIGIN_TYPE = "extra_contract_origin_type";
     //故障
     String EXTRA_MALFUNCTION_INFO = "extra_malfunction_info";
 
@@ -258,6 +265,7 @@ public interface Constants {
 
     String PREFERENCE_KEY_START_TIME = "preference_key_start_time";
     String PREFERENCE_KEY_END_TIME = "preference_key_end_time";
+    String CONTRACT_WE_CHAT_BASE_URL = "https://resource-city.sensoro.com/weapp/contract/";
     //
     int SENSOR_STATUS_ALARM = 0;
     int SENSOR_STATUS_NORMAL = 1;
@@ -305,6 +313,10 @@ public interface Constants {
     int REQUEST_CODE_PERSON_SERVICE = 0x112;
     int REQUEST_CODE_BUSINESS_LICENSE = 0x113;
     int REQUEST_CODE_CAMERA = 102;
+
+    //部署
+    int REQUEST_CODE_INIT_CONFIG = 0x114;
+
     //上传图片相关id
     int IMAGE_ITEM_ADD = -1;
     int REQUEST_CODE_PREVIEW = 0x101;
@@ -342,28 +354,49 @@ public interface Constants {
     int EVENT_DATA_INSPECTION_TASK_STATUS_CHANGE = 0x40;
     int EVENT_DATA_ALARM_FRESH_ALARM_DATA = 0x34;
     int EVENT_DATA_ALARM_SOCKET_DISPLAY_STATUS = 0x35;
+    int EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT = 0x43;
     int EVENT_DATA_SCAN_LOGIN_SUCCESS = 0x39;
 
     int EVENT_DATA_ALARM_POP_IMAGES = 0x33;
+
+    int EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE = 0x45;
+    int EVENT_DATA_DEPLOY_INIT_CONFIG_CODE = 0x47;
 
 
     int TYPE_SCAN_DEPLOY_DEVICE = 0x29;
     int TYPE_SCAN_DEPLOY_STATION = 0x39;
     int TYPE_SCAN_LOGIN = 0x30;
-    int TYPE_SCAN_DEPLOY_DEVICE_CHANGE = 0X37;
+    int TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE = 0X37;
+    int TYPE_SCAN_DEPLOY_MALFUNCTION_DEVICE_CHANGE = 0X44;
+    int EVENT_DATA_DEPLOY_SETTING_WE_CHAT_RELATION = 0x48;
     int TYPE_SCAN_INSPECTION = 0X38;
     int TYPE_SCAN_DEPLOY_POINT_DISPLAY = 0x41;
     int TYPE_SCAN_SIGNAL_CHECK = 0x42;
+    int EVENT_DATA_DEVICE_POSITION_CALIBRATION = 0x49;
     //部署结果
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED = -1;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_NOT_UNDER_THE_ACCOUNT = -2;
     int DEPLOY_RESULT_MODEL_CODE_DEPLOY_SUCCESS = 0;
+    //地图部署回显来源
+    int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL = 1;
+    int DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD = 2;
+    int DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM = 3;
+    int EVENT_DATA_DEVICE_SOCKET_FLUSH = 0x50;
+    int EVENT_DATA_LOCK_SCREEN_ON = 0x51;
 
-    List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST =new ArrayList<String>(){{
+    List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
         add("smoke");
         add("natural_gas");
         add("lpg");
     }};
+
+    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(2) {
+        {
+            add("fhsj_elec_fires");
+            add("acrel_fires");
+        }
+    };
+
 
 }

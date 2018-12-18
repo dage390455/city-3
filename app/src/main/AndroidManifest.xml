@@ -38,6 +38,10 @@
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+
     <uses-permission
         android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS"
         tools:ignore="ProtectedPermissions" />
@@ -114,10 +118,6 @@
         </activity>
         <activity
             android:name=".activity.DeployManualActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/LauncherTheme" />
-        <activity
-            android:name=".activity.SearchMerchantActivity"
             android:screenOrientation="portrait"
             android:theme="@style/LauncherTheme" />
 
@@ -223,7 +223,6 @@
             android:windowSoftInputMode="stateAlwaysHidden" />
         <activity android:name=".activity.AuthActivity" />
         <activity android:name=".activity.DeployMapActivity" />
-        <activity android:name=".activity.MonitorMoreActivity" />
         <activity android:name=".activity.MonitorPointMapActivity" />
         <activity android:name=".activity.InspectionTaskListActivity" />
         <activity android:name=".activity.InspectionTaskDetailActivity" />
@@ -344,6 +343,9 @@
             android:theme="@style/ImagePickerThemeFullScreen" />
         <activity android:name=".activity.MalfunctionDetailActivity" />
         <activity android:name=".activity.MalfunctionHistoryActivity" />
+        <activity android:name=".activity.DeployMonitorWeChatRelationActivity" />
+        <activity android:name=".activity.DeployMonitorDeployPicActivity" />
+        <activity android:name=".activity.DeployMonitorConfigurationActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

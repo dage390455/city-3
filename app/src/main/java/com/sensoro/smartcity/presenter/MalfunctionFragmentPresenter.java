@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import com.sensoro.smartcity.activity.MalfunctionDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IMalfunctionFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
@@ -40,6 +41,7 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
     private CalendarPopUtils mCalendarPopUtils;
     private int cur_page;
     private final List<MalfunctionListInfo> mMalfunctionInfoList = new ArrayList<>();
+    private final List<String> mSearchHistoryList = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
@@ -47,6 +49,11 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
         onCreate();
         mCalendarPopUtils = new CalendarPopUtils(mContext);
         mCalendarPopUtils.setOnCalendarPopupCallbackListener(this);
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().UpdateSearchHistoryList(mSearchHistoryList);
+        }
         requestSearchData(DIRECTION_DOWN, null);
     }
 
@@ -147,6 +154,14 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
     @Override
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
         requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
+        getView().setSearchHistoryVisible(false);
+        if (!TextUtils.isEmpty(tempSearch)) {
+            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+            mSearchHistoryList.remove(tempSearch);
+            mSearchHistoryList.add(0, tempSearch);
+            getView().UpdateSearchHistoryList(mSearchHistoryList);
+
+        }
     }
 
     /**
@@ -191,12 +206,12 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
             mMalfunctionInfoList.clear();
         }
         handleMalfunctionLists(malfunctionListRsp);
-        if (!TextUtils.isEmpty(tempSearch)) {
-//            getView().setSelectedDateSearchText(searchText);
-            getView().setSearchButtonTextVisible(true);
-        } else {
-            getView().setSearchButtonTextVisible(false);
-        }
+//        if (!TextUtils.isEmpty(tempSearch)) {
+////            getView().setSelectedDateSearchText(searchText);
+//            getView().setSearchButtonTextVisible(true);
+//        } else {
+//            getView().setSearchButtonTextVisible(false);
+//        }
         getView().updateAlarmListAdapter(mMalfunctionInfoList);
     }
 
@@ -226,7 +241,6 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
@@ -234,5 +248,21 @@ public class MalfunctionFragmentPresenter extends BasePresenter<IMalfunctionFrag
                 requestSearchData(DIRECTION_DOWN, null);
                 break;
         }
+    }
+
+    public void clearSearchHistory() {
+        PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+        mSearchHistoryList.clear();
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
+    }
+
+    public void save(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_MALFUNCTION);
+        mSearchHistoryList.remove(text);
+        mSearchHistoryList.add(0, text);
+        getView().UpdateSearchHistoryList(mSearchHistoryList);
     }
 }

@@ -269,7 +269,7 @@ public final class ScanBLEFilter implements Parcelable {
 
         // Service data match
         if (mServiceDataUuid != null) {
-            if (!matchesPartialData(mServiceData, mServiceDataMask,
+            if (scanRecord != null && !matchesPartialData(mServiceData, mServiceDataMask,
                     scanRecord.getServiceData(mServiceDataUuid))) {
                 return false;
             }
@@ -277,10 +277,8 @@ public final class ScanBLEFilter implements Parcelable {
 
         // Manufacturer data match.
         if (mManufacturerId >= 0) {
-            if (!matchesPartialData(mManufacturerData, mManufacturerDataMask,
-                    scanRecord.getManufacturerSpecificData(mManufacturerId))) {
-                return false;
-            }
+            return scanRecord == null || matchesPartialData(mManufacturerData, mManufacturerDataMask,
+                    scanRecord.getManufacturerSpecificData(mManufacturerId));
         }
         // All filters match.
         return true;

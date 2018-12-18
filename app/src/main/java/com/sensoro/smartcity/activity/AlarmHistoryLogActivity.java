@@ -22,13 +22,13 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.AlarmHistoryLogRcContentAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.presenter.AlarmHistoryLogActivityPresenter;
 import com.sensoro.smartcity.imainviews.IAlarmHistoryLogActivityView;
 import com.sensoro.smartcity.model.CalendarDateModel;
+import com.sensoro.smartcity.presenter.AlarmHistoryLogActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
 import com.sensoro.smartcity.widget.popup.CalendarPopUtils;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -216,7 +216,8 @@ public class AlarmHistoryLogActivity extends BaseActivity<IAlarmHistoryLogActivi
 
     @Override
     public void onHistoryConfirm(View v, int position) {
-        mPresenter.onClickHistoryConfirm(position);
+        DeviceAlarmLogInfo deviceAlarmLogInfo = mAlarmHistoryLogRcContentAdapter.getData().get(position);
+        mPresenter.onClickHistoryConfirm(deviceAlarmLogInfo);
     }
 
     @Override

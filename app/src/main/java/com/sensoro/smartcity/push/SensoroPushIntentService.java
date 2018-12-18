@@ -204,6 +204,7 @@ public class SensoroPushIntentService extends GTIntentService {
         msg.what = 0;
         msg.obj = data;
         SensoroCityApplication.sendMessage(msg);
+        LogUtils.loge("push ---->>> " + data);
 //        SensoroCityApplication.getInstance().pushNotification(data);
     }
 }

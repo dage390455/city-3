@@ -20,7 +20,7 @@ import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
 import com.sensoro.smartcity.presenter.ContractInfoActivityPresenter;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -30,8 +30,12 @@ import butterknife.OnClick;
 
 public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView, ContractInfoActivityPresenter>
         implements IContractInfoActivityView {
-    @BindView(R.id.iv_contract_info_back)
-    ImageView ivContractInfoBack;
+    @BindView(R.id.include_text_title_imv_arrows_left)
+    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_title)
+    TextView includeTextTitleTvTitle;
+    @BindView(R.id.include_text_title_tv_subtitle)
+    TextView includeTextTitleTvSubtitle;
     @BindView(R.id.tv_contract_info_line1)
     TextView tvContractInfoLine1;
     @BindView(R.id.et_contract_info_line1)
@@ -58,6 +62,8 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
     TextView etContractInfoLine4;
     @BindView(R.id.ll_contract_info_line5)
     LinearLayout llContractInfoLine5;
+    @BindView(R.id.ll_contract_info_line3)
+    LinearLayout llContractInfoLine3;
     @BindView(R.id.tv_contract_info_line5)
     TextView tvContractInfoLine5;
     @BindView(R.id.et_contract_info_line5)
@@ -145,6 +151,10 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
 
     private void initView() {
+        includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_info_title));
+        includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.title_edit));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         contractTemplateShowAdapter = new ContractTemplateShowAdapter(mActivity);
         rvSensorInfoCount.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, true));
@@ -162,15 +172,18 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
         super.onDestroy();
     }
 
-    @OnClick({R.id.iv_contract_info_back, R.id.bt_confirm})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.bt_confirm,R.id.include_text_title_tv_subtitle})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.iv_contract_info_back:
+            case R.id.include_text_title_imv_arrows_left:
                 finishAc();
                 break;
             case R.id.bt_confirm:
                 String text = btConfirm.getText().toString();
                 mPresenter.startToConfirm(text);
+                break;
+            case R.id.include_text_title_tv_subtitle:
+                mPresenter.startToEdit();
                 break;
         }
     }
@@ -213,9 +226,25 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
                 //
                 etContractInfoLine2.setText(line2);
                 //
-                etContractInfoLine3.setText(line3);
-                //
-                etContractInfoLine4.setText(line4);
+                //暂时先用这样判断，社会信用号代码
+                if ("无".equals(line3)) {
+                    ivLine3.setVisibility(View.GONE);
+                    llContractInfoLine3.setVisibility(View.GONE);
+                }else{
+                    ivLine3.setVisibility(View.VISIBLE);
+                    llContractInfoLine3.setVisibility(View.VISIBLE);
+                    etContractInfoLine3.setText(line3);
+                }
+                //注册码
+                if ("无".equals(line4)) {
+                    ivLine4.setVisibility(View.GONE);
+                    llContractInfoLine4.setVisibility(View.GONE);
+                }else{
+                    ivLine4.setVisibility(View.VISIBLE);
+                    llContractInfoLine4.setVisibility(View.VISIBLE);
+                    etContractInfoLine4.setText(line4);
+                }
+
                 //
                 etContractInfoLine5.setText(line5);
                 //
@@ -328,6 +357,7 @@ public class ContractInfoActivity extends BaseActivity<IContractInfoActivityView
 
     @Override
     public void setConfirmStatus(boolean confirmed) {
+        includeTextTitleTvSubtitle.setVisibility(confirmed ? View.GONE : View.VISIBLE);
         ivLine8.setVisibility(View.VISIBLE);
         rlServiceInfoStatus.setVisibility(View.VISIBLE);
         tvContractStatus.setText(confirmed ? R.string.signed : R.string.not_signed);

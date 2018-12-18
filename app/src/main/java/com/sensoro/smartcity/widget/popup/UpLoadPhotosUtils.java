@@ -53,8 +53,9 @@ public final class UpLoadPhotosUtils {
     }
 
     private void getToken() {
+        final long currentTimeMillis = System.currentTimeMillis();
         RetrofitServiceHelper.INSTANCE.getQiNiuToken().subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers
-                .mainThread()).subscribe(new CityObserver<QiNiuToken>() {
+                .mainThread()).subscribe(new CityObserver<QiNiuToken>(null) {
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
                 upLoadPhotoListener.onError(errorMsg);
@@ -62,6 +63,7 @@ public final class UpLoadPhotosUtils {
 
             @Override
             public void onCompleted(QiNiuToken qiNiuToken) {
+                LogUtils.loge("接口速度--->>>getQiNiuToken: " + (System.currentTimeMillis() - currentTimeMillis));
                 String upToken = qiNiuToken.getUptoken();
                 baseUrl = qiNiuToken.getDomain();
                 doUpLoadImages(upToken);
@@ -96,7 +98,7 @@ public final class UpLoadPhotosUtils {
                 }).setCompressListener(new OnCompressListener() {
                     @Override
                     public void onStart() {
-                        String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2)+ imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
+                        String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                         upLoadPhotoListener.onProgress(title, 0);
                     }
 
@@ -135,7 +137,7 @@ public final class UpLoadPhotosUtils {
                                                 @Override
                                                 public void progress(String key, double percent) {
                                                     LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                                    String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2)+ imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
+                                                    String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                                     upLoadPhotoListener.onProgress(title, percent);
                                                 }
                                             }, null));
@@ -152,7 +154,7 @@ public final class UpLoadPhotosUtils {
                             @Override
                             public void progress(String key, double percent) {
                                 LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2)+ imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
+                                String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                 upLoadPhotoListener.onProgress(title, percent);
                             }
                         }, null));
@@ -176,7 +178,7 @@ public final class UpLoadPhotosUtils {
                         () {
                     @Override
                     public void onStart() {
-                        String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2)+ imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
+                        String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                         upLoadPhotoListener.onProgress(title, 0);
                     }
 
@@ -208,7 +210,8 @@ public final class UpLoadPhotosUtils {
                             @Override
                             public void progress(String key, double percent) {
                                 LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
-                                String title = "正在上传第" + currentNum + "个文件，总共" + imageItems.size() + "个";
+                                String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum
+                                        + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                 upLoadPhotoListener.onProgress(title, percent);
                             }
                         }, null));

@@ -51,7 +51,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     private static final int maxImgCount = 9;
     private InspectionTaskDeviceDetail mDeviceDetail;
     private ArrayList<ImageItem> tempImages = null;
-    public UpLoadPhotosUtils upLoadPhotosUtils;
+    private UpLoadPhotosUtils upLoadPhotosUtils;
     private boolean needChangeDevice = false;
 
     @Override
@@ -156,7 +156,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
     private void doUploadAndChange() {
         //TODO 更换设备 上传异常
         Intent intent = new Intent(mContext, ScanActivity.class);
-        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_DEVICE_CHANGE);
+        intent.putExtra(EXTRA_SCAN_ORIGIN_TYPE, Constants.TYPE_SCAN_DEPLOY_INSPECTION_DEVICE_CHANGE);
         intent.putExtra(EXTRA_INSPECTION_DEPLOY_OLD_DEVICE_INFO, mDeviceDetail);
         getView().startAC(intent);
     }
@@ -206,7 +206,6 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         if (code == EVENT_DATA_ALARM_POP_IMAGES) {
@@ -221,7 +220,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                                 selImageList.clear();
                             }
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     }
@@ -232,7 +231,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 //                            adapter.setMaxImgCount(9);
                             selImageList.clear();
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     }
@@ -242,13 +241,13 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                         if (alarmPopModel.imageItems != null) {
 //                            adapter.setMaxImgCount(9);
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
 //                        adapter.setMaxImgCount(9);
 //                        selImageList.clear();
-//                        adapter.setImages(selImageList);
+//                        adapter.updateImages(selImageList);
                     }
 
                 }
@@ -314,7 +313,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         getView().dismissUploadProgressDialog();
 //        toastShort("上传成功---");
         LogUtils.loge(this, "上传成功---" + s);
-        //TODO 上传结果
+        // 上传结果
         doUploadInspectionException(scenesDataList);
 //        mListener.onPopupCallback(selectResult, selectType, selectPlace, scenesDataList, mRemark);
     }

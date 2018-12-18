@@ -1,9 +1,10 @@
 package com.sensoro.smartcity.imainviews;
 
+import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
-import com.sensoro.smartcity.server.bean.DeviceInfo;
+import com.sensoro.smartcity.server.bean.ScenesData;
 
 import java.util.List;
 
@@ -18,13 +19,15 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
 
     void setContractPhone(String contractPhone);
 
-    void setDeviceLocation(String location,boolean isArrowsRight);
+    void setDeviceLocation(String location, boolean isArrowsRight);
 
-    void updateDeviceInfoAdapter(DeviceInfo deviceInfo);
+    void updateDeviceInfoAdapter(List<MonitoringPointRcContentAdapterModel> data);
 
     void setSNText(String sn);
 
     void updateTags(List<String> list);
+
+    void updateMonitorPhotos(List<ScenesData> data);
 
     void setBatteryInfo(String battery);
 
@@ -39,4 +42,28 @@ public interface IMonitorPointDetailActivityView extends IToast, IProgressDialog
     void setDeviceLocationTextColor(int color);
 
     void setDeviceTypeName(String typeName);
+
+    void setDeviceOperationVisible(boolean isVisible);
+
+    void setErasureStatus(boolean isClickable);
+
+    void setResetStatus(boolean isClickable);
+
+    void setSelfCheckStatus(boolean isClickable);
+
+    void setAirSwitchConfigStatus(boolean isClickable);
+
+    void setQueryStatus(boolean isClickable);
+
+    void setPsdStatus(boolean isClickable);
+
+    void showOperationSuccessToast();
+
+    void showErrorTipDialog(String errorMsg);
+
+    void showOperationTipLoadingDialog();
+
+    void dismissTipDialog();
+
+    void dismissOperatingLoadingDialog();
 }

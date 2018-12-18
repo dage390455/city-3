@@ -19,10 +19,6 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp"
-            android:layout_marginBottom="12dp"
             android:orientation="horizontal">
 
             <ImageView
@@ -30,28 +26,45 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/selector_item_white_ee"
                 android:contentDescription="@null"
                 android:padding="8dp"
                 android:src="@drawable/arrows_left" />
 
-            <FrameLayout
+            <RelativeLayout
                 android:id="@+id/ac_deploy_record_frame_search"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="4dp"
+                android:layout_marginStart="8dp"
                 android:layout_weight="1"
                 android:background="@drawable/shape_bg_full_corner">
+
+                <ImageView
+                    android:id="@+id/ac_deploy_record_search_imv_clear"
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginEnd="6dp"
+                    android:contentDescription="@null"
+                    android:padding="7dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/search_monitor_clear_search"
+                    android:visibility="gone" />
 
                 <EditText
                     android:id="@+id/ac_deploy_record_et_search"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:layout_marginStart="12dp"
+                    android:layout_marginStart="8dp"
                     android:layout_marginTop="8dp"
                     android:layout_marginBottom="8dp"
+                    android:layout_toStartOf="@id/ac_deploy_record_search_imv_clear"
                     android:background="@null"
                     android:drawableStart="@drawable/main_search"
                     android:drawablePadding="8dp"
@@ -61,15 +74,17 @@
                     android:textColor="@color/c_252525"
                     android:textColorHint="@color/c_a6a6a6"
                     android:textSize="12sp" />
-            </FrameLayout>
+            </RelativeLayout>
 
             <TextView
                 android:id="@+id/tv_deploy_device_search_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:padding="10dp"
-                android:text="@string/deploy_record_search_cancel_tip"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:padding="8dp"
+                android:text="@string/cancel"
                 android:textColor="@color/c_252525"
                 android:visibility="gone" />
 
@@ -78,9 +93,10 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
                 android:background="@color/transparent"
                 android:contentDescription="@null"
-                android:padding="10dp"
+                android:padding="8dp"
                 android:src="@drawable/calendar" />
 
         </LinearLayout>
@@ -137,12 +153,12 @@
             android:textSize="16sp" />
     </RelativeLayout>
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@id/ac_deploy_record_deploy_rl_new_device"
-        android:layout_below="@id/ac_deploy_record_title_root"
-        android:layout_marginTop="12dp">
+        android:layout_below="@id/ac_deploy_record_title_root">
 
         <include layout="@layout/item_no_content" />
 
@@ -150,6 +166,7 @@
             android:id="@+id/refreshLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginTop="12dp"
             android:orientation="vertical">
 
             <android.support.v7.widget.RecyclerView
@@ -160,6 +177,8 @@
 
             </android.support.v7.widget.RecyclerView>
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <include layout="@layout/item_include_search_history_rv" />
     </RelativeLayout>
 
 

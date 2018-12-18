@@ -12,6 +12,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmDetailLogActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IWarnFragmentView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
@@ -47,6 +48,7 @@ import rx.schedulers.Schedulers;
 public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> implements IOnCreate, Constants,
         AlarmPopUtils.OnPopupCallbackListener, CalendarPopUtils.OnCalendarPopupCallbackListener, Runnable {
     private final List<DeviceAlarmLogInfo> mDeviceAlarmLogInfoList = new ArrayList<>();
+    private final List<String> mSearchHistoryList = new ArrayList<>();
     private volatile int cur_page = 1;
     private long startTime;
     private long endTime;
@@ -82,6 +84,12 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             requestSearchData(DIRECTION_DOWN, null);
             mHandler.post(this);
         }
+        List<String> list = PreferencesHelper.getInstance().getSearchHistoryData(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+        if (list != null) {
+            mSearchHistoryList.addAll(list);
+            getView().updateSearchHistoryList(mSearchHistoryList);
+        }
+
     }
 
     public void doContactOwner(DeviceAlarmLogInfo deviceAlarmLogInfo) {
@@ -98,11 +106,11 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         if (direction == DIRECTION_DOWN) {
             mDeviceAlarmLogInfoList.clear();
         }
-        if (!TextUtils.isEmpty(tempSearch)) {
-            getView().setSearchButtonTextVisible(true);
-        } else {
-            getView().setSearchButtonTextVisible(false);
-        }
+//        if (!TextUtils.isEmpty(tempSearch)) {
+//            getView().setSearchButtonTextVisible(true);
+//        } else {
+//            getView().setSearchButtonTextVisible(false);
+//        }
         final List<DeviceAlarmLogInfo> deviceAlarmLogInfoList = deviceAlarmLogRsp.getData();
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
@@ -351,7 +359,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
@@ -429,6 +436,16 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
     @Override
     public void onCalendarPopupCallback(CalendarDateModel calendarDateModel) {
         requestDataByDate(calendarDateModel.startDate, calendarDateModel.endDate);
+        getView().setSearchHistoryVisible(false);
+        if (!TextUtils.isEmpty(tempSearch)) {
+            PreferencesHelper.getInstance().saveSearchHistoryText(tempSearch, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+            //为了调整 搜索顺序，所以先删除，再添加
+            mSearchHistoryList.remove(tempSearch);
+            mSearchHistoryList.add(0, tempSearch);
+            getView().updateSearchHistoryList(mSearchHistoryList);
+
+        }
+
     }
 
     @Override
@@ -475,6 +492,22 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             Collections.sort(mDeviceAlarmLogInfoList, deviceAlarmLogInfoComparator);
             needFresh = true;
         }
+    }
+
+    public void save(String text) {
+        if (TextUtils.isEmpty(text)) {
+            return;
+        }
+        mSearchHistoryList.remove(text);
+        PreferencesHelper.getInstance().saveSearchHistoryText(text, SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+        mSearchHistoryList.add(0, text);
+        getView().updateSearchHistoryList(mSearchHistoryList);
+    }
+
+    public void clearSearchHistory() {
+            PreferencesHelper.getInstance().clearSearchHistory(SearchHistoryTypeConstants.TYPE_SEARCH_HISTORY_WARN);
+            mSearchHistoryList.clear();
+            getView().updateSearchHistoryList(mSearchHistoryList);
     }
     //-------------------------------------------------------------------------------------------
     //去掉按照确认类型排序排序

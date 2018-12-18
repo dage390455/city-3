@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.sensoro.smartcity.BuildConfig;
 import com.sensoro.smartcity.R;
@@ -10,6 +11,7 @@ import com.sensoro.smartcity.activity.MainActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IAuthActivityView;
+import com.sensoro.smartcity.iwidget.IOnStart;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.CityObserver;
@@ -20,18 +22,21 @@ import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.server.response.AuthRsp;
 import com.sensoro.smartcity.server.response.DevicesMergeTypesRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.functions.Action1;
 import rx.schedulers.Schedulers;
 
-public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> implements Constants {
+public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> implements Constants, IOnStart {
     private Activity mContext;
     private EventLoginData mEventLoginData;
 
@@ -47,10 +52,6 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
     }
 
     public void doAuthCheck(String code) {
-        doSecondAuth(code);
-    }
-
-    private void doSecondAuth(String code) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.doubleCheck(code).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AuthRsp>(this) {
 
@@ -137,5 +138,30 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
         eventData.code = EVENT_DATA_CANCEL_AUTH;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
+    }
+
+    @Override
+    public void onStart() {
+        String textFromClip = AppUtils.getTextFromClip(mContext);
+        if (!TextUtils.isEmpty(textFromClip) && textFromClip.length() == 6) {
+            char[] chars = textFromClip.toCharArray();
+            final List<String> cacheCode = new ArrayList<>();
+            for (char c : chars) {
+                String intStr = String.valueOf(c);
+                try {
+                    Integer.parseInt(intStr);
+                } catch (Exception e) {
+                    return;
+                }
+                cacheCode.add(intStr);
+            }
+            getView().autoFillCode(cacheCode);
+            doAuthCheck(textFromClip);
+        }
+    }
+
+    @Override
+    public void onStop() {
+
     }
 }

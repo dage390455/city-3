@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.InspectionInstructionActivity;
@@ -43,12 +44,15 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
         mContext = (Activity) context;
         onCreate();
         mTaskInfo = (InspectionIndexTaskInfo) mContext.getIntent().getSerializableExtra(EXTRA_INSPECTION_INDEX_TASK_INFO);
-        getView().setTvTaskNumber(mTaskInfo.getIdentifier());
-        getView().setTvTaskTime(DateUtil.getDateByOtherFormatPoint(mTaskInfo.getBeginTime()) + " - " + DateUtil.getDateByOtherFormatPoint(mTaskInfo.getEndTime()));
-
-        freshTvState(mTaskInfo.getStatus());
-
-        initDeviceTag();
+        if (mTaskInfo != null) {
+            String identifier = mTaskInfo.getIdentifier();
+            if (!TextUtils.isEmpty(identifier)) {
+                getView().setTvTaskNumber(identifier);
+            }
+            getView().setTvTaskTime(DateUtil.getDateByOtherFormatPoint(mTaskInfo.getBeginTime()) + " - " + DateUtil.getDateByOtherFormatPoint(mTaskInfo.getEndTime()));
+            freshTvState(mTaskInfo.getStatus());
+            initDeviceTag();
+        }
     }
 
     private void initDeviceTag() {
@@ -87,7 +91,6 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功

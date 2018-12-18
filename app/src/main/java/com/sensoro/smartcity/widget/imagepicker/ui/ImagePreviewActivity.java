@@ -15,7 +15,7 @@ import android.widget.CompoundButton;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.ImagePicker;
 import com.sensoro.smartcity.widget.imagepicker.adapter.ImageBottomAdapter;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;

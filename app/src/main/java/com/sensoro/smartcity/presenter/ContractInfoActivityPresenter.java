@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractResultActivity;
+import com.sensoro.smartcity.activity.ContractServiceActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
@@ -20,7 +22,6 @@ import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
-import com.sensoro.smartcity.util.AESUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 
@@ -29,12 +30,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoActivityView> implements IOnCreate,
         Constants {
+
     private Activity mContext;
     private int serviceType;
     //
@@ -126,7 +129,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     private void requestData(int contractId) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getContractInfo(contractId + "").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<ContractInfoRsp>() {
+                .subscribe(new CityObserver<ContractInfoRsp>(this) {
                     @Override
                     public void onCompleted(ContractInfoRsp responseBase) {
                         mContractInfo = responseBase.getData();
@@ -134,7 +137,6 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             getView().setConfirmVisible(mContractInfo.isConfirmed());
                             getView().setConfirmStatus(mContractInfo.isConfirmed());
                             id = mContractInfo.getId();
-
                             refreshContentText();
 
                             String createdAt = mContractInfo.getCreatedAt();
@@ -143,7 +145,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             } else {
                                 try {
                                     String[] ts = createdAt.split("T");
-                                    createdAt = ts[0];
+                                    createdAt = ts[0].replaceAll("-",".");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     createdAt = "-";
@@ -157,7 +159,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             } else {
                                 try {
                                     String[] ts = confirmTime.split("T");
-                                    confirmTime = ts[0];
+                                    confirmTime = ts[0].replaceAll("-",".");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     confirmTime = "-";
@@ -181,7 +183,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     }
 
     private void refreshContentText() {
-        int created_type = mContractInfo.getCreated_type();
+        serviceType = mContractInfo.getCreated_type();
         placeType = mContractInfo.getPlace_type();
         if (TextUtils.isEmpty(placeType)) {
             placeType = "无";
@@ -189,39 +191,42 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
         contract_service_life = mContractInfo.getServiceTime() + "";
         contract_service_life_first = mContractInfo.getFirstPayTimes() + "";
         contract_service_life_period = mContractInfo.getPayTimes() + "";
-
-        line1 = mContractInfo.getCustomer_name();
-        if (TextUtils.isEmpty(line1)) {
-            line1 = "无";
-        }
-        line2 = mContractInfo.getCustomer_enterprise_name();
-        if (TextUtils.isEmpty(line2)) {
-            line2 = "无";
-        }
-        line3 = mContractInfo.getEnterprise_card_id();
-        if (TextUtils.isEmpty(line3)) {
-            line3 = "无";
-        }
-        line4 = mContractInfo.getEnterprise_register_id();
-        if (TextUtils.isEmpty(line4)) {
-            line4 = "无";
-        }
-        line5 = mContractInfo.getCustomer_address();
-        if (TextUtils.isEmpty(line5)) {
-            line5 = "无";
-        }
-        line6 = mContractInfo.getCustomer_enterprise_validity();
-        if (TextUtils.isEmpty(line6)) {
-            line6 = "无";
-        }
-        phone = mContractInfo.getCustomer_phone();
-        if (TextUtils.isEmpty(phone)) {
-            phone = "无";
-        }
-        switch (created_type) {
+        switch (serviceType) {
             case 1:
+                line1 = mContractInfo.getCustomer_name();
+                if (TextUtils.isEmpty(line1)) {
+                    line1 = "无";
+                }
+                line2 = mContractInfo.getCustomer_enterprise_name();
+                if (TextUtils.isEmpty(line2)) {
+                    line2 = "无";
+                }
+                line3 = mContractInfo.getEnterprise_card_id();
+                if (TextUtils.isEmpty(line3)) {
+                    line3 = "无";
+                }
+                line4 = mContractInfo.getEnterprise_register_id();
+                if (TextUtils.isEmpty(line4)) {
+                    line4 = "无";
+                }
+                line5 = mContractInfo.getCustomer_address();
+                if (TextUtils.isEmpty(line5)) {
+                    line5 = "无";
+                }
+                line6 = mContractInfo.getCustomer_enterprise_validity();
+                if (TextUtils.isEmpty(line6)) {
+                    line6 = "无";
+                }
+                phone = mContractInfo.getCustomer_phone();
+                if (TextUtils.isEmpty(phone)) {
+                    phone = "无";
+                }
                 break;
             case 2:
+                line1 = mContractInfo.getCustomer_name();
+                if (TextUtils.isEmpty(line1)) {
+                    line1 = "无";
+                }
                 int sex = mContractInfo.getSex();
                 switch (sex) {
                     case 1:
@@ -244,6 +249,10 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 }
                 line5 = null;
                 line6 = null;
+                phone = mContractInfo.getCustomer_phone();
+                if (TextUtils.isEmpty(phone)) {
+                    phone = "无";
+                }
                 break;
             case 3:
                 line1 = mContractInfo.getCustomer_enterprise_name();
@@ -262,13 +271,15 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 if (TextUtils.isEmpty(line4)) {
                     line4 = "无";
                 }
+                line5 = mContractInfo.getCustomer_address();
+                if (TextUtils.isEmpty(line5)) {
+                    line5 = "无";
+                }
                 line6 = null;
                 phone = null;
                 break;
         }
-
-
-        getView().showContentText(created_type, line1, phone, line2, line3, line4,
+        getView().showContentText(serviceType, line1, phone, line2, line3, line4,
                 line5, line6, placeType, contract_service_life, contract_service_life_first, contract_service_life_period);
     }
 
@@ -303,7 +314,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     private void addContract(final String text) {
         int serviceTime = 1;
         int serviceTimeFirst = 1;
-        int serviceTimePeriod = 0;
+        int serviceTimePeriod = 1;
         try {
             serviceTime = Integer.parseInt(contract_service_life);
             serviceTimeFirst = Integer.parseInt(contract_service_life_first);
@@ -398,17 +409,18 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
 
     private void handleCode(String code, String text) {
         Intent intent = new Intent();
+        final String url = CONTRACT_WE_CHAT_BASE_URL + code;
         intent.setClass(mContext, ContractResultActivity.class);
-        switch (serviceType) {
-            case 1:
-            case 2:
-                code = AESUtil.contractEncode(phone, code);
-                break;
-            case 3:
-                code = AESUtil.contractEncode(line3, code);
-                break;
-        }
-        intent.putExtra("code", code);
+//        switch (serviceType) {
+//            case 1:
+//            case 2:
+//                code = AESUtil.contractEncode(phone, code);
+//                break;
+//            case 3:
+//                code = AESUtil.contractEncode(line3, code);
+//                break;
+//        }
+        intent.putExtra("code", url);
         if (text.startsWith("查看")) {
             intent.putExtra(EXTRA_CONTRACT_RESULT_TYPE, false);
         } else {
@@ -445,6 +457,168 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                     }
                 }
                 break;
+            case EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
+                if (data instanceof Integer) {
+                    requestData((Integer) data);
+                }
+
+                break;
         }
+    }
+
+    public void startToEdit() {
+        String no = mContext.getString(R.string.no);
+        Intent intent = new Intent();
+        intent.setClass(mContext, ContractServiceActivity.class);
+        int createdType = mContractInfo.getCreated_type();
+        intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, Constants.CONTRACT_ORIGIN_TYPE_EDIT);
+        intent.putExtra(EXTRA_CONTRACT_TYPE, createdType);
+        intent.putExtra(EXTRA_CONTRACT_ID, mContractInfo.getId());
+        String placeType = mContractInfo.getPlace_type();
+        if (TextUtils.isEmpty(placeType)) {
+            placeType = no;
+        }
+        intent.putExtra("place_type", placeType);
+        intent.putExtra("service_life", mContractInfo.getServiceTime());
+        intent.putExtra("service_life_first", mContractInfo.getFirstPayTimes());
+        intent.putExtra("service_life_period", mContractInfo.getPayTimes());
+        List<ContractsTemplateInfo> devices = mContractInfo.getDevices();
+        ContractsTemplateInfo[] objects = devices.toArray(new ContractsTemplateInfo[0]);
+        intent.putExtra("contract_devices", objects);
+        String uid = mContractInfo.getUid();
+        if (!TextUtils.isEmpty(uid)) {
+            intent.putExtra("contract_uid", uid);
+        }
+        switch (createdType) {
+            case 1:
+                addExtraCreateType1(intent, no);
+                break;
+            case 2:
+                addExtraCreateType2(intent, no);
+                break;
+            case 3:
+                addExtraCreateType3(intent, no);
+                break;
+        }
+        getView().startAC(intent);
+
+
+    }
+
+    private void addExtraCreateType3(Intent intent, String no) {
+        String customer_enterprise_name = mContractInfo.getCustomer_enterprise_name();
+        if (TextUtils.isEmpty(customer_enterprise_name)) {
+            customer_enterprise_name = no;
+        }
+        intent.putExtra("company_name", customer_enterprise_name);
+
+        String customer_name = mContractInfo.getCustomer_name();
+        if (TextUtils.isEmpty(customer_name)) {
+            customer_name = no;
+        }
+        intent.putExtra("person_name", customer_name);
+
+        String customer_phone = mContractInfo.getCustomer_phone();
+        if (TextUtils.isEmpty(customer_phone)) {
+            customer_phone = no;
+        }
+        intent.putExtra("customer_phone", customer_phone);
+
+        String card_id = mContractInfo.getCard_id();
+        if (TextUtils.isEmpty(card_id)) {
+            card_id = no;
+        }
+        intent.putExtra("id_number", card_id);
+
+        String customer_address = mContractInfo.getCustomer_address();
+        if (TextUtils.isEmpty(customer_address)) {
+            customer_address = no;
+        }
+        intent.putExtra("address", customer_address);
+
+    }
+
+    private void addExtraCreateType2(Intent intent, String no) {
+        String customer_name = mContractInfo.getCustomer_name();
+        if (TextUtils.isEmpty(customer_name)) {
+            customer_name = no;
+        }
+        intent.putExtra("person_name", customer_name);
+
+        int sex = mContractInfo.getSex();
+        switch (sex) {
+            case 1:
+                intent.putExtra("sex", mContext.getString(R.string.male));
+                break;
+            case 2:
+                intent.putExtra("sex", mContext.getString(R.string.female));
+                break;
+            default:
+                intent.putExtra("sex", no);
+                break;
+        }
+
+        String card_id = mContractInfo.getCard_id();
+        if (TextUtils.isEmpty(card_id)) {
+            card_id = no;
+        }
+        intent.putExtra("id_number", card_id);
+
+        String customer_address = mContractInfo.getCustomer_address();
+        if (TextUtils.isEmpty(customer_address)) {
+            customer_address = no;
+        }
+        intent.putExtra("address", customer_address);
+
+        String customer_phone = mContractInfo.getCustomer_phone();
+        if (TextUtils.isEmpty(customer_phone)) {
+            customer_phone = no;
+        }
+        intent.putExtra("customer_phone", customer_phone);
+
+    }
+
+    private void addExtraCreateType1(Intent intent, String no) {
+        String customer_name = mContractInfo.getCustomer_name();
+        if (TextUtils.isEmpty(customer_name)) {
+            customer_name = no;
+        }
+        intent.putExtra("legal_person", customer_name);
+
+        String customer_enterprise_name = mContractInfo.getCustomer_enterprise_name();
+        if (TextUtils.isEmpty(customer_enterprise_name)) {
+            customer_enterprise_name = no;
+        }
+        intent.putExtra("company_name", customer_enterprise_name);
+
+        String enterprise_card_id = mContractInfo.getEnterprise_card_id();
+        if (TextUtils.isEmpty(enterprise_card_id)) {
+            enterprise_card_id = no;
+        }
+        intent.putExtra("credit_code", enterprise_card_id);
+
+        String enterprise_register_id = mContractInfo.getEnterprise_register_id();
+        if (TextUtils.isEmpty(enterprise_card_id)) {
+            enterprise_register_id = no;
+        }
+        intent.putExtra("registration_number", enterprise_register_id);
+
+        String customer_address = mContractInfo.getCustomer_address();
+        if (TextUtils.isEmpty(customer_address)) {
+            customer_address = no;
+        }
+        intent.putExtra("address", customer_address);
+
+        String customer_enterprise_validity = mContractInfo.getCustomer_enterprise_validity();
+        if (TextUtils.isEmpty(customer_enterprise_validity)) {
+            customer_enterprise_validity = no;
+        }
+        intent.putExtra("validity_period", customer_enterprise_validity);
+
+        String customer_phone = mContractInfo.getCustomer_phone();
+        if (TextUtils.isEmpty(customer_phone)) {
+            customer_phone = no;
+        }
+        intent.putExtra("customer_phone", customer_phone);
     }
 }

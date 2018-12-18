@@ -14,7 +14,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMapActivityView;
 import com.sensoro.smartcity.presenter.DeployMapActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
-import com.sensoro.smartcity.widget.SensoroToast;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -103,7 +103,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     public void refreshSignal(long updateTime, String signal) {
         String signal_text = null;
         long time_diff = System.currentTimeMillis() - updateTime;
-        if (signal != null && (time_diff < 300000)) {
+        if (signal != null && (time_diff < 2 * 60 * 1000)) {
             switch (signal) {
                 case "good":
                     signal_text = mActivity.getString(R.string.signal_excellent);

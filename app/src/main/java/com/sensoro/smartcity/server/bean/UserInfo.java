@@ -29,6 +29,16 @@ public class UserInfo implements Serializable {
     private long updatedTime;
     private boolean isStop;
     private Account account;
+    private boolean addUserEnable = true;
+
+
+    public boolean isAddUserEnable() {
+        return addUserEnable;
+    }
+
+    public void setAddUserEnable(boolean addUserEnable) {
+        this.addUserEnable = addUserEnable;
+    }
 
     public Account getAccount() {
         return account;
