@@ -1,4 +1,4 @@
-package com.sensoro.smartcity.util;
+package com.sensoro.smartcity.analyzer;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -29,6 +29,8 @@ import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.InspectionTaskDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.ResponseBase;
+import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.util.List;
 

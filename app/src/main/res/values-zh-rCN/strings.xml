@@ -633,7 +633,7 @@
     <string name="air_switch_config">配置</string>
     <string name="is_device_air_switch_config">是否进行空开配置</string>
     <string name="configuring">配置中</string>
-    <string name="monitor_point_operation_error_value_range">输入错误，数值范围50至560</string>
+    <string name="monitor_point_operation_error_value_range">输入错误，数值范围:</string>
     <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
     <string name="input_not_null">输入不能为空</string>
     <string name="main_home_menu_scan_login">扫码登录</string>
@@ -662,7 +662,7 @@
     <string name="please_select_device_pic">请选择一张设备照片</string>
     <string name="please_select_installation_site">请选择一张现场照片</string>
     <string name="rated_current">额定电流/A</string>
-    <string name="deploy_configuration_enter_tip">请输入安装现场空气开关的额定电流，范围50&#8211;560</string>
+    <string name="deploy_configuration_enter_tip">请输入安装现场空气开关的额定电流，范围：</string>
     <string name="deploy_configuration">开始配置</string>
     <string name="if_it_is_a_store_please_upload">若为店面请上传</string>
     <string name="check_ble_status">请检查蓝牙状态</string>
@@ -686,4 +686,6 @@
     <string name="fg_malfunction_malfunctioning">故障中</string>
     <string name="deploy_record_detail_alert_contact">预警联系人</string>
     <string name="deploy_location">部署位置</string>
+    <string name="deploy_configuration_analyze_failed">未解析出正确的设备类型</string>
+    <string name="deploy_configuration_analyze_data_failed">未解析出正确的数据</string>
 </resources>

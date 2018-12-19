@@ -395,6 +395,7 @@ public interface Constants {
         {
             add("fhsj_elec_fires");
             add("acrel_fires");
+            add("acrel_single");
         }
     };
 

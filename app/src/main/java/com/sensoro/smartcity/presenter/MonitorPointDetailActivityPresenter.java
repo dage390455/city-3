@@ -18,6 +18,7 @@ import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
+import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
@@ -57,6 +58,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -642,10 +644,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 }
                 try {
                     integer = Integer.valueOf(content);
-                    if (integer >= 50 && integer <= 560) {
+                    int[] ints = new DeployConfigurationAnalyzer().analyzeDeviceType(mDeviceInfo.getDeviceType());
+                    if (integer >= ints[0] && integer <= ints[1]) {
                         switchSpec = integer;
                     } else {
-                        getView().toastShort(mContext.getString(R.string.monitor_point_operation_error_value_range));
+                        getView().toastShort(String.format(Locale.CHINESE,"%s%d-%d",mContext.getString(R.string.monitor_point_operation_error_value_range),ints[0],ints[1]));
                         return;
                     }
                 } catch (NumberFormatException e) {
