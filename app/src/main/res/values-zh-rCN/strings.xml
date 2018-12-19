@@ -633,7 +633,7 @@
     <string name="air_switch_config">配置</string>
     <string name="is_device_air_switch_config">是否进行空开配置</string>
     <string name="configuring">配置中</string>
-    <string name="monitor_point_operation_error_value_range">输入错误，数值范围50至560</string>
+    <string name="monitor_point_operation_error_value_range">输入错误，数值范围:</string>
     <string name="enter_the_correct_number_format">请输入正确的数字格式</string>
     <string name="input_not_null">输入不能为空</string>
     <string name="main_home_menu_scan_login">扫码登录</string>

@@ -11,7 +11,7 @@ public class DeployConfigurationAnalyzer {
     private int index = -1;
 
     /**
-     * 获取配置的最大值，最小值
+     * 获取配置的最大值，最小值;空开配置，不同的电气火灾，这个值应该是不一样的，但是默认给50-560
      */
     public int[] analyzeDeviceType(String deviceType) {
         for (int i = 0; i < Constants.DEVICE_CONTROL_DEVICE_TYPES.size(); i++) {
@@ -20,26 +20,26 @@ public class DeployConfigurationAnalyzer {
                 break;
             }
         }
+        int[] result = new int[2];
+        result[0] = 50;
+        result[1] = 560;
         if (index != -1) {
-            int[] result = new int[2];
             switch (index) {
                 case 0:
                     //泛海三江电气火灾，没有配置
-                    return null;
+                    break;
                 case 1:
-                    //安科瑞三相电
-                    result[0] = 50;
-                    result[1] = 560;
-                    return result;
+                    //安科瑞三相电，跟默认值一样
+                    break;
 
                 case 2:
                     //安科瑞单相电
-                    result[0] = 0;
+                    result[0] = 12;
                     result[1] = 84;
-                    return result;
+                    break;
             }
         }
-        return null;
+        return result;
 
     }
 
@@ -98,9 +98,9 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.leakageTh = 300;//漏电
         sensoroSensor.acrelFires.t1Th = 80;//电线温度 通道1
         sensoroSensor.acrelFires.t2Th = 60;//箱体温度 通道2
-        sensoroSensor.acrelFires.valHighSet = 115;//过压
-        sensoroSensor.acrelFires.currHighSet = 5 * value / 60;//过流
-        sensoroSensor.acrelFires.valLowSet = 85;//欠压
+        sensoroSensor.acrelFires.valHighSet = 1150;//过压
+        sensoroSensor.acrelFires.currHighSet = 1000 * value / 60;//过流
+        sensoroSensor.acrelFires.valLowSet = 850;//欠压
         sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
         sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
         sensoroSensor.acrelFires.ct = 1;

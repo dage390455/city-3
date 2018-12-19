@@ -634,7 +634,7 @@
     <string name="air_switch_config">Configuration</string>
     <string name="is_device_air_switch_config">Setting</string>
     <string name="configuring">Setting&#8230;</string>
-    <string name="monitor_point_operation_error_value_range">Input the rated current,Range:50&#8211;560</string>
+    <string name="monitor_point_operation_error_value_range">Input the rated current,Range:</string>
     <string name="enter_the_correct_number_format">Please enter the correct number format</string>
     <string name="input_not_null">The input must not be empty</string>
 
