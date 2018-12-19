@@ -230,6 +230,6 @@ dependencies {
     //bottom bar
     compile project(':bottomnavigation')
     compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
-        transitive=true
+        transitive = true
     }
 }

@@ -20,6 +20,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorDetailActivityView;
 import com.sensoro.smartcity.model.DeployContactModel;
 import com.sensoro.smartcity.presenter.DeployMonitorDetailActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -92,6 +93,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     TextView acDeployDeviceDetailTvTagRequired;
     @BindView(R.id.ac_deploy_device_detail_tv_alarm_contact_required)
     TextView acDeployDeviceDetailTvAlarmContactRequired;
+    @BindView(R.id.line_deploy_detail_we_chat)
+    View lineDeployDetailWeChat;
     private DeployDeviceDetailAlarmContactAdapter mAlarmContactAdapter;
     private TagAdapter mTagAdapter;
     private TextView mDialogTvConfirm;
@@ -126,6 +129,10 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         initUploadDialog();
         initRcAlarmContact();
         initRcDeployDeviceTag();
+        if (!AppUtils.isChineseLanguage()) {
+            lineDeployDetailWeChat.setVisibility(View.GONE);
+            deployDetailLlWeChat.setVisibility(View.GONE);
+        }
     }
 
     private void initRcDeployDeviceTag() {
@@ -363,7 +370,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         //定位信息是必填的情况下，颜色a6a6 其他2525
         if (locationInfo.equals(mActivity.getString(R.string.required))) {
             acDeployDeviceDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
-        }else{
+        } else {
             acDeployDeviceDetailTvFixedPointState.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
         }
 
