@@ -29,7 +29,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 
 public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView>
         implements Runnable, BLEDeviceListener<BLEDevice>, SensoroConnectionCallback, SensoroWriteCallback {
@@ -98,7 +97,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             }
             mEnterValue = value;
             mConnection = new SensoroDeviceConnection(mActivity, mMacAddress);
-        } catch (NumberFormatException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
             return;

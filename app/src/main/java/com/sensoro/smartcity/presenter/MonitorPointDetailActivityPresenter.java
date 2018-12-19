@@ -92,10 +92,6 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
-
-        if (!AppUtils.isChineseLanguage()) {
-            //TODO 英文版不能显示微信分享按钮
-        }
         requestDeviceRecentLog();
     }
 

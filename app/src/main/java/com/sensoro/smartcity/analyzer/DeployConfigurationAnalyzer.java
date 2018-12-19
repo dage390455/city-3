@@ -14,12 +14,13 @@ public class DeployConfigurationAnalyzer {
      * 获取配置的最大值，最小值;空开配置，不同的电气火灾，这个值应该是不一样的，但是默认给50-560
      */
     public int[] analyzeDeviceType(String deviceType) {
-        for (int i = 0; i < Constants.DEVICE_CONTROL_DEVICE_TYPES.size(); i++) {
-            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.get(i).equals(deviceType)) {
-                index = i;
-                break;
-            }
-        }
+        index = Constants.DEVICE_CONTROL_DEVICE_TYPES.indexOf(deviceType);
+//        for (int i = 0; i < Constants.DEVICE_CONTROL_DEVICE_TYPES.size(); i++) {
+//            if (Constants.DEVICE_CONTROL_DEVICE_TYPES.get(i).equals(deviceType)) {
+//                index = i;
+//                break;
+//            }
+//        }
         int[] result = new int[2];
         result[0] = 50;
         result[1] = 560;
@@ -43,7 +44,7 @@ public class DeployConfigurationAnalyzer {
 
     }
 
-    public SensoroDevice configurationData(SensoroDevice sensoroDevice,int enterValue) {
+    public SensoroDevice configurationData(SensoroDevice sensoroDevice, int enterValue) {
         if (index == -1) {
             return null;
         }
@@ -54,20 +55,20 @@ public class DeployConfigurationAnalyzer {
                 break;
             case 1:
                 //安科瑞三相电
-                configAcrelFires(sensoroDevice.getSensoroSensorTest(),enterValue);
+                configAcrelFires(sensoroDevice.getSensoroSensorTest(), enterValue);
                 break;
             case 2:
                 //安科瑞单相电
-                configAcrelSingle(sensoroDevice.getSensoroSensorTest(),enterValue);
+                configAcrelSingle(sensoroDevice.getSensoroSensorTest(), enterValue);
                 break;
-                default:
-                    sensoroDevice = null;
-                    break;
+            default:
+                sensoroDevice = null;
+                break;
         }
         return sensoroDevice;
     }
 
-    private void configAcrelFires(SensoroSensor sensoroSensor,int value) {
+    private void configAcrelFires(SensoroSensor sensoroSensor, int value) {
         //在开始配置的时候，已经校验过，mEnterValue的值是50 到560
         int dev;
         if (value <= 250) {
@@ -94,7 +95,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.cmd = 2;
     }
 
-    private void configAcrelSingle(SensoroSensor sensoroSensor,int value) {
+    private void configAcrelSingle(SensoroSensor sensoroSensor, int value) {
         sensoroSensor.acrelFires.leakageTh = 300;//漏电
         sensoroSensor.acrelFires.t1Th = 80;//电线温度 通道1
         sensoroSensor.acrelFires.t2Th = 60;//箱体温度 通道2
