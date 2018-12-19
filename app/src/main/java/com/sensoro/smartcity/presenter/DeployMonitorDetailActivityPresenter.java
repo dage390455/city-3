@@ -138,6 +138,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             //TODO 再次部署时暂时不回显电器火灾字段字段
             getView().setDeployDeviceDetailDeploySetting(null);
         }
+        if (!AppUtils.isChineseLanguage()) {
+            //TODO 英文版控制不显示小程序账号
+            deployAnalyzerModel.weChatAccount = null;
+        }
     }
 
     //回显设备信息
@@ -307,7 +311,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
                 final long currentTimeMillis = System.currentTimeMillis();
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount = null, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -513,9 +517,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doDeployMap() {
         Intent intent = new Intent();
-        if (AppUtils.isChineseLanguage()){
+        if (AppUtils.isChineseLanguage()) {
             intent.setClass(mContext, DeployMapActivity.class);
-        }else {
+        } else {
             intent.setClass(mContext, DeployMapENActivity.class);
         }
         deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL;

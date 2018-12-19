@@ -1,24 +1,29 @@
 package com.sensoro.smartcity.presenter;
 
+import android.animation.ObjectAnimator;
+import android.animation.TypeEvaluator;
+import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.location.Location;
 import android.os.Handler;
 import android.os.Looper;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.widget.TextView;
 
-import com.amap.api.maps.model.Marker;
-import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
-import com.mapbox.mapboxsdk.annotations.MarkerView;
-import com.mapbox.mapboxsdk.annotations.MarkerViewOptions;
+import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
-//import com.mapbox.mapboxsdk.location.LocationComponent;
-//import com.mapbox.mapboxsdk.location.modes.RenderMode;
-import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
+import com.mapbox.mapboxsdk.maps.UiSettings;
+import com.mapbox.mapboxsdk.maps.widgets.MyLocationViewSettings;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -32,6 +37,7 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.response.DeployDeviceDetailRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
 import com.sensoro.smartcity.server.response.DeviceInfoListRsp;
+import com.sensoro.smartcity.util.GPSUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
@@ -44,23 +50,18 @@ import java.util.List;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActivityView> implements IOnCreate, Constants, OnMapReadyCallback {
+
+public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActivityView> implements IOnCreate, Constants, OnMapReadyCallback, MapboxMap.InfoWindowAdapter, MapboxMap.OnCameraChangeListener {
     private MapboxMap aMap;
-//    private Marker deviceMarker;
-    //    private GeocodeSearch geocoderSearch;
     private Activity mContext;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private DeployAnalyzerModel deployAnalyzerModel;
-    private Marker locationMarker;
-    private MarkerViewOptions marks;
-    private MarkerView markerView;
+    private com.mapbox.mapboxsdk.annotations.Marker markerView;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-//        geocoderSearch = new GeocodeSearch(mContext);
-//        geocoderSearch.setOnGeocodeSearchListener(this);
         deployAnalyzerModel = (DeployAnalyzerModel) mContext.getIntent().getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
         switch (deployAnalyzerModel.deployType) {
             case TYPE_SCAN_DEPLOY_STATION:
@@ -96,117 +97,6 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
         mHandler.removeCallbacksAndMessages(null);
     }
 
-
-    private void setMarkerAddress(RegeocodeAddress regeocodeAddress) {
-//        StringBuilder stringBuilder = new StringBuilder();
-////        String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
-//        String ts = regeocodeAddress.getTownship();// 乡镇
-//        String thf = null;// 道路
-//        List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
-//        if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
-//            RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
-//            if (regeocodeRoad != null) {
-//                thf = regeocodeRoad.getName();
-//            }
-//        }
-//        String subthf = null;// 门牌号
-//        StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
-//        if (streetNumber != null) {
-//            subthf = streetNumber.getNumber();
-//        }
-////        String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
-////        if (subLoc != null) {
-////            stringBuffer.append(subLoc);
-////        }
-////        if (ts != null) {
-////            stringBuffer.append(ts);
-////        }
-//        if (thf != null) {
-//            stringBuilder.append(thf);
-//        }
-//        if (subthf != null) {
-//            stringBuilder.append(subthf);
-//        }
-//        String address = stringBuilder.toString();
-//        if (TextUtils.isEmpty(address)) {
-//            address = ts;
-//        }
-//        deployAnalyzerModel.address = address;
-//        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
-//        if (TextUtils.isEmpty(address)) {
-//            deviceMarker.hideInfoWindow();
-//        } else {
-//            deviceMarker.setTitle(address);
-//            mHandler.post(new Runnable() {
-//                @Override
-//                public void run() {
-//                    deviceMarker.showInfoWindow();
-//                }
-//            });
-//        }
-    }
-
-//    private void setMapCustomStyleFile() {
-//        String styleName = "custom_config.data";
-//        FileOutputStream outputStream = null;
-//        InputStream inputStream = null;
-//        String filePath = null;
-//        try {
-//            inputStream = mContext.getAssets().open(styleName);
-//            byte[] b = new byte[inputStream.available()];
-//            inputStream.read(b);
-//
-//            filePath = mContext.getFilesDir().getAbsolutePath();
-//            File file = new File(filePath + "/" + styleName);
-//            if (!file.exists()) {
-//                file.createNewFile();
-//            }
-//            outputStream = new FileOutputStream(file);
-//            outputStream.write(b);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        } finally {
-//            try {
-//                if (inputStream != null) {
-//                    inputStream.close();
-//                }
-//
-//                if (outputStream != null) {
-//                    outputStream.close();
-//                }
-//
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        aMap.setCustomMapStylePath(filePath + "/" + styleName);
-//        //暂时去掉自定义的定位显示，防止查看自动定位
-////        MyLocationStyle myLocationStyle = new MyLocationStyle();
-////        myLocationStyle.radiusFillColor(Color.argb(25, 73, 144, 226));
-////        myLocationStyle.strokeWidth(0);
-////        myLocationStyle.myLocationType(MyLocationStyle.LOCATION_TYPE_LOCATE);
-////        myLocationStyle.myLocationIcon(BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_location));
-////        myLocationStyle.showMyLocation(true);
-////        aMap.setMyLocationStyle(myLocationStyle);
-//    }
-
-    public void initMap(MapView map) {
-//        this.aMap = map;
-////        setMapCustomStyleFile();
-//        aMap.mas
-//        aMap.getUiSettings().setTiltGesturesEnabled(false);
-//        aMap.getUiSettings().setZoomControlsEnabled(false);
-//        aMap.getUiSettings().setMyLocationButtonEnabled(false);
-//        aMap.getUiSettings().setLogoBottomMargin(-50);
-//        aMap.setMyLocationEnabled(false);
-//        aMap.setMapCustomEnable(true);
-//        String styleName = "custom_config.data";
-//        aMap.setCustomMapStylePath(mContext.getFilesDir().getAbsolutePath() + "/" + styleName);
-//        aMap.setOnMapLoadedListener(this);
-//        aMap.setOnMarkerClickListener(this);
-//        aMap.setInfoWindowAdapter(this);
-//        aMap.setOnMapTouchListener(this);
-    }
 
     public void doSaveLocation() {
         if (deployAnalyzerModel.latLng.size() == 2) {
@@ -308,154 +198,49 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
 
     }
 
+    @Override
     public void onCameraChange(CameraPosition cameraPosition) {
-//        switch (deployAnalyzerModel.mapSourceType) {
-//            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
-//                break;
-//            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
-//            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
-//                if (cameraPosition != null) {
-//                    //解决不能回显的bug 不能直接赋值
-//                    deviceMarker.setPosition(cameraPosition.target);
-//                    System.out.println("====>onCameraChange");
-//                }
-//                break;
-//        }
-
+        if (cameraPosition != null) {
+            LatLng target = cameraPosition.target;
+            switch (deployAnalyzerModel.mapSourceType) {
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                    break;
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+                case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                    double latitude = target.getLatitude();
+                    double longitude = target.getLongitude();
+                    double[] doubles = GPSUtil.gps84_To_Gcj02(latitude, longitude);
+                    deployAnalyzerModel.latLng.clear();
+                    deployAnalyzerModel.latLng.add(doubles[1]);
+                    deployAnalyzerModel.latLng.add(doubles[0]);
+                    if (markerView != null) {
+                        ValueAnimator markerAnimator = ObjectAnimator.ofObject(markerView, "position",
+                                new LatLngEvaluator(), markerView.getPosition(), target);
+                        markerAnimator.setDuration(0);
+                        markerAnimator.start();
+                    }
+                    break;
+            }
+        }
     }
 
-    public void onCameraChangeFinish(CameraPosition cameraPosition) {
-//        switch (deployAnalyzerModel.mapSourceType) {
-//            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
-//                if (deployAnalyzerModel.latLng.size() == 2) {
-//                    LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-//                    RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-//                    System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
-//                    deviceMarker.setInfoWindowEnable(true);
-//                    geocoderSearch.getFromLocationAsyn(query);
-//                }
-//
-//                break;
-//            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
-//            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
-//                if (cameraPosition != null) {
-//                    deployAnalyzerModel.latLng.clear();
-//                    deployAnalyzerModel.latLng.add(cameraPosition.target.longitude);
-//                    deployAnalyzerModel.latLng.add(cameraPosition.target.latitude);
-//                    //
-//                    LatLonPoint lp = new LatLonPoint(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-//                    RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-//                    System.out.println("====>onCameraChangeFinish=>" + lp.getLatitude() + "&" + lp.getLongitude());
-//                    deviceMarker.setPosition(cameraPosition.target);
-//                    geocoderSearch.getFromLocationAsyn(query);
-//                }
-//                break;
-//        }
-    }
-
-    public boolean onMarkerClick(Marker marker) {
-        return false;
-    }
-
-    public void onMapLoaded() {
-//        aMap.setOnCameraChangeListener(this);
-//        //
-//        MarkerOptions locationOption = new MarkerOptions().icon(BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_location))
-//                .anchor(0.5f, 0.6f)
-//                .draggable(false);
-//        locationMarker = aMap.addMarker(locationOption);
-//        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-//        if (lastKnownLocation != null) {
-//            double lat = lastKnownLocation.getLatitude();//获取纬度
-//            double lon = lastKnownLocation.getLongitude();//获取经度
-//            locationMarker.setPosition(new LatLng(lat, lon));
-//        }
-//        BitmapDescriptor bitmapDescriptor = BitmapDescriptorFactory.fromResource(R.drawable.deploy_map_cur);
-//        MarkerOptions markerOption = new MarkerOptions().icon(bitmapDescriptor)
-//                .anchor(0.5f, 1)
-//                .draggable(true);
-//        deviceMarker = aMap.addMarker(markerOption);
-//        //加载完地图之后添加监听防止位置错乱
-//        if (deployAnalyzerModel.latLng.size() == 2) {
-////可视化区域，将指定位置指定到屏幕中心位置
-//            LatLng latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-//            CameraUpdate update = CameraUpdateFactory
-//                    .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
-//            aMap.moveCamera(update);
-//            deviceMarker.setPosition(latLng);
-//            LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
-//            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-//            geocoderSearch.getFromLocationAsyn(query);
-//            LogUtils.loge("latLng = " + latLng.toString());
-//        } else {
-//            backToCurrentLocation();
-//        }
-
-    }
-
-//    @Override
-//    public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-//        System.out.println("====>onRegeocodeSearched");
-//        try {
-//            RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
-//            setMarkerAddress(regeocodeAddress);
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
-//    }
-
-//    @Override
-//    public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-//
-//    }
-//
-//    @Override
-//    public void onTouch(MotionEvent motionEvent) {
-//
-//    }
-//
-//    @Override
-//    public View getInfoWindow(Marker marker) {
-//        View view = mContext.getLayoutInflater().inflate(R.layout.layout_marker, null);
-//        TextView info = (TextView) view.findViewById(R.id.marker_info);
-//        info.setText(marker.getTitle());
-//        return view;
-//    }
-
-//    @Override
-//    public View getInfoContents(Marker marker) {
-//        return null;
-//    }
 
     public void backToCurrentLocation() {
-//        LatLng latLng;
-//        CameraUpdate update;
-//        switch (deployAnalyzerModel.mapSourceType) {
-//            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
-//                if (deployAnalyzerModel.latLng.size() == 2) {
-//                    latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-//                    update = CameraUpdateFactory
-//                            .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
-//                    aMap.moveCamera(update);
-//                    deviceMarker.setPosition(latLng);
-//                }
-//                break;
-//            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
-//            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
-//                AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-//                if (lastKnownLocation != null) {
-//                    double lat = lastKnownLocation.getLatitude();//获取纬度
-//                    double lon = lastKnownLocation.getLongitude();//获取经度
-//                    latLng = new LatLng(lat, lon);
-//                    //可视化区域，将指定位置指定到屏幕中心位置
-//                    update = CameraUpdateFactory
-//                            .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
-//                    aMap.moveCamera(update);
-//                    locationMarker.setPosition(latLng);
-//                    deviceMarker.setPosition(latLng);
-//                }
-//                break;
-//        }
+        switch (deployAnalyzerModel.mapSourceType) {
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                if (deployAnalyzerModel.latLng.size() == 2) {
+                    freshMap();
+                }
+                break;
+            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                Location lastLocation = aMap.getMyLocation();
+                if (lastLocation != null && aMap != null) {
+                    aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation), 15), 1000);
+                }
+                break;
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -491,47 +276,78 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
     }
 
     @Override
-    public void onMapReady(MapboxMap mapboxMap) {
+    public void onMapReady(final MapboxMap mapboxMap) {
         this.aMap = mapboxMap;
         //
-//        LocationComponentOptions options = LocationComponentOptions.builder(mContext)
-//                .layerBelow(layerId)
-//                .foregroundDrawable(R.drawable.drawable_name)
-//                .bearingTintColor(int color)
-//	.accuracyAlpha(float)
-//	.build();
-//
-//        locationComponent = mapboxMap.getLocationComponent();
-//        locationComponent.activateLocationComponent(this, options);
-
-//        LocationComponent locationComponent = mapboxMap.getLocationComponent();
-//
-//        locationComponent.activateLocationComponent(mContext);
-//        locationComponent.setLocationComponentEnabled(true);
-//        locationComponent.setRenderMode(RenderMode.NORMAL);
-
+        UiSettings uiSettings = aMap.getUiSettings();
+        uiSettings.setTiltGesturesEnabled(false);
+        uiSettings.setZoomControlsEnabled(false);
+        uiSettings.setCompassEnabled(false);//隐藏指南针
+        uiSettings.setLogoEnabled(false);//隐藏logo
+        uiSettings.setTiltGesturesEnabled(true);//设置是否可以调整地图倾斜角
+        uiSettings.setRotateGesturesEnabled(true);//设置是否可以旋转地图
+        uiSettings.setAttributionEnabled(false);//设置是否显示那个提示按钮
+        aMap.setMyLocationEnabled(true);
+        aMap.setInfoWindowAdapter(this);
+        MyLocationViewSettings locationSettings = aMap.getMyLocationViewSettings();
+        locationSettings.setBackgroundDrawable(ContextCompat.getDrawable(mContext, R.drawable.deploy_map_location), new int[]{20, 20, 20, 20});
+        locationSettings.setForegroundTintColor(ContextCompat.getColor(mContext, R.color.transparent));
+        locationSettings.setAccuracyTintColor(ContextCompat.getColor(mContext, R.color.transparent));
+        locationSettings.setAccuracyAlpha(50);
+        locationSettings.setTilt(30);
         //
-//        IconFactory iconFactory = IconFactory.getInstance(mContext);
-//        Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
-//        marks = new MarkerViewOptions().position(new com.mapbox.mapboxsdk.geometry.LatLng(-37.821648, 144.978594)).icon(icon);
-//        markerView = mapboxMap.addMarker(marks);
-//        if (deployAnalyzerModel.latLng.size() == 2) {
-////可视化区域，将指定位置指定到屏幕中心位置
-//            LatLng latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-//            markerView.setPosition(latLng);
-//            CameraPosition position = new CameraPosition.Builder()
-//                    .target(latLng)
-//                    .zoom(10)
-//                    .tilt(20)
-//                    .build();
-//            mapboxMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
-//
-////            LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
-////            RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
-////            geocoderSearch.getFromLocationAsyn(query);
-//            LogUtils.loge("latLng = " + latLng.toString());
-//        } else {
-//            backToCurrentLocation();
-//        }
+        aMap.setOnCameraChangeListener(this);
+        freshMap();
     }
+
+    private void freshMap() {
+        if (aMap != null) {
+            aMap.clear();
+            if (deployAnalyzerModel.latLng.size() == 2) {
+//可视化区域，将指定位置指定到屏幕中心位置
+                double[] currentLonlat = GPSUtil.gcj02_To_Gps84(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+                LatLng latLng = new LatLng(currentLonlat[0], currentLonlat[1]);
+                IconFactory iconFactory = IconFactory.getInstance(mContext);
+                Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
+                MarkerOptions markerOptions = new MarkerOptions();
+                markerOptions.icon(icon).title("国外")
+                        .position(latLng);
+                markerView = aMap.addMarker(markerOptions);
+                markerView.setPosition(latLng);
+                CameraPosition position = new CameraPosition.Builder()
+                        .target(latLng)
+                        .zoom(16)
+                        .tilt(20)
+                        .build();
+                aMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+            } else {
+                backToCurrentLocation();
+            }
+        }
+
+    }
+
+    @Nullable
+    @Override
+    public View getInfoWindow(@NonNull com.mapbox.mapboxsdk.annotations.Marker marker) {
+        View view = mContext.getLayoutInflater().inflate(R.layout.layout_marker, null);
+        TextView info = (TextView) view.findViewById(R.id.marker_info);
+        info.setText(marker.getTitle());
+        return view;
+    }
+
+    private final class LatLngEvaluator implements TypeEvaluator<LatLng> {
+
+        private LatLng latLng = new LatLng();
+
+        @Override
+        public LatLng evaluate(float fraction, LatLng startValue, LatLng endValue) {
+            latLng.setLatitude(startValue.getLatitude()
+                    + ((endValue.getLatitude() - startValue.getLatitude()) * fraction));
+            latLng.setLongitude(startValue.getLongitude()
+                    + ((endValue.getLongitude() - startValue.getLongitude()) * fraction));
+            return latLng;
+        }
+    }
+
 }

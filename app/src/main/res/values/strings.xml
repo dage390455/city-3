@@ -301,8 +301,8 @@
     <string name="tips_username_empty">Please enter your account</string>
     <string name="tips_phone_empty">Please enter a valid phone number</string>
     <string name="tips_login_pwd_empty">Please enter your password</string>
-    <string name="tips_deploy_success">Congratulations! Sensor point deployment is successful</string>
-    <string name="tips_deploy_station_success">Congratulations! Station deployment is successful</string>
+    <string name="tips_deploy_success">Congratulations! Deployment Successful</string>
+    <string name="tips_deploy_station_success">Congratulations! Deployment Successful</string>
     <string name="tips_deploy_failed">Sorry! Sensor point deployment failed</string>
     <string name="tips_deploy_station_failed">Sorry! Station deployment failed</string>
     <string name="tips_input_name">Name/address must not be empty</string>

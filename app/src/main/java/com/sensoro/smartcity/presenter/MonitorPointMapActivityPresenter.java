@@ -8,9 +8,7 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.SystemClock;
 import android.text.TextUtils;
-import android.util.Log;
 
-import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.AMap;
 import com.amap.api.maps.CameraUpdate;
 import com.amap.api.maps.CameraUpdateFactory;
@@ -333,7 +331,6 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
 
 
     public void backToCurrentLocation() {
-        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
         double[] lonlat = mDeviceInfo.getLonlat();
 
         if (lonlat != null && lonlat.length > 1 && lonlat[0] != 0 && lonlat[1] != 0) {
@@ -346,11 +343,6 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                         .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
                 aMap.moveCamera(update);
             }
-
-        } else {
-            //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
-            Log.e("地图错误", "定位失败, 错误码:" + lastKnownLocation.getErrorCode() + ", 错误信息:"
-                    + lastKnownLocation.getErrorInfo());
         }
     }
 

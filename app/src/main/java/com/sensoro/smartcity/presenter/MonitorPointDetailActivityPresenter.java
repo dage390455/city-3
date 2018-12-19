@@ -16,6 +16,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
+import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -89,6 +90,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         mDeviceInfo = (DeviceInfo) mContext.getIntent().getSerializableExtra(EXTRA_DEVICE_INFO);
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
+
+        if (!AppUtils.isChineseLanguage()) {
+            //TODO 英文版不能显示微信分享按钮
+        }
         requestDeviceRecentLog();
     }
 
@@ -582,7 +587,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             return;
         }
         Intent intent = new Intent();
-        intent.setClass(mContext, MonitorPointMapActivity.class);
+        if (AppUtils.isChineseLanguage()) {
+            intent.setClass(mContext, MonitorPointMapActivity.class);
+        } else {
+            intent.setClass(mContext, MonitorPointMapENActivity.class);
+        }
         intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
         getView().startAC(intent);
     }

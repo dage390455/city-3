@@ -22,8 +22,9 @@
 
         <com.mapbox.mapboxsdk.maps.MapView
             android:id="@+id/tm_deploy_map_en"
-            mapbox:mapbox_styleUrl="@string/mapbox_style_mapbox_streets"
             android:layout_width="match_parent"
+            mapbox:mapbox_styleUrl="mapbox://styles/mapbox/streets-v10"
+            mapbox:mapbox_cameraZoom="16"
             android:layout_height="match_parent" />
 
         <TextView
