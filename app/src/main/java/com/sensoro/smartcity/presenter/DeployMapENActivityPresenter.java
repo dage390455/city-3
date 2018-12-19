@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.mapbox.mapboxsdk.annotations.Icon;
 import com.mapbox.mapboxsdk.annotations.IconFactory;
+import com.mapbox.mapboxsdk.annotations.Marker;
 import com.mapbox.mapboxsdk.annotations.MarkerOptions;
 import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
@@ -56,7 +57,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
     private Activity mContext;
     private Handler mHandler = new Handler(Looper.getMainLooper());
     private DeployAnalyzerModel deployAnalyzerModel;
-    private com.mapbox.mapboxsdk.annotations.Marker markerView;
+    private Marker markerView;
 
     @Override
     public void initData(Context context) {
@@ -88,7 +89,8 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
             default:
                 break;
         }
-    }
+
+}
 
 
     @Override
@@ -329,7 +331,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
 
     @Nullable
     @Override
-    public View getInfoWindow(@NonNull com.mapbox.mapboxsdk.annotations.Marker marker) {
+    public View getInfoWindow(@NonNull Marker marker) {
         View view = mContext.getLayoutInflater().inflate(R.layout.layout_marker, null);
         TextView info = (TextView) view.findViewById(R.id.marker_info);
         info.setText(marker.getTitle());

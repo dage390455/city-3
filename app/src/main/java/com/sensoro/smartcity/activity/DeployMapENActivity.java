@@ -46,8 +46,8 @@ public class DeployMapENActivity extends BaseActivity<IDeployMapENActivityView, 
         tmDeployMap.onCreate(savedInstanceState);
         //
         iniView();
-        tmDeployMap.getMapAsync(mPresenter);
         mPresenter.initData(mActivity);
+        tmDeployMap.getMapAsync(mPresenter);
     }
 
     private void iniView() {
