@@ -18,6 +18,8 @@ import com.sensoro.smartcity.presenter.DeployMonitorConfigurationPresenter;
 import com.sensoro.smartcity.widget.dialog.BleConfigurationDialogUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
+import java.util.Locale;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -176,6 +178,12 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     @Override
     public boolean hasEditTextContent() {
         return acDeployConfigurationEtEnter.getText().toString().length() > 0;
+    }
+
+    @Override
+    public void setTvEnterValueRange(int minValue, int maxValue) {
+        String string = String.format(Locale.CHINESE,"%s%d-%d",mActivity.getString(R.string.deploy_configuration_enter_tip),minValue,maxValue);
+        acDeployConfigurationTvEnterTip.setText(string);
     }
 
     @Override

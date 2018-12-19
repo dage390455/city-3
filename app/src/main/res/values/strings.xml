@@ -667,7 +667,7 @@
     <string name="please_select_device_pic">Please select a device map</string>
     <string name="please_select_installation_site">Please select a live photo</string>
     <string name="rated_current">RC/A</string>
-    <string name="deploy_configuration_enter_tip">Input the rated current,Range:50&#8211;560</string>
+    <string name="deploy_configuration_enter_tip">Input the rated current,Range:</string>
     <string name="deploy_configuration">Configuration</string>
     <string name="if_it_is_a_store_please_upload">Should be uploaded if it is a store</string>
     <string name="check_ble_status">Please check the bluetooth status</string>
@@ -691,4 +691,6 @@
     <string name="fg_malfunction_malfunctioning">Malfunction</string>
     <string name="deploy_record_detail_alert_contact">Alarm Contact</string>
     <string name="deploy_location">Deploy Location</string>
+    <string name="deploy_configuration_analyze_failed">Device type parsing failed</string>
+    <string name="deploy_configuration_analyze_data_failed">Data configuration failed</string>
 </resources>
