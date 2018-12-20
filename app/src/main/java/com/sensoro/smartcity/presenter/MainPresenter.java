@@ -5,6 +5,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -35,6 +37,7 @@ import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.widget.popup.AlarmPopUtils;
@@ -56,6 +59,8 @@ import io.socket.emitter.Emitter;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static android.net.ConnectivityManager.CONNECTIVITY_ACTION;
+
 public class MainPresenter extends BasePresenter<IMainView> implements Constants, IOnCreate {
 
     private final ArrayList<Fragment> mFragmentList = new ArrayList<>();
@@ -76,46 +81,99 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private ManagerFragment managerFragment;
     private MalfunctionFragment malfunctionFragment;
     private ScreenBroadcastReceiver mScreenReceiver;
+    private volatile boolean pingNetCanUse;
 
     private final class ScreenBroadcastReceiver extends BroadcastReceiver {
+        private boolean isFirst = true;
+
+        /**
+         * 检测到语言变化重新登录
+         */
+        private void reLogin() {
+            RetrofitServiceHelper.INSTANCE.cancelAllRsp();
+            RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
+            Intent intent = new Intent(mContext, LoginActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            mContext.startActivity(intent);
+            // 杀掉进程
+            android.os.Process.killProcess(android.os.Process.myPid());
+            System.exit(0);
+
+        }
+
         @Override
         public void onReceive(Context context, Intent intent) {
 
             String action = intent.getAction();
             if (!TextUtils.isEmpty(action)) {
-
                 switch (action) {
-                    case Intent.ACTION_SCREEN_ON:
                     case Intent.ACTION_USER_PRESENT:
                         final EventData eventData = new EventData();
                         eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
                         eventData.data = true;
                         EventBus.getDefault().post(eventData);
                         break;
-                    case Intent.ACTION_SCREEN_OFF:
-                        final EventData eventData1 = new EventData();
-                        eventData1.code = EVENT_DATA_LOCK_SCREEN_ON;
-                        eventData1.data = false;
-                        EventBus.getDefault().post(eventData1);
+                    case Intent.ACTION_LOCALE_CHANGED:
+                        LogUtils.loge("Language : isChina = " + AppUtils.isChineseLanguage());
+                        reLogin();
+                        break;
+                    case CONNECTIVITY_ACTION:
+                        boolean netCanUse = false;
+                        ConnectivityManager manager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+                        if (manager != null) {
+                            NetworkInfo activeNetwork = manager.getActiveNetworkInfo();
+                            if (activeNetwork != null) {
+                                if (activeNetwork.isConnected()) {
+                                    if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
+                                        netCanUse = true;
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>当前WiFi连接可用 ");
+                                    } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
+                                        netCanUse = true;
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>当前移动网络连接可用 ");
+                                    }
+                                } else {
+                                    LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
+                                }
+                                LogUtils.loge("CONNECTIVITY_ACTION--->>info.getTypeName()" + activeNetwork.getTypeName());
+                                LogUtils.loge("CONNECTIVITY_ACTION--->>getSubtypeName()" + activeNetwork.getSubtypeName());
+                                LogUtils.loge("CONNECTIVITY_ACTION--->>getState()" + activeNetwork.getState());
+                                LogUtils.loge("CONNECTIVITY_ACTION--->>getDetailedState()"
+                                        + activeNetwork.getDetailedState().name());
+                                LogUtils.loge("CONNECTIVITY_ACTION--->>getDetailedState()" + activeNetwork.getExtraInfo());
+                                LogUtils.loge("CONNECTIVITY_ACTION--->>getType()" + activeNetwork.getType());
+                            } else {   // not connected to the internet
+                                LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
+                            }
+                        }
+                        if (netCanUse) {
+                            if (!isFirst) {
+                                ThreadPoolManager.getInstance().execute(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        try {
+                                            Thread.sleep(500);
+                                        } catch (InterruptedException e) {
+                                            e.printStackTrace();
+                                        }
+                                        pingNetCanUse = NetWorkUtils.ping();
+                                        if (pingNetCanUse) {
+                                            EventData eventData2 = new EventData();
+                                            eventData2.code = EVENT_DATA_NET_WORK_CHANGE;
+                                            LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
+                                            EventBus.getDefault().post(eventData2);
+                                        }
+                                    }
+                                });
+                            }
+                            isFirst = false;
+                        }
                         break;
 
                 }
             }
-//            if (Intent.ACTION_SCREEN_ON.equals(action)) {
-////                Toast.makeText(context, "屏幕开屏", Toast.LENGTH_SHORT).show();
-//                final EventData eventData = new EventData();
-//                eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
-//
-//            } else if (Intent.ACTION_SCREEN_OFF.equals(action)) {
-//
-////                Toast.makeText(context, "屏幕关屏", Toast.LENGTH_SHORT).show();
-//            } else if (Intent.ACTION_USER_PRESENT.equals(action)) {
-//                final EventData eventData = new EventData();
-//                eventData.code = EVENT_DATA_LOCK_SCREEN_ON;
-////                Toast.makeText(context, "屏幕解锁", Toast.LENGTH_SHORT).show();
-//            }
         }
     }
+
 
     @Override
     public void initData(Context context) {
@@ -127,13 +185,21 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             return;
         }
         initViewPager();
-        //注册息屏事件广播
-        IntentFilter intentFilter = new IntentFilter();
-        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
-        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
-        intentFilter.addAction(Intent.ACTION_USER_PRESENT);
         mScreenReceiver = new ScreenBroadcastReceiver();
-        mContext.registerReceiver(mScreenReceiver, intentFilter);
+        mHandler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //注册息屏事件广播
+                IntentFilter intentFilter = new IntentFilter();
+//                intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+//                intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+                intentFilter.addAction(Intent.ACTION_USER_PRESENT);
+                intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
+                intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
+//        CONNECTIVITY_CHANGE WIFI_STATE_CHANGED&STATE_CHANGE
+                mContext.registerReceiver(mScreenReceiver, intentFilter);
+            }
+        }, 3000);
     }
 
     private void initViewPager() {
@@ -369,16 +435,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             ThreadPoolManager.getInstance().execute(new Runnable() {
                 @Override
                 public void run() {
-                    final boolean ping = NetWorkUtils.ping();
+                    pingNetCanUse = NetWorkUtils.ping();
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (!ping) {
+                            if (!pingNetCanUse) {
                                 getView().toastShort(mContext.getString(R.string.disconnected_from_network));
+                                EventData eventData2 = new EventData();
+                                eventData2.code = EVENT_DATA_NET_WORK_CHANGE;
+                                LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
+                                EventBus.getDefault().post(eventData2);
                             }
                             Beta.checkUpgrade(false, false);
                             mHandler.postDelayed(mRunnable, 5 * 1000);
-                            LogUtils.loge("TaskRunnable == ping = " + ping + ",检查更新");
+                            LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
                         }
                     });
                 }
@@ -617,4 +687,47 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             managerFragment.handlerActivityResult(requestCode, resultCode, data);
         }
     }
+    //----------------
+    //TODO 暂时不通过检测wifi状态
+//                    //        CONNECTIVITY_CHANGE WIFI_STATE_CHANGED&STATE_CHANGE
+//                    // 这个监听wifi的连接状态即是否连上了一个有效无线路由，当上边广播的状态是WifiManager
+//                    // .WIFI_STATE_DISABLING，和WIFI_STATE_DISABLED的时候，根本不会接到这个广播。
+//                    // 在上边广播接到广播是WifiManager.WIFI_STATE_ENABLED状态的同时也会接到这个广播，
+//                    // 当然刚打开wifi肯定还没有连接到有效的无线
+//                    case WifiManager.WIFI_STATE_CHANGED_ACTION:
+//                        int wifiState = intent.getIntExtra(WifiManager.EXTRA_WIFI_STATE, 0);
+//                        LogUtils.loge("wifiState" + wifiState);
+//                        switch (wifiState) {
+//                            case WifiManager.WIFI_STATE_DISABLED:
+////                                APP.getInstance().setEnablaWifi(false);
+//                                break;
+//                            case WifiManager.WIFI_STATE_DISABLING:
+//
+//                                break;
+//                            case WifiManager.WIFI_STATE_ENABLING:
+//                                break;
+//                            case WifiManager.WIFI_STATE_ENABLED:
+////                                APP.getInstance().setEnablaWifi(true);
+//                                break;
+//                            case WifiManager.WIFI_STATE_UNKNOWN:
+//                                break;
+//                            default:
+//                                break;
+//                        }
+//                        break;
+//                    case WifiManager.NETWORK_STATE_CHANGED_ACTION:
+//                        Parcelable parcelableExtra = intent
+//                                .getParcelableExtra(WifiManager.EXTRA_NETWORK_INFO);
+//                        if (null != parcelableExtra) {
+//                            NetworkInfo networkInfo = (NetworkInfo) parcelableExtra;
+//                            NetworkInfo.State state = networkInfo.getState();
+//                            boolean isConnected = state == NetworkInfo.State.CONNECTED;// 当然，这边可以更精确的确定状态
+//                            LogUtils.loge("isConnected" + isConnected);
+//                            if (isConnected) {
+////                                APP.getInstance().setWifi(true);
+//                            } else {
+////                                APP.getInstance().setWifi(false);
+//                            }
+//                        }
+//                        break;
 }

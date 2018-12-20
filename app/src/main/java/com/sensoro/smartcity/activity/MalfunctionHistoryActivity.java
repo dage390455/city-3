@@ -79,7 +79,7 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
 
 
     private void initView() {
-        includeImvTitleTvTitle.setText("历史日志");
+        includeImvTitleTvTitle.setText(mActivity.getString(R.string.malfunction_history_log));
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         mMalfunctionHistoryRcContentAdapter = new MalfunctionHistoryRcContentAdapter(mActivity);
         final LinearLayoutManager linearLayoutManager = new LinearLayoutManager(mActivity);
@@ -233,7 +233,7 @@ public class MalfunctionHistoryActivity extends BaseActivity<IMalfunctionHistory
 
     @Override
     public void updateMalfunctionListAdapter(List<MalfunctionListInfo> mMalfunctionInfoList) {
-        if(mMalfunctionInfoList != null && mMalfunctionInfoList.size() >0){
+        if (mMalfunctionInfoList != null && mMalfunctionInfoList.size() > 0) {
             mMalfunctionHistoryRcContentAdapter.updateAdapter(mMalfunctionInfoList);
         }
         setNoContentVisible(mMalfunctionInfoList == null || mMalfunctionInfoList.size() < 1);

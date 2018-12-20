@@ -60,8 +60,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         mMinMaxValue = mConfigurationAnalyzer.analyzeDeviceType(deployAnalyzerModel.deviceType);
         if (mMinMaxValue == null) {
             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
-        }else{
-            getView().setTvEnterValueRange(mMinMaxValue[0],mMinMaxValue[1]);
+        } else {
+            getView().setTvEnterValueRange(mMinMaxValue[0], mMinMaxValue[1]);
         }
     }
 
@@ -84,15 +84,15 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         checkAndConnect(valueStr);
     }
 
-    private void checkAndConnect(String valueStr){
-        if(mMinMaxValue== null){
+    private void checkAndConnect(String valueStr) {
+        if (mMinMaxValue == null) {
             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
             return;
         }
         try {
             Integer value = Integer.parseInt(valueStr);
             if (value < mMinMaxValue[0] || value > mMinMaxValue[1]) {
-                getView().toastShort(mActivity.getString(R.string.monitor_point_operation_error_value_range));
+                getView().toastShort(mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
                 return;
             }
             mEnterValue = value;
@@ -176,14 +176,14 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     }
                 }
             });
-            SensoroDevice sensoroDevice= mConfigurationAnalyzer.configurationData((SensoroDevice) bleDevice,mEnterValue);
+            SensoroDevice sensoroDevice = mConfigurationAnalyzer.configurationData((SensoroDevice) bleDevice, mEnterValue);
             if (sensoroDevice != null) {
-                mConnection.writeData05Configuration(sensoroDevice,this);
-            }else{
+                mConnection.writeData05Configuration(sensoroDevice, this);
+            } else {
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (getView()!=null) {
+                        if (getView() != null) {
                             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_data_failed));
                         }
                         mConnection.disconnect();
@@ -205,9 +205,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         EventBus.getDefault().post(eventData);
         getView().finishAc();
     }
-
-
-
 
 
     @Override

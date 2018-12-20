@@ -111,7 +111,8 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
         getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        String alarmTime = DateUtil.getStrTimeToday(mContext, deviceAlarmLogInfo.getCreatedTime(), 1);
+        long createdTime = deviceAlarmLogInfo.getCreatedTime();
+        String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
         //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {
@@ -245,28 +246,28 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
 
 
-                            @Override
-                            public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                                    getView().toastShort(mContext.getResources().getString(R.string
-                                            .tips_commit_success));
-                                    deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                                    refreshData(false);
-                                } else {
-                                    getView().toastShort(mContext.getResources().getString(R.string
-                                            .tips_commit_failed));
-                                }
-                                getView().dismissProgressDialog();
-                                getView().dismissAlarmPopupView();
-                            }
+                    @Override
+                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                            getView().toastShort(mContext.getResources().getString(R.string
+                                    .tips_commit_success));
+                            deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                            refreshData(false);
+                        } else {
+                            getView().toastShort(mContext.getResources().getString(R.string
+                                    .tips_commit_failed));
+                        }
+                        getView().dismissProgressDialog();
+                        getView().dismissAlarmPopupView();
+                    }
 
-                            @Override
-                            public void onErrorMsg(int errorCode, String errorMsg) {
-                                getView().dismissProgressDialog();
-                                getView().toastShort(errorMsg);
-                                getView().setUpdateButtonClickable(true);
-                            }
-                        });
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
+                        getView().setUpdateButtonClickable(true);
+                    }
+                });
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {

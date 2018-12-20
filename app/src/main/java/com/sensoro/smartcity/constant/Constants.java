@@ -383,6 +383,7 @@ public interface Constants {
     int DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM = 3;
     int EVENT_DATA_DEVICE_SOCKET_FLUSH = 0x50;
     int EVENT_DATA_LOCK_SCREEN_ON = 0x51;
+    int EVENT_DATA_NET_WORK_CHANGE = 0x52;
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");

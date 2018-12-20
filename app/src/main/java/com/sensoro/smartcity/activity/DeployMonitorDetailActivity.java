@@ -413,7 +413,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
 
     @Override
     public void showStartUploadProgressDialog() {
-        progressDialog.setTitle("请稍后");
+        progressDialog.setTitle(mActivity.getString(R.string.please_wait));
         progressDialog.setProgress(0);
         progressDialog.show();
     }

@@ -154,7 +154,7 @@
     <string name="version_tip_text">App latest version</string>
     <string name="ok">OK</string>
     <string name="tip_text_login_out">Sign Out?</string>
-    <string name="quit">Sign Out</string>
+    <string name="quit">OK</string>
     <string name="business_name">Merchant Name</string>
     <string name="Contact_name_cannot_be_empty">Contact name cannot be empty!</string>
     <string name="location_not_obtained">Location not obtained</string>
@@ -319,7 +319,7 @@
     <string name="ip_all_images">All pictures</string>
     <string name="ip_folder_image_count">Total %1$d</string>
     <string name="ip_preview_image_count">%1$d/%2$d</string>
-    <string name="ip_select_limit">Select uo to %1$d images</string>
+    <string name="ip_select_limit">Select up to %1$d images</string>
     <string name="ip_complete">Finish</string>
     <string name="ip_select_complete">Finish(%1$d/%2$d)</string>
     <string name="ip_preview">Preview</string>
@@ -576,8 +576,8 @@
     <string name="recover_normal">&#160;device recovery</string>
     <string name="system_sms_send">&#160;system sends SMS to </string>
     <string name="occur_malfunction_alarm">malfunction occurred</string>
-    <string name="open_ble_contact_device">Turn on bluetooth to allow "city" to connect devices</string>
-    <string name="open_ble_to_location">For your function to work properly, turn on Bluetooth and locate</string>
+    <string name="open_ble_contact_device">Turn on bluetooth </string>
+    <string name="open_ble_to_location">Turn on Bluetooth and locate for this</string>
     <string name="ok_one">OK</string>
     <string name="confirm_monitor_point_exception">Verify that the monitoring point is abnormal</string>
     <string name="uploade_exception_change_device">upload abnormality and replace device</string>
@@ -657,7 +657,7 @@
     <string name="deploy_device_type">Type：</string>
     <string name="initial_configuration">Initial Configuration</string>
     <string name="not_setting">Unset</string>
-    <string name="had_setting_detail">Configured</string>
+    <string name="had_setting_detail">Rated Current:&#160;</string>
 
     <string name="deploy_pic_device_pic">DeviceMap</string>
     <string name="deploy_pic_device_pic_tip">SN should be recognised</string>
@@ -683,7 +683,7 @@
     <string name="optional">Optional</string>
     <string name="required">Required</string>
     <string name="deploy_device_detail_add_all_required">Upload after adding the required fields</string>
-    <string name="deploy_configuration_not_discover_device">Not found,try again</string>
+    <string name="deploy_configuration_not_discover_device">Not found, try again</string>
     <string name="malfunction_cause_detail">Reason</string>
     <string name="update_from">update by</string>
     <string name="mapbox_access_token">pk.eyJ1Ijoic2Vuc29yb3poIiwiYSI6ImNqcGttdjI3bjA1MXozeHA1MWFuMmphZXkifQ.cj-u01eRsyRAg6eOht0iBQ</string>

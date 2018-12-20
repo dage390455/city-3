@@ -279,9 +279,11 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     @Override
     public void setDeployDeviceDetailDeploySetting(String setting) {
         if (TextUtils.isEmpty(setting)) {
+            setDeployDetailDeploySettingVisible(false);
             acDeployDeviceDetailTvDeployRecordSetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
             acDeployDeviceDetailTvDeployRecordSetting.setText(mActivity.getString(R.string.not_setting));
         } else {
+            setDeployDetailDeploySettingVisible(true);
             acDeployDeviceDetailTvDeployRecordSetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
             acDeployDeviceDetailTvDeployRecordSetting.setText(setting);
         }

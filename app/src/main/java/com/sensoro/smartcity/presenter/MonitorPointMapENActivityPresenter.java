@@ -125,13 +125,19 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
     }
 
     public void backToCurrentLocation() {
-        LatLng latLng = new LatLng(currentLonlat[0], currentLonlat[1]);
-        CameraPosition position = new CameraPosition.Builder()
-                .target(latLng)
-                .zoom(16)
-                .tilt(20)
-                .build();
-        aMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+        if (currentLonlat != null && currentLonlat.length == 2) {
+            LatLng latLng = new LatLng(currentLonlat[0], currentLonlat[1]);
+            CameraPosition position = new CameraPosition.Builder()
+                    .target(latLng)
+                    .zoom(16)
+                    .tilt(20)
+                    .build();
+            if (aMap != null) {
+                aMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+            }
+
+        }
+
     }
 
     public void doPositionConfirm() {

@@ -20,7 +20,6 @@ import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
@@ -78,21 +77,26 @@ public class AppUtils {
 //            SensoroToast.INSTANCE.makeText("位置坐标信息错误", Toast.LENGTH_SHORT).show();
             return false;
         }
-        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-        if (lastKnownLocation != null) {
-            double lat = lastKnownLocation.getLatitude();//获取纬度
-            double lon = lastKnownLocation.getLongitude();//获取经度
-            LatLng startPosition = new LatLng(lat, lon);
-            if (isAppInstalled(activity, "com.autonavi.minimap")) {
-                openGaoDeMap(activity, startPosition, destPosition);
-            } else if (isAppInstalled(activity, "com.baidu.BaiduMap")) {
-                openBaiDuMap(activity, startPosition, destPosition);
-            } else {
-                openOther(activity, startPosition, destPosition);
+        if (AppUtils.isChineseLanguage()) {
+            AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+            if (lastKnownLocation != null) {
+                double lat = lastKnownLocation.getLatitude();//获取纬度
+                double lon = lastKnownLocation.getLongitude();//获取经度
+                LatLng startPosition = new LatLng(lat, lon);
+                if (isAppInstalled(activity, "com.autonavi.minimap")) {
+                    openGaoDeMap(activity, startPosition, destPosition);
+                } else if (isAppInstalled(activity, "com.baidu.BaiduMap")) {
+                    openBaiDuMap(activity, startPosition, destPosition);
+                } else {
+                    openOther(activity, startPosition, destPosition);
+                }
+                return true;
             }
-            return true;
+            return false;
+        } else {
+            return doNavigation(activity, GPSUtil.gcj02_To_Gps84(destPosition.latitude, destPosition.longitude), null);
         }
-        return false;
+
 
     }
 
@@ -103,27 +107,28 @@ public class AppUtils {
             return false;
         }
         if (isAppInstalled(activity, "com.google.android.apps.maps")) {
-            goNaviByGoogleMap(activity, destPosition[0], destPosition[1], text);
+            goNaviByGoogleMap(activity, destPosition[0], destPosition[1], null);
         } else {
-            Toast.makeText(activity, "您尚未安装谷歌地图", Toast.LENGTH_LONG)
-                    .show();
-            Uri uri = Uri
-                    .parse("market://details?id=com.google.android.apps.maps");
-            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
-            activity.startActivity(intent);
-//            Intent intent = new Intent();
-//            intent.setAction("android.intent.action.VIEW");
-////            parameters
-//            LogUtils.loge("doNavigation = "+destPosition[1] + "," + destPosition[0]);
-//            String url="https://www.google.com/maps/search/?api=1&query=47.5951518,-122.3316393";
-////            String url = "https://www.google.com/maps/search/?api=1&query=" + destPosition[1] + "," + destPosition[0];
-////            String url = "http://uri.amap.com/navigation?from=" + startPosition.longitude + "," + startPosition.latitude
-////                    + ",当前位置" +
-////                    "&to=" + destPosition.longitude + "," + destPosition.latitude + "," +
-////                    "设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
-//            Uri content_url = Uri.parse(url);
-//            intent.setData(content_url);
+//            Toast.makeText(activity, "您尚未安装谷歌地图", Toast.LENGTH_LONG)
+//                    .show();
+//            Uri uri = Uri
+//                    .parse("market://details?id=com.google.android.apps.maps");
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
 //            activity.startActivity(intent);
+            Intent intent = new Intent();
+            intent.setAction("android.intent.action.VIEW");
+//            parameters
+            LogUtils.loge("doNavigation = " + destPosition[1] + "," + destPosition[0]);
+            String url = "https://www.google.com/maps/search/?api=1&query=" + destPosition[0] + "," + destPosition[1];
+//            String url = "https://www.google.com/maps/search/?api=1&query=" + destPosition[1] + "," + destPosition[0];
+//            String url = "http://uri.amap.com/navigation?from=" + startPosition.longitude + "," + startPosition.latitude
+//                    + ",当前位置" +
+//                    "&to=" + destPosition.longitude + "," + destPosition.latitude + "," +
+//                    "设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
+            LogUtils.loge("doNavigation = " + url);
+            Uri content_url = Uri.parse(url);
+            intent.setData(content_url);
+            activity.startActivity(intent);
 
 
         }

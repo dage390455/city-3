@@ -26,7 +26,7 @@ public class DynamicTimeFormat extends SimpleDateFormat {
     private String mFormat = "%s";
 
     public DynamicTimeFormat() {
-        this("%s", "yyyy年", "M月d日", "HH:mm");
+        this("%s", "yyyy/", "M/d/", "HH:mm");
     }
 
     public DynamicTimeFormat(String format) {
@@ -73,11 +73,11 @@ public class DynamicTimeFormat extends SimpleDateFormat {
                         toAppendTo.append(timeFormat);
                         break;
                     case 1:
-                        toAppendTo.append("昨天 ");
+                        toAppendTo.append(SensoroCityApplication.getInstance().getResources().getString(R.string.yesterday));
                         toAppendTo.append(timeFormat);
                         break;
                     case 2:
-                        toAppendTo.append("前天 ");
+                        toAppendTo.append(SensoroCityApplication.getInstance().getResources().getString(R.string.before_yesterday));
                         toAppendTo.append(timeFormat);
                         break;
                     case 3:

@@ -90,7 +90,7 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                 break;
         }
 
-}
+    }
 
 
     @Override
@@ -104,8 +104,8 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
         if (deployAnalyzerModel.latLng.size() == 2) {
             switch (deployAnalyzerModel.mapSourceType) {
                 case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
-                    getView().showProgressDialog();
                     if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
+                        getView().showProgressDialog();
                         RetrofitServiceHelper.INSTANCE.getDeployDeviceDetail(deployAnalyzerModel.sn, deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1))
                                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployDeviceDetailRsp>(this) {
                             @Override
@@ -236,14 +236,32 @@ public class DeployMapENActivityPresenter extends BasePresenter<IDeployMapENActi
                 break;
             case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
             case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
-                Location lastLocation = aMap.getMyLocation();
-                if (lastLocation != null && aMap != null) {
-                    aMap.animateCamera(CameraUpdateFactory.newLatLngZoom(new LatLng(lastLocation), 15), 1000);
+                if (aMap != null) {
+                    aMap.clear();
+                    Location lastLocation = aMap.getMyLocation();
+                    if (lastLocation != null) {
+                        LatLng latLng = new LatLng(lastLocation.getLatitude(), lastLocation.getLongitude());
+                        IconFactory iconFactory = IconFactory.getInstance(mContext);
+                        Icon icon = iconFactory.fromResource(R.drawable.deploy_map_cur);
+                        MarkerOptions markerOptions = new MarkerOptions();
+                        markerOptions.icon(icon).title("国外")
+                                .position(latLng);
+                        markerView = aMap.addMarker(markerOptions);
+                        markerView.setPosition(latLng);
+                        CameraPosition position = new CameraPosition.Builder()
+                                .target(latLng)
+                                .zoom(16)
+                                .tilt(20)
+                                .build();
+                        LogUtils.loge("---markerView null");
+                        aMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
+                    }
                 }
                 break;
         }
 
     }
+
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {

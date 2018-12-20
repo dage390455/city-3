@@ -213,6 +213,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                needFreshAll = errorCode == ERR_CODE_NET_CONNECT_EX;
                 getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
                 getView().refreshHeaderData(true, mHomeTopModels);
                 getView().refreshContentData(true, mHomeTopModels);
@@ -227,7 +228,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
-                needFreshAll = false;
+
             }
         });
     }
@@ -505,6 +506,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 //                    needFreshAll = (boolean) data;
                 }
                 LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
+                break;
+            case EVENT_DATA_NET_WORK_CHANGE:
+//                needFreshAll = true;
+                //TODO 暂时不加
+                LogUtils.loge("CONNECTIVITY_ACTION --->> 网络变化 ");
                 break;
         }
     }
