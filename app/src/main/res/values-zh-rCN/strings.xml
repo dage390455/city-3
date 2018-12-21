@@ -574,7 +574,7 @@
     <string name="permission_descript">为了应用可以正常使用，请您点击确认申请权限。</string>
     <string name="permission_instruction">需要权限！请重新打开应用</string>
     <string name="necessary_permission_are_denied">必要的权限被拒绝</string>
-    <string name="go_to_setting">必要的权限被拒绝</string>
+    <string name="go_to_setting">前往设置</string>
     <string name="open_camera_permission">请打开拍照权限</string>
 
     // alarm pop

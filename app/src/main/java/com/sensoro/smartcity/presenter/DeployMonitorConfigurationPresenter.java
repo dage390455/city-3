@@ -171,7 +171,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().updateBleConfigurationDialogText(mActivity.getString(R.string.now_configuration));
                     }
                 }
@@ -183,7 +183,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 mActivity.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (getView() != null) {
+                        if (isAttachedView()) {
                             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_data_failed));
                         }
                         mConnection.disconnect();
@@ -213,7 +213,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().dismissBleConfigurationDialog();
                         getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
                     }
@@ -231,7 +231,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().dismissBleConfigurationDialog();
                         getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
                     }
@@ -247,7 +247,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().updateBleConfigurationDialogText(mActivity.getString(R.string.ble_config_success));
                         getView().updateBleConfigurationDialogSuccessImv();
                     }
@@ -274,7 +274,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().dismissBleConfigurationDialog();
                         getView().toastShort(mActivity.getString(R.string.ble_config_failed));
                         mConnection.disconnect();

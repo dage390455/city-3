@@ -306,6 +306,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
             Beta.canShowApkInfo = true;
             //关闭热更新
             Beta.enableHotfix = false;
+            strategy.setCrashHandleCallback(new CrashHandler());
             // 统一初始化Bugly产品，包含Beta
             Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
             Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
@@ -313,6 +314,16 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private final class CrashHandler extends CrashReport.CrashHandleCallback {
+        CrashHandler() {
+            super();
+            LogUtils.loge("CrashHandler--??aaa");
+        }
+//        public void onCrashHandleStart(int crashType, String errorType,
+//                                                      String errorMessage, String errorStack) {
+//        }
     }
 
     private void initORC() {

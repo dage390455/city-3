@@ -26,8 +26,7 @@ public class SplashScreen {
     /**
      * 显示splash图片
      *
-     * @param millis        停留时间 毫秒
-     *
+     * @param millis 停留时间 毫秒
      */
     public void show(final int millis) {
         Runnable runnable = new Runnable() {

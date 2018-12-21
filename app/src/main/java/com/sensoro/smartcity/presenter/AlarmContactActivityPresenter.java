@@ -29,7 +29,10 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
             deployContactModelList.clear();
             deployContactModelList.addAll(deployContactModels);
             DeployContactModel deployContactModel = deployContactModelList.get(0);
-            getView().setNameAndPhone(deployContactModel.name, deployContactModel.phone);
+            if (isAttachedView()) {
+                getView().setNameAndPhone(deployContactModel.name, deployContactModel.phone);
+            }
+
         }
         //TODO 目前只支持一个联系人
     }
@@ -114,7 +117,9 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
 
     public void doFinish(String name, String phone) {
         if (TextUtils.isEmpty(name)) {
-            getView().toastShort(mContext.getString(R.string.Contact_name_cannot_be_empty));
+            if (isAttachedView()) {
+                getView().toastShort(mContext.getString(R.string.Contact_name_cannot_be_empty));
+            }
             return;
         }
         if (RegexUtils.checkPhone(phone)) {
@@ -133,9 +138,13 @@ public class AlarmContactActivityPresenter extends BasePresenter<IAlarmContactAc
             eventData.code = EVENT_DATA_DEPLOY_SETTING_CONTACT;
             eventData.data = deployContactModelList;
             EventBus.getDefault().post(eventData);
-            getView().finishAc();
+            if (isAttachedView()) {
+                getView().finishAc();
+            }
         } else {
-            getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+            if (isAttachedView()) {
+                getView().toastShort(mContext.getResources().getString(R.string.tips_phone_empty));
+            }
         }
     }
 }

@@ -235,7 +235,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                if (getView() != null) {
+                if (isAttachedView()) {
                     getView().updateProgressDialogMessage(mActivity.getString(R.string.ble_send_data));
                     getView().showProgressDialog();
                     getView().setLlTestVisible(false);
@@ -257,7 +257,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (getView() != null) {
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
                     getView().toastShort(ResultCode.errCodeToMsg(errorCode));
@@ -282,7 +282,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (getView() != null) {
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     if (cmd == CmdType.CMD_SIGNAL) {
                         if (o == null) {
@@ -332,7 +332,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         mActivity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (getView() != null) {
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().setStartBtnIcon(R.drawable.signal_check_start_btn);
                     mConnection.disconnect();

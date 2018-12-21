@@ -23,7 +23,7 @@ public class NetWorkUtils {
      * @category 判断是否有外网连接（普通方法不能判断外网的网络是否连接，比如连接上局域网）
      * @return
      */
-    public static boolean ping() {
+    public static synchronized boolean ping() {
         InputStream input = null;
         try {
             String ip = "www.baidu.com";// ping 的地址，可以换成任何一种可靠的外网

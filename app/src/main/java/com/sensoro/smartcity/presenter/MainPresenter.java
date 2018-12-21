@@ -86,21 +86,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     private final class ScreenBroadcastReceiver extends BroadcastReceiver {
         private boolean isFirst = true;
 
-        /**
-         * 检测到语言变化重新登录
-         */
-        private void reLogin() {
-            RetrofitServiceHelper.INSTANCE.cancelAllRsp();
-            RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
-            Intent intent = new Intent(mContext, LoginActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            mContext.startActivity(intent);
-            // 杀掉进程
-            android.os.Process.killProcess(android.os.Process.myPid());
-            System.exit(0);
-
-        }
-
         @Override
         public void onReceive(Context context, Intent intent) {
 
@@ -174,6 +159,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         }
     }
 
+    /**
+     * 检测到语言变化重新登录
+     */
+    private void reLogin() {
+        RetrofitServiceHelper.INSTANCE.cancelAllRsp();
+        RetrofitServiceHelper.INSTANCE.clearLoginDataSessionId();
+        Intent intent = new Intent(mContext, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        mContext.startActivity(intent);
+        // 杀掉进程
+        android.os.Process.killProcess(android.os.Process.myPid());
+        System.exit(0);
+
+    }
 
     @Override
     public void initData(Context context) {
@@ -440,7 +439,9 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         @Override
                         public void run() {
                             if (!pingNetCanUse) {
-                                getView().toastShort(mContext.getString(R.string.disconnected_from_network));
+                                if (isAttachedView()) {
+                                    getView().toastShort(mContext.getString(R.string.disconnected_from_network));
+                                }
                                 EventData eventData2 = new EventData();
                                 eventData2.code = EVENT_DATA_NET_WORK_CHANGE;
                                 LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
@@ -580,7 +581,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
     @Override
     public void onDestroy() {
         mContext.unregisterReceiver(mScreenReceiver);
-        mHandler.removeCallbacks(mRunnable);
         mHandler.removeCallbacksAndMessages(null);
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
@@ -609,7 +609,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         switch (code) {
             case EVENT_DATA_SESSION_ID_OVERTIME:
                 RetrofitServiceHelper.INSTANCE.cancelAllRsp();
-                openLogin();
+                reLogin();
                 break;
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
                 getView().setBottomBarSelected(0);

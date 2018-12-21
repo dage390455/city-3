@@ -460,7 +460,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getView().updateDeviceInfoAdapter(uiData);
+                        if (isAttachedView()){
+                            getView().updateDeviceInfoAdapter(uiData);
+                        }
+
                     }
                 });
 
@@ -483,10 +486,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (getView() != null) {
+                                    if (isAttachedView()) {
                                         mDeviceInfo.cloneSocketData(pushDeviceInfo);
                                         // 单项数值设置
-                                        if (getView() != null) {
+                                        if (isAttachedView()) {
                                             freshLocationDeviceInfo();
                                             freshTopData();
                                             handleDeviceInfoAdapter();
@@ -514,7 +517,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                         public void run() {
                                             if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
                                                 mHandler.removeCallbacks(DeviceTaskOvertime);
-                                                if (getView() != null) {
+                                                if (isAttachedView()) {
                                                     getView().dismissOperatingLoadingDialog();
                                                     getView().showOperationSuccessToast();
                                                 }
@@ -535,7 +538,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                         mContext.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (getView() != null) {
+                                if (isAttachedView()) {
                                     mDeviceInfo.cloneSocketData(pushDeviceInfo);
                                     freshLocationDeviceInfo();
                                     freshTopData();

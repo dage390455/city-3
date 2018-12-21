@@ -339,14 +339,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             homeTopModelCacheFresh[2] = false;
                             homeTopModelCacheFresh[3] = false;
                             homeTopModelCacheFresh[4] = false;
-                            if (getView() != null) {
+                            if (isAttachedView()) {
                                 getView().refreshContentData(false, mHomeTopModels);
                             }
                         }
                         needRefreshContent = false;
                     }
                     if (needRefreshHeader) {
-                        if (getView() != null) {
+                        if (isAttachedView()) {
                             getView().refreshHeaderData(false, mHomeTopModels);
                             getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
                             if (needAlarmPlay) {
@@ -491,7 +491,10 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        requestInitData(true);
+                        if (isAttachedView()) {
+                            requestInitData(true);
+                        }
+
                     }
                 });
                 break;

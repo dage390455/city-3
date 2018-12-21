@@ -311,7 +311,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
                 final long currentTimeMillis = System.currentTimeMillis();
                 RetrofitServiceHelper.INSTANCE.doDevicePointDeploy(deployAnalyzerModel.sn, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount = null, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
+                        deployContactModel.name, deployContactModel.phone, deployAnalyzerModel.weChatAccount, imgUrls, map).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
@@ -893,7 +893,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (getView() != null) {
+                if (isAttachedView()) {
                     getView().updateBleConfigDialogMessage(mContext.getString(R.string.loading_configuration_file));
                     sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, new SensoroWriteCallback() {
                         @Override
@@ -901,7 +901,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (getView() != null) {
+                                    if (isAttachedView()) {
                                         getView().dismissBleConfigDialog();
                                         sensoroDeviceConnection.disconnect();
                                         doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
@@ -917,7 +917,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (getView() != null) {
+                                    if (isAttachedView()) {
                                         getView().dismissBleConfigDialog();
                                         getView().updateUploadState(true);
                                         getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
@@ -941,7 +941,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (getView() != null) {
+                if (isAttachedView()) {
                     getView().dismissBleConfigDialog();
                     getView().updateUploadState(true);
                     getView().toastShort(mContext.getString(R.string.ble_connect_failed));
