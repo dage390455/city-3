@@ -15,6 +15,7 @@ import com.sensoro.libbleserver.ble.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
@@ -28,7 +29,6 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Random;
 
 public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView>
         implements Runnable, BLEDeviceListener<BLEDevice>, SensoroConnectionCallback, SensoroWriteCallback {
@@ -42,14 +42,27 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     private SensoroSensor sensoroSensor;
     private Integer mEnterValue;
     private final HashSet<String> bleList = new HashSet<>();
+    private DeployConfigurationAnalyzer mConfigurationAnalyzer;
+    private int[] mMinMaxValue;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        mConfigurationAnalyzer = new DeployConfigurationAnalyzer();
         deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.post(this);
         BleObserver.getInstance().registerBleObserver(this);
+        init();
+    }
+
+    private void init() {
+        mMinMaxValue = mConfigurationAnalyzer.analyzeDeviceType(deployAnalyzerModel.deviceType);
+        if (mMinMaxValue == null) {
+            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+        } else {
+            getView().setTvEnterValueRange(mMinMaxValue[0], mMinMaxValue[1]);
+        }
     }
 
     @Override
@@ -68,31 +81,34 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             getView().toastShort(mActivity.getString(R.string.deploy_configuration_not_discover_device));
             return;
         }
-        if (Constants.DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType)) {
-            //安科瑞三相电连接
-            try {
-                Integer value = Integer.parseInt(valueStr);
-                if (value < 50 || value > 560) {
-                    getView().toastShort(mActivity.getString(R.string.monitor_point_operation_error_value_range));
-                    return;
-                }
-                mEnterValue = value;
-                mConnection = new SensoroDeviceConnection(mActivity, mMacAddress);
-            } catch (NumberFormatException e) {
-                e.printStackTrace();
-                getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+        checkAndConnect(valueStr);
+    }
+
+    private void checkAndConnect(String valueStr) {
+        if (mMinMaxValue == null) {
+            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+            return;
+        }
+        try {
+            Integer value = Integer.parseInt(valueStr);
+            if (value < mMinMaxValue[0] || value > mMinMaxValue[1]) {
+                getView().toastShort(mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
                 return;
             }
-            try {
-                getView().showBleConfigurationDialog(mActivity.getString(R.string.connecting));
-                mConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorConfigurationPresenter.this);
-            } catch (Exception e) {
-                e.printStackTrace();
-                getView().dismissBleConfigurationDialog();
-                getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
-            }
-        } else {
-            //TODO fhsj 电器设备
+            mEnterValue = value;
+            mConnection = new SensoroDeviceConnection(mActivity, mMacAddress);
+        } catch (Exception e) {
+            e.printStackTrace();
+            getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+            return;
+        }
+        try {
+            getView().showBleConfigurationDialog(mActivity.getString(R.string.connecting));
+            mConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorConfigurationPresenter.this);
+        } catch (Exception e) {
+            e.printStackTrace();
+            getView().dismissBleConfigurationDialog();
+            getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
         }
     }
 
@@ -155,15 +171,27 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().updateBleConfigurationDialogText(mActivity.getString(R.string.now_configuration));
                     }
                 }
             });
-            //安科瑞电气火灾初始化配置
-            sensoroDevice = (SensoroDevice) bleDevice;
-            sensoroSensor = sensoroDevice.getSensoroSensorTest();
-            configAcrelFires();
+            SensoroDevice sensoroDevice = mConfigurationAnalyzer.configurationData((SensoroDevice) bleDevice, mEnterValue);
+            if (sensoroDevice != null) {
+                mConnection.writeData05Configuration(sensoroDevice, this);
+            } else {
+                mActivity.runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_data_failed));
+                        }
+                        mConnection.disconnect();
+                    }
+                });
+
+            }
+
         }
 
     }
@@ -178,33 +206,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         getView().finishAc();
     }
 
-    private void configAcrelFires() {
-        //在开始配置的时候，已经校验过，mEnterValue的值是50 到560
-        int dev;
-        if (mEnterValue <= 250) {
-            dev = 250;
-        } else {
-            dev = 400;
-        }
-        sensoroSensor.acrelFires.leakageTh = 1000;//漏电
-        sensoroSensor.acrelFires.t1Th = 80;//A项线温度
-        sensoroSensor.acrelFires.t2Th = 80;//B项线温度
-        sensoroSensor.acrelFires.t3Th = 80;//C项线温度
-        sensoroSensor.acrelFires.t4Th = 80;//箱体温度
-        sensoroSensor.acrelFires.valHighSet = 1200;
-        sensoroSensor.acrelFires.valLowSet = 800;
-        sensoroSensor.acrelFires.currHighSet = 1000 * mEnterValue / dev;
-        sensoroSensor.acrelFires.passwd = new Random().nextInt(9999) + 1;// 1-9999 4位随机数
-        sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
-        sensoroSensor.acrelFires.valLowType = 0;//关闭保护，不关联脱扣
-        sensoroSensor.acrelFires.valHighType = 1;//打开保护，不关联脱扣
-        sensoroSensor.acrelFires.chEnable = 0x1F;//打开温度，打开漏电保护
-        sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
-        sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
-        sensoroSensor.acrelFires.ct = dev / 5;
-        sensoroSensor.acrelFires.cmd = 2;
-        mConnection.writeData05Configuration(sensoroDevice, this);
-    }
 
     @Override
     public void onConnectedFailure(int errorCode) {
@@ -212,7 +213,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().dismissBleConfigurationDialog();
                         getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
                     }
@@ -230,7 +231,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().dismissBleConfigurationDialog();
                         getView().toastShort(mActivity.getString(R.string.ble_device_disconnected));
                     }
@@ -246,7 +247,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().updateBleConfigurationDialogText(mActivity.getString(R.string.ble_config_success));
                         getView().updateBleConfigurationDialogSuccessImv();
                     }
@@ -273,9 +274,10 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             mActivity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    if (getView() != null) {
+                    if (isAttachedView()) {
                         getView().dismissBleConfigurationDialog();
                         getView().toastShort(mActivity.getString(R.string.ble_config_failed));
+                        mConnection.disconnect();
                     }
 
                 }

@@ -15,7 +15,6 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.widget.imagepicker.bean.ImageFolder;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.io.File;
@@ -58,7 +57,7 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public void setImages(List<ImageItem> data) {
         mData = new ArrayList<>(data);
-        if(!isJustDisplay){
+        if (!isJustDisplay) {
             if (getItemCount() < maxImgCount) {
                 mData.add(new ImageItem());
                 isAdded = true;
@@ -117,11 +116,11 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
 
     public List<ImageItem> getImages() {
         //由于图片未选满时，最后一张显示添加图片，因此这个方法返回真正的已选图片
-        if(isJustDisplay){
+        if (isJustDisplay) {
             return mData;
-        }else if (isAdded) {
+        } else if (isAdded) {
             return new ArrayList<>(mData.subList(0, mData.size() - 1));
-        } else{
+        } else {
             return mData;
         }
     }
@@ -159,8 +158,9 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                     .thumbnail(0.01f)
                     .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                     .into(holder.iv_img);
+            holder.setClickPosition(position);
 
-        }else{
+        } else {
             holder.bind(position);
         }
 
@@ -207,15 +207,13 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                 tv_add_content.setText(tipText);
             }
             //设置条目的点击事件
-            itemView.setOnClickListener(this);
-            image_delete.setOnClickListener(this);
             //根据条目位置设置图片
             ImageItem item = mData.get(position);
             if (isAdded && position == getItemCount() - 1) {
                 ll_add.setVisibility(View.VISIBLE);
                 iv_img.setVisibility(View.GONE);
 //                iv_img.setImageResource(R.drawable.selector_image_add);
-                clickPosition = IMAGE_ITEM_ADD;
+                setClickPosition(IMAGE_ITEM_ADD);
                 image_delete.setVisibility(View.GONE);
                 iv_record_play.setVisibility(View.GONE);
             } else {
@@ -248,8 +246,14 @@ public class ImagePickerAdapter extends RecyclerView.Adapter<ImagePickerAdapter.
                             .into(iv_img);
 //                ImagePicker.getInstance().getImageLoader().displayImage(, , iv_img, 0, 0);
                 }
-                clickPosition = position;
+                setClickPosition(position);
             }
+            itemView.setOnClickListener(this);
+            image_delete.setOnClickListener(this);
+        }
+
+        public void setClickPosition(int position) {
+            clickPosition = position;
         }
 
         @Override

@@ -18,4 +18,6 @@ public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent
     void setTvNearVisible(boolean isVisible);
 
     boolean hasEditTextContent();
+
+    void setTvEnterValueRange(int minValue, int maxValue);
 }

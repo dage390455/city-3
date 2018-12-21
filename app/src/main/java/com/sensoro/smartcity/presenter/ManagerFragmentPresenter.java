@@ -54,7 +54,7 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
             boolean hasContract = userData.hasContract;
             boolean chineseLanguage = AppUtils.isChineseLanguage();
             getView().setContractVisible(hasContract && chineseLanguage);
-            getView().setInspectionVisible(userData.hasInspectionTaskList);
+            getView().setInspectionVisible(userData.hasInspectionTaskList && chineseLanguage);
             getView().setScanLoginVisible(userData.hasScanLogin);
             getView().setMerchantVisible(userData.hasSubMerchant);
             getView().changeMerchantTitle(userData.hasSubMerchant);

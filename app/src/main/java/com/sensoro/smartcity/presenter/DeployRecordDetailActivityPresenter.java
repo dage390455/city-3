@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
+import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -14,6 +15,7 @@ import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.server.bean.DeployContralSettingData;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
@@ -118,7 +120,11 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     public void doFixedPoint() {
         Intent intent = new Intent();
         initDeployMapModel();
-        intent.setClass(mActivity, DeployMapActivity.class);
+        if (AppUtils.isChineseLanguage()) {
+            intent.setClass(mActivity, DeployMapActivity.class);
+        } else {
+            intent.setClass(mActivity, DeployMapENActivity.class);
+        }
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }

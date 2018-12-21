@@ -18,6 +18,7 @@ import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
 import com.baidu.ocr.sdk.exception.OCRError;
 import com.baidu.ocr.sdk.model.AccessToken;
+import com.mapbox.mapboxsdk.Mapbox;
 import com.qiniu.android.common.FixedZone;
 import com.qiniu.android.storage.Configuration;
 import com.qiniu.android.storage.UploadManager;
@@ -32,6 +33,7 @@ import com.scwang.smartrefresh.layout.footer.ClassicsFooter;
 import com.scwang.smartrefresh.layout.header.ClassicsHeader;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceManager;
 import com.sensoro.smartcity.constant.Constants;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.SensoroPushListener;
 import com.sensoro.smartcity.push.SensoroPushManager;
 import com.sensoro.smartcity.push.ThreadPoolManager;
@@ -50,6 +52,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 import com.tencent.mm.opensdk.openapi.IWXAPI;
 import com.tencent.mm.opensdk.openapi.WXAPIFactory;
 import com.yixia.camera.VCamera;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 
@@ -118,6 +122,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         super.onCreate();
         instance = this;
         init();
+        Mapbox.getInstance(getApplicationContext(), getString(R.string.mapbox_access_token));
         if (LeakCanary.isInAnalyzerProcess(this)) {
             // This process is dedicated to LeakCanary for heap analysis.
             // You should not initView your app in this process.
@@ -304,6 +309,7 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
             Beta.canShowApkInfo = true;
             //关闭热更新
             Beta.enableHotfix = false;
+            strategy.setCrashHandleCallback(new CrashHandler());
             // 统一初始化Bugly产品，包含Beta
             Bugly.setIsDevelopmentDevice(getApplicationContext(), BuildConfig.DEBUG);
             Bugly.init(getApplicationContext(), "ab6c4abe4f", BuildConfig.DEBUG, strategy);
@@ -311,6 +317,24 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private final class CrashHandler extends CrashReport.CrashHandleCallback {
+        @Override
+        public synchronized byte[] onCrashHandleStart2GetExtraDatas(int crashType, String errorType, String errorMessage, String errorStack) {
+            if (pushHandler != null) {
+                pushHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        EventData eventData = new EventData();
+                        eventData.code = Constants.EVENT_DATA_SESSION_ID_OVERTIME;
+                        EventBus.getDefault().post(eventData);
+                    }
+                }, 1000);
+            }
+            return super.onCrashHandleStart2GetExtraDatas(crashType, errorType, errorMessage, errorStack);
+        }
+
     }
 
     private void initORC() {

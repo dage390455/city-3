@@ -438,34 +438,39 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
     }
 
     public void backToCurrentLocation() {
-        LatLng latLng;
-        CameraUpdate update;
-        switch (deployAnalyzerModel.mapSourceType) {
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
-                if (deployAnalyzerModel.latLng.size() == 2) {
-                    latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
-                    update = CameraUpdateFactory
-                            .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
-                    aMap.moveCamera(update);
-                    deviceMarker.setPosition(latLng);
-                }
-                break;
-            case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
-            case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
-                AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-                if (lastKnownLocation != null) {
-                    double lat = lastKnownLocation.getLatitude();//获取纬度
-                    double lon = lastKnownLocation.getLongitude();//获取经度
-                    latLng = new LatLng(lat, lon);
-                    //可视化区域，将指定位置指定到屏幕中心位置
-                    update = CameraUpdateFactory
-                            .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
-                    aMap.moveCamera(update);
-                    locationMarker.setPosition(latLng);
-                    deviceMarker.setPosition(latLng);
-                }
-                break;
+        if (aMap != null && deviceMarker != null) {
+            LatLng latLng;
+            CameraUpdate update;
+            switch (deployAnalyzerModel.mapSourceType) {
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD:
+                    if (deployAnalyzerModel.latLng.size() == 2) {
+                        latLng = new LatLng(deployAnalyzerModel.latLng.get(1), deployAnalyzerModel.latLng.get(0));
+                        update = CameraUpdateFactory
+                                .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                        aMap.moveCamera(update);
+                        deviceMarker.setPosition(latLng);
+                    }
+                    break;
+                case DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL:
+                case DEPLOY_MAP_SOURCE_TYPE_MONITOR_MAP_CONFIRM:
+                    AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+                    if (lastKnownLocation != null) {
+                        double lat = lastKnownLocation.getLatitude();//获取纬度
+                        double lon = lastKnownLocation.getLongitude();//获取经度
+                        latLng = new LatLng(lat, lon);
+                        //可视化区域，将指定位置指定到屏幕中心位置
+                        update = CameraUpdateFactory
+                                .newCameraPosition(new CameraPosition(latLng, 15, 0, 30));
+                        aMap.moveCamera(update);
+                        if (locationMarker != null) {
+                            locationMarker.setPosition(latLng);
+                        }
+                        deviceMarker.setPosition(latLng);
+                    }
+                    break;
+            }
         }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

@@ -201,6 +201,7 @@ public final class PreferencesHelper implements Constants {
                 .MODE_PRIVATE).edit().clear().apply();
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
                 .MODE_PRIVATE).edit().clear().apply();
+        this.mEventLoginData = null;
     }
 
     public void saveDeployNameAddressHistory(String history) {

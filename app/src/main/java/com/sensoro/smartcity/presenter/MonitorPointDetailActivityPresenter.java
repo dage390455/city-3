@@ -10,13 +10,18 @@ import android.text.TextUtils;
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
 import com.amap.api.services.geocoder.GeocodeSearch;
+import com.amap.api.services.geocoder.RegeocodeAddress;
 import com.amap.api.services.geocoder.RegeocodeQuery;
 import com.amap.api.services.geocoder.RegeocodeResult;
+import com.amap.api.services.geocoder.RegeocodeRoad;
+import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
+import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
+import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
@@ -56,6 +61,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
@@ -454,7 +460,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getView().updateDeviceInfoAdapter(uiData);
+                        if (isAttachedView()){
+                            getView().updateDeviceInfoAdapter(uiData);
+                        }
+
                     }
                 });
 
@@ -477,10 +486,10 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (getView() != null) {
+                                    if (isAttachedView()) {
                                         mDeviceInfo.cloneSocketData(pushDeviceInfo);
                                         // 单项数值设置
-                                        if (getView() != null) {
+                                        if (isAttachedView()) {
                                             freshLocationDeviceInfo();
                                             freshTopData();
                                             handleDeviceInfoAdapter();
@@ -508,7 +517,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                         public void run() {
                                             if (!TextUtils.isEmpty(mScheduleNo) && mScheduleNo.equals(temp)) {
                                                 mHandler.removeCallbacks(DeviceTaskOvertime);
-                                                if (getView() != null) {
+                                                if (isAttachedView()) {
                                                     getView().dismissOperatingLoadingDialog();
                                                     getView().showOperationSuccessToast();
                                                 }
@@ -529,7 +538,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                         mContext.runOnUiThread(new Runnable() {
                             @Override
                             public void run() {
-                                if (getView() != null) {
+                                if (isAttachedView()) {
                                     mDeviceInfo.cloneSocketData(pushDeviceInfo);
                                     freshLocationDeviceInfo();
                                     freshTopData();
@@ -554,8 +563,51 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     @Override
     public void onRegeocodeSearched(RegeocodeResult regeocodeResult, int i) {
-        String address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
-        LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+        RegeocodeAddress regeocodeAddress = regeocodeResult.getRegeocodeAddress();
+        String address;
+        if (AppUtils.isChineseLanguage()) {
+            address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
+            LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+        } else {
+            StringBuilder stringBuilder = new StringBuilder();
+            String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
+            String ts = regeocodeAddress.getTownship();// 乡镇
+            String thf = null;// 道路
+            List<RegeocodeRoad> regeocodeRoads = regeocodeAddress.getRoads();// 道路列表
+            if (regeocodeRoads != null && regeocodeRoads.size() > 0) {
+                RegeocodeRoad regeocodeRoad = regeocodeRoads.get(0);
+                if (regeocodeRoad != null) {
+                    thf = regeocodeRoad.getName();
+                }
+            }
+            String subthf = null;// 门牌号
+            StreetNumber streetNumber = regeocodeAddress.getStreetNumber();
+            if (streetNumber != null) {
+                subthf = streetNumber.getNumber();
+            }
+            String fn = regeocodeAddress.getBuilding();// 标志性建筑,当道路为null时显示
+            if (TextUtils.isEmpty(thf)) {
+                if (!TextUtils.isEmpty(fn)) {
+                    stringBuilder.append(fn);
+                }
+            }
+            if (subLoc != null) {
+                stringBuilder.append(subLoc);
+            }
+            if (ts != null) {
+                stringBuilder.append(ts);
+            }
+            if (thf != null) {
+                stringBuilder.append(thf);
+            }
+            if (subthf != null) {
+                stringBuilder.append(subthf);
+            }
+            address = stringBuilder.toString();
+            if (TextUtils.isEmpty(address)) {
+                address = ts;
+            }
+        }
         if (TextUtils.isEmpty(address)) {
             address = mContext.getString(R.string.unknown_street);
         }
@@ -582,7 +634,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
             return;
         }
         Intent intent = new Intent();
-        intent.setClass(mContext, MonitorPointMapActivity.class);
+        if (AppUtils.isChineseLanguage()) {
+            intent.setClass(mContext, MonitorPointMapActivity.class);
+        } else {
+            intent.setClass(mContext, MonitorPointMapENActivity.class);
+        }
         intent.putExtra(EXTRA_DEVICE_INFO, mDeviceInfo);
         getView().startAC(intent);
     }
@@ -633,10 +689,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 }
                 try {
                     integer = Integer.valueOf(content);
-                    if (integer >= 50 && integer <= 560) {
+                    int[] ints = new DeployConfigurationAnalyzer().analyzeDeviceType(mDeviceInfo.getDeviceType());
+                    if (integer >= ints[0] && integer <= ints[1]) {
                         switchSpec = integer;
                     } else {
-                        getView().toastShort(mContext.getString(R.string.monitor_point_operation_error_value_range));
+                        getView().toastShort(String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), ints[0], ints[1]));
                         return;
                     }
                 } catch (NumberFormatException e) {

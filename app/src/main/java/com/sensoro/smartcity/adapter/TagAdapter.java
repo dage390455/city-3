@@ -2,18 +2,15 @@ package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.graphics.drawable.GradientDrawable;
 import android.support.annotation.ColorRes;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.util.DpUtils;
 
 import java.util.ArrayList;
@@ -26,11 +23,11 @@ public class TagAdapter extends RecyclerView.
         Adapter<TagAdapter.TagHolder> {
     private final Context mContext;
     private final List<String> tags = new ArrayList<>();
-    private  int mTextColor = -1;
-    private  int mStrokeColor = -1;
+    private int mTextColor = -1;
+    private int mStrokeColor = -1;
     private int mStrokeWidth;
 
-    public TagAdapter(Context context, @ColorRes int textColorId,@ColorRes int strokeColorId) {
+    public TagAdapter(Context context, @ColorRes int textColorId, @ColorRes int strokeColorId) {
         mContext = context;
         mTextColor = textColorId;
         mStrokeColor = strokeColorId;
@@ -60,8 +57,8 @@ public class TagAdapter extends RecyclerView.
         Resources resources = mContext.getResources();
         holder.itemAdapterTv.setTextColor(resources.getColor(mTextColor));
         GradientDrawable gd = (GradientDrawable) resources.getDrawable(R.drawable.shape_bg_solid_ff_stroke_df_full_corner);
-        gd.setBounds(0,0,gd.getMinimumWidth(),gd.getMinimumHeight());
-        gd.setStroke(mStrokeWidth,resources.getColor(mStrokeColor));
+        gd.setBounds(0, 0, gd.getMinimumWidth(), gd.getMinimumHeight());
+        gd.setStroke(mStrokeWidth, resources.getColor(mStrokeColor));
         holder.itemAdapterTv.setBackground(gd);
 
 

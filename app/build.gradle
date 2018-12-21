@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
-    def verName = "3.2.3"
+    def verName = "3.2.4"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
@@ -43,6 +43,7 @@ android {
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
                 GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A"
         ]
+
         ndk {
 //            moduleName "city"
             //声明启用Android日志, 在c/c++的源文件中使用的#include <android/log.h> 日志将得到输出
@@ -50,6 +51,15 @@ android {
 //            abiFilters 'armeabi','armeabi-v7a'  //只生成armeabi的so
             abiFilters 'armeabi-v7a'  //只生成armeabi的so
         }
+
+//        jackOptions {
+//            enabled true
+//        }
+//        gradle.projectsEvaluated {
+//            tasks.withType(JavaCompile) {
+//                options.compilerArgs << "-Xbootclasspath/a:" + System.properties.get("java.home") + "/lib/rt.jar"
+//            }
+//        }
     }
     buildTypes {
         debug {
@@ -65,9 +75,11 @@ android {
             debuggable false
         }
     }
-//    dexOptions {
-//        javaMaxHeapSize "4g"
-//    }
+    dexOptions {
+
+//        preDexLibrarOpies = false
+//        additionalParameters=['--core-library']
+    }
     android {
         lintOptions {
             abortOnError false
@@ -83,6 +95,7 @@ android {
             exclude 'META-INF/NOTICE.txt'
             exclude 'META-INF/notice.txt'
             exclude 'META-INF/ASL2.0'
+            exclude ''
             doNotStrip '*/mips/*.so'
             doNotStrip '*/mips64/*.so'
             doNotStrip '*/x86/*.so'
@@ -199,7 +212,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:27.1.1'
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     compile files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
-    compile project(':libbleserver')
+    compile project(':sensor-kit')
     compile 'com.android.support.constraint:constraint-layout:1.1.3'
 //    compile 'com.gyf.immersionbar:immersionbar:2.3.2-beta01'
     //protobuf
@@ -216,4 +229,7 @@ dependencies {
 
     //bottom bar
     compile project(':bottomnavigation')
+    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
+        transitive = true
+    }
 }

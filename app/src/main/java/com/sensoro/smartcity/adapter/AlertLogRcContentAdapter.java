@@ -196,8 +196,8 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
                     String name = sensorTypeStyles.getName();
                     stringBuilder.append(name);
                     stringBuilder.append(mContext.getString(R.string.below_the_warning_value)).append("，").append(mContext.getString(R.string.back_to_normal));
-                    holder.itemAlertContentTvContent.setText(stringBuilder.toString());
                 }
+                holder.itemAlertContentTvContent.setText(stringBuilder.toString());
             } catch (Exception e) {
                 e.printStackTrace();
                 holder.itemAlertContentTvContent.setText(WidgetUtil.getAlarmDetailInfo(sensorType, recordInfo

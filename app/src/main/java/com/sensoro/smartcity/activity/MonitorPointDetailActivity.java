@@ -143,8 +143,8 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
         monitorDetailRcTag.setIntercept(true);
-        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         monitorDetailRcTag.setLayoutManager(layoutManager);
+        monitorDetailRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         monitorDetailRcTag.setAdapter(mTagAdapter);
         //
         mContentAdapter = new MonitoringPointRcContentAdapter(mActivity);
@@ -169,8 +169,6 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
     private void initMonitorPhoto() {
         //
         acMonitorDeployPhoto.setIntercept(false);
-        mTagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
-        //
         SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false) {
             @Override
             public boolean canScrollHorizontally() {

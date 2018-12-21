@@ -131,7 +131,10 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                            if (isAttachedView()){
+                                getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                            }
+
                         }
                     });
                 }
@@ -308,7 +311,10 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        if (isAttachedView()){
+                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        }
+
                     }
                 });
             }
@@ -373,7 +379,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        requestSearchData(DIRECTION_DOWN, null);
+                        if (isAttachedView()){
+                            requestSearchData(DIRECTION_DOWN, null);
+                        }
                     }
                 });
                 break;
@@ -459,7 +467,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             mContext.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                    if (isAttachedView()){
+                        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                    }
                     needFresh = false;
                 }
             });

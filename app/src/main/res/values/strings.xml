@@ -30,7 +30,7 @@
     <string name="signal_good">Signal Normal</string>
     <string name="signal_weak">Signal Bad</string>
     <string name="no_signal">Signal None</string>
-    <string name="alert_contact">Alarm contact</string>
+    <string name="alert_contact">Alarm Contact</string>
     <string name="get_the_middle_profile">Get the configuration file</string>
     <string name="live_photo">site photos</string>
     <string name="positioned">located</string>
@@ -43,7 +43,7 @@
     <string name="monitoring_point_exception_details">Monitoring Point Exception Details</string>
     <string name="inspection_task">Inspection</string>
     <string name="abnormal_reporting">abnormality</string>
-    <string name="photo_recording">photo/video</string>
+    <string name="photo_recording">Photo/Video</string>
     <string name="must_select_a_tag_type">Must select a tag type</string>
     <string name="upload_at_least_one_photo_or_a_video">upload at least one photo or a video</string>
     <string name="wrong_password">Password error！</string>
@@ -124,7 +124,7 @@
     <string name="status_offline">Offline</string>
     <string name="text_fire_alarm">A fire broke out at or near the monitoring station, requiring immediate action</string>
     <string name="text_no_fire_alarm">No fire or smoke</string>
-    <string name="text_fire_alarm_test">ALARM_TEST_DESC_TIP</string>
+    <string name="text_fire_alarm_test">Relevant personnel actively test the warning issued</string>
     <string name="text_fire_alarm_risk">There was no fire, but there were real hazards</string>
     <string name="alarm_type_bnormal_power">Abnormal power consumption</string>
     <string name="alarm_type_production_operation">Production operation</string>
@@ -145,16 +145,16 @@
     <string name="inspection_exception_tag_device_lost">device lost</string>
     <string name="inspection_exception_tag_bluetooth_exception">bluetooth abnormality</string>
     <string name="inspection_exception_tag_loose_equipment">device loose</string>
-    <string name="inspection_status_text_pending_execution">Executory</string>
-    <string name="inspection_status_text_executing">Executing</string>
-    <string name="inspection_status_text_timeout_not_completed">Timeout not completed</string>
-    <string name="inspection_status_text_completed">Executed</string>
-    <string name="inspection_status_text_timeout_completed">Timeout completed</string>
+    <string name="inspection_status_text_pending_execution">executory</string>
+    <string name="inspection_status_text_executing">executing</string>
+    <string name="inspection_status_text_timeout_not_completed">timeout not completed</string>
+    <string name="inspection_status_text_completed">executed</string>
+    <string name="inspection_status_text_timeout_completed">timeout completed</string>
     <string name="device_alert_removed">alarm removed,please view the details in the alarm tab</string>
     <string name="version_tip_text">App latest version</string>
     <string name="ok">OK</string>
     <string name="tip_text_login_out">Sign Out?</string>
-    <string name="quit">Sign Out</string>
+    <string name="quit">OK</string>
     <string name="business_name">Merchant Name</string>
     <string name="Contact_name_cannot_be_empty">Contact name cannot be empty!</string>
     <string name="location_not_obtained">Location not obtained</string>
@@ -169,13 +169,13 @@
     <string name="device_patrolled_status_normal">this device has been inspected and is in normal condition</string>
     <string name="device_not_in_inspection_mission">this device is not in the task list</string>
     <string name="no_old_device_information_found">Old device info not found</string>
-    <string name="replacement_equipment">Replace device</string>
+    <string name="replacement_equipment">Replace</string>
     <string name="device_ble_deploy_failed">Failed to configuration, please try it again</string>
     <string name="device_not_found_activate_Bluetooth">Not found this device, please active the bluetooth of device</string>
     <string name="ble_connect_failed">Bluetooth connection failed,try again</string>
     <string name="not_added">No added</string>
-    <string name="added">Added</string>
-    <string name="images">images</string>
+    <string name="added">added&#160;</string>
+    <string name="images">&#160;picture(s)</string>
     <string name="name_address_length">Name/address must be less than 16 chinese characters or 48 characters</string>
     <string name="please_add_at_least_one_image">Please select one picture at least</string>
     <string name="please_specify_the_deployment_location">Please specify the deployment location</string>
@@ -213,7 +213,7 @@
     <string name="wechat_not_installed">WeChat is not installed on the current phone. Please try again after installation.</string>
     <string name="sensor_location">sensor location</string>
     <string name="sensor_location_desc">with this tool, you can view and navigate to the appropriate sensor device</string>
-    <string name="device_deployment">Device deployment</string>
+    <string name="device_deployment">Deploy</string>
     <string name="device_deployment_tip">Please scan the QRCODE of device</string>
     <string name="scan_login">Scan Code Login</string>
     <string name="scan_login_tip">Please scan the QRCODE to login big screen app</string>
@@ -244,7 +244,7 @@
     <string name="login">Sign in</string>
     <string name="finish">Save</string>
 
-    <string name="deploy_photo">Deployment picture</string>
+    <string name="deploy_photo">Deploy Photos</string>
     <string name="input_name">Enter Name</string>
     <string name="contract_list">Contract</string>
     <string name="sensor_detail_sn">SN</string>
@@ -297,12 +297,12 @@
     <string name="exit_main">Press again to exit</string>
     <string name="tips_data_error">Data parsing error</string>
     <string name="tips_date_not_null">No date in the date section can be empty/string</string>>
-    <string name="tips_input_machine_sn">Please enter the SN number</string>
+    <string name="tips_input_machine_sn">Please enter the SN </string>
     <string name="tips_username_empty">Please enter your account</string>
     <string name="tips_phone_empty">Please enter a valid phone number</string>
     <string name="tips_login_pwd_empty">Please enter your password</string>
-    <string name="tips_deploy_success">Congratulations! Sensor point deployment is successful</string>
-    <string name="tips_deploy_station_success">Congratulations! Station deployment is successful</string>
+    <string name="tips_deploy_success">Congratulations! Deployment Successful</string>
+    <string name="tips_deploy_station_success">Congratulations! Deployment Successful</string>
     <string name="tips_deploy_failed">Sorry! Sensor point deployment failed</string>
     <string name="tips_deploy_station_failed">Sorry! Station deployment failed</string>
     <string name="tips_input_name">Name/address must not be empty</string>
@@ -319,7 +319,7 @@
     <string name="ip_all_images">All pictures</string>
     <string name="ip_folder_image_count">Total %1$d</string>
     <string name="ip_preview_image_count">%1$d/%2$d</string>
-    <string name="ip_select_limit">Select uo to %1$d images</string>
+    <string name="ip_select_limit">Select up to %1$d images</string>
     <string name="ip_complete">Finish</string>
     <string name="ip_select_complete">Finish(%1$d/%2$d)</string>
     <string name="ip_preview">Preview</string>
@@ -333,7 +333,7 @@
     //
     <string name="alarm_contact_btn_save">Save</string>
     <string name="alarm_contact_tip_sample">e.g:XX</string>
-    <string name="alarm_contact_tip_phone">Alarm phone</string>
+    <string name="alarm_contact_tip_phone">Phone Number</string>
     <string name="alarm_contact_tip_phone_sample">e.g.18600000000</string>
     //预警日志xml
     <string name="alarm_log_alarm_time">ALARM TIME</string>
@@ -373,18 +373,18 @@
     <string name="contract_service_next">Next</string>
     //部署标签
     <string name="deploy_device_tag_save">Save</string>
-    <string name="deploy_device_tag_history_tag">History tag</string>
-    <string name="deploy_device_tag_add_tag">New tag</string>
+    <string name="deploy_device_tag_history_tag">Tag history</string>
+    <string name="deploy_device_tag_add_tag">Add tag</string>
     //部署地图
     <string name="deploy_device_map_save">Save</string>
     //部署记录
     <string name="deploy_record_search_tip">Name/SN/Tag</string>
     <string name="deploy_record_search_cancel_tip">Name/SN/Tag</string>
-    <string name="deploy_record_new_device">Deploy new Device</string>
+    <string name="deploy_record_new_device">Deploy</string>
     <string name="deploy_record_device_number">SN</string>
     <string name="deploy_record_name">Name</string>
-    <string name="deploy_record_deploy_time">Deploy date</string>
-    <string name="deploy_record_deploy_we_chat">Deploy WeChat</string>
+    <string name="deploy_record_deploy_time">Deploy Time</string>
+    <string name="deploy_record_deploy_we_chat">Mini Program</string>
 
     //部署结果
     <string name="deploy_result_back_home">Back Home</string>
@@ -395,10 +395,10 @@
     <string name="deploy_result_contract">Contact</string>
     <string name="deploy_result_status">Status</string>
     <string name="deploy_result_recent_upload_time">Last upload date</string>
-    <string name="deploy_result_is_upload">Does deploy this device？</string>
+    <string name="deploy_result_is_upload">Does deploy this device</string>
     <string name="no_signal_can_not_uploaded">No signal can not be uploaded</string>
     <string name="deploy_result_upload_tip">The signal of device is bad or none, Please push the self check button of device and try it again.</string>
-    <string name="deploy_result_force_upload">Upload still</string>
+    <string name="deploy_result_force_upload">Upload Still</string>
     <string name="deploy_result_ok">OK</string>
 
     //部署选择图片
@@ -426,7 +426,7 @@
     <string name="inspection_task_detail_device_counts">Device quantity</string>
     <string name="inspection_task_detail_status">Status</string>
     //巡检task list
-    <string name="inspection_task_list_undone">Undone</string>
+    <string name="inspection_task_list_undone">Unfinished</string>
     <string name="inspection_task_list_complete">Done</string>
     //巡检异常上报
     <string name="inspection_uploade_exception_uploade">Upload</string>
@@ -448,11 +448,11 @@
     <string name="name_address">Name/Address</string>
     <string name="we_chat_relation">WeChat No</string>
     <string name="we_chat_relation_">WeChat No</string>
-    <string name="name_address_history_tag">History/Tag</string>
+    <string name="name_address_history_tag">Name history</string>
     <string name="name_address_save">Save</string>
     //扫描界面
     <string name="scan_tip">Please scan the QRCode of device</string>
-    <string name="scan_input_sn">input SN</string>
+    <string name="scan_input_sn">Enter SN manually</string>
     <string name="scan_open_flashlight">Turn on the light</string>
     //扫描结果
     <string name="scan_result_login_big_screen">BIG SCREEN</string>
@@ -466,9 +466,9 @@
     <string name="take_record_camera">Hold to record video</string>
     //设备部署 详情
     <string name="deploy_device_detail_name_address">Name/Address</string>
-    <string name="deploy_device_detail_deploy_photo">Deploy photos</string>
-    <string name="deploy_device_detail_deploy_location">Deploy location</string>
-    <string name="deploy_device_detail_uploade">Upload</string>
+    <string name="deploy_device_detail_deploy_photo">Deploy Photos</string>
+    <string name="deploy_device_detail_deploy_location">Deploy Location</string>
+    <string name="deploy_device_detail_upload">Upload</string>
     //部署记录详情
     <string name="deploy_record_name_address">Name/Address</string>
     //巡检
@@ -487,14 +487,14 @@
     //合同 列表
     //manager fragment
     <string name="manager_fragment_manager">Manage</string>
-    <string name="manager_fragment_merchant_switch">Merchant Switching</string>
+    <string name="manager_fragment_merchant_switch">Merchants Switch</string>
     <string name="manager_fragment_deploy_manager">Deploy</string>
     <string name="manager_fragment_contract_manager">Contract</string>
     <string name="manager_fragment_maintenance_task">Maintenance</string>
     <string name="manager_fragment_monitor_big_screen">Monitor large screen</string>
     <string name="manager_fragment_about_us">About</string>
     <string name="manager_fragment_version_information">Version</string>
-    <string name="manager_fragment_exit_account">Sign out</string>
+    <string name="manager_fragment_exit_account">Sign Out</string>
     //warn framgen
     <string name="warn_fragment_search_tip">Name/SN/Phone Number</string>
 
@@ -568,27 +568,27 @@
     <string name="unknown_malfunction">Unknown malfunction</string>
     <string name="unknown_error">unknown error</string>
     <string name="malfunction_time">MALFUNCTION TIME</string>
-    <string name="malfunction_log">malfunction log</string>
-    <string name="malfunction_history_log">History log</string>
-    <string name="malfunction_cause">cause of malfunction：</string>
+    <string name="malfunction_log">Malfunction Log</string>
+    <string name="malfunction_history_log">History</string>
+    <string name="malfunction_cause">Reason：</string>
     <string name="malfunction_data">Malfunction data</string>
-    <string name="system_upload_malfunction_task">the system reports malfunction</string>
-    <string name="recover_normal">&#160;the device returns to normal</string>
+    <string name="system_upload_malfunction_task">The system reports malfunction</string>
+    <string name="recover_normal">&#160;device recovery</string>
     <string name="system_sms_send">&#160;system sends SMS to </string>
-    <string name="occour_malfunction_alarm">new malfunction event</string>
-    <string name="open_ble_contact_device">Turn on bluetooth to allow "city" to connect devices</string>
-    <string name="open_ble_to_location">For your function to work properly, turn on Bluetooth and locate</string>
+    <string name="occur_malfunction_alarm">malfunction occurred</string>
+    <string name="open_ble_contact_device">Turn on bluetooth </string>
+    <string name="open_ble_to_location">Turn on Bluetooth and locate for this</string>
     <string name="ok_one">OK</string>
     <string name="confirm_monitor_point_exception">Verify that the monitoring point is abnormal</string>
     <string name="uploade_exception_change_device">upload abnormality and replace device</string>
     <string name="address">address</string>
-    <string name="device_exist_under_the_account">This device does not exist under the account.The device is associated with this account before it can be tested</string>
+    <string name="device_exist_under_the_account">There is not the device under current account</string>
     <string name="save">Save</string>
-    <string name="tips_deploy_not_exist">This device does not exist under the account.The device is associated with this account before it can be tested</string>
+    <string name="tips_deploy_not_exist">There is not the device under current account</string>
     <string name="contract_info_validity_period">有效期至</string>
     <string name="contract_info_title">物联网消防安全预警服务合同</string>
     <string name="contract_info_site_nature">场地性质</string>
-    <string name="deploy_result_confirm_information">Confirm The Information</string>
+    <string name="deploy_result_confirm_information">Confirmation Information</string>
     <string name="deploy_result_successed">Congratulations! Sensor point deployment is succcessful</string>
     <string name="deploy_result_signal">Signal: None</string>
     <string name="login_tip">Safer city,Easier life</string>
@@ -634,7 +634,7 @@
     <string name="air_switch_config">Configuration</string>
     <string name="is_device_air_switch_config">Setting</string>
     <string name="configuring">Setting&#8230;</string>
-    <string name="monitor_point_operation_error_value_range">Input the rated current,Range:50&#8211;560</string>
+    <string name="monitor_point_operation_error_value_range">Input the rated current,Range:</string>
     <string name="enter_the_correct_number_format">Please enter the correct number format</string>
     <string name="input_not_null">The input must not be empty</string>
 
@@ -657,24 +657,24 @@
     <string name="deploy_device_type">Type：</string>
     <string name="initial_configuration">Initial Configuration</string>
     <string name="not_setting">Unset</string>
-    <string name="had_setting_detail">Configured</string>
+    <string name="had_setting_detail">Rated Current:&#160;</string>
 
     <string name="deploy_pic_device_pic">DeviceMap</string>
     <string name="deploy_pic_device_pic_tip">SN should be recognised</string>
-    <string name="deploy_pic_take_photo">photo</string>
+    <string name="deploy_pic_take_photo">Photo</string>
     <string name="deploy_pic_installation_site">Installation</string>
     <string name="deploy_pic_shop_pic">Store Picture（Optional）</string>
     <string name="please_select_device_pic">Please select a device map</string>
     <string name="please_select_installation_site">Please select a live photo</string>
     <string name="rated_current">RC/A</string>
-    <string name="deploy_configuration_enter_tip">Input the rated current,Range:50&#8211;560</string>
+    <string name="deploy_configuration_enter_tip">Input the rated current,Range:</string>
     <string name="deploy_configuration">Configuration</string>
     <string name="if_it_is_a_store_please_upload">Should be uploaded if it is a store</string>
     <string name="check_ble_status">Please check the bluetooth status</string>
     <string name="now_configuration">Configuring</string>
     <string name="ble_config_failed">It is failed to configure</string>
     <string name="ble_config_success">Successful</string>
-    <string name="occur_alarmed"> alarmed</string>
+    <string name="occur_alarmed">&#160;alarmed</string>
     <string name="alarm_pop_security_risks">security risk</string>
     <string name="alarm_pop_misdescription">false alarm</string>
     <string name="alarm_pop_test_patrol">test/inspection</string>
@@ -683,7 +683,14 @@
     <string name="optional">Optional</string>
     <string name="required">Required</string>
     <string name="deploy_device_detail_add_all_required">Upload after adding the required fields</string>
-    <string name="deploy_configuration_not_discover_device">Not found,try again</string>
+    <string name="deploy_configuration_not_discover_device">Not found, try again</string>
     <string name="malfunction_cause_detail">Reason</string>
     <string name="update_from">update by</string>
+    <string name="mapbox_access_token">pk.eyJ1Ijoic2Vuc29yb3poIiwiYSI6ImNqcGttdjI3bjA1MXozeHA1MWFuMmphZXkifQ.cj-u01eRsyRAg6eOht0iBQ</string>
+    <string name="fg_malfunction_back_to_normal">Recovery</string>
+    <string name="fg_malfunction_malfunctioning">Malfunction</string>
+    <string name="deploy_record_detail_alert_contact">Alarm Contact</string>
+    <string name="deploy_location">Deploy Location</string>
+    <string name="deploy_configuration_analyze_failed">Device type parsing failed</string>
+    <string name="deploy_configuration_analyze_data_failed">Data configuration failed</string>
 </resources>

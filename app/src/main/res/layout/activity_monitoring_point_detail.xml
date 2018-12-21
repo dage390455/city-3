@@ -304,7 +304,7 @@
             android:orientation="vertical"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:visibility="visible">
+            android:visibility="gone">
 
             <TextView
                 android:id="@+id/ac_monitoring_point_tv_operation"
@@ -434,10 +434,10 @@
                 android:background="@color/c_e7e7e7"
                 android:contentDescription="@null" />
 
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_item_selector"
+                android:orientation="horizontal"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp">
 
@@ -445,32 +445,28 @@
                     android:id="@+id/monitor_detail_tv_tag"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentLeft="true"
-                    android:layout_centerVertical="true"
                     android:layout_marginStart="20dp"
                     android:text="@string/sensor_detail_tag"
                     android:textColor="@color/c_626262"
                     android:textSize="@dimen/x50" />
 
                 <RelativeLayout
-                    android:layout_width="match_parent"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
-                    android:layout_toEndOf="@id/monitor_detail_tv_tag">
+                    android:layout_weight="1"
+                    android:gravity="end">
 
                     <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/monitor_detail_rc_tag"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true">
-
-                    </com.sensoro.smartcity.widget.TouchRecycleView>
-
+                        android:layout_alignParentEnd="true" />
                 </RelativeLayout>
 
 
-            </RelativeLayout>
+            </LinearLayout>
 
             <ImageView
                 android:layout_width="match_parent"

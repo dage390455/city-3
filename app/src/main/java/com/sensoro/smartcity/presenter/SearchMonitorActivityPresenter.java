@@ -201,7 +201,10 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            getView().updateRelationData(tempList);
+                            if (isAttachedView()){
+                                getView().updateRelationData(tempList);
+                            }
+
                         }
                     });
                 }

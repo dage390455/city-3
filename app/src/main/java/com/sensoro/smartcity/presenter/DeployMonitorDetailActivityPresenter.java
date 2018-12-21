@@ -16,6 +16,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.DeployDeviceTagActivity;
 import com.sensoro.smartcity.activity.DeployMapActivity;
+import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorAlarmContactActivity;
 import com.sensoro.smartcity.activity.DeployMonitorConfigurationActivity;
 import com.sensoro.smartcity.activity.DeployMonitorDeployPicActivity;
@@ -38,6 +39,7 @@ import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.DeployStationInfoRsp;
 import com.sensoro.smartcity.server.response.DeviceDeployRsp;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -129,12 +131,16 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 //        getView().updateUploadState(true);
         String deviceTypeName = WidgetUtil.getDeviceTypeName(deployAnalyzerModel.deviceType);
         getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + deviceTypeName);
-        //TODO 暂时只针对ancre的电器火灾
-        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType);
+        //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
+        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) && !DEVICE_CONTROL_DEVICE_TYPES.get(0).equals(deployAnalyzerModel.deviceType);
         getView().setDeployDetailDeploySettingVisible(isFire);
         if (isFire) {
             //TODO 再次部署时暂时不回显电器火灾字段字段
             getView().setDeployDeviceDetailDeploySetting(null);
+        }
+        if (!AppUtils.isChineseLanguage()) {
+            //TODO 英文版控制不显示小程序账号
+            deployAnalyzerModel.weChatAccount = null;
         }
     }
 
@@ -295,7 +301,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //TODO 暂时不支持添加wx电话
                 //TODO 添加电气火灾配置支持
 //                deployAnalyzerModel.weChatAccount = null;
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType);
+                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType) || DEVICE_CONTROL_DEVICE_TYPES.get(2).equals(deployAnalyzerModel.deviceType);
                 HashMap<String, DeployContralSettingData> map = null;
                 if (isFire) {
                     map = new HashMap<>();
@@ -511,7 +517,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     public void doDeployMap() {
         Intent intent = new Intent();
-        intent.setClass(mContext, DeployMapActivity.class);
+        if (AppUtils.isChineseLanguage()) {
+            intent.setClass(mContext, DeployMapActivity.class);
+        } else {
+            intent.setClass(mContext, DeployMapENActivity.class);
+        }
         deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_MONITOR_DETIAL;
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
@@ -883,7 +893,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (getView() != null) {
+                if (isAttachedView()) {
                     getView().updateBleConfigDialogMessage(mContext.getString(R.string.loading_configuration_file));
                     sensoroDeviceConnection.writeData05ChannelMask(deployAnalyzerModel.channelMask, new SensoroWriteCallback() {
                         @Override
@@ -891,7 +901,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (getView() != null) {
+                                    if (isAttachedView()) {
                                         getView().dismissBleConfigDialog();
                                         sensoroDeviceConnection.disconnect();
                                         doUploadImages(deployAnalyzerModel.latLng.get(0), deployAnalyzerModel.latLng.get(1));
@@ -907,7 +917,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    if (getView() != null) {
+                                    if (isAttachedView()) {
                                         getView().dismissBleConfigDialog();
                                         getView().updateUploadState(true);
                                         getView().toastShort(mContext.getString(R.string.device_ble_deploy_failed));
@@ -931,7 +941,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (getView() != null) {
+                if (isAttachedView()) {
                     getView().dismissBleConfigDialog();
                     getView().updateUploadState(true);
                     getView().toastShort(mContext.getString(R.string.ble_connect_failed));

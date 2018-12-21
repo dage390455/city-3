@@ -52,7 +52,9 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
     }
 
     public void doAuthCheck(String code) {
-        getView().showProgressDialog();
+        if (isAttachedView()) {
+            getView().showProgressDialog();
+        }
         RetrofitServiceHelper.INSTANCE.doubleCheck(code).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AuthRsp>(this) {
 
             @Override
@@ -61,16 +63,20 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
                     //请求mergetypes字段
                     getMergeType();
                 } else {
-                    getView().dismissProgressDialog();
-                    getView().toastShort(mContext.getString(R.string.secondary_verification_failed));
-                    getView().updateImvStatus(false);
+                    if (isAttachedView()) {
+                        getView().dismissProgressDialog();
+                        getView().toastShort(mContext.getString(R.string.secondary_verification_failed));
+                        getView().updateImvStatus(false);
+                    }
                 }
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().toastShort(errorMsg);
-                getView().dismissProgressDialog();
+                if (isAttachedView()){
+                    getView().toastShort(errorMsg);
+                    getView().dismissProgressDialog();
+                }
             }
         });
     }
@@ -115,8 +121,10 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
+                if (isAttachedView()){
+                    getView().dismissProgressDialog();
+                    getView().toastShort(errorMsg);
+                }
             }
         });
     }
@@ -129,15 +137,19 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
         Intent mainIntent = new Intent();
         mainIntent.setClass(mContext, MainActivity.class);
         mainIntent.putExtra(EXTRA_EVENT_LOGIN_DATA, eventLoginData);
-        getView().startAC(mainIntent);
-        getView().finishAc();
+        if (isAttachedView()){
+            getView().startAC(mainIntent);
+            getView().finishAc();
+        }
     }
 
     public void close() {
         EventData eventData = new EventData();
         eventData.code = EVENT_DATA_CANCEL_AUTH;
         EventBus.getDefault().post(eventData);
-        getView().finishAc();
+        if (isAttachedView()){
+            getView().finishAc();
+        }
     }
 
     @Override
@@ -155,7 +167,9 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
                 }
                 cacheCode.add(intStr);
             }
-            getView().autoFillCode(cacheCode);
+            if (isAttachedView()){
+                getView().autoFillCode(cacheCode);
+            }
             doAuthCheck(textFromClip);
         }
     }

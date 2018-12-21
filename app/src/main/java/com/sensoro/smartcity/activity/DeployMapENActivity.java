@@ -8,11 +8,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.amap.api.maps.TextureMapView;
+import com.mapbox.mapboxsdk.maps.MapView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.imainviews.IDeployMapActivityView;
-import com.sensoro.smartcity.presenter.DeployMapActivityPresenter;
+import com.sensoro.smartcity.imainviews.IDeployMapENActivityView;
+import com.sensoro.smartcity.presenter.DeployMapENActivityPresenter;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
@@ -20,7 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, DeployMapActivityPresenter> implements IDeployMapActivityView {
+public class DeployMapENActivity extends BaseActivity<IDeployMapENActivityView, DeployMapENActivityPresenter> implements IDeployMapENActivityView {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -29,8 +29,8 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     TextView includeTextTitleTvSubtitle;
     @BindView(R.id.include_text_title_cl_root)
     ConstraintLayout includeTextTitleClRoot;
-    @BindView(R.id.tm_deploy_map)
-    TextureMapView tmDeployMap;
+    @BindView(R.id.tm_deploy_map_en)
+    MapView tmDeployMap;
     @BindView(R.id.bt_deploy_map_signal)
     TextView btDeployMapSignal;
     @BindView(R.id.iv_deploy_map_location)
@@ -41,19 +41,32 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_deploy_map);
+        setContentView(R.layout.activity_deploy_map_en);
         ButterKnife.bind(this);
         tmDeployMap.onCreate(savedInstanceState);
+        //
         iniView();
         mPresenter.initData(mActivity);
-        mPresenter.initMap(tmDeployMap.getMap());
+        tmDeployMap.getMapAsync(mPresenter);
     }
 
     private void iniView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeTextTitleTvTitle.setText(R.string.deploy_location);
+        includeTextTitleTvTitle.setText(R.string.deploy_device_detail_deploy_location);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mActivity.getWindow().getDecorView().postInvalidate();
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        tmDeployMap.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        tmDeployMap.onStop();
     }
 
     @Override
@@ -98,6 +111,7 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
         super.onSaveInstanceState(outState);
         tmDeployMap.onSaveInstanceState(outState);
     }
+
 
     @Override
     public void refreshSignal(long updateTime, String signal) {
@@ -166,8 +180,8 @@ public class DeployMapActivity extends BaseActivity<IDeployMapActivityView, Depl
     }
 
     @Override
-    protected DeployMapActivityPresenter createPresenter() {
-        return new DeployMapActivityPresenter();
+    protected DeployMapENActivityPresenter createPresenter() {
+        return new DeployMapENActivityPresenter();
     }
 
     @Override
