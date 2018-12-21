@@ -511,8 +511,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
                 break;
             case EVENT_DATA_NET_WORK_CHANGE:
-//                needFreshAll = true;
                 //TODO 暂时不加
+//                needFreshAll = true;
                 LogUtils.loge("CONNECTIVITY_ACTION --->> 网络变化 ");
                 break;
         }
