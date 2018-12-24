@@ -215,7 +215,7 @@
     <string name="sensor_location_desc">View and navigate to the sensor device with the tool</string>
     <string name="device_deployment">Deploy</string>
     <string name="device_deployment_tip">Please scan the QRCode</string>
-    <string name="scan_login">Scan QRCode to Login</string>
+    <string name="scan_login">Scan QRCode</string>
     <string name="scan_login_tip">Please scan the QRCODE to login</string>
     <string name="device_change">Device replacement</string>
     <string name="device_change_tip">Please scan the QRCode</string>
@@ -480,8 +480,8 @@
     //文件list
     <string name="folder_list_zero">Total 0</string>
     //主页弹窗
-    <string name="quick_deploy">Quick deploy</string>
-    <string name="new_contract">New contract</string>
+    <string name="quick_deploy">Deploy</string>
+    <string name="new_contract">Contract</string>
     //dialog 输入
     <string name="dialog_input_confirm">OK</string>
     //合同 列表
