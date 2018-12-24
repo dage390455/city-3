@@ -688,4 +688,5 @@
     <string name="deploy_location">部署位置</string>
     <string name="deploy_configuration_analyze_failed">未解析出正确的设备类型</string>
     <string name="deploy_configuration_analyze_data_failed">未解析出正确的数据</string>
+    <string name="contract_personal">个人合同</string>
 </resources>

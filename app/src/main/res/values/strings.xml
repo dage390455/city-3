@@ -693,4 +693,5 @@
     <string name="deploy_location">Deploy Location</string>
     <string name="deploy_configuration_analyze_failed">Device type parsing failed</string>
     <string name="deploy_configuration_analyze_data_failed">Data configuration failed</string>
+    <string name="contract_personal">个人合同</string>
 </resources>
