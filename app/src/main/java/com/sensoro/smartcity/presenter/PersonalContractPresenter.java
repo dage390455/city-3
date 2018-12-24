@@ -4,27 +4,18 @@ import android.app.Activity;
 import android.content.Context;
 
 import com.sensoro.smartcity.base.BasePresenter;
-import com.sensoro.smartcity.imainviews.IContractCreationView;
+import com.sensoro.smartcity.imainviews.IPersonalContractView;
 
-public class ContractCreationPresenter extends BasePresenter<IContractCreationView> {
+public class PersonalContractPresenter extends BasePresenter<IPersonalContractView> {
     private Activity mActivity;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-
     }
 
     @Override
     public void onDestroy() {
-
-    }
-
-    public void doBusinessContract() {
-
-    }
-
-    public void doPersonalContract() {
 
     }
 }
