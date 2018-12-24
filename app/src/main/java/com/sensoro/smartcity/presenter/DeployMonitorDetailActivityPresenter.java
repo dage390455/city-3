@@ -257,7 +257,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
                 @Override
                 public void onStart() {
-                    getView().showStartUploadProgressDialog();
+                    if (isAttachedView()) {
+                        getView().showStartUploadProgressDialog();
+                    }
+
                 }
 
                 @Override
@@ -267,22 +270,32 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         scenesData.type = "image";
                         strings.add(scenesData.url);
                     }
-                    getView().dismissUploadProgressDialog();
                     LogUtils.loge(this, "上传成功--- size = " + strings.size());
-                    // 上传结果
-                    doDeployResult(lon, lan, strings);
+                    if (isAttachedView()) {
+                        getView().dismissUploadProgressDialog();
+                        // 上传结果
+                        doDeployResult(lon, lan, strings);
+                    }
+
+
                 }
 
                 @Override
                 public void onError(String errMsg) {
-                    getView().updateUploadState(true);
-                    getView().dismissUploadProgressDialog();
-                    getView().toastShort(errMsg);
+                    if (isAttachedView()) {
+                        getView().updateUploadState(true);
+                        getView().dismissUploadProgressDialog();
+                        getView().toastShort(errMsg);
+                    }
+
                 }
 
                 @Override
                 public void onProgress(String content, double percent) {
-                    getView().showUploadProgressDialog(content, percent);
+                    if (isAttachedView()) {
+                        getView().showUploadProgressDialog(content, percent);
+                    }
+
                 }
             };
             UpLoadPhotosUtils upLoadPhotosUtils = new UpLoadPhotosUtils(mContext, upLoadPhotoListener);

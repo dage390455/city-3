@@ -27,7 +27,7 @@ public class SensoroXLinearLayoutManager extends LinearLayoutManager {
     public void onLayoutChildren(RecyclerView.Recycler recycler, RecyclerView.State state) {
         try {
             super.onLayoutChildren(recycler, state);
-        } catch (IndexOutOfBoundsException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.out.println("SensoroXLinearLayoutManager.exception----->");
         }
