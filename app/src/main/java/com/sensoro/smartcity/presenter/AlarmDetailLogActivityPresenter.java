@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.amap.api.maps.model.LatLng;
 import com.sensoro.smartcity.R;
@@ -261,10 +262,12 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                     getView().toastShort(mContext.getString(R.string.location_not_obtained));
                 }
             }
+        }else{
+            if (isAttachedView()) {
+                getView().toastShort(mContext.getString(R.string.location_not_obtained));
+            }
         }
-        if (isAttachedView()) {
-            getView().toastShort(mContext.getString(R.string.location_not_obtained));
-        }
+
     }
 
     @Override

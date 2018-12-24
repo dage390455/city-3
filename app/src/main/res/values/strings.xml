@@ -343,10 +343,10 @@
     <string name="alarm_log_alarm_quick_navigation">Navigation</string>
     <string name="alarm_log_alarm_warn_confirm">Confirm</string>
     <string name="alarm_log_alarm_call">"System calls to "</string>
-    <string name="alarm_log_alarm_result">alarm result:</string>
-    <string name="alarm_log_alarm_cause">alarm reason:</string>
-    <string name="alarm_log_alarm_place">alarm site:</string>
-    <string name="alarm_log_alarm_remark">alarm remark:</string>
+    <string name="alarm_log_alarm_result">Result:&#160;&#160;</string>
+    <string name="alarm_log_alarm_cause">Cause:&#160;&#160;</string>
+    <string name="alarm_log_alarm_place">Site:&#160;&#160;&#160;&#160;&#160;&#160;&#160;</string>
+    <string name="alarm_log_alarm_remark">Remark:</string>
     //二次验证xml
     <string name="auth_two_step_verification">Secondary verification</string>
     <string name="auth_two_step_verification_tip">Please submit the secondary verification for account security</string>
@@ -570,7 +570,7 @@
     <string name="malfunction_time">MALFUNCTION TIME</string>
     <string name="malfunction_log">Malfunction Log</string>
     <string name="malfunction_history_log">History</string>
-    <string name="malfunction_cause">Reason：</string>
+    <string name="malfunction_cause">Cause：</string>
     <string name="malfunction_data">Malfunction data</string>
     <string name="system_upload_malfunction_task">The system reports malfunction task</string>
     <string name="recover_normal">&#160;The device is back to nomal </string>
