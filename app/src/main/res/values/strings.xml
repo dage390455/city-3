@@ -193,7 +193,7 @@
     <string name="error">Error</string>
     <string name="success">Success</string>
     <string name="no_such_permission">No permission</string>
-    <string name="no_alert_log_information_was_obtained">Alarm records are zero</string>
+    <string name="no_alert_log_information_was_obtained">Unable to get alarm related data</string>
     <string name="successful_report">Upload success</string>
     <string name="report_failure">Upload failed</string>
     <string name="account_no_patrol_device_permissions">Inspection is not authorized</string>
