@@ -58,10 +58,8 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     ImageView contractIvMenuList;
     @BindView(R.id.contract_manger_root)
     RelativeLayout contractMangerRoot;
-    @BindView(R.id.contract_title)
-    TextView contractTitle;
-    @BindView(R.id.contract_iv_add)
-    ImageView contractIvAdd;
+    @BindView(R.id.ac_contract_manger_add)
+    RelativeLayout acContractMangerAdd;
     @BindView(R.id.contract_ptr_list)
     ListView contractPtrList;
     @BindView(R.id.contract_return_top)
@@ -80,13 +78,13 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     ConstraintLayout clSelectRoot;
     @BindView(R.id.fg_main_top_search_title_root)
     LinearLayout fgMainWarnTitleRoot;
-    @BindView(R.id.fg_main_top_search_frame_search)
+    @BindView(R.id.ac_contract_record_frame_search)
     RelativeLayout fgMainWarnFrameSearch;
-    @BindView(R.id.fg_main_top_search_et_search)
+    @BindView(R.id.ac_contract_record_et_search)
     EditText fgMainWarnEtSearch;
-    @BindView(R.id.fg_main_top_search_imv_calendar)
+    @BindView(R.id.ac_contract_record_imv_calendar)
     ImageView fgMainWarnImvCalendar;
-    @BindView(R.id.tv_top_search_alarm_search_cancel)
+    @BindView(R.id.tv_contract_search_cancel)
     TextView tvWarnAlarmSearchCancel;
     @BindView(R.id.rv_search_history)
     RecyclerView rvSearchHistory;
@@ -94,7 +92,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     ImageView btnSearchClear;
     @BindView(R.id.ll_search_history)
     LinearLayout llSearchHistory;
-    @BindView(R.id.fg_main_top_search_imv_clear)
+    @BindView(R.id.ac_contract_record_search_imv_clear)
     ImageView fgMainWarnFragmentImvClear;
     @BindView(R.id.fg_main_top_search_tv_date_edit)
     TextView fgMainWarnTvDateEdit;
@@ -148,7 +146,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
         contractPtrList.setOnItemClickListener(this);
         contractIvMenuList.setOnClickListener(this);
         contractIvMenuList.setOnClickListener(this);
-        contractIvAdd.setOnClickListener(this);
+        acContractMangerAdd.setOnClickListener(this);
         contractReturnTop.setOnClickListener(this);
         tvSelectType.setOnClickListener(this);
         tvSelectStatus.setOnClickListener(this);
@@ -443,7 +441,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.contract_iv_add:
+            case R.id.ac_contract_manger_add:
                 mPresenter.startToAdd();
                 break;
             case R.id.contract_iv_menu_list:
@@ -464,15 +462,15 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 mPresenter.doSelectStatusPop();
                 break;
-            case R.id.fg_main_top_search_frame_search:
-            case R.id.fg_main_top_search_et_search:
+            case R.id.ac_contract_record_frame_search:
+            case R.id.ac_contract_record_et_search:
                 fgMainWarnEtSearch.requestFocus();
                 fgMainWarnEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);
                 AppUtils.openInputMethodManager(mActivity, fgMainWarnEtSearch);
 //                forceOpenSoftKeyboard();
                 break;
-            case R.id.fg_main_top_search_imv_calendar:
+            case R.id.ac_contract_record_imv_calendar:
 //                mPresenter.doCalendar(fgMainWarnTitleRoot);
                 mPresenter.doCalendar(fgMainWarnTitleRoot);
                 AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
@@ -484,12 +482,12 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
                 AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 mPresenter.requestSearchData(DIRECTION_DOWN, text);
                 break;
-            case R.id.tv_top_search_alarm_search_cancel:
+            case R.id.tv_contract_search_cancel:
                 doCancelSearch();
                 setSearchHistoryVisible(false);
                 AppUtils.dismissInputMethodManager(mActivity, fgMainWarnEtSearch);
                 break;
-            case R.id.fg_main_top_search_imv_clear:
+            case R.id.ac_contract_record_search_imv_clear:
                 fgMainWarnEtSearch.getText().clear();
                 fgMainWarnEtSearch.requestFocus();
                 AppUtils.openInputMethodManager(mActivity, fgMainWarnEtSearch);
