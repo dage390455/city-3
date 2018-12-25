@@ -666,7 +666,9 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 setElectDetailVisible(showDetail);
                 break;
             case R.id.elect_info:
-                toastShort("详情");
+                if (earlyWarningThresholdDialogUtils != null) {
+                    earlyWarningThresholdDialogUtils.show();
+                }
                 break;
         }
     }

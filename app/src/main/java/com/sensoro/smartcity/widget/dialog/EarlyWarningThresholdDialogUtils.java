@@ -2,6 +2,7 @@ package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -15,12 +16,14 @@ public class EarlyWarningThresholdDialogUtils {
     //    private final TextView mTvConfirm;
     private DialogUtilsChangeClickListener listener;
     private CustomCornerDialog mDialog;
+    private ImageView ivCancel;
 
     public EarlyWarningThresholdDialogUtils(Activity activity) {
         View view = View.inflate(activity, R.layout.item_dialog_elect_threshold, null);
 //        mTvTitle = view.findViewById(R.id.dialog_tip_tv_title);
 //        mTvMessage = view.findViewById(R.id.dialog_tip_tv_message);
         mTvCancel = view.findViewById(R.id.dialog_tv_change_info);
+        ivCancel = view.findViewById(R.id.iv_cancel);
 //        mTvConfirm = view.findViewById(R.id.dialog_tip_tv_confirm);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
@@ -32,7 +35,12 @@ public class EarlyWarningThresholdDialogUtils {
 //        }
 
         mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
-
+        ivCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dismiss();
+            }
+        });
         mTvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
