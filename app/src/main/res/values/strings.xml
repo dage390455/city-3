@@ -216,10 +216,10 @@
     <string name="device_deployment">Deploy</string>
     <string name="device_deployment_tip">Please scan the QRCode</string>
     <string name="scan_login">Scan QRCode</string>
-    <string name="scan_login_tip">Please scan the QRCODE to login</string>
-    <string name="device_change">Device replacement</string>
+    <string name="scan_login_tip">Please scan the QRCode to login</string>
+    <string name="device_change">Device Replacement</string>
     <string name="device_change_tip">Please scan the QRCode</string>
-    <string name="device_inspetion">Device inspection</string>
+    <string name="device_inspetion">Device Inspection</string>
     <string name="device_inspetion_tip">Please scan the QRCode</string>
     <string name="please_re_scan_try_again">Please rescan and try again</string>
     <string name="login_failed_please_rescan">login failed,please rescan</string>
@@ -244,7 +244,7 @@
     <string name="login">Login</string>
     <string name="finish">Save</string>
 
-    <string name="deploy_photo">Deployment Photo</string>
+    <string name="deploy_photo">Deploy Photos</string>
     <string name="input_name">Enter Name</string>
     <string name="contract_list">Contract</string>
     <string name="sensor_detail_sn">SN</string>
@@ -447,7 +447,7 @@
     //名称和地址
     <string name="name_address">Name/Address</string>
     <string name="we_chat_relation">Mini program account</string>
-    <string name="we_chat_relation_">Mini progam</string>
+    <string name="we_chat_relation_">Mini program</string>
     <string name="name_address_history_tag">Name history</string>
     <string name="name_address_save">Save</string>
     //扫描界面
@@ -487,7 +487,7 @@
     //合同 列表
     //manager fragment
     <string name="manager_fragment_manager">Manage</string>
-    <string name="manager_fragment_merchant_switch">Merchants Switch</string>
+    <string name="manager_fragment_merchant_switch">Switch Merchant</string>
     <string name="manager_fragment_deploy_manager">Deploy</string>
     <string name="manager_fragment_contract_manager">Contract</string>
     <string name="manager_fragment_maintenance_task">Maintenance</string>
@@ -605,7 +605,7 @@
     <string name="monitor_point_detail_reset">Reset</string>
     <string name="is_device_erasure">Mute the alarm device? </string>
     <string name="device_erasure_tip_message">Alarming,mute the alarm device？</string>
-    <string name="back">back</string>
+    <string name="back">Back</string>
     <string name="erasure">Mute</string>
     <string name="is_device_self_check">Would you like to perform self-check？</string>
     <string name="device_self_check_tip_message">After the self-check is success, observe the device indicator and the buzzer working status closely</string>
