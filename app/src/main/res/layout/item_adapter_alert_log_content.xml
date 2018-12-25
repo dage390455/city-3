@@ -129,14 +129,15 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="3dp"
             android:orientation="horizontal">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="3dp"
                 android:text="@string/alarm_log_alarm_remark"
+                android:layout_gravity="center_vertical"
                 android:textColor="@color/c_626262"
                 android:textSize="@dimen/city_size" />
 
