@@ -339,6 +339,7 @@
         <activity android:name=".activity.DeployMonitorConfigurationActivity" />
         <activity android:name=".activity.DeployMapENActivity" />
         <activity android:name=".activity.MonitorPointMapENActivity" />
+        <activity android:name=".activity.MonitorPointElectricDetailActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

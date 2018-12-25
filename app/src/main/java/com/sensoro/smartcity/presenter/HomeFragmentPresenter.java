@@ -12,7 +12,7 @@ import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractIndexActivity;
-import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
@@ -402,7 +402,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void clickItem(int position, HomeTopModel homeTopModel) {
         try {
             DeviceInfo deviceInfo = homeTopModel.innerAdapter.getData().get(position);
-            Intent intent = new Intent(mContext, MonitorPointDetailActivity.class);
+            String deviceType = deviceInfo.getDeviceType();
+            Intent intent = new Intent(mContext, MonitorPointElectricDetailActivity.class);
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
