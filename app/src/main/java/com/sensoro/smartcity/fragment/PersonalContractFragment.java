@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -15,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.adapter.ContractTemplateAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
@@ -27,15 +27,12 @@ import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
-import java.util.List;
-
-import javax.crypto.Mac;
 
 import butterknife.BindView;
 import butterknife.OnClick;
 
 public class PersonalContractFragment extends BaseFragment<IPersonalContractView, PersonalContractPresenter>
-        implements IPersonalContractView ,TipOperationDialogUtils.TipDialogUtilsClickListener {
+        implements IPersonalContractView {
     @BindView(R.id.fg_personal_contract_et_part_a)
     EditText fgPersonalContractEtPartA;
     @BindView(R.id.fg_personal_contract_et_owner_name)
@@ -76,6 +73,8 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
     TextView fgPersonalContractTvSubmit;
     private ProgressUtils mProgressUtils;
     private ContractTemplateAdapter contractTemplateAdapter;
+    private ArrayList<String> sites = new ArrayList<>();
+
 
     @Override
     protected void initData(Context activity) {
@@ -84,12 +83,20 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
     }
 
     private void initView() {
-
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         contractTemplateAdapter = new ContractTemplateAdapter(mRootFragment.getActivity());
         fgPersonalContractRcDevice.setLayoutManager(new LinearLayoutManager(mRootFragment.getActivity(), LinearLayoutManager.VERTICAL, true));
         fgPersonalContractRcDevice.setAdapter(contractTemplateAdapter);
         fgPersonalContractRcDevice.setNestedScrollingEnabled(false);
+
+        sites.add(mRootFragment.getActivity().getString(R.string.community));
+        sites.add(mRootFragment.getActivity().getString(R.string.rental_house));
+        sites.add(mRootFragment.getActivity().getString(R.string.factory));
+        sites.add(mRootFragment.getActivity().getString(R.string.resident_workshop));
+        sites.add(mRootFragment.getActivity().getString(R.string.warehouse));
+        sites.add(mRootFragment.getActivity().getString(R.string.shop_storefront));
+        sites.add(mRootFragment.getActivity().getString(R.string.the_mall));
+        sites.add(mRootFragment.getActivity().getString(R.string.the_ohter));
 
     }
 
@@ -143,12 +150,6 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
         if (mProgressUtils != null) {
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
-        }
-
-        if (mCreateContractDialog != null) {
-            mCreateContractDialog.dismiss();
-            mCreateContractDialog.destroy();
-            mCreateContractDialog = null;
         }
         super.onDestroyView();
     }
@@ -273,7 +274,10 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
 
     @Override
     public void showCreationContractDialog() {
-        mCreateContractDialog.show();
+        ContractEditorActivity activity = (ContractEditorActivity) mRootFragment.getActivity();
+        if (activity != null&&!activity.isFinishing()) {
+            activity.showCreateDialog(1);
+        }
     }
 
     @Override
@@ -283,4 +287,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
     }
 
 
+    public void doCreateContract() {
+        mPresenter.doCreateContract();
+    }
 }

@@ -3,6 +3,7 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.R;
@@ -11,6 +12,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IBusinessContractView;
 import com.sensoro.smartcity.model.BusinessLicenseData;
+import com.sensoro.smartcity.model.ContractInfoModel;
 import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -18,6 +20,9 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.util.RegexUtils;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -26,6 +31,7 @@ import rx.schedulers.Schedulers;
 
 public class BusinessContractPresenter extends BasePresenter<IBusinessContractView> {
     private Activity mActivity;
+    private ContractInfoModel mContractInfoModel;
 
     @Override
     public void initData(Context context) {
@@ -175,5 +181,108 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             }
 
         }
+    }
+
+    public void doCreateContract() {
+
+    }
+
+    public void doSubmit(String enterpriseName, String customerName, String customerPhone, String enterpriseCardId, String customerAddress, String placeType, String contractAgeStr, String contractAgeFirstStr, String contractAgePeriodStr, ArrayList<ContractsTemplateInfo> data) {
+//        intent.putExtra(EXTRA_CONTRACT_TYPE, 1);
+        mContractInfoModel = new ContractInfoModel();
+
+        //
+        if (TextUtils.isEmpty(enterpriseName)) {
+            getView().toastShort(mActivity.getString(R.string.please_enter_enterprise_name));
+            return;
+
+
+        } else {
+            if (enterpriseName.length() > 100) {
+                getView().toastShort(mActivity.getString(R.string.enterprise_name_not_more_100));
+                return;
+            }
+        }
+        if(TextUtils.isEmpty(customerName)){
+            getView().toastShort(mActivity.getString(R.string.please_enter_customer_name));
+            return;
+
+        }else{
+            if(customerName.length() > 48){
+                getView().toastShort(mActivity.getString(R.string.customer_name_not_more_48));
+                return;
+            }
+        }
+        if (RegexUtils.checkPhone(customerPhone)) {
+//            intent.putExtra("phone", phone);
+        } else {
+            getView().toastShort(mActivity.getString(R.string.please_enter_a_valid_mobile_number));
+            return;
+        }
+
+//        if (RegexUtils.checkContractNotEmpty(line3) || RegexUtils.checkContractNotEmpty(line4)) {
+//            boolean canGoOn = false;
+//            boolean[] result = {false, false};
+//            result[0] = RegexUtils.checkEnterpriseCardID(line3);
+//            result[1] = RegexUtils.checkRegisterCode(line4);
+//            for (boolean isSuc : result) {
+//                if (isSuc) {
+//                    canGoOn = true;
+//                    break;
+//                }
+//            }
+//            if (canGoOn) {
+//                intent.putExtra("line3", line3);
+//                intent.putExtra("line4", line4);
+//            } else {
+//                getView().toastShort("请输入正确的社会信用代码或注册号");
+//                return;
+//            }
+//        } else {
+//            getView().toastShort("社会信用代码和注册号必须填写其中一个");
+//            return;
+//        }
+
+        if (TextUtils.isEmpty(enterpriseCardId)) {
+            getView().toastShort(mActivity.getString(R.string.please_enter_enterprise_card_id));
+            return;
+        }else{
+            if (RegexUtils.checkEnterpriseCardID(enterpriseCardId)) {
+
+            }else{
+                getView().toastShort(mActivity.getString(R.string.please_enter_correct_enterprise_card_id));
+                return;
+            }
+
+        }
+
+        if (TextUtils.isEmpty(customerAddress)) {
+            getView().toastShort(mActivity.getString(R.string.please_enter_register_address));
+        }else{
+            if (customerAddress.length() > 200) {
+//                getView().
+            }
+        }
+        if (RegexUtils.checkContractNotEmpty()) {
+            if (line5.length() > 200) {
+                getView().toastShort("住址信息不能超过200个字符");
+                return;
+            }
+            intent.putExtra("line5", line5);
+        } else {
+            getView().toastShort("请填写住址信息");
+            return;
+        }
+        if (RegexUtils.checkContractNotEmpty(line6)) {
+            if (line6.length() > 48) {
+                getView().toastShort("有效期不能超过48个字符");
+                return;
+            }
+            intent.putExtra("line6", line6);
+        } else {
+            getView().toastShort("请输入有效期");
+            return;
+        }
+        break;
     }
 }

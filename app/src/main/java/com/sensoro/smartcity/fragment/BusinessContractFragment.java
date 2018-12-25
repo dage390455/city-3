@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -188,24 +189,63 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
                 AppUtils.showDialog(mRootFragment.getActivity(),new SelectDialog.SelectDialogListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        fgPersonalContractTvSiteNature.setText(sites.get(position));
+                        fgBusinessContractTvSiteNature.setText(sites.get(position));
                     }
                 }, sites);
                 break;
             case R.id.iv_contract_age_del:
+                contractAgeAddOrSubtract(etContractAge,false);
                 break;
             case R.id.iv_contract_age_add:
+                contractAgeAddOrSubtract(etContractAge,true);
                 break;
             case R.id.iv_contract_age_first_del:
+                contractAgeAddOrSubtract(etContractAgeFirst,false);
                 break;
             case R.id.iv_contract_age_first_add:
+                contractAgeAddOrSubtract(etContractAgeFirst,true);
                 break;
             case R.id.iv_contract_age_period_del:
+                contractAgeAddOrSubtract(etContractAgePeriod,false);
                 break;
             case R.id.iv_contract_age_period_add:
+                contractAgeAddOrSubtract(etContractAgePeriod,true);
                 break;
             case R.id.fg_business_contract_tv_submit:
+                String enterpriseName = fgBusinessContractEtBusinessMerchantName.getText().toString();
+                String customerName = fgBusinessContractEtOwnerName.getText().toString();
+                String customerPhone = fgBusinessContractEtContactInfo.getText().toString();
+                String enterpriseCardId = fgBusinessContractEtSocialCreditCode.getText().toString();
+                String customerAddress = fgBusinessContractEtRegisterAddress.getText().toString();
+                String placeType = fgBusinessContractTvSiteNature.getText().toString();
+
+                String contractAgeStr = etContractAge.getText().toString();
+                String contractAgeFirstStr = etContractAgeFirst.getText().toString();
+                String contractAgePeriodStr = etContractAgePeriod.getText().toString();
+                ArrayList<ContractsTemplateInfo> data = contractTemplateAdapter.getData();
+                mPresenter.doSubmit(enterpriseName,customerName,customerPhone,enterpriseCardId,customerAddress,placeType,
+                        contractAgeStr, contractAgeFirstStr, contractAgePeriodStr, data);
                 break;
+        }
+    }
+
+    private void contractAgeAddOrSubtract(EditText editText,boolean isAdd) {
+        String contractAgeAdd = editText.getText().toString();
+        if (!TextUtils.isEmpty(contractAgeAdd)) {
+            int i = Integer.parseInt(contractAgeAdd);
+            if(isAdd){
+                if (i >= 1) {
+                    i++;
+                }
+            }else{
+                if (i > 1) {
+                    i--;
+                }
+            }
+            editText.setText(String.valueOf(i));
+
+        } else {
+            editText.setText(String.valueOf(1));
         }
     }
 
@@ -238,5 +278,9 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         mPresenter.handActivityResult(requestCode, resultCode, data);
+    }
+
+    public void doCreateContract() {
+//        mPresenter.
     }
 }

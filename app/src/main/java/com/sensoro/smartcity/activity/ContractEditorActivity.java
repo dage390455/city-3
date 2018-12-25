@@ -44,9 +44,9 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
 
     private PersonalContractFragment mPersonalContractFragment;
     private BusinessContractFragment mBusinessContractFragment;
-    private FragmentTransaction mFragmentTransaction;
-    private ArrayList<String> sites = new ArrayList<>();
     private TipOperationDialogUtils mCreateContractDialog;
+
+    private int mDialogOrigin;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -62,15 +62,6 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         mPersonalContractFragment = new PersonalContractFragment();
         mBusinessContractFragment = new BusinessContractFragment();
-
-        sites.add(mActivity.getString(R.string.community));
-        sites.add(mActivity.getString(R.string.rental_house));
-        sites.add(mActivity.getString(R.string.factory));
-        sites.add(mActivity.getString(R.string.resident_workshop));
-        sites.add(mActivity.getString(R.string.warehouse));
-        sites.add(mActivity.getString(R.string.shop_storefront));
-        sites.add(mActivity.getString(R.string.the_mall));
-        sites.add(mActivity.getString(R.string.the_ohter));
 
     }
 
@@ -142,11 +133,9 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
                 break;
             case R.id.ac_contract_editor_personal_contract:
                 showPersonalFragment();
-//                mPresenter.doPersonalContract();
                 break;
             case R.id.ac_contract_editor_business_contract:
                 showBusinessFragment();
-//                mPresenter.doBusinessContract();
                 break;
         }
     }
@@ -181,6 +170,16 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         }
     }
 
+    @Override
+    protected void onDestroy() {
+        if (mCreateContractDialog != null) {
+            mCreateContractDialog.dismiss();
+            mCreateContractDialog.destroy();
+            mCreateContractDialog = null;
+        }
+        super.onDestroy();
+    }
+
     /**
      * 对话框的点击事件
      */
@@ -192,6 +191,15 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
     @Override
     public void onConfirmClick(String content) {
         mCreateContractDialog.dismiss();
-//        mPersonalContractFragment.is
+        if(mDialogOrigin == 1){
+            mPersonalContractFragment.doCreateContract();
+        }else if(mDialogOrigin == 2){
+            mBusinessContractFragment.doCreateContract();
+        }
+    }
+
+    public void showCreateDialog(int origin) {
+        mDialogOrigin = origin;
+        mCreateContractDialog.show();
     }
 }
