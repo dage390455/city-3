@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
+import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.activity.ContractIndexActivity;
 import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -108,7 +109,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     }
 
     public void startToAdd() {
-        Intent intent = new Intent(mContext, ContractIndexActivity.class);
+        Intent intent = new Intent(mContext, ContractEditorActivity.class);
         getView().startAC(intent);
     }
 
@@ -444,6 +445,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                 break;
 
             case EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
+            case Constants.EVENT_DATA_CONTRACT_CREATION_SUCCESS:
                 refreshData(DIRECTION_DOWN);
                 break;
         }

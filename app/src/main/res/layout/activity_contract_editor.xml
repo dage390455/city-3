@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/c_f4f4f4"
     android:orientation="vertical">
 
     <include layout="@layout/item_include_text_title" />
@@ -16,7 +17,7 @@
         android:orientation="horizontal">
 
         <TextView
-            android:id="@+id/ac_contract_creation_personal_contract"
+            android:id="@+id/ac_contract_editor_personal_contract"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_btn_top_bottom_left_corner_2_29c_bg"
@@ -29,7 +30,7 @@
             android:textSize="14sp" />
 
         <TextView
-            android:id="@+id/ac_contract_creation_business_contract"
+            android:id="@+id/ac_contract_editor_business_contract"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/shape_btn_top_bottom_right_corner_2_white_bg"
@@ -37,7 +38,7 @@
             android:paddingTop="6dp"
             android:paddingEnd="56dp"
             android:paddingBottom="6dp"
-            android:text="@string/contract_personal"
+            android:text="@string/contract_business"
             android:textColor="@color/c_a6a6a6"
             android:textSize="14sp" />
     </LinearLayout>
@@ -50,7 +51,7 @@
         android:textColor="@color/c_a6a6a6"
         android:layout_marginStart="20dp"/>
     <FrameLayout
-        android:id="@+id/ac_contract_creation_fl"
+        android:id="@+id/ac_contract_editor_fl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="12dp"

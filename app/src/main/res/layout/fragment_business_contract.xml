@@ -26,19 +26,37 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/party_a_customer_name"
+                    android:text="@string/business_merchant_name"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
                 <EditText
-                    android:id="@+id/fg_personal_contract_et_part_a"
-                    android:layout_width="match_parent"
+                    android:id="@+id/fg_business_contract_et_business_merchant_name"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="8dp"
+                    android:layout_marginStart="12dp"
+                    android:layout_marginEnd="12dp"
                     android:textColor="@color/c_252525"
                     android:gravity="end"
                     android:background="@null"
                     android:textSize="14sp" />
+
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="match_parent"
+                    android:background="@color/c_dfdfdf" />
+
+                <ImageView
+                    android:id="@+id/fg_business_contract_imv_business_merchant_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:paddingStart="20dp"
+                    android:contentDescription="@null"
+                    android:paddingTop="4dp"
+                    android:paddingBottom="4dp"
+                    android:src="@drawable/camera" />
             </LinearLayout>
 
             <View
@@ -60,38 +78,21 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/owners_name"
+                    android:text="@string/legal_name"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
                 <EditText
-                    android:id="@+id/fg_personal_contract_et_owner_name"
-                    android:layout_width="0dp"
+                    android:id="@+id/fg_business_contract_et_owner_name"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:layout_marginEnd="12dp"
-                    android:layout_weight="1"
-                    android:gravity="end"
                     android:background="@null"
+                    android:gravity="end"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
 
-                <View
-                    android:layout_width="1dp"
-                    android:layout_height="match_parent"
-                    android:background="@color/c_dfdfdf" />
-
-                <ImageView
-                    android:id="@+id/fg_personal_contract_imv_owner_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:paddingStart="20dp"
-                    android:background="@drawable/selector_item_white_ee"
-                    android:contentDescription="@null"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
-                    android:src="@drawable/camera" />
 
             </LinearLayout>
 
@@ -119,7 +120,7 @@
                     android:textSize="14sp" />
 
                 <EditText
-                    android:id="@+id/fg_personal_contract_et_contact_info"
+                    android:id="@+id/fg_business_contract_et_contact_info"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -148,12 +149,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/identification_number"
+                    android:text="@string/social_credit_code"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
                 <EditText
-                    android:id="@+id/fg_personal_contract_et_id_card"
+                    android:id="@+id/fg_business_contract_et_social_credit_code"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -182,12 +183,12 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/home_address"
+                    android:text="@string/register_address"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
                 <EditText
-                    android:id="@+id/fg_personal_contract_et_home_address"
+                    android:id="@+id/fg_business_contract_et_register_address"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -205,7 +206,7 @@
                 android:background="@color/c_dfdfdf" />
 
             <LinearLayout
-                android:id="@+id/fg_personal_contract_ll_site_nature"
+                android:id="@+id/fg_business_contract_ll_site_nature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/selector_item_white_ee"
@@ -222,7 +223,7 @@
                     android:textSize="14sp" />
 
                 <TextView
-                    android:id="@+id/fg_personal_contract_tv_site_nature"
+                    android:id="@+id/fg_business_contract_tv_site_nature"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
@@ -252,7 +253,7 @@
             />
 
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/fg_personal_contract_rc_device"
+            android:id="@+id/fg_business_contract_rc_device"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/white">
@@ -320,11 +321,11 @@
                         android:maxEms="5"
                         android:maxLength="5"
                         android:minEms="3"
-                        android:text="1"
                         android:paddingStart="14dp"
                         android:paddingEnd="14dp"
                         android:paddingTop="2dp"
                         android:paddingBottom="2dp"
+                        android:text="0"
                         android:textColor="@color/c_29c093"
                         android:textSize="14sp" />
 
@@ -392,7 +393,7 @@
                         android:paddingEnd="14dp"
                         android:paddingTop="2dp"
                         android:paddingBottom="2dp"
-                        android:text="1"
+                        android:text="0"
                         android:textColor="@color/c_29c093"
                         android:textSize="14sp" />
 
@@ -460,7 +461,7 @@
                         android:paddingEnd="14dp"
                         android:paddingTop="2dp"
                         android:paddingBottom="2dp"
-                        android:text="1"
+                        android:text="0"
                         android:textColor="@color/c_29c093"
                         android:textSize="14sp" />
 
@@ -475,7 +476,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/fg_personal_contract_tv_submit"
+            android:id="@+id/fg_business_contract_tv_submit"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"

@@ -2,18 +2,80 @@ package com.sensoro.smartcity.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
+import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.ContractTemplateAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
 import com.sensoro.smartcity.presenter.PersonalContractPresenter;
+import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
+import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
+import com.sensoro.smartcity.widget.popup.SelectDialog;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
-public class PersonalContractFragment extends BaseFragment<IPersonalContractView,PersonalContractPresenter>
-implements IPersonalContractView{
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.crypto.Mac;
+
+import butterknife.BindView;
+import butterknife.OnClick;
+
+public class PersonalContractFragment extends BaseFragment<IPersonalContractView, PersonalContractPresenter>
+        implements IPersonalContractView ,TipOperationDialogUtils.TipDialogUtilsClickListener {
+    @BindView(R.id.fg_personal_contract_et_part_a)
+    EditText fgPersonalContractEtPartA;
+    @BindView(R.id.fg_personal_contract_et_owner_name)
+    EditText fgPersonalContractEtOwnerName;
+    @BindView(R.id.fg_personal_contract_imv_owner_name)
+    ImageView fgPersonalContractImvOwnerName;
+    @BindView(R.id.fg_personal_contract_et_contact_info)
+    EditText fgPersonalContractEtContactInfo;
+    @BindView(R.id.fg_personal_contract_et_id_card)
+    EditText fgPersonalContractEtIdCard;
+    @BindView(R.id.fg_personal_contract_et_home_address)
+    EditText fgPersonalContractEtHomeAddress;
+    @BindView(R.id.fg_personal_contract_tv_site_nature)
+    TextView fgPersonalContractTvSiteNature;
+    @BindView(R.id.fg_personal_contract_ll_site_nature)
+    LinearLayout fgPersonalContractLlSiteNature;
+    @BindView(R.id.fg_personal_contract_rc_device)
+    RecyclerView fgPersonalContractRcDevice;
+    @BindView(R.id.iv_contract_age_del)
+    ImageView ivContractAgeDel;
+    @BindView(R.id.et_contract_age)
+    EditText etContractAge;
+    @BindView(R.id.iv_contract_age_add)
+    ImageView ivContractAgeAdd;
+    @BindView(R.id.iv_contract_age_first_del)
+    ImageView ivContractAgeFirstDel;
+    @BindView(R.id.et_contract_age_first)
+    EditText etContractAgeFirst;
+    @BindView(R.id.iv_contract_age_first_add)
+    ImageView ivContractAgeFirstAdd;
+    @BindView(R.id.iv_contract_age_period_del)
+    ImageView ivContractAgePeriodDel;
+    @BindView(R.id.et_contract_age_period)
+    EditText etContractAgePeriod;
+    @BindView(R.id.iv_contract_age_period_add)
+    ImageView ivContractAgePeriodAdd;
+    @BindView(R.id.fg_personal_contract_tv_submit)
+    TextView fgPersonalContractTvSubmit;
     private ProgressUtils mProgressUtils;
+    private ContractTemplateAdapter contractTemplateAdapter;
 
     @Override
     protected void initData(Context activity) {
@@ -22,7 +84,13 @@ implements IPersonalContractView{
     }
 
     private void initView() {
+
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
+        contractTemplateAdapter = new ContractTemplateAdapter(mRootFragment.getActivity());
+        fgPersonalContractRcDevice.setLayoutManager(new LinearLayoutManager(mRootFragment.getActivity(), LinearLayoutManager.VERTICAL, true));
+        fgPersonalContractRcDevice.setAdapter(contractTemplateAdapter);
+        fgPersonalContractRcDevice.setNestedScrollingEnabled(false);
+
     }
 
     @Override
@@ -42,12 +110,12 @@ implements IPersonalContractView{
 
     @Override
     public void finishAc() {
-
+        mRootFragment.getActivity().finish();
     }
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
+        startActivityForResult(intent,requestCode);
     }
 
     @Override
@@ -76,6 +144,12 @@ implements IPersonalContractView{
             mProgressUtils.destroyProgress();
             mProgressUtils = null;
         }
+
+        if (mCreateContractDialog != null) {
+            mCreateContractDialog.dismiss();
+            mCreateContractDialog.destroy();
+            mCreateContractDialog = null;
+        }
         super.onDestroyView();
     }
 
@@ -96,11 +170,117 @@ implements IPersonalContractView{
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void toastLong(String msg) {
 
     }
+
+
+    @OnClick({R.id.fg_personal_contract_imv_owner_name, R.id.fg_personal_contract_ll_site_nature,
+            R.id.iv_contract_age_del, R.id.iv_contract_age_add, R.id.iv_contract_age_first_del, R.id.iv_contract_age_first_add,
+            R.id.iv_contract_age_period_del, R.id.iv_contract_age_period_add, R.id.fg_personal_contract_tv_submit})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.fg_personal_contract_imv_owner_name:
+                mPresenter.doTakePhoto();
+                break;
+            case R.id.fg_personal_contract_ll_site_nature:
+                AppUtils.showDialog(mRootFragment.getActivity(),new SelectDialog.SelectDialogListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        fgPersonalContractTvSiteNature.setText(sites.get(position));
+                    }
+                }, sites);
+                break;
+            case R.id.iv_contract_age_del:
+                contractAgeAddOrSubtract(etContractAge,false);
+                break;
+            case R.id.iv_contract_age_add:
+                contractAgeAddOrSubtract(etContractAge,true);
+                break;
+            case R.id.iv_contract_age_first_del:
+                contractAgeAddOrSubtract(etContractAgeFirst,false);
+                break;
+            case R.id.iv_contract_age_first_add:
+                contractAgeAddOrSubtract(etContractAgeFirst,true);
+                break;
+            case R.id.iv_contract_age_period_del:
+                contractAgeAddOrSubtract(etContractAgePeriod,false);
+                break;
+            case R.id.iv_contract_age_period_add:
+                contractAgeAddOrSubtract(etContractAgePeriod,true);
+                break;
+            case R.id.fg_personal_contract_tv_submit:
+                String partA = fgPersonalContractEtPartA.getText().toString();
+                String ownerName = fgPersonalContractEtOwnerName.getText().toString();
+                String contactInfo = fgPersonalContractEtContactInfo.getText().toString();
+                String idCard = fgPersonalContractEtIdCard.getText().toString();
+                String homeAddress = fgPersonalContractEtHomeAddress.getText().toString();
+                String siteNature = fgPersonalContractTvSiteNature.getText().toString();
+
+                String contractAgeStr = etContractAge.getText().toString();
+                String contractAgeFirstStr = etContractAgeFirst.getText().toString();
+                String contractAgePeriodStr = etContractAgePeriod.getText().toString();
+                ArrayList<ContractsTemplateInfo> data = contractTemplateAdapter.getData();
+                mPresenter.doSubmit(partA, ownerName, contactInfo, idCard, homeAddress, siteNature, contractAgeStr, contractAgeFirstStr, contractAgePeriodStr, data);
+                break;
+        }
+    }
+
+    private void contractAgeAddOrSubtract(EditText editText,boolean isAdd) {
+        String contractAgeAdd = editText.getText().toString();
+        if (!TextUtils.isEmpty(contractAgeAdd)) {
+            int i = Integer.parseInt(contractAgeAdd);
+            if(isAdd){
+                if (i >= 1) {
+                    i++;
+                }
+            }else{
+                if (i > 1) {
+                    i--;
+                }
+            }
+            editText.setText(String.valueOf(i));
+
+        } else {
+            editText.setText(String.valueOf(1));
+        }
+    }
+
+
+    @Override
+    public void updateContractTemplateAdapterInfo(ArrayList<ContractsTemplateInfo> data) {
+        contractTemplateAdapter.updateList(data);
+    }
+
+    @Override
+    public void setOwnerName(String name) {
+        fgPersonalContractEtOwnerName.setText(name);
+    }
+
+    @Override
+    public void setIdCardNumber(String idNumber) {
+        fgPersonalContractEtIdCard.setText(idNumber);
+    }
+
+    @Override
+    public void setHomeAddress(String address) {
+        fgPersonalContractEtHomeAddress.setText(address);
+    }
+
+    @Override
+    public void showCreationContractDialog() {
+        mCreateContractDialog.show();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        mPresenter.handActivityResult(requestCode, resultCode, data);
+    }
+
+
 }

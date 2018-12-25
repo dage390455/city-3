@@ -4,5 +4,8 @@ import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
-public interface IContractCreationView extends IToast,IProgressDialog,IActivityIntent {
+public interface IContractEditorView extends IToast,IProgressDialog,IActivityIntent {
+    void showPersonalFragment();
+
+    void showBusinessFragment();
 }

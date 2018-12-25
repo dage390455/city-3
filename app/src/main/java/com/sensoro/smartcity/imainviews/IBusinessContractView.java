@@ -7,14 +7,14 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
 
-public interface IPersonalContractView extends IToast,IProgressDialog,IActivityIntent {
+public interface IBusinessContractView extends IToast,IActivityIntent,IProgressDialog {
     void updateContractTemplateAdapterInfo(ArrayList<ContractsTemplateInfo> data);
 
-    void setOwnerName(String name);
+    void setBusinessMerchantName(String enterpriseName);
 
-    void setIdCardNumber(String idNumber);
+    void setOwnerName(String customerName);
 
-    void setHomeAddress(String address);
+    void setRegisterAddress(String customerAddress);
 
-    void showCreationContractDialog();
+    void setSocialCreatedId(String enterpriseCardId);
 }
