@@ -28,22 +28,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_toEndOf="@id/iv_contract_result_back"
-            android:text="@string/contract_result_title"
-            android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_large_size" />
-
-        <TextView
-            android:id="@+id/tv_contract_info_title_finish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerInParent="true"
-            android:layout_marginRight="10dp"
-            android:text="@string/contract_result_finish"
-            android:visibility="gone"
-            android:textColor="@color/c_626262"
-            android:textSize="@dimen/city_tiny_large_size" />
+            android:layout_centerHorizontal="true"
+            android:text="@string/contract_info_contract_qr_code"
+            android:textColor="@color/c_030303"
+            android:textSize="18sp" />
 
     </RelativeLayout>
 

@@ -248,6 +248,8 @@ public interface Constants {
     //合同相关
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     String EXTRA_CONTRACT_ID = "extra_contract_id";
+    String EXTRA_CONTRACT_ID_QRCODE = "extra_contract_id_qrcode";
+    String EXTRA_CONTRACT_PREVIEW_URL = "extra_contract_preview_url";
     String EXTRA_CONTRACT_ORIGIN_TYPE = "extra_contract_origin_type";
     String EXTRA_CONTRACT_LIST_INFO = "extra_contract_list_info";
 
