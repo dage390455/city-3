@@ -6,19 +6,4 @@
     android:orientation="vertical">
 
     <include layout="@layout/item_include_text_title" />
-
-    <WebView
-        android:id="@+id/webview"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"/>
-
-    <ProgressBar
-        android:id="@+id/progressbar"
-        style="@android:style/Widget.ProgressBar.Horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="3dip"
-        android:max="100"
-        android:progress="0"
-        android:visibility="gone" />
 </LinearLayout>
