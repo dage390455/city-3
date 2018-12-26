@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
@@ -42,6 +43,8 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
     TextView acContractEditorCompanyContract;
     @BindView(R.id.ac_contract_editor_fl)
     FrameLayout acContractEditorFl;
+    @BindView(R.id.ac_contract_editor_top_tab)
+    LinearLayout acContractEditorTopTab;
 
     private PersonalContractFragment mPersonalContractFragment;
     private BusinessContractFragment mBusinessContractFragment;
@@ -169,6 +172,26 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         }else{
             fragmentTransaction.add(R.id.ac_contract_editor_fl,mBusinessContractFragment).hide(mPersonalContractFragment).show(mBusinessContractFragment).commit();
         }
+    }
+
+    @Override
+    public void personalFragmentSetArguments(Bundle bundle) {
+        mPersonalContractFragment.setArguments(bundle);
+    }
+
+    @Override
+    public void businessFragmentSetArguments(Bundle bundle) {
+        mBusinessContractFragment.setArguments(bundle);
+    }
+
+    @Override
+    public void setTopTabVisible(boolean isVisible) {
+        acContractEditorTopTab.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setTitleText(String text) {
+        includeTextTitleTvTitle.setText(text);
     }
 
     @Override

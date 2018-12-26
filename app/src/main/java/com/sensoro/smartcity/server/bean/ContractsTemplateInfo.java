@@ -6,7 +6,7 @@ import android.support.annotation.NonNull;
 
 import java.io.Serializable;
 
-public class ContractsTemplateInfo implements Parcelable, Comparable<ContractsTemplateInfo> {
+public class ContractsTemplateInfo implements Serializable, Comparable<ContractsTemplateInfo> {
     private String deviceType;
     private String name;
     private String hardwareVersion;
@@ -60,40 +60,40 @@ public class ContractsTemplateInfo implements Parcelable, Comparable<ContractsTe
 //        return 0;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
-    }
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(this.deviceType);
+//        dest.writeString(this.name);
+//        dest.writeString(this.hardwareVersion);
+//        dest.writeInt(this.quantity);
+//        dest.writeInt(this.price);
+//    }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.deviceType);
-        dest.writeString(this.name);
-        dest.writeString(this.hardwareVersion);
-        dest.writeInt(this.quantity);
-        dest.writeInt(this.price);
-    }
+//    public ContractsTemplateInfo() {
+//    }
+//
+//    protected ContractsTemplateInfo(Parcel in) {
+//        this.deviceType = in.readString();
+//        this.name = in.readString();
+//        this.hardwareVersion = in.readString();
+//        this.quantity = in.readInt();
+//        this.price = in.readInt();
+//    }
 
-    public ContractsTemplateInfo() {
-    }
-
-    protected ContractsTemplateInfo(Parcel in) {
-        this.deviceType = in.readString();
-        this.name = in.readString();
-        this.hardwareVersion = in.readString();
-        this.quantity = in.readInt();
-        this.price = in.readInt();
-    }
-
-    public static final Creator<ContractsTemplateInfo> CREATOR = new Creator<ContractsTemplateInfo>() {
-        @Override
-        public ContractsTemplateInfo createFromParcel(Parcel source) {
-            return new ContractsTemplateInfo(source);
-        }
-
-        @Override
-        public ContractsTemplateInfo[] newArray(int size) {
-            return new ContractsTemplateInfo[size];
-        }
-    };
+//    public static final Creator<ContractsTemplateInfo> CREATOR = new Creator<ContractsTemplateInfo>() {
+//        @Override
+//        public ContractsTemplateInfo createFromParcel(Parcel source) {
+//            return new ContractsTemplateInfo(source);
+//        }
+//
+//        @Override
+//        public ContractsTemplateInfo[] newArray(int size) {
+//            return new ContractsTemplateInfo[size];
+//        }
+//    };
 }

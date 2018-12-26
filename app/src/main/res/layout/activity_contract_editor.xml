@@ -8,6 +8,7 @@
     <include layout="@layout/item_include_text_title" />
 
     <LinearLayout
+        android:id="@+id/ac_contract_editor_top_tab"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
@@ -43,18 +44,10 @@
             android:textSize="14sp" />
     </LinearLayout>
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/monitor_point_information"
-        android:textSize="12sp"
-        android:textColor="@color/c_a6a6a6"
-        android:layout_marginStart="20dp"/>
     <FrameLayout
         android:id="@+id/ac_contract_editor_fl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
         >
 
     </FrameLayout>

@@ -15,6 +15,7 @@
         android:layout_marginTop="5dp"
         android:contentDescription="@null"
         android:padding="10dp"
+        android:background="@drawable/selector_item_white_ee"
         android:src="@drawable/arrows_left"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -42,6 +43,7 @@
         android:textColor="@color/c_a6a6a6"
         android:textSize="14sp"
         android:padding="8dp"
+        android:background="@drawable/selector_item_white_ee"
         app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/include_text_title_imv_arrows_left" />

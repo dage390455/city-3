@@ -16,4 +16,19 @@ public interface IPersonalContractView extends IToast,IProgressDialog,IActivityI
 
     void setHomeAddress(String address);
 
+    void setPartAName(String customerEnterpriseName);
+
+    void setContactNumber(String contactNumber);
+
+    void setSiteNature(String placeType);
+
+    ArrayList<ContractsTemplateInfo> getContractTemplateList();
+
+    void setServeAge(String serverAge);
+
+    void setFirstAge(String firstAge);
+
+    void setPeriodAge(String periodAge);
+
+    void setTvSubmitText(String text);
 }
