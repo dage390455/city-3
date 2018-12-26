@@ -37,7 +37,7 @@ import rx.schedulers.Schedulers;
 
 public class BusinessContractPresenter extends BasePresenter<IBusinessContractView> {
     private Activity mActivity;
-    private ContractInfoModel mContractInfoModel;
+    private ContractInfoModel mContractInfoModel = new ContractInfoModel();;
 
     @Override
     public void initData(Context context) {
@@ -225,7 +225,6 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
 
     public void doSubmit(String enterpriseName, String customerName, String customerPhone, String enterpriseCardId, String customerAddress, String placeType, String contractAgeStr, String contractAgeFirstStr, String contractAgePeriodStr, ArrayList<ContractsTemplateInfo> data) {
 //        intent.putExtra(EXTRA_CONTRACT_TYPE, 1);
-        mContractInfoModel = new ContractInfoModel();
         mContractInfoModel.contractType = 1;
         //
         if (TextUtils.isEmpty(enterpriseName)) {

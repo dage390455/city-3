@@ -21,7 +21,7 @@ public class ContractInfoModel {
 
     public String placeType;
 
-    public List<ContractsTemplateInfo> devicesList;
+    public ArrayList<ContractsTemplateInfo> devicesList;
     //续费周期
     public Integer periodAge;
     //服务年限
