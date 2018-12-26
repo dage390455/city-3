@@ -8,6 +8,7 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.ISearchMonitorActivityView;
@@ -201,7 +202,7 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            if (isAttachedView()){
+                            if (isAttachedView()) {
                                 getView().updateRelationData(tempList);
                             }
 
@@ -340,7 +341,13 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     public void clickItem(int position) {
         if (position >= 0) {
             DeviceInfo deviceInfo = mDataList.get(position);
-            Intent intent = new Intent(mContext, MonitorPointDetailActivity.class);
+            String deviceType = deviceInfo.getDeviceType();
+            Intent intent = new Intent();
+            if (DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType)) {
+                intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
+            } else {
+                intent.setClass(mContext, MonitorPointDetailActivity.class);
+            }
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());

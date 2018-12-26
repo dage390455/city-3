@@ -392,7 +392,7 @@ public interface Constants {
         add("lpg");
     }};
 
-    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(2) {
+    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(3) {
         {
             add("fhsj_elec_fires");
             add("acrel_fires");

@@ -340,6 +340,7 @@
         <activity android:name=".activity.DeployMapENActivity" />
         <activity android:name=".activity.MonitorPointMapENActivity" />
         <activity android:name=".activity.MonitorPointElectricDetailActivity" />
+        <activity android:name=".activity.EarlyWarningThresholdSettingActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

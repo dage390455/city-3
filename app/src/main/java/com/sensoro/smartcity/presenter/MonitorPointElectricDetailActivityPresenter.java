@@ -17,7 +17,7 @@ import com.amap.api.services.geocoder.RegeocodeRoad;
 import com.amap.api.services.geocoder.StreetNumber;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
-import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
@@ -96,6 +96,10 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         geocoderSearch = new GeocodeSearch(mContext);
         geocoderSearch.setOnGeocodeSearchListener(this);
         requestDeviceRecentLog();
+        boolean fhsj_elec_fires = DEVICE_CONTROL_DEVICE_TYPES.contains("fhsj_elec_fires");
+        boolean acrel_fires = DEVICE_CONTROL_DEVICE_TYPES.contains("acrel_fires");
+        boolean acrel_single = DEVICE_CONTROL_DEVICE_TYPES.contains("acrel_single");
+        LogUtils.loge("fhsj_elec_fires = " + fhsj_elec_fires + ",acrel_fires = " + acrel_fires + ",acrel_single = " + acrel_single);
     }
 
     private void freshTopData() {
@@ -471,6 +475,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     @Override
                     public void run() {
                         if (isAttachedView()) {
+                            getView().setElect3DetailVisible(mDeviceInfo != null && !"acrel_single".equals(mDeviceInfo.getDeviceType()));
                             getView().setIvAlarmStatusVisible(mDeviceInfo != null && mDeviceInfo.getStatus() == SENSOR_STATUS_ALARM);
                             getView().updateDeviceInfoAdapter(uiData);
                         }
@@ -493,7 +498,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 if (data instanceof DeviceInfo) {
                     final DeviceInfo pushDeviceInfo = (DeviceInfo) data;
                     if (pushDeviceInfo.getSn().equalsIgnoreCase(mDeviceInfo.getSn())) {
-                        if (AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
+                        if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
@@ -522,7 +527,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         if (split.length > 0) {
                             final String temp = split[0];
                             if (!TextUtils.isEmpty(temp)) {
-                                if (AppUtils.isActivityTop(mContext, MonitorPointDetailActivity.class)) {
+                                if (AppUtils.isActivityTop(mContext, MonitorPointElectricDetailActivity.class)) {
                                     mContext.runOnUiThread(new Runnable() {
                                         @Override
                                         public void run() {

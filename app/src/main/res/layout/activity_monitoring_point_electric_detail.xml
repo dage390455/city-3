@@ -213,7 +213,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="12dp"
                     android:shrinkColumns="0"
-                    android:stretchColumns="1,2,3">
+                    android:stretchColumns="1,2,3"
+                    android:visibility="gone">
 
                     <View
                         android:id="@+id/ac_monitoring_elect_3_point_line"
@@ -847,14 +848,15 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_item_selector"
                 android:paddingTop="10dp"
-                android:paddingBottom="10dp">
+                android:paddingBottom="10dp"
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="20dp"
-                    android:text="@string/ble_pwd"
+                    android:text="@string/elect_pwd"
                     android:textColor="@color/c_626262"
                     android:textSize="@dimen/x50" />
 
