@@ -331,25 +331,25 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 if (!RegexUtils.checkContractNotEmpty(line4)) {
                     line4 = null;
                 }
-                RetrofitServiceHelper.INSTANCE.getNewContract(1, serviceType, null, null, line3, line4,
-                        line1, line2, line6, line5, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
-
-                    @Override
-                    public void onCompleted(ContractAddRsp contractAddRsp) {
-                        ContractAddInfo data = contractAddRsp.getData();
-                        id = data.getId();
-                        LogUtils.loge(this, "id = " + id);
-                        handleCode(id + "", text);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+//                RetrofitServiceHelper.INSTANCE.getNewContract(1, serviceType, null, null, line3, line4,
+//                        line1, line2, line6, line5, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
                 break;
             case 2:
                 Integer sex = null;
@@ -359,48 +359,48 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                     sex = 2;
                 }
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line3, sex, null, null,
-                        line1, null, null, line4, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
-
-                    @Override
-                    public void onCompleted(ContractAddRsp contractAddRsp) {
-                        ContractAddInfo data = contractAddRsp.getData();
-                        int id = data.getId();
-                        LogUtils.loge(this, "id = " + id);
-                        handleCode(id + "", text);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+//                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line3, sex, null, null,
+//                        line1, null, null, line4, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        int id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
                 break;
             case 3:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line4, null, null, null,
-                        line2, line1, null, line5, line3, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
-
-
-                    @Override
-                    public void onCompleted(ContractAddRsp contractAddRsp) {
-                        ContractAddInfo data = contractAddRsp.getData();
-                        int id = data.getId();
-                        LogUtils.loge(this, "id = " + id);
-                        handleCode(id + "", text);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+//                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line4, null, null, null,
+//                        line2, line1, null, line5, line3, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        int id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
                 break;
             default:
                 break;

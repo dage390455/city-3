@@ -29,7 +29,8 @@
         android:textColor="@color/c_030303"
         android:textSize="18sp"
         app:layout_constraintBottom_toBottomOf="@id/include_text_title_imv_arrows_left"
-        app:layout_constraintStart_toEndOf="@id/include_text_title_imv_arrows_left"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/include_text_title_imv_arrows_left" />
 
     <TextView

@@ -249,6 +249,8 @@ public interface Constants {
     String EXTRA_CONTRACT_TYPE = "extra_contract_type";
     String EXTRA_CONTRACT_ID = "extra_contract_id";
     String EXTRA_CONTRACT_ORIGIN_TYPE = "extra_contract_origin_type";
+    String EXTRA_CONTRACT_LIST_INFO = "extra_contract_list_info";
+
     //故障
     String EXTRA_MALFUNCTION_INFO = "extra_malfunction_info";
 
@@ -312,10 +314,12 @@ public interface Constants {
     int REQUEST_CODE_LICENSE_SERVICE = 0x111;
     int REQUEST_CODE_PERSON_SERVICE = 0x112;
     int REQUEST_CODE_BUSINESS_LICENSE = 0x113;
-    int REQUEST_CODE_CAMERA = 102;
-
+    int REQUEST_CODE_CAMERA = 0x102;
     //部署
     int REQUEST_CODE_INIT_CONFIG = 0x114;
+
+
+
 
     //上传图片相关id
     int IMAGE_ITEM_ADD = -1;
@@ -384,6 +388,8 @@ public interface Constants {
     int EVENT_DATA_DEVICE_SOCKET_FLUSH = 0x50;
     int EVENT_DATA_LOCK_SCREEN_ON = 0x51;
     int EVENT_DATA_NET_WORK_CHANGE = 0x52;
+    //合同
+    int EVENT_DATA_CONTRACT_CREATION_SUCCESS = 0X53;
 
     List<String> DEPLOY_CAN_FOURCE_UPLOAD_PERMISSION_LIST = new ArrayList<String>(4) {{
         add("elec_fire");
@@ -399,6 +405,7 @@ public interface Constants {
             add("acrel_single");
         }
     };
+
 
 
 }
