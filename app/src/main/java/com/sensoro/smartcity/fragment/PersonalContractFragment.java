@@ -4,7 +4,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -89,6 +91,13 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
         fgPersonalContractRcDevice.setAdapter(contractTemplateAdapter);
         fgPersonalContractRcDevice.setNestedScrollingEnabled(false);
 
+        String contractAge = etContractAge.getText().toString();
+        handleAgeText(contractAge, etContractAge);
+        String contractAgeFirst = etContractAgeFirst.getText().toString();
+        handleAgeText(contractAgeFirst, etContractAgeFirst);
+        String contractAgePeriod = etContractAgePeriod.getText().toString();
+        handleAgeText(contractAgePeriod, etContractAgePeriod);
+
         sites.add(mRootFragment.getActivity().getString(R.string.community));
         sites.add(mRootFragment.getActivity().getString(R.string.rental_house));
         sites.add(mRootFragment.getActivity().getString(R.string.factory));
@@ -98,6 +107,43 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
         sites.add(mRootFragment.getActivity().getString(R.string.the_mall));
         sites.add(mRootFragment.getActivity().getString(R.string.the_ohter));
 
+        addEtTextChange(etContractAge);
+        addEtTextChange(etContractAgeFirst);
+        addEtTextChange(etContractAgePeriod);
+    }
+
+    private void addEtTextChange(final EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                handleAgeText(text, editText);
+            }
+        });
+    }
+    private void handleAgeText(String text, EditText editText) {
+        if (!TextUtils.isEmpty(text)) {
+            try {
+                int i = Integer.parseInt(text);
+                if (i > 0) {
+                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_29c093));
+                } else {
+                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_252525));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -272,13 +318,6 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
         fgPersonalContractEtHomeAddress.setText(address);
     }
 
-    @Override
-    public void showCreationContractDialog() {
-        ContractEditorActivity activity = (ContractEditorActivity) mRootFragment.getActivity();
-        if (activity != null&&!activity.isFinishing()) {
-            activity.showCreateDialog(1);
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

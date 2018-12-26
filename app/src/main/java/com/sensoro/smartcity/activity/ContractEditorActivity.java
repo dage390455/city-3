@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -198,6 +199,10 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         }
     }
 
+    /**
+     *
+     * @param origin 1是个人合同 2是企业合同
+     */
     public void showCreateDialog(int origin) {
         mDialogOrigin = origin;
         mCreateContractDialog.show();

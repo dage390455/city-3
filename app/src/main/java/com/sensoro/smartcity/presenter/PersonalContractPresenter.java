@@ -15,6 +15,7 @@ import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.activity.ContractCreationSuccessActivity;
+import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
@@ -310,8 +311,10 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.not_obtain_device_cout));
             return;
         }
-
-        getView().showCreationContractDialog();
+        ContractEditorActivity contractEditorActivity = (ContractEditorActivity) mActivity;
+        if (contractEditorActivity != null && !contractEditorActivity.isFinishing()) {
+            contractEditorActivity.showCreateDialog(2);
+        }
 
     }
 
@@ -322,7 +325,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
         }
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfoModel.contractType, 2, mContractInfoModel.idCardNumber, null,
-                null,null,mContractInfoModel.customerName, mContractInfoModel.customerEnterpriseName,
+                mContractInfoModel.enterpriseCardId,null,mContractInfoModel.customerName, mContractInfoModel.customerEnterpriseName,
                  null, mContractInfoModel.customerAddress, mContractInfoModel.customerPhone, mContractInfoModel.placeType,
                 mContractInfoModel.devicesList, mContractInfoModel.periodAge, null, mContractInfoModel.serverAge, mContractInfoModel.firstAge).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {

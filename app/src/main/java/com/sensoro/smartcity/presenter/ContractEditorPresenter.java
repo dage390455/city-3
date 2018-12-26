@@ -33,7 +33,7 @@ public class ContractEditorPresenter extends BasePresenter<IContractEditorView> 
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
-            case Constants.EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
+            case Constants.EVENT_DATA_CONTRACT_CREATION_SUCCESS:
                 getView().finishAc();
                 break;
         }

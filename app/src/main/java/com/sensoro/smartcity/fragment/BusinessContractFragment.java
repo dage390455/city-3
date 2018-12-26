@@ -4,7 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -14,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.adapter.ContractTemplateAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IBusinessContractView;
@@ -81,11 +85,18 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     }
 
     private void initView() {
-        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()));
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mRootFragment.getActivity()).build());
         contractTemplateAdapter = new ContractTemplateAdapter(mRootFragment.getActivity());
         fgBusinessContractRcDevice.setLayoutManager(new LinearLayoutManager(mRootFragment.getActivity(), LinearLayoutManager.VERTICAL, true));
         fgBusinessContractRcDevice.setAdapter(contractTemplateAdapter);
         fgBusinessContractRcDevice.setNestedScrollingEnabled(false);
+
+        String contractAge = etContractAge.getText().toString();
+        handleAgeText(contractAge, etContractAge);
+        String contractAgeFirst = etContractAgeFirst.getText().toString();
+        handleAgeText(contractAgeFirst, etContractAgeFirst);
+        String contractAgePeriod = etContractAgePeriod.getText().toString();
+        handleAgeText(contractAgePeriod, etContractAgePeriod);
 
         sites.add(mRootFragment.getActivity().getString(R.string.community));
         sites.add(mRootFragment.getActivity().getString(R.string.rental_house));
@@ -95,6 +106,45 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
         sites.add(mRootFragment.getActivity().getString(R.string.shop_storefront));
         sites.add(mRootFragment.getActivity().getString(R.string.the_mall));
         sites.add(mRootFragment.getActivity().getString(R.string.the_ohter));
+
+        addEtTextChange(etContractAge);
+        addEtTextChange(etContractAgeFirst);
+        addEtTextChange(etContractAgePeriod);
+
+    }
+
+    private void addEtTextChange(final EditText editText) {
+        editText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String text = s.toString();
+                handleAgeText(text, editText);
+            }
+        });
+    }
+    private void handleAgeText(String text, EditText editText) {
+        if (!TextUtils.isEmpty(text)) {
+            try {
+                int i = Integer.parseInt(text);
+                if (i > 0) {
+                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_29c093));
+                } else {
+                    editText.setTextColor(mRootFragment.getResources().getColor(R.color.c_252525));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     @Override
@@ -119,7 +169,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-
+        startActivityForResult(intent,requestCode);
     }
 
     @Override
@@ -281,6 +331,6 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     }
 
     public void doCreateContract() {
-//        mPresenter.
+        mPresenter.doCreateContract();
     }
 }

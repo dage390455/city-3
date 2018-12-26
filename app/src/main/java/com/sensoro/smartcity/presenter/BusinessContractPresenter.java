@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.activity.ContractCreationSuccessActivity;
+import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IBusinessContractView;
@@ -16,7 +19,9 @@ import com.sensoro.smartcity.model.ContractInfoModel;
 import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
+import com.sensoro.smartcity.server.bean.ContractAddInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
@@ -25,6 +30,7 @@ import com.sensoro.smartcity.util.RegexUtils;
 import org.w3c.dom.Text;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -85,6 +91,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
         if (!SensoroCityApplication.getInstance().hasGotToken) {
             return;
         }
+
         Intent intent = new Intent(mActivity, CameraActivity.class);
         String absolutePath = FileUtil.getSaveFile(mActivity.getApplicationContext()).getAbsolutePath();
         intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,
@@ -184,23 +191,52 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     }
 
     public void doCreateContract() {
+        if(mContractInfoModel == null){
+            getView().toastShort(mActivity.getString(R.string.info_check_faild));
+            return;
+        }
+        getView().showProgressDialog();
+        RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfoModel.contractType, 1, mContractInfoModel.idCardNumber, null,
+                mContractInfoModel.enterpriseCardId,null,mContractInfoModel.customerName, mContractInfoModel.customerEnterpriseName,
+                null, mContractInfoModel.customerAddress, mContractInfoModel.customerPhone, mContractInfoModel.placeType,
+                mContractInfoModel.devicesList, mContractInfoModel.periodAge, null, mContractInfoModel.serverAge, mContractInfoModel.firstAge).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+
+            @Override
+            public void onCompleted(ContractAddRsp contractAddRsp) {
+                ContractAddInfo data = contractAddRsp.getData();
+//                id = data.getId();
+//                LogUtils.loge(this, "id = " + id);
+//                handleCode(id + "", text);
+                Intent intent = new Intent(mActivity,ContractCreationSuccessActivity.class);
+//                intent.putExtra()
+                getView().startACForResult(intent,Constants.EVENT_DATA_CONTRACT_CREATION_SUCCESS);
+                getView().dismissProgressDialog();
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
 
     }
 
     public void doSubmit(String enterpriseName, String customerName, String customerPhone, String enterpriseCardId, String customerAddress, String placeType, String contractAgeStr, String contractAgeFirstStr, String contractAgePeriodStr, ArrayList<ContractsTemplateInfo> data) {
 //        intent.putExtra(EXTRA_CONTRACT_TYPE, 1);
         mContractInfoModel = new ContractInfoModel();
-
+        mContractInfoModel.contractType = 1;
         //
         if (TextUtils.isEmpty(enterpriseName)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_enterprise_name));
             return;
-
-
         } else {
             if (enterpriseName.length() > 100) {
                 getView().toastShort(mActivity.getString(R.string.enterprise_name_not_more_100));
                 return;
+            }else{
+                mContractInfoModel.customerEnterpriseName = enterpriseName;
             }
         }
         if(TextUtils.isEmpty(customerName)){
@@ -211,44 +247,23 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             if(customerName.length() > 48){
                 getView().toastShort(mActivity.getString(R.string.customer_name_not_more_48));
                 return;
+            }else{
+                mContractInfoModel.customerName = customerName;
             }
         }
         if (RegexUtils.checkPhone(customerPhone)) {
-//            intent.putExtra("phone", phone);
+            mContractInfoModel.customerPhone = customerPhone;
         } else {
             getView().toastShort(mActivity.getString(R.string.please_enter_a_valid_mobile_number));
             return;
         }
-
-//        if (RegexUtils.checkContractNotEmpty(line3) || RegexUtils.checkContractNotEmpty(line4)) {
-//            boolean canGoOn = false;
-//            boolean[] result = {false, false};
-//            result[0] = RegexUtils.checkEnterpriseCardID(line3);
-//            result[1] = RegexUtils.checkRegisterCode(line4);
-//            for (boolean isSuc : result) {
-//                if (isSuc) {
-//                    canGoOn = true;
-//                    break;
-//                }
-//            }
-//            if (canGoOn) {
-//                intent.putExtra("line3", line3);
-//                intent.putExtra("line4", line4);
-//            } else {
-//                getView().toastShort("请输入正确的社会信用代码或注册号");
-//                return;
-//            }
-//        } else {
-//            getView().toastShort("社会信用代码和注册号必须填写其中一个");
-//            return;
-//        }
 
         if (TextUtils.isEmpty(enterpriseCardId)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_enterprise_card_id));
             return;
         }else{
             if (RegexUtils.checkEnterpriseCardID(enterpriseCardId)) {
-
+                mContractInfoModel.enterpriseCardId = enterpriseCardId;
             }else{
                 getView().toastShort(mActivity.getString(R.string.please_enter_correct_enterprise_card_id));
                 return;
@@ -260,29 +275,93 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_register_address));
         }else{
             if (customerAddress.length() > 200) {
-//                getView().
+                getView().toastShort(mActivity.getString(R.string.customer_address_no_more_200));
+                return;
+            }else{
+                mContractInfoModel.customerAddress = customerAddress;
             }
         }
-        if (RegexUtils.checkContractNotEmpty()) {
-            if (line5.length() > 200) {
-                getView().toastShort("住址信息不能超过200个字符");
-                return;
-            }
-            intent.putExtra("line5", line5);
-        } else {
-            getView().toastShort("请填写住址信息");
+
+        if (TextUtils.isEmpty(placeType)) {
+            getView().toastShort(mActivity.getString(R.string.please_select_site_nature));
             return;
         }
-        if (RegexUtils.checkContractNotEmpty(line6)) {
-            if (line6.length() > 48) {
-                getView().toastShort("有效期不能超过48个字符");
+        mContractInfoModel.placeType = placeType;
+
+        int serverAge = 1;
+        int ageFirst = 1;
+        int agePeriod = 1;
+//        总服务年限校验
+        if (TextUtils.isEmpty(contractAgeStr)) {
+            getView().toastShort(mActivity.getString(R.string.contract_service_year_more_1));
+            return;
+        } else {
+            try {
+                serverAge = Integer.parseInt(contractAgeStr);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+        // 首次服务年限校验
+        if (TextUtils.isEmpty(contractAgeFirstStr)) {
+            getView().toastShort(mActivity.getString(R.string.contract_first_year_more_1));
+            return;
+        } else {
+            try {
+                ageFirst = Integer.parseInt(contractAgeFirstStr);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (ageFirst > serverAge) {
+                getView().toastShort(mActivity.getString(R.string.contract_first_year_more_service_year));
                 return;
             }
-            intent.putExtra("line6", line6);
+
+        }
+        if (TextUtils.isEmpty(contractAgePeriodStr)) {
+            getView().toastShort(mActivity.getString(R.string.contract_period_more_1));
+            return;
         } else {
-            getView().toastShort("请输入有效期");
+            try {
+                agePeriod = Integer.parseInt(contractAgePeriodStr);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+            if (agePeriod > serverAge) {
+                getView().toastShort(mActivity.getString(R.string.contract_period_more_service_year));
+                return;
+            }
+
+        }
+
+        mContractInfoModel.serverAge = serverAge;
+        mContractInfoModel.firstAge = ageFirst;
+        mContractInfoModel.periodAge = agePeriod;
+
+        final ArrayList<ContractsTemplateInfo> dataList = new ArrayList<>(data);
+        if (data.size() > 0) {
+            //去除未选择的设备
+            Iterator<ContractsTemplateInfo> iterator = dataList.iterator();
+            while (iterator.hasNext()) {
+                ContractsTemplateInfo next = iterator.next();
+                if (next.getQuantity() == 0) {
+                    iterator.remove();
+                }
+            }
+            if (dataList.size() > 0) {
+                mContractInfoModel.devicesList = dataList;
+            } else {
+                getView().toastShort(mActivity.getString(R.string.please_select_devices_more_1));
+                return;
+            }
+
+        } else {
+            getView().toastShort(mActivity.getString(R.string.not_obtain_device_cout));
             return;
         }
-        break;
+        ContractEditorActivity contractEditorActivity = (ContractEditorActivity) mActivity;
+        if (contractEditorActivity != null && !contractEditorActivity.isFinishing()) {
+            contractEditorActivity.showCreateDialog(2);
+        }
     }
 }

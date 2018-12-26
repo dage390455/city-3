@@ -16,5 +16,4 @@ public interface IPersonalContractView extends IToast,IProgressDialog,IActivityI
 
     void setHomeAddress(String address);
 
-    void showCreationContractDialog();
 }
