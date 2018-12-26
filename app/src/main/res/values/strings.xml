@@ -568,12 +568,12 @@
     <string name="unknown_malfunction">Unknown malfunction</string>
     <string name="unknown_error">unknown error</string>
     <string name="malfunction_time">MALFUNCTION TIME</string>
-    <string name="malfunction_log">Malfunction Log</string>
+    <string name="malfunction_log">Malfunction log</string>
     <string name="malfunction_history_log">History</string>
     <string name="malfunction_cause">Cause：</string>
     <string name="malfunction_data">Malfunction data</string>
     <string name="system_upload_malfunction_task">The system reports malfunction task</string>
-    <string name="recover_normal">&#160;The device is back to nomal </string>
+    <string name="recover_normal">&#160;The device is back to normal </string>
     <string name="system_sms_send">&#160;system sends SMS to </string>
     <string name="occur_malfunction_alarm">New malfunction alarm</string>
     <string name="open_ble_contact_device">Turn on bluetooth </string>
