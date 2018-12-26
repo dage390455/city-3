@@ -341,6 +341,7 @@
         <activity android:name=".activity.MonitorPointMapENActivity" />
         <activity android:name=".activity.ContractEditorActivity" />
         <activity android:name=".activity.ContractCreationSuccessActivity" />
+        <activity android:name=".activity.ContractDetailActivity" />
 
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"

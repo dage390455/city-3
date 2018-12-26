@@ -378,7 +378,7 @@
     <string name="contract_info_contract_service_life">合同服务年限</string>
     <string name="contract_info_contract_status">合同状态</string>
     <string name="contract_info_contract_created_time">合同生成时间</string>
-    <string name="contract_info_contract_sign_time">合同签订时间</string>
+    <string name="contract_info_contract_sign_time">合同签署时间</string>
     <string name="contract_info_contract_qr_code">合同二维码</string>
     //合同result xml
     <string name="contract_result_title">二维码</string>
@@ -731,4 +731,5 @@
     <string name="please_enter_correct_enterprise_card_id">请输入正确的统一社会信用代码</string>
     <string name="please_enter_register_address">请填写注册住址信息</string>
     <string name="customer_address_no_more_200">注册地址信息不能超过200个字符</string>
+    <string name="contract_detail">合同详情</string>
 </resources>

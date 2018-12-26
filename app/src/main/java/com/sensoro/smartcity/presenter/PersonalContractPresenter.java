@@ -39,7 +39,7 @@ import rx.schedulers.Schedulers;
 
 public class PersonalContractPresenter extends BasePresenter<IPersonalContractView> {
     private Activity mActivity;
-    private ContractInfoModel mContractInfoModel;
+    private ContractInfoModel mContractInfoModel = new ContractInfoModel();;
 
     @Override
     public void initData(Context context) {
@@ -187,7 +187,6 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
     public void doSubmit(String partA, String ownerName, String contactInfo, String idCard, String homeAddress,
                          String siteNature, String contractAgeStr, String contractAgeFirstStr, String contractAgePeriodStr, ArrayList<ContractsTemplateInfo> data) {
-        mContractInfoModel = new ContractInfoModel();
         mContractInfoModel.contractType = 2;
         if (TextUtils.isEmpty(partA)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_party_a_customer_name));
@@ -313,7 +312,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
         }
         ContractEditorActivity contractEditorActivity = (ContractEditorActivity) mActivity;
         if (contractEditorActivity != null && !contractEditorActivity.isFinishing()) {
-            contractEditorActivity.showCreateDialog(2);
+            contractEditorActivity.showCreateDialog(1);
         }
 
     }
