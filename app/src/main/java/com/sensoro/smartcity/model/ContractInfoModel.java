@@ -3,7 +3,6 @@ package com.sensoro.smartcity.model;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContractInfoModel {
     //1 是企业合同 2 是个人合同
@@ -21,7 +20,7 @@ public class ContractInfoModel {
 
     public String placeType;
 
-    public List<ContractsTemplateInfo> devicesList;
+    public ArrayList<ContractsTemplateInfo> devicesList;
     //续费周期
     public Integer periodAge;
     //服务年限
