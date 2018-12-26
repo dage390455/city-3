@@ -2,14 +2,12 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
-import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractCreationSuccessView;
 import com.sensoro.smartcity.presenter.ContractCreationSuccessPresenter;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -97,8 +95,10 @@ public class ContractCreationSuccessActivity extends BaseActivity<IContractCreat
                 mPresenter.finish();
                 break;
             case R.id.ac_contract_creation_success_tv_contract_preview:
+                mPresenter.doContractPreview();
                 break;
             case R.id.ac_contract_creation_success_tv_create_qr_code:
+                mPresenter.doShareCode();
                 break;
         }
     }

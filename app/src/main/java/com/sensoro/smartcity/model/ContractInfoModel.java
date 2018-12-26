@@ -3,7 +3,6 @@ package com.sensoro.smartcity.model;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class ContractInfoModel {
     //1 是企业合同 2 是个人合同

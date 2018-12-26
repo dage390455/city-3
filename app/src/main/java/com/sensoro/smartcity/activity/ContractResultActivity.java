@@ -29,8 +29,6 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     ImageView ivContractResultBack;
     @BindView(R.id.tv_result_info)
     TextView tvResultInfo;
-    @BindView(R.id.tv_contract_info_title_finish)
-    TextView tvContractInfoTitleFinish;
 //    private ProgressUtils mProgressUtils;
 
     @Override
@@ -51,16 +49,13 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
     }
 
 
-    @OnClick({R.id.bt_share, R.id.iv_contract_result_back, R.id.tv_contract_info_title_finish})
+    @OnClick({R.id.bt_share, R.id.iv_contract_result_back})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.bt_share:
                 mPresenter.sharePic();
                 break;
             case R.id.iv_contract_result_back:
-                mPresenter.finish();
-                break;
-            case R.id.tv_contract_info_title_finish:
                 mPresenter.finish();
                 break;
         }

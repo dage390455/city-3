@@ -34,6 +34,9 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     }
 
     private void checkLoginState() {
+//        Intent intent = new Intent(mContext, ContractPreviewActivity.class);
+//        getView().startAC(intent);
+//        getView().finishAc();
         try {
             RetrofitServiceHelper.INSTANCE.getBaseUrlType();
             String sessionID = RetrofitServiceHelper.INSTANCE.getSessionId();

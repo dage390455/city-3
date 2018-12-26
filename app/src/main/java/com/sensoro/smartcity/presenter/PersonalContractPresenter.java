@@ -47,6 +47,8 @@ import java.util.Set;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
+import static com.sensoro.smartcity.constant.Constants.EXTRA_CONTRACT_ID;
+
 public class PersonalContractPresenter extends BasePresenter<IPersonalContractView> {
     private Activity mActivity;
     private ContractListInfo mContractInfo = new ContractListInfo();;
@@ -135,7 +137,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
         intent.putExtra(CameraActivity.KEY_OUTPUT_FILE_PATH,
                 absolutePath);
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, CameraActivity.CONTENT_TYPE_ID_CARD_FRONT);
-        if (isAttachedView()){
+        if (isAttachedView()) {
             getView().startACForResult(intent, Constants.REQUEST_CODE_CAMERA);
         }
     }
@@ -143,7 +145,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
     public void handActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_CODE_CAMERA && resultCode == Activity.RESULT_OK) {
             if (data != null) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
                 try {
@@ -158,7 +160,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
-                    if (isAttachedView()){
+                    if (isAttachedView()) {
                         getView().dismissProgressDialog();
                         getView().toastShort(mActivity.getString(R.string.read_error_try));
                     }
@@ -180,7 +182,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
         OCR.getInstance(mActivity).recognizeIDCard(param, new OnResultListener<IDCardResult>() {
             @Override
             public void onResult(IDCardResult result) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                 }
                 String name = "";
@@ -212,7 +214,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
             @Override
             public void onError(OCRError error) {
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().toastShort(mActivity.getString(R.string.id_card_Identification_error) + error.getMessage());
                 }
@@ -398,18 +400,21 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
         RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), 2, mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(),null,mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
                  null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
-                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null,mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null,mContractInfo.getServiceTime(),
+                mContractInfo.getFirstPayTimes()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
             @Override
             public void onCompleted(ContractAddRsp contractAddRsp) {
                 ContractAddInfo data = contractAddRsp.getData();
-//                id = data.getId();
-//                LogUtils.loge(this, "id = " + id);
-//                handleCode(id + "", text);
-                Intent intent = new Intent(mActivity,ContractCreationSuccessActivity.class);
-//                intent.putExtra()
-                getView().startACForResult(intent,Constants.EVENT_DATA_CONTRACT_CREATION_SUCCESS);
+                int id = data.getId();
+                LogUtils.loge(this, "id = " + id);
+                String url = data.getFdd_viewpdf_url();
+                Intent intent = new Intent(mActivity, ContractCreationSuccessActivity.class);
+                intent.putExtra(EXTRA_CONTRACT_ID, String.valueOf(id));
+                if (!TextUtils.isEmpty(url)) {
+                    intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL, url);
+                }
+                getView().startACForResult(intent, Constants.EVENT_DATA_CONTRACT_CREATION_SUCCESS);
                 getView().dismissProgressDialog();
             }
 

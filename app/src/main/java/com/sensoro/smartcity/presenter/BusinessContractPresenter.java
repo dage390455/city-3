@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.R;
@@ -33,7 +32,6 @@ import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.w3c.dom.Text;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,7 +44,6 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     private Activity mActivity;
     private ContractListInfo mContractInfo = new ContractListInfo();;
     private int submitStatus = 1;
-
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
@@ -115,6 +112,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             }
         });
     }
+
     @Override
     public void onDestroy() {
 
@@ -131,14 +129,14 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 absolutePath);
         intent.putExtra(CameraActivity.KEY_CONTENT_TYPE,
                 CameraActivity.CONTENT_TYPE_GENERAL);
-        if (isAttachedView()){
+        if (isAttachedView()) {
             getView().startACForResult(intent, Constants.REQUEST_CODE_BUSINESS_LICENSE);
         }
     }
 
     public void handActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == Constants.REQUEST_CODE_BUSINESS_LICENSE && resultCode == Activity.RESULT_OK) {
-            if (isAttachedView()){
+            if (isAttachedView()) {
                 getView().showProgressDialog();
             }
             try {
@@ -147,7 +145,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                         new RecognizeService.ServiceListener() {
                             @Override
                             public void onResult(final String result) {
-                                if (isAttachedView()){
+                                if (isAttachedView()) {
                                     getView().dismissProgressDialog();
                                 }
                                 String enterpriseName = "";
@@ -214,7 +212,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                         });
             } catch (Exception e) {
                 e.printStackTrace();
-                if (isAttachedView()){
+                if (isAttachedView()) {
                     getView().dismissProgressDialog();
                     getView().toastShort(mActivity.getString(R.string.read_error_try));
                 }
@@ -229,18 +227,21 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
         RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), 1, mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(),null,mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
                 null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
-                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null,mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null,mContractInfo.getServiceTime(),
+                mContractInfo.getFirstPayTimes()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
             @Override
             public void onCompleted(ContractAddRsp contractAddRsp) {
                 ContractAddInfo data = contractAddRsp.getData();
-//                id = data.getId();
-//                LogUtils.loge(this, "id = " + id);
-//                handleCode(id + "", text);
-                Intent intent = new Intent(mActivity,ContractCreationSuccessActivity.class);
-//                intent.putExtra()
-                getView().startACForResult(intent,Constants.EVENT_DATA_CONTRACT_CREATION_SUCCESS);
+                int id = data.getId();
+                LogUtils.loge(this, "id = " + id);
+                Intent intent = new Intent(mActivity, ContractCreationSuccessActivity.class);
+                intent.putExtra(Constants.EXTRA_CONTRACT_ID,String.valueOf(id));
+                String url = data.getFdd_viewpdf_url();
+                if (!TextUtils.isEmpty(url)){
+                    intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL,url);
+                }
+                getView().startAC(intent);
                 getView().dismissProgressDialog();
             }
 
@@ -267,12 +268,12 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 mContractInfo.setCustomer_enterprise_name(enterpriseName);
             }
         }
-        if(TextUtils.isEmpty(customerName)){
+        if (TextUtils.isEmpty(customerName)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_customer_name));
             return;
 
-        }else{
-            if(customerName.length() > 48){
+        } else {
+            if (customerName.length() > 48) {
                 getView().toastShort(mActivity.getString(R.string.customer_name_not_more_48));
                 return;
             }else{
@@ -289,7 +290,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
         if (TextUtils.isEmpty(enterpriseCardId)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_enterprise_card_id));
             return;
-        }else{
+        } else {
             if (RegexUtils.checkEnterpriseCardID(enterpriseCardId)) {
                 mContractInfo.setEnterprise_card_id(enterpriseCardId);
             }else{
