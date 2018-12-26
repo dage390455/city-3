@@ -560,7 +560,7 @@ public enum RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls,String wxPhone) {
+            name, String contact, String content, List<String> imgUrls, String wxPhone) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -598,7 +598,7 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("imgUrls", jsonArrayImg);
             }
             if (!TextUtils.isEmpty(wxPhone)) {
-                jsonObject.put("wxPhone",wxPhone);
+                jsonObject.put("wxPhone", wxPhone);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -1360,5 +1360,15 @@ public enum RetrofitServiceHelper {
         Observable<ResponseBase> modifyContract = retrofitService.modifyContract(body);
         RxApiManager.getInstance().add("modifyContract", modifyContract.subscribe());
         return modifyContract;
+    }
+
+    /**
+     * 检测设备名称是否重名
+     *
+     * @param name
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceNameValid(String name) {
+        return retrofitService.getDeviceNameValid(name);
     }
 }

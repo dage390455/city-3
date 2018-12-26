@@ -76,6 +76,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             mHandler.postDelayed(signalTask, 2000);
         }
     };
+    private String originName;
 
     @Override
     public void initData(Context context) {
@@ -84,6 +85,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         onCreate();
         Intent intent = mContext.getIntent();
         deployAnalyzerModel = (DeployAnalyzerModel) intent.getSerializableExtra(EXTRA_DEPLOY_ANALYZER_MODEL);
+        originName = deployAnalyzerModel.nameAndAddress;
         getView().setNotOwnVisible(deployAnalyzerModel.notOwn);
         init();
         if (PreferencesHelper.getInstance().getUserData().hasSignalConfig && deployAnalyzerModel.deployType != TYPE_SCAN_DEPLOY_STATION) {
@@ -501,6 +503,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             intent.putExtra(EXTRA_SETTING_NAME_ADDRESS, deployAnalyzerModel.nameAndAddress);
         }
         intent.putExtra(EXTRA_DEPLOY_TO_SN, deployAnalyzerModel.sn);
+        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
+        if (!TextUtils.isEmpty(originName)) {
+            intent.putExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS, originName);
+        }
+        intent.putExtra(EXTRA_DEPLOY_TYPE, deployAnalyzerModel.deployType);
         getView().startAC(intent);
     }
 
