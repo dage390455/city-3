@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractPreviewActivity;
 import com.sensoro.smartcity.activity.ContractResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -16,13 +17,13 @@ import org.greenrobot.eventbus.EventBus;
 
 public class ContractCreationSuccessPresenter extends BasePresenter<IContractCreationSuccessView> {
     private Activity mActivity;
-    private String id;
+    private int id;
     private String url;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        id = mActivity.getIntent().getStringExtra(Constants.EXTRA_CONTRACT_ID);
+        id = mActivity.getIntent().getIntExtra(Constants.EXTRA_CONTRACT_ID,0);
         url = mActivity.getIntent().getStringExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL);
 
     }
@@ -41,7 +42,7 @@ public class ContractCreationSuccessPresenter extends BasePresenter<IContractCre
 
     public void doContractPreview() {
         if (TextUtils.isEmpty(url)) {
-            getView().toastShort("合同预览生成失败");
+            getView().toastShort(mActivity.getString(R.string.preview_contract_failed));
             return;
         }
         Intent intent = new Intent();
@@ -51,8 +52,8 @@ public class ContractCreationSuccessPresenter extends BasePresenter<IContractCre
     }
 
     public void doShareCode() {
-        if (TextUtils.isEmpty(id)) {
-            getView().toastShort("合同id生成失败");
+        if (id==0) {
+            getView().toastShort(mActivity.getString(R.string.contract_id_failed));
             return;
         }
         Intent intent = new Intent();

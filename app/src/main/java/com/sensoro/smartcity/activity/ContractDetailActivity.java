@@ -3,6 +3,7 @@ package com.sensoro.smartcity.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
@@ -10,11 +11,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.ContractTemplateShowAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IContractDetailView;
 import com.sensoro.smartcity.presenter.ContractDetailPresenter;
+import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
+
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -51,10 +56,10 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     TextView acContractDetailTvHomeRegisterAddress;
     @BindView(R.id.ac_contract_detail_tv_home_address)
     TextView acContractDetailTvHomeAddress;
-    @BindView(R.id.fg_personal_contract_tv_site_nature)
-    TextView fgPersonalContractTvSiteNature;
-    @BindView(R.id.fg_personal_contract_rc_device)
-    RecyclerView fgPersonalContractRcDevice;
+    @BindView(R.id.ac_contract_detail_tv_site_nature)
+    TextView acContractDetailTvSiteNature;
+    @BindView(R.id.ac_contract_detail_rc_device)
+    RecyclerView acContractDetailRcDevice;
     @BindView(R.id.ac_contract_detail_sign_status)
     TextView acContractDetailSignStatus;
     @BindView(R.id.ac_contract_detail_serve_life)
@@ -72,6 +77,7 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     @BindView(R.id.ac_contract_detail_tv_create_qr_code)
     TextView acContractDetailTvCreateQrCode;
     private ProgressUtils mProgressUtils;
+    private ContractTemplateShowAdapter contractTemplateShowAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -84,6 +90,18 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
     private void initView() {
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_detail));
+        includeTextTitleTvSubtitle.setText(mActivity.getString(R.string.title_edit));
+        includeTextTitleTvSubtitle.setTextColor(mActivity.getResources().getColor(R.color.c_29c093));
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+
+       initRCDevices();
+    }
+
+    private void initRCDevices() {
+        contractTemplateShowAdapter = new ContractTemplateShowAdapter(mActivity);
+        acContractDetailRcDevice.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, true));
+        acContractDetailRcDevice.setAdapter(contractTemplateShowAdapter);
+        acContractDetailRcDevice.setNestedScrollingEnabled(false);
     }
 
     @Override
@@ -149,11 +167,106 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
                 finishAc();
                 break;
             case R.id.include_text_title_tv_subtitle:
+                mPresenter.doEditContract();
                 break;
             case R.id.ac_contract_detail_tv_contract_preview:
+                mPresenter.doPreviewActivity();
                 break;
             case R.id.ac_contract_detail_tv_create_qr_code:
+                mPresenter.doViewContractQrCode();
                 break;
         }
     }
+
+    @Override
+    public void setSignStatus(boolean isSigned) {
+        includeTextTitleTvSubtitle.setVisibility(isSigned ? View.GONE : View.VISIBLE);
+        acContractDetailSignStatus.setText(isSigned ? R.string.signed : R.string.not_signed);
+        acContractDetailSignStatus.setTextColor(isSigned ? getResources().getColor(R.color.c_29c093) :
+                getResources().getColor(R.color.c_ff8d34));
+        acContractDetailSignStatus.setBackgroundResource(isSigned ? R.drawable.shape_bg_stroke_1_29c_full_corner :
+                R.drawable.shape_bg_stroke_1_ff8d_full_corner);
+
+        acContractDetailTvContractPreview.setVisibility(isSigned ? View.GONE : View.VISIBLE);
+        acContractDetailTvCreateQrCode.setText(mActivity.getString(isSigned ? R.string.view_signed_contract :R.string.view_contract_qr_code));
+    }
+
+    @Override
+    public void setCustomerEnterpriseName(String customerEnterpriseName) {
+        acContractDetailTvPartA.setText(customerEnterpriseName);
+    }
+
+    @Override
+    public void setCustomerName(String customerName) {
+        acContractDetailTvOwnerName.setText(customerName);
+    }
+
+    @Override
+    public void setCustomerPhone(String customerPhone) {
+        acContractDetailTvContactInfo.setText(customerPhone);
+    }
+
+    @Override
+    public void setCustomerAddress(String customerAddress) {
+        acContractDetailTvHomeAddress.setText(customerAddress);
+    }
+
+    @Override
+    public void setPlaceType(String placeType) {
+        acContractDetailTvSiteNature.setText(placeType);
+    }
+
+    @Override
+    public void setCardIdOrEnterpriseId(String cardOrEnterpriseId) {
+        acContractDetailTvIdCard.setText(cardOrEnterpriseId);
+    }
+
+    @Override
+    public void setTipText(int contractType) {
+        switch (contractType){
+            case 1:
+                acContractDetailTvPartAEnterprise.setText(mActivity.getString(R.string.business_merchant_name));
+                acContractDetailTvOwnerCustomerName.setText(mActivity.getString(R.string.legal_name));
+                acContractDetailTvIdCardEnterpriseId.setText(mActivity.getString(R.string.social_credit_code));
+                acContractDetailTvHomeRegisterAddress.setText(mActivity.getString(R.string.register_address));
+                break;
+            case 2:
+                acContractDetailTvPartAEnterprise.setText(mActivity.getString(R.string.party_a_customer_name));
+                acContractDetailTvOwnerCustomerName.setText(mActivity.getString(R.string.owners_name));
+                acContractDetailTvIdCardEnterpriseId.setText(mActivity.getString(R.string.identification_number));
+                acContractDetailTvHomeRegisterAddress.setText(mActivity.getString(R.string.home_address));
+                break;
+        }
+    }
+
+    @Override
+    public void setContractCreateTime(String createdAt) {
+        acContractDetailCreatedTime.setText(createdAt);
+    }
+
+    @Override
+    public void setSignTime(String signTime) {
+        acContractDetailSignTime.setText(signTime);
+    }
+
+    @Override
+    public void updateContractTemplateAdapterInfo(List<ContractsTemplateInfo> devices) {
+        contractTemplateShowAdapter.updateList(devices);
+    }
+
+    @Override
+    public void setServerAge(String serverAge) {
+        acContractDetailServeLife.setText(serverAge);
+    }
+
+    @Override
+    public void setPeriodAge(String periodAge) {
+        acContractDetailPeriodAge.setText(periodAge);
+    }
+
+    @Override
+    public void setFirstAge(String firstAge) {
+        acContractDetailFirstAge.setText(firstAge);
+    }
+
 }

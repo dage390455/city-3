@@ -808,7 +808,7 @@ public enum RetrofitServiceHelper {
                                                      String customerAddress,
                                                      String customerPhone,
                                                      String placeType,
-                                                     ArrayList<ContractsTemplateInfo> devicesList,
+                                                     List<ContractsTemplateInfo> devicesList,
                                                      int payTimes,
                                                      //可选
                                                      Boolean confirmed,
@@ -1291,7 +1291,7 @@ public enum RetrofitServiceHelper {
                                                    String customerAddress,
                                                    String customerPhone,
                                                    String placeType,
-                                                   ArrayList<ContractsTemplateInfo> devicesList,
+                                                   List<ContractsTemplateInfo> devicesList,
                                                    int payTimes,
                                                    //可选
                                                    Boolean confirmed,

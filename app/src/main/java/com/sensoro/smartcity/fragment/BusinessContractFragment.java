@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
@@ -17,7 +16,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.adapter.ContractTemplateAdapter;
 import com.sensoro.smartcity.base.BaseFragment;
 import com.sensoro.smartcity.imainviews.IBusinessContractView;
@@ -73,7 +71,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     @BindView(R.id.iv_contract_age_period_add)
     ImageView ivContractAgePeriodAdd;
     @BindView(R.id.fg_business_contract_tv_submit)
-    TextView fgBusinessContractTvSybmit;
+    TextView fgBusinessContractTvSubmit;
     private ProgressUtils mProgressUtils;
     private ContractTemplateAdapter contractTemplateAdapter;
     private ArrayList<String> sites = new ArrayList<>();
@@ -81,7 +79,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     @Override
     protected void initData(Context activity) {
         initView();
-        mPresenter.initData(activity);
+        mPresenter.initData(activity,getArguments());
     }
 
     private void initView() {
@@ -239,7 +237,7 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
                 AppUtils.showDialog(mRootFragment.getActivity(),new SelectDialog.SelectDialogListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        fgBusinessContractTvSiteNature.setText(sites.get(position));
+                        setSiteNature(sites.get(position));
                     }
                 }, sites);
                 break;
@@ -322,6 +320,46 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     @Override
     public void setSocialCreatedId(String enterpriseCardId) {
         fgBusinessContractEtSocialCreditCode.setText(enterpriseCardId);
+    }
+
+    @Override
+    public void setEnterpriseName(String customerEnterpriseName) {
+        fgBusinessContractEtBusinessMerchantName.setText(customerEnterpriseName);
+    }
+
+    @Override
+    public void setContactNumber(String customerPhone) {
+        fgBusinessContractEtContactInfo.setText(customerPhone);
+    }
+
+    @Override
+    public void setSiteNature(String placeType) {
+        fgBusinessContractTvSiteNature.setText(placeType);
+    }
+
+    @Override
+    public ArrayList<ContractsTemplateInfo> getContractTemplateList() {
+        return contractTemplateAdapter.getData();
+    }
+
+    @Override
+    public void setServeAge(String serverAge) {
+        etContractAge.setText(serverAge);
+    }
+
+    @Override
+    public void setFirstAge(String firstAge) {
+        etContractAgeFirst.setText(firstAge);
+    }
+
+    @Override
+    public void setPeriodAge(String periodAge) {
+        etContractAgePeriod.setText(periodAge);
+    }
+
+    @Override
+    public void setTvSubmitText(String text) {
+        fgBusinessContractTvSubmit.setText(text);
     }
 
     @Override

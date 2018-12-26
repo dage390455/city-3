@@ -197,7 +197,7 @@
                         android:textSize="14sp" />
 
                     <TextView
-                        android:id="@+id/fg_personal_contract_tv_site_nature"
+                        android:id="@+id/ac_contract_detail_tv_site_nature"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginStart="12dp"
@@ -220,7 +220,7 @@
                 />
 
             <android.support.v7.widget.RecyclerView
-                android:id="@+id/fg_personal_contract_rc_device"
+                android:id="@+id/ac_contract_detail_rc_device"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white">
@@ -265,6 +265,10 @@
                         android:textSize="10sp"
                         android:layout_alignParentEnd="true"
                         android:layout_centerVertical="true"
+                        android:paddingStart="10dp"
+                        android:paddingEnd="10dp"
+                        android:paddingBottom="4dp"
+                        android:paddingTop="4dp"
                         android:layout_marginEnd="20dp"
                         />
 
@@ -452,6 +456,7 @@
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
+                android:layout_marginTop="20dp"
                 android:text="@string/contract_preview"
                 android:textColor="@color/c_252525"
                 android:textSize="16sp" />
@@ -468,7 +473,7 @@
                 android:gravity="center"
                 android:paddingTop="10dp"
                 android:paddingBottom="10dp"
-                android:text="@string/create_qr_code"
+                android:text="@string/view_contract_qr_code"
                 android:textColor="@color/white"
                 android:textSize="16sp" />
 

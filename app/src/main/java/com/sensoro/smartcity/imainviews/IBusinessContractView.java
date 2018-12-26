@@ -17,4 +17,20 @@ public interface IBusinessContractView extends IToast,IActivityIntent,IProgressD
     void setRegisterAddress(String customerAddress);
 
     void setSocialCreatedId(String enterpriseCardId);
+
+    void setEnterpriseName(String customerEnterpriseName);
+
+    void setContactNumber(String customerPhone);
+
+    void setSiteNature(String placeType);
+
+    ArrayList<ContractsTemplateInfo> getContractTemplateList();
+
+    void setServeAge(String serverAge);
+
+    void setFirstAge(String firstAge);
+
+    void setPeriodAge(String periodAge);
+
+    void setTvSubmitText(String text);
 }

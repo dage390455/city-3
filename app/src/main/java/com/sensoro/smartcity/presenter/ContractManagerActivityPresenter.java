@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
+import com.sensoro.smartcity.activity.ContractDetailActivity;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.activity.ContractIndexActivity;
 import com.sensoro.smartcity.activity.ContractInfoActivity;
@@ -111,6 +112,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
 
     public void startToAdd() {
         Intent intent = new Intent(mContext, ContractEditorActivity.class);
+        intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
         getView().startAC(intent);
     }
 
@@ -213,8 +215,8 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
     public void clickItem(int position) {
         ContractListInfo contractListInfo = dataList.get(position);
         Intent intent = new Intent();
-        intent.setClass(mContext, ContractInfoActivity.class);
-        intent.putExtra(Constants.EXTRA_CONTRACT_LIST_INFO,contractListInfo);
+        intent.setClass(mContext, ContractDetailActivity.class);
+        intent.putExtra(Constants.EXTRA_CONTRACT_ID,contractListInfo.getId());
         getView().startAC(intent);
 //
 //        int created_type = contractListInfo.getCreated_type();

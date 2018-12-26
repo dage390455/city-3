@@ -732,4 +732,12 @@
     <string name="please_enter_register_address">请填写注册住址信息</string>
     <string name="customer_address_no_more_200">注册地址信息不能超过200个字符</string>
     <string name="contract_detail">合同详情</string>
+    <string name="not_obtain_contract_id">未获取到合同号</string>
+    <string name="not_obtain_contract_info">未获取到合同信息</string>
+    <string name="view_signed_contract">查看已签订合同</string>
+    <string name="view_contract_qr_code">查看二维码</string>
+    <string name="contract_info_obtain_failed">合同信息获取失败，请重试</string>
+    <string name="edit_contract">编辑合同</string>
+    <string name="preview_contract_failed">合同预览生成失败</string>
+    <string name="contract_id_failed">合同id生成失败</string>
 </resources>

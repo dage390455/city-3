@@ -3,7 +3,9 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.os.Bundle;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -20,19 +22,27 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
 import com.sensoro.smartcity.model.ContractInfoModel;
+import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ContractAddInfo;
+import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
+import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.io.File;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -41,12 +51,51 @@ import static com.sensoro.smartcity.constant.Constants.EXTRA_CONTRACT_ID;
 
 public class PersonalContractPresenter extends BasePresenter<IPersonalContractView> {
     private Activity mActivity;
-    private final ContractInfoModel mContractInfoModel = new ContractInfoModel();
+    private ContractListInfo mContractInfo = new ContractListInfo();;
+    private int submitStatus = 1;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         getContractTemplateInfos();
+    }
+
+    public void initData(Context context, Bundle bundle){
+        this.initData(context);
+        if (bundle != null) {
+            Serializable serializable = bundle.getSerializable(Constants.EXTRA_CONTRACT_INFO);
+            if (serializable instanceof ContractListInfo) {
+                submitStatus = 2;
+                mContractInfo = (ContractListInfo) serializable;
+                getView().setOwnerName(mContractInfo.getCustomer_name());
+                getView().setPartAName(mContractInfo.getCustomer_enterprise_name());
+                getView().setContactNumber(mContractInfo.getCustomer_phone());
+                getView().setIdCardNumber(mContractInfo.getCard_id());
+                getView().setHomeAddress(mContractInfo.getCustomer_address());
+                getView().setSiteNature(mContractInfo.getPlace_type());
+                ArrayList<ContractsTemplateInfo> data = getView().getContractTemplateList();
+                if (data.size() > 0) {
+                    refreshContractsTemplate(data,mContractInfo.getDevices());
+                }
+                getView().setServeAge(String.valueOf(mContractInfo.getServiceTime()));
+                getView().setFirstAge(String.valueOf(mContractInfo.getFirstPayTimes()));
+                getView().setPeriodAge(String.valueOf(mContractInfo.getPayTimes()));
+                getView().setTvSubmitText(mActivity.getString(R.string.save));
+            }
+        }
+
+    }
+
+    private void refreshContractsTemplate(ArrayList<ContractsTemplateInfo> data, List<ContractsTemplateInfo> devices) {
+        for (ContractsTemplateInfo datum : data) {
+            for (ContractsTemplateInfo device : devices) {
+                if (datum.getDeviceType().equals(device.getDeviceType())) {
+                    datum.setQuantity(device.getQuantity());
+                    break;
+                }
+            }
+        }
+        getView().updateContractTemplateAdapterInfo(data);
     }
 
     private void getContractTemplateInfos() {
@@ -57,24 +106,11 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             @Override
             public void onCompleted(ContractsTemplateRsp contractsTemplateRsp) {
                 ArrayList<ContractsTemplateInfo> data = contractsTemplateRsp.getData();
-//                Parcelable[] contract_devices = mActivity.getIntent().getParcelableArrayExtra("contract_devices");
-//                if (contract_devices != null && contract_devices.length > 0) {
-//                    for (Parcelable contract : contract_devices) {
-//                        try {
-//                            ContractsTemplateInfo contract1 = (ContractsTemplateInfo) contract;
-//                            for (ContractsTemplateInfo datum : data) {
-//                                if (datum.getDeviceType().endsWith(contract1.getDeviceType())) {
-//                                    datum.setQuantity(contract1.getQuantity());
-//                                    break;
-//                                }
-//                            }
-//                        } catch (Exception e) {
-//                            e.printStackTrace();
-//                        }
-//                    }
-//                }
-                getView().updateContractTemplateAdapterInfo(data);
-
+                if(mContractInfo.getDevices() != null && mContractInfo.getDevices().size()>0){
+                    refreshContractsTemplate(data,mContractInfo.getDevices());
+                }else{
+                    getView().updateContractTemplateAdapterInfo(data);
+                }
                 getView().dismissProgressDialog();
             }
 
@@ -189,7 +225,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
     public void doSubmit(String partA, String ownerName, String contactInfo, String idCard, String homeAddress,
                          String siteNature, String contractAgeStr, String contractAgeFirstStr, String contractAgePeriodStr, ArrayList<ContractsTemplateInfo> data) {
-        mContractInfoModel.contractType = 2;
+        mContractInfo.setContract_type(2);
         if (TextUtils.isEmpty(partA)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_party_a_customer_name));
             return;
@@ -198,7 +234,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 getView().toastShort(mActivity.getString(R.string.party_a_customer_name_not_more_100));
                 return;
             }
-            mContractInfoModel.customerEnterpriseName = partA;
+            mContractInfo.setCustomer_enterprise_name(partA);
 
         }
         if (TextUtils.isEmpty(ownerName)) {
@@ -209,17 +245,17 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 getView().toastShort(mActivity.getString(R.string.owner_name_more_48));
                 return;
             }
-            mContractInfoModel.customerName = ownerName;
+            mContractInfo.setCustomer_name(ownerName);
         }
         if (RegexUtils.checkPhone(contactInfo)) {
-            mContractInfoModel.customerPhone = contactInfo;
+            mContractInfo.setCustomer_phone(contactInfo);
         } else {
             getView().toastShort(mActivity.getString(R.string.please_enter_a_valid_mobile_number));
             return;
         }
         //
         if (RegexUtils.checkUserID(idCard)) {
-            mContractInfoModel.idCardNumber = idCard;
+            mContractInfo.setCard_id(idCard);
         } else {
             getView().toastShort(mActivity.getString(R.string.please_enter_valid_id_card_number));
             return;
@@ -232,14 +268,14 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 getView().toastShort(mActivity.getString(R.string.home_address_more_200));
                 return;
             }
-            mContractInfoModel.customerAddress = homeAddress;
+            mContractInfo.setCustomer_address(homeAddress);
         }
 
         if (TextUtils.isEmpty(siteNature)) {
             getView().toastShort(mActivity.getString(R.string.please_select_site_nature));
             return;
         }
-        mContractInfoModel.placeType = siteNature;
+        mContractInfo.setPlace_type(siteNature);
 
         int serverAge = 1;
         int ageFirst = 1;
@@ -287,9 +323,9 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
         }
 
-        mContractInfoModel.serverAge = serverAge;
-        mContractInfoModel.firstAge = ageFirst;
-        mContractInfoModel.periodAge = agePeriod;
+        mContractInfo.setServiceTime(serverAge);
+        mContractInfo.setFirstPayTimes(ageFirst);
+        mContractInfo.setPayTimes(agePeriod);
 
         final ArrayList<ContractsTemplateInfo> dataList = new ArrayList<>(data);
         if (data.size() > 0) {
@@ -302,7 +338,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 }
             }
             if (dataList.size() > 0) {
-                mContractInfoModel.devicesList = dataList;
+                mContractInfo.setDevices(dataList);
             } else {
                 getView().toastShort(mActivity.getString(R.string.please_select_devices_more_1));
                 return;
@@ -312,20 +348,60 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.not_obtain_device_cout));
             return;
         }
-        ContractEditorActivity contractEditorActivity = (ContractEditorActivity) mActivity;
-        if (contractEditorActivity != null && !contractEditorActivity.isFinishing()) {
-            contractEditorActivity.showCreateDialog(1);
+        switch (submitStatus){
+            case 1:
+                //创建合同
+                ContractEditorActivity contractEditorActivity = (ContractEditorActivity) mActivity;
+                if (contractEditorActivity != null && !contractEditorActivity.isFinishing()) {
+                    contractEditorActivity.showCreateDialog(1);
+                }
+                break;
+            case 2:
+                //编辑合同
+                doModifyContract();
+                break;
         }
 
+
+    }
+
+    private void doModifyContract() {
+        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(),mContractInfo.getId(), mContractInfo.getContract_type(), 2, mContractInfo.getCard_id(), null,
+                mContractInfo.getEnterprise_card_id(),null,
+                mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(), null, mContractInfo.getCustomer_address(),
+                mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(), mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn
+                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+
+            @Override
+            public void onCompleted(ResponseBase responseBase) {
+                modifyContractSuccess();
+                getView().dismissProgressDialog();
+            }
+
+            @Override
+            public void onErrorMsg(int errorCode, String errorMsg) {
+                getView().dismissProgressDialog();
+                getView().toastShort(errorMsg);
+            }
+        });
+    }
+
+    private void modifyContractSuccess() {
+        EventData eventData = new EventData();
+        eventData.code = Constants.EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE;
+        eventData.data = mContractInfo.getId();
+        EventBus.getDefault().post(eventData);
+//        getView().toastShort(mContext.getString(R.string.contract_modified_success));
+        getView().finishAc();
     }
 
     public void doCreateContract() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfoModel.contractType, 2, mContractInfoModel.idCardNumber, null,
-                mContractInfoModel.enterpriseCardId, null, mContractInfoModel.customerName, mContractInfoModel.customerEnterpriseName,
-                null, mContractInfoModel.customerAddress, mContractInfoModel.customerPhone, mContractInfoModel.placeType,
-                mContractInfoModel.devicesList, mContractInfoModel.periodAge, null, mContractInfoModel.serverAge, mContractInfoModel.firstAge).subscribeOn
-                (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+        RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), 2, mContractInfo.getCard_id(), null,
+                mContractInfo.getEnterprise_card_id(),null,mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
+                 null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
+                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null,mContractInfo.getServiceTime(),
+                mContractInfo.getFirstPayTimes()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
             @Override
             public void onCompleted(ContractAddRsp contractAddRsp) {
@@ -334,7 +410,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 LogUtils.loge(this, "id = " + id);
                 String url = data.getFdd_viewpdf_url();
                 Intent intent = new Intent(mActivity, ContractCreationSuccessActivity.class);
-                intent.putExtra(EXTRA_CONTRACT_ID, String.valueOf(id));
+                intent.putExtra(EXTRA_CONTRACT_ID, id);
                 if (!TextUtils.isEmpty(url)) {
                     intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL, url);
                 }

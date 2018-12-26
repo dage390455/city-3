@@ -81,7 +81,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
     @Override
     protected void initData(Context activity) {
         initView();
-        mPresenter.initData(activity);
+        mPresenter.initData(activity,getArguments());
     }
 
     private void initView() {
@@ -238,7 +238,7 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
                 AppUtils.showDialog(mRootFragment.getActivity(),new SelectDialog.SelectDialogListener() {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                        fgPersonalContractTvSiteNature.setText(sites.get(position));
+                        setSiteNature(sites.get(position));
                     }
                 }, sites);
                 break;
@@ -316,6 +316,46 @@ public class PersonalContractFragment extends BaseFragment<IPersonalContractView
     @Override
     public void setHomeAddress(String address) {
         fgPersonalContractEtHomeAddress.setText(address);
+    }
+
+    @Override
+    public void setPartAName(String customerEnterpriseName) {
+        fgPersonalContractEtPartA.setText(customerEnterpriseName);
+    }
+
+    @Override
+    public void setContactNumber(String contactNumber) {
+        fgPersonalContractEtContactInfo.setText(contactNumber);
+    }
+
+    @Override
+    public void setSiteNature(String placeType) {
+        fgPersonalContractTvSiteNature.setText(placeType);
+    }
+
+    @Override
+    public ArrayList<ContractsTemplateInfo> getContractTemplateList() {
+        return contractTemplateAdapter.getData();
+    }
+
+    @Override
+    public void setServeAge(String serverAge) {
+        etContractAge.setText(serverAge);
+    }
+
+    @Override
+    public void setFirstAge(String firstAge) {
+        etContractAgeFirst.setText(firstAge);
+    }
+
+    @Override
+    public void setPeriodAge(String periodAge) {
+        etContractAgePeriod.setText(periodAge);
+    }
+
+    @Override
+    public void setTvSubmitText(String text) {
+        fgPersonalContractTvSubmit.setText(text);
     }
 
 
