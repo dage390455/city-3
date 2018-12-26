@@ -7,6 +7,8 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
+import com.sensoro.smartcity.activity.ContractPreviewActivity;
+import com.sensoro.smartcity.activity.ContractResultActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractDetailView;
@@ -33,9 +35,9 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        contractId = mActivity.getIntent().getIntExtra(Constants.EXTRA_CONTRACT_ID, -1);
+        contractId = mActivity.getIntent().getIntExtra(Constants.EXTRA_CONTRACT_ID, 0);
         EventBus.getDefault().register(this);
-        if (contractId == -1) {
+        if (contractId == 0) {
             getView().toastShort(mActivity.getString(R.string.not_obtain_contract_id));
         } else {
             requestContractInfo(contractId);
@@ -131,6 +133,31 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
         Intent intent = new Intent(mActivity, ContractEditorActivity.class);
         intent.putExtra(Constants.EXTRA_CONTRACT_INFO, mContractInfo);
         intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 2);
+        getView().startAC(intent);
+    }
+
+    public void doViewContractQrCode() {
+        int id = mContractInfo.getId();
+        if (id == 0) {
+            getView().toastShort(mActivity.getString(R.string.contract_id_failed));
+            return;
+        }
+        Intent intent = new Intent();
+        final String code = Constants.CONTRACT_WE_CHAT_BASE_URL + id;
+        intent.putExtra(Constants.EXTRA_CONTRACT_ID_QRCODE, code);
+        intent.setClass(mActivity, ContractResultActivity.class);
+        getView().startAC(intent);
+    }
+
+    public void doPreviewActivity() {
+
+        if (TextUtils.isEmpty(mContractInfo.getFdd_viewpdf_url())) {
+            getView().toastShort(mActivity.getString(R.string.preview_contract_failed));
+            return;
+        }
+        Intent intent = new Intent();
+        intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL, mContractInfo.getFdd_viewpdf_url());
+        intent.setClass(mActivity, ContractPreviewActivity.class);
         getView().startAC(intent);
     }
 }

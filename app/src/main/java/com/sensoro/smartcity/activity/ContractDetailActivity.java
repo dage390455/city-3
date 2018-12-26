@@ -170,8 +170,10 @@ public class ContractDetailActivity extends BaseActivity<IContractDetailView, Co
                 mPresenter.doEditContract();
                 break;
             case R.id.ac_contract_detail_tv_contract_preview:
+                mPresenter.doPreviewActivity();
                 break;
             case R.id.ac_contract_detail_tv_create_qr_code:
+                mPresenter.doViewContractQrCode();
                 break;
         }
     }

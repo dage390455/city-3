@@ -236,7 +236,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 int id = data.getId();
                 LogUtils.loge(this, "id = " + id);
                 Intent intent = new Intent(mActivity, ContractCreationSuccessActivity.class);
-                intent.putExtra(Constants.EXTRA_CONTRACT_ID,String.valueOf(id));
+                intent.putExtra(Constants.EXTRA_CONTRACT_ID,id);
                 String url = data.getFdd_viewpdf_url();
                 if (!TextUtils.isEmpty(url)){
                     intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL,url);

@@ -738,4 +738,6 @@
     <string name="view_contract_qr_code">查看二维码</string>
     <string name="contract_info_obtain_failed">合同信息获取失败，请重试</string>
     <string name="edit_contract">编辑合同</string>
+    <string name="preview_contract_failed">合同预览生成失败</string>
+    <string name="contract_id_failed">合同id生成失败</string>
 </resources>
