@@ -14,14 +14,26 @@ import com.sensoro.smartcity.SensoroCityApplication;
  */
 
 public enum SensoroToast {
+//    private static class InnerSensoroToast {
+//        private static SensoroToast instance = new SensoroToast();
+//    }
+//
+//    private SensoroToast() {
+//    }
+//
+//    public static SensoroToast getInstance() {
+//        return InnerSensoroToast.instance;
+//    }
+
+
     INSTANCE;
     private Toast mToast;
     private TextView textView;
 
     private void showToast(Context context, CharSequence content, int duration) {
         if (mToast == null) {
-            mToast = new Toast(context);
-            final View v = LayoutInflater.from(context).inflate(R.layout.layout_toast, null);
+            mToast = new Toast(context.getApplicationContext());
+            final View v = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.layout_toast, null);
             textView = (TextView) v.findViewById(R.id.textView1);
             mToast.setView(v);//设置自定义的view
         }

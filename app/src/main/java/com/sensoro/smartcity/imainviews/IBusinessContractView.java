@@ -33,4 +33,9 @@ public interface IBusinessContractView extends IToast,IActivityIntent,IProgressD
     void setPeriodAge(String periodAge);
 
     void setTvSubmitText(String text);
+
+    void showSaveSuccessToast();
+
+    void cancelSuccessToast();
+
 }

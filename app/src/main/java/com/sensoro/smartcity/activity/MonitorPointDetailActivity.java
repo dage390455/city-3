@@ -31,7 +31,7 @@ import com.sensoro.smartcity.widget.TouchRecycleView;
 import com.sensoro.smartcity.widget.dialog.MonitorPointOperatingDialogUtil;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
-import com.sensoro.smartcity.widget.toast.MonitorPointOperationSuccessToast;
+import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
@@ -306,6 +306,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
         if (mOperatingUtil != null) {
             mOperatingUtil.destroy();
         }
+        SensoroSuccessToast.INSTANCE.cancelToast();
         super.onDestroy();
     }
 
@@ -453,7 +454,7 @@ public class MonitorPointDetailActivity extends BaseActivity<IMonitorPointDetail
 
     @Override
     public void showOperationSuccessToast() {
-        MonitorPointOperationSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
+        SensoroSuccessToast.INSTANCE.showToast(mActivity, Toast.LENGTH_SHORT);
     }
 
     @Override

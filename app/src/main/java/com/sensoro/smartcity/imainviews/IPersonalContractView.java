@@ -31,4 +31,9 @@ public interface IPersonalContractView extends IToast,IProgressDialog,IActivityI
     void setPeriodAge(String periodAge);
 
     void setTvSubmitText(String text);
+
+    void showSaveSuccessToast();
+
+    void cancelSuccessToast();
+
 }

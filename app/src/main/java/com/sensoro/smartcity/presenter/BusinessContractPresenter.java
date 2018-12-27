@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 
 import com.baidu.ocr.ui.camera.CameraActivity;
@@ -44,6 +46,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     private Activity mActivity;
     private ContractListInfo mContractInfo = new ContractListInfo();;
     private int submitStatus = 1;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
@@ -115,7 +118,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
 
     @Override
     public void onDestroy() {
-
+        mHandler.removeCallbacksAndMessages(null);
     }
 
     public void doTakePhoto() {
@@ -204,10 +207,13 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
-                                getView().setBusinessMerchantName(enterpriseName);
-                                getView().setOwnerName(customerName);
-                                getView().setRegisterAddress(customerAddress);
-                                getView().setSocialCreatedId(enterpriseCardId);
+                                if (isAttachedView()) {
+                                    getView().setBusinessMerchantName(enterpriseName);
+                                    getView().setOwnerName(customerName);
+                                    getView().setRegisterAddress(customerAddress);
+                                    getView().setSocialCreatedId(enterpriseCardId);
+                                }
+
                             }
                         });
             } catch (Exception e) {
@@ -417,6 +423,17 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             public void onCompleted(ResponseBase responseBase) {
                 modifyContractSuccess();
                 getView().dismissProgressDialog();
+                getView().showSaveSuccessToast();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            getView().cancelSuccessToast();
+                            getView().finishAc();
+                        }
+
+                    }
+                },1000);
             }
 
             @Override
@@ -432,7 +449,5 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
         eventData.code = Constants.EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE;
         eventData.data = mContractInfo.getId();
         EventBus.getDefault().post(eventData);
-//        getView().toastShort(mContext.getString(R.string.contract_modified_success));
-        getView().finishAc();
     }
 }

@@ -72,7 +72,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                 getView().seDeployWeChat(wxPhone);
             }
             String deviceType = mDeployRecordInfo.getDeviceType();
-            String deviceTypeName = WidgetUtil.getDeviceTypeName(deviceType);
+            String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
             getView().setDeployDeviceRecordDeviceType(mActivity.getString(R.string.deploy_device_type) + deviceTypeName);
             boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
             getView().setDeployDetailDeploySettingVisible(isFire);

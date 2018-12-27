@@ -10,12 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -24,7 +20,6 @@ import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +28,6 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
     private final Context mContext;
 
     private List<MalfunctionListInfo> mList = new ArrayList<>();
-    private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
     private RecycleViewItemClickListener mListener;
 
     public MainMalfunctionFragRcContentAdapter(Context context) {
@@ -48,7 +42,6 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
     }
 
     public void setData(List<MalfunctionListInfo> list) {
-        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
         this.mList.clear();
         this.mList.addAll(list);
     }
@@ -82,20 +75,7 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
         holder.mainMalfunctionRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext, malfunctionListInfo.getCreatedTime(), 0));
 
         String deviceType = malfunctionListInfo.getDeviceType();
-        String deviceTypeStr;
-        try {
-            Map<String, DeviceTypeStyles> deviceTypeMap = deviceMergeTypeConfig.getDeviceType();
-            DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
-            String mergeType = deviceTypeStyles.getMergeType();
-            Map<String, MergeTypeStyles> mergeTypeMap = deviceMergeTypeConfig.getMergeType();
-            MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(mergeType);
-            deviceTypeStr = mergeTypeStyles.getName();
-        } catch (Exception e) {
-            e.printStackTrace();
-            List<String> strings = new ArrayList<String>();
-            strings.add(deviceType);
-            deviceTypeStr = WidgetUtil.parseSensorTypes(mContext, strings);
-        }
+        String deviceTypeStr = WidgetUtil.getDeviceMainTypeName(deviceType);
         String deviceName = malfunctionListInfo.getDeviceName();
         if (TextUtils.isEmpty(deviceName)) {
             deviceName = malfunctionListInfo.getDeviceSN();
@@ -112,33 +92,16 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
             }
         });
         String malfunctionType = malfunctionListInfo.getMalfunctionType();
-        DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
-        if (localDevicesMergeTypes != null) {
-            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
-            if (config != null) {
-                DeviceMergeTypesInfo.DeviceMergeTypeConfig.MalfunctionTypeBean malfunctionTypeBean = config.getMalfunctionType();
-                if (malfunctionTypeBean != null) {
-                    Map<String, MalfunctionTypeStyles> mainTypes = malfunctionTypeBean.getMainTypes();
-                    if (mainTypes != null) {
-                        MalfunctionTypeStyles malfunctionTypeStyles = mainTypes.get(malfunctionType);
-                        if (malfunctionTypeStyles != null) {
-                            String name = malfunctionTypeStyles.getName();
-                            if (!TextUtils.isEmpty(name)) {
-                                holder.mainMalfunctionRcContentTvReason.setText(name);
-                                LogUtils.loge("localDevicesMergeTypes = " + name);
-                                return;
-                            }
-                        }
-                    }
-                }
+        MalfunctionTypeStyles malfunctionTypeStyles = PreferencesHelper.getInstance().getConfigMalfunctionMainTypes(malfunctionType);
+        if (malfunctionTypeStyles != null) {
+            String name = malfunctionTypeStyles.getName();
+            if (!TextUtils.isEmpty(name)) {
+                holder.mainMalfunctionRcContentTvReason.setText(name);
+                LogUtils.loge("localDevicesMergeTypes = " + name);
+                return;
             }
         }
-        Map<String, MalfunctionDataBean> malfunctionData = malfunctionListInfo.getMalfunctionData();
-        if (malfunctionData.keySet().contains(malfunctionType)) {
-            holder.mainMalfunctionRcContentTvReason.setText(malfunctionData.get(malfunctionType).getDescription());
-        } else {
-            holder.mainMalfunctionRcContentTvReason.setText(mContext.getString(R.string.unknown_malfunction));
-        }
+        holder.mainMalfunctionRcContentTvReason.setText(mContext.getString(R.string.unknown));
     }
 
     public void setOnItemClickListener(RecycleViewItemClickListener listener) {

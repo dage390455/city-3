@@ -371,13 +371,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         }
         String mergeType = deviceInfo.getMergeType();
         if (TextUtils.isEmpty(mergeType)) {
-            try {
-                String deviceType = deviceInfo.getDeviceType();
-                DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-                mergeType = config.getDeviceType().get(deviceType).getMergeType();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            String deviceType = deviceInfo.getDeviceType();
+            mergeType = WidgetUtil.handleMergeType(deviceType);
         }
         if (TextUtils.isEmpty(mTypeSelectedType)) {
             organizeJsonData(deviceInfo);
@@ -890,17 +885,24 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void updateSelectDeviceTypePopAndShow() {
         mMergeTypes.clear();
-        final DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-        Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-        Set<Map.Entry<String, MergeTypeStyles>> entries = mergeType.entrySet();
-        for (Map.Entry<String, MergeTypeStyles> entry : entries) {
-            String key = entry.getKey();
-            MergeTypeStyles mergeTypeStyles = entry.getValue();
-            if (mergeTypeStyles.isOwn()) {
-                mMergeTypes.add(key);
+        DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            final DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+                if (mergeType != null) {
+                    Set<Map.Entry<String, MergeTypeStyles>> entries = mergeType.entrySet();
+                    for (Map.Entry<String, MergeTypeStyles> entry : entries) {
+                        String key = entry.getKey();
+                        MergeTypeStyles mergeTypeStyles = entry.getValue();
+                        if (mergeTypeStyles.isOwn()) {
+                            mMergeTypes.add(key);
+                        }
+                    }
+                    Collections.sort(mMergeTypes);
+                }
             }
         }
-        Collections.sort(mMergeTypes);
         getView().updateSelectDeviceTypePopAndShow(mMergeTypes);
     }
 

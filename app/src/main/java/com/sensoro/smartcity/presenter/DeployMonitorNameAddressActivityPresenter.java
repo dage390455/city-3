@@ -33,7 +33,6 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-
         String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
         originName = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS);
         deployType = mContext.getIntent().getIntExtra(EXTRA_DEPLOY_TYPE, -1);

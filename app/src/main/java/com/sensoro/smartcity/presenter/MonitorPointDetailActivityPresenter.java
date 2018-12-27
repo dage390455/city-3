@@ -34,8 +34,8 @@ import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmsRecord;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
+import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.MonitorPointOperationTaskResultInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
@@ -102,19 +102,14 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         String sn = mDeviceInfo.getSn();
         getView().setSNText(sn);
         String typeName = mContext.getString(R.string.power_supply);
-        try {
-            DeviceMergeTypesInfo.DeviceMergeTypeConfig localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-            String mergeType = mDeviceInfo.getMergeType();
-            String deviceType = mDeviceInfo.getDeviceType();
-            if (TextUtils.isEmpty(mergeType)) {
-                mergeType = WidgetUtil.handleMergeType(deviceType);
-            }
-            Map<String, MergeTypeStyles> mergeTypeMap = localDevicesMergeTypes.getMergeType();
-            MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(mergeType);
+        String mergeType = mDeviceInfo.getMergeType();
+        String deviceType = mDeviceInfo.getDeviceType();
+        if (TextUtils.isEmpty(mergeType)) {
+            mergeType = WidgetUtil.handleMergeType(deviceType);
+        }
+        MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+        if (mergeTypeStyles != null) {
             typeName = mergeTypeStyles.getName();
-
-        } catch (Exception e) {
-            e.printStackTrace();
         }
         getView().setDeviceTypeName(typeName);
         refreshOperationStatus();
@@ -340,25 +335,31 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                             }
                             Collections.sort(keyList);
                             for (String key : keyList) {
-                                MalfunctionDataBean malfunctionDataBean = malfunctionData.get(key);
                                 MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
                                 monitoringPointRcContentAdapterModel.name = mContext.getString(R.string.malfunction_cause_detail);
                                 monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
-                                monitoringPointRcContentAdapterModel.content = malfunctionDataBean.getDescription();
+
+                                MalfunctionTypeStyles configMalfunctionMainTypes = PreferencesHelper.getInstance().getConfigMalfunctionMainTypes(key);
+                                if (configMalfunctionMainTypes != null) {
+                                    monitoringPointRcContentAdapterModel.content = configMalfunctionMainTypes.getName();
+                                    uiData.add(monitoringPointRcContentAdapterModel);
+                                    LogUtils.loge("故障成因：key = " + key + "value = " + monitoringPointRcContentAdapterModel.content);
+                                    break;
+                                }
+                                monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
                                 uiData.add(monitoringPointRcContentAdapterModel);
-                                LogUtils.loge("故障成因：key = " + key + "value = " + malfunctionDataBean.getDescription());
+
                             }
                         }
                     }
                     //
                     String[] sensorTypes = mDeviceInfo.getSensorTypes();
                     Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
-                    Map<String, SensorTypeStyles> sensorTypeMap = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig().getSensorType();
-                    if (sensorTypes != null && sensorTypes.length > 0 && sensorTypeMap != null && sensoroDetails != null) {
+                    if (sensorTypes != null && sensorTypes.length > 0 && sensoroDetails != null) {
                         List<String> sortSensorTypes = Arrays.asList(sensorTypes);
                         for (String type : sortSensorTypes) {
                             if (!TextUtils.isEmpty(type)) {
-                                SensorTypeStyles sensorTypeStyles = sensorTypeMap.get(type);
+                                SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(type);
                                 if (sensorTypeStyles != null) {
                                     MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
                                     String name = sensorTypeStyles.getName();
@@ -461,7 +462,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        if (isAttachedView()){
+                        if (isAttachedView()) {
                             getView().updateDeviceInfoAdapter(uiData);
                         }
 

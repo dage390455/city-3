@@ -4,8 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.text.TextUtils;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -53,6 +56,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
     private Activity mActivity;
     private ContractListInfo mContractInfo = new ContractListInfo();;
     private int submitStatus = 1;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
 
     @Override
     public void initData(Context context) {
@@ -207,9 +211,12 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
-                getView().setOwnerName(name);
-                getView().setIdCardNumber(idNumber);
-                getView().setHomeAddress(address);
+                if (isAttachedView()) {
+                    getView().setOwnerName(name);
+                    getView().setIdCardNumber(idNumber);
+                    getView().setHomeAddress(address);
+                }
+
             }
 
             @Override
@@ -376,6 +383,17 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             public void onCompleted(ResponseBase responseBase) {
                 modifyContractSuccess();
                 getView().dismissProgressDialog();
+                getView().showSaveSuccessToast();
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (isAttachedView()) {
+                            getView().cancelSuccessToast();
+                            getView().finishAc();
+                        }
+
+                    }
+                },1000);
             }
 
             @Override
@@ -391,8 +409,6 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
         eventData.code = Constants.EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE;
         eventData.data = mContractInfo.getId();
         EventBus.getDefault().post(eventData);
-//        getView().toastShort(mContext.getString(R.string.contract_modified_success));
-        getView().finishAc();
     }
 
     public void doCreateContract() {
