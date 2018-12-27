@@ -11,6 +11,15 @@ public class SensorTypeStyles {
     private String trueMean;
     private String falseMean;
     private int max;
+    private Integer precision;
+
+    public Integer getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(Integer precision) {
+        this.precision = precision;
+    }
 
     //
     @Override
@@ -92,6 +101,7 @@ public class SensorTypeStyles {
     public void setMax(int max) {
         this.max = max;
     }
+
     public String getTrueMean() {
         return trueMean;
     }

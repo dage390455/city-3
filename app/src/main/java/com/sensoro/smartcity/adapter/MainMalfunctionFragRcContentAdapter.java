@@ -14,8 +14,10 @@ import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MalfunctionDataBean;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
+import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
@@ -77,13 +79,6 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
                 setTextColor(holder, R.color.c_fdc83b);
                 break;
         }
-        Map<String, MalfunctionDataBean> malfunctionData = malfunctionListInfo.getMalfunctionData();
-        if (malfunctionData.keySet().contains(malfunctionListInfo.getMalfunctionType())) {
-            holder.mainMalfunctionRcContentTvReason.setText(malfunctionData.get(malfunctionListInfo.getMalfunctionType()).getDescription());
-        } else {
-            holder.mainMalfunctionRcContentTvReason.setText(mContext.getString(R.string.unknown_malfunction));
-        }
-
         holder.mainMalfunctionRcContentTvTime.setText(DateUtil.getStrTimeToday(mContext, malfunctionListInfo.getCreatedTime(), 0));
 
         String deviceType = malfunctionListInfo.getDeviceType();
@@ -116,6 +111,34 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
                 }
             }
         });
+        String malfunctionType = malfunctionListInfo.getMalfunctionType();
+        DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                DeviceMergeTypesInfo.DeviceMergeTypeConfig.MalfunctionTypeBean malfunctionTypeBean = config.getMalfunctionType();
+                if (malfunctionTypeBean != null) {
+                    Map<String, MalfunctionTypeStyles> mainTypes = malfunctionTypeBean.getMainTypes();
+                    if (mainTypes != null) {
+                        MalfunctionTypeStyles malfunctionTypeStyles = mainTypes.get(malfunctionType);
+                        if (malfunctionTypeStyles != null) {
+                            String name = malfunctionTypeStyles.getName();
+                            if (!TextUtils.isEmpty(name)) {
+                                holder.mainMalfunctionRcContentTvReason.setText(name);
+                                LogUtils.loge("localDevicesMergeTypes = " + name);
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        Map<String, MalfunctionDataBean> malfunctionData = malfunctionListInfo.getMalfunctionData();
+        if (malfunctionData.keySet().contains(malfunctionType)) {
+            holder.mainMalfunctionRcContentTvReason.setText(malfunctionData.get(malfunctionType).getDescription());
+        } else {
+            holder.mainMalfunctionRcContentTvReason.setText(mContext.getString(R.string.unknown_malfunction));
+        }
     }
 
     public void setOnItemClickListener(RecycleViewItemClickListener listener) {

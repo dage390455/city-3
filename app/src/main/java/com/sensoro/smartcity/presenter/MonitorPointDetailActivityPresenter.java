@@ -329,6 +329,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 if (mDeviceInfo != null) {
                     if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
+                        //TODO 添加故障字段数组
                         if (malfunctionData != null) {
                             Set<String> keySet = malfunctionData.keySet();
                             ArrayList<String> keyList = new ArrayList<>();

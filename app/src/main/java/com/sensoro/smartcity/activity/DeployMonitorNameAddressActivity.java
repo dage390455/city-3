@@ -18,6 +18,7 @@ import com.sensoro.smartcity.adapter.NameAddressHistoryAdapter;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.presenter.DeployMonitorNameAddressActivityPresenter;
+import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
@@ -47,6 +48,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     @BindView(R.id.include_text_title_tv_subtitle)
     TextView includeTextTitleTvSubtitle;
     private NameAddressHistoryAdapter mHistoryAdapter;
+    private ProgressUtils mProgressUtils;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -57,6 +59,7 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
     }
 
     private void initView() {
+        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
         includeTextTitleTvTitle.setText(R.string.name_address);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         initRcHistory();
@@ -156,5 +159,21 @@ public class DeployMonitorNameAddressActivity extends BaseActivity<IDeployMonito
         setEditText(text);
         acNameAddressEt.clearFocus();
         dismissInputMethodManager(view);
+    }
+
+    @Override
+    public void showProgressDialog() {
+        mProgressUtils.showProgress();
+    }
+
+    @Override
+    public void dismissProgressDialog() {
+        mProgressUtils.dismissProgress();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mProgressUtils.destroyProgress();
+        super.onDestroy();
     }
 }

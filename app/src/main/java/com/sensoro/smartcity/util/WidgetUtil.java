@@ -39,6 +39,7 @@ import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.SensorStruct;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -709,6 +710,36 @@ public class WidgetUtil {
                 monitoringPointRcContentAdapterModel.content = (String) value;
             }
         } else if (value instanceof Number) {
+            DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
+            if (localDevicesMergeTypes != null) {
+                DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+                if (config != null) {
+                    Map<String, SensorTypeStyles> sensorTypeMap = config.getSensorType();
+                    if (sensorTypeMap != null) {
+                        SensorTypeStyles sensorTypeStyles = sensorTypeMap.get(sensorType);
+                        if (sensorTypeStyles != null) {
+                            Integer precision = sensorTypeStyles.getPrecision();
+                            if (precision != null) {
+                                if (precision == 0) {
+                                    DecimalFormat df = new DecimalFormat("###");
+                                    monitoringPointRcContentAdapterModel.content = df.format(value);
+                                } else {
+                                    StringBuilder stringBuilder = new StringBuilder("###.");
+                                    for (int i = 0; i < precision; i++) {
+                                        stringBuilder.append("#");
+                                    }
+                                    String pattern = stringBuilder.toString();
+                                    LogUtils.loge("pattern = " + pattern);
+                                    DecimalFormat df = new DecimalFormat(pattern);
+                                    monitoringPointRcContentAdapterModel.content = df.format(value);
+                                }
+                                return;
+                            }
+                        }
+                    }
+                }
+            }
+            //TODO ﻿precision 字段
             if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
                 DecimalFormat df = new DecimalFormat("###.##");
                 monitoringPointRcContentAdapterModel.content = df.format(value);
