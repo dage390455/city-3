@@ -24,6 +24,7 @@ import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.ProgressUtils;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
+import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.ArrayList;
@@ -361,6 +362,23 @@ public class BusinessContractFragment extends BaseFragment<IBusinessContractView
     public void setTvSubmitText(String text) {
         fgBusinessContractTvSubmit.setText(text);
     }
+
+    @Override
+    public void showSaveSuccessToast() {
+        SensoroSuccessToast.INSTANCE.showToast(mRootFragment.getActivity(),Toast.LENGTH_SHORT,mRootFragment.getString(R.string.save_success));
+    }
+
+    @Override
+    public void cancelSuccessToast() {
+        SensoroSuccessToast.INSTANCE.cancelToast();
+    }
+
+    @Override
+    public void onDestroy() {
+        SensoroSuccessToast.INSTANCE.cancelToast();
+        super.onDestroy();
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

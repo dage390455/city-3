@@ -745,4 +745,5 @@
     <string name="edit_contract">编辑合同</string>
     <string name="preview_contract_failed">合同预览生成失败</string>
     <string name="contract_id_failed">合同id生成失败</string>
+    <string name="save_success">保存成功</string>
 </resources>
