@@ -518,22 +518,22 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 if (!RegexUtils.checkContractNotEmpty(this.line4)) {
                     this.line4 = null;
                 }
-                RetrofitServiceHelper.INSTANCE.modifyContract(uid,contractID, 1, serviceType, null, null, line3, line4,
-                        line1, line2, line6, line5, phone, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
-
-                    @Override
-                    public void onCompleted(ResponseBase responseBase) {
-                        modifyContractSuccess();
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+//                RetrofitServiceHelper.INSTANCE.modifyContract(uid,contractID, 1, serviceType, null, null, line3, line4,
+//                        line1, line2, line6, line5, phone, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+//
+//                    @Override
+//                    public void onCompleted(ResponseBase responseBase) {
+//                        modifyContractSuccess();
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
                 break;
             case 2:
                 int sexInt = 1;
@@ -543,43 +543,43 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                     sexInt = 2;
                 }
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.modifyContract(uid,contractID, 2, serviceType, line3, sexInt, null, null,
-                        line1, null, null, line4, phone, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
-
-                    @Override
-                    public void onCompleted(ResponseBase responseBase) {
-                        modifyContractSuccess();
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+//                RetrofitServiceHelper.INSTANCE.modifyContract(uid,contractID, 2, serviceType, line3, sexInt, null, null,
+//                        line1, null, null, line4, phone, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+//
+//                    @Override
+//                    public void onCompleted(ResponseBase responseBase) {
+//                        modifyContractSuccess();
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
                 break;
             case 3:
-                getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.modifyContract(uid,contractID, 2, serviceType, line4, null, null, null,
-                        line2, line1, null, line5, line3, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
-
-
-                    @Override
-                    public void onCompleted(ResponseBase responseBase) {
-                        modifyContractSuccess();
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
-                break;
+//                getView().showProgressDialog();
+//                RetrofitServiceHelper.INSTANCE.modifyContract(uid,contractID, 2, serviceType, line4, null, null, null,
+//                        line2, line1, null, line5, line3, place, data, serverAgePeriod, null, serverAgeTotal, serverAgeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+//
+//
+//                    @Override
+//                    public void onCompleted(ResponseBase responseBase) {
+//                        modifyContractSuccess();
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
+//                break;
             default:
                 break;
         }
