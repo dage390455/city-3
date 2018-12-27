@@ -29,6 +29,16 @@ public class ContractAddInfo implements Serializable {
     private String updatedAt;
     private String createdAt;
     private List<ContractsTemplateInfo> devices;
+    private String fdd_viewpdf_url;
+
+
+    public String getFdd_viewpdf_url() {
+        return fdd_viewpdf_url;
+    }
+
+    public void setFdd_viewpdf_url(String fdd_viewpdf_url) {
+        this.fdd_viewpdf_url = fdd_viewpdf_url;
+    }
 
     public int getSex() {
         return sex;

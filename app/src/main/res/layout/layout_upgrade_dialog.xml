@@ -31,7 +31,7 @@
                 android:gravity="center"
                 android:maxLines="1"
                 android:tag="beta_title"
-                android:text="升级提示"
+                android:text="@string/upgrade_tip"
                 android:textColor="@color/c_626262"
                 android:textSize="18dp" />
         </LinearLayout>
@@ -40,7 +40,7 @@
         <View
             android:id="@+id/view_line1"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/view_divider_height"
             android:background="@color/list_sep_color" />
 
         <TextView
@@ -56,7 +56,7 @@
         <View
             android:id="@+id/view_line"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/view_divider_height"
             android:background="@color/list_sep_color" />
 
         <TextView
@@ -73,7 +73,7 @@
         <View
             android:id="@+id/view_line2"
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/view_divider_height"
             android:background="@color/list_sep_color" />
 
         <LinearLayout

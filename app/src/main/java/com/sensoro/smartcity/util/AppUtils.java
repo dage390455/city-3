@@ -23,9 +23,11 @@ import android.widget.EditText;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -539,5 +541,18 @@ public class AppUtils {
                 }
             }
         });
+    }
+
+    /**
+     * 合同选择场地性质dialog
+     */
+    public static SelectDialog showDialog(Activity activity,SelectDialog.SelectDialogListener listener, List<String> items) {
+        SelectDialog dialog = new SelectDialog(activity, R.style
+                .transparentFrameWindowStyle,
+                listener, items);
+        if (!activity.isFinishing()) {
+            dialog.show();
+        }
+        return dialog;
     }
 }

@@ -95,7 +95,7 @@ public class SignalCheckActivityPresenter extends BasePresenter<ISignalCheckActi
         } else {
             temp = deployAnalyzerModel.nameAndAddress;
         }
-        String text = WidgetUtil.getDeviceTypeName(deployAnalyzerModel.deviceType) + " " + temp;
+        String text = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType) + " " + temp;
         getView().setTypeAndName(text);
         getView().updateTag(deployAnalyzerModel.tagList);
     }

@@ -560,7 +560,7 @@ public enum RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls,String wxPhone) {
+            name, String contact, String content, List<String> imgUrls, String wxPhone) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -598,7 +598,7 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("imgUrls", jsonArrayImg);
             }
             if (!TextUtils.isEmpty(wxPhone)) {
-                jsonObject.put("wxPhone",wxPhone);
+                jsonObject.put("wxPhone", wxPhone);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -798,7 +798,7 @@ public enum RetrofitServiceHelper {
         return contractstemplate;
     }
 
-    public Observable<ContractAddRsp> getNewContract(Integer contractType, int createType, String cardId,
+    public Observable<ContractAddRsp> getNewContract(Integer contractType, String cardId,
                                                      Integer sex, String enterpriseCardId,
                                                      String enterpriseRegisterId,
                                                      String customerName,
@@ -808,7 +808,7 @@ public enum RetrofitServiceHelper {
                                                      String customerAddress,
                                                      String customerPhone,
                                                      String placeType,
-                                                     ArrayList<ContractsTemplateInfo> devicesList,
+                                                     List<ContractsTemplateInfo> devicesList,
                                                      int payTimes,
                                                      //可选
                                                      Boolean confirmed,
@@ -818,7 +818,7 @@ public enum RetrofitServiceHelper {
             if (contractType != null) {
                 jsonObject.put("contract_type", contractType);
             }
-            jsonObject.put("created_type", createType);
+//            jsonObject.put("created_type", createType);
             if (cardId != null) {
                 jsonObject.put("card_id", cardId);
             }
@@ -1282,7 +1282,7 @@ public enum RetrofitServiceHelper {
         return doDevicePositionCalibration;
     }
 
-    public Observable<ResponseBase> modifyContract(String uid, Integer contractID, Integer contractType, Integer createType, String cardId, Integer sex, String enterpriseCardId,
+    public Observable<ResponseBase> modifyContract(String uid, Integer contractID, Integer contractType, String cardId, Integer sex, String enterpriseCardId,
                                                    String enterpriseRegisterId,
                                                    String customerName,
                                                    String customerEnterpriseName,
@@ -1291,7 +1291,7 @@ public enum RetrofitServiceHelper {
                                                    String customerAddress,
                                                    String customerPhone,
                                                    String placeType,
-                                                   ArrayList<ContractsTemplateInfo> devicesList,
+                                                   List<ContractsTemplateInfo> devicesList,
                                                    int payTimes,
                                                    //可选
                                                    Boolean confirmed,
@@ -1306,7 +1306,7 @@ public enum RetrofitServiceHelper {
             if (contractType != null) {
                 jsonObject.put("contract_type", contractType);
             }
-            jsonObject.put("created_type", createType);
+//            jsonObject.put("created_type", createType);
             if (!TextUtils.isEmpty(cardId)) {
                 jsonObject.put("card_id", cardId);
             }
@@ -1360,5 +1360,15 @@ public enum RetrofitServiceHelper {
         Observable<ResponseBase> modifyContract = retrofitService.modifyContract(body);
         RxApiManager.getInstance().add("modifyContract", modifyContract.subscribe());
         return modifyContract;
+    }
+
+    /**
+     * 检测设备名称是否重名
+     *
+     * @param name
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceNameValid(String name) {
+        return retrofitService.getDeviceNameValid(name);
     }
 }

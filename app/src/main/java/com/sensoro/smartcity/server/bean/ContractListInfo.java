@@ -36,6 +36,16 @@ public class ContractListInfo implements Serializable {
     private String confirmTime;
     private String createdAt;
     private String updatedAt;
+    private String fdd_viewpdf_url;
+
+    public String getFdd_viewpdf_url() {
+        return fdd_viewpdf_url;
+    }
+
+    public void setFdd_viewpdf_url(String fdd_viewpdf_url) {
+        this.fdd_viewpdf_url = fdd_viewpdf_url;
+    }
+
     private List<ContractsTemplateInfo> devices;
 
 

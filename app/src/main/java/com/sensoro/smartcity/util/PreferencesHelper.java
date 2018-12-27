@@ -11,6 +11,10 @@ import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -362,5 +366,111 @@ public final class PreferencesHelper implements Constants {
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
         return oldHistoryList;
+    }
+
+    /**
+     * 获取配置字段 --故障主字段
+     *
+     * @param mainFunctionMainType
+     * @return
+     */
+    public MalfunctionTypeStyles getConfigMalfunctionMainTypes(String mainFunctionMainType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                DeviceMergeTypesInfo.DeviceMergeTypeConfig.MalfunctionTypeBean malfunctionType = config.getMalfunctionType();
+                if (malfunctionType != null) {
+                    Map<String, MalfunctionTypeStyles> mainTypes = malfunctionType.getMainTypes();
+                    if (mainTypes != null) {
+                        return mainTypes.get(mainFunctionMainType);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取配置字段 --故障子字段
+     *
+     * @param mainFunctionSubType
+     * @return
+     */
+    public MalfunctionTypeStyles getConfigMalfunctionSubTypes(String mainFunctionSubType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                DeviceMergeTypesInfo.DeviceMergeTypeConfig.MalfunctionTypeBean malfunctionType = config.getMalfunctionType();
+                if (malfunctionType != null) {
+                    Map<String, MalfunctionTypeStyles> subTypes = malfunctionType.getSubTypes();
+                    if (subTypes != null) {
+                        return subTypes.get(mainFunctionSubType);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取配置字段 --设备副类型
+     *
+     * @param deviceType
+     * @return
+     */
+    public DeviceTypeStyles getConfigDeviceType(String deviceType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                Map<String, DeviceTypeStyles> deviceTypeStylesMap = config.getDeviceType();
+                if (deviceTypeStylesMap != null) {
+                    return deviceTypeStylesMap.get(deviceType);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取配置字段 --设备主类型
+     *
+     * @param mergeType
+     * @return
+     */
+    public MergeTypeStyles getConfigMergeType(String mergeType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                Map<String, MergeTypeStyles> mergeTypeStylesMap = config.getMergeType();
+                if (mergeTypeStylesMap != null) {
+                    return mergeTypeStylesMap.get(mergeType);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取配置字段 --传感器类型
+     *
+     * @param sensorType
+     * @return
+     */
+    public SensorTypeStyles getConfigSensorType(String sensorType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                Map<String, SensorTypeStyles> sensorTypeStylesMap = config.getSensorType();
+                if (sensorTypeStylesMap != null) {
+                    return sensorTypeStylesMap.get(sensorType);
+                }
+            }
+        }
+        return null;
     }
 }
