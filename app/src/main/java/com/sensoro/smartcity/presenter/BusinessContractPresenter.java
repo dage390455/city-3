@@ -230,7 +230,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     public void doCreateContract() {
         getView().showProgressDialog();
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), 1, mContractInfo.getCard_id(), null,
+        RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(),null,mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
                 null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
                 mContractInfo.getDevices(), mContractInfo.getPayTimes(), null,mContractInfo.getServiceTime(),
@@ -413,7 +413,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     }
 
     private void doModifyContract() {
-        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(),mContractInfo.getId(), mContractInfo.getContract_type(), 1, mContractInfo.getCard_id(), null,
+        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(),mContractInfo.getId(), mContractInfo.getContract_type(),  mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(),null,
                 mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(), null, mContractInfo.getCustomer_address(),
                 mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(), mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn
