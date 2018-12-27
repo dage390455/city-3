@@ -138,6 +138,8 @@
                     android:layout_marginStart="12dp"
                     android:background="@null"
                     android:gravity="end"
+                    android:inputType="number"
+                    android:singleLine="true"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -171,6 +173,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="12dp"
                     android:background="@null"
+                    android:singleLine="true"
                     android:gravity="end"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
