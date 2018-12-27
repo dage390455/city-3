@@ -710,33 +710,24 @@ public class WidgetUtil {
                 monitoringPointRcContentAdapterModel.content = (String) value;
             }
         } else if (value instanceof Number) {
-            DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
-            if (localDevicesMergeTypes != null) {
-                DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
-                if (config != null) {
-                    Map<String, SensorTypeStyles> sensorTypeMap = config.getSensorType();
-                    if (sensorTypeMap != null) {
-                        SensorTypeStyles sensorTypeStyles = sensorTypeMap.get(sensorType);
-                        if (sensorTypeStyles != null) {
-                            Integer precision = sensorTypeStyles.getPrecision();
-                            if (precision != null) {
-                                if (precision == 0) {
-                                    DecimalFormat df = new DecimalFormat("###");
-                                    monitoringPointRcContentAdapterModel.content = df.format(value);
-                                } else {
-                                    StringBuilder stringBuilder = new StringBuilder("###.");
-                                    for (int i = 0; i < precision; i++) {
-                                        stringBuilder.append("#");
-                                    }
-                                    String pattern = stringBuilder.toString();
-                                    LogUtils.loge("pattern = " + pattern);
-                                    DecimalFormat df = new DecimalFormat(pattern);
-                                    monitoringPointRcContentAdapterModel.content = df.format(value);
-                                }
-                                return;
-                            }
+            SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
+            if (sensorTypeStyles != null) {
+                Integer precision = sensorTypeStyles.getPrecision();
+                if (precision != null) {
+                    if (precision == 0) {
+                        DecimalFormat df = new DecimalFormat("###");
+                        monitoringPointRcContentAdapterModel.content = df.format(value);
+                    } else {
+                        StringBuilder stringBuilder = new StringBuilder("###.");
+                        for (int i = 0; i < precision; i++) {
+                            stringBuilder.append("#");
                         }
+                        String pattern = stringBuilder.toString();
+                        LogUtils.loge("pattern = " + pattern);
+                        DecimalFormat df = new DecimalFormat(pattern);
+                        monitoringPointRcContentAdapterModel.content = df.format(value);
                     }
+                    return;
                 }
             }
             //TODO ﻿precision 字段
@@ -1658,22 +1649,23 @@ public class WidgetUtil {
 
     public static String getInspectionDeviceName(String deviceType) {
         //
-        try {
-            DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
-            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
-            Map<String, DeviceTypeStyles> deviceTypeMap = config.getDeviceType();
-            DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
+        DeviceTypeStyles deviceTypeStyles = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
+        if (deviceTypeStyles != null) {
             String category = deviceTypeStyles.getCategory();
-            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-            MergeTypeStyles mergeTypeStyles = mergeType.get(deviceTypeStyles.getMergeType());
-            String name = mergeTypeStyles.getName();
-            if (!TextUtils.isEmpty(category)) {
-                return name + category;
+            String mergeType = deviceTypeStyles.getMergeType();
+            MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+            if (mergeTypeStyles != null) {
+                String name = mergeTypeStyles.getName();
+                if (!TextUtils.isEmpty(category)) {
+                    return name + category;
+                }
+                return name;
             }
-            return name;
-        } catch (Exception e) {
-            return SensoroCityApplication.getInstance().getResources().getString(R.string.unknown);
+
         }
+        return SensoroCityApplication.getInstance().getResources().getString(R.string.unknown);
+
+
 //        if (!TextUtils.isEmpty(deviceType)) {
 //            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
 //            if (mergeTypeInfos != null) {
@@ -2570,29 +2562,18 @@ public class WidgetUtil {
 //    }
 
     public static String handleMergeType(String deviceType) {
-        if (!TextUtils.isEmpty(deviceType)) {
-            try {
-                DeviceTypeStyles deviceTypeStyles = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig().getDeviceType().get(deviceType);
-                return deviceTypeStyles.getMergeType();
-            } catch (Exception e) {
-                e.printStackTrace();
-//                LogUtils.loge("handleMergeType ----->>>deviceType = " + deviceType);
-            }
+        DeviceTypeStyles deviceTypeStyles = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
+        if (deviceTypeStyles != null) {
+            return deviceTypeStyles.getMergeType();
         }
         return null;
     }
 
-    public static String getDeviceTypeName(String deviceType) {
-        if (!TextUtils.isEmpty(deviceType)) {
-            try {
-                DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-                DeviceTypeStyles deviceTypeStyles = config.getDeviceType().get(deviceType);
-                String mergeType = deviceTypeStyles.getMergeType();
-                return config.getMergeType().get(mergeType).getName();
-            } catch (Exception e) {
-                e.printStackTrace();
-//                LogUtils.loge("handleMergeType ----->>>deviceType = " + deviceType);
-            }
+    public static String getDeviceMainTypeName(String deviceType) {
+        String mergeType = handleMergeType(deviceType);
+        MergeTypeStyles configMergeType = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+        if (configMergeType != null) {
+            return configMergeType.getName();
         }
         return SensoroCityApplication.getInstance().getResources().getString(R.string.unknown);
     }

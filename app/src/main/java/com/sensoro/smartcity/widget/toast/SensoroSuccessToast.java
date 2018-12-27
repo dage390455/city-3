@@ -8,9 +8,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.SensoroCityApplication;
-
-import javax.xml.datatype.Duration;
 
 /**
  * Created by sensoro on 17/12/6.
@@ -27,8 +24,8 @@ public enum SensoroSuccessToast {
 
     public void showToast(Context context, int duration,String msg) {
         if (mToast == null) {
-            mToast = new Toast(context);
-            final View v = LayoutInflater.from(context).inflate(R.layout.item_toast_monitor_point_operation_success, null);
+            mToast = new Toast(context.getApplicationContext());
+            final View v = LayoutInflater.from(context.getApplicationContext()).inflate(R.layout.item_toast_monitor_point_operation_success, null);
             textView = (TextView) v.findViewById(R.id.toast_message);
             mToast.setView(v);//设置自定义的view
         }

@@ -15,7 +15,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
@@ -24,7 +23,6 @@ import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +31,6 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
     private final Context mContext;
     private String mMalfunctionText;
     private List<MalfunctionListInfo.RecordsBean> mRecordInfoList = new ArrayList<>();
-    private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus0 = new ArrayList<>();
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus1 = new ArrayList<>();
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus2 = new ArrayList<>();
@@ -67,30 +64,17 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
 //                recordsBean.getMalfunctionText()
                 String malfunctionType = recordsBean.getMalfunctionType();
                 if (!TextUtils.isEmpty(malfunctionType)) {
-                    DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
-                    if (localDevicesMergeTypes != null) {
-                        DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
-                        if (config != null) {
-                            DeviceMergeTypesInfo.DeviceMergeTypeConfig.MalfunctionTypeBean malfunctionTypeBean = config.getMalfunctionType();
-                            if (malfunctionTypeBean != null) {
-                                Map<String, MalfunctionTypeStyles> subTypes = malfunctionTypeBean.getSubTypes();
-                                if (subTypes != null) {
-                                    MalfunctionTypeStyles malfunctionTypeStyles = subTypes.get(malfunctionType);
-                                    if (malfunctionTypeStyles!=null){
-                                        String name = malfunctionTypeStyles.getName();
-                                        if (!TextUtils.isEmpty(name)) {
-                                            LogUtils.loge("malfunctionType = " + malfunctionType);
-                                            holder.itemMalfunctionDetailChildMalfunctionCause.setText(name);
-                                            break;
-                                        }
-                                    }
-
-                                }
-                            }
+                    MalfunctionTypeStyles malfunctionTypeStyles = PreferencesHelper.getInstance().getConfigMalfunctionSubTypes(malfunctionType);
+                    if (malfunctionTypeStyles != null) {
+                        String name = malfunctionTypeStyles.getName();
+                        if (!TextUtils.isEmpty(name)) {
+                            LogUtils.loge("malfunctionType = " + malfunctionType);
+                            holder.itemMalfunctionDetailChildMalfunctionCause.setText(name);
+                            break;
                         }
                     }
                 }
-                holder.itemMalfunctionDetailChildMalfunctionCause.setText(recordsBean.getMalfunctionText());
+                holder.itemMalfunctionDetailChildMalfunctionCause.setText(mContext.getString(R.string.unknown));
                 break;
             case "recovery":
                 String content = mMalfunctionText + mContext.getString(R.string.recover_normal);
@@ -191,7 +175,6 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
         if (TextUtils.isEmpty(mMalfunctionText)) {
             mMalfunctionText = mContext.getString(R.string.unknown_malfunction);
         }
-        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
     }
 
     @Override

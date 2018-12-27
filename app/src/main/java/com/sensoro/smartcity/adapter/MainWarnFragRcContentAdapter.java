@@ -14,16 +14,11 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeviceAlarmLogInfo;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
-import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
-import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
-import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -33,7 +28,6 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
     private final Context mContext;
     private AlarmConfirmStatusClickListener mListener;
     private final List<DeviceAlarmLogInfo> mList = new ArrayList<>();
-    private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
 
     public MainWarnFragRcContentAdapter(Context context) {
         mContext = context;
@@ -64,20 +58,7 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
             String deviceType = alarmLogInfo.getDeviceType();
             String default_name = TextUtils.isEmpty(deviceSN) ? mContext.getResources().getString(R.string
                     .unname) : deviceSN;
-            String deviceTypeStr;
-            try {
-                Map<String, DeviceTypeStyles> deviceTypeMap = deviceMergeTypeConfig.getDeviceType();
-                DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
-                String mergeType = deviceTypeStyles.getMergeType();
-                Map<String, MergeTypeStyles> mergeTypeMap = deviceMergeTypeConfig.getMergeType();
-                MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(mergeType);
-                deviceTypeStr = mergeTypeStyles.getName();
-            } catch (Exception e) {
-                e.printStackTrace();
-                List<String> strings = new ArrayList<String>();
-                strings.add(deviceType);
-                deviceTypeStr = WidgetUtil.parseSensorTypes(mContext, strings);
-            }
+            String deviceTypeStr=WidgetUtil.getDeviceMainTypeName(deviceType);
             StringBuilder stringBuilder = new StringBuilder();
             if (TextUtils.isEmpty(deviceName)) {
                 holder.mainWarnRcContentTvContent.setText(stringBuilder.append(deviceTypeStr).append(" ").append(default_name).toString());
@@ -218,7 +199,6 @@ public class MainWarnFragRcContentAdapter extends RecyclerView.Adapter<MainWarnF
     }
 
     public void setData(List<DeviceAlarmLogInfo> list) {
-        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
         this.mList.clear();
         this.mList.addAll(list);
     }
