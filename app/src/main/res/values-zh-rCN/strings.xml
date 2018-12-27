@@ -741,4 +741,5 @@
     <string name="preview_contract_failed">合同预览生成失败</string>
     <string name="contract_id_failed">合同id生成失败</string>
     <string name="save_success">保存成功</string>
+    <string name="upgrade_tip">升级提示</string>
 </resources>

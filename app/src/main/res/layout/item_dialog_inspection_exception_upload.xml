@@ -16,7 +16,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_width"
         android:layout_marginTop="24dp"
         android:background="@color/c_dfdfdf" />
 
@@ -34,7 +34,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_width"
         android:background="@color/c_dfdfdf" />
 
     <TextView
@@ -51,7 +51,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_width"
         android:background="@color/c_dfdfdf" />
 
     <TextView

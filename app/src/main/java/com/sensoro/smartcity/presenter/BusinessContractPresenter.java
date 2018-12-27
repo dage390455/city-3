@@ -413,6 +413,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     }
 
     private void doModifyContract() {
+        getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(),mContractInfo.getId(), mContractInfo.getContract_type(),  mContractInfo.getCard_id(), null,
                 mContractInfo.getEnterprise_card_id(),null,
                 mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(), null, mContractInfo.getCustomer_address(),

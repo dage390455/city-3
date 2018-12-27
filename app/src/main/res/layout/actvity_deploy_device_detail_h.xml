@@ -114,7 +114,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />
@@ -252,7 +252,7 @@
                 <View
                     android:id="@+id/line_deploy_detail_we_chat"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />
@@ -345,7 +345,7 @@
 
                 <View
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />
@@ -428,7 +428,7 @@
                 <View
                     android:id="@+id/ac_deploy_device_detail_deploy_setting_line"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />
@@ -476,7 +476,7 @@
                 <View
                     android:id="@+id/last_view"
                     android:layout_width="match_parent"
-                    android:layout_height="1dp"
+                    android:layout_height="@dimen/view_divider_height"
                     android:layout_marginStart="20dp"
                     android:layout_marginEnd="20dp"
                     android:background="@color/c_dfdfdf" />

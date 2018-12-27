@@ -51,7 +51,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/view_divider_height"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/c_dfdfdf" />
@@ -60,15 +60,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:orientation="horizontal"
-                android:paddingTop="16dp"
-                android:paddingBottom="16dp">
+                >
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/owners_name"
+                    android:layout_gravity="center_vertical"
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
@@ -80,6 +79,7 @@
                     android:layout_marginEnd="12dp"
                     android:layout_weight="1"
                     android:gravity="end"
+                    android:layout_gravity="center_vertical"
                     android:background="@null"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
@@ -87,6 +87,8 @@
                 <View
                     android:layout_width="1dp"
                     android:layout_height="match_parent"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
                     android:background="@color/c_dfdfdf" />
 
                 <ImageView
@@ -95,17 +97,18 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
                     android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
                     android:background="@drawable/selector_item_white_ee"
                     android:contentDescription="@null"
-                    android:paddingTop="4dp"
-                    android:paddingBottom="4dp"
+                    android:paddingTop="18dp"
+                    android:paddingBottom="18dp"
                     android:src="@drawable/camera" />
 
             </LinearLayout>
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/view_divider_height"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/c_dfdfdf" />
@@ -139,7 +142,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/view_divider_height"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/c_dfdfdf" />
@@ -173,7 +176,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/view_divider_height"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/c_dfdfdf" />
@@ -207,7 +210,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/view_divider_height"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/c_dfdfdf" />
@@ -348,7 +351,7 @@
 
             <View
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/view_divider_height"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/c_dfdfdf"
@@ -416,7 +419,7 @@
 
             <ImageView
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
+                android:layout_height="@dimen/view_divider_height"
                 android:layout_marginStart="20dp"
                 android:layout_marginEnd="20dp"
                 android:background="@color/c_dfdfdf"

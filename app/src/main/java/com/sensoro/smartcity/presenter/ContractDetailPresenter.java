@@ -137,6 +137,14 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
     }
 
     public void doViewContractQrCode() {
+        if (mContractInfo == null) {
+            getView().toastShort(mActivity.getString(R.string.not_obtain_contract_info));
+            return;
+        }
+        if (mContractInfo.isConfirmed()) {
+            doPreviewActivity();
+            return;
+        }
         int id = mContractInfo.getId();
         if (id == 0) {
             getView().toastShort(mActivity.getString(R.string.contract_id_failed));

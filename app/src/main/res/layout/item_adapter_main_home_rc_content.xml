@@ -59,7 +59,7 @@
     <View
         android:id="@+id/line_bottom"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_height"
         android:layout_marginTop="20dp"
         android:background="@color/c_dfdfdf" />
 

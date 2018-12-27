@@ -47,7 +47,7 @@ public class ContractResultActivity extends BaseActivity<IContractResultActivity
 
     private void initView() {
 //        mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        includeTextTitleImvArrowsLeft.setImageResource(R.drawable.qr_code_close);
+        includeTextTitleImvArrowsLeft.setImageResource(R.drawable.title_close);
         includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_info_contract_qr_code));
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleViewDivider.setVisibility(View.GONE);

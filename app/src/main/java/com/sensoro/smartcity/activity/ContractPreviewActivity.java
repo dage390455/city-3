@@ -2,6 +2,7 @@ package com.sensoro.smartcity.activity;
 
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AlertDialog;
 import android.view.KeyEvent;
 import android.view.View;
@@ -11,7 +12,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
@@ -23,12 +26,23 @@ import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivityView, ContractPreviewActivityPresenter> implements IContractPreviewActivityView {
     @BindView(R.id.wv_preview)
     WebView wvPreview;
     @BindView(R.id.pb_preview)
     ProgressBar pbPreview;
+    @BindView(R.id.include_text_title_imv_arrows_left)
+    ImageView includeTextTitleImvArrowsLeft;
+    @BindView(R.id.include_text_title_tv_title)
+    TextView includeTextTitleTvTitle;
+    @BindView(R.id.include_text_title_tv_subtitle)
+    TextView includeTextTitleTvSubtitle;
+    @BindView(R.id.include_text_title_divider)
+    View includeTextTitleDivider;
+    @BindView(R.id.include_text_title_cl_root)
+    ConstraintLayout includeTextTitleClRoot;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -39,6 +53,9 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
     }
 
     private void initView() {
+        includeTextTitleImvArrowsLeft.setImageResource(R.drawable.title_close);
+        includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        includeTextTitleTvTitle.setText(mActivity.getString(R.string.contract_preview));
 //        wvPreview.loadUrl("file:///android_asset/test.html");//加载asset文件夹下html
         //
 //        webView.loadUrl("http://139.196.35.30:8080/OkHttpTest/apppackage/test.html");//加载url
@@ -124,6 +141,7 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
         }
     };
 
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         LogUtils.loge("ddong", "是否有上一个页面:" + wvPreview.canGoBack());
@@ -163,5 +181,11 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
         if (wvPreview != null) {
             wvPreview.loadUrl(url);
         }
+    }
+
+
+    @OnClick(R.id.include_text_title_imv_arrows_left)
+    public void onViewClicked() {
+        finish();
     }
 }
