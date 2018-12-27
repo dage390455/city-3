@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ContractIndexActivity;
+import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
@@ -875,7 +875,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void doContract() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasContract) {
-                Intent intent = new Intent(mContext, ContractIndexActivity.class);
+                Intent intent = new Intent(mContext, ContractEditorActivity.class);
+                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
                 getView().startAC(intent);
                 return;
             }
