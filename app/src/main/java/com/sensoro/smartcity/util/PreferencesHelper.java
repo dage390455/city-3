@@ -145,7 +145,10 @@ public final class PreferencesHelper implements Constants {
      * @param username
      * @param pwd
      */
-    public void saveLoginNamePwd(String username, String pwd) {
+    public boolean saveLoginNamePwd(String username, String pwd) {
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(pwd)) {
+            return false;
+        }
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -153,6 +156,7 @@ public final class PreferencesHelper implements Constants {
         String aes_pwd = AESUtil.encode(pwd);
         editor.putString(PREFERENCE_KEY_PASSWORD, aes_pwd);
         editor.apply();
+        return true;
     }
 
     public Map<String, String> getLoginNamePwd() {
@@ -185,12 +189,16 @@ public final class PreferencesHelper implements Constants {
         editor.apply();
     }
 
-    public void saveSessionId(String sessionId) {
+    public boolean saveSessionId(String sessionId) {
+        if (TextUtils.isEmpty(sessionId)) {
+            return false;
+        }
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREFERENCE_KEY_SESSION_ID, sessionId);
         editor.apply();
+        return true;
     }
 
     public String getSessionId() {
@@ -208,12 +216,20 @@ public final class PreferencesHelper implements Constants {
         this.mEventLoginData = null;
     }
 
-    public void saveDeployNameAddressHistory(String history) {
+    public boolean saveDeployNameAddressHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, history).apply();
+        return true;
     }
 
-    public void saveDeployWeChatRelationHistory(String history) {
+    public boolean saveDeployWeChatRelationHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, history).apply();
+        return true;
     }
 
     public String getDeployNameAddressHistory() {
@@ -224,8 +240,12 @@ public final class PreferencesHelper implements Constants {
         return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, null);
     }
 
-    public void saveDeployTagsHistory(String hisory) {
-        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_TAG, hisory).apply();
+    public boolean saveDeployTagsHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_TAG, history).apply();
+        return true;
     }
 
     public String getDeployTagsHistory() {
@@ -263,17 +283,18 @@ public final class PreferencesHelper implements Constants {
         return mDeviceMergeTypesInfo;
     }
 
-    public void saveLocalDevicesMergeTypes(DeviceMergeTypesInfo deviceMergeTypesInfo) {
-        if (deviceMergeTypesInfo != null) {
-            mDeviceMergeTypesInfo = deviceMergeTypesInfo;
-            String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(mDeviceMergeTypesInfo);
-            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
-                    .MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
-            editor.apply();
+    public boolean saveLocalDevicesMergeTypes(DeviceMergeTypesInfo deviceMergeTypesInfo) {
+        if (deviceMergeTypesInfo == null) {
+            return false;
         }
-
+        mDeviceMergeTypesInfo = deviceMergeTypesInfo;
+        String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(mDeviceMergeTypesInfo);
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
+        editor.apply();
+        return true;
     }
 
     public boolean saveSearchHistoryText(String text, int type) {
