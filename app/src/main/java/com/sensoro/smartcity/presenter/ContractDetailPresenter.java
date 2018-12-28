@@ -71,6 +71,7 @@ public class ContractDetailPresenter extends BasePresenter<IContractDetailView> 
                             }
                             getView().setTipText(mContractInfo.getContract_type());
                             String createdAt = mContractInfo.getCreatedAt();
+
                             if (TextUtils.isEmpty(createdAt)) {
                                 createdAt = "-";
                             } else {
