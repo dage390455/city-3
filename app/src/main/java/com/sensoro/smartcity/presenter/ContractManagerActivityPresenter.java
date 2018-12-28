@@ -8,21 +8,17 @@ import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.activity.ContractDetailActivity;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
-import com.sensoro.smartcity.activity.ContractIndexActivity;
-import com.sensoro.smartcity.activity.ContractInfoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.imainviews.IContractManagerActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.CalendarDateModel;
-import com.sensoro.smartcity.model.ContractInfoModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.model.InspectionStatusCountModel;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ContractListInfo;
-import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractsListRsp;
 import com.sensoro.smartcity.util.DateUtil;
 import com.sensoro.smartcity.util.PreferencesHelper;
@@ -182,7 +178,7 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
                         List<ContractListInfo> data = contractsListRsp.getData();
                         if (data.size() == 0) {
                             getView().toastShort("没有更多数据了");
-                            getView().showSmartRefreshNoMoreData();
+//                            getView().showSmartRefreshNoMoreData();
                             cur_page--;
                         } else {
                             dataList.addAll(data);

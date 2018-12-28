@@ -19,12 +19,12 @@
 
         <TextView
             android:id="@+id/ac_contract_editor_personal_contract"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/shape_btn_top_bottom_left_corner_2_29c_bg"
-            android:paddingStart="56dp"
+            android:gravity="center"
             android:paddingTop="6dp"
-            android:paddingEnd="56dp"
             android:paddingBottom="6dp"
             android:text="@string/contract_personal"
             android:textColor="@color/white"
@@ -32,12 +32,12 @@
 
         <TextView
             android:id="@+id/ac_contract_editor_business_contract"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:background="@drawable/shape_btn_top_bottom_right_corner_2_white_bg"
-            android:paddingStart="56dp"
+            android:gravity="center"
             android:paddingTop="6dp"
-            android:paddingEnd="56dp"
             android:paddingBottom="6dp"
             android:text="@string/contract_business"
             android:textColor="@color/c_a6a6a6"
@@ -47,8 +47,7 @@
     <FrameLayout
         android:id="@+id/ac_contract_editor_fl"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        >
+        android:layout_height="wrap_content">
 
     </FrameLayout>
 

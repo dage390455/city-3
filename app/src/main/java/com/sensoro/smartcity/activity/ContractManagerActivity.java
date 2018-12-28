@@ -123,6 +123,7 @@ public class ContractManagerActivity extends BaseActivity<IContractManagerActivi
 
         fgMainWarnEtSearch.setHint(R.string.legal_representative_name);
         refreshLayout.setEnableAutoLoadMore(true);//开启自动加载功能（非必须）
+        refreshLayout.setNoMoreData(false);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
