@@ -353,8 +353,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             if (needAlarmPlay) {
                                 playSound();
                             }
+                            shoAlarmWindow();
                         }
-                        shoAlarmWindow();
+
                         needAlarmPlay = false;
                         needRefreshHeader = false;
                     }

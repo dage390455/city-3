@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -24,7 +22,6 @@ import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
-import com.sensoro.smartcity.model.ContractInfoModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -45,7 +42,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -54,7 +50,8 @@ import static com.sensoro.smartcity.constant.Constants.EXTRA_CONTRACT_ID;
 
 public class PersonalContractPresenter extends BasePresenter<IPersonalContractView> {
     private Activity mActivity;
-    private ContractListInfo mContractInfo = new ContractListInfo();;
+    private ContractListInfo mContractInfo = new ContractListInfo();
+    ;
     private int submitStatus = 1;
     private Handler mHandler = new Handler(Looper.getMainLooper());
 
@@ -64,7 +61,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
         getContractTemplateInfos();
     }
 
-    public void initData(Context context, Bundle bundle){
+    public void initData(Context context, Bundle bundle) {
         this.initData(context);
         if (bundle != null) {
             Serializable serializable = bundle.getSerializable(Constants.EXTRA_CONTRACT_INFO);
@@ -79,7 +76,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 getView().setSiteNature(mContractInfo.getPlace_type());
                 ArrayList<ContractsTemplateInfo> data = getView().getContractTemplateList();
                 if (data.size() > 0) {
-                    refreshContractsTemplate(data,mContractInfo.getDevices());
+                    refreshContractsTemplate(data, mContractInfo.getDevices());
                 }
                 getView().setServeAge(String.valueOf(mContractInfo.getServiceTime()));
                 getView().setFirstAge(String.valueOf(mContractInfo.getFirstPayTimes()));
@@ -110,9 +107,9 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             @Override
             public void onCompleted(ContractsTemplateRsp contractsTemplateRsp) {
                 ArrayList<ContractsTemplateInfo> data = contractsTemplateRsp.getData();
-                if(mContractInfo.getDevices() != null && mContractInfo.getDevices().size()>0){
-                    refreshContractsTemplate(data,mContractInfo.getDevices());
-                }else{
+                if (mContractInfo.getDevices() != null && mContractInfo.getDevices().size() > 0) {
+                    refreshContractsTemplate(data, mContractInfo.getDevices());
+                } else {
                     getView().updateContractTemplateAdapterInfo(data);
                 }
                 getView().dismissProgressDialog();
@@ -333,7 +330,6 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
         mContractInfo.setServiceTime(serverAge);
         mContractInfo.setFirstPayTimes(ageFirst);
         mContractInfo.setPayTimes(agePeriod);
-
         final ArrayList<ContractsTemplateInfo> dataList = new ArrayList<>(data);
         if (data.size() > 0) {
             //去除未选择的设备
@@ -355,7 +351,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.not_obtain_device_cout));
             return;
         }
-        switch (submitStatus){
+        switch (submitStatus) {
             case 1:
                 //创建合同
                 ContractEditorActivity contractEditorActivity = (ContractEditorActivity) mActivity;
@@ -374,8 +370,8 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
     private void doModifyContract() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(),mContractInfo.getId(), mContractInfo.getContract_type(),  mContractInfo.getCard_id(), null,
-                mContractInfo.getEnterprise_card_id(),null,
+        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(), mContractInfo.getId(), mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
+                mContractInfo.getEnterprise_card_id(), null,
                 mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(), null, mContractInfo.getCustomer_address(),
                 mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(), mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
@@ -394,7 +390,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                         }
 
                     }
-                },1000);
+                }, 1000);
             }
 
             @Override
@@ -415,9 +411,9 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
     public void doCreateContract() {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
-                mContractInfo.getEnterprise_card_id(),null,mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
-                 null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
-                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null,mContractInfo.getServiceTime(),
+                mContractInfo.getEnterprise_card_id(), null, mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
+                null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
+                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(),
                 mContractInfo.getFirstPayTimes()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
             @Override

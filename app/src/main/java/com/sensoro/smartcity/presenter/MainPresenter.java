@@ -184,7 +184,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             return;
         }
         initViewPager();
-        mScreenReceiver = new ScreenBroadcastReceiver();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -196,6 +195,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
                 intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 //        CONNECTIVITY_CHANGE WIFI_STATE_CHANGED&STATE_CHANGE
+                mScreenReceiver = new ScreenBroadcastReceiver();
                 mContext.registerReceiver(mScreenReceiver, intentFilter);
             }
         }, 3000);
@@ -580,7 +580,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     @Override
     public void onDestroy() {
-        mContext.unregisterReceiver(mScreenReceiver);
+        if (mScreenReceiver != null) {
+            mContext.unregisterReceiver(mScreenReceiver);
+        }
+
         mHandler.removeCallbacksAndMessages(null);
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);

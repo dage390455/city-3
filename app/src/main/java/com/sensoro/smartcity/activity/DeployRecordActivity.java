@@ -247,7 +247,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(View.VISIBLE);
                         mReturnTopImageView.setAnimation(returnTopAnimation);
-                        if (returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation!=null&&returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {
