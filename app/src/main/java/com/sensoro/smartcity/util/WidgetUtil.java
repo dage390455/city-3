@@ -244,8 +244,12 @@ public class WidgetUtil {
 
     //文件转化成bitmap
     public static String bitmap2File(Bitmap bitmap, String path) {
+
         String pathname = path.substring(0, path.lastIndexOf(".")) + ".jpg";
         LogUtils.loge("pathname = " + pathname);
+        if (TextUtils.isEmpty(pathname)) {
+            return "";
+        }
         File f = new File(pathname);
         if (f.exists()) f.delete();
         FileOutputStream fOut = null;

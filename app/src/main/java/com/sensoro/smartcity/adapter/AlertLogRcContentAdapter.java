@@ -226,7 +226,7 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
             StringBuilder stringBuilder = new StringBuilder();
             try {
                 SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
-                if (sensorTypeStyles!=null){
+                if (sensorTypeStyles != null) {
                     boolean bool = sensorTypeStyles.isBool();
                     if (bool) {
 //                    info = "烟雾浓度高，设备预警";
@@ -361,10 +361,14 @@ public class AlertLogRcContentAdapter extends RecyclerView.Adapter<AlertLogRcCon
         receiveStautus3.clear();
     }
 
-    private SpannableString changTextColor(String content, String temp, SpannableString spannableString, @ColorRes int color) {
-
+    private SpannableString changTextColor(final String content, final String temp, SpannableString spannableString, @ColorRes int color) {
         ForegroundColorSpan foregroundColorSpan = new ForegroundColorSpan(mContext.getResources().getColor(color));
-        int i = content.indexOf(temp);
+        int i = 0;
+        try {
+            i = content.indexOf(temp);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         spannableString.setSpan(foregroundColorSpan, i, i + temp.length(), Spanned.SPAN_INCLUSIVE_INCLUSIVE);
         return spannableString;
     }

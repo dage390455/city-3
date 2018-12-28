@@ -185,8 +185,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     public void run() {
                         if (isAttachedView()) {
                             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_data_failed));
-                        }
-                        mConnection.disconnect();
+                            mConnection.disconnect();}
+
                     }
                 });
 

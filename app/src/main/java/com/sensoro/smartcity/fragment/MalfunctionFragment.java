@@ -8,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,7 +15,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -43,8 +41,6 @@ import com.sensoro.smartcity.widget.SpacesItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
-
-import javax.crypto.Mac;
 
 import butterknife.BindView;
 import butterknife.OnClick;
@@ -244,7 +240,7 @@ public class MalfunctionFragment extends BaseFragment<IMalfunctionFragmentView, 
                 if (xLinearLayoutManager.findFirstVisibleItemPosition() > 4) {
                     if (newState == 0) {
                         alarmReturnTop.setVisibility(View.VISIBLE);
-                        if (returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation!=null&&returnTopAnimation.hasEnded()) {
                             alarmReturnTop.startAnimation(returnTopAnimation);
                         }
                     } else {
