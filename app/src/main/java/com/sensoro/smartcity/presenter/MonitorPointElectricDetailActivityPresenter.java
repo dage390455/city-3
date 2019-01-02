@@ -20,6 +20,7 @@ import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -778,5 +779,25 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         } else {
             getView().toastShort(mContext.getString(R.string.no_photos_added));
         }
+    }
+
+    public void showEarlyWarningThresholdDialogUtils() {
+        ArrayList<EarlyWarningthresholdDialogUtilsAdapterModel> list = new ArrayList<>();
+        for (int i = 0; i < 5; i++) {
+            EarlyWarningthresholdDialogUtilsAdapterModel earlyWarningthresholdDialogUtilsAdapterModel = new EarlyWarningthresholdDialogUtilsAdapterModel();
+            earlyWarningthresholdDialogUtilsAdapterModel.name = "点穴" + i;
+            StringBuilder stringBuilder = new StringBuilder();
+            for (int j = 0; j <= i; j++) {
+                if (j == i) {
+                    stringBuilder.append("电压-->>klajflajf");
+                } else {
+                    stringBuilder.append("电压-->>klajflajf").append("\n");
+                }
+
+            }
+            earlyWarningthresholdDialogUtilsAdapterModel.content = stringBuilder.toString();
+            list.add(earlyWarningthresholdDialogUtilsAdapterModel);
+        }
+        getView().updateEarlyWarningThresholdAdapterDialogUtils(list);
     }
 }

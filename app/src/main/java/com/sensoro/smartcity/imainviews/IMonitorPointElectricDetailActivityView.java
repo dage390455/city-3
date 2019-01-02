@@ -1,5 +1,6 @@
 package com.sensoro.smartcity.imainviews;
 
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
@@ -81,4 +82,7 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void set3ElectVDetail(int index, String text);
 
     void set3ElectTDetail(int index, String text);
+
+    void updateEarlyWarningThresholdAdapterDialogUtils(List<EarlyWarningthresholdDialogUtilsAdapterModel> data);
+    void dismissEarlyWarningThresholdAdapterDialogUtils();
 }

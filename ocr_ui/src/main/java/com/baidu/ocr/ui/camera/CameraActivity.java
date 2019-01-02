@@ -3,15 +3,6 @@
  */
 package com.baidu.ocr.ui.camera;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import com.baidu.idcardquality.IDcardQualityProcess;
-import com.baidu.ocr.ui.R;
-import com.baidu.ocr.ui.crop.CropView;
-import com.baidu.ocr.ui.crop.FrameOverlayView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -32,6 +23,15 @@ import android.view.Surface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.baidu.idcardquality.IDcardQualityProcess;
+import com.baidu.ocr.ui.R;
+import com.baidu.ocr.ui.crop.CropView;
+import com.baidu.ocr.ui.crop.FrameOverlayView;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class CameraActivity extends Activity {
 

@@ -1,11 +1,17 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.adapter.EarlyWarningThresholdDialogUtilsAdapter;
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
+
+import java.util.List;
 
 public class EarlyWarningThresholdDialogUtils {
 
@@ -13,6 +19,8 @@ public class EarlyWarningThresholdDialogUtils {
     //    private AlertDialog mDialog;
 //    private final TextView mTvMessage;
     private final TextView mTvCancel;
+    private final RecyclerView rvEarlyWarningThreshold;
+    private final EarlyWarningThresholdDialogUtilsAdapter mAdapter;
     //    private final TextView mTvConfirm;
     private DialogUtilsChangeClickListener listener;
     private CustomCornerDialog mDialog;
@@ -24,6 +32,12 @@ public class EarlyWarningThresholdDialogUtils {
 //        mTvMessage = view.findViewById(R.id.dialog_tip_tv_message);
         mTvCancel = view.findViewById(R.id.dialog_tv_change_info);
         ivCancel = view.findViewById(R.id.iv_cancel);
+        rvEarlyWarningThreshold = view.findViewById(R.id.rv_early_warning_threshold);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(activity);
+        layoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+        rvEarlyWarningThreshold.setLayoutManager(layoutManager);
+        mAdapter = new EarlyWarningThresholdDialogUtilsAdapter(activity);
+        rvEarlyWarningThreshold.setAdapter(mAdapter);
 //        mTvConfirm = view.findViewById(R.id.dialog_tip_tv_confirm);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
@@ -70,13 +84,23 @@ public class EarlyWarningThresholdDialogUtils {
 //        mTvConfirm.setTextColor(color);
 //    }
 
-//    public void setTipConfirmText(String text, @ColorInt int color) {
+    //    public void setTipConfirmText(String text, @ColorInt int color) {
 //        mTvConfirm.setText(text);
 //        mTvConfirm.setTextColor(color);
 //    }
+    public void updateEarlyWarningThresholdAdapter(List<EarlyWarningthresholdDialogUtilsAdapterModel> data) {
+        mAdapter.updateList(data);
+    }
 
     public void show() {
         if (mDialog != null) {
+            mDialog.show();
+        }
+    }
+
+    public void show(List<EarlyWarningthresholdDialogUtilsAdapterModel> data) {
+        if (mDialog != null) {
+            updateEarlyWarningThresholdAdapter(data);
             mDialog.show();
         }
     }

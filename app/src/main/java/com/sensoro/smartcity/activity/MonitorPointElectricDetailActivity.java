@@ -21,6 +21,7 @@ import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcMalfunctionContentAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
+import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
@@ -620,6 +621,20 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         }
     }
 
+    @Override
+    public void updateEarlyWarningThresholdAdapterDialogUtils(List<EarlyWarningthresholdDialogUtilsAdapterModel> data) {
+        if (earlyWarningThresholdDialogUtils != null) {
+            earlyWarningThresholdDialogUtils.show(data);
+        }
+    }
+
+    @Override
+    public void dismissEarlyWarningThresholdAdapterDialogUtils() {
+        if (earlyWarningThresholdDialogUtils != null) {
+            earlyWarningThresholdDialogUtils.dismiss();
+        }
+    }
+
 
     @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
             R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check, R.id.ac_monitoring_point_tv_air_switch_config, R.id.include_text_title_tv_subtitle,
@@ -666,9 +681,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 setElectDetailVisible(showDetail);
                 break;
             case R.id.elect_info:
-                if (earlyWarningThresholdDialogUtils != null) {
-                    earlyWarningThresholdDialogUtils.show();
-                }
+                mPresenter.showEarlyWarningThresholdDialogUtils();
+//                if (earlyWarningThresholdDialogUtils != null) {
+//                    earlyWarningThresholdDialogUtils.show();
+//                }
                 break;
         }
     }
