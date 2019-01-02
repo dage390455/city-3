@@ -41,8 +41,7 @@
             android:background="@color/white"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/alert_contact"
                 android:textSize="14sp"
@@ -52,8 +51,9 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"/>
             <EditText
+                android:layout_weight="1"
                 android:id="@+id/ac_name_address_et_alarm_contact_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="@string/alarm_contact_tip_sample"
@@ -78,8 +78,7 @@
             android:background="@color/white"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/alarm_contact_tip_phone"
                 android:textSize="14sp"
@@ -90,7 +89,8 @@
                 android:layout_marginBottom="16dp"/>
             <EditText
                 android:id="@+id/ac_name_address_et_alarm_contact_phone"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="@string/alarm_contact_tip_phone_sample"

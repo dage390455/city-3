@@ -3,10 +3,6 @@
  */
 package com.baidu.ocr.ui.crop;
 
-import java.io.IOException;
-
-import com.baidu.ocr.ui.util.ImageUtil;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,6 +17,10 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.WindowManager;
+
+import com.baidu.ocr.ui.util.ImageUtil;
+
+import java.io.IOException;
 
 public class CropView extends View {
 
@@ -71,7 +71,8 @@ public class CropView extends View {
             WindowManager windowManager = (WindowManager) getContext().getSystemService(Context.WINDOW_SERVICE);
             Point screenSize = new Point();
             windowManager.getDefaultDisplay().getSize(screenSize);
-            min = Math.min(min, screenSize.x * 2 / 3);
+            //TODO 原来2/3 先在线改为1
+            min = Math.min(min, screenSize.x * 1);
 
             options.inSampleSize = ImageUtil.calculateInSampleSize(options, min, min);
             options.inScaled = true;
@@ -108,8 +109,8 @@ public class CropView extends View {
     public Bitmap crop(Rect frame) {
         float scale = getScale();
 
-        float[] src = new float[] {frame.left, frame.top};
-        float[] desc = new float[] {0, 0};
+        float[] src = new float[]{frame.left, frame.top};
+        float[] desc = new float[]{0, 0};
 
         Matrix invertedMatrix = new Matrix();
         this.matrix.invert(invertedMatrix);
