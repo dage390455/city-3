@@ -9,9 +9,6 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorNameAddressActivityView;
 import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.CityObserver;
-import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -20,9 +17,6 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
 
 public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDeployMonitorNameAddressActivityView> implements Constants {
     private Activity mContext;
@@ -109,39 +103,41 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
             getView().toastShort(mContext.getString(R.string.must_enter_name_address));
             return;
         }
-        //跟原先名字一样 保存
-        if (text.equals(originName)) {
-            doResult(text);
-            return;
-        }
-        //基站设备不进行校验
-        if (deployType != -1 && deployType == TYPE_SCAN_DEPLOY_STATION) {
-            doResult(text);
-            return;
-        }
-        getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.getDeviceNameValid(text).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
-            @Override
-            public void onCompleted(ResponseBase responseBase) {
-                if (isAttachedView()) {
-                    getView().dismissProgressDialog();
-                    doResult(text);
-                }
-            }
-
-            @Override
-            public void onErrorMsg(int errorCode, String errorMsg) {
-//                if (errorCode==4007108){
-////此code为重名
-////                }
-                if (isAttachedView()) {
-                    getView().dismissProgressDialog();
-                    getView().toastShort(errorMsg);
-                }
-
-
-            }
-        });
+        doResult(text);
+        //TODO 暂时去掉重名检测
+//        //跟原先名字一样 保存
+//        if (text.equals(originName)) {
+//            doResult(text);
+//            return;
+//        }
+//        //基站设备不进行校验
+//        if (deployType != -1 && deployType == TYPE_SCAN_DEPLOY_STATION) {
+//            doResult(text);
+//            return;
+//        }
+//        getView().showProgressDialog();
+//        RetrofitServiceHelper.INSTANCE.getDeviceNameValid(text).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+//            @Override
+//            public void onCompleted(ResponseBase responseBase) {
+//                if (isAttachedView()) {
+//                    getView().dismissProgressDialog();
+//                    doResult(text);
+//                }
+//            }
+//
+//            @Override
+//            public void onErrorMsg(int errorCode, String errorMsg) {
+////                if (errorCode==4007108){
+//////此code为重名
+//////                }
+//                if (isAttachedView()) {
+//                    getView().dismissProgressDialog();
+//                    getView().toastShort(errorMsg);
+//                }
+//
+//
+//            }
+//        });
 //
     }
 

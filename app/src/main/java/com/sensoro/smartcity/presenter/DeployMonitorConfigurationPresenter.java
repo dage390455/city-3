@@ -10,7 +10,6 @@ import com.sensoro.libbleserver.ble.BLEDevice;
 import com.sensoro.libbleserver.ble.SensoroConnectionCallback;
 import com.sensoro.libbleserver.ble.SensoroDevice;
 import com.sensoro.libbleserver.ble.SensoroDeviceConnection;
-import com.sensoro.libbleserver.ble.SensoroSensor;
 import com.sensoro.libbleserver.ble.SensoroWriteCallback;
 import com.sensoro.libbleserver.ble.scanner.BLEDeviceListener;
 import com.sensoro.smartcity.R;
@@ -38,17 +37,13 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     private DeployAnalyzerModel deployAnalyzerModel;
     private String mMacAddress;
     private SensoroDeviceConnection mConnection;
-    private SensoroDevice sensoroDevice;
-    private SensoroSensor sensoroSensor;
     private Integer mEnterValue;
     private final HashSet<String> bleList = new HashSet<>();
-    private DeployConfigurationAnalyzer mConfigurationAnalyzer;
     private int[] mMinMaxValue;
 
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
-        mConfigurationAnalyzer = new DeployConfigurationAnalyzer();
         deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.post(this);
@@ -57,7 +52,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
     private void init() {
-        mMinMaxValue = mConfigurationAnalyzer.analyzeDeviceType(deployAnalyzerModel.deviceType);
+        mMinMaxValue = DeployConfigurationAnalyzer.analyzeDeviceType(deployAnalyzerModel.deviceType);
         if (mMinMaxValue == null) {
             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
         } else {
@@ -176,7 +171,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     }
                 }
             });
-            SensoroDevice sensoroDevice = mConfigurationAnalyzer.configurationData((SensoroDevice) bleDevice, mEnterValue);
+            SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType,(SensoroDevice) bleDevice, mEnterValue);
             if (sensoroDevice != null) {
                 mConnection.writeData05Configuration(sensoroDevice, this);
             } else {

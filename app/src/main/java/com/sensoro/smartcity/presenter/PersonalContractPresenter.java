@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
-import android.util.Log;
-import android.widget.Toast;
 
 import com.baidu.ocr.sdk.OCR;
 import com.baidu.ocr.sdk.OnResultListener;
@@ -24,7 +22,6 @@ import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IPersonalContractView;
-import com.sensoro.smartcity.model.ContractInfoModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
@@ -45,7 +42,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
@@ -237,7 +233,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_party_a_customer_name));
             return;
         } else {
-            if (partA.length() > 100) {
+            if (partA.length() > 30) {
                 getView().toastShort(mActivity.getString(R.string.party_a_customer_name_not_more_100));
                 return;
             }
@@ -248,7 +244,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_owner_name));
             return;
         } else {
-            if (ownerName.length() > 48) {
+            if (ownerName.length() > 8) {
                 getView().toastShort(mActivity.getString(R.string.owner_name_more_48));
                 return;
             }
@@ -271,7 +267,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_home_address));
             return;
         } else {
-            if (homeAddress.length() > 200) {
+            if (homeAddress.length() > 30) {
                 getView().toastShort(mActivity.getString(R.string.home_address_more_200));
                 return;
             }

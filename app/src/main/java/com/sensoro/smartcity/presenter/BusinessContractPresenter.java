@@ -17,7 +17,6 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IBusinessContractView;
 import com.sensoro.smartcity.model.BusinessLicenseData;
-import com.sensoro.smartcity.model.ContractInfoModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.push.RecognizeService;
 import com.sensoro.smartcity.server.CityObserver;
@@ -33,7 +32,7 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
-import org.w3c.dom.Text;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -267,7 +266,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_enterprise_name));
             return;
         } else {
-            if (enterpriseName.length() > 100) {
+            if (enterpriseName.length() > 30) {
                 getView().toastShort(mActivity.getString(R.string.enterprise_name_not_more_100));
                 return;
             }else{
@@ -279,7 +278,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             return;
 
         } else {
-            if (customerName.length() > 48) {
+            if (customerName.length() > 8) {
                 getView().toastShort(mActivity.getString(R.string.customer_name_not_more_48));
                 return;
             }else{
@@ -310,7 +309,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_register_address));
             return;
         }else{
-            if (customerAddress.length() > 200) {
+            if (customerAddress.length() > 30) {
                 getView().toastShort(mActivity.getString(R.string.customer_address_no_more_200));
                 return;
             }else{
