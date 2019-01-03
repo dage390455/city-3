@@ -275,7 +275,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 if (RegexUtils.checkContractName(enterpriseName)) {
                     mContractInfo.setCustomer_enterprise_name(enterpriseName);
                 } else {
-                    getView().toastShort("企业名称不合法");
+                    getView().toastShort(mActivity.getString(R.string.company_name) + mActivity.getString(R.string.do_not_enter_illegal_characters_such_as_english_and_numbers));
                     return;
                 }
             }
@@ -292,7 +292,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 if (RegexUtils.checkContractName(customerName)) {
                     mContractInfo.setCustomer_name(customerName);
                 } else {
-                    getView().toastShort("法人姓名不合法");
+                    getView().toastShort(mActivity.getString(R.string.legal_name) + mActivity.getString(R.string.do_not_enter_illegal_characters_such_as_english_and_numbers));
                     return;
                 }
 
