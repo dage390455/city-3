@@ -840,12 +840,14 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void onRefresh(@NonNull RefreshLayout refreshLayout) {
         try {
             HomeTopModel homeTopModel = mMainHomeFragRcContentAdapter.getData().get(currentPosition);
+            if (homeTopModel == null) {
+                mPresenter.requestInitData(false);
+                return;
+            }
             mPresenter.requestWithDirection(DIRECTION_DOWN, false, homeTopModel);
         } catch (Exception e) {
             e.printStackTrace();
-            if (mMainHomeFragRcContentAdapter.getData().size() == 0) {
-                mPresenter.requestInitData(false);
-            }
+            mPresenter.requestInitData(false);
         }
     }
 
@@ -853,6 +855,10 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
     public void onLoadMore(@NonNull RefreshLayout refreshLayout) {
         try {
             HomeTopModel homeTopModel = mMainHomeFragRcContentAdapter.getData().get(currentPosition);
+            if (homeTopModel == null) {
+                recycleViewRefreshComplete();
+                return;
+            }
             mPresenter.requestWithDirection(DIRECTION_UP, false, homeTopModel);
         } catch (Exception e) {
             e.printStackTrace();

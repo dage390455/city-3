@@ -143,4 +143,19 @@ public class RegexUtils {
     public static boolean checkContractNotEmpty(String content) {
         return !TextUtils.isEmpty(content) && !"无".equals(content);
     }
+
+    /**
+     * 不能包含字母和数字
+     *
+     * @param customName
+     * @return
+     */
+    public static boolean checkContractName(String customName) {
+        if (TextUtils.isEmpty(customName)) {
+            return false;
+        }
+        final String regex = ".*[a-zA-z0-9].*";
+        Pattern p = Pattern.compile(regex);
+        return !p.matcher(customName).matches();
+    }
 }

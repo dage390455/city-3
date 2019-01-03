@@ -84,7 +84,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.currHighType = 1;//打开保护，不关联脱扣
         sensoroSensor.acrelFires.valLowType = 0;//关闭保护，不关联脱扣
         sensoroSensor.acrelFires.valHighType = 1;//打开保护，不关联脱扣
-        sensoroSensor.acrelFires.chEnable = 0x1F;//打开温度，打开漏电保护
+        sensoroSensor.acrelFires.chEnable = 0x1E;//打开温度，关闭漏电保护
         sensoroSensor.acrelFires.connectSw = 0;//关联脱扣器全部关闭
         sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
         sensoroSensor.acrelFires.ct = dev / 5;
@@ -132,5 +132,6 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.ict = 2000;//漏电互感器变比 2000
         sensoroSensor.acrelFires.ct = 1;
         sensoroSensor.acrelFires.cmd = 2;
+        sensoroSensor.acrelFires.currHighType = 1;
     }
 }

@@ -43,16 +43,18 @@ import rx.schedulers.Schedulers;
 
 public class BusinessContractPresenter extends BasePresenter<IBusinessContractView> {
     private Activity mActivity;
-    private ContractListInfo mContractInfo = new ContractListInfo();;
+    private ContractListInfo mContractInfo = new ContractListInfo();
+    ;
     private int submitStatus = 1;
     private Handler mHandler = new Handler(Looper.getMainLooper());
+
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
         getContractTemplateInfos();
     }
 
-    public void initData(Context context, Bundle bundle){
+    public void initData(Context context, Bundle bundle) {
         this.initData(context);
         if (bundle != null) {
             Serializable serializable = bundle.getSerializable(Constants.EXTRA_CONTRACT_INFO);
@@ -67,7 +69,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 getView().setSiteNature(mContractInfo.getPlace_type());
                 ArrayList<ContractsTemplateInfo> data = getView().getContractTemplateList();
                 if (data.size() > 0) {
-                    refreshContractsTemplate(data,mContractInfo.getDevices());
+                    refreshContractsTemplate(data, mContractInfo.getDevices());
                 }
                 getView().setServeAge(String.valueOf(mContractInfo.getServiceTime()));
                 getView().setFirstAge(String.valueOf(mContractInfo.getFirstPayTimes()));
@@ -98,9 +100,9 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             @Override
             public void onCompleted(ContractsTemplateRsp contractsTemplateRsp) {
                 ArrayList<ContractsTemplateInfo> data = contractsTemplateRsp.getData();
-                if(mContractInfo.getDevices() != null && mContractInfo.getDevices().size()>0){
-                    refreshContractsTemplate(data,mContractInfo.getDevices());
-                }else{
+                if (mContractInfo.getDevices() != null && mContractInfo.getDevices().size() > 0) {
+                    refreshContractsTemplate(data, mContractInfo.getDevices());
+                } else {
                     getView().updateContractTemplateAdapterInfo(data);
                 }
                 getView().dismissProgressDialog();
@@ -230,9 +232,9 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
         getView().showProgressDialog();
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getNewContract(mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
-                mContractInfo.getEnterprise_card_id(),null,mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
+                mContractInfo.getEnterprise_card_id(), null, mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(),
                 null, mContractInfo.getCustomer_address(), mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(),
-                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null,mContractInfo.getServiceTime(),
+                mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(),
                 mContractInfo.getFirstPayTimes()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
 
             @Override
@@ -241,10 +243,10 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 int id = data.getId();
                 LogUtils.loge(this, "id = " + id);
                 Intent intent = new Intent(mActivity, ContractCreationSuccessActivity.class);
-                intent.putExtra(Constants.EXTRA_CONTRACT_ID,id);
+                intent.putExtra(Constants.EXTRA_CONTRACT_ID, id);
                 String url = data.getFdd_viewpdf_url();
-                if (!TextUtils.isEmpty(url)){
-                    intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL,url);
+                if (!TextUtils.isEmpty(url)) {
+                    intent.putExtra(Constants.EXTRA_CONTRACT_PREVIEW_URL, url);
                 }
                 getView().startAC(intent);
                 getView().dismissProgressDialog();
@@ -269,8 +271,13 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             if (enterpriseName.length() > 30) {
                 getView().toastShort(mActivity.getString(R.string.enterprise_name_not_more_100));
                 return;
-            }else{
-                mContractInfo.setCustomer_enterprise_name(enterpriseName);
+            } else {
+                if (RegexUtils.checkContractName(enterpriseName)) {
+                    mContractInfo.setCustomer_enterprise_name(enterpriseName);
+                } else {
+                    getView().toastShort("企业名称不合法");
+                    return;
+                }
             }
         }
         if (TextUtils.isEmpty(customerName)) {
@@ -281,8 +288,14 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             if (customerName.length() > 8) {
                 getView().toastShort(mActivity.getString(R.string.customer_name_not_more_48));
                 return;
-            }else{
-                mContractInfo.setCustomer_name(customerName);
+            } else {
+                if (RegexUtils.checkContractName(customerName)) {
+                    mContractInfo.setCustomer_name(customerName);
+                } else {
+                    getView().toastShort("法人姓名不合法");
+                    return;
+                }
+
             }
         }
         if (RegexUtils.checkPhone(customerPhone)) {
@@ -298,7 +311,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
         } else {
             if (RegexUtils.checkEnterpriseCardID(enterpriseCardId)) {
                 mContractInfo.setEnterprise_card_id(enterpriseCardId);
-            }else{
+            } else {
                 getView().toastShort(mActivity.getString(R.string.please_enter_correct_enterprise_card_id));
                 return;
             }
@@ -308,11 +321,11 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
         if (TextUtils.isEmpty(customerAddress)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_register_address));
             return;
-        }else{
+        } else {
             if (customerAddress.length() > 30) {
                 getView().toastShort(mActivity.getString(R.string.customer_address_no_more_200));
                 return;
-            }else{
+            } else {
                 mContractInfo.setCustomer_address(customerAddress);
             }
         }
@@ -395,7 +408,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             return;
         }
 
-        switch (submitStatus){
+        switch (submitStatus) {
             case 1:
                 //创建合同
                 ContractEditorActivity contractEditorActivity = (ContractEditorActivity) mActivity;
@@ -413,8 +426,8 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
 
     private void doModifyContract() {
         getView().showProgressDialog();
-        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(),mContractInfo.getId(), mContractInfo.getContract_type(),  mContractInfo.getCard_id(), null,
-                mContractInfo.getEnterprise_card_id(),null,
+        RetrofitServiceHelper.INSTANCE.modifyContract(mContractInfo.getUid(), mContractInfo.getId(), mContractInfo.getContract_type(), mContractInfo.getCard_id(), null,
+                mContractInfo.getEnterprise_card_id(), null,
                 mContractInfo.getCustomer_name(), mContractInfo.getCustomer_enterprise_name(), null, mContractInfo.getCustomer_address(),
                 mContractInfo.getCustomer_phone(), mContractInfo.getPlace_type(), mContractInfo.getDevices(), mContractInfo.getPayTimes(), null, mContractInfo.getServiceTime(), mContractInfo.getFirstPayTimes()).subscribeOn
                 (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
@@ -433,7 +446,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                         }
 
                     }
-                },1000);
+                }, 1000);
             }
 
             @Override
