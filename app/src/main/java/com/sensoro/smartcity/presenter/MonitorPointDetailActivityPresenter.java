@@ -690,7 +690,7 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                 }
                 try {
                     integer = Integer.valueOf(content);
-                    int[] ints = new DeployConfigurationAnalyzer().analyzeDeviceType(mDeviceInfo.getDeviceType());
+                    int[] ints = DeployConfigurationAnalyzer.analyzeDeviceType(mDeviceInfo.getDeviceType());
                     if (integer >= ints[0] && integer <= ints[1]) {
                         switchSpec = integer;
                     } else {

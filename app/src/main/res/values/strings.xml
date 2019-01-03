@@ -643,7 +643,7 @@
     <string name="monitor_point_detail_operation">Operate</string>
     <string name="text_fire_alarm_empty"></string>
     <string name="main_home_menu_scan_login">Scan</string>
-    <string name="legal_representative_name">Legal representative/name</string>
+    <string name="legal_representative_name">Legal representative/name/shop</string>
 
     <string name="please_use_different_device_to_replace">Please use different device to replace</string>
     <string name="no_search_history">No search history</string>
@@ -708,12 +708,12 @@
     <string name="contract_business">企业合同</string>
     <string name="read_error_try">读取失败请重试</string>
     <string name="id_card_Identification_error">身份证识别失败：</string>
-    <string name="party_a_customer_name_not_more_100">甲方（客户名称）不能超过100个字符</string>
+    <string name="party_a_customer_name_not_more_100">甲方（客户名称）不能超过30个字符</string>
     <string name="please_enter_party_a_customer_name">请输入甲方（客户名称）</string>
-    <string name="owner_name_more_48">业主姓名不能超过48个字符</string>
+    <string name="owner_name_more_48">业主姓名不能超过8个字符</string>
     <string name="please_enter_owner_name">请输入业主姓名</string>
     <string name="please_enter_valid_id_card_number">请输入有效身份证号码</string>
-    <string name="home_address_more_200">住址信息不能超过200个字符</string>
+    <string name="home_address_more_200">住址信息不能超过30个字符</string>
     <string name="please_enter_home_address">请填写住址信息</string>
     <string name="please_select_site_nature">请选择一个场地性质</string>
     <string name="contract_service_year_more_1">合同服务年限不能少于1年</string>
@@ -730,14 +730,14 @@
     <string name="contract_preview">合同预览</string>
     <string name="create_qr_code">生成二维码</string>
     <string name="contract_creattion">创建合同</string>
-    <string name="enterprise_name_not_more_100">企业名称不能超过100个字符</string>
+    <string name="enterprise_name_not_more_100">企业名称不能超过30个字符</string>
     <string name="please_enter_enterprise_name">请输入企业名称</string>
-    <string name="customer_name_not_more_48">法定代表人名称不能超过48个字符</string>
+    <string name="customer_name_not_more_48">法定代表人名称不能超过8个字符</string>
     <string name="please_enter_customer_name">请输入法定代表人</string>
     <string name="please_enter_enterprise_card_id">请输入统一社会信用代码</string>
     <string name="please_enter_correct_enterprise_card_id">请输入正确的统一社会信用代码</string>
     <string name="please_enter_register_address">请填写注册住址信息</string>
-    <string name="customer_address_no_more_200">注册地址信息不能超过200个字符</string>
+    <string name="customer_address_no_more_200">注册地址信息不能超过30个字符</string>
     <string name="contract_detail">合同详情</string>
     <string name="not_obtain_contract_id">未获取到合同号</string>
     <string name="not_obtain_contract_info">未获取到合同信息</string>

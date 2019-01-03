@@ -234,22 +234,32 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_party_a_customer_name));
             return;
         } else {
-            if (partA.length() > 100) {
+            if (partA.length() > 30) {
                 getView().toastShort(mActivity.getString(R.string.party_a_customer_name_not_more_100));
                 return;
             }
-            mContractInfo.setCustomer_enterprise_name(partA);
-
+            if (RegexUtils.checkContractName(partA)) {
+                mContractInfo.setCustomer_enterprise_name(partA);
+            } else {
+                getView().toastShort("甲方名称不合法");
+                return;
+            }
         }
         if (TextUtils.isEmpty(ownerName)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_owner_name));
             return;
         } else {
-            if (ownerName.length() > 48) {
+            if (ownerName.length() > 8) {
                 getView().toastShort(mActivity.getString(R.string.owner_name_more_48));
                 return;
             }
-            mContractInfo.setCustomer_name(ownerName);
+            if (RegexUtils.checkContractName(ownerName)) {
+                mContractInfo.setCustomer_name(ownerName);
+            } else {
+                getView().toastShort("业主姓名不合法");
+                return;
+            }
+
         }
         if (RegexUtils.checkPhone(contactInfo)) {
             mContractInfo.setCustomer_phone(contactInfo);
@@ -268,7 +278,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_home_address));
             return;
         } else {
-            if (homeAddress.length() > 200) {
+            if (homeAddress.length() > 30) {
                 getView().toastShort(mActivity.getString(R.string.home_address_more_200));
                 return;
             }
