@@ -185,6 +185,7 @@ public enum DeployAnalyzerUtils implements Constants {
                 deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                 deployAnalyzerModel.nameAndAddress = data.getName();
+                deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.deviceType = data.getDeviceType();
                 deployAnalyzerModel.sn = data.getSn();
                 deployAnalyzerModel.blePassword = data.getBlePassword();
@@ -306,6 +307,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_STATION;
                             deployAnalyzerModel.sn = deployStationInfo.getSn();
                             deployAnalyzerModel.nameAndAddress = deployStationInfo.getName();
+                            deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
                             List<Double> lonlat = deployStationInfo.getLonlat();
                             if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
                                 deployAnalyzerModel.latLng.clear();
@@ -353,7 +355,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             deployAnalyzerModel.notOwn = data.isNotOwn();
                             deployAnalyzerModel.blePassword = data.getBlePassword();
                             deployAnalyzerModel.weChatAccount = data.getWxPhone();
-
+                            deployAnalyzerModel.status = data.getStatus();
                             deployAnalyzerModel.signal = data.getSignal();
                             List<String> tags = data.getTags();
                             if (tags != null && tags.size() > 0) {
@@ -399,6 +401,7 @@ public enum DeployAnalyzerUtils implements Constants {
                         deployAnalyzerModel.sn = data.getSn();
                         deployAnalyzerModel.deviceType = data.getDeviceType();
                         deployAnalyzerModel.nameAndAddress = data.getName();
+                        deployAnalyzerModel.status = data.getStatus();
                         deployAnalyzerModel.notOwn = data.isNotOwn();
                         deployAnalyzerModel.blePassword = data.getBlePassword();
                         deployAnalyzerModel.signal = data.getSignal();
@@ -573,7 +576,7 @@ public enum DeployAnalyzerUtils implements Constants {
                                 deployAnalyzerModel.notOwn = data.isNotOwn();
                                 deployAnalyzerModel.mDeviceDetail = oldDeviceDetail;
                                 deployAnalyzerModel.blePassword = data.getBlePassword();
-
+                                deployAnalyzerModel.status = data.getStatus();
                                 String deviceType = data.getDeviceType();
                                 if (!TextUtils.isEmpty(deviceType)) {
                                     deployAnalyzerModel.deviceType = deviceType;
@@ -598,6 +601,7 @@ public enum DeployAnalyzerUtils implements Constants {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
                 deployAnalyzerModel.deployType = scanType;
                 deployAnalyzerModel.nameAndAddress = data.getName();
+                deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.deviceType = data.getDeviceType();
                 deployAnalyzerModel.weChatAccount = data.getWxPhone();
                 List<Double> lonlat = data.getLonlat();
@@ -751,7 +755,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             DeployContactModel deployContactModel = deployAnalyzerModel.deployContactModelList.get(0);
                             RetrofitServiceHelper.INSTANCE.doInspectionChangeDeviceDeploy(deployAnalyzerModel.mDeviceDetail.getSn(), deployAnalyzerModel.sn,
                                     deployAnalyzerModel.mDeviceDetail.getTaskId(), 1, lon, lan, deployAnalyzerModel.tagList, deployAnalyzerModel.nameAndAddress,
-                                    deployContactModel.name, deployContactModel.phone, imgUrls,null).
+                                    deployContactModel.name, deployContactModel.phone, imgUrls, null).
                                     subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceDeployRsp>(presenter) {
                                 @Override
                                 public void onCompleted(DeviceDeployRsp deviceDeployRsp) {

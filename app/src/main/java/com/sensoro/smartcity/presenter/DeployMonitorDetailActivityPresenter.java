@@ -457,9 +457,9 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
             deployResultModel.phone = deployContactModel.phone;
         }
         deployResultModel.address = deployAnalyzerModel.address;
-        deployResultModel.updateTime = deployAnalyzerModel.updatedTime;
-        deployResultModel.deviceStatus = deployAnalyzerModel.status;
-        deployResultModel.signal = deployAnalyzerModel.signal;
+        deployResultModel.updateTime = deviceInfo.getUpdatedTime();
+        deployResultModel.deviceStatus = deviceInfo.getStatus();
+        deployResultModel.signal = deviceInfo.getSignal();
         deployResultModel.name = deployAnalyzerModel.nameAndAddress;
         intent.putExtra(EXTRA_DEPLOY_RESULT_MODEL, deployResultModel);
         getView().startAC(intent);
