@@ -241,7 +241,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             if (RegexUtils.checkContractName(partA)) {
                 mContractInfo.setCustomer_enterprise_name(partA);
             } else {
-                getView().toastShort("甲方名称不合法");
+                getView().toastShort(mActivity.getString(R.string.party_a_customer_name) + mActivity.getString(R.string.do_not_enter_illegal_characters_such_as_english_and_numbers));
                 return;
             }
         }
@@ -256,7 +256,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             if (RegexUtils.checkContractName(ownerName)) {
                 mContractInfo.setCustomer_name(ownerName);
             } else {
-                getView().toastShort("业主姓名不合法");
+                getView().toastShort(mActivity.getString(R.string.owners_name) + mActivity.getString(R.string.do_not_enter_illegal_characters_such_as_english_and_numbers));
                 return;
             }
 
