@@ -731,7 +731,7 @@
     <string name="please_enter_customer_name">请输入法人姓名</string>
     <string name="please_enter_enterprise_card_id">请输入统一社会信用代码</string>
     <string name="please_enter_correct_enterprise_card_id">请输入正确的统一社会信用代码</string>
-    <string name="please_enter_register_address">请填写注册住址信息</string>
+    <string name="please_enter_register_address">请填写注册地址信息</string>
     <string name="customer_address_no_more_200">注册地址信息不能超过30个字符</string>
     <string name="contract_detail">合同详情</string>
     <string name="not_obtain_contract_id">未获取到合同号</string>

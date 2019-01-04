@@ -140,6 +140,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     ImageView ivAlarmStatus;
     @BindView(R.id.ac_monitoring_point_content_malfunction)
     RecyclerView acMonitoringPointContentMalfunction;
+    @BindView(R.id.ll_elect_top)
+    LinearLayout llElectTop;
+    @BindView(R.id.ac_monitoring_elect_point_line)
+    View acMonitoringElectPointLine;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -633,6 +637,23 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         if (earlyWarningThresholdDialogUtils != null) {
             earlyWarningThresholdDialogUtils.dismiss();
         }
+    }
+
+    @Override
+    public void setLlElectTopVisible(boolean isVisible) {
+        llElectTop.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setTopElectData(String value, int color, String typeName) {
+        tvElectMain.setText(value);
+        tvElectMain.setTextColor(mActivity.getResources().getColor(color));
+        electMainType.setText(typeName);
+    }
+
+    @Override
+    public void setAcMonitoringElectPointLineVisible(boolean isVisible) {
+        acMonitoringElectPointLine.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
 

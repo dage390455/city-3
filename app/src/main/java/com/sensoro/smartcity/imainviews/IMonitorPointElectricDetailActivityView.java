@@ -23,6 +23,7 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setDeviceLocation(String location, boolean isArrowsRight);
 
     void updateDeviceInfoAdapter(List<MonitoringPointRcContentAdapterModel> data);
+
     void updateDeviceMalfunctionInfoAdapter(List<MonitoringPointRcContentAdapterModel> data);
 
     void setSNText(String sn);
@@ -84,5 +85,11 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void set3ElectTDetail(int index, String text);
 
     void updateEarlyWarningThresholdAdapterDialogUtils(List<EarlyWarningthresholdDialogUtilsAdapterModel> data);
+
     void dismissEarlyWarningThresholdAdapterDialogUtils();
+
+    void setLlElectTopVisible(boolean isVisible);
+
+    void setTopElectData(String value,int color,String typeName);
+    void setAcMonitoringElectPointLineVisible(boolean isVisible);
 }

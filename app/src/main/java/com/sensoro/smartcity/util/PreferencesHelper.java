@@ -282,7 +282,7 @@ public final class PreferencesHelper implements Constants {
 //            }
 //        }
             return mDeviceMergeTypesInfo;
-        } catch (Throwable e) {
+        } catch (Throwable t) {
             return null;
         }
     }
