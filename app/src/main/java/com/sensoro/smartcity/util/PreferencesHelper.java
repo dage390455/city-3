@@ -253,12 +253,13 @@ public final class PreferencesHelper implements Constants {
     }
 
     public DeviceMergeTypesInfo getLocalDevicesMergeTypes() {
-        if (mDeviceMergeTypesInfo == null) {
-            String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
-            if (!TextUtils.isEmpty(json)) {
-                mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
+        try {
+            if (mDeviceMergeTypesInfo == null) {
+                String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+                if (!TextUtils.isEmpty(json)) {
+                    mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
+                }
             }
-        }
 //        if (mDeviceMergeTypesInfo != null) {
 //            //加入全部的类型数据
 //            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = mDeviceMergeTypesInfo.getConfig();
@@ -280,7 +281,10 @@ public final class PreferencesHelper implements Constants {
 //                sensorType.put("all", new SensorTypeStyles());
 //            }
 //        }
-        return mDeviceMergeTypesInfo;
+            return mDeviceMergeTypesInfo;
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
     public boolean saveLocalDevicesMergeTypes(DeviceMergeTypesInfo deviceMergeTypesInfo) {
