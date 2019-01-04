@@ -69,13 +69,13 @@
     <permission
         android:name="getui.permission.GetuiService.${applicationId}"
         android:protectionLevel="normal" />
-
+    <!--TODO 正式版和测试版需要进行图标切换-->
     <application
         android:name=".SensoroCityApplication"
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_beta"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
+        android:roundIcon="@mipmap/ic_launcher_beta_round"
         android:supportsRtl="true"
         android:theme="@style/MyTheme"
         tools:replace="android:theme">
