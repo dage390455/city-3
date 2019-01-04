@@ -6,7 +6,7 @@ import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 
-public interface IContractEditorView extends IToast,IProgressDialog,IActivityIntent {
+public interface IContractEditorView extends IToast, IProgressDialog, IActivityIntent {
     void showPersonalFragment();
 
     void showBusinessFragment();
@@ -18,4 +18,6 @@ public interface IContractEditorView extends IToast,IProgressDialog,IActivityInt
     void setTopTabVisible(boolean isVisible);
 
     void setTitleText(String text);
+
+    void setOriginFormList(boolean isFormList);
 }

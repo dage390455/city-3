@@ -93,7 +93,7 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         }
         switch (contract_type) {
             case 1:
-                holder.itemTvType.setText(R.string.business_merchant_name);
+                holder.itemTvType.setText(R.string.company);
                 holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
                 holder.itemEtLine1.setText(customer_name);
                 holder.itemTvContactsEnterprise.setText(R.string.business_merchant_name);
@@ -111,7 +111,7 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
                 holder.itemEtLine2.setText(customer_address);
                 break;
             default:
-                holder.itemTvType.setText(R.string.business_merchant_name);
+                holder.itemTvType.setText(R.string.company);
                 holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
                 holder.itemEtLine1.setText(customer_name);
                 holder.itemTvContactsEnterprise.setText(R.string.business_merchant_name);
