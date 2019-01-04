@@ -10,7 +10,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -24,8 +23,8 @@ import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.FocusSurfaceView;
 import com.sensoro.smartcity.widget.MyVideoView;
 import com.sensoro.smartcity.widget.RecordedButton;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.yixia.camera.MediaRecorderBase;
 import com.yixia.camera.MediaRecorderNative;
 import com.yixia.camera.VCamera;
@@ -238,7 +237,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
 
     @Override
     public void onEncodeStart() {
-        Log.i("Log.i", "onEncodeStart");
+        LogUtils.logd("Log.i", "onEncodeStart");
     }
 
     @Override
@@ -289,7 +288,7 @@ public class TakeRecordActivity extends Activity implements MediaRecorderBase.On
 
     @Override
     public void onEncodeError() {
-        Log.i("Log.i", "onEncodeError");
+        LogUtils.logd("Log.i", "onEncodeError");
     }
 
     @Override
