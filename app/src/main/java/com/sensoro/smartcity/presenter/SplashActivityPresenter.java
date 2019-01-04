@@ -74,7 +74,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     }
 
     private void openMain(final EventLoginData eventLoginData) {
-        // 数据加载
+        // 提前加载数据
+        PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
