@@ -230,7 +230,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
     public void doSubmit(String partA, String ownerName, String contactInfo, String idCard, String homeAddress,
                          String siteNature, String contractAgeStr, String contractAgeFirstStr, String contractAgePeriodStr, ArrayList<ContractsTemplateInfo> data) {
         mContractInfo.setContract_type(2);
-        if (TextUtils.isEmpty(partA)) {
+        if (RegexUtils.checkContractIsEmpty(partA)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_party_a_customer_name));
             return;
         } else {
@@ -245,7 +245,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 return;
             }
         }
-        if (TextUtils.isEmpty(ownerName)) {
+        if (RegexUtils.checkContractIsEmpty(ownerName)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_owner_name));
             return;
         } else {
@@ -274,7 +274,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             getView().toastShort(mActivity.getString(R.string.please_enter_valid_id_card_number));
             return;
         }
-        if (TextUtils.isEmpty(homeAddress)) {
+        if (RegexUtils.checkContractIsEmpty(homeAddress)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_home_address));
             return;
         } else {
@@ -285,7 +285,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             mContractInfo.setCustomer_address(homeAddress);
         }
 
-        if (TextUtils.isEmpty(siteNature)) {
+        if (RegexUtils.checkContractIsEmpty(siteNature)) {
             getView().toastShort(mActivity.getString(R.string.please_select_site_nature));
             return;
         }

@@ -144,6 +144,10 @@ public class RegexUtils {
         return !TextUtils.isEmpty(content) && !"无".equals(content);
     }
 
+    public static boolean checkContractIsEmpty(String content) {
+        return TextUtils.isEmpty(content) && "无".equals(content);
+    }
+
     /**
      * 不能包含字母和数字
      *
