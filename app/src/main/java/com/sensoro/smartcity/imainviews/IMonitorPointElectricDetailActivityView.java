@@ -92,4 +92,5 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setTopElectData(String value,int color,String typeName);
     void setAcMonitoringElectPointLineVisible(boolean isVisible);
+    void setLlAllElectDetailVisible(boolean isVisible);
 }

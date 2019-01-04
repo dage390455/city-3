@@ -177,7 +177,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="4dp"
-                            android:text="更多数据"
+                            android:text="@string/more_data"
                             android:textColor="@color/c_a6a6a6"
                             android:textSize="12sp" />
 

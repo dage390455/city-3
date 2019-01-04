@@ -745,4 +745,6 @@
     <string name="save_success">保存成功</string>
     <string name="upgrade_tip">升级提示</string>
     <string name="the_environment_is_too_dark_please_turn_on_the_flash">环境过暗，请打开闪光灯</string>
+    <string name="collapse">收起</string>
+    <string name="more_data">更多数据</string>
 </resources>

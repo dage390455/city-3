@@ -324,57 +324,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             @Override
             public void run() {
                 if (mDeviceInfo != null) {
-                    String deviceType = mDeviceInfo.getDeviceType();
-                    boolean needTop = false;
-                    DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
-                    Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
-                    if (configDeviceType != null) {
-                        DisplayOptionsBean displayOptions = configDeviceType.getDisplayOptions();
-                        if (displayOptions != null) {
-                            List<String> majors = displayOptions.getMajors();
-                            if (majors != null && majors.size() > 0) {
-                                String sensoroType = majors.get(0);
-                                if (!TextUtils.isEmpty(sensoroType)) {
-                                    //TODO 控制头部
-                                    needTop = true;
-                                    MonitoringPointRcContentAdapterModel model = createModel(sensoroDetails, sensoroType);
-                                    if (model != null) {
-                                        if (TextUtils.isEmpty(model.unit)) {
-                                            getView().setTopElectData(model.content, model.statusColorId, model.name);
-                                        } else {
-                                            getView().setTopElectData(model.content + model.unit, model.statusColorId, model.name);
-                                        }
-                                    }
-                                }
-                            }
-                            List<String> minors = displayOptions.getMinors();
-                            if (minors != null && minors.size() > 0) {
-                                needTop = true;
-
-                                for (String type : minors) {
-                                    //todo 控制展开
-                                }
-                            }
-                            DisplayOptionsBean.SpecialBean special = displayOptions.getSpecial();
-                            if (special != null) {
-                                String type = special.getType();
-                                if ("table".equals(type)) {
-                                    List<List<DisplayOptionsBean.SpecialBean.DataBean>> specialData = special.getData();
-                                    //todo 控制九宫格
-                                }
-                            }
-
-                        }
-                    }
-                    if (needTop) {
-
-                    } else {
-
-                    }
-                }
-                //
-                final ArrayList<MonitoringPointRcContentAdapterModel> uiData = new ArrayList<>();
-                if (mDeviceInfo != null) {
                     if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
                         Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
                         //TODO 添加故障字段数组
@@ -407,127 +356,273 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             mContext.runOnUiThread(new Runnable() {
                                 @Override
                                 public void run() {
-                                    getView().updateDeviceMalfunctionInfoAdapter(malfunctionBeanData);
+                                    if (isAttachedView()){
+                                        getView().updateDeviceMalfunctionInfoAdapter(malfunctionBeanData);
+                                    }
+
                                 }
                             });
                         }
                     }
                     //
-                    //
                     String deviceType = mDeviceInfo.getDeviceType();
+                    boolean needTop = false;
                     DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
+                    Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
                     if (configDeviceType != null) {
-                        List<String> sensorTypes = configDeviceType.getSensorTypes();
-                        Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
-                        if (sensorTypes != null && sensorTypes.size() > 0 && sensoroDetails != null) {
-                            for (String sensoroType : sensorTypes) {
+                        DisplayOptionsBean displayOptions = configDeviceType.getDisplayOptions();
+                        if (displayOptions != null) {
+                            List<String> majors = displayOptions.getMajors();
+                            if (majors != null && majors.size() > 0) {
+                                String sensoroType = majors.get(0);
                                 if (!TextUtils.isEmpty(sensoroType)) {
-                                    SensorStruct sensorStruct = sensoroDetails.get(sensoroType);
-                                    if (sensorStruct != null) {
-                                        // 只在有数据时进行显示
-                                        SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
-                                        if (sensorTypeStyles != null) {
-                                            MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
-                                            String name = sensorTypeStyles.getName();
-                                            if (TextUtils.isEmpty(name)) {
-                                                monitoringPointRcContentAdapterModel.name = mContext.getResources().getString(R.string.unknown);
-                                            } else {
-                                                monitoringPointRcContentAdapterModel.name = name;
-                                            }
-                                            int status = mDeviceInfo.getStatus();
-                                            switch (status) {
-                                                case SENSOR_STATUS_ALARM:
-                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
-                                                    break;
-                                                case SENSOR_STATUS_INACTIVE:
-                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_inactive;
-                                                    break;
-                                                case SENSOR_STATUS_LOST:
-                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_lost;
-                                                    break;
-                                                case SENSOR_STATUS_NORMAL:
-                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                                                    break;
-                                                case SENSOR_STATUS_MALFUNCTION:
-                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
-                                                    break;
-                                                default:
-                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                                                    break;
-                                            }
-                                            switch (status) {
-                                                case SENSOR_STATUS_ALARM:
-                                                case SENSOR_STATUS_NORMAL:
-                                                    List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
-                                                    if (alarmsRecords != null) {
-                                                        for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
-                                                            String sensorTypeStr = deviceAlarmsRecord.getSensorTypes();
-                                                            if (sensoroType.equalsIgnoreCase(sensorTypeStr)) {
-                                                                int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
-                                                                switch (alarmStatus) {
-                                                                    case 1:
-                                                                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                                                                        break;
-                                                                    case 2:
-                                                                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
-                                                                        break;
-                                                                }
-                                                            }
-                                                        }
+                                    //TODO 控制头部
+                                    needTop = true;
+                                    final MonitoringPointRcContentAdapterModel model = createModel(sensoroDetails, sensoroType);
+                                    if (model != null) {
+                                        mContext.runOnUiThread(new Runnable() {
+                                            @Override
+                                            public void run() {
+                                                if (isAttachedView()){
+                                                    if (TextUtils.isEmpty(model.unit)) {
+                                                        getView().setTopElectData(model.content, model.statusColorId, model.name);
+                                                    } else {
+                                                        getView().setTopElectData(model.content + model.unit, model.statusColorId, model.name);
                                                     }
-                                                    break;
-                                                default:
-                                                    break;
-                                            }
-                                            boolean bool = sensorTypeStyles.isBool();
-                                            Object value = sensorStruct.getValue();
-                                            if (value != null) {
-                                                if (bool) {
-                                                    if (value instanceof Boolean) {
-                                                        String trueMean = sensorTypeStyles.getTrueMean();
-                                                        String falseMean = sensorTypeStyles.getFalseMean();
-                                                        if ((Boolean) value) {
-                                                            if (!TextUtils.isEmpty(trueMean)) {
-                                                                monitoringPointRcContentAdapterModel.content = trueMean;
-                                                            }
-                                                        } else {
-                                                            if (!TextUtils.isEmpty(falseMean)) {
-                                                                monitoringPointRcContentAdapterModel.content = falseMean;
-                                                            }
-                                                        }
-
-                                                    }
-                                                } else {
-                                                    String unit = sensorTypeStyles.getUnit();
-                                                    if (!TextUtils.isEmpty(unit)) {
-                                                        monitoringPointRcContentAdapterModel.unit = unit;
-                                                    }
-                                                    WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, sensoroType, value);
                                                 }
                                             }
-                                            uiData.add(monitoringPointRcContentAdapterModel);
-                                        }
-
+                                        });
 
                                     }
                                 }
+                            }
+                            List<String> minors = displayOptions.getMinors();
+                            if (minors != null && minors.size() > 0) {
+                                needTop = true;
+                                final ArrayList<MonitoringPointRcContentAdapterModel> dataBean = new ArrayList<>();
+                                for (String type : minors) {
+                                    MonitoringPointRcContentAdapterModel model = createModel(sensoroDetails, type);
+                                    if (model != null) {
+                                        if (TextUtils.isEmpty(model.content)) {
+                                            model.content = "-";
+                                        }
+                                        dataBean.add(model);
+                                    }
+                                }
+                                //todo 控制展开
+                                mContext.runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        if(isAttachedView()){
+                                            getView().updateDeviceInfoAdapter(dataBean);
+                                        }
+                                    }
+                                });
 
                             }
+                            DisplayOptionsBean.SpecialBean special = displayOptions.getSpecial();
+                            if (special != null) {
+                                String type = special.getType();
+                                if ("table".equals(type)) {
+                                    final List<List<DisplayOptionsBean.SpecialBean.DataBean>> specialData = special.getData();
+                                    //todo 控制九宫格
+                                    mContext.runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            if (isAttachedView()){
+                                                getView().setElect3DetailVisible(true);
+                                                LogUtils.loge("specialData size = " + specialData.size() + ",specialData item size = " + specialData.get(0).size());
+                                            }
+                                        }
+                                    });
+
+                                }
+                            }
+
                         }
+                    }
+
+                    if (needTop) {
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isAttachedView()){
+                                    getView().setAcMonitoringElectPointLineVisible(true);
+                                    getView().setLlElectTopVisible(true);
+                                    getView().setLlAllElectDetailVisible(false);
+                                }
+                            }
+                        });
+                    } else {
+                        mContext.runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isAttachedView()){
+                                    getView().setLlAllElectDetailVisible(true);
+                                    getView().setAcMonitoringElectPointLineVisible(false);
+                                    getView().setLlElectTopVisible(true);
+                                }
+                            }
+                        });
+
                     }
                 }
                 //
-                mContext.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        if (isAttachedView()) {
-                            getView().setElect3DetailVisible(mDeviceInfo != null && !"acrel_single".equals(mDeviceInfo.getDeviceType()));
-                            getView().setIvAlarmStatusVisible(mDeviceInfo != null && mDeviceInfo.getStatus() == SENSOR_STATUS_ALARM);
-                            getView().updateDeviceInfoAdapter(uiData);
-                        }
-
-                    }
-                });
+//                final ArrayList<MonitoringPointRcContentAdapterModel> uiData = new ArrayList<>();
+//                if (mDeviceInfo != null) {
+//                    if (mDeviceInfo.getStatus() == SENSOR_STATUS_MALFUNCTION) {
+//                        Map<String, MalfunctionDataBean> malfunctionData = mDeviceInfo.getMalfunctionData();
+//                        //TODO 添加故障字段数组
+//                        if (malfunctionData != null) {
+//                            final ArrayList<MonitoringPointRcContentAdapterModel> malfunctionBeanData = new ArrayList<>();
+//                            Set<String> keySet = malfunctionData.keySet();
+//                            ArrayList<String> keyList = new ArrayList<>();
+//                            for (String key : keySet) {
+//                                if (!keyList.contains(key)) {
+//                                    keyList.add(key);
+//                                }
+//                            }
+//                            Collections.sort(keyList);
+//                            for (String key : keyList) {
+//                                MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
+//                                monitoringPointRcContentAdapterModel.name = mContext.getString(R.string.malfunction_cause_detail);
+//                                monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
+//
+//                                MalfunctionTypeStyles configMalfunctionMainTypes = PreferencesHelper.getInstance().getConfigMalfunctionMainTypes(key);
+//                                if (configMalfunctionMainTypes != null) {
+//                                    monitoringPointRcContentAdapterModel.content = configMalfunctionMainTypes.getName();
+//                                    malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
+//                                    LogUtils.loge("故障成因：key = " + key + "value = " + monitoringPointRcContentAdapterModel.content);
+//                                    break;
+//                                }
+//                                monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
+//                                malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
+//
+//                            }
+//                            mContext.runOnUiThread(new Runnable() {
+//                                @Override
+//                                public void run() {
+//                                    getView().updateDeviceMalfunctionInfoAdapter(malfunctionBeanData);
+//                                }
+//                            });
+//                        }
+//                    }
+//                    //
+//                    //
+//                    String deviceType = mDeviceInfo.getDeviceType();
+//                    DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
+//                    if (configDeviceType != null) {
+//                        List<String> sensorTypes = configDeviceType.getSensorTypes();
+//                        Map<String, SensorStruct> sensoroDetails = mDeviceInfo.getSensoroDetails();
+//                        if (sensorTypes != null && sensorTypes.size() > 0 && sensoroDetails != null) {
+//                            for (String sensoroType : sensorTypes) {
+//                                if (!TextUtils.isEmpty(sensoroType)) {
+//                                    SensorStruct sensorStruct = sensoroDetails.get(sensoroType);
+//                                    if (sensorStruct != null) {
+//                                        // 只在有数据时进行显示
+//                                        SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
+//                                        if (sensorTypeStyles != null) {
+//                                            MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
+//                                            String name = sensorTypeStyles.getName();
+//                                            if (TextUtils.isEmpty(name)) {
+//                                                monitoringPointRcContentAdapterModel.name = mContext.getResources().getString(R.string.unknown);
+//                                            } else {
+//                                                monitoringPointRcContentAdapterModel.name = name;
+//                                            }
+//                                            int status = mDeviceInfo.getStatus();
+//                                            switch (status) {
+//                                                case SENSOR_STATUS_ALARM:
+//                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
+//                                                    break;
+//                                                case SENSOR_STATUS_INACTIVE:
+//                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_inactive;
+//                                                    break;
+//                                                case SENSOR_STATUS_LOST:
+//                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_lost;
+//                                                    break;
+//                                                case SENSOR_STATUS_NORMAL:
+//                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+//                                                    break;
+//                                                case SENSOR_STATUS_MALFUNCTION:
+//                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
+//                                                    break;
+//                                                default:
+//                                                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+//                                                    break;
+//                                            }
+//                                            switch (status) {
+//                                                case SENSOR_STATUS_ALARM:
+//                                                case SENSOR_STATUS_NORMAL:
+//                                                    List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
+//                                                    if (alarmsRecords != null) {
+//                                                        for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
+//                                                            String sensorTypeStr = deviceAlarmsRecord.getSensorTypes();
+//                                                            if (sensoroType.equalsIgnoreCase(sensorTypeStr)) {
+//                                                                int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
+//                                                                switch (alarmStatus) {
+//                                                                    case 1:
+//                                                                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+//                                                                        break;
+//                                                                    case 2:
+//                                                                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
+//                                                                        break;
+//                                                                }
+//                                                            }
+//                                                        }
+//                                                    }
+//                                                    break;
+//                                                default:
+//                                                    break;
+//                                            }
+//                                            boolean bool = sensorTypeStyles.isBool();
+//                                            Object value = sensorStruct.getValue();
+//                                            if (value != null) {
+//                                                if (bool) {
+//                                                    if (value instanceof Boolean) {
+//                                                        String trueMean = sensorTypeStyles.getTrueMean();
+//                                                        String falseMean = sensorTypeStyles.getFalseMean();
+//                                                        if ((Boolean) value) {
+//                                                            if (!TextUtils.isEmpty(trueMean)) {
+//                                                                monitoringPointRcContentAdapterModel.content = trueMean;
+//                                                            }
+//                                                        } else {
+//                                                            if (!TextUtils.isEmpty(falseMean)) {
+//                                                                monitoringPointRcContentAdapterModel.content = falseMean;
+//                                                            }
+//                                                        }
+//
+//                                                    }
+//                                                } else {
+//                                                    String unit = sensorTypeStyles.getUnit();
+//                                                    if (!TextUtils.isEmpty(unit)) {
+//                                                        monitoringPointRcContentAdapterModel.unit = unit;
+//                                                    }
+//                                                    WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, sensoroType, value);
+//                                                }
+//                                            }
+//                                            uiData.add(monitoringPointRcContentAdapterModel);
+//                                        }
+//
+//
+//                                    }
+//                                }
+//
+//                            }
+//                        }
+//                    }
+//                }
+//                //
+//                mContext.runOnUiThread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//                        if (isAttachedView()) {
+//                            getView().setElect3DetailVisible(mDeviceInfo != null && !"acrel_single".equals(mDeviceInfo.getDeviceType()));
+//                            getView().setIvAlarmStatusVisible(mDeviceInfo != null && mDeviceInfo.getStatus() == SENSOR_STATUS_ALARM);
+//                            getView().updateDeviceInfoAdapter(uiData);
+//                        }
+//
+//                    }
+//                });
 
             }
         });
@@ -537,63 +632,64 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     private MonitoringPointRcContentAdapterModel createModel(Map<String, SensorStruct> sensoroDetails, String sensoroType) {
         if (sensoroDetails != null) {
             SensorStruct sensorStruct = sensoroDetails.get(sensoroType);
-            if (sensorStruct != null) {
-                // 只在有数据时进行显示
-                SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
-                if (sensorTypeStyles != null) {
-                    MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
-                    String name = sensorTypeStyles.getName();
-                    if (TextUtils.isEmpty(name)) {
-                        monitoringPointRcContentAdapterModel.name = mContext.getResources().getString(R.string.unknown);
-                    } else {
-                        monitoringPointRcContentAdapterModel.name = name;
-                    }
-                    int status = mDeviceInfo.getStatus();
-                    switch (status) {
-                        case SENSOR_STATUS_ALARM:
-                            monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
-                            break;
-                        case SENSOR_STATUS_INACTIVE:
-                            monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_inactive;
-                            break;
-                        case SENSOR_STATUS_LOST:
-                            monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_lost;
-                            break;
-                        case SENSOR_STATUS_NORMAL:
-                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                            break;
-                        case SENSOR_STATUS_MALFUNCTION:
-                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
-                            break;
-                        default:
-                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                            break;
-                    }
-                    switch (status) {
-                        case SENSOR_STATUS_ALARM:
-                        case SENSOR_STATUS_NORMAL:
-                            List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
-                            if (alarmsRecords != null) {
-                                for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
-                                    String sensorTypeStr = deviceAlarmsRecord.getSensorTypes();
-                                    if (sensoroType.equalsIgnoreCase(sensorTypeStr)) {
-                                        int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
-                                        switch (alarmStatus) {
-                                            case 1:
-                                                monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                                                break;
-                                            case 2:
-                                                monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
-                                                break;
-                                        }
+
+            // 只在有数据时进行显示
+            SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
+            if (sensorTypeStyles != null) {
+                MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
+                String name = sensorTypeStyles.getName();
+                if (TextUtils.isEmpty(name)) {
+                    monitoringPointRcContentAdapterModel.name = mContext.getResources().getString(R.string.unknown);
+                } else {
+                    monitoringPointRcContentAdapterModel.name = name;
+                }
+                int status = mDeviceInfo.getStatus();
+                switch (status) {
+                    case SENSOR_STATUS_ALARM:
+                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
+                        break;
+                    case SENSOR_STATUS_INACTIVE:
+                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_inactive;
+                        break;
+                    case SENSOR_STATUS_LOST:
+                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_lost;
+                        break;
+                    case SENSOR_STATUS_NORMAL:
+                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                        break;
+                    case SENSOR_STATUS_MALFUNCTION:
+                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
+                        break;
+                    default:
+                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                        break;
+                }
+                switch (status) {
+                    case SENSOR_STATUS_ALARM:
+                    case SENSOR_STATUS_NORMAL:
+                        List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
+                        if (alarmsRecords != null) {
+                            for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
+                                String sensorTypeStr = deviceAlarmsRecord.getSensorTypes();
+                                if (sensoroType.equalsIgnoreCase(sensorTypeStr)) {
+                                    int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
+                                    switch (alarmStatus) {
+                                        case 1:
+                                            monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
+                                            break;
+                                        case 2:
+                                            monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
+                                            break;
                                     }
                                 }
                             }
-                            break;
-                        default:
-                            break;
-                    }
-                    boolean bool = sensorTypeStyles.isBool();
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                boolean bool = sensorTypeStyles.isBool();
+                if (sensorStruct != null) {
                     Object value = sensorStruct.getValue();
                     if (value != null) {
                         if (bool) {
@@ -619,8 +715,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, sensoroType, value);
                         }
                     }
-                    return monitoringPointRcContentAdapterModel;
                 }
+                return monitoringPointRcContentAdapterModel;
             }
         }
         return null;

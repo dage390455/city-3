@@ -34,14 +34,17 @@ public class ContractEditorPresenter extends BasePresenter<IContractEditorView> 
             case 1:
                 //创建合同
                 getView().showPersonalFragment();
+                getView().setOriginFormList(false);
                 break;
             case 2:
                 //编辑合同
                 displayEditContract();
+                getView().setOriginFormList(true);
                 break;
             default:
                 //默认创建合同
                 getView().showPersonalFragment();
+                getView().setOriginFormList(false);
                 break;
         }
 
@@ -67,7 +70,7 @@ public class ContractEditorPresenter extends BasePresenter<IContractEditorView> 
                     break;
             }
 
-        }else{
+        } else {
             getView().toastShort(mActivity.getString(R.string.contract_info_obtain_failed));
         }
     }

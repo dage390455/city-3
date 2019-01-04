@@ -581,14 +581,13 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void setElectDetailVisible(boolean isVisible) {
         if (isVisible) {
-            tvShrink.setText("收起");
-            llAllElectDetail.setVisibility(View.VISIBLE);
+            tvShrink.setText(R.string.collapse);
             ivArrowElect.setImageResource(R.drawable.arrow_up_elect);
         } else {
-            tvShrink.setText("更多数据");
+            tvShrink.setText(R.string.more_data);
             ivArrowElect.setImageResource(R.drawable.arrow_down_elect);
-            llAllElectDetail.setVisibility(View.GONE);
         }
+        setLlAllElectDetailVisible(isVisible);
     }
 
     @Override
@@ -654,6 +653,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void setAcMonitoringElectPointLineVisible(boolean isVisible) {
         acMonitoringElectPointLine.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setLlAllElectDetailVisible(boolean isVisible) {
+        llAllElectDetail.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
 
