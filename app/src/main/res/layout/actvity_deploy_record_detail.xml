@@ -220,7 +220,6 @@
                     android:id="@+id/ac_deploy_record_detail_ll_deploy_pic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:orientation="horizontal">
 
                     <TextView
@@ -267,7 +266,6 @@
                     android:id="@+id/ac_deploy_record_detail_ll_fixed_point"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:orientation="horizontal">
 
                     <TextView
@@ -334,7 +332,6 @@
                     android:id="@+id/ac_deploy_device_detail_ll_deploy_record_setting"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:orientation="horizontal"
                     android:visibility="visible">
 

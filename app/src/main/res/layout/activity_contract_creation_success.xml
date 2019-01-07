@@ -14,7 +14,6 @@
         android:layout_marginBottom="10dp"
         android:padding="8dp"
         android:text="@string/ip_complete"
-        android:background="@drawable/selector_item_white_ee"
         android:textColor="@color/c_29c093"
         android:textSize="14sp" />
 

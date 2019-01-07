@@ -408,7 +408,6 @@
                     android:id="@+id/monitor_detail_layout_sn"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:paddingTop="14dp"
                     android:paddingBottom="14dp">
 
@@ -444,7 +443,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:orientation="horizontal"
                     android:paddingTop="14dp"
                     android:paddingBottom="14dp">
@@ -487,7 +485,6 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:paddingTop="14dp"
                     android:paddingBottom="14dp">
 
@@ -527,7 +524,6 @@
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:paddingTop="14dp"
                     android:paddingBottom="14dp">
 

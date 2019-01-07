@@ -48,7 +48,6 @@
             android:textSize="16sp"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:background="@drawable/selector_item_white_ee_corner_left_right"
             android:textColor="@color/c_a6a6a6"
             android:gravity="center"/>
         <!--<View-->
@@ -65,7 +64,6 @@
             <!--android:textSize="16sp"-->
             <!--android:paddingTop="16dp"-->
             <!--android:paddingBottom="16dp"-->
-            <!--android:background="@drawable/selector_item_white_ee"-->
             <!--android:textColor="@color/c_29c093"-->
             <!--android:gravity="center"/>-->
 

@@ -73,7 +73,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:focusable="true"
-                    android:background="@drawable/selector_item_white_ee"
                     android:focusableInTouchMode="true"
                     android:orientation="horizontal">
 
@@ -122,7 +121,6 @@
                 <RelativeLayout
                     android:id="@+id/ac_deploy_device_detail_rl_tag"
                     android:layout_width="match_parent"
-                    android:background="@drawable/selector_item_white_ee"
                     android:layout_height="wrap_content">
 
                     <TextView
@@ -195,7 +193,6 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:orientation="horizontal">
 
                     <TextView
@@ -265,7 +262,6 @@
                     android:paddingStart="20dp"
                     android:paddingTop="12dp"
                     android:paddingEnd="20dp"
-                    android:background="@drawable/selector_item_white_ee"
                     android:paddingBottom="12dp">
 
                     <TextView
@@ -308,7 +304,6 @@
                     android:id="@+id/ac_deploy_device_detail_ll_deploy_pic"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:orientation="horizontal">
 
                     <TextView
@@ -354,7 +349,6 @@
                     android:id="@+id/ac_deploy_device_detail_ll_fixed_point"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/selector_item_white_ee"
                     android:orientation="horizontal">
 
                     <TextView
@@ -438,7 +432,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:background="@drawable/selector_item_white_ee"
                     android:visibility="visible">
 
                     <TextView

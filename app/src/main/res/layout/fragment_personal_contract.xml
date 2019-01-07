@@ -99,7 +99,6 @@
                     android:layout_gravity="center_vertical"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
-                    android:background="@drawable/selector_item_white_ee"
                     android:contentDescription="@null"
                     android:paddingTop="18dp"
                     android:paddingBottom="18dp"
@@ -223,7 +222,6 @@
                 android:id="@+id/fg_personal_contract_ll_site_nature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_item_white_ee"
                 android:orientation="horizontal"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp">

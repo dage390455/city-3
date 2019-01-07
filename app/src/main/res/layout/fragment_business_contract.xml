@@ -62,7 +62,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
-                    android:background="@drawable/selector_item_white_ee"
                     android:paddingStart="20dp"
                     android:paddingEnd="20dp"
                     android:contentDescription="@null"
@@ -224,7 +223,6 @@
                 android:id="@+id/fg_business_contract_ll_site_nature"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/selector_item_white_ee"
                 android:orientation="horizontal"
                 android:paddingTop="16dp"
                 android:paddingBottom="16dp">
