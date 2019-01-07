@@ -48,7 +48,7 @@ public class EarlyWarningThresholdDialogUtils {
 //            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
 
-        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view);
+        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view,560/750f);
         ivCancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

@@ -35,7 +35,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.SensorStruct;
@@ -44,10 +44,11 @@ import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -718,19 +719,14 @@ public class WidgetUtil {
             if (sensorTypeStyles != null) {
                 Integer precision = sensorTypeStyles.getPrecision();
                 if (precision != null) {
-                    if (precision == 0) {
-                        DecimalFormat df = new DecimalFormat("###");
-                        monitoringPointRcContentAdapterModel.content = df.format(value);
-                    } else {
-                        StringBuilder stringBuilder = new StringBuilder("###.");
-                        for (int i = 0; i < precision; i++) {
-                            stringBuilder.append("#");
-                        }
-                        String pattern = stringBuilder.toString();
-                        LogUtils.loge("pattern = " + pattern);
-                        DecimalFormat df = new DecimalFormat(pattern);
-                        monitoringPointRcContentAdapterModel.content = df.format(value);
-                    }
+                    //不留0
+                    Double valueStr = (Double) value;
+                    BigDecimal b = new BigDecimal(valueStr);
+                    //留0
+//                  NumberFormat nf = NumberFormat.getNumberInstance();
+//                  nf.setMaximumFractionDigits(precision);
+//                  String format = nf.format(value);
+                    monitoringPointRcContentAdapterModel.content = b.setScale(precision, BigDecimal.ROUND_HALF_UP).toString();
                     return;
                 }
             }
@@ -751,6 +747,60 @@ public class WidgetUtil {
             }
         }
 
+    }
+
+    public static void judgeIndexSensorType(Elect3DetailModel elect3DetailModel, String
+            sensorType, Object value, String unit) {
+        StringBuilder builder = new StringBuilder();
+        if (value instanceof String) {
+            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
+                builder.append((String) value);
+            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+                    .equalsIgnoreCase
+                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
+                builder.append((String) value);
+            } else {
+                builder.append((String) value);
+            }
+        } else if (value instanceof Number) {
+            SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
+            if (sensorTypeStyles != null) {
+                Integer precision = sensorTypeStyles.getPrecision();
+                if (precision != null) {
+                    Double valueStr = (Double) value;
+                    BigDecimal b = new BigDecimal(valueStr);
+                    //留0
+//                  NumberFormat nf = NumberFormat.getNumberInstance();
+//                  nf.setMaximumFractionDigits(precision);
+//                  String format = nf.format(value);
+                    builder.append(b.setScale(precision, BigDecimal.ROUND_HALF_UP).toString());
+                    if (!TextUtils.isEmpty(unit)) {
+                        builder.append(unit);
+                    }
+                    elect3DetailModel.text = builder.toString();
+                    return;
+                }
+            }
+            //TODO 当没有precision字段时
+            if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
+                DecimalFormat df = new DecimalFormat("###.##");
+                builder.append(df.format(value));
+            } else if (sensorType.equalsIgnoreCase("co") || sensorType.equalsIgnoreCase("temperature") || sensorType
+                    .equalsIgnoreCase
+                            ("humidity") || sensorType.equalsIgnoreCase("waterPressure") || sensorType
+                    .equalsIgnoreCase("no2") || sensorType.equalsIgnoreCase("temp1")) {
+                DecimalFormat df = new DecimalFormat("###.#");
+                builder.append(df.format(value));
+            } else {
+                builder.append(String.format("%.0f", Double.valueOf(value
+                        .toString())));
+            }
+        }
+        if (!TextUtils.isEmpty(unit)) {
+            builder.append(unit);
+        }
+        elect3DetailModel.text = builder.toString();
     }
 
     public static void judgeIndexSensorType(TextView valueTextView, TextView unitTextView, String

@@ -68,7 +68,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:paddingTop="8dp"
-                    android:text="电气火灾"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
 
@@ -87,7 +86,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:paddingTop="8dp"
-                    android:text="正常"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
             </LinearLayout>
@@ -132,13 +130,14 @@
                 android:layout_marginTop="12dp"
                 android:layout_marginEnd="20dp"
                 android:layout_marginBottom="18dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:visibility="gone">
 
                 <TextView
                     android:id="@+id/tv_elect_main"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="136mA"
+                    android:text="@string/unknown"
                     android:textSize="36sp" />
 
                 <RelativeLayout
@@ -151,7 +150,7 @@
                         android:layout_height="wrap_content"
                         android:layout_centerVertical="true"
                         android:layout_marginTop="4dp"
-                        android:text="漏电流"
+                        android:text="@string/unknown"
                         android:textColor="@color/c_252525"
                         android:textSize="14sp" />
 
@@ -205,6 +204,7 @@
                     android:id="@+id/ac_monitoring_elect_point_line"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:visibility="gone"
                     android:background="@color/c_dfdfdf" />
 
                 <android.support.v7.widget.RecyclerView
@@ -230,20 +230,20 @@
                         android:layout_marginBottom="15dp"
                         android:background="@color/c_dfdfdf" />
 
-                    <TableRow>
+                    <TableRow android:id="@+id/tr_elect_top">
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="参数"
+                            android:text="@string/unknown"
                             android:visibility="invisible" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="A相"
+                            android:text="@string/unknown"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
 
@@ -251,7 +251,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="B相"
+                            android:text="@string/unknown"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
 
@@ -259,7 +259,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:gravity="center"
-                            android:text="C相"
+                            android:text="@string/unknown"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
                     </TableRow>
@@ -272,8 +272,9 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:gravity="center"
-                            android:text="电流"
+                            android:text="@string/unknown"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
 
@@ -284,7 +285,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="222V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
@@ -295,7 +298,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="223V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
@@ -306,7 +311,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="224V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
                     </TableRow>
@@ -318,7 +325,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="电压"
+                            android:text="@string/unknown"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
 
@@ -329,7 +338,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="222V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
@@ -340,7 +351,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="223V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
@@ -351,7 +364,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="224V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
                     </TableRow>
@@ -363,7 +378,9 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="温度"
+                            android:text="@string/unknown"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
 
@@ -374,7 +391,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="222V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
@@ -385,7 +404,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="223V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
@@ -396,7 +417,9 @@
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="224V"
+                            android:text="-"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
                     </TableRow>
@@ -437,7 +460,6 @@
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="12dp"
                     android:layout_marginBottom="8dp"
-                    android:text="@string/unknown"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
@@ -460,7 +482,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="12dp"
-                    android:text="@string/unknown"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="@id/ac_monitoring_point_tv_alert_contact_name"

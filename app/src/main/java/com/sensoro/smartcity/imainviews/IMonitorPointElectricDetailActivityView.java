@@ -5,6 +5,7 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
+import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
 
 import java.util.List;
@@ -78,11 +79,13 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setElect3DetailVisible(boolean isVisible);
 
-    void set3ElectADetail(int index, String text);
+    void set3ElectTopDetail(Elect3DetailModel detailModel);
 
-    void set3ElectVDetail(int index, String text);
+    void set3ElectADetail(Elect3DetailModel detailModel);
 
-    void set3ElectTDetail(int index, String text);
+    void set3ElectVDetail(Elect3DetailModel detailModel);
+
+    void set3ElectTDetail(Elect3DetailModel detailModel);
 
     void updateEarlyWarningThresholdAdapterDialogUtils(List<EarlyWarningthresholdDialogUtilsAdapterModel> data);
 
@@ -90,7 +93,11 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setLlElectTopVisible(boolean isVisible);
 
-    void setTopElectData(String value,int color,String typeName);
+    void setTopElectData(String value, int color, String typeName);
+
     void setAcMonitoringElectPointLineVisible(boolean isVisible);
+
     void setLlAllElectDetailVisible(boolean isVisible);
+
+    void setElectInfoTipVisible(boolean isVisible);
 }

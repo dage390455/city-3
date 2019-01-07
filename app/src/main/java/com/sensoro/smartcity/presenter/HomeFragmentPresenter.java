@@ -12,7 +12,6 @@ import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
-import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
@@ -399,13 +398,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void clickItem(int position, HomeTopModel homeTopModel) {
         try {
             DeviceInfo deviceInfo = homeTopModel.innerAdapter.getData().get(position);
-            String deviceType = deviceInfo.getDeviceType();
             Intent intent = new Intent();
-            if (DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType)) {
-                intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
-            } else {
-                intent.setClass(mContext, MonitorPointDetailActivity.class);
-            }
+            intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
@@ -884,7 +878,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasContract) {
                 Intent intent = new Intent(mContext, ContractEditorActivity.class);
-                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
+                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
                 getView().startAC(intent);
                 return;
             }

@@ -7,7 +7,6 @@ import android.content.SharedPreferences;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
@@ -341,13 +340,8 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
     public void clickItem(int position) {
         if (position >= 0) {
             DeviceInfo deviceInfo = mDataList.get(position);
-            String deviceType = deviceInfo.getDeviceType();
             Intent intent = new Intent();
-            if (DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType)) {
-                intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
-            } else {
-                intent.setClass(mContext, MonitorPointDetailActivity.class);
-            }
+            intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());

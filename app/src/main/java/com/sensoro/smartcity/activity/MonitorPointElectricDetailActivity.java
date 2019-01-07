@@ -26,6 +26,7 @@ import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
+import com.sensoro.smartcity.model.Elect3DetailModel;
 import com.sensoro.smartcity.presenter.MonitorPointElectricDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.widget.ProgressUtils;
@@ -114,6 +115,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @BindView(R.id.ac_monitor_deploy_photo)
     TouchRecycleView acMonitorDeployPhoto;
     MonitorDeployDetailPhotoAdapter mAdapter;
+    @BindView(R.id.tr_elect_top)
+    TableRow trElectTop;
     @BindView(R.id.tr_elect_a)
     TableRow trElectA;
     @BindView(R.id.tr_elect_v)
@@ -601,26 +604,47 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    public void set3ElectADetail(int index, String text) {
-        View virtualChildAt = trElectA.getVirtualChildAt(index);
+    public void set3ElectADetail(Elect3DetailModel detailModel) {
+        View virtualChildAt = trElectA.getVirtualChildAt(detailModel.index);
         if (virtualChildAt instanceof TextView) {
-            ((TextView) virtualChildAt).setText(text);
+            ((TextView) virtualChildAt).setText(detailModel.text);
+            if (detailModel.index != 0) {
+                ((TextView) virtualChildAt).setBackgroundColor(mActivity.getResources().getColor(detailModel.backgroundColor));
+                ((TextView) virtualChildAt).setTextColor(mActivity.getResources().getColor(detailModel.textColor));
+            }
         }
     }
 
     @Override
-    public void set3ElectVDetail(int index, String text) {
-        View virtualChildAt = trElectV.getVirtualChildAt(index);
+    public void set3ElectTopDetail(Elect3DetailModel detailModel) {
+        View virtualChildAt = trElectTop.getVirtualChildAt(detailModel.index);
         if (virtualChildAt instanceof TextView) {
-            ((TextView) virtualChildAt).setText(text);
+            ((TextView) virtualChildAt).setText(detailModel.text);
+        }
+
+    }
+
+    @Override
+    public void set3ElectVDetail(Elect3DetailModel detailModel) {
+        View virtualChildAt = trElectV.getVirtualChildAt(detailModel.index);
+        if (virtualChildAt instanceof TextView) {
+            ((TextView) virtualChildAt).setText(detailModel.text);
+            if (detailModel.index != 0) {
+                ((TextView) virtualChildAt).setBackgroundColor(mActivity.getResources().getColor(detailModel.backgroundColor));
+                ((TextView) virtualChildAt).setTextColor(mActivity.getResources().getColor(detailModel.textColor));
+            }
         }
     }
 
     @Override
-    public void set3ElectTDetail(int index, String text) {
-        View virtualChildAt = trElectT.getVirtualChildAt(index);
+    public void set3ElectTDetail(Elect3DetailModel detailModel) {
+        View virtualChildAt = trElectT.getVirtualChildAt(detailModel.index);
         if (virtualChildAt instanceof TextView) {
-            ((TextView) virtualChildAt).setText(text);
+            ((TextView) virtualChildAt).setText(detailModel.text);
+            if (detailModel.index != 0) {
+                ((TextView) virtualChildAt).setBackgroundColor(mActivity.getResources().getColor(detailModel.backgroundColor));
+                ((TextView) virtualChildAt).setTextColor(mActivity.getResources().getColor(detailModel.textColor));
+            }
         }
     }
 
@@ -658,6 +682,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void setLlAllElectDetailVisible(boolean isVisible) {
         llAllElectDetail.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setElectInfoTipVisible(boolean isVisible) {
+        electInfo.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
 

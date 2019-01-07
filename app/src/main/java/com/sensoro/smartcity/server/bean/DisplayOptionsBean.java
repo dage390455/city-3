@@ -70,6 +70,7 @@ public class DisplayOptionsBean {
 
             private String type;
             private String name;
+            private String value;
 
             public String getType() {
                 return type;
@@ -85,6 +86,14 @@ public class DisplayOptionsBean {
 
             public void setName(String name) {
                 this.name = name;
+            }
+
+            public String getValue() {
+                return value;
+            }
+
+            public void setValue(String value) {
+                this.value = value;
             }
         }
     }
