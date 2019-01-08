@@ -520,20 +520,27 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             }
                             List<String> minors = displayOptions.getMinors();
                             if (minors != null && minors.size() > 0) {
+                                boolean hasAlarmStatus = false;
                                 for (String type : minors) {
                                     MonitoringPointRcContentAdapterModel model = createMonitoringPointRcContentAdapterModel(sensoroDetails, type);
                                     if (model != null) {
                                         if (TextUtils.isEmpty(model.content)) {
                                             model.content = "-";
                                         }
+
+                                        if (model.statusColorId == R.color.sensoro_alarm) {
+                                            hasAlarmStatus = true;
+                                        }
                                         dataBean.add(model);
                                     }
                                 }
                                 // 控制展开
+                                final boolean finalHasAlarmStatus = hasAlarmStatus;
                                 mContext.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         if (isAttachedView()) {
+                                            getView().setIvAlarmStatusVisible(finalHasAlarmStatus);
                                             getView().updateDeviceInfoAdapter(dataBean);
                                         }
                                     }

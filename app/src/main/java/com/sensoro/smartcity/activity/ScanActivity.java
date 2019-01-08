@@ -74,7 +74,6 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     private void changeIconArrowsColor() {
-
 //        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.arrows_left);
 //        Drawable.ConstantState state = drawable.getConstantState();
 //        DrawableCompat.wrap(state == null ? drawable : state.newDrawable());
@@ -82,7 +81,6 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 //        DrawableCompat.setTint(drawable, Color.WHITE);
 //        includeTextTitleImvArrowsLeft.setImageDrawable(drawable);
         includeTextTitleImvArrowsLeft.setColorFilter(mActivity.getResources().getColor(R.color.white));
-
     }
 
     @Override
