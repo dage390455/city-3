@@ -36,6 +36,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -52,7 +53,12 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         Beta.checkUpgrade(false, false);
         readLoginData();
         initSeverUrl();
-        AppUtils.addToPhoneContact(mContext, "升哲安全服务", "（0570）2296646");
+        ArrayList<String> nameList = new ArrayList<>();
+        nameList.add("升哲安全服务");
+        ArrayList<String> numberList = new ArrayList<>();
+        numberList.add("(0570)2296646");
+        numberList.add("(010)53876304");
+        AppUtils.addToPhoneContact(mContext, nameList, numberList);
     }
 
     private void readLoginData() {

@@ -759,4 +759,11 @@
     <string name="enter_wire_diameter_tip">Please enter diameter</string>
     <string name="diameter">Diameter:</string>
     <string name="device_number">Device Num: </string>
+    <string name="command_elec_disconnect_title">Do you want power off</string>
+    <string name="command_elec_disconnect_desc">Please ensure this operator does not impact the product before you power off this device</string>
+    <string name="command_elec_disconnect_btn_title">Power off</string>
+    <string name="command_elec_connect_title">Do you want power on</string>
+    <string name="command_elec_connect_desc">Please ensure the safety of staff around before you power on this device</string>
+    <string name="command_elec_connect_btn_title">Power on</string>
+    <string name="deploy_detail">Deploy Detail</string>
 </resources>

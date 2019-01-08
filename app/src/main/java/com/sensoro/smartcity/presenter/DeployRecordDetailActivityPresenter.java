@@ -51,7 +51,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
 
     private void refreshUI() {
         if (mDeployRecordInfo != null) {
-            getView().setSNTitle(mDeployRecordInfo.getSn());
+            getView().setSNTitle(mActivity.getString(R.string.device_number) + mDeployRecordInfo.getSn());
             getView().setDeviceName(mDeployRecordInfo.getDeviceName());
             getView().updateTagList(mDeployRecordInfo.getTags());
             getView().setDeployTime(DateUtil.getStrTime_ymd_hm_ss(mDeployRecordInfo.getCreatedTime()));
@@ -73,7 +73,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             }
             String deviceType = mDeployRecordInfo.getDeviceType();
             String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
-            getView().setDeployDeviceRecordDeviceType(mActivity.getString(R.string.deploy_device_type) + deviceTypeName);
+            getView().setDeployDeviceRecordDeviceType(deviceTypeName);
             boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
             getView().setDeployDetailDeploySettingVisible(isFire);
             if (isFire) {

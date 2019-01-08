@@ -753,4 +753,11 @@
     <string name="enter_wire_diameter_tip">请输入电线线径</string>
     <string name="diameter">线径:</string>
     <string name="device_number">设备编号: </string>
+    <string name="command_elec_disconnect_title">是否设备断电</string>
+    <string name="command_elec_disconnect_desc">操作后设备将变为断电状态，请先确认是否会对生产生活造成影响</string>
+    <string name="command_elec_disconnect_btn_title">断电</string>
+    <string name="command_elec_connect_title">是否设备上电</string>
+    <string name="command_elec_connect_desc">操作后设备将变为通电状态，请先务必确认周边人员安全</string>
+    <string name="command_elec_connect_btn_title">上电</string>
+    <string name="deploy_detail">部署详情</string>
 </resources>

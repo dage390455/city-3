@@ -61,6 +61,8 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     LinearLayout acDeployRecordDetailLlDeployPic;
     @BindView(R.id.ac_deploy_device_record_detail_tv_device_type)
     TextView acDeployDeviceRecordDetailTvDeviceType;
+    @BindView(R.id.ac_deploy_device_record_detail_tv_device_sn)
+    TextView acDeployDeviceRecordDetailTvDeviceSn;
     @BindView(R.id.ac_deploy_device_detail_deploy_record_setting_line)
     View acDeployDeviceDetailDeployRecordSettingLine;
     @BindView(R.id.ac_deploy_device_detail_ll_deploy_record_setting)
@@ -86,7 +88,8 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     private void initView() {
 //        includeTextTitleTvSubtitle.setText("历史记录");
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
-        includeTextTitleTvTitle.setVisibility(View.GONE);
+        includeTextTitleTvTitle.setVisibility(View.VISIBLE);
+        includeTextTitleTvTitle.setText(R.string.deploy_detail);
         initRcTag();
         if (!AppUtils.isChineseLanguage()) {
             lineWeChat.setVisibility(View.GONE);
@@ -186,9 +189,7 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
 
     @Override
     public void setSNTitle(String sn) {
-        includeTextTitleTvTitle.setVisibility(View.VISIBLE);
-
-        includeTextTitleTvTitle.setText(sn);
+        acDeployDeviceRecordDetailTvDeviceSn.setText(sn);
     }
 
     @Override
