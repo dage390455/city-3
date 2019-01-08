@@ -13,7 +13,7 @@ import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
-import com.sensoro.smartcity.server.bean.DeployContralSettingData;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
@@ -79,9 +79,9 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
             if (isFire) {
                 //TODO 是否配置过电器火灾字段字段
                 if (mDeployRecordInfo.getConfig() != null) {
-                    DeployContralSettingData deployContralSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
-                    if (deployContralSettingData != null) {
-                        getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployContralSettingData.getInitValue() + "A");
+                    DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
+                    if (deployControlSettingData != null) {
+                        getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A");
                         return;
                     }
                 }

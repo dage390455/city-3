@@ -3,7 +3,6 @@ package com.sensoro.smartcity.imainviews;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
-import com.sensoro.smartcity.presenter.DeployMonitorDeployPicPresenter;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 import com.sensoro.smartcity.widget.popup.SelectDialog;
 
@@ -16,4 +15,5 @@ public interface IDeployMonitorDeployPicView extends IToast,IActivityIntent,IPro
     void displayPic(ImageItem[] selImages, int index);
 
     void setSaveBtnStatus(boolean isEnable);
+    void setDeployPicTvInstallationSiteTipVisible(boolean isVisible);
 }

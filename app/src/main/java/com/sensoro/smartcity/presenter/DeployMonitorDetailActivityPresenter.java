@@ -33,7 +33,7 @@ import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
-import com.sensoro.smartcity.server.bean.DeployContralSettingData;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeployStationInfo;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.ScenesData;
@@ -102,7 +102,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 getView().setDeployContactRelativeLayoutVisible(false);
                 getView().setDeployDeviceRlSignalVisible(false);
                 getView().setDeployPhotoVisible(false);
-                getView().setDeviceTitleName(deployAnalyzerModel.sn);
+                getView().setDeviceSn(mContext.getString(R.string.device_number) + deployAnalyzerModel.sn);
                 if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
                     getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
                 }
@@ -132,7 +132,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
 //        getView().updateUploadState(true);
         String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
-        getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + deviceTypeName);
+        getView().setDeployDeviceType(deviceTypeName);
         //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
         boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) && !DEVICE_CONTROL_DEVICE_TYPES.get(0).equals(deployAnalyzerModel.deviceType);
         getView().setDeployDetailDeploySettingVisible(isFire);
@@ -148,7 +148,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
 
     //回显设备信息
     private void echoDeviceInfo() {
-        getView().setDeviceTitleName(deployAnalyzerModel.sn);
+        getView().setDeviceSn(mContext.getString(R.string.device_number) + deployAnalyzerModel.sn);
         if (!TextUtils.isEmpty(deployAnalyzerModel.nameAndAddress)) {
             getView().setNameAddressText(deployAnalyzerModel.nameAndAddress);
         }
@@ -317,7 +317,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //TODO 添加电气火灾配置支持
 //                deployAnalyzerModel.weChatAccount = null;
                 boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType) || DEVICE_CONTROL_DEVICE_TYPES.get(2).equals(deployAnalyzerModel.deviceType);
-                HashMap<String, DeployContralSettingData> map = null;
+                HashMap<String, DeployControlSettingData> map = null;
                 if (isFire) {
                     map = new HashMap<>();
                     if (deployAnalyzerModel.settingData != null) {
@@ -532,6 +532,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         if (deployAnalyzerModel.images.size() > 0) {
             intent.putExtra(EXTRA_DEPLOY_TO_PHOTO, deployAnalyzerModel.images);
         }
+        intent.putExtra(EXTRA_SETTING_DEPLOY_DEVICE_TYPE, deployAnalyzerModel.deviceType);
         getView().startAC(intent);
     }
 
@@ -623,10 +624,17 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 }
                 break;
             case EVENT_DATA_DEPLOY_INIT_CONFIG_CODE:
-                if (data instanceof DeployContralSettingData) {
-                    deployAnalyzerModel.settingData = (DeployContralSettingData) data;
+                if (data instanceof DeployControlSettingData) {
+                    deployAnalyzerModel.settingData = (DeployControlSettingData) data;
                     int initValue = deployAnalyzerModel.settingData.getInitValue();
-                    getView().setDeployDeviceDetailDeploySetting(mContext.getString(R.string.had_setting_detail) + initValue + "A");
+                    String settingText;
+                    if ("mantun_fires".equals(deployAnalyzerModel.deviceType)) {
+                        Double diameterValue = deployAnalyzerModel.settingData.getDiameterValue();
+                        settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A" + " " + mContext.getString(R.string.diameter) + diameterValue + "m㎡";
+                    } else {
+                        settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A";
+                    }
+                    getView().setDeployDeviceDetailDeploySetting(settingText);
                 } else {
                     getView().setDeployDeviceDetailDeploySetting(null);
                 }

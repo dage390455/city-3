@@ -225,6 +225,7 @@ public interface Constants {
     String EXTRA_SETTING_WE_CHAT_RELATION = "extra_setting_we_chat_relation";
     String EXTRA_SETTING_CONTACT = "extra_setting_contact";
     String EXTRA_SETTING_DEPLOY_CONTACT = "extra_setting_deploy_contact";
+    String EXTRA_SETTING_DEPLOY_DEVICE_TYPE = "extra_setting_deploy_device_type";
     String EXTRA_SETTING_CONTENT = "extra_setting_content";
     String EXTRA_SETTING_INDEX = "extra_setting_index";
     String EXTRA_SETTING_TAG_LIST = "extra_tag_list";

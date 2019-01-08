@@ -4,6 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/c_f4f4f4">
+
     <include
         android:id="@+id/ac_deploy_detail_title_root"
         layout="@layout/item_include_text_title" />
@@ -29,20 +30,19 @@
         android:id="@+id/ac_deploy_device_detail_tv_upload_tip"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/deploy_device_detail_add_all_required"
-        android:textSize="14sp"
-        android:textColor="@color/c_a6a6a6"
-        android:layout_marginStart="20dp"
         android:layout_above="@id/ac_deploy_device_detail_tv_upload"
+        android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        />
+        android:text="@string/deploy_device_detail_add_all_required"
+        android:textColor="@color/c_a6a6a6"
+        android:textSize="14sp" />
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ac_deploy_detail_title_root"
         android:layout_above="@id/ac_deploy_device_detail_tv_upload_tip"
+        android:layout_below="@id/ac_deploy_detail_title_root"
         android:scrollbars="none">
 
         <LinearLayout
@@ -51,16 +51,33 @@
             android:background="@color/c_f4f4f4"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/ac_deploy_device_detail_tv_device_type"
+            <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginEnd="20dp"
-                android:layout_marginBottom="20dp"
-                android:textColor="@color/c_a6a6a6"
-                android:textSize="14sp" />
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/ac_deploy_device_detail_tv_device_sn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="20dp"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:layout_marginBottom="20dp"
+                    android:textColor="@color/c_a6a6a6"
+                    android:text="111"
+                    android:textSize="14sp" />
+                <TextView
+                    android:id="@+id/ac_deploy_device_detail_tv_device_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="20dp"
+                    android:layout_marginEnd="20dp"
+                    android:text="222"
+                    android:layout_marginBottom="20dp"
+                    android:layout_alignParentEnd="true"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="14sp" />
+            </RelativeLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -155,17 +172,17 @@
                         android:layout_marginStart="16dp"
                         android:layout_toStartOf="@id/ac_deploy_device_detail_imv_tag"
                         android:layout_toEndOf="@id/ac_deploy_device_detail_tv_tag">
+
                         <TextView
                             android:id="@+id/ac_deploy_device_detail_tv_tag_required"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text="@string/optional"
                             android:layout_centerVertical="true"
-                            android:textSize="14sp"
+                            android:text="@string/optional"
                             android:textColor="@color/c_a6a6a6"
-                            android:visibility="visible"
-                            />
+                            android:textSize="14sp"
+                            android:visibility="visible" />
 
                         <com.sensoro.smartcity.widget.TouchRecycleView
                             android:id="@+id/ac_deploy_device_detail_rc_tag"
@@ -217,12 +234,12 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
-                            android:text="@string/required"
                             android:layout_centerVertical="true"
+                            android:text="@string/required"
                             android:textColor="@color/c_a6a6a6"
                             android:textSize="14sp"
-                            android:visibility="visible"
-                            />
+                            android:visibility="visible" />
+
                         <com.sensoro.smartcity.widget.TouchRecycleView
                             android:id="@+id/ac_deploy_device_detail_rc_alarm_contact"
                             android:layout_width="match_parent"
@@ -481,8 +498,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@color/white"
-                android:visibility="gone"
-                >
+                android:visibility="gone">
 
                 <TextView
                     android:layout_width="match_parent"

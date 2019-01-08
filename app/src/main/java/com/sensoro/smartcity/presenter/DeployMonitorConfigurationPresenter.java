@@ -20,7 +20,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployMonitorConfigurationView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
 import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.DeployContralSettingData;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.util.BleObserver;
 import com.sensoro.smartcity.util.LogUtils;
 
@@ -40,6 +40,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     private Integer mEnterValue;
     private final HashSet<String> bleList = new HashSet<>();
     private int[] mMinMaxValue;
+    private Double diameterValue;
 
     @Override
     public void initData(Context context) {
@@ -47,6 +48,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         deployAnalyzerModel = (DeployAnalyzerModel) mActivity.getIntent().getSerializableExtra(Constants.EXTRA_DEPLOY_ANALYZER_MODEL);
         mHandler = new Handler(Looper.getMainLooper());
         mHandler.post(this);
+        getView().setLlAcDeployConfigurationDiameterVisible(needDiameter());
         BleObserver.getInstance().registerBleObserver(this);
         init();
     }
@@ -71,15 +73,28 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
 
-    public void doConfiguration(String valueStr) {
+    public void doConfiguration(String valueStr, String diameter) {
         if (!bleList.contains(deployAnalyzerModel.sn)) {
             getView().toastShort(mActivity.getString(R.string.deploy_configuration_not_discover_device));
             return;
         }
-        checkAndConnect(valueStr);
+        checkAndConnect(valueStr, diameter);
     }
 
-    private void checkAndConnect(String valueStr) {
+    private void checkAndConnect(String valueStr, String diameter) {
+        if (needDiameter()) {
+            if (TextUtils.isEmpty(diameter)) {
+                getView().toastShort(mActivity.getString(R.string.enter_wire_diameter_tip));
+                return;
+            }
+            try {
+                diameterValue = Double.parseDouble(diameter);
+            } catch (Exception e) {
+                e.printStackTrace();
+                getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+                return;
+            }
+        }
         if (mMinMaxValue == null) {
             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
             return;
@@ -105,6 +120,10 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             getView().dismissBleConfigurationDialog();
             getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
         }
+    }
+
+    public boolean needDiameter() {
+        return "mantun_fires".equals(deployAnalyzerModel.deviceType);
     }
 
     @Override
@@ -171,7 +190,7 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     }
                 }
             });
-            SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType,(SensoroDevice) bleDevice, mEnterValue);
+            SensoroDevice sensoroDevice = DeployConfigurationAnalyzer.configurationData(deployAnalyzerModel.deviceType, (SensoroDevice) bleDevice, mEnterValue);
             if (sensoroDevice != null) {
                 mConnection.writeData05Configuration(sensoroDevice, this);
             } else {
@@ -180,7 +199,8 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                     public void run() {
                         if (isAttachedView()) {
                             getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_data_failed));
-                            mConnection.disconnect();}
+                            mConnection.disconnect();
+                        }
 
                     }
                 });
@@ -194,9 +214,10 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     private void configCompleted() {
         EventData eventData = new EventData();
         eventData.code = Constants.EVENT_DATA_DEPLOY_INIT_CONFIG_CODE;
-        DeployContralSettingData deployContralSettingData = new DeployContralSettingData();
-        deployContralSettingData.setInitValue(mEnterValue);
-        eventData.data = deployContralSettingData;
+        DeployControlSettingData deployControlSettingData = new DeployControlSettingData();
+        deployControlSettingData.setInitValue(mEnterValue);
+        deployControlSettingData.setDiameterValue(diameterValue);
+        eventData.data = deployControlSettingData;
         EventBus.getDefault().post(eventData);
         getView().finishAc();
     }

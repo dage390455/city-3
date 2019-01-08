@@ -747,4 +747,10 @@
     <string name="the_environment_is_too_dark_please_turn_on_the_flash">环境过暗，请打开闪光灯</string>
     <string name="collapse">收起</string>
     <string name="more_data">更多数据</string>
+    <string name="need_to_see_the_wire_diameter_connection">需能看清电线线径连接</string>
+    <string name="wire_diameter">电线线径/m㎡</string>
+    <string name="enter_wire_diameter_in_the_open_circuit_of_the_installation_site">输入安装现场的空开回路中的电线线径</string>
+    <string name="enter_wire_diameter_tip">请输入电线线径</string>
+    <string name="diameter">线径:</string>
+    <string name="device_number">设备编号: </string>
 </resources>
