@@ -498,9 +498,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             if (majors != null && majors.size() > 0) {
                                 String sensoroType = majors.get(0);
                                 if (!TextUtils.isEmpty(sensoroType)) {
-                                    //TODO 控制头部
+                                    // 控制头部
                                     needTop = true;
-                                    final MonitoringPointRcContentAdapterModel model = createModel(sensoroDetails, sensoroType);
+                                    final MonitoringPointRcContentAdapterModel model = createMonitoringPointRcContentAdapterModel(sensoroDetails, sensoroType);
                                     if (model != null) {
                                         mContext.runOnUiThread(new Runnable() {
                                             @Override
@@ -521,7 +521,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             List<String> minors = displayOptions.getMinors();
                             if (minors != null && minors.size() > 0) {
                                 for (String type : minors) {
-                                    MonitoringPointRcContentAdapterModel model = createModel(sensoroDetails, type);
+                                    MonitoringPointRcContentAdapterModel model = createMonitoringPointRcContentAdapterModel(sensoroDetails, type);
                                     if (model != null) {
                                         if (TextUtils.isEmpty(model.content)) {
                                             model.content = "-";
@@ -529,7 +529,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         dataBean.add(model);
                                     }
                                 }
-                                //todo 控制展开
+                                // 控制展开
                                 mContext.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
@@ -779,19 +779,17 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             }
                         });
                     } else {
-                        if (configDeviceType != null) {
-                            //容错处理 若无任何添加，尝试查找全部
-                            if (dataBean.size() == 0) {
-                                List<String> sensorTypes = configDeviceType.getSensorTypes();
-                                if (sensorTypes != null && sensorTypes.size() > 0 && sensoroDetails != null) {
-                                    for (String type : sensorTypes) {
-                                        MonitoringPointRcContentAdapterModel model = createModel(sensoroDetails, type);
-                                        if (model != null) {
-                                            if (TextUtils.isEmpty(model.content)) {
-                                                model.content = "-";
-                                            }
-                                            dataBean.add(model);
+                        //容错处理 若无任何添加，尝试查找全部
+                        if (dataBean.size() == 0 && configDeviceType != null) {
+                            List<String> sensorTypes = configDeviceType.getSensorTypes();
+                            if (sensorTypes != null && sensorTypes.size() > 0 && sensoroDetails != null) {
+                                for (String type : sensorTypes) {
+                                    MonitoringPointRcContentAdapterModel model = createMonitoringPointRcContentAdapterModel(sensoroDetails, type);
+                                    if (model != null) {
+                                        if (TextUtils.isEmpty(model.content)) {
+                                            model.content = "-";
                                         }
+                                        dataBean.add(model);
                                     }
                                 }
                             }
@@ -821,7 +819,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
      */
     private void handleEarlyWarningThresholdModel(List<MonitorOptionsBean> monitorOptions) {
         synchronized (mEarlyWarningthresholdDialogUtilsAdapterModels) {
-            mEarlyWarningthresholdDialogUtilsAdapterModels.clear();
             if (mDeviceInfo != null) {
                 AlarmInfo alarms = mDeviceInfo.getAlarms();
                 final HashMap<String, AlarmInfo.RuleInfo> ruleInfoHashMap = new HashMap<>();
@@ -847,7 +844,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         }
                     }
                 });
-
+                mEarlyWarningthresholdDialogUtilsAdapterModels.clear();
                 for (MonitorOptionsBean monitorOptionsBean : monitorOptions) {
                     EarlyWarningthresholdDialogUtilsAdapterModel earlyWarningthresholdDialogUtilsAdapterModel = new EarlyWarningthresholdDialogUtilsAdapterModel();
                     String name = monitorOptionsBean.getName();
@@ -861,7 +858,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         if (sensorTypeBean != null) {
                             String id = sensorTypeBean.getId();
                             AlarmInfo.RuleInfo ruleInfo = ruleInfoHashMap.get(id);
-
                             if (ruleInfo != null) {
                                 SensorTypeStyles configSensorType = PreferencesHelper.getInstance().getConfigSensorType(id);
                                 if (configSensorType != null) {
@@ -923,7 +919,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     }
 
-    private MonitoringPointRcContentAdapterModel createModel(Map<String, SensorStruct> sensoroDetails, String sensoroType) {
+    private MonitoringPointRcContentAdapterModel createMonitoringPointRcContentAdapterModel(Map<String, SensorStruct> sensoroDetails, String sensoroType) {
         if (sensoroDetails != null) {
             SensorStruct sensorStruct = sensoroDetails.get(sensoroType);
             // 只在有数据时进行显示

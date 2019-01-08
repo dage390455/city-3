@@ -10,7 +10,7 @@ import rx.Subscription;
 
 public class RxApiManager implements RxActionManager<Object> {
 
-    private static RxApiManager instance = null;
+    private volatile static RxApiManager instance;
 
     private ArrayMap<Object, Subscription> maps;
 
