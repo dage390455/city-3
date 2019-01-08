@@ -5,13 +5,19 @@ import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.ContentProviderOperation;
+import android.content.ContentProviderResult;
+import android.content.ContentUris;
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.OperationApplicationException;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.os.RemoteException;
 import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
@@ -512,41 +518,106 @@ public class AppUtils {
 
     }
 
-    public static void addToPhoneContact(final Context context, final String name, final String number) {
+    /**
+     * 不重复添加联系人
+     *
+     * @param context
+     * @param names
+     * @param numbers
+     */
+    public static void addToPhoneContact(final Context context, final List<String> names, final List<String> numbers) {
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
+                //先删除原有联系人
+                final ArrayList<Long> idList = new ArrayList<>();
+                Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+                if (cursor != null) {
+                    while (cursor.moveToNext()) {
+                        long contactId = cursor.getLong(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID));
+                        String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+                        if ("升哲安全服务".equals(name)) {
+                            idList.add(contactId);
+                        }
+                    }
+                    if (cursor != null) {
+                        cursor.close();
+                    }
+                    batchDelContact(context, idList);
+                }
+                //
+                ContentValues values = new ContentValues();
+                //TODO 默认设置不允许重复添加
+//                values.put(ContactsContract.RawContacts.AGGREGATION_MODE,ContactsContract.RawContacts.AGGREGATION_MODE_DISABLED);
+                Uri rawContactUri = context.getContentResolver().insert(
+                        ContactsContract.RawContacts.CONTENT_URI, values);
+                long rawContactId = ContentUris.parseId(rawContactUri);
+                //插入姓名和号码
+                final ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+                for (String name : names) {
+                    ContentProviderOperation build = ContentProviderOperation
+                            .newInsert(
+                                    ContactsContract.Data.CONTENT_URI)
+                            .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
+                            .withValue(ContactsContract.Data.MIMETYPE,
+                                    ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.StructuredName.GIVEN_NAME, name).build();
+                    ops.add(build);
+                }
+                for (String number : numbers) {
+                    ContentProviderOperation build = ContentProviderOperation
+                            .newInsert(
+                                    ContactsContract.Data.CONTENT_URI)
+                            .withValue(ContactsContract.Data.RAW_CONTACT_ID, rawContactId)
+                            .withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE)
+                            .withValue(ContactsContract.CommonDataKinds.Phone.LABEL,
+                                    ContactsContract.CommonDataKinds.Phone.getTypeLabelResource(ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE))
+                            .build();
+                    ops.add(build);
+                }
                 try {
-                    ArrayList<ContentProviderOperation> ops = new ArrayList<>();
-                    ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI);
-                    builder.withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null);
-                    builder.withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null);
-                    ops.add(builder.build());
-                    // Name
-                    builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
-                    builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0);
-                    builder.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
-                    builder.withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name);
-                    ops.add(builder.build());
-                    // Number
-                    builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
-                    builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0);
-                    builder.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-                    builder.withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number);
-                    builder.withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
-                    ops.add(builder.build());
-                    context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
-                } catch (Exception e) {
+                    ContentProviderResult[] results = context.getContentResolver()
+                            .applyBatch(ContactsContract.AUTHORITY, ops);
+                } catch (RemoteException e) {
+                    e.printStackTrace();
+                } catch (OperationApplicationException e) {
                     e.printStackTrace();
                 }
             }
         });
+
+    }
+
+    /**
+     * 删除指定id联系人
+     *
+     * @param context
+     * @param list
+     */
+    private static void batchDelContact(Context context, final List<Long> list) {
+        final ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            long id = list.get(i);
+            ops.add(ContentProviderOperation.newDelete(ContentUris.withAppendedId(ContactsContract.RawContacts.CONTENT_URI, id))
+                    .withYieldAllowed(true)
+                    .build());
+        }
+        try {
+            context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+        } catch (OperationApplicationException e) {
+            e.printStackTrace();
+        } catch (RemoteException e) {
+            e.printStackTrace();
+        }
+
     }
 
     /**
      * 合同选择场地性质dialog
      */
-    public static SelectDialog showDialog(Activity activity,SelectDialog.SelectDialogListener listener, List<String> items) {
+    public static SelectDialog showDialog(Activity activity, SelectDialog.SelectDialogListener listener, List<String> items) {
         SelectDialog dialog = new SelectDialog(activity, R.style
                 .transparentFrameWindowStyle,
                 listener, items);
