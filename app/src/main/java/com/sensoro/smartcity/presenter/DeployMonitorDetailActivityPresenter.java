@@ -316,7 +316,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 //TODO 暂时不支持添加wx电话
                 //TODO 添加电气火灾配置支持
 //                deployAnalyzerModel.weChatAccount = null;
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType) || DEVICE_CONTROL_DEVICE_TYPES.get(2).equals(deployAnalyzerModel.deviceType);
+                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 HashMap<String, DeployContralSettingData> map = null;
                 if (isFire) {
                     map = new HashMap<>();
