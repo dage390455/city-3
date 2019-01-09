@@ -748,4 +748,5 @@
     <string name="save_success">保存成功</string>
     <string name="upgrade_tip">升级提示</string>
     <string name="the_environment_is_too_dark_please_turn_on_the_flash">Dark, please turn on the flash</string>
+    <string name="do_not_enter_illegal_characters_such_as_english_and_numbers">Do not enter illegal characters such as English and numbers</string>
 </resources>

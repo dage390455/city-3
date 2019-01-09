@@ -264,7 +264,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     public void doSubmit(String enterpriseName, String customerName, String customerPhone, String enterpriseCardId, String customerAddress, String placeType, String contractAgeStr, String contractAgeFirstStr, String contractAgePeriodStr, ArrayList<ContractsTemplateInfo> data) {
         mContractInfo.setContract_type(1);
         //
-        if (TextUtils.isEmpty(enterpriseName)) {
+        if (RegexUtils.checkContractIsEmpty(enterpriseName)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_enterprise_name));
             return;
         } else {
@@ -275,12 +275,12 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 if (RegexUtils.checkContractName(enterpriseName)) {
                     mContractInfo.setCustomer_enterprise_name(enterpriseName);
                 } else {
-                    getView().toastShort("企业名称不合法");
+                    getView().toastShort(mActivity.getString(R.string.company_name) + mActivity.getString(R.string.do_not_enter_illegal_characters_such_as_english_and_numbers));
                     return;
                 }
             }
         }
-        if (TextUtils.isEmpty(customerName)) {
+        if (RegexUtils.checkContractIsEmpty(customerName)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_customer_name));
             return;
 
@@ -292,7 +292,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
                 if (RegexUtils.checkContractName(customerName)) {
                     mContractInfo.setCustomer_name(customerName);
                 } else {
-                    getView().toastShort("法人姓名不合法");
+                    getView().toastShort(mActivity.getString(R.string.legal_name) + mActivity.getString(R.string.do_not_enter_illegal_characters_such_as_english_and_numbers));
                     return;
                 }
 
@@ -305,7 +305,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             return;
         }
 
-        if (TextUtils.isEmpty(enterpriseCardId)) {
+        if (RegexUtils.checkContractIsEmpty(enterpriseCardId)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_enterprise_card_id));
             return;
         } else {
@@ -318,7 +318,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
 
         }
 
-        if (TextUtils.isEmpty(customerAddress)) {
+        if (RegexUtils.checkContractIsEmpty(customerAddress)) {
             getView().toastShort(mActivity.getString(R.string.please_enter_register_address));
             return;
         } else {
@@ -330,7 +330,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             }
         }
 
-        if (TextUtils.isEmpty(placeType)) {
+        if (RegexUtils.checkContractIsEmpty(placeType)) {
             getView().toastShort(mActivity.getString(R.string.please_select_site_nature));
             return;
         }
