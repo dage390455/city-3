@@ -41,7 +41,14 @@ android {
         manifestPlaceholders = [
                 GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
-                GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A"
+                GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+                //TODO 测试版/正式版 使用其中一个
+                APP_ICON        : "@mipmap/ic_launcher_beta",
+                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+                //
+//                APP_ICON        : "@mipmap/ic_launcher",
+//                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+
         ]
 
         ndk {
@@ -66,6 +73,14 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
+//            manifestPlaceholders = [
+//                    GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
+//                    GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
+//                    GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+//                    APP_ICON        : "@mipmap/ic_launcher_beta",
+//                    APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+//
+//            ]
         }
         release {
             minifyEnabled false
@@ -73,6 +88,14 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             debuggable false
+//            manifestPlaceholders = [
+//                    GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
+//                    GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
+//                    GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+//                    APP_ICON        : "@mipmap/ic_launcher",
+//                    APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+//
+//            ]
         }
     }
     dexOptions {

@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.adapter;
 
 import android.content.Context;
-import android.content.res.Resources;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,19 +24,11 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
     private Context mContext;
     private LayoutInflater mInflater;
     private final List<ContractListInfo> mList = new ArrayList<>();
-    private final Resources resources;
-    //    private OnContractClickListener mListener;
 
     public ContractListAdapter(Context context) {
         this.mContext = context;
         this.mInflater = LayoutInflater.from(context);
-        resources = context.getResources();
-//        this.mListener = listener;
     }
-
-//    public interface OnContractClickListener {
-//        void onContractClickItem(View view, int position);
-//    }
 
     public void setData(List<ContractListInfo> list) {
         this.mList.clear();
@@ -47,7 +38,6 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
     public List<ContractListInfo> getData() {
         return mList;
     }
-
 
     @Override
     public int getCount() {
@@ -66,7 +56,7 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup viewGroup) {
-        ContractViewHolder holder = null;
+        ContractViewHolder holder;
         if (convertView == null) {
             holder = new ContractViewHolder();
             convertView = mInflater.inflate(R.layout.item_contracts_manger, null);
@@ -93,29 +83,51 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
         if (TextUtils.isEmpty(customer_enterprise_name)) {
             customer_enterprise_name = mContext.getString(R.string.unknown);
         }
+        String customer_name = contractListInfo.getCustomer_name();
+        if (TextUtils.isEmpty(customer_name)) {
+            customer_name = mContext.getString(R.string.unknown);
+        }
+        String customer_address = contractListInfo.getCustomer_address();
+        if (TextUtils.isEmpty(customer_address)) {
+            customer_address = mContext.getString(R.string.unknown);
+        }
         switch (contract_type) {
             case 1:
-                holder.itemTvType.setText(R.string.business_merchant_name);
-                holder.itemRlContactsEnterprise.setVisibility(View.GONE);
+                holder.itemTvType.setText(R.string.company);
+                holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
+                holder.itemEtLine1.setText(customer_name);
+                holder.itemTvContactsEnterprise.setText(R.string.business_merchant_name);
+                holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
+                holder.itemTvLine2.setText(R.string.register_address);
+                holder.itemEtLine2.setText(customer_address);
                 break;
             case 2:
                 holder.itemTvType.setText(R.string.personal);
-                holder.itemRlContactsEnterprise.setVisibility(View.VISIBLE);
+                holder.itemTvLine1.setText(R.string.owners_name);
+                holder.itemEtLine1.setText(customer_name);
+                holder.itemTvContactsEnterprise.setText(R.string.party_a_customer_name);
                 holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
+                holder.itemTvLine2.setText(R.string.home_address);
+                holder.itemEtLine2.setText(customer_address);
                 break;
             default:
                 holder.itemTvType.setText(R.string.company);
-                holder.itemRlContactsEnterprise.setVisibility(View.GONE);
+                holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
+                holder.itemEtLine1.setText(customer_name);
+                holder.itemTvContactsEnterprise.setText(R.string.business_merchant_name);
+                holder.itemEtContactsEnterprise.setText(customer_enterprise_name);
+                holder.itemTvLine2.setText(R.string.register_address);
+                holder.itemEtLine2.setText(customer_address);
                 break;
         }
 
         if (contractListInfo.isConfirmed()) {
             holder.itemTvStatus.setText(R.string.signed);
-            holder.itemTvStatus.setTextColor(resources.getColor(R.color.c_29c093));
+            holder.itemTvStatus.setTextColor(mContext.getResources().getColor(R.color.c_29c093));
             holder.itemTvStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_29c_full_corner);
         } else {
             holder.itemTvStatus.setText(R.string.not_signed);
-            holder.itemTvStatus.setTextColor(resources.getColor(R.color.c_ff8d34));
+            holder.itemTvStatus.setTextColor(mContext.getResources().getColor(R.color.c_ff8d34));
             holder.itemTvStatus.setBackgroundResource(R.drawable.shape_bg_stroke_1_ff8d_full_corner);
         }
         String contract_number = contractListInfo.getContract_number();
@@ -146,33 +158,6 @@ public class ContractListAdapter extends BaseAdapter implements Constants {
             holder.itemEtSignTime.setText(confirmTime);
         } else {
             holder.itemEtSignTime.setText("-");
-        }
-        //
-        String customer_name = contractListInfo.getCustomer_name();
-        if (TextUtils.isEmpty(customer_name)) {
-            customer_name = mContext.getString(R.string.unknown);
-        }
-        switch (contract_type) {
-            case 1:
-                holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
-                holder.itemEtLine1.setText(customer_name);
-                holder.itemTvLine2.setText(R.string.business_merchant_name);
-                holder.itemEtLine2.setText(customer_enterprise_name);
-                break;
-            case 2:
-                holder.itemTvLine1.setText(R.string.owners_name);
-                holder.itemEtLine1.setText(customer_name);
-                String customer_address = contractListInfo.getCustomer_address();
-                holder.itemTvLine2.setText(R.string.home_address);
-                holder.itemEtLine2.setText(customer_address);
-
-                break;
-            default:
-                holder.itemTvLine1.setText(mContext.getString(R.string.legal_name));
-                holder.itemEtLine1.setText(customer_name);
-                holder.itemTvLine2.setText(R.string.business_merchant_name);
-                holder.itemEtLine2.setText(customer_enterprise_name);
-                break;
         }
         return convertView;
     }

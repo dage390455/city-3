@@ -145,7 +145,7 @@ public class RegexUtils {
     }
 
     public static boolean checkContractIsEmpty(String content) {
-        return TextUtils.isEmpty(content) && "无".equals(content);
+        return TextUtils.isEmpty(content) || "无".equals(content);
     }
 
     /**

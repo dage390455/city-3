@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -19,14 +18,12 @@ import com.sensoro.smartcity.imainviews.IContractEditorView;
 import com.sensoro.smartcity.presenter.ContractEditorPresenter;
 import com.sensoro.smartcity.widget.dialog.TipOperationDialogUtils;
 
-import java.util.ArrayList;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class ContractEditorActivity extends BaseActivity<IContractEditorView, ContractEditorPresenter>
-        implements IContractEditorView ,TipOperationDialogUtils.TipDialogUtilsClickListener{
+        implements IContractEditorView, TipOperationDialogUtils.TipDialogUtilsClickListener {
     @BindView(R.id.include_text_title_imv_arrows_left)
     ImageView includeTextTitleImvArrowsLeft;
     @BindView(R.id.include_text_title_tv_title)
@@ -73,8 +70,8 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         mCreateContractDialog = new TipOperationDialogUtils(mActivity, true);
         mCreateContractDialog.setTipTitleText(mActivity.getString(R.string.create_contract));
         mCreateContractDialog.setTipMessageText(mActivity.getString(R.string.create_contract_tip_message));
-        mCreateContractDialog.setTipCacnleText(mActivity.getString(R.string.cancel),mActivity.getResources().getColor(R.color.c_a6a6a6));
-        mCreateContractDialog.setTipConfirmText(mActivity.getString(R.string.dialog_input_confirm),mActivity.getResources().getColor(R.color.c_29c093));
+        mCreateContractDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
+        mCreateContractDialog.setTipConfirmText(mActivity.getString(R.string.dialog_input_confirm), mActivity.getResources().getColor(R.color.c_29c093));
         mCreateContractDialog.setTipDialogUtilsClickListener(this);
     }
 
@@ -129,10 +126,11 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
     }
 
 
-    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_contract_editor_personal_contract, R.id.ac_contract_editor_business_contract})
+    @OnClick({R.id.include_text_title_imv_arrows_left, R.id.include_text_title_tv_subtitle, R.id.ac_contract_editor_personal_contract, R.id.ac_contract_editor_business_contract})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
+            case R.id.include_text_title_tv_subtitle:
                 finishAc();
                 break;
             case R.id.ac_contract_editor_personal_contract:
@@ -152,10 +150,10 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         acContractEditorCompanyContract.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if(mPersonalContractFragment.isAdded()){
+        if (mPersonalContractFragment.isAdded()) {
             fragmentTransaction.hide(mBusinessContractFragment).show(mPersonalContractFragment).commit();
-        }else{
-            fragmentTransaction.add(R.id.ac_contract_editor_fl,mPersonalContractFragment).hide(mBusinessContractFragment).show(mPersonalContractFragment).commit();
+        } else {
+            fragmentTransaction.add(R.id.ac_contract_editor_fl, mPersonalContractFragment).hide(mBusinessContractFragment).show(mPersonalContractFragment).commit();
         }
     }
 
@@ -167,10 +165,10 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         acContractEditorCompanyContract.setTextColor(mActivity.getResources().getColor(R.color.white));
 
         FragmentTransaction fragmentTransaction = getSupportFragmentManager().beginTransaction();
-        if(mBusinessContractFragment.isAdded()){
+        if (mBusinessContractFragment.isAdded()) {
             fragmentTransaction.hide(mPersonalContractFragment).show(mBusinessContractFragment).commit();
-        }else{
-            fragmentTransaction.add(R.id.ac_contract_editor_fl,mBusinessContractFragment).hide(mPersonalContractFragment).show(mBusinessContractFragment).commit();
+        } else {
+            fragmentTransaction.add(R.id.ac_contract_editor_fl, mBusinessContractFragment).hide(mPersonalContractFragment).show(mBusinessContractFragment).commit();
         }
     }
 
@@ -195,6 +193,19 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
     }
 
     @Override
+    public void setOriginFormList(boolean isFormList) {
+        if (isFormList) {
+            includeTextTitleTvSubtitle.setVisibility(View.VISIBLE);
+            includeTextTitleTvSubtitle.setText(mActivity.getResources().getString(R.string.cancel));
+            includeTextTitleImvArrowsLeft.setVisibility(View.GONE);
+        } else {
+            includeTextTitleImvArrowsLeft.setVisibility(View.VISIBLE);
+            includeTextTitleTvSubtitle.setVisibility(View.GONE);
+        }
+
+    }
+
+    @Override
     protected void onDestroy() {
         if (mCreateContractDialog != null) {
             mCreateContractDialog.dismiss();
@@ -215,15 +226,14 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
     @Override
     public void onConfirmClick(String content) {
         mCreateContractDialog.dismiss();
-        if(mDialogOrigin == 1){
+        if (mDialogOrigin == 1) {
             mPersonalContractFragment.doCreateContract();
-        }else if(mDialogOrigin == 2){
+        } else if (mDialogOrigin == 2) {
             mBusinessContractFragment.doCreateContract();
         }
     }
 
     /**
-     *
      * @param origin 1是个人合同 2是企业合同
      */
     public void showCreateDialog(int origin) {
