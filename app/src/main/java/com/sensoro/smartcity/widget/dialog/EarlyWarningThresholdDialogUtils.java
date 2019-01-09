@@ -79,7 +79,7 @@ public class EarlyWarningThresholdDialogUtils {
 //        mTvMessage.setText(text);
 //    }
 
-//    public void setTipCacnleText(String text, @ColorInt int color) {
+//    public void setTipCancelText(String text, @ColorInt int color) {
 //        mTvCancel.setText(text);
 //        mTvConfirm.setTextColor(color);
 //    }

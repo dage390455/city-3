@@ -533,7 +533,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mTipUtils.setTipEtRootVisible(false);
         mTipUtils.setTipTitleText(mActivity.getString(R.string.request_failed));
         mTipUtils.setTipMessageText(errorMsg);
-        mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
         mTipUtils.setTipConfirmVisible(false);
         mTipUtils.show();
     }
@@ -765,7 +765,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mTipUtils.setTipTitleText(mActivity.getString(title));
         mTipUtils.setTipMessageText(mActivity.getString(message));
         mTipUtils.setTipConfirmVisible(true);
-        mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
         mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
         mTipDialogType = type;
         mTipUtils.show();
@@ -780,7 +780,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mTipUtils.setTipTitleText(mActivity.getString(title));
         mTipUtils.setTipMessageText(mActivity.getString(message), messageColor);
         mTipUtils.setTipConfirmVisible(true);
-        mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
         mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
         mTipDialogType = type;
         mTipUtils.show();
@@ -795,8 +795,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    public void onConfirmClick(String content) {
-        mPresenter.doOperation(mTipDialogType, content);
+    public void onConfirmClick(String content,String diameter) {
+        mPresenter.doOperation(mTipDialogType, content,diameter);
     }
 
     @Override

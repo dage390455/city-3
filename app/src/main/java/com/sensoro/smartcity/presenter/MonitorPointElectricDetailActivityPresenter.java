@@ -1217,7 +1217,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         getView().startAC(intent);
     }
 
-    public void doOperation(int type, String content) {
+    public void doOperation(int type, String content, String diameter) {
         String operationType = null;
         Integer switchSpec = null;
         switch (type) {

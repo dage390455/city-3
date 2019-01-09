@@ -18,7 +18,9 @@ public class TipOperationDialogUtils {
     private final TextView mTvConfirm;
     private final TextView mTvTitle;
     private final LinearLayout mLlEtRoot;
+    private final LinearLayout mLlEtDiameter;
     private final EditText mEt;
+    private final EditText mEtDiameter;
     private TipDialogUtilsClickListener listener;
     private CustomCornerDialog mDialog;
     private Activity mActivity;
@@ -31,13 +33,15 @@ public class TipOperationDialogUtils {
 
     public TipOperationDialogUtils(Activity activity) {
         mActivity = activity;
-        View view = View.inflate(activity, R.layout.item_dialog_monitor_point_operation, null);
+        final View view = View.inflate(activity, R.layout.item_dialog_monitor_point_operation, null);
         mTvTitle = view.findViewById(R.id.dialog_tip_operation_tv_title);
         mTvMessage = view.findViewById(R.id.dialog_tip_operation_tv_message);
         mTvCancel = view.findViewById(R.id.dialog_tip_operation_tv_cancel);
         mTvConfirm = view.findViewById(R.id.dialog_tip_operation_tv_confirm);
         mLlEtRoot = view.findViewById(R.id.dialog_operation_ll_et_root);
         mEt = view.findViewById(R.id.dialog_operation_et);
+        mLlEtDiameter = view.findViewById(R.id.dialog_operation_ll_et_diameter);
+        mEtDiameter = view.findViewById(R.id.dialog_operation_et_diameter);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
 //        builder.setCancelable(false);
@@ -64,9 +68,14 @@ public class TipOperationDialogUtils {
             @Override
             public void onClick(View v) {
                 if (mLlEtRoot.getVisibility() == View.VISIBLE) {
-                    listener.onConfirmClick(mEt.getText().toString());
+                    if (mLlEtDiameter.getVisibility() == View.VISIBLE) {
+                        listener.onConfirmClick(mEt.getText().toString(), mEtDiameter.getText().toString());
+                    } else {
+                        listener.onConfirmClick(mEt.getText().toString(), null);
+                    }
+
                 } else {
-                    listener.onConfirmClick(null);
+                    listener.onConfirmClick(null, null);
                 }
             }
         });
@@ -101,7 +110,7 @@ public class TipOperationDialogUtils {
         mTvMessage.setTextColor(mActivity.getResources().getColor(color));
     }
 
-    public void setTipCacnleText(String text, @ColorInt int color) {
+    public void setTipCancelText(String text, @ColorInt int color) {
         mTvCancel.setText(text);
         mTvCancel.setTextColor(color);
     }
@@ -153,7 +162,7 @@ public class TipOperationDialogUtils {
     public interface TipDialogUtilsClickListener {
         void onCancelClick();
 
-        void onConfirmClick(String content);
+        void onConfirmClick(String content, String diameter);
     }
 
 }
