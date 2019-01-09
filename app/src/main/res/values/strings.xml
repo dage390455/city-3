@@ -753,4 +753,5 @@
     <string name="do_not_enter_illegal_characters_such_as_english_and_numbers">Do not enter illegal characters such as English and numbers</string>
     <string name="collapse">Collapse</string>
     <string name="more_data">More</string>
+    <string name="device_category">Category</string>
 </resources>

@@ -147,6 +147,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     LinearLayout llElectTop;
     @BindView(R.id.ac_monitoring_elect_point_line)
     View acMonitoringElectPointLine;
+    @BindView(R.id.monitor_detail_tv_category)
+    TextView monitorDetailTvCategory;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -687,6 +689,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void setElectInfoTipVisible(boolean isVisible) {
         electInfo.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setMonitorDetailTvCategory(String category) {
+        monitorDetailTvCategory.setText(category);
     }
 
 

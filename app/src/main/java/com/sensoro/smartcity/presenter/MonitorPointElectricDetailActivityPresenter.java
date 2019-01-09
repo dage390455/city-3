@@ -116,6 +116,14 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (TextUtils.isEmpty(mergeType)) {
             mergeType = WidgetUtil.handleMergeType(deviceType);
         }
+        DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
+        if (configDeviceType != null) {
+            String category = configDeviceType.getCategory();
+            if (TextUtils.isEmpty(category)) {
+                category = mContext.getString(R.string.unknown);
+            }
+            getView().setMonitorDetailTvCategory(category);
+        }
         MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
         if (mergeTypeStyles != null) {
             typeName = mergeTypeStyles.getName();

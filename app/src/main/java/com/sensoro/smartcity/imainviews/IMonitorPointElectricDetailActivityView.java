@@ -100,4 +100,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setLlAllElectDetailVisible(boolean isVisible);
 
     void setElectInfoTipVisible(boolean isVisible);
+
+    void setMonitorDetailTvCategory(String category);
 }
