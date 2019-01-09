@@ -100,7 +100,8 @@
             android:layout_weight="1"
             android:background="@color/white"
             android:gravity="center"
-            android:inputType="number"
+            android:visibility="visible"
+            android:inputType="number|numberDecimal"
             android:textColor="@color/c_252525"
             android:textSize="14sp" />
 

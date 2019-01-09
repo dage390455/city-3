@@ -109,7 +109,7 @@
                     android:layout_marginStart="8dp"
                     android:background="@null"
                     android:gravity="end"
-                    android:inputType="number"
+                    android:inputType="number|numberDecimal"
                     android:textColor="@color/c_252525"
                     android:textSize="14sp" />
             </LinearLayout>
