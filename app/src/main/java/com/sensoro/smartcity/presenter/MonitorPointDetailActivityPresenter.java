@@ -344,7 +344,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
                                 if (configMalfunctionMainTypes != null) {
                                     monitoringPointRcContentAdapterModel.content = configMalfunctionMainTypes.getName();
                                     uiData.add(monitoringPointRcContentAdapterModel);
-                                    LogUtils.loge("故障成因：key = " + key + "value = " + monitoringPointRcContentAdapterModel.content);
+                                    try {
+                                        LogUtils.loge("故障成因：key = " + key + "value = " + monitoringPointRcContentAdapterModel.content);
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
                                     break;
                                 }
                                 monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
@@ -568,7 +572,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
         String address;
         if (AppUtils.isChineseLanguage()) {
             address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
-            LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+            try {
+                LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } else {
             StringBuilder stringBuilder = new StringBuilder();
             String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
@@ -618,7 +626,11 @@ public class MonitorPointDetailActivityPresenter extends BasePresenter<IMonitorP
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-        LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
+        try {
+            LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     public void doNavigation() {

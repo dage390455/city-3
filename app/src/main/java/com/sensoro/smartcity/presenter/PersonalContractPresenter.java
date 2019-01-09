@@ -191,7 +191,11 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 String address = "";
                 try {
                     if (result != null) {
-                        LogUtils.loge(this, result.toString());
+                        try {
+                            LogUtils.loge(this, result.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         Word resultName = result.getName();
                         if (resultName != null) {
                             name = resultName.getWords();
@@ -222,7 +226,11 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                     getView().dismissProgressDialog();
                     getView().toastShort(mActivity.getString(R.string.id_card_Identification_error) + error.getMessage());
                 }
-                LogUtils.loge(this, error.getMessage());
+                try {
+                    LogUtils.loge(this, error.getMessage());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
     }
@@ -430,7 +438,11 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
             public void onCompleted(ContractAddRsp contractAddRsp) {
                 ContractAddInfo data = contractAddRsp.getData();
                 int id = data.getId();
-                LogUtils.loge(this, "id = " + id);
+                try {
+                    LogUtils.loge(this, "id = " + id);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 String url = data.getFdd_viewpdf_url();
                 Intent intent = new Intent(mActivity, ContractCreationSuccessActivity.class);
                 intent.putExtra(EXTRA_CONTRACT_ID, id);

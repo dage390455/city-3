@@ -125,14 +125,22 @@ public class AppUtils {
             Intent intent = new Intent();
             intent.setAction("android.intent.action.VIEW");
 //            parameters
-            LogUtils.loge("doNavigation = " + destPosition[1] + "," + destPosition[0]);
+            try {
+                LogUtils.loge("doNavigation = " + destPosition[1] + "," + destPosition[0]);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             String url = "https://www.google.com/maps/search/?api=1&query=" + destPosition[0] + "," + destPosition[1];
 //            String url = "https://www.google.com/maps/search/?api=1&query=" + destPosition[1] + "," + destPosition[0];
 //            String url = "http://uri.amap.com/navigation?from=" + startPosition.longitude + "," + startPosition.latitude
 //                    + ",当前位置" +
 //                    "&to=" + destPosition.longitude + "," + destPosition.latitude + "," +
 //                    "设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
-            LogUtils.loge("doNavigation = " + url);
+            try {
+                LogUtils.loge("doNavigation = " + url);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             Uri content_url = Uri.parse(url);
             intent.setData(content_url);
             activity.startActivity(intent);
@@ -464,20 +472,32 @@ public class AppUtils {
                     String number = event.getNumber();
                     if (!TextUtils.isEmpty(number)) {
                         if ("attach".equals(source)) {
-                            LogUtils.loge("单独联系人：" + number);
+                            try {
+                                LogUtils.loge("单独联系人：" + number);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (TextUtils.isEmpty(contract[0])) {
                                 contract[0] = number;
                             }
                             break outer;
 
                         } else if ("group".equals(source)) {
-                            LogUtils.loge("分组联系人：" + number);
+                            try {
+                                LogUtils.loge("分组联系人：" + number);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (TextUtils.isEmpty(contract[0])) {
                                 contract[1] = number;
                             }
                             break;
                         } else if ("notification".equals(source)) {
-                            LogUtils.loge("账户联系人：" + number);
+                            try {
+                                LogUtils.loge("账户联系人：" + number);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (TextUtils.isEmpty(contract[0])) {
                                 contract[2] = number;
                             }

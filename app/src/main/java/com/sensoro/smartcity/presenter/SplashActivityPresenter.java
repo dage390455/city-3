@@ -26,11 +26,21 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 
     @Override
     public void initData(Context context) {
+        try {
+            LogUtils.loge(mContext.getActionBar().getCustomView().toString());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         mContext = (Activity) context;
         // 逻辑判断
+
         initPushSDK();
         checkLoginState();
-        LogUtils.loge("SplashActivityPresenter create ");
+        try {
+            LogUtils.loge("SplashActivityPresenter create ");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     private void checkLoginState() {
@@ -40,7 +50,11 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
         try {
             RetrofitServiceHelper.INSTANCE.getBaseUrlType();
             String sessionID = RetrofitServiceHelper.INSTANCE.getSessionId();
-            LogUtils.loge("sessionID = " + sessionID);
+            try {
+                LogUtils.loge("sessionID = " + sessionID);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             if (TextUtils.isEmpty(sessionID)) {
                 openLogin();
                 return;
@@ -53,7 +67,11 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
             openMain(userData);
         } catch (Exception e) {
             e.printStackTrace();
-            LogUtils.loge("login Exception : " + e.getMessage());
+            try {
+                LogUtils.loge("login Exception : " + e.getMessage());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             openLogin();
         }
 
@@ -106,7 +124,11 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
 
     @Override
     public void onDestroy() {
-        LogUtils.loge("SplashActivityPresenter onDestroy ");
+        try {
+            LogUtils.loge("SplashActivityPresenter onDestroy ");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         handler.removeCallbacksAndMessages(null);
     }
 }

@@ -144,7 +144,11 @@ public class AuthActivity extends BaseActivity<IAuthActivityView, AuthActivityPr
     @Override
     protected void onDestroy() {
         mProgressUtils.destroyProgress();
-        LogUtils.loge("onDestroy");
+        try {
+            LogUtils.loge("onDestroy");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         super.onDestroy();
     }
 

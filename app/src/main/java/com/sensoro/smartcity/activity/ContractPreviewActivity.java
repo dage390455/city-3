@@ -101,7 +101,11 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
 
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
-            LogUtils.loge("ddong", "拦截url:" + url);
+            try {
+                LogUtils.loge("ddong", "拦截url:" + url);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             if (url.equals("http://www.google.com/")) {
                 SensoroToast.INSTANCE.makeText("国内不能访问google,拦截该url", Toast.LENGTH_LONG).show();
                 return true;//表示我已经处理过了
@@ -131,7 +135,11 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
         @Override
         public void onReceivedTitle(WebView view, String title) {
             super.onReceivedTitle(view, title);
-            LogUtils.loge("ddong", "网页标题:" + title);
+            try {
+                LogUtils.loge("ddong", "网页标题:" + title);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
 
         //加载进度回调
@@ -144,7 +152,11 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
-        LogUtils.loge("ddong", "是否有上一个页面:" + wvPreview.canGoBack());
+        try {
+            LogUtils.loge("ddong", "是否有上一个页面:" + wvPreview.canGoBack());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (wvPreview.canGoBack() && keyCode == KeyEvent.KEYCODE_BACK) {//点击返回按钮的时候判断有没有上一页
             wvPreview.goBack(); // goBack()表示返回webView的上一页面
             return true;
@@ -160,7 +172,11 @@ public class ContractPreviewActivity extends BaseActivity<IContractPreviewActivi
      */
     @JavascriptInterface //仍然必不可少
     public void getClient(String str) {
-        LogUtils.loge("ddong", "html调用客户端:" + str);
+        try {
+            LogUtils.loge("ddong", "html调用客户端:" + str);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override

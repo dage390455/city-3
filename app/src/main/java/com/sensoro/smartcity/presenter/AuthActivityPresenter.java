@@ -94,28 +94,48 @@ public class AuthActivityPresenter extends BasePresenter<IAuthActivityView> impl
                     for (Map.Entry<String, DeviceTypeStyles> next : deviceType.entrySet()) {
                         String key = next.getKey();
                         DeviceTypeStyles value = next.getValue();
-                        LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
+                        try {
+                            LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                     }
                     Map<String, MergeTypeStyles> mergeType = config.getMergeType();
                     for (Map.Entry<String, MergeTypeStyles> next : mergeType.entrySet()) {
                         String key = next.getKey();
                         MergeTypeStyles value = next.getValue();
-                        LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
+                        try {
+                            LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                     }
                     Map<String, SensorTypeStyles> sensorType = config.getSensorType();
                     for (Map.Entry<String, SensorTypeStyles> next : sensorType.entrySet()) {
                         String key = next.getKey();
                         SensorTypeStyles value = next.getValue();
-                        LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> " + key + "," + value.toString());
+                        try {
+                            LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> " + key + "," + value.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                     }
-                    LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
+                    try {
+                        LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                 }
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(AuthActivityPresenter.this) {
             @Override
             public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                 saveLoginDataOpenMain(mEventLoginData);
-                LogUtils.loge("DevicesMergeTypesRsp ....." + mEventLoginData.toString());
+                try {
+                    LogUtils.loge("DevicesMergeTypesRsp ....." + mEventLoginData.toString());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
 
 

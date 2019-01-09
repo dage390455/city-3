@@ -97,7 +97,11 @@ public class MainMalfunctionFragRcContentAdapter extends RecyclerView.Adapter<Ma
             String name = malfunctionTypeStyles.getName();
             if (!TextUtils.isEmpty(name)) {
                 holder.mainMalfunctionRcContentTvReason.setText(name);
-                LogUtils.loge("localDevicesMergeTypes = " + name);
+                try {
+                    LogUtils.loge("localDevicesMergeTypes = " + name);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 return;
             }
         }

@@ -474,7 +474,11 @@ public enum DeployAnalyzerUtils implements Constants {
             public void onCompleted(ResponseBase responseBase) {
                 if (responseBase.getErrcode() == 0) {
                     try {
-                        LogUtils.loge("qrcodeId = " + result);
+                        try {
+                            LogUtils.loge("qrcodeId = " + result);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         Intent intent = new Intent();
                         intent.setClass(activity, ScanLoginResultActivity.class);
                         intent.putExtra("qrcodeId", result);

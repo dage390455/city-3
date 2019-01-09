@@ -68,7 +68,11 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                     if (malfunctionTypeStyles != null) {
                         String name = malfunctionTypeStyles.getName();
                         if (!TextUtils.isEmpty(name)) {
-                            LogUtils.loge("malfunctionType = " + malfunctionType);
+                            try {
+                                LogUtils.loge("malfunctionType = " + malfunctionType);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             holder.itemMalfunctionDetailChildMalfunctionCause.setText(name);
                             break;
                         }

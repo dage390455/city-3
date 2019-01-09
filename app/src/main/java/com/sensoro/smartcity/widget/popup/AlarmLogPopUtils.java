@@ -241,16 +241,28 @@ public class AlarmLogPopUtils implements AlarmPopUtils.OnPopupCallbackListener,
                     String number = event.getNumber();
                     if (!TextUtils.isEmpty(number)) {
                         if ("attach".equals(source)) {
-                            LogUtils.loge("单独联系人：" + number);
+                            try {
+                                LogUtils.loge("单独联系人：" + number);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             tempNumber = number;
                             break outer;
 
                         } else if ("group".equals(source)) {
-                            LogUtils.loge("分组联系人：" + number);
+                            try {
+                                LogUtils.loge("分组联系人：" + number);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             tempNumber = number;
                             break;
                         } else if ("notification".equals(source)) {
-                            LogUtils.loge("账户联系人：" + number);
+                            try {
+                                LogUtils.loge("账户联系人：" + number);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             tempNumber = number;
                             break;
                         }

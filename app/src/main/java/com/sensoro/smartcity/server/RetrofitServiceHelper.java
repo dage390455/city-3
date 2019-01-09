@@ -58,7 +58,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,7 +213,11 @@ public enum RetrofitServiceHelper {
         final HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String s) {
-                LogUtils.loge(this, "retrofit------------>" + s);
+                try {
+                    LogUtils.loge(this, "retrofit------------>" + s);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
