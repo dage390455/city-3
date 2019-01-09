@@ -658,10 +658,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (checkHasPhoto()) return;
                 //经纬度校验
                 if (checkHasNoLatLng()) return;
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType);
+                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 if (isFire) {
                     if (deployAnalyzerModel.settingData == null) {
-//                        getView().toastShort(mContext.getString(R.string.deploy_has_no_configuration_tip));
+                        getView().toastShort(mContext.getString(R.string.deploy_has_no_configuration_tip));
                         return;
                     }
                 }
@@ -726,7 +726,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                 if (deployAnalyzerModel.latLng.size() != 2) {
                     return false;
                 }
-                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.get(1).equals(deployAnalyzerModel.deviceType);
+                boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
                 if (isFire) {
                     if (deployAnalyzerModel.settingData == null) {
                         return false;
