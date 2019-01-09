@@ -459,7 +459,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }
                     LogUtils.loge("malfunctionCount = " + malfunctionCount);
                     needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
-                    LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
+                     LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
                     tempAlarmCount = currentAlarmCount;
                     //
                     mHomeTopModels.clear();
