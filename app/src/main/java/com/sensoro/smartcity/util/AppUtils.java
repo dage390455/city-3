@@ -13,7 +13,6 @@ import android.content.Intent;
 import android.content.OperationApplicationException;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
@@ -529,22 +528,25 @@ public class AppUtils {
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
             public void run() {
-                //先删除原有联系人
-                final ArrayList<Long> idList = new ArrayList<>();
-                Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
-                if (cursor != null) {
-                    while (cursor.moveToNext()) {
-                        long contactId = cursor.getLong(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID));
-                        String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
-                        if ("升哲安全服务".equals(name)) {
-                            idList.add(contactId);
-                        }
-                    }
-                    if (cursor != null) {
-                        cursor.close();
-                    }
-                    batchDelContact(context, idList);
-                }
+                //TODO 暂时去掉删除原有联系人
+//                final ArrayList<Long> idList = new ArrayList<>();
+//                Cursor cursor = context.getContentResolver().query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null, null, null);
+//                if (cursor != null) {
+//                    while (cursor.moveToNext()) {
+//                        long contactId = cursor.getLong(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.RAW_CONTACT_ID));
+//                        String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
+//                        String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
+//                        //
+//                        LogUtils.loge("addToPhoneContact-->>name = " + name + ",number = " + number);
+//                        if ("升哲安全服务".equals(name)) {
+//                            idList.add(contactId);
+//                        }
+//                    }
+//                    if (cursor != null) {
+//                        cursor.close();
+//                    }
+//                    batchDelContact(context, idList);
+//                }
                 //
                 ContentValues values = new ContentValues();
                 //TODO 默认设置不允许重复添加
