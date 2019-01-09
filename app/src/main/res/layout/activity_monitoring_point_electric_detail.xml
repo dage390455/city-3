@@ -204,8 +204,8 @@
                     android:id="@+id/ac_monitoring_elect_point_line"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:visibility="gone"
-                    android:background="@color/c_dfdfdf" />
+                    android:background="@color/c_dfdfdf"
+                    android:visibility="gone" />
 
                 <android.support.v7.widget.RecyclerView
                     android:id="@+id/ac_monitoring_point_rc_content"
@@ -240,7 +240,8 @@
                             android:visibility="invisible" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/unknown"
@@ -248,7 +249,8 @@
                             android:textSize="12sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/unknown"
@@ -256,12 +258,69 @@
                             android:textSize="12sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:gravity="center"
                             android:text="@string/unknown"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
+                    </TableRow>
+
+                    <TableRow
+                        android:id="@+id/tr_elect_v"
+                        android:layout_marginTop="12dp">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="@string/unknown"
+                            android:textColor="@color/c_252525"
+                            android:textSize="12sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
+                            android:gravity="center"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="-"
+                            android:textColor="@color/c_197358"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
+                            android:gravity="center"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="-"
+                            android:textColor="@color/c_197358"
+                            android:textSize="14sp" />
+
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginEnd="12dp"
+                            android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
+                            android:gravity="center"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
+                            android:text="-"
+                            android:textColor="@color/c_197358"
+                            android:textSize="14sp" />
                     </TableRow>
 
                     <TableRow
@@ -272,101 +331,51 @@
 
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/unknown"
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
+                            android:text="@string/unknown"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="-"
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
+                            android:text="-"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="-"
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
+                            android:text="-"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
+                            android:paddingTop="5dp"
+                            android:paddingBottom="5dp"
                             android:text="-"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/c_197358"
-                            android:textSize="14sp" />
-                    </TableRow>
-
-                    <TableRow
-                        android:id="@+id/tr_elect_v"
-                        android:layout_marginTop="12dp">
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/unknown"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/c_252525"
-                            android:textSize="12sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginEnd="12dp"
-                            android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
-                            android:gravity="center"
-                            android:text="-"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/c_197358"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginEnd="12dp"
-                            android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
-                            android:gravity="center"
-                            android:text="-"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
-                            android:textColor="@color/c_197358"
-                            android:textSize="14sp" />
-
-                        <TextView
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="12dp"
-                            android:layout_marginEnd="12dp"
-                            android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
-                            android:gravity="center"
-                            android:text="-"
-                            android:paddingTop="5dp"
-                            android:paddingBottom="5dp"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
                     </TableRow>
@@ -378,48 +387,51 @@
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/unknown"
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
+                            android:text="@string/unknown"
                             android:textColor="@color/c_252525"
                             android:textSize="12sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="-"
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
+                            android:text="-"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="-"
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
+                            android:text="-"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
 
                         <TextView
-                            android:layout_width="wrap_content"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
-                            android:text="-"
                             android:paddingTop="5dp"
                             android:paddingBottom="5dp"
+                            android:text="-"
                             android:textColor="@color/c_197358"
                             android:textSize="14sp" />
                     </TableRow>
