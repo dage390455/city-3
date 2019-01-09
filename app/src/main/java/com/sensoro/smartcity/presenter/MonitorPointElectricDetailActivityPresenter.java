@@ -363,6 +363,8 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     }
                     //针对预警特殊处理
                     if (SENSOR_STATUS_ALARM == status) {
+                        elect3DetailModel.backgroundColor = R.color.c_dff6ef;
+                        elect3DetailModel.textColor = R.color.c_197358;
                         List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
                         if (alarmsRecords != null) {
                             for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
@@ -497,6 +499,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         handleEarlyWarningThresholdModel(monitorOptions);
                         //特殊头部展示
                         DisplayOptionsBean displayOptions = configDeviceType.getDisplayOptions();
+                        boolean hasAlarmStatus = false;
                         if (displayOptions != null) {
                             List<String> majors = displayOptions.getMajors();
                             if (majors != null && majors.size() > 0) {
@@ -524,27 +527,24 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             }
                             List<String> minors = displayOptions.getMinors();
                             if (minors != null && minors.size() > 0) {
-                                boolean hasAlarmStatus = false;
+
                                 for (String type : minors) {
                                     MonitoringPointRcContentAdapterModel model = createMonitoringPointRcContentAdapterModel(sensoroDetails, type);
                                     if (model != null) {
                                         if (TextUtils.isEmpty(model.content)) {
                                             model.content = "-";
                                         }
-
-                                        if (model.statusColorId == R.color.sensoro_alarm) {
+                                        if (model.hasAlarmStatus()) {
                                             hasAlarmStatus = true;
                                         }
                                         dataBean.add(model);
                                     }
                                 }
                                 // 控制展开
-                                final boolean finalHasAlarmStatus = hasAlarmStatus;
                                 mContext.runOnUiThread(new Runnable() {
                                     @Override
                                     public void run() {
                                         if (isAttachedView()) {
-                                            getView().setIvAlarmStatusVisible(finalHasAlarmStatus);
                                             getView().updateDeviceInfoAdapter(dataBean);
                                         }
                                     }
@@ -563,6 +563,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean01 = dataBeans0.get(1);
                                             final Elect3DetailModel elect3TopModel1 = createElect3NameModel(1, dataBean01);
                                             if (elect3TopModel1 != null) {
+
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -617,6 +618,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean11 = dataBeans1.get(1);
                                             final Elect3DetailModel elect3DetailModel1 = createElect3DetailModel(1, dataBean11, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
+                                                if (elect3DetailModel1.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -630,6 +634,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean12 = dataBeans1.get(2);
                                             final Elect3DetailModel elect3DetailModel2 = createElect3DetailModel(2, dataBean12, sensoroDetails);
                                             if (elect3DetailModel2 != null) {
+                                                if (elect3DetailModel2.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -643,6 +650,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean13 = dataBeans1.get(3);
                                             final Elect3DetailModel elect3DetailModel3 = createElect3DetailModel(3, dataBean13, sensoroDetails);
                                             if (elect3DetailModel3 != null) {
+                                                if (elect3DetailModel3.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -673,6 +683,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean21 = dataBeans2.get(1);
                                             final Elect3DetailModel elect3DetailModel1 = createElect3DetailModel(1, dataBean21, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
+                                                if (elect3DetailModel1.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -686,6 +699,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean22 = dataBeans2.get(2);
                                             final Elect3DetailModel elect3DetailModel2 = createElect3DetailModel(2, dataBean22, sensoroDetails);
                                             if (elect3DetailModel2 != null) {
+                                                if (elect3DetailModel2.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -699,6 +715,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean23 = dataBeans2.get(3);
                                             final Elect3DetailModel elect3DetailModel3 = createElect3DetailModel(3, dataBean23, sensoroDetails);
                                             if (elect3DetailModel3 != null) {
+                                                if (elect3DetailModel3.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -728,6 +747,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean31 = dataBeans3.get(1);
                                             final Elect3DetailModel elect3DetailModel1 = createElect3DetailModel(1, dataBean31, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
+                                                if (elect3DetailModel1.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -741,6 +763,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean32 = dataBeans3.get(2);
                                             final Elect3DetailModel elect3DetailModel2 = createElect3DetailModel(2, dataBean32, sensoroDetails);
                                             if (elect3DetailModel2 != null) {
+                                                if (elect3DetailModel2.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -754,6 +779,9 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean33 = dataBeans3.get(3);
                                             final Elect3DetailModel elect3DetailModel3 = createElect3DetailModel(3, dataBean33, sensoroDetails);
                                             if (elect3DetailModel3 != null) {
+                                                if (elect3DetailModel3.hasAlarmStatus()) {
+                                                    hasAlarmStatus = true;
+                                                }
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
                                                     public void run() {
@@ -776,6 +804,15 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                 }
                             }
+                            final boolean finalHasAlarmStatus = hasAlarmStatus;
+                            mContext.runOnUiThread(new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (isAttachedView()) {
+                                        getView().setIvAlarmStatusVisible(finalHasAlarmStatus);
+                                    }
+                                }
+                            });
                         }
                     }
 
@@ -967,6 +1004,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 }
                 //针对预警特殊处理
                 if (SENSOR_STATUS_ALARM == status) {
+                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
                     List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
                     if (alarmsRecords != null) {
                         for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {

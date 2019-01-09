@@ -74,10 +74,10 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
 
 
     public void doConfiguration(String valueStr, String diameter) {
-        if (!bleList.contains(deployAnalyzerModel.sn)) {
-            getView().toastShort(mActivity.getString(R.string.deploy_configuration_not_discover_device));
-            return;
-        }
+//        if (!bleList.contains(deployAnalyzerModel.sn)) {
+//            getView().toastShort(mActivity.getString(R.string.deploy_configuration_not_discover_device));
+//            return;
+//        }
         checkAndConnect(valueStr, diameter);
     }
 
@@ -112,14 +112,15 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
             return;
         }
-        try {
-            getView().showBleConfigurationDialog(mActivity.getString(R.string.connecting));
-            mConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorConfigurationPresenter.this);
-        } catch (Exception e) {
-            e.printStackTrace();
-            getView().dismissBleConfigurationDialog();
-            getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
-        }
+//        try {
+//            getView().showBleConfigurationDialog(mActivity.getString(R.string.connecting));
+//            mConnection.connect(deployAnalyzerModel.blePassword, DeployMonitorConfigurationPresenter.this);
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//            getView().dismissBleConfigurationDialog();
+//            getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
+//        }
+        configCompleted();
     }
 
     public boolean needDiameter() {

@@ -543,7 +543,7 @@ public enum RetrofitServiceHelper {
                         jsonObjectIn.put("initValue", value.getInitValue());
                         Double diameterValue = value.getDiameterValue();
                         if (diameterValue != null) {
-                            jsonObjectIn.put("mantun_fires", diameterValue);
+                            jsonObjectIn.put("diameterValue", diameterValue);
                         }
                         jsonObjectOut.put(key, jsonObjectIn);
                     }

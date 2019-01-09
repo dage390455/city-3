@@ -134,7 +134,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
         getView().setDeployDeviceType(deviceTypeName);
         //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
-        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType) && !DEVICE_CONTROL_DEVICE_TYPES.get(0).equals(deployAnalyzerModel.deviceType);
+        boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
         getView().setDeployDetailDeploySettingVisible(isFire);
         if (isFire) {
             //TODO 再次部署时暂时不回显电器火灾字段字段

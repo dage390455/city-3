@@ -81,7 +81,19 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                 if (mDeployRecordInfo.getConfig() != null) {
                     DeployControlSettingData deployControlSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
                     if (deployControlSettingData != null) {
-                        getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A");
+//                        getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A");
+//                        String settingText;
+//                        if ("mantun_fires".equals(deployAnalyzerModel.deviceType)) {
+//                            Double diameterValue = deployAnalyzerModel.settingData.getDiameterValue();
+//                            settingText = mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue()  + "A" + " " + mActivity.getString(R.string.diameter) + ":" + deployControlSettingData.getDiameterValue() + "m㎡";
+//                        } else {
+//                            settingText = mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue()  + "A";
+//                        }
+                        if (deployControlSettingData.getDiameterValue() != null) {
+                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A" + " " + mActivity.getString(R.string.diameter) + ":" + deployControlSettingData.getDiameterValue() + "m㎡");
+                        } else {
+                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A");
+                        }
                         return;
                     }
                 }
