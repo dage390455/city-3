@@ -213,7 +213,11 @@ public class MainHomeFragRcTypeAdapter extends RecyclerView.Adapter<MainHomeFrag
         if (payloads.isEmpty()) {
             onBindViewHolder(holder, position);
         } else {
-            LogUtils.loge("updateData-----onBindViewHolder-->>position = " + position + ", payloads = " + payloads);
+            try {
+                LogUtils.loge("updateData-----onBindViewHolder-->>position = " + position + ", payloads = " + payloads);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             HashMap map = (HashMap) payloads.get(0);
             Integer type = (Integer) map.get("type");
             if (type != null) {

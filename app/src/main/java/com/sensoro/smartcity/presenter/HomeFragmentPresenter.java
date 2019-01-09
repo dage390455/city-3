@@ -150,7 +150,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         if (needShowProgressDialog) {
             getView().showProgressDialog();
         }
-        LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
+        try {
+            LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
                 .io()).flatMap(new Func1<DeviceTypeCountRsp, Observable<DeviceInfoListRsp>>() {
             @Override
@@ -454,9 +458,17 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     if (tempAlarmCount == 0 && currentAlarmCount > 0) {
                         needAlarmPlay = true;
                     }
-                    LogUtils.loge("malfunctionCount = " + malfunctionCount);
+                    try {
+                        LogUtils.loge("malfunctionCount = " + malfunctionCount);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
-                    LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
+                    try {
+                        LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     tempAlarmCount = currentAlarmCount;
                     //
                     mHomeTopModels.clear();
@@ -498,19 +510,31 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             case EVENT_DATA_DEVICE_SOCKET_FLUSH:
                 //TODO
                 needFreshAll = true;
-                LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+                try {
+                    LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
             case EVENT_DATA_LOCK_SCREEN_ON:
                 //TODO 暂时不加
                 if (data instanceof Boolean) {
 //                    needFreshAll = (boolean) data;
                 }
-                LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
+                try {
+                    LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
             case EVENT_DATA_NET_WORK_CHANGE:
                 //TODO 暂时不加
 //                needFreshAll = true;
-                LogUtils.loge("CONNECTIVITY_ACTION --->> 网络变化 ");
+                try {
+                    LogUtils.loge("CONNECTIVITY_ACTION --->> 网络变化 ");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
         }
     }
@@ -523,7 +547,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 try {
                     int position = getView().getFirstVisibleItemPosition();
                     requestDataByStatus(mHomeTopModels.get(position));
-                    LogUtils.loge("shoAlarmWindow  position = " + position + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type + ",mCurrentHomeTopModel.value = " + mCurrentHomeTopModel.value);
+                    try {
+                        LogUtils.loge("shoAlarmWindow  position = " + position + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type + ",mCurrentHomeTopModel.value = " + mCurrentHomeTopModel.value);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     if (needShowAlarmWindow && mCurrentHomeTopModel.type != 0) {
                         getView().showAlarmInfoView();
                     }

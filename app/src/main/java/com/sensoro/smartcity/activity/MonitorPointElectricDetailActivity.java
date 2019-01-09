@@ -110,6 +110,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     TextView acMonitoringPointTvSelfCheck;
     @BindView(R.id.ac_monitoring_point_tv_air_switch_config)
     TextView acMonitoringPointTvAirSwitchConfig;
+    @BindView(R.id.ac_monitoring_point_tv_power_off)
+    TextView acMonitoringPointTvPowerOff;
+    @BindView(R.id.ac_monitoring_point_tv_power_on)
+    TextView acMonitoringPointTvPowerOn;
     @BindView(R.id.ac_monitoring_point_ll_operation)
     LinearLayout acMonitoringPointLlOperation;
     @BindView(R.id.ac_monitor_deploy_photo)
@@ -689,11 +693,17 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         electInfo.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    @Override
+    public void setMandunDeviceVisible(boolean isVisible) {
+        acMonitoringPointTvPowerOff.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+        acMonitoringPointTvPowerOn.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
+    }
+
 
     @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
             R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check, R.id.ac_monitoring_point_tv_air_switch_config, R.id.include_text_title_tv_subtitle,
             R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.elect_info})
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.elect_info, R.id.ac_monitoring_point_tv_power_off, R.id.ac_monitoring_point_tv_power_on})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_monitoring_point_tv_erasure:
@@ -713,6 +723,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 break;
             case R.id.ac_monitoring_point_tv_air_switch_config:
                 showTipDialog(true, R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
+                break;
+            case R.id.ac_monitoring_point_tv_power_off:
+                break;
+            case R.id.ac_monitoring_point_tv_power_on:
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMonitorHistory();
@@ -750,6 +764,21 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mTipUtils.setTipEtRootVisible(isEdit);
         mTipUtils.setTipTitleText(mActivity.getString(title));
         mTipUtils.setTipMessageText(mActivity.getString(message));
+        mTipUtils.setTipConfirmVisible(true);
+        mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
+        mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
+        mTipDialogType = type;
+        mTipUtils.show();
+    }
+
+    //TODO 包含慢炖空开配置
+    private void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type) {
+        if (mTipUtils.isShowing()) {
+            mTipUtils.dismiss();
+        }
+        mTipUtils.setTipEtRootVisible(isEdit);
+        mTipUtils.setTipTitleText(mActivity.getString(title));
+        mTipUtils.setTipMessageText(mActivity.getString(message), messageColor);
         mTipUtils.setTipConfirmVisible(true);
         mTipUtils.setTipCacnleText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
         mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));

@@ -463,7 +463,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 if (configMalfunctionMainTypes != null) {
                                     monitoringPointRcContentAdapterModel.content = configMalfunctionMainTypes.getName();
                                     malfunctionBeanData.add(monitoringPointRcContentAdapterModel);
-                                    LogUtils.loge("故障成因：key = " + key + "value = " + monitoringPointRcContentAdapterModel.content);
+                                    try {
+                                        LogUtils.loge("故障成因：key = " + key + "value = " + monitoringPointRcContentAdapterModel.content);
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
                                     break;
                                 }
                                 monitoringPointRcContentAdapterModel.content = mContext.getString(R.string.unknown);
@@ -852,75 +856,76 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     }
                 });
                 mEarlyWarningthresholdDialogUtilsAdapterModels.clear();
-                for (MonitorOptionsBean monitorOptionsBean : monitorOptions) {
-                    EarlyWarningthresholdDialogUtilsAdapterModel earlyWarningthresholdDialogUtilsAdapterModel = new EarlyWarningthresholdDialogUtilsAdapterModel();
-                    String name = monitorOptionsBean.getName();
-                    if (TextUtils.isEmpty(name)) {
-                        name = mContext.getString(R.string.unknown);
-                    }
-                    earlyWarningthresholdDialogUtilsAdapterModel.name = name;
-                    List<MonitorOptionsBean.SensorTypesBean> sensorTypes = monitorOptionsBean.getSensorTypes();
-                    StringBuilder stringBuilder = new StringBuilder();
-                    for (MonitorOptionsBean.SensorTypesBean sensorTypeBean : sensorTypes) {
-                        if (sensorTypeBean != null) {
-                            String id = sensorTypeBean.getId();
-                            AlarmInfo.RuleInfo ruleInfo = ruleInfoHashMap.get(id);
-                            if (ruleInfo != null) {
-                                SensorTypeStyles configSensorType = PreferencesHelper.getInstance().getConfigSensorType(id);
-                                if (configSensorType != null) {
-                                    id = configSensorType.getName();
-                                    if (TextUtils.isEmpty(id)) {
-                                        id = mContext.getString(R.string.unknown);
-                                    }
-                                    boolean bool = configSensorType.isBool();
-                                    if (bool) {
-                                        stringBuilder.append(configSensorType.getAlarm()).append("时报警").append("\n");
-                                    } else {
-                                        String unit = configSensorType.getUnit();
-                                        float value = ruleInfo.getThresholds();
-                                        Integer precision = configSensorType.getPrecision();
-                                        String valueStr = String.valueOf(value);
-                                        if (precision != null) {
-                                            BigDecimal b = new BigDecimal(value);
-                                            valueStr = b.setScale(precision, BigDecimal.ROUND_HALF_UP).toString();
-                                        }
-                                        String conditionType = sensorTypeBean.getConditionType();
-                                        if (!TextUtils.isEmpty(conditionType)) {
-                                            String conditionTypeRule = ruleInfo.getConditionType();
-                                            if (conditionType.equals(conditionTypeRule)) {
-                                                switch (conditionType) {
-                                                    case "gt":
-                                                        stringBuilder.append(id).append(" ").append(">=").append(" ").append(valueStr).append(unit);
-                                                        break;
-                                                    case "lt":
-                                                        stringBuilder.append(id).append(" ").append("<=").append(" ").append(valueStr).append(unit);
-                                                        break;
-                                                }
-                                                stringBuilder.append(" ").append("时报警").append("\n");
-                                            }
-                                        }
-
-                                    }
-
-                                } else {
-                                    stringBuilder.append(mContext.getString(R.string.unknown));
-                                }
-
-                            }
+                if (monitorOptions != null && monitorOptions.size() > 0) {
+                    for (MonitorOptionsBean monitorOptionsBean : monitorOptions) {
+                        EarlyWarningthresholdDialogUtilsAdapterModel earlyWarningthresholdDialogUtilsAdapterModel = new EarlyWarningthresholdDialogUtilsAdapterModel();
+                        String name = monitorOptionsBean.getName();
+                        if (TextUtils.isEmpty(name)) {
+                            name = mContext.getString(R.string.unknown);
                         }
+                        earlyWarningthresholdDialogUtilsAdapterModel.name = name;
+                        List<MonitorOptionsBean.SensorTypesBean> sensorTypes = monitorOptionsBean.getSensorTypes();
+                        StringBuilder stringBuilder = new StringBuilder();
+                        for (MonitorOptionsBean.SensorTypesBean sensorTypeBean : sensorTypes) {
+                            if (sensorTypeBean != null) {
+                                String id = sensorTypeBean.getId();
+                                AlarmInfo.RuleInfo ruleInfo = ruleInfoHashMap.get(id);
+                                if (ruleInfo != null) {
+                                    SensorTypeStyles configSensorType = PreferencesHelper.getInstance().getConfigSensorType(id);
+                                    if (configSensorType != null) {
+                                        id = configSensorType.getName();
+                                        if (TextUtils.isEmpty(id)) {
+                                            id = mContext.getString(R.string.unknown);
+                                        }
+                                        boolean bool = configSensorType.isBool();
+                                        if (bool) {
+                                            stringBuilder.append(configSensorType.getAlarm()).append("时报警").append("\n");
+                                        } else {
+                                            String unit = configSensorType.getUnit();
+                                            float value = ruleInfo.getThresholds();
+                                            Integer precision = configSensorType.getPrecision();
+                                            String valueStr = String.valueOf(value);
+                                            if (precision != null) {
+                                                BigDecimal b = new BigDecimal(value);
+                                                valueStr = b.setScale(precision, BigDecimal.ROUND_HALF_UP).toString();
+                                            }
+                                            String conditionType = sensorTypeBean.getConditionType();
+                                            if (!TextUtils.isEmpty(conditionType)) {
+                                                String conditionTypeRule = ruleInfo.getConditionType();
+                                                if (conditionType.equals(conditionTypeRule)) {
+                                                    switch (conditionType) {
+                                                        case "gt":
+                                                            stringBuilder.append(id).append(" ").append(">=").append(" ").append(valueStr).append(unit);
+                                                            break;
+                                                        case "lt":
+                                                            stringBuilder.append(id).append(" ").append("<=").append(" ").append(valueStr).append(unit);
+                                                            break;
+                                                    }
+                                                    stringBuilder.append(" ").append("时报警").append("\n");
+                                                }
+                                            }
 
+                                        }
+
+                                    } else {
+                                        stringBuilder.append(mContext.getString(R.string.unknown));
+                                    }
+
+                                }
+                            }
+
+                        }
+                        String content = stringBuilder.toString();
+                        if (TextUtils.isEmpty(content)) {
+                            content = mContext.getString(R.string.unknown);
+                        }
+                        if (content.endsWith("\n")) {
+                            content = content.substring(0, content.lastIndexOf("\n"));
+                        }
+                        earlyWarningthresholdDialogUtilsAdapterModel.content = content;
+                        mEarlyWarningthresholdDialogUtilsAdapterModels.add(earlyWarningthresholdDialogUtilsAdapterModel);
                     }
-                    String content = stringBuilder.toString();
-                    if (TextUtils.isEmpty(content)) {
-                        content = mContext.getString(R.string.unknown);
-                    }
-                    if (content.endsWith("\n")) {
-                        content = content.substring(0, content.lastIndexOf("\n"));
-                    }
-                    earlyWarningthresholdDialogUtilsAdapterModel.content = content;
-                    mEarlyWarningthresholdDialogUtilsAdapterModels.add(earlyWarningthresholdDialogUtilsAdapterModel);
                 }
-
             }
         }
 
@@ -1108,7 +1113,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String address;
         if (AppUtils.isChineseLanguage()) {
             address = regeocodeResult.getRegeocodeAddress().getFormatAddress();
-            LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+            try {
+                LogUtils.loge(this, "onRegeocodeSearched: " + "code = " + i + ",address = " + address);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } else {
             StringBuilder stringBuilder = new StringBuilder();
             String subLoc = regeocodeAddress.getDistrict();// 区或县或县级市
@@ -1160,7 +1169,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     @Override
     public void onGeocodeSearched(GeocodeResult geocodeResult, int i) {
-        LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
+        try {
+            LogUtils.loge(this, "onGeocodeSearched: " + "onGeocodeSearched");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     public void doNavigation() {

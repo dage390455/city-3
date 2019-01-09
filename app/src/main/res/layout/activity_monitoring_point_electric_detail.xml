@@ -620,7 +620,7 @@
             android:orientation="vertical"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
-            android:visibility="gone">
+            android:visibility="visible">
 
             <TextView
                 android:id="@+id/ac_monitoring_point_tv_operation"
@@ -687,9 +687,17 @@
                     android:text="@string/monitor_point_detail_air_switch_config" />
 
                 <!--下面这两个只是为了占空间，还可以扩展，增加id,drawableTop,text即可增加一个button-->
-                <TextView style="@style/style_monitor_point_detail_operation_text" />
+                <TextView
+                    android:id="@+id/ac_monitoring_point_tv_power_off"
+                    style="@style/style_monitor_point_detail_operation_text"
+                    android:drawableTop="@drawable/air_switch_config_not_clickable"
+                    android:text="@string/command_elec_disconnect_btn_title" />
 
-                <TextView style="@style/style_monitor_point_detail_operation_text" />
+                <TextView
+                    android:id="@+id/ac_monitoring_point_tv_power_on"
+                    style="@style/style_monitor_point_detail_operation_text"
+                    android:drawableTop="@drawable/air_switch_config_not_clickable"
+                    android:text="@string/command_elec_connect_btn_title" />
             </LinearLayout>
 
         </LinearLayout>

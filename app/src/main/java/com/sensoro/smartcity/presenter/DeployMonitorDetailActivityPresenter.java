@@ -157,7 +157,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         freshSignalInfo();
         getView().setUploadBtnStatus(checkCanUpload());
         getView().setDeployWeChatText(deployAnalyzerModel.weChatAccount);
-        LogUtils.loge("channelMask--->> " + deployAnalyzerModel.channelMask.size());
+        try {
+            LogUtils.loge("channelMask--->> " + deployAnalyzerModel.channelMask.size());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
 
     }
 
@@ -272,7 +276,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         scenesData.type = "image";
                         strings.add(scenesData.url);
                     }
-                    LogUtils.loge(this, "上传成功--- size = " + strings.size());
+                    try {
+                        LogUtils.loge(this, "上传成功--- size = " + strings.size());
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     if (isAttachedView()) {
                         getView().dismissUploadProgressDialog();
                         // 上传结果
@@ -330,7 +338,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                         .subscribe(new CityObserver<DeviceDeployRsp>(this) {
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
-                                LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
+                                try {
+                                    LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 getView().dismissProgressDialog();
                                 getView().updateUploadState(true);
                                 if (errorCode == ERR_CODE_NET_CONNECT_EX || errorCode == ERR_CODE_UNKNOWN_EX) {
@@ -346,7 +358,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             @Override
                             public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
 //                                getView().toastShort("接口速度--->>>" + (System.currentTimeMillis() - currentTimeMillis));
-                                LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
+                                try {
+                                    LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 freshPoint(deviceDeployRsp);
                                 getView().dismissProgressDialog();
                                 getView().finishAc();
@@ -610,7 +626,11 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                             deployAnalyzerModel.signal = deviceInfo.getSignal();
                             freshSignalInfo();
 //                            getView().toastLong("信号-->>time = " + deployAnalyzerModel.updatedTime + ",signal = " + deployAnalyzerModel.signal);
-                            LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                            try {
+                                LogUtils.loge(this, "部署页刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                         }
                     } catch (Exception e) {
                         e.printStackTrace();

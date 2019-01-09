@@ -46,7 +46,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
 import java.util.Arrays;
 import java.util.List;
 
@@ -247,7 +246,11 @@ public class WidgetUtil {
     public static String bitmap2File(Bitmap bitmap, String path) {
 
         String pathname = path.substring(0, path.lastIndexOf(".")) + ".jpg";
-        LogUtils.loge("pathname = " + pathname);
+        try {
+            LogUtils.loge("pathname = " + pathname);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (TextUtils.isEmpty(pathname)) {
             return "";
         }

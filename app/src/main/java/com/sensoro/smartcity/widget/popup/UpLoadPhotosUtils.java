@@ -67,7 +67,11 @@ public final class UpLoadPhotosUtils {
 
             @Override
             public void onCompleted(QiNiuToken qiNiuToken) {
-                LogUtils.loge("接口速度--->>>getQiNiuToken: " + (System.currentTimeMillis() - currentTimeMillis));
+                try {
+                    LogUtils.loge("接口速度--->>>getQiNiuToken: " + (System.currentTimeMillis() - currentTimeMillis));
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 String upToken = qiNiuToken.getUptoken();
                 baseUrl = qiNiuToken.getDomain();
                 doUpLoadImages(upToken);
@@ -116,21 +120,33 @@ public final class UpLoadPhotosUtils {
                                         if (responseInfo.isOK()) {
                                             scenesData.type = "video";
                                             scenesData.thumbUrl = baseUrl + thumbKey;
-                                            LogUtils.loge(this, "缩略图文件路径-->> " + baseUrl + thumbKey);
+                                            try {
+                                                LogUtils.loge(this, "缩略图文件路径-->> " + baseUrl + thumbKey);
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
                                             SensoroCityApplication.getInstance().uploadManager.put(recordPath, recordKey, token, new
                                                     UpCompletionHandler() {
                                                         @Override
                                                         public void complete(String s, ResponseInfo responseInfo, JSONObject jsonObject) {
                                                             if (responseInfo.isOK()) {
                                                                 scenesData.url = baseUrl + recordKey;
-                                                                LogUtils.loge(this, "视频文件路径-->> " + baseUrl + recordKey);
+                                                                try {
+                                                                    LogUtils.loge(this, "视频文件路径-->> " + baseUrl + recordKey);
+                                                                } catch (Throwable throwable) {
+                                                                    throwable.printStackTrace();
+                                                                }
                                                                 mScenesDataList.add(scenesData);
                                                                 pictureIndex++;
                                                                 doUpLoadImages(token);
                                                             } else {
                                                                 //TODO 可以添加重试获取token机制
-                                                                LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + currentNum + "】文件-" +
-                                                                        imageItem.name + "-->" + responseInfo.error);
+                                                                try {
+                                                                    LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + currentNum + "】文件-" +
+                                                                            imageItem.name + "-->" + responseInfo.error);
+                                                                } catch (Throwable throwable) {
+                                                                    throwable.printStackTrace();
+                                                                }
                                                                 handleUpLoadPhotoListenerOnError(mContext.getString(R.string.upload_photo_dialog_upload_video_failed));
                                                                 pictureIndex = 0;
                                                             }
@@ -140,15 +156,23 @@ public final class UpLoadPhotosUtils {
 
                                                 @Override
                                                 public void progress(String key, double percent) {
-                                                    LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
+                                                    try {
+                                                        LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
+                                                    } catch (Throwable throwable) {
+                                                        throwable.printStackTrace();
+                                                    }
                                                     String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                                     handleUpLoadPhotoListenerOnProgress(title, percent);
                                                 }
                                             }, null));
                                         } else {
                                             //TODO 可以添加重试获取token机制
-                                            LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + currentNum + "】张-" +
-                                                    imageItem.name + "-->" + responseInfo.error);
+                                            try {
+                                                LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + currentNum + "】张-" +
+                                                        imageItem.name + "-->" + responseInfo.error);
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
                                             handleUpLoadPhotoListenerOnError(mContext.getString(R.string.upload_photo_dialog_upload_thumbnail_failed));
                                             pictureIndex = 0;
                                         }
@@ -157,7 +181,11 @@ public final class UpLoadPhotosUtils {
                                 }, new UploadOptions(null, null, false, new UpProgressHandler() {
                             @Override
                             public void progress(String key, double percent) {
-                                LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
+                                try {
+                                    LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                 handleUpLoadPhotoListenerOnProgress(title, percent);
                             }
@@ -166,8 +194,12 @@ public final class UpLoadPhotosUtils {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtils.loge(this, "压缩视频缩略图" + "第【" + currentNum + "】张-" + imageItem
-                                .name + "失败--->>" + e.getMessage());
+                        try {
+                            LogUtils.loge(this, "压缩视频缩略图" + "第【" + currentNum + "】张-" + imageItem
+                                    .name + "失败--->>" + e.getMessage());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         handleUpLoadPhotoListenerOnError(mContext.getString(R.string.upload_photo_dialog_upload_thumbnail_failed));
                     }
                 }).launch();
@@ -198,13 +230,21 @@ public final class UpLoadPhotosUtils {
                                             scenesData.type = "image";
                                             scenesData.url = baseUrl + key;
                                             mScenesDataList.add(scenesData);
-                                            LogUtils.loge(this, "文件路径-->> " + baseUrl + key);
+                                            try {
+                                                LogUtils.loge(this, "文件路径-->> " + baseUrl + key);
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
                                             pictureIndex++;
                                             doUpLoadImages(token);
                                         } else {
                                             //TODO 可以添加重试获取token机制
-                                            LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + currentNum + "】张-" +
-                                                    imageItem.name + "-->" + responseInfo.error);
+                                            try {
+                                                LogUtils.loge(this, "上传七牛服务器失败：" + "第【" + currentNum + "】张-" +
+                                                        imageItem.name + "-->" + responseInfo.error);
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
                                             handleUpLoadPhotoListenerOnError(mContext.getString(R.string.upload_photo_dialog_upload) + currentNum + mContext.getString(R.string.upload_photo_dialog_upload_count_failed));
                                             pictureIndex = 0;
                                         }
@@ -213,7 +253,11 @@ public final class UpLoadPhotosUtils {
                                 }, new UploadOptions(null, null, false, new UpProgressHandler() {
                             @Override
                             public void progress(String key, double percent) {
-                                LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
+                                try {
+                                    LogUtils.loge(this, key + ": " + "progress ---->>" + percent);
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 String title = mContext.getString(R.string.upload_photo_dialog_append_title1) + currentNum
                                         + mContext.getString(R.string.upload_photo_dialog_append_title2) + imageItems.size() + mContext.getString(R.string.upload_photo_dialog_append_title3);
                                 handleUpLoadPhotoListenerOnProgress(title, percent);
@@ -223,8 +267,12 @@ public final class UpLoadPhotosUtils {
 
                     @Override
                     public void onError(Throwable e) {
-                        LogUtils.loge(this, "压缩 " + "第【" + currentNum + "】张-" + imageItem
-                                .name + "失败--->>" + e.getMessage());
+                        try {
+                            LogUtils.loge(this, "压缩 " + "第【" + currentNum + "】张-" + imageItem
+                                    .name + "失败--->>" + e.getMessage());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         handleUpLoadPhotoListenerOnError(mContext.getString(R.string.upload_photo_dialog_upload) + currentNum + mContext.getString(R.string.upload_photo_dialog_upload_count_failed));
                         pictureIndex = 0;
                     }

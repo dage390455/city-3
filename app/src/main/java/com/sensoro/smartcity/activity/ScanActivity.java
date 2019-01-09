@@ -214,7 +214,11 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void onScanQRCodeOpenCameraError() {
-        LogUtils.loge(this, "扫描出错！！！！！！！");
+        try {
+            LogUtils.loge(this, "扫描出错！！！！！！！");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override

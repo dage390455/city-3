@@ -440,7 +440,11 @@ public class SearchMonitorActivityPresenter extends BasePresenter<ISearchMonitor
             if (data != null && requestCode == REQUEST_CODE_RECORD) {
                 ImageItem imageItem = (ImageItem) data.getSerializableExtra("path_record");
                 if (imageItem != null) {
-                    LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
+                    try {
+                        LogUtils.loge("--- 从视频返回  path = " + imageItem.path);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     ArrayList<ImageItem> tempImages = new ArrayList<>();
                     tempImages.add(imageItem);
                     EventData eventData = new EventData();

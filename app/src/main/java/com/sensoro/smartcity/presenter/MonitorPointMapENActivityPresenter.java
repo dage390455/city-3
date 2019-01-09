@@ -111,7 +111,11 @@ public class MonitorPointMapENActivityPresenter extends BasePresenter<IMonitorPo
                     .build();
 
             aMap.animateCamera(CameraUpdateFactory.newCameraPosition(position));
-            LogUtils.loge("latLng = " + latLng.toString());
+            try {
+                LogUtils.loge("latLng = " + latLng.toString());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } else {
             backToCurrentLocation();
         }

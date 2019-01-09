@@ -87,8 +87,12 @@ public class ContractResultActivityPresenter extends BasePresenter<IContractResu
         req.message = wxMediaMessage;
         req.scene = SendMessageToWX.Req.WXSceneSession;
         boolean b = SensoroCityApplication.getInstance().api.sendReq(req);
-        LogUtils.loge("toShareWeChat: isSuc = " + b + ",bitmap_ratio = " + ratio.length + ",bitmapLength = " +
-                bitmapTemp.getByteCount());
+        try {
+            LogUtils.loge("toShareWeChat: isSuc = " + b + ",bitmap_ratio = " + ratio.length + ",bitmapLength = " +
+                    bitmapTemp.getByteCount());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     private String buildTransaction(final String type) {

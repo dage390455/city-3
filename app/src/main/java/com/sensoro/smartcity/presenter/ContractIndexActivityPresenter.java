@@ -147,7 +147,11 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                                         }
                                     }
 
-                                    LogUtils.loge(this, businessLicenseData.toString());
+                                    try {
+                                        LogUtils.loge(this, businessLicenseData.toString());
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -211,7 +215,11 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                 String address = "无";
                 try {
                     if (result != null) {
-                        LogUtils.loge(this, result.toString());
+                        try {
+                            LogUtils.loge(this, result.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         Word resultName = result.getName();
                         if (resultName != null) {
                             name = resultName.getWords();
@@ -241,7 +249,11 @@ public class ContractIndexActivityPresenter extends BasePresenter<IContractIndex
                     getView().dismissProgressDialog();
                     getView().toastShort("身份证识别失败：" + error.getMessage());
                 }
-                LogUtils.loge(this, error.getMessage());
+                try {
+                    LogUtils.loge(this, error.getMessage());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
     }

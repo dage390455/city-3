@@ -18,7 +18,11 @@ public class UserPermissionFactory {
         eventLoginData.userName = userInfo.getNickname();
         eventLoginData.phone = userInfo.getContacts();
         eventLoginData.phoneId = phoneId;
-        LogUtils.loge("logPresenter", "phoneId = " + phoneId);
+        try {
+            LogUtils.loge("logPresenter", "phoneId = " + phoneId);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         //TODO 处理Character信息
 //                      mCharacter = userInfo.getCharacter();
         boolean addUserEnable = userInfo.isAddUserEnable();
@@ -41,13 +45,21 @@ public class UserPermissionFactory {
         eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
         eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
         eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
-        LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
+        try {
+            LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         //
         UserInfo.Account account = userInfo.getAccount();
         if (account != null) {
             String id = account.getId();
             boolean totpEnable = account.isTotpEnable();
-            LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
+            try {
+                LogUtils.loge("id = " + id + ",totpEnable = " + totpEnable);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             if (totpEnable) {
                 eventLoginData.needAuth = true;
             }

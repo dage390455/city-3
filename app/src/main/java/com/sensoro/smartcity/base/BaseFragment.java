@@ -38,7 +38,11 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
         if (view instanceof BaseFragment) {
             mRootFragment = (BaseFragment) view;
         } else {
-            LogUtils.loge(this, "当前View转换异常！");
+            try {
+                LogUtils.loge(this, "当前View转换异常！");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             mRootFragment = this;
         }
         if (mRootView == null) {
@@ -130,7 +134,11 @@ public abstract class BaseFragment<V, P extends BasePresenter<V>> extends Fragme
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        LogUtils.logd("onActivityCreated");
+        try {
+            LogUtils.logd("onActivityCreated");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         initData(mRootFragment.getActivity());
 
     }

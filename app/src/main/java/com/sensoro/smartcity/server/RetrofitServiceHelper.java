@@ -213,7 +213,11 @@ public enum RetrofitServiceHelper {
         final HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String s) {
-                LogUtils.loge(this, "retrofit------------>" + s);
+                try {
+                    LogUtils.loge(this, "retrofit------------>" + s);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);

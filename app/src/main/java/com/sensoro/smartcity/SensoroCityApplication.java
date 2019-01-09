@@ -389,7 +389,11 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
 
     @Override
     public void onPushCallBack(String message) {
-        LogUtils.loge("hcs", "pushNotification---isAPPBack = " + isAPPBack);
+        try {
+            LogUtils.loge("hcs", "pushNotification---isAPPBack = " + isAPPBack);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (isAPPBack) {
             mNotificationUtils.sendNotification(message);
         }
@@ -400,7 +404,11 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         // 调用成功，返回AccessToken对象
         String token = result.getAccessToken();
         hasGotToken = true;
-        LogUtils.loge(this, "初始化QCR成功 ： token = " + token);
+        try {
+            LogUtils.loge(this, "初始化QCR成功 ： token = " + token);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override
@@ -408,7 +416,11 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
         // 调用失败，返回OCRError子类SDKError对象
         hasGotToken = false;
         String message = error.getMessage();
-        LogUtils.loge(this, message);
+        try {
+            LogUtils.loge(this, message);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override
@@ -419,7 +431,11 @@ public class SensoroCityApplication extends MultiDexApplication implements Repau
                 double lat = aMapLocation.getLatitude();//获取纬度
                 double lon = aMapLocation.getLongitude();//获取经度
 //            mStartPosition = new LatLng(lat, lon);
-                LogUtils.loge(this, "定位信息------->lat = " + lat + ",lon = =" + lon);
+                try {
+                    LogUtils.loge(this, "定位信息------->lat = " + lat + ",lon = =" + lon);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             } else {
                 //定位失败时，可通过ErrCode（错误码）信息来确定失败的原因，errInfo是错误信息，详见错误码表。
                 Log.e("地图错误", "定位失败, 错误码:" + aMapLocation.getErrorCode() + ", 错误信息:"

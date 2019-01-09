@@ -149,7 +149,11 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
         String sn = bleDevice.getSn();
-        LogUtils.loge("deployConfig", sn + " " + deployAnalyzerModel.sn.equals(sn));
+        try {
+            LogUtils.loge("deployConfig", sn + " " + deployAnalyzerModel.sn.equals(sn));
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         bleList.add(sn);
         if (TextUtils.isEmpty(mMacAddress)) {
             if (deployAnalyzerModel.sn.equals(sn)) {

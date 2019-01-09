@@ -1,19 +1,14 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.ColorInt;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.AppUtils;
 
 public class TipOperationDialogUtils {
 
@@ -52,7 +47,7 @@ public class TipOperationDialogUtils {
 //            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
 
-        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view,true);
+        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view, true);
 
         mTvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,9 +63,9 @@ public class TipOperationDialogUtils {
         mTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mLlEtRoot.getVisibility() == View.VISIBLE){
+                if (mLlEtRoot.getVisibility() == View.VISIBLE) {
                     listener.onConfirmClick(mEt.getText().toString());
-                }else{
+                } else {
                     listener.onConfirmClick(null);
                 }
             }
@@ -99,6 +94,11 @@ public class TipOperationDialogUtils {
 
     public void setTipMessageText(String text) {
         mTvMessage.setText(text);
+    }
+
+    public void setTipMessageText(String text, int color) {
+        mTvMessage.setText(text);
+        mTvMessage.setTextColor(mActivity.getResources().getColor(color));
     }
 
     public void setTipCacnleText(String text, @ColorInt int color) {
@@ -148,7 +148,6 @@ public class TipOperationDialogUtils {
     public void setTipEtRootVisible(boolean isVisible) {
         mLlEtRoot.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
-
 
 
     public interface TipDialogUtilsClickListener {

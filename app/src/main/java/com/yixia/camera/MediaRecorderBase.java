@@ -456,7 +456,11 @@ public abstract class MediaRecorderBase implements Callback, PreviewCallback, IM
             }
         } else if (dir.exists()) {
             if (dir.getAbsolutePath().endsWith(".jpg") || dir.getAbsolutePath().endsWith("mp4")) {
-                LogUtils.loge("视频图片缓存文件路径--->> " + dir.getAbsolutePath());
+                try {
+                    LogUtils.loge("视频图片缓存文件路径--->> " + dir.getAbsolutePath());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             } else {
                 dir.delete();
             }
@@ -557,7 +561,11 @@ public abstract class MediaRecorderBase implements Callback, PreviewCallback, IM
             }
         }
         if (flag) {
-            LogUtils.loge(this, "视频拍摄分辨率设置---->> 支持原始值 width = " + MediaRecorderBase.VIDEO_WIDTH + ",height = " + MediaRecorderBase.VIDEO_HEIGHT);
+            try {
+                LogUtils.loge(this, "视频拍摄分辨率设置---->> 支持原始值 width = " + MediaRecorderBase.VIDEO_WIDTH + ",height = " + MediaRecorderBase.VIDEO_HEIGHT);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             mParameters.setPreviewSize(MediaRecorderBase.VIDEO_WIDTH, MediaRecorderBase.VIDEO_HEIGHT);
         } else {
             int tempWidth = 6000;
@@ -573,7 +581,11 @@ public abstract class MediaRecorderBase implements Callback, PreviewCallback, IM
                 MediaRecorderBase.VIDEO_WIDTH = tempSize.width;
                 MediaRecorderBase.VIDEO_HEIGHT = tempSize.height;
             }
-            LogUtils.loge(this, "视频拍摄分辨率设置---->> 不支持原始值！！ width = " + MediaRecorderBase.VIDEO_WIDTH + ",height = " + MediaRecorderBase.VIDEO_HEIGHT);
+            try {
+                LogUtils.loge(this, "视频拍摄分辨率设置---->> 不支持原始值！！ width = " + MediaRecorderBase.VIDEO_WIDTH + ",height = " + MediaRecorderBase.VIDEO_HEIGHT);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             mParameters.setPreviewSize(MediaRecorderBase.VIDEO_WIDTH, MediaRecorderBase.VIDEO_HEIGHT);
         }
 

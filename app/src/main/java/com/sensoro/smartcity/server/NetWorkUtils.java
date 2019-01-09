@@ -37,20 +37,40 @@ public class NetWorkUtils {
                 while ((content = in.readLine()) != null) {
                     stringBuilder.append(content);
                 }
-                LogUtils.logd("------ping-----", "result content : " + stringBuilder.toString());
+                try {
+                    LogUtils.logd("------ping-----", "result content : " + stringBuilder.toString());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
             // ping的状态
             int status = p.waitFor();
             if (status == 0) {
-                LogUtils.loge("----net--->>result---", "result = success");
+                try {
+                    LogUtils.loge("----net--->>result---", "result = success");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 return true;
             } else {
-                LogUtils.loge("----net--->>result---", "result = failed");
+                try {
+                    LogUtils.loge("----net--->>result---", "result = failed");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         } catch (IOException e) {
-            LogUtils.loge("----net--->>result---", "result = IOException");
+            try {
+                LogUtils.loge("----net--->>result---", "result = IOException");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } catch (InterruptedException e) {
-            LogUtils.loge("----net--->>result---", "result = InterruptedException");
+            try {
+                LogUtils.loge("----net--->>result---", "result = InterruptedException");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } finally {
             if (input != null) {
                 try {

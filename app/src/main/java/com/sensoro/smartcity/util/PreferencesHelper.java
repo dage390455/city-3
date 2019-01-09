@@ -90,7 +90,11 @@ public final class PreferencesHelper implements Constants {
                     .MODE_PRIVATE);
             String phoneId = sp.getString(EXTRA_PHONE_ID, null);
             String userId = sp.getString(EXTRA_USER_ID, null);
-            LogUtils.loge(this, "phoneId = " + phoneId + ",userId = " + userId);
+            try {
+                LogUtils.loge(this, "phoneId = " + phoneId + ",userId = " + userId);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             String userName = sp.getString(EXTRA_USER_NAME, null);
             String phone = sp.getString(EXTRA_PHONE, null);
             String roles = sp.getString(EXTRA_USER_ROLES, null);
@@ -294,8 +298,16 @@ public final class PreferencesHelper implements Constants {
         mDeviceMergeTypesInfo = deviceMergeTypesInfo;
         String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(mDeviceMergeTypesInfo);
         if (!TextUtils.isEmpty(json)) {
-            LogUtils.loge("saveLocalDevicesMergeTypes length = " + json.length());
-            LogUtils.loge("saveLocalDevicesMergeTypes :" + json);
+            try {
+                LogUtils.loge("saveLocalDevicesMergeTypes length = " + json.length());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+            try {
+                LogUtils.loge("saveLocalDevicesMergeTypes :" + json);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
                 .MODE_PRIVATE);

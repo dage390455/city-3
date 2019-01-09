@@ -255,20 +255,36 @@ public class MainHomeFragRcContentAdapter extends RecyclerView.Adapter<MainHomeF
             setBottomVisible(holder, position);
             DeviceInfo deviceInfo = mList.get(position);
             HashMap map = (HashMap) payloads.get(0);
-            LogUtils.loge(this, "----------------->>>>" + map.toString());
+            try {
+                LogUtils.loge(this, "----------------->>>>" + map.toString());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             Integer status = (Integer) map.get("status");
             if (status != null) {
-                LogUtils.loge(this, "status change -->> " + status);
+                try {
+                    LogUtils.loge(this, "status change -->> " + status);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 setContentStatus(holder, position, status, deviceInfo.getDeviceType());
             }
             Long updateTime = (Long) map.get("updateTime");
             if (updateTime != null) {
-                LogUtils.loge(this, "updateTime change -->> " + updateTime);
+                try {
+                    LogUtils.loge(this, "updateTime change -->> " + updateTime);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 setContentTime(holder, updateTime);
             }
             String name = (String) map.get("name");
             if (!TextUtils.isEmpty(name)) {
-                LogUtils.loge(this, "updateTime name -->> " + name);
+                try {
+                    LogUtils.loge(this, "updateTime name -->> " + name);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 setContentName(holder, name, deviceInfo.getSn());
             }
             setListener(holder, position);

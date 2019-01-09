@@ -172,7 +172,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
         fgMainHomeRcTypeHeader.setOnPageChangeListener(new BannerRecyclerView.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                LogUtils.loge(this, "setOnPageChangeListener mBannerScaleHeaderHelper--> position = " + position);
+                try {
+                    LogUtils.loge(this, "setOnPageChangeListener mBannerScaleHeaderHelper--> position = " + position);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 try {
                     currentPosition = position;
                     HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(position);
@@ -267,13 +271,21 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
             @Override
             public void onScrolledOther(float otherPercent) {
-                LogUtils.loge("setOnBannerHelperListener  onScrolledOther --->> " + otherPercent);
+                try {
+                    LogUtils.loge("setOnBannerHelperListener  onScrolledOther --->> " + otherPercent);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
         fgMainHomeRcContent.setOnPageChangeListener(new BannerRecyclerView.OnPageChangeListener() {
             @Override
             public void onPageSelected(int position) {
-                LogUtils.loge(this, "setOnPageChangeListener mBannerAlphaContentHelper--> position = " + position);
+                try {
+                    LogUtils.loge(this, "setOnPageChangeListener mBannerAlphaContentHelper--> position = " + position);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 try {
                     currentPosition = position;
                     HomeTopModel homeTopModel = mMainHomeFragRcTypeHeaderAdapter.getData().get(position);
@@ -574,7 +586,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     private void setHeaderTitleRightArrow(int index) {
         int itemCount = mMainHomeFragRcContentAdapter.getItemCount();
-        LogUtils.loge("iv_header_title --->> right currentPosition = " + currentPosition + ",itemCount = " + itemCount);
+        try {
+            LogUtils.loge("iv_header_title --->> right currentPosition = " + currentPosition + ",itemCount = " + itemCount);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (index >= 0 && index <= itemCount - 1) {
             mBannerScaleContentHelper.setCurrentItem(index, true);
 //            mBannerScaleHeaderHelper.setCurrentItem(index, true);
@@ -594,7 +610,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     private void setHeaderTitleLeftArrow(int index) {
         int itemCount = mMainHomeFragRcContentAdapter.getItemCount();
-        LogUtils.loge("iv_header_title --->> left currentPosition = " + currentPosition + ",itemCount = " + itemCount);
+        try {
+            LogUtils.loge("iv_header_title --->> left currentPosition = " + currentPosition + ",itemCount = " + itemCount);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (index >= 0 && index <= itemCount - 1) {
 
             mBannerScaleContentHelper.setCurrentItem(index, true);
@@ -615,7 +635,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 
     private void setAlarmScrolled(int index) {
         int itemCount = mMainHomeFragRcContentAdapter.getItemCount();
-        LogUtils.loge("iv_header_title --->> left currentPosition = " + currentPosition + ",itemCount = " + itemCount);
+        try {
+            LogUtils.loge("iv_header_title --->> left currentPosition = " + currentPosition + ",itemCount = " + itemCount);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (index >= 0 && index <= itemCount - 1) {
 
 //            mBannerScaleContentHelper.setCurrentItem(index, true);
@@ -716,7 +740,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
 //                handleRefreshLayoutState(false);
 //            }
 
-            LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_DOWN");
+            try {
+                LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_DOWN");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } else if (Math.abs(verticalOffset) >= appBarLayout.getTotalScrollRange()) {//收缩
             toolbarDirection = DIRECTION_UP;
             homeToolbarMonitor.setVisibility(View.GONE);
@@ -724,9 +752,17 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
             homeTopToolbar.setAlpha(1.0f);
             refreshLayout.setEnableRefresh(false);
             refreshLayout.setEnableLoadMore(true);
-            LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_UP");
+            try {
+                LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_UP");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
-        LogUtils.loge(this, "onOffsetChanged-->> 执行 ---- ");
+        try {
+            LogUtils.loge(this, "onOffsetChanged-->> 执行 ---- ");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (toolbarDirection == DIRECTION_DOWN) {
             if (Math.abs(verticalOffset) > 0) {
                 float bar_alpha = Math.abs(verticalOffset) / (float) appBarLayout.getTotalScrollRange();
@@ -745,7 +781,11 @@ public class HomeFragment extends BaseFragment<IHomeFragmentView, HomeFragmentPr
                 float bar_alpha = Math.abs(verticalOffset) / (float) appBarLayout.getTotalScrollRange();
                 homeTopToolbar.setAlpha(bar_alpha);
                 home_layout_head.setAlpha(1 - bar_alpha);
-                LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_UP bar_alpha = " + bar_alpha);
+                try {
+                    LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_UP bar_alpha = " + bar_alpha);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
 //            else {
 //                LogUtils.loge(this, "onOffsetChanged-->> DIRECTION_UP 0000");

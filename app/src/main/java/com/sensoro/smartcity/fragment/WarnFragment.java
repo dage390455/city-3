@@ -451,7 +451,11 @@ public class WarnFragment extends BaseFragment<IWarnFragmentView, WarnFragmentPr
             mRcContentAdapter.setData(deviceAlarmLogInfoList);
             mRcContentAdapter.notifyDataSetChanged();
         }
-        LogUtils.loge("updateAlarmListAdapter-->> 刷新 " + mRcContentAdapter.getData().size());
+        try {
+            LogUtils.loge("updateAlarmListAdapter-->> 刷新 " + mRcContentAdapter.getData().size());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         setNoContentVisible(deviceAlarmLogInfoList.size() < 1);
 
     }
