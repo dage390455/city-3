@@ -132,7 +132,7 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
         }
 //        getView().updateUploadState(true);
         String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deployAnalyzerModel.deviceType);
-        getView().setDeployDeviceType(deviceTypeName);
+        getView().setDeployDeviceType(mContext.getString(R.string.deploy_device_type) + ":" + deviceTypeName);
         //TODO 暂时只针对ancre的电器火灾并且排除掉泛海三江电气火灾
         boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deployAnalyzerModel.deviceType);
         getView().setDeployDetailDeploySettingVisible(isFire);

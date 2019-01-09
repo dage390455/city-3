@@ -1716,7 +1716,10 @@ public class WidgetUtil {
                 if (!TextUtils.isEmpty(category)) {
                     return name + category;
                 }
-                return name;
+                if (!TextUtils.isEmpty(name)) {
+                    return name;
+                }
+
             }
 
         }
@@ -2630,7 +2633,10 @@ public class WidgetUtil {
         String mergeType = handleMergeType(deviceType);
         MergeTypeStyles configMergeType = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
         if (configMergeType != null) {
-            return configMergeType.getName();
+            String name = configMergeType.getName();
+            if (!TextUtils.isEmpty(name)) {
+                return name;
+            }
         }
         return SensoroCityApplication.getInstance().getResources().getString(R.string.unknown);
     }

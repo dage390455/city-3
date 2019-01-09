@@ -766,4 +766,5 @@
     <string name="command_elec_connect_desc">Please ensure the safety of staff around before you power on this device</string>
     <string name="command_elec_connect_btn_title">Power on</string>
     <string name="deploy_detail">Deploy Detail</string>
+    <string name="device_category">Category</string>
 </resources>

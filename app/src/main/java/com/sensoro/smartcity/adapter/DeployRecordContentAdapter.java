@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
@@ -46,9 +47,10 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
         holder.itemAdapterDeployRecordTvName.setText(deployRecordInfo.getDeviceName());
         holder.itemAdapterDeployRecordTvSn.setText(deployRecordInfo.getSn());
         holder.itemAdapterDeployRecordTvTime.setText(DateUtil.getStrTime_ymd_hm_ss(deployRecordInfo.getCreatedTime()));
-
+        String deviceType = deployRecordInfo.getDeviceType();
+        holder.itemAdapterDeployRecordTvDeviceType.setText(WidgetUtil.getDeviceMainTypeName(deviceType));
         TagAdapter tagAdapter = new TagAdapter(mActivity, R.color.c_252525, R.color.c_dfdfdf);
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity,false);
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity, false);
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         holder.itemAdapterDeployRecordRcTag.setLayoutManager(layoutManager);
 
@@ -58,7 +60,7 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
             @Override
             public void onClick(View v) {
                 if (listener != null) {
-                    listener.onItemClick(v,position);
+                    listener.onItemClick(v, position);
                 }
             }
         });
@@ -74,7 +76,7 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
         recordInfoList.addAll(data);
     }
 
-    public void setOnClickListener(RecycleViewItemClickListener listener){
+    public void setOnClickListener(RecycleViewItemClickListener listener) {
         this.listener = listener;
     }
 
@@ -91,9 +93,12 @@ public class DeployRecordContentAdapter extends RecyclerView.Adapter<DeployRecor
         RecyclerView itemAdapterDeployRecordRcTag;
         @BindView(R.id.item_adapter_deploy_record_tv_time)
         TextView itemAdapterDeployRecordTvTime;
+        @BindView(R.id.item_adapter_deploy_record_tv_device_type)
+        TextView itemAdapterDeployRecordTvDeviceType;
+
         public DeployRecordContentHolder(View itemView) {
             super(itemView);
-            ButterKnife.bind(this,itemView);
+            ButterKnife.bind(this, itemView);
             int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
             itemAdapterDeployRecordRcTag.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         }

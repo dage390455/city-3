@@ -151,6 +151,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     LinearLayout llElectTop;
     @BindView(R.id.ac_monitoring_elect_point_line)
     View acMonitoringElectPointLine;
+    @BindView(R.id.monitor_detail_tv_category)
+    TextView monitorDetailTvCategory;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -699,6 +701,10 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         acMonitoringPointTvPowerOn.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
 
+    public void setMonitorDetailTvCategory(String category) {
+        monitorDetailTvCategory.setText(category);
+    }
+
 
     @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
             R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check, R.id.ac_monitoring_point_tv_air_switch_config, R.id.include_text_title_tv_subtitle,
@@ -795,8 +801,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    public void onConfirmClick(String content,String diameter) {
-        mPresenter.doOperation(mTipDialogType, content,diameter);
+    public void onConfirmClick(String content, String diameter) {
+        mPresenter.doOperation(mTipDialogType, content, diameter);
     }
 
     @Override
