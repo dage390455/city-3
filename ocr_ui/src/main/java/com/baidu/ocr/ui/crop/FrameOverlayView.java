@@ -13,6 +13,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,6 +24,8 @@ public class FrameOverlayView extends View {
 
     private int lastW;
     private int lastH;
+    private float lastMoveX;
+    private float lastMoveY;
 
     interface OnFrameChangeListener {
         void onFrameChange(RectF newFrame);
@@ -119,8 +122,8 @@ public class FrameOverlayView extends View {
             frameRect.left = (int) (w * 0.05);
             frameRect.top = (int) (h * 0.25);
         } else {
-            frameRect.left = (int) (w * 0.03);
-            frameRect.top = (int) (h * 0.03);
+            frameRect.left = (int) (w * 0.05);
+            frameRect.top = (int) (h * 0.05);
         }
         frameRect.right = w - frameRect.left;
         frameRect.bottom = h - frameRect.top;
@@ -201,7 +204,7 @@ public class FrameOverlayView extends View {
         RectF rectExtend = new RectF(frameRect.left - ex, frameRect.top - ex,
                 frameRect.right + ex, frameRect.bottom + ex);
         if (!result) {
-            if (rectExtend.contains(event.getX(), event.getY())) {
+            if (rectExtend.contains(event.getX(), event.getY())&&currentCorner == -1) {
                 gestureDetector.onTouchEvent(event);
                 return true;
             }
@@ -213,13 +216,15 @@ public class FrameOverlayView extends View {
         switch (event.getAction()) {
             case MotionEvent.ACTION_CANCEL:
             case MotionEvent.ACTION_UP:
+                lastMoveX = 0;
+                lastMoveY = 0;
                 currentCorner = -1;
                 break;
             case MotionEvent.ACTION_DOWN: {
 //                float radius = cornerLength;
-                float radius = 300;
-                touchRect.set(event.getX() - radius, event.getY() - radius, event.getX() + radius,
-                        event.getY() + radius);
+                float cornerPadding = cornerLength;
+                touchRect.set(event.getX() - cornerPadding, event.getY() - cornerPadding, event.getX() + cornerPadding,
+                        event.getY() + cornerPadding);
                 if (touchRect.contains(frameRect.left, frameRect.top)) {
                     currentCorner = CORNER_LEFT_TOP;
                     return true;
@@ -242,6 +247,13 @@ public class FrameOverlayView extends View {
                 return false;
             }
             case MotionEvent.ACTION_MOVE:
+                if (lastMoveX == 0 && lastMoveY == 0) {
+                    lastMoveX = event.getX();
+                    lastMoveY = event.getY();
+                }
+                if(lastMoveX == event.getX() && lastMoveY ==event.getY()){
+                    return false;
+                }
                 return handleScale(event);
             default:
 
