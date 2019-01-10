@@ -719,19 +719,19 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_monitoring_point_tv_erasure:
-                showTipDialog(false, R.string.is_device_erasure, R.string.device_erasure_tip_message, R.string.erasure, R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
+                showTipDialog(false, null, R.string.is_device_erasure, R.string.device_erasure_tip_message, R.color.c_a6a6a6, R.string.erasure, R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
                 break;
             case R.id.ac_monitoring_point_tv_reset:
-                showTipDialog(false, R.string.is_device_reset, R.string.device_reset_tip_message, R.string.reset, R.color.c_f34a4a, MonitorPointOperationCode.RESET);
+                showTipDialog(false, null, R.string.is_device_reset, R.string.device_reset_tip_message, R.color.c_a6a6a6, R.string.reset, R.color.c_f34a4a, MonitorPointOperationCode.RESET);
                 break;
             case R.id.ac_monitoring_point_tv_psd:
-                showTipDialog(false, R.string.is_device_psd, R.string.device_psd_tip_message, R.string.modify, R.color.c_f34a4a, MonitorPointOperationCode.PSD);
+                showTipDialog(false, null, R.string.is_device_psd, R.string.device_psd_tip_message, R.color.c_a6a6a6, R.string.modify, R.color.c_f34a4a, MonitorPointOperationCode.PSD);
                 break;
             case R.id.ac_monitoring_point_tv_query:
-                showTipDialog(false, R.string.is_device_query, R.string.device_query_tip_message, R.string.monitor_point_detail_query, R.color.c_29c093, MonitorPointOperationCode.QUERY);
+                showTipDialog(false, null, R.string.is_device_query, R.string.device_query_tip_message, R.color.c_a6a6a6, R.string.monitor_point_detail_query, R.color.c_29c093, MonitorPointOperationCode.QUERY);
                 break;
             case R.id.ac_monitoring_point_tv_self_check:
-                showTipDialog(false, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
+                showTipDialog(false, null, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.color.c_a6a6a6, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case R.id.ac_monitoring_point_tv_air_switch_config:
                 mPresenter.doAirSwitchConfig();
@@ -764,25 +764,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 break;
             case R.id.elect_info:
                 mPresenter.showEarlyWarningThresholdDialogUtils();
-//                if (earlyWarningThresholdDialogUtils != null) {
-//                    earlyWarningThresholdDialogUtils.show();
-//                }
                 break;
         }
-    }
-
-    private void showTipDialog(boolean isEdit, @StringRes int title, @StringRes int message, @StringRes int confirm, @ColorRes int confirmColor, int type) {
-        if (mTipUtils.isShowing()) {
-            mTipUtils.dismiss();
-        }
-        mTipUtils.setTipEtRootVisible(isEdit);
-        mTipUtils.setTipTitleText(mActivity.getString(title));
-        mTipUtils.setTipMessageText(mActivity.getString(message));
-        mTipUtils.setTipConfirmVisible(true);
-        mTipUtils.setTipCancelText(mActivity.getString(R.string.back), mActivity.getResources().getColor(R.color.c_252525));
-        mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
-        mTipDialogType = type;
-        mTipUtils.show();
     }
 
     //TODO 包含慢炖空开配置

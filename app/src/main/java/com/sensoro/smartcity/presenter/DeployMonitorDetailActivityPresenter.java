@@ -352,12 +352,10 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                                 } else {
                                     freshError(deployAnalyzerModel.sn, errorMsg, DEPLOY_RESULT_MODEL_CODE_DEPLOY_FAILED);
                                 }
-//                                getView().toastShort("接口速度--->>>" + (System.currentTimeMillis() - currentTimeMillis));
                             }
 
                             @Override
                             public void onCompleted(DeviceDeployRsp deviceDeployRsp) {
-//                                getView().toastShort("接口速度--->>>" + (System.currentTimeMillis() - currentTimeMillis));
                                 try {
                                     LogUtils.loge("接口速度--->>>doDevicePointDeploy: " + (System.currentTimeMillis() - currentTimeMillis));
                                 } catch (Throwable throwable) {

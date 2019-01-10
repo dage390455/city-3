@@ -55,7 +55,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
-        initCreateContractDilog();
+        initCreateContractDialog();
     }
 
     private void initView() {
@@ -66,7 +66,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
 
     }
 
-    private void initCreateContractDilog() {
+    private void initCreateContractDialog() {
         mCreateContractDialog = new TipOperationDialogUtils(mActivity, true);
         mCreateContractDialog.setTipTitleText(mActivity.getString(R.string.create_contract));
         mCreateContractDialog.setTipMessageText(mActivity.getString(R.string.create_contract_tip_message));

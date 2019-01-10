@@ -82,6 +82,22 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
     }
 
     private void checkAndConnect(String valueStr, String diameter) {
+        if (mMinMaxValue == null) {
+            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
+            return;
+        }
+        try {
+            mEnterValue = Integer.parseInt(valueStr);
+            if (mEnterValue < mMinMaxValue[0] || mEnterValue > mMinMaxValue[1]) {
+                getView().toastShort(mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
+                return;
+            }
+            mConnection = new SensoroDeviceConnection(mActivity, mMacAddress);
+        } catch (Exception e) {
+            e.printStackTrace();
+            getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+            return;
+        }
         if (needDiameter()) {
             if (TextUtils.isEmpty(diameter)) {
                 getView().toastShort(mActivity.getString(R.string.enter_wire_diameter_tip));
@@ -94,23 +110,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
                 getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
                 return;
             }
-        }
-        if (mMinMaxValue == null) {
-            getView().toastShort(mActivity.getString(R.string.deploy_configuration_analyze_failed));
-            return;
-        }
-        try {
-            Integer value = Integer.parseInt(valueStr);
-            if (value < mMinMaxValue[0] || value > mMinMaxValue[1]) {
-                getView().toastShort(mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
-                return;
-            }
-            mEnterValue = value;
-            mConnection = new SensoroDeviceConnection(mActivity, mMacAddress);
-        } catch (Exception e) {
-            e.printStackTrace();
-            getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
-            return;
         }
         try {
             getView().showBleConfigurationDialog(mActivity.getString(R.string.connecting));
