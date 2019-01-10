@@ -35,6 +35,11 @@ public class DeployConfigurationAnalyzer {
                 result[0] = 12;
                 result[1] = 84;
                 break;
+            case "mantun_fires":
+                //慢炖空开
+                result[0] = 1;
+                result[1] = 79;
+                break;
         }
         return result;
 
@@ -56,6 +61,10 @@ public class DeployConfigurationAnalyzer {
             case "acrel_single":
                 //安科瑞单相电
                 configAcrelSingle(sensoroDevice.getSensoroSensorTest(), enterValue);
+                break;
+            case "mantun_fires":
+                //慢炖空开
+                configMantunFires(sensoroDevice.getSensoroSensorTest(), enterValue);
                 break;
             default:
                 sensoroDevice = null;
@@ -133,5 +142,12 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.ct = 1;
         sensoroSensor.acrelFires.cmd = 2;
         sensoroSensor.acrelFires.currHighType = 1;
+    }
+
+    private static void configMantunFires(SensoroSensor sensoroSensor, int value) {
+
+//        sensoroSensor.mantunData. = 0; //现阶段只有一组，所以id为0，如果多组，则依次赋值
+        sensoroSensor.mantunData.currentTh = value; //过流
+        sensoroSensor.mantunData.powerTh = value * 220 / 1000; //过载
     }
 }
