@@ -811,6 +811,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:paddingTop="10dp"
+                android:gravity="center_vertical"
                 android:paddingBottom="10dp">
 
                 <TextView
@@ -828,7 +829,7 @@
                     android:layout_marginStart="16dp"
                     android:layout_marginEnd="16dp"
                     android:layout_weight="1"
-                    android:gravity="end">
+                    android:gravity="end|center_vertical">
 
                     <com.sensoro.smartcity.widget.TouchRecycleView
                         android:id="@+id/monitor_detail_rc_tag"

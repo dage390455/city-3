@@ -762,4 +762,6 @@
     <string name="deploy_detail">部署详情</string>
     <string name="device_category">设备型号</string>
     <string name="identification_failed_try_again">识别失败，请重试</string>
+    <string name="is_alarm">时报警</string>
+    <string name="sensoro_number">升哲安全服务</string>
 </resources>

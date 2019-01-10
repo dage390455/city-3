@@ -54,7 +54,7 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         readLoginData();
         initSeverUrl();
         ArrayList<String> nameList = new ArrayList<>();
-        nameList.add("升哲安全服务");
+        nameList.add(mContext.getString(R.string.sensoro_number));
         ArrayList<String> numberList = new ArrayList<>();
         numberList.add("(0570)2296646");
         numberList.add("(010)53876304");

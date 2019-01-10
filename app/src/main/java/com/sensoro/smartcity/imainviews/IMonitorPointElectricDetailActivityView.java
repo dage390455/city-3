@@ -63,6 +63,9 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setQueryStatus(boolean isClickable);
 
     void setPsdStatus(boolean isClickable);
+    void setPowerOffStatus(boolean isClickable);
+    void setPowerOnStatus(boolean isClickable);
+
 
     void showOperationSuccessToast();
 

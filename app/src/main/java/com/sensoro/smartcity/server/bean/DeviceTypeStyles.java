@@ -19,6 +19,30 @@ public class DeviceTypeStyles {
     private DisplayOptionsBean displayOptions;
     private List<MonitorOptionsBean> monitorOptions;
 
+    /**
+     * "taskOptions": [
+     * // 是否支持消音
+     * "mute",
+     * // 是否支持复位
+     * "reset",
+     * // 是否支持修改密码
+     * "password",
+     * // 是否支持查看设备
+     * "view",
+     * // 是否支持自检
+     * "check",
+     * // 是否支持配置
+     * "config",
+     * // 是否支持下行断电
+     * "open",
+     * // 是否支持下行上电
+     * "close"
+     * ]
+     *
+     * @return
+     */
+    private List<String> taskOptions;
+
     @Override
     public String toString() {
         return "DeviceTypeStyles{" +
@@ -122,4 +146,11 @@ public class DeviceTypeStyles {
         this.monitorOptions = monitorOptions;
     }
 
+    public List<String> getTaskOptions() {
+        return taskOptions;
+    }
+
+    public void setTaskOptions(List<String> taskOptions) {
+        this.taskOptions = taskOptions;
+    }
 }

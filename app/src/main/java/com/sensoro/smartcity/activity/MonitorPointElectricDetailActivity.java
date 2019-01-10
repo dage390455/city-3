@@ -520,6 +520,34 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         acMonitoringPointTvPsd.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
     }
 
+    @Override
+    public void setPowerOffStatus(boolean isClickable) {
+        Drawable drawable;
+        if (isClickable) {
+            drawable = getResources().getDrawable(R.drawable.power_off);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.power_off_gray);
+        }
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acMonitoringPointTvPowerOff.setCompoundDrawables(null, drawable, null, null);
+        acMonitoringPointTvPowerOff.setClickable(isClickable);
+        acMonitoringPointTvPowerOff.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
+    }
+
+    @Override
+    public void setPowerOnStatus(boolean isClickable) {
+        Drawable drawable;
+        if (isClickable) {
+            drawable = getResources().getDrawable(R.drawable.power_on);
+        } else {
+            drawable = getResources().getDrawable(R.drawable.power_on_gray);
+        }
+        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
+        acMonitoringPointTvPowerOn.setCompoundDrawables(null, drawable, null, null);
+        acMonitoringPointTvPowerOn.setClickable(isClickable);
+        acMonitoringPointTvPowerOn.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
+    }
+
 
     @Override
     public void showOperationSuccessToast() {

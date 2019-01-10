@@ -768,4 +768,6 @@
     <string name="deploy_detail">Deploy Detail</string>
     <string name="device_category">Category</string>
     <string name="identification_failed_try_again">识别失败，请重试</string>
+    <string name="is_alarm">Alarm</string>
+    <string name="sensoro_number">Sensoro Security Service</string>
 </resources>
