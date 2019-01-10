@@ -20,7 +20,7 @@ public class CameraThreadPool {
     /*
      * 线程池大小
      */
-    private static int poolCount = Runtime.getRuntime().availableProcessors();
+    private static int poolCount = Runtime.getRuntime().availableProcessors()*2+1;
 
     private static ExecutorService fixedThreadPool = Executors.newFixedThreadPool(poolCount);
 

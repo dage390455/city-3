@@ -36,6 +36,8 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.File;
 import java.io.Serializable;
@@ -58,6 +60,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        EventBus.getDefault().register(this);
         getContractTemplateInfos();
     }
 
@@ -126,7 +129,7 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
 
     @Override
     public void onDestroy() {
-
+        EventBus.getDefault().unregister(this);
     }
 
     public void doTakePhoto() {
@@ -149,23 +152,38 @@ public class PersonalContractPresenter extends BasePresenter<IPersonalContractVi
                 if (isAttachedView()) {
                     getView().showProgressDialog();
                 }
-                try {
-                    String contentType = data.getStringExtra(CameraActivity.KEY_CONTENT_TYPE);
-                    String filePath = FileUtil.getSaveFile(mActivity.getApplicationContext()).getAbsolutePath();
-                    if (!TextUtils.isEmpty(contentType)) {
-                        if (CameraActivity.CONTENT_TYPE_ID_CARD_FRONT.equals(contentType)) {
-                            recIDCard(IDCardParams.ID_CARD_SIDE_FRONT, filePath);
-                        } else if (CameraActivity.CONTENT_TYPE_ID_CARD_BACK.equals(contentType)) {
-                            recIDCard(IDCardParams.ID_CARD_SIDE_BACK, filePath);
-                        }
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    if (isAttachedView()) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(mActivity.getString(R.string.read_error_try));
-                    }
-                }
+            }
+        }
+    }
+
+    private void recPersonalLicense() {
+        try {
+//            String contentType = data.getStringExtra(CameraActivity.KEY_CONTENT_TYPE);
+            String filePath = FileUtil.getSaveFile(mActivity.getApplicationContext()).getAbsolutePath();
+//            if (!TextUtils.isEmpty(contentType)) {
+//                if (CameraActivity.CONTENT_TYPE_ID_CARD_FRONT.equals(contentType)) {
+                    recIDCard(IDCardParams.ID_CARD_SIDE_FRONT, filePath);
+//                } else if (CameraActivity.CONTENT_TYPE_ID_CARD_BACK.equals(contentType)) {
+//                    recIDCard(IDCardParams.ID_CARD_SIDE_BACK, filePath);
+//                }
+//            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (isAttachedView()) {
+                getView().dismissProgressDialog();
+                getView().toastShort(mActivity.getString(R.string.read_error_try));
+            }
+        }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(String msg) {
+        if ("ocr_ui__file_success".equals(msg)) {
+            recPersonalLicense();
+        }else if("ocr_ui__file_failed".equals(msg)){
+            if (isAttachedView()) {
+                getView().dismissProgressDialog();
+                getView().toastShort(mActivity.getString(R.string.identification_failed_try_again));
             }
         }
     }
