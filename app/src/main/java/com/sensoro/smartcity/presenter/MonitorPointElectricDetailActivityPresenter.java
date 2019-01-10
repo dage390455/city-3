@@ -887,7 +887,14 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         for (AlarmInfo.RuleInfo ruleInfo : rules) {
                             String sensorTypeStr = ruleInfo.getSensorTypes();
                             if (!TextUtils.isEmpty(sensorTypeStr)) {
-                                ruleInfoHashMap.put(sensorTypeStr, ruleInfo);
+                                String conditionType = ruleInfo.getConditionType();
+                                if (TextUtils.isEmpty(conditionType)) {
+                                    ruleInfoHashMap.put(sensorTypeStr, ruleInfo);
+                                } else {
+                                    ruleInfoHashMap.put(sensorTypeStr + conditionType, ruleInfo);
+                                }
+
+
                             }
                         }
                     }
@@ -914,8 +921,16 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         StringBuilder stringBuilder = new StringBuilder();
                         for (MonitorOptionsBean.SensorTypesBean sensorTypeBean : sensorTypes) {
                             if (sensorTypeBean != null) {
+                                String key;
                                 String id = sensorTypeBean.getId();
-                                AlarmInfo.RuleInfo ruleInfo = ruleInfoHashMap.get(id);
+                                String conditionType = sensorTypeBean.getConditionType();
+                                AlarmInfo.RuleInfo ruleInfo;
+                                if (TextUtils.isEmpty(conditionType)) {
+                                    key = id;
+                                } else {
+                                    key = id + conditionType;
+                                }
+                                ruleInfo = ruleInfoHashMap.get(key);
                                 if (ruleInfo != null) {
                                     SensorTypeStyles configSensorType = PreferencesHelper.getInstance().getConfigSensorType(id);
                                     if (configSensorType != null) {
@@ -935,7 +950,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 BigDecimal b = new BigDecimal(value);
                                                 valueStr = b.setScale(precision, BigDecimal.ROUND_HALF_UP).toString();
                                             }
-                                            String conditionType = sensorTypeBean.getConditionType();
                                             if (!TextUtils.isEmpty(conditionType)) {
                                                 String conditionTypeRule = ruleInfo.getConditionType();
                                                 if (conditionType.equals(conditionTypeRule)) {
