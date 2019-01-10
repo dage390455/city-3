@@ -21,6 +21,9 @@ import com.baidu.ocr.ui.util.DimensionUtil;
 
 public class FrameOverlayView extends View {
 
+    private int lastW;
+    private int lastH;
+
     interface OnFrameChangeListener {
         void onFrameChange(RectF newFrame);
     }
@@ -100,16 +103,24 @@ public class FrameOverlayView extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
+        lastW = w;
+        lastH = h;
         resetFrameRect(w, h);
     }
 
+    public void resetFrameRect(){
+        if(lastW != 0&& lastH != 0){
+            resetFrameRect(lastW,lastH);
+            invalidate();
+        }
+    }
     private void resetFrameRect(int w, int h) {
         if (shapeType == 1) {
             frameRect.left = (int) (w * 0.05);
             frameRect.top = (int) (h * 0.25);
         } else {
-            frameRect.left = (int) (w * 0.2);
-            frameRect.top = (int) (h * 0.2);
+            frameRect.left = (int) (w * 0.03);
+            frameRect.top = (int) (h * 0.03);
         }
         frameRect.right = w - frameRect.left;
         frameRect.bottom = h - frameRect.top;
@@ -205,7 +216,8 @@ public class FrameOverlayView extends View {
                 currentCorner = -1;
                 break;
             case MotionEvent.ACTION_DOWN: {
-                float radius = cornerLength;
+//                float radius = cornerLength;
+                float radius = 300;
                 touchRect.set(event.getX() - radius, event.getY() - radius, event.getX() + radius,
                         event.getY() + radius);
                 if (touchRect.contains(frameRect.left, frameRect.top)) {
