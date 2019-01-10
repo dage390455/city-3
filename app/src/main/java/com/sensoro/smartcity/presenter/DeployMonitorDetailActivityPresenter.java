@@ -648,7 +648,13 @@ public class DeployMonitorDetailActivityPresenter extends BasePresenter<IDeployM
                     String settingText;
                     if ("mantun_fires".equals(deployAnalyzerModel.deviceType)) {
                         Double diameterValue = deployAnalyzerModel.settingData.getDiameterValue();
-                        settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A" + " " + mContext.getString(R.string.diameter) + ":" + diameterValue + "m㎡";
+                        if (diameterValue != null) {
+                            String formatDouble = WidgetUtil.getFormatDouble(diameterValue, 2);
+                            settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A" + " " + mContext.getString(R.string.diameter) + ":" + formatDouble + "m㎡";
+                        } else {
+                            settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A" + " " + mContext.getString(R.string.diameter);
+                        }
+
                     } else {
                         settingText = mContext.getString(R.string.had_setting_detail) + initValue + "A";
                     }

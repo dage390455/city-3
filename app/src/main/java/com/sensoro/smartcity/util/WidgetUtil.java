@@ -2653,4 +2653,13 @@ public class WidgetUtil {
         }
         return text;
     }
+
+    public static String getFormatDouble(double d, int precision) {
+        try {
+            BigDecimal b = new BigDecimal(d);
+            return b.setScale(precision, BigDecimal.ROUND_HALF_UP).toString();
+        } catch (Exception e) {
+            return String.valueOf(d);
+        }
+    }
 }

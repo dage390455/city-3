@@ -237,7 +237,7 @@
     //
 
     //
-    <string name="search_tips">设备名称/设备号/标签</string>
+    <string name="search_tips">设备名称/设备编号/标签</string>
 
     <string name="recent">最近搜索</string>
     <string name="clear">清除</string>
@@ -251,7 +251,7 @@
     <string name="deploy_photo">部署图片</string>
     <string name="input_name">输入名称</string>
     <string name="contract_list">合同管理</string>
-    <string name="sensor_detail_sn">设备号</string>
+    <string name="sensor_detail_sn">设备编号</string>
     <string name="sensor_detail_name">名称</string>
     <string name="sensor_detail_type">类型</string>
     <string name="sensor_detail_status">状态</string>
@@ -395,10 +395,10 @@
     //部署地图
     <string name="deploy_device_map_save">保存</string>
     //部署记录
-    <string name="deploy_record_search_tip">设备名称/设备号/标签</string>
-    <string name="deploy_record_search_cancel_tip">设备名称/设备号/标签</string>
+    <string name="deploy_record_search_tip">设备名称/设备编号/标签</string>
+    <string name="deploy_record_search_cancel_tip">设备名称/设备编号/标签</string>
     <string name="deploy_record_new_device">部署新设备</string>
-    <string name="deploy_record_device_number">设备号</string>
+    <string name="deploy_record_device_number">设备编号</string>
     <string name="deploy_record_name">名称</string>
     <string name="deploy_record_deploy_time">部署时间</string>
     <string name="deploy_record_deploy_we_chat">小程序账号</string>
@@ -408,7 +408,7 @@
     <string name="deploy_result_back_home">返回主页</string>
     <string name="deploy_result_continue">继续部署</string>
     <string name="deploy_result_successed">恭喜！传感器点位部署成功</string>
-    <string name="deploy_result_device_number">设备号</string>
+    <string name="deploy_result_device_number">设备编号</string>
     <string name="deploy_result_name">名称</string>
     <string name="deploy_result_location">位置</string>
     <string name="deploy_result_contract">联系人</string>
@@ -438,7 +438,7 @@
     <string name="inspection_exception_detail_remark">备注</string>
     <string name="inspection_exception_detail_live_video">现场录像</string>
     //巡检task
-    <string name="inspection_task_search_hint">设备名称/设备号</string>
+    <string name="inspection_task_search_hint">设备名称/设备编号</string>
     //巡检task detail
     <string name="inspection_task_detail_start_inspection">开始巡检</string>
     <string name="inspection_task_detail_task_number">任务编号</string>
@@ -522,7 +522,7 @@
     <string name="manager_fragment_version_information">版本信息</string>
     <string name="manager_fragment_exit_account">退出账户</string>
     //warn framgen
-    <string name="warn_fragment_search_tip">设备名称/设备号/手机号</string>
+    <string name="warn_fragment_search_tip">设备名称/设备编号/手机号</string>
 
     //
     <string name="top_bar_image">图片</string>
@@ -655,7 +655,7 @@
     <string name="not_setting">未配置</string>
     <string name="had_setting_detail">额定电流：</string>
     <string name="deploy_pic_device_pic">设备图</string>
-    <string name="deploy_pic_device_pic_tip">需能看清设备号</string>
+    <string name="deploy_pic_device_pic_tip">需能看清设备编号</string>
     <string name="deploy_pic_take_photo">拍照</string>
     <string name="deploy_pic_installation_site">安装现场</string>
     <string name="deploy_pic_shop_pic">店面照片（选填）</string>

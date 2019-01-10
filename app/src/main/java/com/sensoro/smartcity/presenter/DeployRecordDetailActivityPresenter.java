@@ -90,7 +90,8 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
 //                            settingText = mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue()  + "A";
 //                        }
                         if (deployControlSettingData.getDiameterValue() != null) {
-                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A" + " " + mActivity.getString(R.string.diameter) + ":" + deployControlSettingData.getDiameterValue() + "m㎡");
+                            String formatDouble = WidgetUtil.getFormatDouble(deployControlSettingData.getDiameterValue(), 2);
+                            getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A" + " " + mActivity.getString(R.string.diameter) + ":" + formatDouble + "m㎡");
                         } else {
                             getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployControlSettingData.getInitValue() + "A");
                         }
