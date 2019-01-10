@@ -209,9 +209,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 if (mHomeTopModels.size() > 0) {
                     updateHeaderTop(mHomeTopModels.get(0));
                 }
-                getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
+                getView().dismissProgressDialog();
                 needFreshAll = false;
             }
 
@@ -229,9 +229,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     updateHeaderTop(mHomeTopModels.get(0));
                 }
                 getView().toastShort(errorMsg);
-                getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
+                getView().dismissProgressDialog();
 
             }
         });
@@ -592,9 +592,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
-                            getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);
                             getView().recycleViewRefreshComplete();
+                            getView().dismissProgressDialog();
                         }
                     });
                     break;
@@ -619,7 +619,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
                         @Override
                         public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                            getView().dismissProgressDialog();
                             try {
                                 List<DeviceInfo> data = deviceInfoListRsp.getData();
                                 if (data.size() == 0) {
@@ -629,13 +628,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            getView().dismissProgressDialog();
                         }
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
-                            getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);
                             getView().recycleViewRefreshComplete();
+                            getView().dismissProgressDialog();
                         }
                     });
                     break;
@@ -824,8 +824,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+                getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
             }
         });
@@ -868,8 +868,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
 //                getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
-                    getView().dismissProgressDialog();
                     getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
+                    getView().dismissProgressDialog();
                 } else {
                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);
@@ -878,8 +878,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+                getView().dismissProgressDialog();
             }
         });
     }
