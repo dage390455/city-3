@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.baidu.ocr.ui.camera.CameraActivity;
 import com.sensoro.smartcity.R;
@@ -32,6 +33,8 @@ import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -51,7 +54,20 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
     @Override
     public void initData(Context context) {
         mActivity = (Activity) context;
+        EventBus.getDefault().register(this);
         getContractTemplateInfos();
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(String msg) {
+        if ("ocr_ui__file_success".equals(msg)) {
+            recBusinessLicense();
+        }else if("ocr_ui__file_failed".equals(msg)){
+            if (isAttachedView()) {
+                getView().dismissProgressDialog();
+                getView().toastShort(mActivity.getString(R.string.identification_failed_try_again));
+            }
+        }
     }
 
     public void initData(Context context, Bundle bundle) {
@@ -119,6 +135,7 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
 
     @Override
     public void onDestroy() {
+        EventBus.getDefault().unregister(this);
         mHandler.removeCallbacksAndMessages(null);
     }
 
@@ -143,40 +160,42 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
             if (isAttachedView()) {
                 getView().showProgressDialog();
             }
-            try {
-                RecognizeService.recBusinessLicense(mActivity, FileUtil.getSaveFile(mActivity.getApplicationContext())
-                                .getAbsolutePath(),
-                        new RecognizeService.ServiceListener() {
-                            @Override
-                            public void onResult(final String result) {
-                                if (isAttachedView()) {
-                                    getView().dismissProgressDialog();
-                                }
-                                String enterpriseName = "";
-                                String customerAddress = "";
+
+        }
+    }
+
+    private void recBusinessLicense() {
+        try {
+            RecognizeService.recBusinessLicense(mActivity, FileUtil.getSaveFile(mActivity.getApplicationContext())
+                            .getAbsolutePath(),
+                    new RecognizeService.ServiceListener() {
+                        @Override
+                        public void onResult(final String result) {
+                            String enterpriseName = "";
+                            String customerAddress = "";
 //                                String 成立日期 = "";
 //                                String 有效期 = "";
-                                String customerName = "";
-                                String enterpriseCardId = "";
+                            String customerName = "";
+                            String enterpriseCardId = "";
 //                                String 证件编号 = "";
-                                try {
-                                    BusinessLicenseData businessLicenseData = RetrofitServiceHelper.INSTANCE
-                                            .getGson()
-                                            .fromJson(result, BusinessLicenseData.class);
-                                    BusinessLicenseData.WordsResultBean words_result = businessLicenseData
-                                            .getWords_result();
-                                    //
-                                    if (words_result != null) {
-                                        BusinessLicenseData.WordsResultBean.单位名称Bean words_result单位名称 = words_result
-                                                .get单位名称();
-                                        if (words_result单位名称 != null) {
-                                            enterpriseName = words_result单位名称.getWords();
-                                        }
-                                        BusinessLicenseData.WordsResultBean.地址Bean words_result地址 = words_result
-                                                .get地址();
-                                        if (words_result地址 != null) {
-                                            customerAddress = words_result地址.getWords();
-                                        }
+                            try {
+                                BusinessLicenseData businessLicenseData = RetrofitServiceHelper.INSTANCE
+                                        .getGson()
+                                        .fromJson(result, BusinessLicenseData.class);
+                                BusinessLicenseData.WordsResultBean words_result = businessLicenseData
+                                        .getWords_result();
+                                //
+                                if (words_result != null) {
+                                    BusinessLicenseData.WordsResultBean.单位名称Bean words_result单位名称 = words_result
+                                            .get单位名称();
+                                    if (words_result单位名称 != null) {
+                                        enterpriseName = words_result单位名称.getWords();
+                                    }
+                                    BusinessLicenseData.WordsResultBean.地址Bean words_result地址 = words_result
+                                            .get地址();
+                                    if (words_result地址 != null) {
+                                        customerAddress = words_result地址.getWords();
+                                    }
 //                                        BusinessLicenseData.WordsResultBean.成立日期Bean words_result成立日期 = words_result
 //                                                .get成立日期();
 //                                        if (words_result成立日期 != null) {
@@ -187,44 +206,43 @@ public class BusinessContractPresenter extends BasePresenter<IBusinessContractVi
 //                                        if (words_result有效期 != null) {
 //                                            有效期 = words_result有效期.getWords();
 //                                        }
-                                        BusinessLicenseData.WordsResultBean.法人Bean words_result法人 = words_result
-                                                .get法人();
-                                        if (words_result法人 != null) {
-                                            customerName = words_result法人.getWords();
-                                        }
-                                        BusinessLicenseData.WordsResultBean.社会信用代码Bean words_result社会信用代码 =
-                                                words_result
-                                                        .get社会信用代码();
-                                        if (words_result社会信用代码 != null) {
-                                            enterpriseCardId = words_result社会信用代码.getWords();
-                                        }
+                                    BusinessLicenseData.WordsResultBean.法人Bean words_result法人 = words_result
+                                            .get法人();
+                                    if (words_result法人 != null) {
+                                        customerName = words_result法人.getWords();
+                                    }
+                                    BusinessLicenseData.WordsResultBean.社会信用代码Bean words_result社会信用代码 =
+                                            words_result
+                                                    .get社会信用代码();
+                                    if (words_result社会信用代码 != null) {
+                                        enterpriseCardId = words_result社会信用代码.getWords();
+                                    }
 //                                        BusinessLicenseData.WordsResultBean.证件编号Bean words_result证件编号 = words_result
 //                                                .get证件编号();
 //                                        if (words_result证件编号 != null) {
 //                                            证件编号 = words_result证件编号.getWords();
 //                                        }
-                                    }
-
-                                } catch (Exception e) {
-                                    e.printStackTrace();
-                                }
-                                if (isAttachedView()) {
-                                    getView().setBusinessMerchantName(enterpriseName);
-                                    getView().setOwnerName(customerName);
-                                    getView().setRegisterAddress(customerAddress);
-                                    getView().setSocialCreatedId(enterpriseCardId);
                                 }
 
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                        });
-            } catch (Exception e) {
-                e.printStackTrace();
-                if (isAttachedView()) {
-                    getView().dismissProgressDialog();
-                    getView().toastShort(mActivity.getString(R.string.read_error_try));
-                }
-            }
+                            if (isAttachedView()) {
+                                getView().dismissProgressDialog();
+                                getView().setBusinessMerchantName(enterpriseName);
+                                getView().setOwnerName(customerName);
+                                getView().setRegisterAddress(customerAddress);
+                                getView().setSocialCreatedId(enterpriseCardId);
+                            }
 
+                        }
+                    });
+        } catch (Exception e) {
+            e.printStackTrace();
+            if (isAttachedView()) {
+                getView().dismissProgressDialog();
+                getView().toastShort(mActivity.getString(R.string.read_error_try));
+            }
         }
     }
 
