@@ -113,6 +113,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String typeName = mContext.getString(R.string.power_supply);
         String mergeType = mDeviceInfo.getMergeType();
         String deviceType = mDeviceInfo.getDeviceType();
+        getView().setDeviceConfigPowerVisible("mantun_fires".equals(deviceType));
         if (TextUtils.isEmpty(mergeType)) {
             mergeType = WidgetUtil.handleMergeType(deviceType);
         }
@@ -1266,6 +1267,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
     public void doOperation(int type, String content, String diameter) {
         String operationType = null;
         Integer switchSpec = null;
+        Double d = null;
         switch (type) {
             case MonitorPointOperationCode.ERASURE:
                 operationType = "mute";
@@ -1284,17 +1286,14 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 break;
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
                 operationType = "config";
-                Integer integer = null;
                 if (TextUtils.isEmpty(content)) {
                     getView().toastShort(mContext.getString(R.string.input_not_null));
                     return;
                 }
                 try {
-                    integer = Integer.valueOf(content);
+                    switchSpec = Integer.valueOf(content);
                     int[] ints = DeployConfigurationAnalyzer.analyzeDeviceType(mDeviceInfo.getDeviceType());
-                    if (integer >= ints[0] && integer <= ints[1]) {
-                        switchSpec = integer;
-                    } else {
+                    if (switchSpec < ints[0] || switchSpec > ints[1]) {
                         getView().toastShort(String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), ints[0], ints[1]));
                         return;
                     }
@@ -1303,20 +1302,47 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     getView().toastShort(mContext.getString(R.string.enter_the_correct_number_format));
                     return;
                 }
+                if ("mantun_fires".equals(mDeviceInfo.getDeviceType())) {
+                    if (TextUtils.isEmpty(diameter)) {
+                        if (TextUtils.isEmpty(content)) {
+                            getView().toastShort(mContext.getString(R.string.input_not_null));
+                            return;
+                        }
+                        try {
+                            d = Double.parseDouble(content);
+                            if (d < 0 || d > 200) {
+                                getView().toastShort(String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), 0, 200));
+                                return;
+                            }
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            getView().toastShort(mContext.getString(R.string.enter_the_correct_number_format));
+                            return;
+                        }
+                    }
+                }
 
+                break;
+            case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
+                operationType = "open";
+                //断电
+                break;
+            case MonitorPointOperationCode.AIR_SWITCH_POWER_ON:
+                operationType = "close";
+                //上电
                 break;
         }
 
-        requestCmd(operationType, switchSpec);
+        requestCmd(operationType, switchSpec, d);
     }
 
-    private void requestCmd(String operationType, Integer switchSpec) {
+    private void requestCmd(String operationType, Integer switchSpec, Double diameter) {
         ArrayList<String> sns = new ArrayList<>();
         sns.add(mDeviceInfo.getSn());
         getView().dismissTipDialog();
         getView().showOperationTipLoadingDialog();
         mScheduleNo = null;
-        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec)
+        RetrofitServiceHelper.INSTANCE.doMonitorPointOperation(sns, operationType, null, null, switchSpec, diameter)
                 .subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<MonitorPointOperationRequestRsp>(this) {
             @Override
             public void onCompleted(MonitorPointOperationRequestRsp response) {
@@ -1381,5 +1407,17 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 }
             }
         });
+    }
+
+    public void doPowerOff() {
+        getView().showTipDialog(false, mDeviceInfo.getDeviceType(), R.string.command_elec_disconnect_title, R.string.command_elec_disconnect_desc, R.color.c_f34a4a, R.string.command_elec_disconnect_btn_title, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_OFF);
+    }
+
+    public void doPowerOn() {
+        getView().showTipDialog(false, mDeviceInfo.getDeviceType(), R.string.command_elec_connect_title, R.string.command_elec_connect_desc, R.color.c_f34a4a, R.string.command_elec_connect_btn_title, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_ON);
+    }
+
+    public void doAirSwitchConfig() {
+        getView().showTipDialog(true, mDeviceInfo.getDeviceType(), R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.color.c_a6a6a6, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
     }
 }

@@ -1,5 +1,8 @@
 package com.sensoro.smartcity.imainviews;
 
+import android.support.annotation.ColorRes;
+import android.support.annotation.StringRes;
+
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.iwidget.IActivityIntent;
@@ -101,7 +104,9 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setElectInfoTipVisible(boolean isVisible);
 
-    void setMandunDeviceVisible(boolean isVisible);
+    void setDeviceConfigPowerVisible(boolean isVisible);
 
     void setMonitorDetailTvCategory(String category);
+
+    void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type);
 }

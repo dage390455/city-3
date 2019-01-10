@@ -158,6 +158,10 @@ public class TipOperationDialogUtils {
         mLlEtRoot.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    public void setDiameterVisible(boolean isVisible) {
+        mLlEtDiameter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
 
     public interface TipDialogUtilsClickListener {
         void onCancelClick();

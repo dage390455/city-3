@@ -3,6 +3,7 @@ package com.sensoro.smartcity.analyzer;
 import android.text.TextUtils;
 
 import com.sensoro.libbleserver.ble.SensoroDevice;
+import com.sensoro.libbleserver.ble.SensoroMantunData;
 import com.sensoro.libbleserver.ble.SensoroSensor;
 
 import java.util.Random;
@@ -145,9 +146,12 @@ public class DeployConfigurationAnalyzer {
     }
 
     private static void configMantunFires(SensoroSensor sensoroSensor, int value) {
-
-//        sensoroSensor.mantunData. = 0; //现阶段只有一组，所以id为0，如果多组，则依次赋值
-        sensoroSensor.mantunData.currentTh = value; //过流
-        sensoroSensor.mantunData.powerTh = value * 220 / 1000; //过载
+        if (sensoroSensor.mantunDatas != null && sensoroSensor.mantunDatas.size() > 0) {
+            for (SensoroMantunData mantunData : sensoroSensor.mantunDatas) {
+                mantunData.id = 0; //现阶段只有一组，所以id为0，如果多组，则依次赋值
+                mantunData.currentTh = value; //过流
+                mantunData.powerTh = value * 220 / 1000; //过载
+            }
+        }
     }
 }

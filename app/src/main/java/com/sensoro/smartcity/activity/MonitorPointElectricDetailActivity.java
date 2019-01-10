@@ -562,6 +562,12 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
                     mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
                     break;
+                case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
+                    break;
+                case MonitorPointOperationCode.AIR_SWITCH_POWER_ON:
+                    mOperatingUtil.setTipText(mActivity.getString(R.string.configuring));
+                    break;
 
             }
             mOperatingUtil.show();
@@ -696,7 +702,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    public void setMandunDeviceVisible(boolean isVisible) {
+    public void setDeviceConfigPowerVisible(boolean isVisible) {
         acMonitoringPointTvPowerOff.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
         acMonitoringPointTvPowerOn.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
     }
@@ -728,11 +734,13 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
                 showTipDialog(false, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
                 break;
             case R.id.ac_monitoring_point_tv_air_switch_config:
-                showTipDialog(true, R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
+                mPresenter.doAirSwitchConfig();
                 break;
             case R.id.ac_monitoring_point_tv_power_off:
+                mPresenter.doPowerOff();
                 break;
             case R.id.ac_monitoring_point_tv_power_on:
+                mPresenter.doPowerOn();
                 break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMonitorHistory();
@@ -778,10 +786,13 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     //TODO 包含慢炖空开配置
-    private void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type) {
+    @Override
+    public void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type) {
         if (mTipUtils.isShowing()) {
             mTipUtils.dismiss();
         }
+        //控制线径显示
+        mTipUtils.setDiameterVisible(isEdit && "mantun_fires".equals(deviceType));
         mTipUtils.setTipEtRootVisible(isEdit);
         mTipUtils.setTipTitleText(mActivity.getString(title));
         mTipUtils.setTipMessageText(mActivity.getString(message), messageColor);

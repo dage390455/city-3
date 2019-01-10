@@ -1239,7 +1239,7 @@ public enum RetrofitServiceHelper {
         return devicesMergeTypes;
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec) {
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Double diameter) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1262,6 +1262,9 @@ public enum RetrofitServiceHelper {
             }
             if (switchSpec != null) {
                 jsonObject.put("switchSpec", switchSpec);
+            }
+            if (diameter != null) {
+                jsonObject.put("wireDiameter", diameter);
             }
 
         } catch (JSONException e) {

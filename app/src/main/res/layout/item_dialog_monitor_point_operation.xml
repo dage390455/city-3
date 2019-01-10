@@ -39,7 +39,7 @@
         android:background="@drawable/shape_corner_b6_bg_stroke"
         android:orientation="horizontal"
         android:padding="1dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"
@@ -83,7 +83,7 @@
         android:background="@drawable/shape_corner_b6_bg_stroke"
         android:orientation="horizontal"
         android:padding="1dp"
-        android:visibility="visible">
+        android:visibility="gone">
 
         <TextView
             android:layout_width="wrap_content"

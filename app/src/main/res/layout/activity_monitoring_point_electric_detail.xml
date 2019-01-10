@@ -241,8 +241,8 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/unknown"
                             android:textColor="@color/c_252525"
@@ -250,8 +250,8 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/unknown"
                             android:textColor="@color/c_252525"
@@ -259,8 +259,8 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
+                            android:layout_weight="1"
                             android:gravity="center"
                             android:text="@string/unknown"
                             android:textColor="@color/c_252525"
@@ -282,10 +282,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -296,10 +296,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -310,10 +310,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -339,10 +339,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -353,10 +353,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -367,10 +367,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -395,10 +395,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -409,10 +409,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -423,10 +423,10 @@
 
                         <TextView
                             android:layout_width="0dp"
-                            android:layout_weight="1"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="12dp"
                             android:layout_marginEnd="12dp"
+                            android:layout_weight="1"
                             android:background="@drawable/shape_bg_corner_2dp_dff6ef_shadow"
                             android:gravity="center"
                             android:paddingTop="5dp"
@@ -702,13 +702,13 @@
                 <TextView
                     android:id="@+id/ac_monitoring_point_tv_power_off"
                     style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/air_switch_config_not_clickable"
+                    android:drawableTop="@drawable/power_off"
                     android:text="@string/command_elec_disconnect_btn_title" />
 
                 <TextView
                     android:id="@+id/ac_monitoring_point_tv_power_on"
                     style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/air_switch_config_not_clickable"
+                    android:drawableTop="@drawable/power_on"
                     android:text="@string/command_elec_connect_btn_title" />
             </LinearLayout>
 
@@ -762,12 +762,14 @@
                     android:textColor="#9b9b9b"
                     android:textSize="@dimen/x50" />
             </RelativeLayout>
+
             <ImageView
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/y1"
                 android:layout_marginStart="12dp"
                 android:background="@color/c_e7e7e7"
                 android:contentDescription="@null" />
+
             <RelativeLayout
                 android:id="@+id/monitor_detail_layout_device_category"
                 android:layout_width="match_parent"

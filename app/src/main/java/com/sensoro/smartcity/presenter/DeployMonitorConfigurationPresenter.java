@@ -120,7 +120,6 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             getView().dismissBleConfigurationDialog();
             getView().toastShort(mActivity.getString(R.string.ble_connect_failed));
         }
-        configCompleted();
     }
 
     public boolean needDiameter() {
