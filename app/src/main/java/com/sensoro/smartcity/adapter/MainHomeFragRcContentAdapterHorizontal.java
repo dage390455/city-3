@@ -77,28 +77,29 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
             setNoContentVisible(holder, true);
             return;
         }
-        final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
-        layoutManager.setOrientation(OrientationHelper.VERTICAL);
-        holder.rvHorizontalItem.setLayoutManager(layoutManager);
+//        final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+//        layoutManager.setOrientation(OrientationHelper.VERTICAL);
+//        holder.rvHorizontalItem.setLayoutManager(layoutManager);
         holder.rvHorizontalItem.setAdapter(item.innerAdapter);
-        holder.rvHorizontalItem.setNestedScrollingEnabled(true);
-        if (item.scrollOffset > 0) {
-            layoutManager.scrollToPositionWithOffset(item.scrollPosition, item.scrollOffset);
-        }
-        holder.rvHorizontalItem.addOnScrollListener(new MyOnScrollListener(item, layoutManager));
+//        holder.rvHorizontalItem.setNestedScrollingEnabled(true);
+//        if (item.scrollOffset > 0) {
+//            layoutManager.scrollToPositionWithOffset(item.scrollPosition, item.scrollOffset);
+//        }
+//        MyOnScrollListener listener = new MyOnScrollListener(item, layoutManager);
+//        holder.rvHorizontalItem.addOnScrollListener(listener);
 
         item.innerAdapter.setOnContentItemClickListener(new MainHomeFragRcContentAdapter.OnContentItemClickListener() {
             @Override
             public void onAlarmInfoClick(View v, int position) {
-                if (listener != null) {
-                    listener.onAlarmInfoClick(v, position);
+                if (MainHomeFragRcContentAdapterHorizontal.this.listener != null) {
+                    MainHomeFragRcContentAdapterHorizontal.this.listener.onAlarmInfoClick(v, position);
                 }
             }
 
             @Override
             public void onItemClick(View view, int position) {
-                if (listener != null) {
-                    listener.onItemClick(view, position);
+                if (MainHomeFragRcContentAdapterHorizontal.this.listener != null) {
+                    MainHomeFragRcContentAdapterHorizontal.this.listener.onItemClick(view, position);
                 }
             }
         });
@@ -154,6 +155,15 @@ public class MainHomeFragRcContentAdapterHorizontal extends RecyclerView.Adapter
         MyViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+            final LinearLayoutManager layoutManager = new LinearLayoutManager(mContext);
+            layoutManager.setOrientation(OrientationHelper.VERTICAL);
+            rvHorizontalItem.setLayoutManager(layoutManager);
+            rvHorizontalItem.setNestedScrollingEnabled(true);
+//        if (item.scrollOffset > 0) {
+//            layoutManager.scrollToPositionWithOffset(item.scrollPosition, item.scrollOffset);
+//        }
+//        MyOnScrollListener listener = new MyOnScrollListener(item, layoutManager);
+//        holder.rvHorizontalItem.addOnScrollListener(listener);
         }
     }
 
