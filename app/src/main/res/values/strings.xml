@@ -767,4 +767,5 @@
     <string name="command_elec_connect_btn_title">Power on</string>
     <string name="deploy_detail">Deploy Detail</string>
     <string name="device_category">Category</string>
+    <string name="identification_failed_try_again">识别失败，请重试</string>
 </resources>
