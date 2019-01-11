@@ -26,6 +26,7 @@ import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
+import com.sensoro.smartcity.factory.MonitorPointModelsFactory;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.Elect3DetailModel;
@@ -36,7 +37,6 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
-import com.sensoro.smartcity.server.bean.DeviceAlarmsRecord;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.DisplayOptionsBean;
@@ -359,119 +359,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     }
 
-    private Elect3DetailModel createElect3DetailModel(int index, DisplayOptionsBean.SpecialBean.DataBean dataBean, Map<String, SensorStruct> sensoroDetails) {
-        if (dataBean != null && sensoroDetails != null) {
-            String type = dataBean.getType();
-            if ("sensorType".equals(type)) {
-                String sensoroType = dataBean.getValue();
-                SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
-                if (sensorTypeStyles != null) {
-                    Elect3DetailModel elect3DetailModel = new Elect3DetailModel();
-                    elect3DetailModel.index = index;
-                    int status = mDeviceInfo.getStatus();
-                    switch (status) {
-                        case SENSOR_STATUS_ALARM:
-                            elect3DetailModel.backgroundColor = R.color.c_fde4e4;
-                            elect3DetailModel.textColor = R.color.c_922c2c;
-                            break;
-                        case SENSOR_STATUS_INACTIVE:
-                            elect3DetailModel.backgroundColor = R.color.c_f4f4f4;
-                            elect3DetailModel.textColor = R.color.c_5d5d5d;
-                            break;
-                        case SENSOR_STATUS_LOST:
-                            elect3DetailModel.backgroundColor = R.color.c_f4f4f4;
-                            elect3DetailModel.textColor = R.color.c_b6b6b6;
-                            break;
-                        case SENSOR_STATUS_NORMAL:
-                            elect3DetailModel.backgroundColor = R.color.c_dff6ef;
-                            elect3DetailModel.textColor = R.color.c_197358;
-                            break;
-                        case SENSOR_STATUS_MALFUNCTION:
-                            elect3DetailModel.backgroundColor = R.color.c_fff7e2;
-                            elect3DetailModel.textColor = R.color.c_987823;
-                            break;
-                        default:
-                            elect3DetailModel.backgroundColor = R.color.c_dff6ef;
-                            elect3DetailModel.textColor = R.color.c_197358;
-                            break;
-                    }
-                    //针对预警特殊处理
-                    if (SENSOR_STATUS_ALARM == status) {
-                        elect3DetailModel.backgroundColor = R.color.c_dff6ef;
-                        elect3DetailModel.textColor = R.color.c_197358;
-                        List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
-                        if (alarmsRecords != null) {
-                            for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
-                                String sensorTypeStr = deviceAlarmsRecord.getSensorTypes();
-                                if (sensoroType.equalsIgnoreCase(sensorTypeStr)) {
-                                    int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
-                                    switch (alarmStatus) {
-                                        case 1:
-                                            elect3DetailModel.backgroundColor = R.color.c_dff6ef;
-                                            elect3DetailModel.textColor = R.color.c_197358;
-                                            break;
-                                        case 2:
-                                            elect3DetailModel.backgroundColor = R.color.c_fde4e4;
-                                            elect3DetailModel.textColor = R.color.c_922c2c;
-                                            break;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    boolean bool = sensorTypeStyles.isBool();
-                    SensorStruct sensorStruct = sensoroDetails.get(sensoroType);
-                    if (sensorStruct != null) {
-                        Object value = sensorStruct.getValue();
-                        if (value != null) {
-                            if (bool) {
-                                if (value instanceof Boolean) {
-                                    String trueMean = sensorTypeStyles.getTrueMean();
-                                    String falseMean = sensorTypeStyles.getFalseMean();
-                                    if ((Boolean) value) {
-                                        if (!TextUtils.isEmpty(trueMean)) {
-                                            elect3DetailModel.text = trueMean;
-                                        }
-                                    } else {
-                                        if (!TextUtils.isEmpty(falseMean)) {
-                                            elect3DetailModel.text = falseMean;
-                                        }
-                                    }
-
-                                }
-                            } else {
-                                String unit = sensorTypeStyles.getUnit();
-                                WidgetUtil.judgeIndexSensorType(elect3DetailModel, sensoroType, value, unit);
-                            }
-                        }
-                    } else {
-                        elect3DetailModel.text = "-";
-                    }
-                    return elect3DetailModel;
-                }
-            }
-
-        }
-        return null;
-    }
-
-    private Elect3DetailModel createElect3NameModel(int index, DisplayOptionsBean.SpecialBean.DataBean dataBean) {
-        if (dataBean != null) {
-            String type = dataBean.getType();
-            if ("label".equals(type)) {
-                Elect3DetailModel elect3DetailModel = new Elect3DetailModel();
-                elect3DetailModel.index = index;
-                String name = dataBean.getName();
-                if (TextUtils.isEmpty(name)) {
-                    name = mContext.getString(R.string.unknown);
-                }
-                elect3DetailModel.text = name;
-                return elect3DetailModel;
-            }
-        }
-        return null;
-    }
-
     private void handleDeviceInfoAdapter() {
         ThreadPoolManager.getInstance().execute(new Runnable() {
             @Override
@@ -494,7 +381,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
                                 monitoringPointRcContentAdapterModel.name = mContext.getString(R.string.malfunction_cause_detail);
                                 monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
-
                                 MalfunctionTypeStyles configMalfunctionMainTypes = PreferencesHelper.getInstance().getConfigMalfunctionMainTypes(key);
                                 if (configMalfunctionMainTypes != null) {
                                     monitoringPointRcContentAdapterModel.content = configMalfunctionMainTypes.getName();
@@ -541,7 +427,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                 if (!TextUtils.isEmpty(sensoroType)) {
                                     // 控制头部
                                     needTop = true;
-                                    final MonitoringPointRcContentAdapterModel model = createMonitoringPointRcContentAdapterModel(sensoroDetails, sensoroType);
+                                    final MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mContext, mDeviceInfo, sensoroDetails, sensoroType);
                                     if (model != null) {
                                         mContext.runOnUiThread(new Runnable() {
                                             @Override
@@ -563,7 +449,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             if (minors != null && minors.size() > 0) {
 
                                 for (String type : minors) {
-                                    MonitoringPointRcContentAdapterModel model = createMonitoringPointRcContentAdapterModel(sensoroDetails, type);
+                                    MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mContext, mDeviceInfo, sensoroDetails, type);
                                     if (model != null) {
                                         if (TextUtils.isEmpty(model.content)) {
                                             model.content = "-";
@@ -595,7 +481,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         List<DisplayOptionsBean.SpecialBean.DataBean> dataBeans0 = specialData.get(0);
                                         if (dataBeans0 != null && dataBeans0.size() >= 4) {
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean01 = dataBeans0.get(1);
-                                            final Elect3DetailModel elect3TopModel1 = createElect3NameModel(1, dataBean01);
+                                            final Elect3DetailModel elect3TopModel1 = MonitorPointModelsFactory.createElect3NameModel(mContext, 1, dataBean01);
                                             if (elect3TopModel1 != null) {
 
                                                 mContext.runOnUiThread(new Runnable() {
@@ -609,7 +495,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean02 = dataBeans0.get(2);
-                                            final Elect3DetailModel elect3TopModel2 = createElect3NameModel(2, dataBean02);
+                                            final Elect3DetailModel elect3TopModel2 = MonitorPointModelsFactory.createElect3NameModel(mContext, 2, dataBean02);
                                             if (elect3TopModel2 != null) {
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
@@ -622,7 +508,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean03 = dataBeans0.get(3);
-                                            final Elect3DetailModel elect3TopModel3 = createElect3NameModel(3, dataBean03);
+                                            final Elect3DetailModel elect3TopModel3 = MonitorPointModelsFactory.createElect3NameModel(mContext, 3, dataBean03);
                                             if (elect3TopModel3 != null) {
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
@@ -638,7 +524,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         List<DisplayOptionsBean.SpecialBean.DataBean> dataBeans1 = specialData.get(1);
                                         if (dataBeans1 != null && dataBeans1.size() >= 4) {
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean10 = dataBeans1.get(0);
-                                            final Elect3DetailModel elect3NameModel10 = createElect3NameModel(0, dataBean10);
+                                            final Elect3DetailModel elect3NameModel10 = MonitorPointModelsFactory.createElect3NameModel(mContext, 0, dataBean10);
                                             if (elect3NameModel10 != null) {
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
@@ -650,7 +536,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 });
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean11 = dataBeans1.get(1);
-                                            final Elect3DetailModel elect3DetailModel1 = createElect3DetailModel(1, dataBean11, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel1 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 1, dataBean11, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
                                                 if (elect3DetailModel1.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -666,7 +552,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean12 = dataBeans1.get(2);
-                                            final Elect3DetailModel elect3DetailModel2 = createElect3DetailModel(2, dataBean12, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel2 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 2, dataBean12, sensoroDetails);
                                             if (elect3DetailModel2 != null) {
                                                 if (elect3DetailModel2.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -682,7 +568,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean13 = dataBeans1.get(3);
-                                            final Elect3DetailModel elect3DetailModel3 = createElect3DetailModel(3, dataBean13, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel3 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 3, dataBean13, sensoroDetails);
                                             if (elect3DetailModel3 != null) {
                                                 if (elect3DetailModel3.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -703,7 +589,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         List<DisplayOptionsBean.SpecialBean.DataBean> dataBeans2 = specialData.get(2);
                                         if (dataBeans2 != null && dataBeans2.size() >= 4) {
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean20 = dataBeans2.get(0);
-                                            final Elect3DetailModel elect3NameModel20 = createElect3NameModel(0, dataBean20);
+                                            final Elect3DetailModel elect3NameModel20 = MonitorPointModelsFactory.createElect3NameModel(mContext, 0, dataBean20);
                                             if (elect3NameModel20 != null) {
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
@@ -715,7 +601,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 });
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean21 = dataBeans2.get(1);
-                                            final Elect3DetailModel elect3DetailModel1 = createElect3DetailModel(1, dataBean21, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel1 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 1, dataBean21, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
                                                 if (elect3DetailModel1.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -731,7 +617,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean22 = dataBeans2.get(2);
-                                            final Elect3DetailModel elect3DetailModel2 = createElect3DetailModel(2, dataBean22, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel2 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 2, dataBean22, sensoroDetails);
                                             if (elect3DetailModel2 != null) {
                                                 if (elect3DetailModel2.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -747,7 +633,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean23 = dataBeans2.get(3);
-                                            final Elect3DetailModel elect3DetailModel3 = createElect3DetailModel(3, dataBean23, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel3 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 3, dataBean23, sensoroDetails);
                                             if (elect3DetailModel3 != null) {
                                                 if (elect3DetailModel3.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -767,7 +653,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         List<DisplayOptionsBean.SpecialBean.DataBean> dataBeans3 = specialData.get(3);
                                         if (dataBeans3 != null && dataBeans3.size() >= 3) {
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean30 = dataBeans3.get(0);
-                                            final Elect3DetailModel elect3NameModel30 = createElect3NameModel(0, dataBean30);
+                                            final Elect3DetailModel elect3NameModel30 = MonitorPointModelsFactory.createElect3NameModel(mContext, 0, dataBean30);
                                             if (elect3NameModel30 != null) {
                                                 mContext.runOnUiThread(new Runnable() {
                                                     @Override
@@ -779,7 +665,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                 });
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean31 = dataBeans3.get(1);
-                                            final Elect3DetailModel elect3DetailModel1 = createElect3DetailModel(1, dataBean31, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel1 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 1, dataBean31, sensoroDetails);
                                             if (elect3DetailModel1 != null) {
                                                 if (elect3DetailModel1.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -795,7 +681,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean32 = dataBeans3.get(2);
-                                            final Elect3DetailModel elect3DetailModel2 = createElect3DetailModel(2, dataBean32, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel2 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 2, dataBean32, sensoroDetails);
                                             if (elect3DetailModel2 != null) {
                                                 if (elect3DetailModel2.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -811,7 +697,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean33 = dataBeans3.get(3);
-                                            final Elect3DetailModel elect3DetailModel3 = createElect3DetailModel(3, dataBean33, sensoroDetails);
+                                            final Elect3DetailModel elect3DetailModel3 = MonitorPointModelsFactory.createElect3DetailModel(mDeviceInfo, 3, dataBean33, sensoroDetails);
                                             if (elect3DetailModel3 != null) {
                                                 if (elect3DetailModel3.hasAlarmStatus()) {
                                                     hasAlarmStatus = true;
@@ -866,7 +752,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                             List<String> sensorTypes = configDeviceType.getSensorTypes();
                             if (sensorTypes != null && sensorTypes.size() > 0 && sensoroDetails != null) {
                                 for (String type : sensorTypes) {
-                                    MonitoringPointRcContentAdapterModel model = createMonitoringPointRcContentAdapterModel(sensoroDetails, type);
+                                    MonitoringPointRcContentAdapterModel model = MonitorPointModelsFactory.createMonitoringPointRcContentAdapterModel(mContext, mDeviceInfo, sensoroDetails, type);
                                     if (model != null) {
                                         if (TextUtils.isEmpty(model.content)) {
                                             model.content = "-";
@@ -965,7 +851,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                         }
                                         boolean bool = configSensorType.isBool();
                                         if (bool) {
-                                            stringBuilder.append(configSensorType.getAlarm()).append("时报警").append("\n");
+                                            stringBuilder.append(configSensorType.getAlarm()).append(mContext.getString(R.string.is_alarm)).append("\n");
                                         } else {
                                             String unit = configSensorType.getUnit();
                                             float value = ruleInfo.getThresholds();
@@ -1016,94 +902,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     }
 
-    private MonitoringPointRcContentAdapterModel createMonitoringPointRcContentAdapterModel(Map<String, SensorStruct> sensoroDetails, String sensoroType) {
-        if (sensoroDetails != null) {
-            SensorStruct sensorStruct = sensoroDetails.get(sensoroType);
-            // 只在有数据时进行显示
-            SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensoroType);
-            if (sensorTypeStyles != null) {
-                MonitoringPointRcContentAdapterModel monitoringPointRcContentAdapterModel = new MonitoringPointRcContentAdapterModel();
-                String name = sensorTypeStyles.getName();
-                if (TextUtils.isEmpty(name)) {
-                    monitoringPointRcContentAdapterModel.name = mContext.getResources().getString(R.string.unknown);
-                } else {
-                    monitoringPointRcContentAdapterModel.name = name;
-                }
-                int status = mDeviceInfo.getStatus();
-                switch (status) {
-                    case SENSOR_STATUS_ALARM:
-                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
-                        break;
-                    case SENSOR_STATUS_INACTIVE:
-                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_inactive;
-                        break;
-                    case SENSOR_STATUS_LOST:
-                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_lost;
-                        break;
-                    case SENSOR_STATUS_NORMAL:
-                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                        break;
-                    case SENSOR_STATUS_MALFUNCTION:
-                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_fdc83b;
-                        break;
-                    default:
-                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                        break;
-                }
-                //针对预警特殊处理
-                if (SENSOR_STATUS_ALARM == status) {
-                    monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                    List<DeviceAlarmsRecord> alarmsRecords = mDeviceInfo.getAlarmsRecords();
-                    if (alarmsRecords != null) {
-                        for (DeviceAlarmsRecord deviceAlarmsRecord : alarmsRecords) {
-                            String sensorTypeStr = deviceAlarmsRecord.getSensorTypes();
-                            if (sensoroType.equalsIgnoreCase(sensorTypeStr)) {
-                                int alarmStatus = deviceAlarmsRecord.getAlarmStatus();
-                                switch (alarmStatus) {
-                                    case 1:
-                                        monitoringPointRcContentAdapterModel.statusColorId = R.color.c_29c093;
-                                        break;
-                                    case 2:
-                                        monitoringPointRcContentAdapterModel.statusColorId = R.color.sensoro_alarm;
-                                        break;
-                                }
-                            }
-                        }
-                    }
-                }
-                boolean bool = sensorTypeStyles.isBool();
-                if (sensorStruct != null) {
-                    Object value = sensorStruct.getValue();
-                    if (value != null) {
-                        if (bool) {
-                            if (value instanceof Boolean) {
-                                String trueMean = sensorTypeStyles.getTrueMean();
-                                String falseMean = sensorTypeStyles.getFalseMean();
-                                if ((Boolean) value) {
-                                    if (!TextUtils.isEmpty(trueMean)) {
-                                        monitoringPointRcContentAdapterModel.content = trueMean;
-                                    }
-                                } else {
-                                    if (!TextUtils.isEmpty(falseMean)) {
-                                        monitoringPointRcContentAdapterModel.content = falseMean;
-                                    }
-                                }
-
-                            }
-                        } else {
-                            String unit = sensorTypeStyles.getUnit();
-                            if (!TextUtils.isEmpty(unit)) {
-                                monitoringPointRcContentAdapterModel.unit = unit;
-                            }
-                            WidgetUtil.judgeIndexSensorType(monitoringPointRcContentAdapterModel, sensoroType, value);
-                        }
-                    }
-                }
-                return monitoringPointRcContentAdapterModel;
-            }
-        }
-        return null;
-    }
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
