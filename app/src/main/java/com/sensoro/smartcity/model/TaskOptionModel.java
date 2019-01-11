@@ -34,17 +34,10 @@ public class TaskOptionModel {
             add("close");
         }
     };
+    public int optionType;
     public String id;
     public boolean clickable;
     public int drawableResId;
     public int textColorResId;
-    public String content;
-
-    public TaskOptionModel(String id, boolean clickable, int drawableResId, int textColorResId, String content) {
-        this.id = id;
-        this.clickable = clickable;
-        this.drawableResId = drawableResId;
-        this.textColorResId = textColorResId;
-        this.content = content;
-    }
+    public int contentResId;
 }

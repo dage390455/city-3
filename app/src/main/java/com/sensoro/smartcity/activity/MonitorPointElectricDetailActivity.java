@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.MonitorDeployDetailPhotoAdapter;
+import com.sensoro.smartcity.adapter.MonitorDetailOperationAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcContentAdapter;
 import com.sensoro.smartcity.adapter.MonitoringPointRcMalfunctionContentAdapter;
 import com.sensoro.smartcity.adapter.TagAdapter;
@@ -27,6 +29,7 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.imainviews.IMonitorPointElectricDetailActivityView;
 import com.sensoro.smartcity.model.Elect3DetailModel;
+import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.presenter.MonitorPointElectricDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.widget.ProgressUtils;
@@ -40,6 +43,7 @@ import com.sensoro.smartcity.widget.divider.BottomNoDividerItemDecoration;
 import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -153,6 +157,8 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     View acMonitoringElectPointLine;
     @BindView(R.id.monitor_detail_tv_category)
     TextView monitorDetailTvCategory;
+    @BindView(R.id.ac_monitoring_point_rc_operation)
+    RecyclerView acMonitoringPointRcOperation;
     private boolean showDetail = false;
     private MonitoringPointRcContentAdapter mContentAdapter;
     private MonitoringPointRcMalfunctionContentAdapter mContentMalfunctionAdapter;
@@ -162,6 +168,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     private MonitorPointOperatingDialogUtil mOperatingUtil;
     private int mTipDialogType;
     private EarlyWarningThresholdDialogUtils earlyWarningThresholdDialogUtils;
+    private MonitorDetailOperationAdapter monitorDetailOperationAdapter;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -209,6 +216,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         initOperatingDialog();
         initMonitorPhoto();
         initMalfunctionData();
+        initMonitorOperation();
         earlyWarningThresholdDialogUtils = new EarlyWarningThresholdDialogUtils(mActivity);
         earlyWarningThresholdDialogUtils.setDialogUtilsChangeClickListener(this);
 
@@ -242,6 +250,19 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mAdapter = new MonitorDeployDetailPhotoAdapter(mActivity);
         acMonitorDeployPhoto.setAdapter(mAdapter);
         mAdapter.setOnItemClickListener(this);
+    }
+
+    private void initMonitorOperation() {
+        //
+        GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 4);
+//        gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
+//        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
+//        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
+        acMonitoringPointRcOperation.setLayoutManager(gridLayoutManager);
+        monitorDetailOperationAdapter = new MonitorDetailOperationAdapter(mActivity);
+        acMonitoringPointRcOperation.setAdapter(monitorDetailOperationAdapter);
+        monitorDetailOperationAdapter.setOnMonitorDetailOperationAdatperListener(mPresenter);
+
     }
 
     private void initEditDialog() {
@@ -812,6 +833,11 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         mTipUtils.setTipConfirmText(mActivity.getString(confirm), mActivity.getResources().getColor(confirmColor));
         mTipDialogType = type;
         mTipUtils.show();
+    }
+
+    @Override
+    public void updateTaskOptionModelAdapter(ArrayList<TaskOptionModel> optionModels) {
+        monitorDetailOperationAdapter.updateMonitorDetailOperations(optionModels);
     }
 
     //tip dialog 点击事件

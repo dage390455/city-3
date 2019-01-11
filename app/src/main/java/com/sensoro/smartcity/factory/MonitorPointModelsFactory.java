@@ -5,7 +5,9 @@ import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
+import com.sensoro.smartcity.constant.MonitorPointOperationCode;
 import com.sensoro.smartcity.model.Elect3DetailModel;
+import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.server.bean.DeviceAlarmsRecord;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 import com.sensoro.smartcity.server.bean.DisplayOptionsBean;
@@ -14,6 +16,7 @@ import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 import com.sensoro.smartcity.util.PreferencesHelper;
 import com.sensoro.smartcity.util.WidgetUtil;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -225,5 +228,98 @@ public class MonitorPointModelsFactory {
             }
         }
         return null;
+    }
+
+    public static HashMap<String, TaskOptionModel> createTaskOptionModelMap(int status) {
+        HashMap<String, TaskOptionModel> map = new HashMap<>();
+        //消音
+//        int ERASURE = 0x01;
+//        int RESET = 0x02;
+//        int PSD = 0x03;
+//        int QUERY = 0x04;
+//        int SELF_CHECK = 0x05;
+//        int AIR_SWITCH_CONFIG = 0x06;
+//        int AIR_SWITCH_POWER_OFF = 0x07;
+//        int AIR_SWITCH_POWER_ON = 0x08;
+        TaskOptionModel muteModel = new TaskOptionModel();
+        muteModel.id = "mute";
+        muteModel.optionType = MonitorPointOperationCode.ERASURE;
+        boolean muteClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
+        muteModel.clickable = muteClickable;
+        muteModel.contentResId = R.string.monitor_point_detail_erasure;
+        muteModel.drawableResId = muteClickable ? R.drawable.erasure_clickable : R.drawable.erasure_not_clickable;
+        muteModel.textColorResId = muteClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(muteModel.id, muteModel);
+        //复位
+        TaskOptionModel resetModel = new TaskOptionModel();
+        resetModel.id = "reset";
+        resetModel.optionType = MonitorPointOperationCode.RESET;
+        boolean resetClickable = status == SENSOR_STATUS_ALARM || status == SENSOR_STATUS_MALFUNCTION;
+        resetModel.clickable = resetClickable;
+        resetModel.contentResId = R.string.monitor_point_detail_reset;
+        resetModel.drawableResId = resetClickable ? R.drawable.reset_clickable : R.drawable.reset_not_clickable;
+        resetModel.textColorResId = resetClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(resetModel.id, resetModel);
+        //修改密码
+        TaskOptionModel passwordModel = new TaskOptionModel();
+        passwordModel.id = "password";
+        passwordModel.optionType = MonitorPointOperationCode.PSD;
+        boolean passwordClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        passwordModel.clickable = passwordClickable;
+        passwordModel.contentResId = R.string.monitor_point_detail_psd;
+        passwordModel.drawableResId = passwordClickable ? R.drawable.psd_clickable : R.drawable.psd_not_clickable;
+        passwordModel.textColorResId = passwordClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(passwordModel.id, passwordModel);
+        //查询
+        TaskOptionModel viewModel = new TaskOptionModel();
+        viewModel.id = "view";
+        viewModel.optionType = MonitorPointOperationCode.QUERY;
+        boolean viewClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        viewModel.clickable = viewClickable;
+        viewModel.contentResId = R.string.monitor_point_detail_query;
+        viewModel.drawableResId = viewClickable ? R.drawable.query_clickable : R.drawable.query_not_clickable;
+        viewModel.textColorResId = viewClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(viewModel.id, viewModel);
+        //自检
+        TaskOptionModel checkModel = new TaskOptionModel();
+        checkModel.id = "check";
+        checkModel.optionType = MonitorPointOperationCode.SELF_CHECK;
+        boolean checkClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        checkModel.clickable = checkClickable;
+        checkModel.contentResId = R.string.monitor_point_detail_self_check;
+        checkModel.drawableResId = checkClickable ? R.drawable.self_check_clickable : R.drawable.self_check_not_clickable;
+        checkModel.textColorResId = checkClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(checkModel.id, checkModel);
+        //初始配置
+        TaskOptionModel configModel = new TaskOptionModel();
+        configModel.id = "config";
+        configModel.optionType = MonitorPointOperationCode.AIR_SWITCH_CONFIG;
+        boolean configClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        configModel.clickable = configClickable;
+        configModel.contentResId = R.string.monitor_point_detail_air_switch_config;
+        configModel.drawableResId = configClickable ? R.drawable.air_switch_config_clickable : R.drawable.air_switch_config_not_clickable;
+        configModel.textColorResId = configClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(configModel.id, configModel);
+        //断电
+        TaskOptionModel openModel = new TaskOptionModel();
+        openModel.id = "open";
+        openModel.optionType = MonitorPointOperationCode.AIR_SWITCH_POWER_OFF;
+        boolean openClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        openModel.clickable = openClickable;
+        openModel.contentResId = R.string.command_elec_disconnect_btn_title;
+        openModel.drawableResId = openClickable ? R.drawable.power_on : R.drawable.power_off_gray;
+        openModel.textColorResId = openClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(openModel.id, openModel);
+        //上电
+        TaskOptionModel closeModel = new TaskOptionModel();
+        closeModel.id = "close";
+        closeModel.optionType = MonitorPointOperationCode.AIR_SWITCH_POWER_ON;
+        boolean closeClickable = status != SENSOR_STATUS_LOST && status != SENSOR_STATUS_INACTIVE;
+        closeModel.clickable = closeClickable;
+        closeModel.contentResId = R.string.command_elec_connect_btn_title;
+        closeModel.drawableResId = closeClickable ? R.drawable.power_on : R.drawable.power_on_gray;
+        closeModel.textColorResId = closeClickable ? R.color.c_252525 : R.color.c_a6a6a6;
+        map.put(closeModel.id, closeModel);
+        return map;
     }
 }

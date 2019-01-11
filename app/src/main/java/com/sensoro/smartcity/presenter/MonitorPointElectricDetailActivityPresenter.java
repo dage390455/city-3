@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.view.View;
 
 import com.amap.api.services.core.LatLonPoint;
 import com.amap.api.services.geocoder.GeocodeResult;
@@ -20,6 +21,7 @@ import com.sensoro.smartcity.activity.AlarmHistoryLogActivity;
 import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapActivity;
 import com.sensoro.smartcity.activity.MonitorPointMapENActivity;
+import com.sensoro.smartcity.adapter.MonitorDetailOperationAdapter;
 import com.sensoro.smartcity.adapter.model.EarlyWarningthresholdDialogUtilsAdapterModel;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.analyzer.DeployConfigurationAnalyzer;
@@ -77,7 +79,7 @@ import java.util.Set;
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
-public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants, GeocodeSearch.OnGeocodeSearchListener {
+public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<IMonitorPointElectricDetailActivityView> implements IOnCreate, Constants, GeocodeSearch.OnGeocodeSearchListener, MonitorDetailOperationAdapter.OnMonitorDetailOperationAdapterListener {
     private Activity mContext;
     private DeviceInfo mDeviceInfo;
 
@@ -229,6 +231,11 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         boolean isContains = Constants.DEVICE_CONTROL_DEVICE_TYPES.contains(mDeviceInfo.getDeviceType());
         getView().setDeviceOperationVisible(isContains);
         if (isContains) {
+            //消音
+            int status = mDeviceInfo.getStatus();
+            HashMap<String, TaskOptionModel> taskOptionModel = MonitorPointModelsFactory.createTaskOptionModelMap(status);
+
+            //
             //做数组对应
             final boolean[] statusArr = {false, false, false, false, false, false, false, false};
             //TODO 配置文件显示状态
@@ -238,6 +245,15 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 List<String> taskOptions = configDeviceType.getTaskOptions();
                 if (taskOptions != null && taskOptions.size() > 0) {
                     tempList.addAll(taskOptions);
+                    //
+                    ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
+                    for (String string : taskOptions) {
+                        TaskOptionModel taskOptionModel1 = taskOptionModel.get(string);
+                        if (taskOptionModel1 != null) {
+                            taskOptionModelList.add(taskOptionModel1);
+                        }
+                    }
+                    getView().updateTaskOptionModelAdapter(taskOptionModelList);
                 }
             }
             for (int i = 0; i < TaskOptionModel.taskOptionsList.size(); i++) {
@@ -246,7 +262,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                     statusArr[i] = true;
                 }
             }
-            int status = mDeviceInfo.getStatus();
             switch (status) {
                 //故障和预警显示消音复位
                 case SENSOR_STATUS_ALARM:
@@ -1256,5 +1271,38 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
     public void doAirSwitchConfig() {
         getView().showTipDialog(true, mDeviceInfo.getDeviceType(), R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.color.c_a6a6a6, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
+    }
+
+    @Override
+    public void onClickOperation(View view, int position, TaskOptionModel taskOptionModel) {
+
+        switch (taskOptionModel.optionType) {
+            case MonitorPointOperationCode.ERASURE:
+                getView().showTipDialog(false, null, R.string.is_device_erasure, R.string.device_erasure_tip_message, R.color.c_a6a6a6, R.string.erasure, R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
+                break;
+            case MonitorPointOperationCode.RESET:
+                getView().showTipDialog(false, null, R.string.is_device_reset, R.string.device_reset_tip_message, R.color.c_a6a6a6, R.string.reset, R.color.c_f34a4a, MonitorPointOperationCode.RESET);
+                break;
+            case MonitorPointOperationCode.PSD:
+                getView().showTipDialog(false, null, R.string.is_device_psd, R.string.device_psd_tip_message, R.color.c_a6a6a6, R.string.modify, R.color.c_f34a4a, MonitorPointOperationCode.PSD);
+                break;
+            case MonitorPointOperationCode.QUERY:
+                getView().showTipDialog(false, null, R.string.is_device_query, R.string.device_query_tip_message, R.color.c_a6a6a6, R.string.monitor_point_detail_query, R.color.c_29c093, MonitorPointOperationCode.QUERY);
+                break;
+            case MonitorPointOperationCode.SELF_CHECK:
+                getView().showTipDialog(false, null, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.color.c_a6a6a6, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
+                break;
+            case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
+                getView().showTipDialog(true, mDeviceInfo.getDeviceType(), R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.color.c_a6a6a6, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
+                break;
+            case MonitorPointOperationCode.AIR_SWITCH_POWER_OFF:
+                //断电
+                getView().showTipDialog(false, mDeviceInfo.getDeviceType(), R.string.command_elec_disconnect_title, R.string.command_elec_disconnect_desc, R.color.c_f34a4a, R.string.command_elec_disconnect_btn_title, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_OFF);
+                break;
+            case MonitorPointOperationCode.AIR_SWITCH_POWER_ON:
+                getView().showTipDialog(false, mDeviceInfo.getDeviceType(), R.string.command_elec_connect_title, R.string.command_elec_connect_desc, R.color.c_f34a4a, R.string.command_elec_connect_btn_title, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_ON);
+                //上电
+                break;
+        }
     }
 }

@@ -9,8 +9,10 @@ import com.sensoro.smartcity.iwidget.IActivityIntent;
 import com.sensoro.smartcity.iwidget.IProgressDialog;
 import com.sensoro.smartcity.iwidget.IToast;
 import com.sensoro.smartcity.model.Elect3DetailModel;
+import com.sensoro.smartcity.model.TaskOptionModel;
 import com.sensoro.smartcity.server.bean.ScenesData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface IMonitorPointElectricDetailActivityView extends IToast, IProgressDialog, IActivityIntent {
@@ -63,7 +65,9 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setQueryStatus(boolean isClickable);
 
     void setPsdStatus(boolean isClickable);
+
     void setPowerOffStatus(boolean isClickable);
+
     void setPowerOnStatus(boolean isClickable);
 
 
@@ -112,4 +116,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setMonitorDetailTvCategory(String category);
 
     void showTipDialog(boolean isEdit, String deviceType, @StringRes int title, @StringRes int message, @ColorRes int messageColor, @StringRes int confirm, @ColorRes int confirmColor, int type);
+
+    void updateTaskOptionModelAdapter(ArrayList<TaskOptionModel> optionModels);
 }
