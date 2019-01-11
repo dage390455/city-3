@@ -50,16 +50,17 @@ public class MonitorDetailOperationAdapter extends RecyclerView.Adapter<MonitorD
         holder.ivMonitoringPointOperation.setImageResource(taskOptionModel.drawableResId);
         holder.tvMonitoringPointOperation.setText(taskOptionModel.contentResId);
         holder.tvMonitoringPointOperation.setTextColor(mContext.getResources().getColor(taskOptionModel.textColorResId));
-        if (taskOptionModel.clickable){
-            holder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (listener != null) {
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (listener != null) {
+                    if (taskOptionModel.clickable) {
                         listener.onClickOperation(holder.itemView, position, taskOptionModel);
                     }
                 }
-            });
-        }
+            }
+        });
+
     }
 
     @Override

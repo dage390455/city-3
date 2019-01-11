@@ -116,7 +116,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         String typeName = mContext.getString(R.string.power_supply);
         String mergeType = mDeviceInfo.getMergeType();
         String deviceType = mDeviceInfo.getDeviceType();
-        getView().setDeviceConfigPowerVisible("mantun_fires".equals(deviceType));
         if (TextUtils.isEmpty(mergeType)) {
             mergeType = WidgetUtil.handleMergeType(deviceType);
         }
@@ -233,68 +232,24 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
         if (isContains) {
             //消音
             int status = mDeviceInfo.getStatus();
-            HashMap<String, TaskOptionModel> taskOptionModel = MonitorPointModelsFactory.createTaskOptionModelMap(status);
-
-            //
-            //做数组对应
-            final boolean[] statusArr = {false, false, false, false, false, false, false, false};
+            HashMap<String, TaskOptionModel> taskOptionModelMap = MonitorPointModelsFactory.createTaskOptionModelMap(status);
             //TODO 配置文件显示状态
-            final List<String> tempList = new ArrayList<>();
             DeviceTypeStyles configDeviceType = PreferencesHelper.getInstance().getConfigDeviceType(mDeviceInfo.getDeviceType());
             if (configDeviceType != null) {
                 List<String> taskOptions = configDeviceType.getTaskOptions();
                 if (taskOptions != null && taskOptions.size() > 0) {
-                    tempList.addAll(taskOptions);
-                    //
                     ArrayList<TaskOptionModel> taskOptionModelList = new ArrayList<>();
                     for (String string : taskOptions) {
-                        TaskOptionModel taskOptionModel1 = taskOptionModel.get(string);
-                        if (taskOptionModel1 != null) {
-                            taskOptionModelList.add(taskOptionModel1);
+                        TaskOptionModel taskOptionModel = taskOptionModelMap.get(string);
+                        if (taskOptionModel != null) {
+                            taskOptionModelList.add(taskOptionModel);
                         }
                     }
                     getView().updateTaskOptionModelAdapter(taskOptionModelList);
+                } else {
+                    getView().setDeviceOperationVisible(false);
                 }
             }
-            for (int i = 0; i < TaskOptionModel.taskOptionsList.size(); i++) {
-                String taskStr = TaskOptionModel.taskOptionsList.get(i);
-                if (tempList.contains(taskStr)) {
-                    statusArr[i] = true;
-                }
-            }
-            switch (status) {
-                //故障和预警显示消音复位
-                case SENSOR_STATUS_ALARM:
-                case SENSOR_STATUS_MALFUNCTION:
-                    statusArr[0] = tempList.contains("mute");
-                    statusArr[1] = tempList.contains("reset");
-                    break;
-                case SENSOR_STATUS_NORMAL:
-                    statusArr[0] = false;
-                    statusArr[1] = false;
-                    break;
-                case SENSOR_STATUS_LOST:
-                case SENSOR_STATUS_INACTIVE:
-                    statusArr[0] = false;
-                    statusArr[1] = false;
-                    statusArr[2] = false;
-                    statusArr[3] = false;
-                    statusArr[4] = false;
-                    statusArr[5] = false;
-                    statusArr[6] = false;
-                    statusArr[7] = false;
-                    break;
-                default:
-                    break;
-            }
-            getView().setErasureStatus(statusArr[0]);
-            getView().setResetStatus(statusArr[1]);
-            getView().setPsdStatus(statusArr[2]);
-            getView().setQueryStatus(statusArr[3]);
-            getView().setSelfCheckStatus(statusArr[4]);
-            getView().setAirSwitchConfigStatus(statusArr[5]);
-            getView().setPowerOffStatus(statusArr[6]);
-            getView().setPowerOnStatus(statusArr[7]);
         }
     }
 
@@ -893,8 +848,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
 
                                         }
 
-                                    } else {
-                                        stringBuilder.append(mContext.getString(R.string.unknown));
                                     }
 
                                 }
@@ -903,7 +856,7 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                         }
                         String content = stringBuilder.toString();
                         if (TextUtils.isEmpty(content)) {
-                            content = mContext.getString(R.string.unknown);
+                            content = mContext.getString(R.string.not_set);
                         }
                         if (content.endsWith("\n")) {
                             content = content.substring(0, content.lastIndexOf("\n"));
@@ -1259,18 +1212,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                 }
             }
         });
-    }
-
-    public void doPowerOff() {
-        getView().showTipDialog(false, mDeviceInfo.getDeviceType(), R.string.command_elec_disconnect_title, R.string.command_elec_disconnect_desc, R.color.c_f34a4a, R.string.command_elec_disconnect_btn_title, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_OFF);
-    }
-
-    public void doPowerOn() {
-        getView().showTipDialog(false, mDeviceInfo.getDeviceType(), R.string.command_elec_connect_title, R.string.command_elec_connect_desc, R.color.c_f34a4a, R.string.command_elec_connect_btn_title, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_POWER_ON);
-    }
-
-    public void doAirSwitchConfig() {
-        getView().showTipDialog(true, mDeviceInfo.getDeviceType(), R.string.is_device_air_switch_config, R.string.device_air_switch_config_tip_message, R.color.c_a6a6a6, R.string.air_switch_config, R.color.c_f34a4a, MonitorPointOperationCode.AIR_SWITCH_CONFIG);
     }
 
     @Override

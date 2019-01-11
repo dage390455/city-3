@@ -651,82 +651,11 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="20dp"
-                android:layout_marginEnd="20dp"
                 android:layout_marginTop="4dp"
+                android:layout_marginEnd="20dp"
                 android:layout_marginBottom="4dp">
 
             </android.support.v7.widget.RecyclerView>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:orientation="horizontal"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_erasure"
-                    style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/erasure_not_clickable"
-                    android:text="@string/monitor_point_detail_erasure" />
-
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_reset"
-                    style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/reset_not_clickable"
-                    android:text="@string/monitor_point_detail_reset" />
-
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_psd"
-                    style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/psd_not_clickable"
-                    android:text="@string/monitor_point_detail_psd" />
-
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_query"
-                    style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/query_not_clickable"
-                    android:text="@string/monitor_point_detail_query" />
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:orientation="horizontal"
-                android:paddingStart="24dp"
-                android:paddingEnd="24dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_self_check"
-                    style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/self_check_not_clickable"
-                    android:text="@string/monitor_point_detail_self_check" />
-
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_air_switch_config"
-                    style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/air_switch_config_not_clickable"
-                    android:text="@string/monitor_point_detail_air_switch_config" />
-
-                <!--下面这两个只是为了占空间，还可以扩展，增加id,drawableTop,text即可增加一个button-->
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_power_off"
-                    style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/power_off"
-                    android:text="@string/command_elec_disconnect_btn_title" />
-
-                <TextView
-                    android:id="@+id/ac_monitoring_point_tv_power_on"
-                    style="@style/style_monitor_point_detail_operation_text"
-                    android:drawableTop="@drawable/power_on"
-                    android:text="@string/command_elec_connect_btn_title" />
-            </LinearLayout>
-
         </LinearLayout>
         <!--基本信息-->
         <LinearLayout

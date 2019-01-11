@@ -1,7 +1,6 @@
 package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorRes;
 import android.support.annotation.StringRes;
@@ -102,22 +101,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     View acMonitoringPointImvPhoneView;
     @BindView(R.id.ac_monitoring_point_tv_device_type)
     TextView acMonitoringPointTvDeviceType;
-    @BindView(R.id.ac_monitoring_point_tv_erasure)
-    TextView acMonitoringPointTvErasure;
-    @BindView(R.id.ac_monitoring_point_tv_reset)
-    TextView acMonitoringPointTvReset;
-    @BindView(R.id.ac_monitoring_point_tv_psd)
-    TextView acMonitoringPointTvPsd;
-    @BindView(R.id.ac_monitoring_point_tv_query)
-    TextView acMonitoringPointTvQuery;
-    @BindView(R.id.ac_monitoring_point_tv_self_check)
-    TextView acMonitoringPointTvSelfCheck;
-    @BindView(R.id.ac_monitoring_point_tv_air_switch_config)
-    TextView acMonitoringPointTvAirSwitchConfig;
-    @BindView(R.id.ac_monitoring_point_tv_power_off)
-    TextView acMonitoringPointTvPowerOff;
-    @BindView(R.id.ac_monitoring_point_tv_power_on)
-    TextView acMonitoringPointTvPowerOn;
     @BindView(R.id.ac_monitoring_point_ll_operation)
     LinearLayout acMonitoringPointLlOperation;
     @BindView(R.id.ac_monitor_deploy_photo)
@@ -175,8 +158,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         setContentView(R.layout.activity_monitoring_point_electric_detail);
         ButterKnife.bind(this);
         initView();
-        acMonitoringPointTvErasure.setClickable(false);
-        acMonitoringPointTvReset.setClickable(true);
         mPresenter.initData(mActivity);
     }
 
@@ -253,11 +234,7 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     private void initMonitorOperation() {
-        //
         GridLayoutManager gridLayoutManager = new GridLayoutManager(mActivity, 4);
-//        gridLayoutManager.setOrientation(LinearLayoutManager.VERTICAL);
-//        int spacingInPixels = mActivity.getResources().getDimensionPixelSize(R.dimen.x10);
-//        acMonitorDeployPhoto.addItemDecoration(new SpacesItemDecoration(false, spacingInPixels));
         acMonitoringPointRcOperation.setLayoutManager(gridLayoutManager);
         monitorDetailOperationAdapter = new MonitorDetailOperationAdapter(mActivity);
         acMonitoringPointRcOperation.setAdapter(monitorDetailOperationAdapter);
@@ -361,16 +338,32 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    public void updateDeviceInfoAdapter(List<MonitoringPointRcContentAdapterModel> data) {
-//        mContentAdapter.setDeviceInfo(deviceInfo);
-//        mContentAdapter.notifyDataSetChanged();
+    public void updateDeviceInfoAdapter(final List<MonitoringPointRcContentAdapterModel> data) {
+        if (acMonitoringPointRcContent.isComputingLayout()) {
+            acMonitoringPointRcContent.post(new Runnable() {
+                @Override
+                public void run() {
+                    mContentAdapter.updateAdapter(data);
+                }
+            });
+            return;
+        }
         mContentAdapter.updateAdapter(data);
     }
 
     @Override
-    public void updateDeviceMalfunctionInfoAdapter(List<MonitoringPointRcContentAdapterModel> data) {
+    public void updateDeviceMalfunctionInfoAdapter(final List<MonitoringPointRcContentAdapterModel> data) {
         if (data != null && data.size() > 0) {
             acMonitoringPointContentMalfunction.setVisibility(View.VISIBLE);
+            if (acMonitoringPointContentMalfunction.isComputingLayout()) {
+                acMonitoringPointContentMalfunction.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        mContentMalfunctionAdapter.updateAdapter(data);
+                    }
+                });
+                return;
+            }
             mContentMalfunctionAdapter.updateAdapter(data);
         } else {
             acMonitoringPointContentMalfunction.setVisibility(View.GONE);
@@ -401,12 +394,30 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    public void updateTags(List<String> list) {
+    public void updateTags(final List<String> list) {
+        if (monitorDetailRcTag.isComputingLayout()) {
+            monitorDetailRcTag.post(new Runnable() {
+                @Override
+                public void run() {
+                    mTagAdapter.updateTags(list);
+                }
+            });
+            return;
+        }
         mTagAdapter.updateTags(list);
     }
 
     @Override
-    public void updateMonitorPhotos(List<ScenesData> data) {
+    public void updateMonitorPhotos(final List<ScenesData> data) {
+        if (acMonitorDeployPhoto.isComputingLayout()){
+            acMonitorDeployPhoto.post(new Runnable() {
+                @Override
+                public void run() {
+                    mAdapter.updateImages(data);
+                }
+            });
+            return;
+        }
         mAdapter.updateImages(data);
     }
 
@@ -455,118 +466,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     @Override
     public void setDeviceOperationVisible(boolean isVisible) {
         acMonitoringPointLlOperation.setVisibility(isVisible ? View.VISIBLE : View.GONE);
-    }
-
-    @Override
-    public void setErasureStatus(boolean isClickable) {
-        Drawable drawable;
-        if (isClickable) {
-            drawable = getResources().getDrawable(R.drawable.erasure_clickable);
-        } else {
-            drawable = getResources().getDrawable(R.drawable.erasure_not_clickable);
-        }
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        acMonitoringPointTvErasure.setCompoundDrawables(null, drawable, null, null);
-        acMonitoringPointTvErasure.setClickable(isClickable);
-        acMonitoringPointTvErasure.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
-    }
-
-    @Override
-    public void setResetStatus(boolean isClickable) {
-        Drawable drawable;
-        if (isClickable) {
-            drawable = getResources().getDrawable(R.drawable.reset_clickable);
-        } else {
-            drawable = getResources().getDrawable(R.drawable.reset_not_clickable);
-        }
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        acMonitoringPointTvReset.setCompoundDrawables(null, drawable, null, null);
-        acMonitoringPointTvReset.setClickable(isClickable);
-        acMonitoringPointTvReset.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
-    }
-
-    @Override
-    public void setSelfCheckStatus(boolean isClickable) {
-        Drawable drawable;
-        if (isClickable) {
-            drawable = getResources().getDrawable(R.drawable.self_check_clickable);
-        } else {
-            drawable = getResources().getDrawable(R.drawable.self_check_not_clickable);
-        }
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        acMonitoringPointTvSelfCheck.setCompoundDrawables(null, drawable, null, null);
-        acMonitoringPointTvSelfCheck.setClickable(isClickable);
-        acMonitoringPointTvSelfCheck.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
-    }
-
-    @Override
-    public void setAirSwitchConfigStatus(boolean isClickable) {
-        Drawable drawable;
-        if (isClickable) {
-            drawable = getResources().getDrawable(R.drawable.air_switch_config_clickable);
-        } else {
-            drawable = getResources().getDrawable(R.drawable.air_switch_config_not_clickable);
-        }
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        acMonitoringPointTvAirSwitchConfig.setCompoundDrawables(null, drawable, null, null);
-        acMonitoringPointTvAirSwitchConfig.setClickable(isClickable);
-        acMonitoringPointTvAirSwitchConfig.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
-    }
-
-    @Override
-    public void setQueryStatus(boolean isClickable) {
-        Drawable drawable;
-        if (isClickable) {
-            drawable = getResources().getDrawable(R.drawable.query_clickable);
-        } else {
-            drawable = getResources().getDrawable(R.drawable.query_not_clickable);
-        }
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        acMonitoringPointTvQuery.setCompoundDrawables(null, drawable, null, null);
-        acMonitoringPointTvQuery.setClickable(isClickable);
-        acMonitoringPointTvQuery.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
-    }
-
-    @Override
-    public void setPsdStatus(boolean isClickable) {
-        Drawable drawable;
-        if (isClickable) {
-            drawable = getResources().getDrawable(R.drawable.psd_clickable);
-        } else {
-            drawable = getResources().getDrawable(R.drawable.psd_not_clickable);
-        }
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        acMonitoringPointTvPsd.setCompoundDrawables(null, drawable, null, null);
-        acMonitoringPointTvPsd.setClickable(isClickable);
-        acMonitoringPointTvPsd.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
-    }
-
-    @Override
-    public void setPowerOffStatus(boolean isClickable) {
-        Drawable drawable;
-        if (isClickable) {
-            drawable = getResources().getDrawable(R.drawable.power_off);
-        } else {
-            drawable = getResources().getDrawable(R.drawable.power_off_gray);
-        }
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        acMonitoringPointTvPowerOff.setCompoundDrawables(null, drawable, null, null);
-        acMonitoringPointTvPowerOff.setClickable(isClickable);
-        acMonitoringPointTvPowerOff.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
-    }
-
-    @Override
-    public void setPowerOnStatus(boolean isClickable) {
-        Drawable drawable;
-        if (isClickable) {
-            drawable = getResources().getDrawable(R.drawable.power_on);
-        } else {
-            drawable = getResources().getDrawable(R.drawable.power_on_gray);
-        }
-        drawable.setBounds(0, 0, drawable.getMinimumWidth(), drawable.getMinimumHeight());
-        acMonitoringPointTvPowerOn.setCompoundDrawables(null, drawable, null, null);
-        acMonitoringPointTvPowerOn.setClickable(isClickable);
-        acMonitoringPointTvPowerOn.setTextColor(getResources().getColor(isClickable ? R.color.c_252525 : R.color.c_a6a6a6));
     }
 
 
@@ -750,47 +649,15 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
         electInfo.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
-    @Override
-    public void setDeviceConfigPowerVisible(boolean isVisible) {
-        acMonitoringPointTvPowerOff.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-        acMonitoringPointTvPowerOn.setVisibility(isVisible ? View.VISIBLE : View.INVISIBLE);
-    }
-
     public void setMonitorDetailTvCategory(String category) {
         monitorDetailTvCategory.setText(category);
     }
 
 
-    @OnClick({R.id.ac_monitoring_point_tv_erasure, R.id.ac_monitoring_point_tv_reset, R.id.ac_monitoring_point_tv_psd,
-            R.id.ac_monitoring_point_tv_query, R.id.ac_monitoring_point_tv_self_check, R.id.ac_monitoring_point_tv_air_switch_config, R.id.include_text_title_tv_subtitle,
-            R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
-            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.elect_info, R.id.ac_monitoring_point_tv_power_off, R.id.ac_monitoring_point_tv_power_on})
+    @OnClick({R.id.include_text_title_tv_subtitle, R.id.ac_monitoring_point_cl_alert_contact, R.id.ac_monitoring_point_imv_location, R.id.ac_monitoring_point_cl_location_navigation,
+            R.id.ac_monitoring_point_imv_detail, R.id.include_text_title_imv_arrows_left, R.id.ll_elect_more, R.id.elect_info})
     public void onViewClicked(View view) {
         switch (view.getId()) {
-            case R.id.ac_monitoring_point_tv_erasure:
-                showTipDialog(false, null, R.string.is_device_erasure, R.string.device_erasure_tip_message, R.color.c_a6a6a6, R.string.erasure, R.color.c_f34a4a, MonitorPointOperationCode.ERASURE);
-                break;
-            case R.id.ac_monitoring_point_tv_reset:
-                showTipDialog(false, null, R.string.is_device_reset, R.string.device_reset_tip_message, R.color.c_a6a6a6, R.string.reset, R.color.c_f34a4a, MonitorPointOperationCode.RESET);
-                break;
-            case R.id.ac_monitoring_point_tv_psd:
-                showTipDialog(false, null, R.string.is_device_psd, R.string.device_psd_tip_message, R.color.c_a6a6a6, R.string.modify, R.color.c_f34a4a, MonitorPointOperationCode.PSD);
-                break;
-            case R.id.ac_monitoring_point_tv_query:
-                showTipDialog(false, null, R.string.is_device_query, R.string.device_query_tip_message, R.color.c_a6a6a6, R.string.monitor_point_detail_query, R.color.c_29c093, MonitorPointOperationCode.QUERY);
-                break;
-            case R.id.ac_monitoring_point_tv_self_check:
-                showTipDialog(false, null, R.string.is_device_self_check, R.string.device_self_check_tip_message, R.color.c_a6a6a6, R.string.self_check, R.color.c_29c093, MonitorPointOperationCode.SELF_CHECK);
-                break;
-            case R.id.ac_monitoring_point_tv_air_switch_config:
-                mPresenter.doAirSwitchConfig();
-                break;
-            case R.id.ac_monitoring_point_tv_power_off:
-                mPresenter.doPowerOff();
-                break;
-            case R.id.ac_monitoring_point_tv_power_on:
-                mPresenter.doPowerOn();
-                break;
             case R.id.include_text_title_tv_subtitle:
                 mPresenter.doMonitorHistory();
                 break;
@@ -836,7 +703,16 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
     }
 
     @Override
-    public void updateTaskOptionModelAdapter(ArrayList<TaskOptionModel> optionModels) {
+    public void updateTaskOptionModelAdapter(final ArrayList<TaskOptionModel> optionModels) {
+        if (acMonitoringPointRcOperation.isComputingLayout()) {
+            acMonitoringPointRcOperation.post(new Runnable() {
+                @Override
+                public void run() {
+                    monitorDetailOperationAdapter.updateMonitorDetailOperations(optionModels);
+                }
+            });
+            return;
+        }
         monitorDetailOperationAdapter.updateMonitorDetailOperations(optionModels);
     }
 
@@ -861,6 +737,6 @@ public class MonitorPointElectricDetailActivity extends BaseActivity<IMonitorPoi
 
     @Override
     public void onChangeInfoClick() {
-
+        //TODO 前往修改阈值
     }
 }

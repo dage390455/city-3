@@ -54,23 +54,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
 
     void setDeviceOperationVisible(boolean isVisible);
 
-    void setErasureStatus(boolean isClickable);
-
-    void setResetStatus(boolean isClickable);
-
-    void setSelfCheckStatus(boolean isClickable);
-
-    void setAirSwitchConfigStatus(boolean isClickable);
-
-    void setQueryStatus(boolean isClickable);
-
-    void setPsdStatus(boolean isClickable);
-
-    void setPowerOffStatus(boolean isClickable);
-
-    void setPowerOnStatus(boolean isClickable);
-
-
     void showOperationSuccessToast();
 
     void showErrorTipDialog(String errorMsg);
@@ -110,8 +93,6 @@ public interface IMonitorPointElectricDetailActivityView extends IToast, IProgre
     void setLlAllElectDetailVisible(boolean isVisible);
 
     void setElectInfoTipVisible(boolean isVisible);
-
-    void setDeviceConfigPowerVisible(boolean isVisible);
 
     void setMonitorDetailTvCategory(String category);
 
