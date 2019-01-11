@@ -28,6 +28,7 @@ import org.greenrobot.eventbus.EventBus;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.Locale;
 
 public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMonitorConfigurationView>
         implements Runnable, BLEDeviceListener<BLEDevice>, SensoroConnectionCallback, SensoroWriteCallback {
@@ -89,13 +90,13 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
         try {
             mEnterValue = Integer.parseInt(valueStr);
             if (mEnterValue < mMinMaxValue[0] || mEnterValue > mMinMaxValue[1]) {
-                getView().toastShort(mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
+                getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.monitor_point_operation_error_value_range) + mMinMaxValue[0] + "-" + mMinMaxValue[1]);
                 return;
             }
             mConnection = new SensoroDeviceConnection(mActivity, mMacAddress);
         } catch (Exception e) {
             e.printStackTrace();
-            getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+            getView().toastShort(mActivity.getString(R.string.electric_current) + mActivity.getString(R.string.enter_the_correct_number_format));
             return;
         }
         if (needDiameter()) {
@@ -105,9 +106,13 @@ public class DeployMonitorConfigurationPresenter extends BasePresenter<IDeployMo
             }
             try {
                 diameterValue = Double.parseDouble(diameter);
+                if (diameterValue < 0 || diameterValue >= 200) {
+                    getView().toastShort(mActivity.getString(R.string.diameter) + String.format(Locale.CHINESE, "%s%d-%d", mActivity.getString(R.string.monitor_point_operation_error_value_range), 0, 200));
+                    return;
+                }
             } catch (Exception e) {
                 e.printStackTrace();
-                getView().toastShort(mActivity.getString(R.string.enter_the_correct_number_format));
+                getView().toastShort(mActivity.getString(R.string.diameter) + mActivity.getString(R.string.enter_the_correct_number_format));
                 return;
             }
         }

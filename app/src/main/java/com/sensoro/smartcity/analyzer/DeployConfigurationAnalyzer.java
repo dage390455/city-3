@@ -38,8 +38,8 @@ public class DeployConfigurationAnalyzer {
                 break;
             case "mantun_fires":
                 //慢炖空开
-                result[0] = 1;
-                result[1] = 79;
+                result[0] = 0;
+                result[1] = 80;
                 break;
         }
         return result;

@@ -462,7 +462,6 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
                                                         }
                                                     }
                                                 });
-
                                             }
                                             DisplayOptionsBean.SpecialBean.DataBean dataBean02 = dataBeans0.get(2);
                                             final Elect3DetailModel elect3TopModel2 = MonitorPointModelsFactory.createElect3NameModel(mContext, 2, dataBean02);
@@ -1092,38 +1091,36 @@ public class MonitorPointElectricDetailActivityPresenter extends BasePresenter<I
             case MonitorPointOperationCode.AIR_SWITCH_CONFIG:
                 operationType = "config";
                 if (TextUtils.isEmpty(content)) {
-                    getView().toastShort(mContext.getString(R.string.input_not_null));
+                    getView().toastShort(mContext.getString(R.string.electric_current) + mContext.getString(R.string.input_not_null));
                     return;
                 }
                 try {
                     switchSpec = Integer.valueOf(content);
                     int[] ints = DeployConfigurationAnalyzer.analyzeDeviceType(mDeviceInfo.getDeviceType());
                     if (switchSpec < ints[0] || switchSpec > ints[1]) {
-                        getView().toastShort(String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), ints[0], ints[1]));
+                        getView().toastShort(mContext.getString(R.string.electric_current) + String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), ints[0], ints[1]));
                         return;
                     }
                 } catch (NumberFormatException e) {
                     e.printStackTrace();
-                    getView().toastShort(mContext.getString(R.string.enter_the_correct_number_format));
+                    getView().toastShort(mContext.getString(R.string.electric_current) + mContext.getString(R.string.enter_the_correct_number_format));
                     return;
                 }
                 if ("mantun_fires".equals(mDeviceInfo.getDeviceType())) {
                     if (TextUtils.isEmpty(diameter)) {
-                        if (TextUtils.isEmpty(content)) {
-                            getView().toastShort(mContext.getString(R.string.input_not_null));
+                        getView().toastShort(mContext.getString(R.string.diameter) + mContext.getString(R.string.input_not_null));
+                        return;
+                    }
+                    try {
+                        d = Double.parseDouble(diameter);
+                        if (d < 0 || d >= 200) {
+                            getView().toastShort(mContext.getString(R.string.diameter) + String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), 0, 200));
                             return;
                         }
-                        try {
-                            d = Double.parseDouble(content);
-                            if (d < 0 || d > 200) {
-                                getView().toastShort(String.format(Locale.CHINESE, "%s%d-%d", mContext.getString(R.string.monitor_point_operation_error_value_range), 0, 200));
-                                return;
-                            }
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                            getView().toastShort(mContext.getString(R.string.enter_the_correct_number_format));
-                            return;
-                        }
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        getView().toastShort(mContext.getString(R.string.diameter) + mContext.getString(R.string.enter_the_correct_number_format));
+                        return;
                     }
                 }
 
