@@ -514,6 +514,34 @@ public class CalendarView extends FrameLayout {
         scrollToCalendar(year, month, day, false);
     }
 
+    public void setSelectedCalendar(int year, int month, int day, boolean isStart){
+        Calendar calendar = new Calendar();
+        calendar.setYear(year);
+        calendar.setMonth(month);
+        calendar.setDay(day);
+        if (!isInRange(calendar)) {
+            return;
+        }
+        if (mDelegate.mCalendarInterceptListener != null &&
+                mDelegate.mCalendarInterceptListener.onCalendarIntercept(calendar)) {
+            mDelegate.mCalendarInterceptListener.onCalendarInterceptClick(calendar, false);
+            return;
+        }
+
+//        if (mWeekPager.getVisibility() == VISIBLE) {
+//            //只支持monthview
+////            mWeekPager.scrollToCalendar(year, month, day);
+//        } else {
+        if (isStart) {
+            mMonthPager.setStartSelectedCalendar(year, month, day);
+        }else{
+            mMonthPager.setEndSelectedCalendar(year, month, day);
+        }
+
+//        }
+    }
+
+
     /**
      * 滚动到指定日期
      *

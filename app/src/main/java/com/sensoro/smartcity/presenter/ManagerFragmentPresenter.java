@@ -42,8 +42,6 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     public void initData(Context context) {
         mContext = (Activity) context;
         onCreate();
-        checkPermission(PreferencesHelper.getInstance().getUserData());
-
     }
 
     /**
@@ -53,8 +51,10 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
      */
     private void checkPermission(EventLoginData userData) {
         if (userData != null) {
-            getView().setContractVisible(userData.hasContract);
-            getView().setInspectionVisible(userData.hasInspectionTaskList);
+            boolean hasContract = userData.hasContract;
+            boolean chineseLanguage = AppUtils.isChineseLanguage();
+            getView().setContractVisible(hasContract && chineseLanguage);
+            getView().setInspectionVisible(userData.hasInspectionTaskList && chineseLanguage);
             getView().setScanLoginVisible(userData.hasScanLogin);
             getView().setMerchantVisible(userData.hasSubMerchant);
             getView().changeMerchantTitle(userData.hasSubMerchant);
@@ -95,22 +95,14 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     @Override
     public void onFragmentStart() {
         //TODO 控制账号权限
-        if (PreferencesHelper.getInstance().getUserData() != null) {
-            if (TextUtils.isEmpty(PreferencesHelper.getInstance().getUserData().userName)) {
+        EventLoginData userData = PreferencesHelper.getInstance().getUserData();
+        if (userData != null) {
+            if (TextUtils.isEmpty(userData.userName)) {
                 getView().setMerchantName("SENSORO");
             } else {
-                getView().setMerchantName(PreferencesHelper.getInstance().getUserData().userName);
+                getView().setMerchantName(userData.userName);
             }
-
-            //                getView().updateMenuPager(UserPermissionFactory.createMenuPageList(mEventLoginData));
-            if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
-
-//                    merchantSwitchFragment.requestDataByDirection(DIRECTION_DOWN, true);
-            } else {
-//                    indexFragment.reFreshDataByDirection(DIRECTION_DOWN);
-            }
-//                merchantSwitchFragment.refreshContentData(mEventLoginData.userName, (mEventLoginData.phone == null ? "" : mEventLoginData.phone), mEventLoginData.phoneId);
-//                getView().setMenuSelected(0);
+            checkPermission(userData);
         }
         getView().setAppUpdateVisible(hasNewVersion());
 
@@ -200,7 +192,12 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
     }
 
     public void doAboutUs() {
-        AppUtils.openNetPage(mContext, "https://www.sensoro.com/zh/about.html");
+        if (AppUtils.isChineseLanguage()) {
+            AppUtils.openNetPage(mContext, "https://www.sensoro.com/zh/about.html");
+        } else {
+            AppUtils.openNetPage(mContext, "https://www.sensoro.com/en/about.html");
+        }
+
     }
 
     public void doVersionInfo() {
@@ -218,7 +215,6 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {

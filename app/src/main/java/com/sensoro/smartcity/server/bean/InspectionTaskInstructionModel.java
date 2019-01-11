@@ -4,18 +4,6 @@ import java.util.List;
 
 public class InspectionTaskInstructionModel {
 
-    /**
-     * _id : 5b98f40f7a550e06577f3f4e
-     * deviceType : temp_humi_one
-     * operator : 5b516460e80bf5ff7638fa2c
-     * __v : 0
-     * isDelete : false
-     * blueTooth : [{"text":"text","title":"title","images":["http://xx.png"]}]
-     * data : [{"title":"title","text":"text","_id":"5b98f40f7a550e06577f3f4f","images":["http://xx.png"]}]
-     * updatedTime : 1536750607702
-     * createdTime : 1536750607702
-     */
-
     private String _id;
     private String deviceType;
     private String operator;

@@ -21,6 +21,7 @@ import com.gyf.barlibrary.ImmersionBar;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.util.LogUtils;
+import com.sensoro.smartcity.widget.toast.SensoroSuccessToast;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.lang.reflect.Field;
@@ -114,9 +115,13 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
 
     @Override
     protected void onResume() {
-        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
-        boolean isOpened = manager.areNotificationsEnabled();
-        if (!isNotificationEnabled(mActivity) && !isOpened) {
+        boolean hasNo = NotificationManagerCompat.from(mActivity).areNotificationsEnabled();
+//        final NotificationManagerCompat manager = NotificationManagerCompat.from(mActivity);
+//        boolean isOpened = manager.areNotificationsEnabled();
+//        if (!isNotificationEnabled(mActivity) && !isOpened) {
+//            showRationaleDialog();
+//        }
+        if (!hasNo) {
             showRationaleDialog();
         }
         super.onResume();
@@ -230,5 +235,6 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         }
         return hasNavigationBar;
     }
+
 
 }

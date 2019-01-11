@@ -33,11 +33,13 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.adapter.model.MonitoringPointRcContentAdapterModel;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.server.bean.SensorStruct;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -242,8 +244,12 @@ public class WidgetUtil {
 
     //文件转化成bitmap
     public static String bitmap2File(Bitmap bitmap, String path) {
+
         String pathname = path.substring(0, path.lastIndexOf(".")) + ".jpg";
         LogUtils.loge("pathname = " + pathname);
+        if (TextUtils.isEmpty(pathname)) {
+            return "";
+        }
         File f = new File(pathname);
         if (f.exists()) f.delete();
         FileOutputStream fOut = null;
@@ -708,6 +714,27 @@ public class WidgetUtil {
                 monitoringPointRcContentAdapterModel.content = (String) value;
             }
         } else if (value instanceof Number) {
+            SensorTypeStyles sensorTypeStyles = PreferencesHelper.getInstance().getConfigSensorType(sensorType);
+            if (sensorTypeStyles != null) {
+                Integer precision = sensorTypeStyles.getPrecision();
+                if (precision != null) {
+                    if (precision == 0) {
+                        DecimalFormat df = new DecimalFormat("###");
+                        monitoringPointRcContentAdapterModel.content = df.format(value);
+                    } else {
+                        StringBuilder stringBuilder = new StringBuilder("###.");
+                        for (int i = 0; i < precision; i++) {
+                            stringBuilder.append("#");
+                        }
+                        String pattern = stringBuilder.toString();
+                        LogUtils.loge("pattern = " + pattern);
+                        DecimalFormat df = new DecimalFormat(pattern);
+                        monitoringPointRcContentAdapterModel.content = df.format(value);
+                    }
+                    return;
+                }
+            }
+            //TODO ﻿precision 字段
             if (sensorType.equalsIgnoreCase("longitude") || sensorType.equalsIgnoreCase("latitude")) {
                 DecimalFormat df = new DecimalFormat("###.##");
                 monitoringPointRcContentAdapterModel.content = df.format(value);
@@ -889,225 +916,225 @@ public class WidgetUtil {
     }
 
 
-    public static String getSensorTypeChinese(String sensorType) {
-        String value = "";
-        if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("temp1")) {
-            value = "温度";
-        } else if (sensorType.equalsIgnoreCase("humidity")) {
-            value = "湿度";
-        } else if (sensorType.equalsIgnoreCase("co")) {
-            value = "一氧化碳";
-        } else if (sensorType.equalsIgnoreCase("co2")) {
-            value = "二氧化碳";
-        } else if (sensorType.equalsIgnoreCase("pm10")) {
-            value = "PM10";
-        } else if (sensorType.equalsIgnoreCase("pm2_5")) {
-            value = "PM2.5";
-        } else if (sensorType.equalsIgnoreCase("ch4")) {
-            value = "甲烷";
-        } else if (sensorType.equalsIgnoreCase("so2")) {
-            value = "二氧化硫";
-        } else if (sensorType.equalsIgnoreCase("no2")) {
-            value = "二氧化氮";
-        } else if (sensorType.equalsIgnoreCase("yaw")) {
-            value = "偏航角";
-        } else if (sensorType.equalsIgnoreCase("roll")) {
-            value = "横滚角";
-        } else if (sensorType.equalsIgnoreCase("pitch")) {
-            value = "俯仰角";
-        } else if (sensorType.equalsIgnoreCase("collision")) {
-            value = "撞击";
-        } else if (sensorType.equalsIgnoreCase("distance")) {
-            value = "距离水位";
-        } else if (sensorType.equalsIgnoreCase("light")) {
-            value = "光线";
-        } else if (sensorType.equalsIgnoreCase("cover")) {
-            value = "井盖";
-        } else if (sensorType.equalsIgnoreCase("level")) {
-            value = "水位";
-        } else if (sensorType.equalsIgnoreCase("drop")) {
-            value = "滴漏";
-        } else if (sensorType.equalsIgnoreCase("smoke")) {
-            value = "烟感";
-        } else if (sensorType.equalsIgnoreCase("altitude")) {
-            value = "高度";
-        } else if (sensorType.equalsIgnoreCase("latitude")) {
-            value = "纬度";
-        } else if (sensorType.equalsIgnoreCase("longitude")) {
-            value = "经度";
-        } else if (sensorType.equalsIgnoreCase("alarm")) {
-            value = "紧急报警器";
-        } else if (sensorType.equalsIgnoreCase("lpg")) {
-            value = "液化石油气";
-        } else if (sensorType.equalsIgnoreCase("flame")) {
-            value = "火焰";
-        } else if (sensorType.equalsIgnoreCase("artificialGas")) {
-            value = "人工煤气";
-        } else if (sensorType.equalsIgnoreCase("waterPressure")) {
-            value = "消防液压";
-        } else if (sensorType.equalsIgnoreCase("magnetic")) {
-            value = "地磁";
-        } else if (sensorType.equalsIgnoreCase("door")) {
-            value = "门锁检测";
-        } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {
-            value = "电流A";
-        } else if (sensorType.equalsIgnoreCase("CURRENT_B")) {
-            value = "电流B";
-        } else if (sensorType.equalsIgnoreCase("CURRENT_C")) {
-            value = "电流C";
-        } else if (sensorType.equalsIgnoreCase("ID")) {
-            value = "电表ID";
-        } else if (sensorType.equalsIgnoreCase("TOTAL_POWER")) {
-            value = "总电量";
-        } else if (sensorType.equalsIgnoreCase("VOLTAGE_A")) {
-            value = "电压A";
-        } else if (sensorType.equalsIgnoreCase("VOLTAGE_B")) {
-            value = "电压B";
-        } else if (sensorType.equalsIgnoreCase("VOLTAGE_C")) {
-            value = "电压C";
-        } else if (sensorType.equalsIgnoreCase("installed")) {
-            value = "安装状态";
-        } else if (sensorType.equalsIgnoreCase("leakage_val")) {
-            value = "漏电流";
-        } else if (sensorType.equalsIgnoreCase("temp_val")) {
-            value = "电线温度";
-        } else if (sensorType.equalsIgnoreCase("infrared")) {
-            value = "红外线";
-        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
-            value = "手动报警";
-        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
-            value = "声光报警";
-        } else if (sensorType.equalsIgnoreCase("connection")) {
-            value = "通断检测";
-        }
-        //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
-
-        return value;
-    }
-
-    public static String getSensorTypeSingleChinese(String sensorType) {
-        String value;
-        if (sensorType.equalsIgnoreCase("temperature")) {
-            value = "温度";
-        } else if (sensorType.equalsIgnoreCase("temp1")) {
-            value = "温度贴片";
-        } else if (sensorType.equalsIgnoreCase("humidity")) {
-            value = "湿度";
-        } else if (sensorType.equalsIgnoreCase("co")) {
-            value = "一氧化碳";
-        } else if (sensorType.equalsIgnoreCase("co2")) {
-            value = "二氧化碳";
-        } else if (sensorType.equalsIgnoreCase("pm10")) {
-            value = "PM10";
-        } else if (sensorType.equalsIgnoreCase("pm2_5")) {
-            value = "PM2.5";
-        } else if (sensorType.equalsIgnoreCase("ch4")) {
-            value = "甲烷";
-        } else if (sensorType.equalsIgnoreCase("so2")) {
-            value = "二氧化硫";
-        } else if (sensorType.equalsIgnoreCase("no2")) {
-            value = "二氧化氮";
-        } else if (sensorType.equalsIgnoreCase("yaw")) {
-            value = "偏航角";
-        } else if (sensorType.equalsIgnoreCase("roll")) {
-            value = "横滚角";
-        } else if (sensorType.equalsIgnoreCase("pitch")) {
-            value = "俯仰角";
-        } else if (sensorType.equalsIgnoreCase("collision")) {
-            value = "撞击";
-        } else if (sensorType.equalsIgnoreCase("distance")) {
-            value = "距离水位";
-        } else if (sensorType.equalsIgnoreCase("light")) {
-            value = "光线";
-        } else if (sensorType.equalsIgnoreCase("cover")) {
-            value = "井盖";
-        } else if (sensorType.equalsIgnoreCase("level")) {
-            value = "水位";
-        } else if (sensorType.equalsIgnoreCase("drop")) {
-            value = "滴漏";
-        } else if (sensorType.equalsIgnoreCase("smoke")) {
-            value = "烟感";
-        } else if (sensorType.equalsIgnoreCase("altitude")) {
-            value = "高度";
-        } else if (sensorType.equalsIgnoreCase("latitude")) {
-            value = "纬度";
-        } else if (sensorType.equalsIgnoreCase("longitude")) {
-            value = "经度";
-        } else if (sensorType.equalsIgnoreCase("alarm")) {
-            value = "紧急报警器";
-        } else if (sensorType.equalsIgnoreCase("lpg")) {
-            value = "液化石油气";
-        } else if (sensorType.equalsIgnoreCase("flame")) {
-            value = "火焰";
-        } else if (sensorType.equalsIgnoreCase("artificialGas")) {
-            value = "人工煤气";
-        } else if (sensorType.equalsIgnoreCase("waterPressure")) {
-            value = "消防液压";
-        } else if (sensorType.equalsIgnoreCase("magnetic")) {
-            value = "地磁";
-        } else if (sensorType.equalsIgnoreCase("door")) {
-            value = "门锁检测";
-        } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {
-            value = "电流A";
-        } else if (sensorType.equalsIgnoreCase("CURRENT_B")) {
-            value = "电流B";
-        } else if (sensorType.equalsIgnoreCase("CURRENT_C")) {
-            value = "电流C";
-        } else if (sensorType.equalsIgnoreCase("ID")) {
-            value = "电表ID";
-        } else if (sensorType.equalsIgnoreCase("TOTAL_POWER")) {
-            value = "总电量";
-        } else if (sensorType.equalsIgnoreCase("VOLTAGE_A")) {
-            value = "电压A";
-        } else if (sensorType.equalsIgnoreCase("VOLTAGE_B")) {
-            value = "电压B";
-        } else if (sensorType.equalsIgnoreCase("VOLTAGE_C")) {
-            value = "电压C";
-        } else if (sensorType.equalsIgnoreCase("installed")) {
-            value = "安装状态";
-        } else if (sensorType.equalsIgnoreCase("leakage_val")) {
-            value = "漏电流";
-        } else if (sensorType.equalsIgnoreCase("temp_val")) {
-            value = "电线温度";
-        } else if (sensorType.equalsIgnoreCase("infrared")) {
-            value = "红外线";
-        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
-            value = "手动报警";
-        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
-            value = "声光报警";
-        } else if (sensorType.equalsIgnoreCase("connection")) {
-            value = "通断检测";
-        } else {
-            value = "未知";
-        }
-
-        //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
-
-        return value;
-    }
-
-
-    /**
-     * 区分联系人
-     *
-     * @return
-     */
-    public static String distinguishContacts(String source) {
-        if (!TextUtils.isEmpty(source)) {
-            switch (source) {
-                case "attach":
-                    return "单独联系人";
-                case "group":
-                    return "分组联系人";
-                case "notification":
-                    return "账户联系人";
-                default:
-                    return "";
-            }
-        }
-        return "";
-
-    }
+//    public static String getSensorTypeChinese(String sensorType) {
+//        String value = "";
+//        if (sensorType.equalsIgnoreCase("temperature") || sensorType.equalsIgnoreCase("temp1")) {
+//            value = "温度";
+//        } else if (sensorType.equalsIgnoreCase("humidity")) {
+//            value = "湿度";
+//        } else if (sensorType.equalsIgnoreCase("co")) {
+//            value = "一氧化碳";
+//        } else if (sensorType.equalsIgnoreCase("co2")) {
+//            value = "二氧化碳";
+//        } else if (sensorType.equalsIgnoreCase("pm10")) {
+//            value = "PM10";
+//        } else if (sensorType.equalsIgnoreCase("pm2_5")) {
+//            value = "PM2.5";
+//        } else if (sensorType.equalsIgnoreCase("ch4")) {
+//            value = "甲烷";
+//        } else if (sensorType.equalsIgnoreCase("so2")) {
+//            value = "二氧化硫";
+//        } else if (sensorType.equalsIgnoreCase("no2")) {
+//            value = "二氧化氮";
+//        } else if (sensorType.equalsIgnoreCase("yaw")) {
+//            value = "偏航角";
+//        } else if (sensorType.equalsIgnoreCase("roll")) {
+//            value = "横滚角";
+//        } else if (sensorType.equalsIgnoreCase("pitch")) {
+//            value = "俯仰角";
+//        } else if (sensorType.equalsIgnoreCase("collision")) {
+//            value = "撞击";
+//        } else if (sensorType.equalsIgnoreCase("distance")) {
+//            value = "距离水位";
+//        } else if (sensorType.equalsIgnoreCase("light")) {
+//            value = "光线";
+//        } else if (sensorType.equalsIgnoreCase("cover")) {
+//            value = "井盖";
+//        } else if (sensorType.equalsIgnoreCase("level")) {
+//            value = "水位";
+//        } else if (sensorType.equalsIgnoreCase("drop")) {
+//            value = "滴漏";
+//        } else if (sensorType.equalsIgnoreCase("smoke")) {
+//            value = "烟感";
+//        } else if (sensorType.equalsIgnoreCase("altitude")) {
+//            value = "高度";
+//        } else if (sensorType.equalsIgnoreCase("latitude")) {
+//            value = "纬度";
+//        } else if (sensorType.equalsIgnoreCase("longitude")) {
+//            value = "经度";
+//        } else if (sensorType.equalsIgnoreCase("alarm")) {
+//            value = "紧急报警器";
+//        } else if (sensorType.equalsIgnoreCase("lpg")) {
+//            value = "液化石油气";
+//        } else if (sensorType.equalsIgnoreCase("flame")) {
+//            value = "火焰";
+//        } else if (sensorType.equalsIgnoreCase("artificialGas")) {
+//            value = "人工煤气";
+//        } else if (sensorType.equalsIgnoreCase("waterPressure")) {
+//            value = "消防液压";
+//        } else if (sensorType.equalsIgnoreCase("magnetic")) {
+//            value = "地磁";
+//        } else if (sensorType.equalsIgnoreCase("door")) {
+//            value = "门锁检测";
+//        } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {
+//            value = "电流A";
+//        } else if (sensorType.equalsIgnoreCase("CURRENT_B")) {
+//            value = "电流B";
+//        } else if (sensorType.equalsIgnoreCase("CURRENT_C")) {
+//            value = "电流C";
+//        } else if (sensorType.equalsIgnoreCase("ID")) {
+//            value = "电表ID";
+//        } else if (sensorType.equalsIgnoreCase("TOTAL_POWER")) {
+//            value = "总电量";
+//        } else if (sensorType.equalsIgnoreCase("VOLTAGE_A")) {
+//            value = "电压A";
+//        } else if (sensorType.equalsIgnoreCase("VOLTAGE_B")) {
+//            value = "电压B";
+//        } else if (sensorType.equalsIgnoreCase("VOLTAGE_C")) {
+//            value = "电压C";
+//        } else if (sensorType.equalsIgnoreCase("installed")) {
+//            value = "安装状态";
+//        } else if (sensorType.equalsIgnoreCase("leakage_val")) {
+//            value = "漏电流";
+//        } else if (sensorType.equalsIgnoreCase("temp_val")) {
+//            value = "电线温度";
+//        } else if (sensorType.equalsIgnoreCase("infrared")) {
+//            value = "红外线";
+//        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+//            value = "手动报警";
+//        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+//            value = "声光报警";
+//        } else if (sensorType.equalsIgnoreCase("connection")) {
+//            value = "通断检测";
+//        }
+//        //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
+//
+//        return value;
+//    }
+//
+//    public static String getSensorTypeSingleChinese(String sensorType) {
+//        String value;
+//        if (sensorType.equalsIgnoreCase("temperature")) {
+//            value = "温度";
+//        } else if (sensorType.equalsIgnoreCase("temp1")) {
+//            value = "温度贴片";
+//        } else if (sensorType.equalsIgnoreCase("humidity")) {
+//            value = "湿度";
+//        } else if (sensorType.equalsIgnoreCase("co")) {
+//            value = "一氧化碳";
+//        } else if (sensorType.equalsIgnoreCase("co2")) {
+//            value = "二氧化碳";
+//        } else if (sensorType.equalsIgnoreCase("pm10")) {
+//            value = "PM10";
+//        } else if (sensorType.equalsIgnoreCase("pm2_5")) {
+//            value = "PM2.5";
+//        } else if (sensorType.equalsIgnoreCase("ch4")) {
+//            value = "甲烷";
+//        } else if (sensorType.equalsIgnoreCase("so2")) {
+//            value = "二氧化硫";
+//        } else if (sensorType.equalsIgnoreCase("no2")) {
+//            value = "二氧化氮";
+//        } else if (sensorType.equalsIgnoreCase("yaw")) {
+//            value = "偏航角";
+//        } else if (sensorType.equalsIgnoreCase("roll")) {
+//            value = "横滚角";
+//        } else if (sensorType.equalsIgnoreCase("pitch")) {
+//            value = "俯仰角";
+//        } else if (sensorType.equalsIgnoreCase("collision")) {
+//            value = "撞击";
+//        } else if (sensorType.equalsIgnoreCase("distance")) {
+//            value = "距离水位";
+//        } else if (sensorType.equalsIgnoreCase("light")) {
+//            value = "光线";
+//        } else if (sensorType.equalsIgnoreCase("cover")) {
+//            value = "井盖";
+//        } else if (sensorType.equalsIgnoreCase("level")) {
+//            value = "水位";
+//        } else if (sensorType.equalsIgnoreCase("drop")) {
+//            value = "滴漏";
+//        } else if (sensorType.equalsIgnoreCase("smoke")) {
+//            value = "烟感";
+//        } else if (sensorType.equalsIgnoreCase("altitude")) {
+//            value = "高度";
+//        } else if (sensorType.equalsIgnoreCase("latitude")) {
+//            value = "纬度";
+//        } else if (sensorType.equalsIgnoreCase("longitude")) {
+//            value = "经度";
+//        } else if (sensorType.equalsIgnoreCase("alarm")) {
+//            value = "紧急报警器";
+//        } else if (sensorType.equalsIgnoreCase("lpg")) {
+//            value = "液化石油气";
+//        } else if (sensorType.equalsIgnoreCase("flame")) {
+//            value = "火焰";
+//        } else if (sensorType.equalsIgnoreCase("artificialGas")) {
+//            value = "人工煤气";
+//        } else if (sensorType.equalsIgnoreCase("waterPressure")) {
+//            value = "消防液压";
+//        } else if (sensorType.equalsIgnoreCase("magnetic")) {
+//            value = "地磁";
+//        } else if (sensorType.equalsIgnoreCase("door")) {
+//            value = "门锁检测";
+//        } else if (sensorType.equalsIgnoreCase("CURRENT_A")) {
+//            value = "电流A";
+//        } else if (sensorType.equalsIgnoreCase("CURRENT_B")) {
+//            value = "电流B";
+//        } else if (sensorType.equalsIgnoreCase("CURRENT_C")) {
+//            value = "电流C";
+//        } else if (sensorType.equalsIgnoreCase("ID")) {
+//            value = "电表ID";
+//        } else if (sensorType.equalsIgnoreCase("TOTAL_POWER")) {
+//            value = "总电量";
+//        } else if (sensorType.equalsIgnoreCase("VOLTAGE_A")) {
+//            value = "电压A";
+//        } else if (sensorType.equalsIgnoreCase("VOLTAGE_B")) {
+//            value = "电压B";
+//        } else if (sensorType.equalsIgnoreCase("VOLTAGE_C")) {
+//            value = "电压C";
+//        } else if (sensorType.equalsIgnoreCase("installed")) {
+//            value = "安装状态";
+//        } else if (sensorType.equalsIgnoreCase("leakage_val")) {
+//            value = "漏电流";
+//        } else if (sensorType.equalsIgnoreCase("temp_val")) {
+//            value = "电线温度";
+//        } else if (sensorType.equalsIgnoreCase("infrared")) {
+//            value = "红外线";
+//        } else if (sensorType.equalsIgnoreCase("manual_alarm")) {
+//            value = "手动报警";
+//        } else if (sensorType.equalsIgnoreCase("sound_light_alarm")) {
+//            value = "声光报警";
+//        } else if (sensorType.equalsIgnoreCase("connection")) {
+//            value = "通断检测";
+//        } else {
+//            value = "未知";
+//        }
+//
+//        //CURRENT_A|CURRENT_B|CURRENT_C|ID|TOTAL_POWER|VOLTAGE_A|VOLTAGE_B|VOLTAGE_C
+//
+//        return value;
+//    }
+//
+//
+//    /**
+//     * 区分联系人
+//     *
+//     * @return
+//     */
+//    public static String distinguishContacts(String source) {
+//        if (!TextUtils.isEmpty(source)) {
+//            switch (source) {
+//                case "attach":
+//                    return "单独联系人";
+//                case "group":
+//                    return "分组联系人";
+//                case "notification":
+//                    return "账户联系人";
+//                default:
+//                    return "";
+//            }
+//        }
+//        return "";
+//
+//    }
 
     /**
      * 根据标识显示相关的状态信息和数据
@@ -1626,22 +1653,23 @@ public class WidgetUtil {
 
     public static String getInspectionDeviceName(String deviceType) {
         //
-        try {
-            DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
-            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
-            Map<String, DeviceTypeStyles> deviceTypeMap = config.getDeviceType();
-            DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
+        DeviceTypeStyles deviceTypeStyles = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
+        if (deviceTypeStyles != null) {
             String category = deviceTypeStyles.getCategory();
-            Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-            MergeTypeStyles mergeTypeStyles = mergeType.get(deviceTypeStyles.getMergeType());
-            String name = mergeTypeStyles.getName();
-            if (!TextUtils.isEmpty(category)) {
-                return name + category;
+            String mergeType = deviceTypeStyles.getMergeType();
+            MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+            if (mergeTypeStyles != null) {
+                String name = mergeTypeStyles.getName();
+                if (!TextUtils.isEmpty(category)) {
+                    return name + category;
+                }
+                return name;
             }
-            return name;
-        } catch (Exception e) {
-            return "未知";
+
         }
+        return SensoroCityApplication.getInstance().getResources().getString(R.string.unknown);
+
+
 //        if (!TextUtils.isEmpty(deviceType)) {
 //            List<DeviceTypeMutualModel.MergeTypeInfosBean> mergeTypeInfos = SensoroCityApplication.getInstance().mDeviceTypeMutualModel.getMergeTypeInfos();
 //            if (mergeTypeInfos != null) {
@@ -2538,31 +2566,20 @@ public class WidgetUtil {
 //    }
 
     public static String handleMergeType(String deviceType) {
-        if (!TextUtils.isEmpty(deviceType)) {
-            try {
-                DeviceTypeStyles deviceTypeStyles = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig().getDeviceType().get(deviceType);
-                return deviceTypeStyles.getMergeType();
-            } catch (Exception e) {
-                e.printStackTrace();
-//                LogUtils.loge("handleMergeType ----->>>deviceType = " + deviceType);
-            }
+        DeviceTypeStyles deviceTypeStyles = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
+        if (deviceTypeStyles != null) {
+            return deviceTypeStyles.getMergeType();
         }
         return null;
     }
 
-    public static String getDeviceTypeName(String deviceType) {
-        if (!TextUtils.isEmpty(deviceType)) {
-            try {
-                DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-                DeviceTypeStyles deviceTypeStyles = config.getDeviceType().get(deviceType);
-                String mergeType = deviceTypeStyles.getMergeType();
-                return config.getMergeType().get(mergeType).getName();
-            } catch (Exception e) {
-                e.printStackTrace();
-//                LogUtils.loge("handleMergeType ----->>>deviceType = " + deviceType);
-            }
+    public static String getDeviceMainTypeName(String deviceType) {
+        String mergeType = handleMergeType(deviceType);
+        MergeTypeStyles configMergeType = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+        if (configMergeType != null) {
+            return configMergeType.getName();
         }
-        return "未知";
+        return SensoroCityApplication.getInstance().getResources().getString(R.string.unknown);
     }
 
     public static String handlerNumber(String text) {

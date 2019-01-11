@@ -92,7 +92,6 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         //
@@ -151,7 +150,9 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
             mContext.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                    if (isAttachedView()){
+                        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                    }
                 }
             });
 
@@ -159,7 +160,7 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO 对照片信息统一处理
+        //对照片信息统一处理
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
             if (data != null && requestCode == REQUEST_CODE_SELECT) {
@@ -223,11 +224,15 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
     }
 
     public void onCalendarBack(CalendarDateModel calendarDateModel) {
-        getView().setDateSelectVisible(true);
+        if (isAttachedView()){
+            getView().setDateSelectVisible(true);
+        }
         startTime = DateUtil.strToDate(calendarDateModel.startDate).getTime();
         endTime = DateUtil.strToDate(calendarDateModel.endDate).getTime();
-        getView().setDateSelectText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-                .getMothDayFormatDate(endTime));
+        if (isAttachedView()){
+            getView().setDateSelectText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
+                    .getMothDayFormatDate(endTime));
+        }
 //        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
 //                .getMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
@@ -238,7 +243,9 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
         switch (direction) {
             case DIRECTION_DOWN:
                 cur_page = 1;
-                getView().showProgressDialog();
+                if (isAttachedView()){
+                    getView().showProgressDialog();
+                }
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, mSn, null, null, null, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
@@ -246,21 +253,27 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                     @Override
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
                         freshUI(direction, deviceAlarmLogRsp);
-                        getView().onPullRefreshComplete();
-                        getView().dismissProgressDialog();
+                        if (isAttachedView()){
+                            getView().onPullRefreshComplete();
+                            getView().dismissProgressDialog();
+                        }
                     }
 
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().onPullRefreshComplete();
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
+                        if (isAttachedView()){
+                            getView().onPullRefreshComplete();
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
+                        }
                     }
                 });
                 break;
             case DIRECTION_UP:
                 cur_page++;
-                getView().showProgressDialog();
+                if (isAttachedView()){
+                    getView().showProgressDialog();
+                }
                 RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(cur_page, mSn, null, null, null, startTime,
                         endTime,
                         null).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceAlarmLogRsp>(this) {
@@ -269,21 +282,29 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                     @Override
                     public void onErrorMsg(int errorCode, String errorMsg) {
                         cur_page--;
-                        getView().onPullRefreshComplete();
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
+                        if (isAttachedView()){
+                            getView().onPullRefreshComplete();
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
+                        }
                     }
 
                     @Override
                     public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
-                        getView().dismissProgressDialog();
+                        if (isAttachedView()){
+                            getView().dismissProgressDialog();
+                        }
                         if (deviceAlarmLogRsp.getData().size() == 0) {
                             cur_page--;
-                            getView().toastShort(mContext.getString(R.string.no_more_data));
-                            getView().onPullRefreshCompleteNoMoreData();
+                            if (isAttachedView()){
+                                getView().toastShort(mContext.getString(R.string.no_more_data));
+                                getView().onPullRefreshCompleteNoMoreData();
+                            }
                         } else {
                             freshUI(direction, deviceAlarmLogRsp);
-                            getView().onPullRefreshComplete();
+                            if (isAttachedView()){
+                                getView().onPullRefreshComplete();
+                            }
                         }
                     }
                 });
@@ -319,7 +340,9 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                            if (isAttachedView()){
+                                getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                            }
                         }
                     });
                 }
@@ -361,7 +384,9 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        if (isAttachedView()){
+                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        }
                     }
                 });
             }
@@ -370,7 +395,9 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
     }
 
     public void closeDateSearch() {
-        getView().setDateSelectVisible(false);
+        if (isAttachedView()){
+            getView().setDateSelectVisible(false);
+        }
         startTime = null;
         endTime = null;
         requestDataByFilter(DIRECTION_DOWN);
@@ -381,12 +408,16 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
             startTime = -1L;
             endTime = -1L;
         }
-        getView().showCalendar(startTime, endTime);
+        if (isAttachedView()){
+            getView().showCalendar(startTime, endTime);
+        }
     }
 
     @Override
     public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
-        getView().showProgressDialog();
+        if (isAttachedView()){
+            getView().showProgressDialog();
+        }
         RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(mCurrentDeviceAlarmLogInfo.get_id(), statusResult,
                 statusType, statusPlace,
                 remark, false, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
@@ -396,23 +427,31 @@ public class AlarmHistoryLogActivityPresenter extends BasePresenter<IAlarmHistor
 
                             @Override
                             public void onErrorMsg(int errorCode, String errorMsg) {
-                                getView().dismissProgressDialog();
-                                getView().toastShort(errorMsg);
+                                if (isAttachedView()){
+                                    getView().dismissProgressDialog();
+                                    getView().toastShort(errorMsg);
+                                }
                             }
 
                             @Override
                             public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
                                 if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                                    getView().toastShort(mContext.getResources().getString(R.string
-                                            .tips_commit_success));
+                                    if (isAttachedView()){
+                                        getView().toastShort(mContext.getResources().getString(R.string
+                                                .tips_commit_success));
+                                    }
                                     freshDeviceAlarmLogInfo(deviceAlarmLogInfo);
                                     pushAlarmFresh(deviceAlarmLogInfo);
                                 } else {
-                                    getView().toastShort(mContext.getResources().getString(R.string
-                                            .tips_commit_failed));
+                                    if (isAttachedView()){
+                                        getView().toastShort(mContext.getResources().getString(R.string
+                                                .tips_commit_failed));
+                                    }
                                 }
-                                getView().dismissProgressDialog();
+                                if (isAttachedView()){
+                                    getView().dismissProgressDialog();
+                                }
                                 if (alarmPopUtils != null) {
                                     alarmPopUtils.dismiss();
                                 }

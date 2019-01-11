@@ -29,7 +29,8 @@ public abstract class BasePresenter<V> implements IOnDestroy {
      * @return
      */
     protected V getView() {
-        return mViewRef.get();
+        V v = mViewRef.get();
+        return v;
     }
 
     /**

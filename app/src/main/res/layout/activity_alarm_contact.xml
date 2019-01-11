@@ -25,25 +25,23 @@
         android:textColor="@color/white"
         android:textSize="16sp" />
     <LinearLayout
-
         android:id="@+id/ac_name_address_ll_add_name_phone"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
+        android:layout_marginTop="12dp"
+        android:background="@color/white"
         android:layout_below="@id/ac_alarm_contact_title"
-        android:layout_above="@id/ac_alarm_contact_tv_save"
         >
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
             android:focusableInTouchMode="true"
             android:focusable="true"
             android:background="@color/white"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/alert_contact"
                 android:textSize="14sp"
@@ -53,8 +51,9 @@
                 android:layout_marginTop="16dp"
                 android:layout_marginBottom="16dp"/>
             <EditText
+                android:layout_weight="1"
                 android:id="@+id/ac_name_address_et_alarm_contact_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="@string/alarm_contact_tip_sample"
@@ -68,7 +67,7 @@
         </LinearLayout>
         <View
             android:layout_width="match_parent"
-            android:layout_height="1dp"
+            android:layout_height="@dimen/view_divider_height"
             android:layout_marginStart="20dp"
             android:layout_marginEnd="20dp"
             android:background="@color/c_dfdfdf"/>
@@ -79,8 +78,7 @@
             android:background="@color/white"
             android:orientation="horizontal">
             <TextView
-                android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/alarm_contact_tip_phone"
                 android:textSize="14sp"
@@ -91,7 +89,8 @@
                 android:layout_marginBottom="16dp"/>
             <EditText
                 android:id="@+id/ac_name_address_et_alarm_contact_phone"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
+                android:layout_weight="1"
                 android:layout_height="wrap_content"
                 android:background="@null"
                 android:hint="@string/alarm_contact_tip_phone_sample"
@@ -209,7 +208,7 @@
                         </LinearLayout>
                         <View
                             android:layout_width="match_parent"
-                            android:layout_height="1dp"
+                            android:layout_height="@dimen/view_divider_height"
                             android:layout_marginStart="20dp"
                             android:layout_marginEnd="20dp"
                             android:background="@color/c_dfdfdf"/>

@@ -3,16 +3,21 @@ package com.sensoro.smartcity.presenter;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployMapActivity;
+import com.sensoro.smartcity.activity.DeployMapENActivity;
 import com.sensoro.smartcity.activity.DeployMonitorSettingPhotoActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.model.DeployAnalyzerModel;
+import com.sensoro.smartcity.server.bean.DeployContralSettingData;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.imagepicker.bean.ImageItem;
 
 import java.util.ArrayList;
@@ -34,7 +39,7 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     private void initDeployMapModel() {
         List<Double> lonlat = mDeployRecordInfo.getLonlat();
         deployAnalyzerModel = new DeployAnalyzerModel();
-        deployAnalyzerModel.isFromDeployRecord = true;
+        deployAnalyzerModel.mapSourceType = DEPLOY_MAP_SOURCE_TYPE_DEPLOY_RECORD;
         deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_POINT_DISPLAY;
         if (lonlat != null) {
             deployAnalyzerModel.latLng.clear();
@@ -62,6 +67,27 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
                 getView().setPositionStatus(0);
             }
             getView().refreshSingle(mDeployRecordInfo.getSignalQuality());
+            String wxPhone = mDeployRecordInfo.getWxPhone();
+            if (!TextUtils.isEmpty(wxPhone)) {
+                getView().seDeployWeChat(wxPhone);
+            }
+            String deviceType = mDeployRecordInfo.getDeviceType();
+            String deviceTypeName = WidgetUtil.getDeviceMainTypeName(deviceType);
+            getView().setDeployDeviceRecordDeviceType(mActivity.getString(R.string.deploy_device_type) + deviceTypeName);
+            boolean isFire = DEVICE_CONTROL_DEVICE_TYPES.contains(deviceType);
+            getView().setDeployDetailDeploySettingVisible(isFire);
+            if (isFire) {
+                //TODO 是否配置过电器火灾字段字段
+                if (mDeployRecordInfo.getConfig() != null) {
+                    DeployContralSettingData deployContralSettingData = mDeployRecordInfo.getConfig().get(mDeployRecordInfo.getDeviceType());
+                    if (deployContralSettingData != null) {
+                        getView().setDeployDeviceDetailDeploySetting(mActivity.getString(R.string.had_setting_detail) + deployContralSettingData.getInitValue() + "A");
+                        return;
+                    }
+                }
+                getView().setDeployDeviceDetailDeploySetting(null);
+
+            }
 
         }
     }
@@ -94,7 +120,11 @@ public class DeployRecordDetailActivityPresenter extends BasePresenter<IDeployRe
     public void doFixedPoint() {
         Intent intent = new Intent();
         initDeployMapModel();
-        intent.setClass(mActivity, DeployMapActivity.class);
+        if (AppUtils.isChineseLanguage()) {
+            intent.setClass(mActivity, DeployMapActivity.class);
+        } else {
+            intent.setClass(mActivity, DeployMapENActivity.class);
+        }
         intent.putExtra(EXTRA_DEPLOY_ANALYZER_MODEL, deployAnalyzerModel);
         getView().startAC(intent);
     }

@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 //apply plugin: 'android-apt'
 android {
-    def verName = "3.2.1"
+    def verName = "3.2.5"
     def verCode = 1
     def buildCode = 1
     def connector = '_v'
@@ -41,8 +41,16 @@ android {
         manifestPlaceholders = [
                 GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
                 GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
-                GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A"
+                GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+                //TODO 测试版/正式版 使用其中一个
+                APP_ICON        : "@mipmap/ic_launcher_beta",
+                APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+                //
+//                APP_ICON        : "@mipmap/ic_launcher",
+//                APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+
         ]
+
         ndk {
 //            moduleName "city"
             //声明启用Android日志, 在c/c++的源文件中使用的#include <android/log.h> 日志将得到输出
@@ -50,12 +58,29 @@ android {
 //            abiFilters 'armeabi','armeabi-v7a'  //只生成armeabi的so
             abiFilters 'armeabi-v7a'  //只生成armeabi的so
         }
+
+//        jackOptions {
+//            enabled true
+//        }
+//        gradle.projectsEvaluated {
+//            tasks.withType(JavaCompile) {
+//                options.compilerArgs << "-Xbootclasspath/a:" + System.properties.get("java.home") + "/lib/rt.jar"
+//            }
+//        }
     }
     buildTypes {
         debug {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             debuggable true
+//            manifestPlaceholders = [
+//                    GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
+//                    GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
+//                    GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+//                    APP_ICON        : "@mipmap/ic_launcher_beta",
+//                    APP_ROUND_ICON  : "@mipmap/ic_launcher_beta_round"
+//
+//            ]
         }
         release {
             minifyEnabled false
@@ -63,11 +88,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.release
             debuggable false
+//            manifestPlaceholders = [
+//                    GETUI_APP_ID    : "2VjnktTwteAnEZ1aMZCB53",
+//                    GETUI_APP_KEY   : "zrfWS690Dh7r9bPUUfh1o2",
+//                    GETUI_APP_SECRET: "fN5extdlmHA5NDbdKPkP6A",
+//                    APP_ICON        : "@mipmap/ic_launcher",
+//                    APP_ROUND_ICON  : "@mipmap/ic_launcher_round"
+//
+//            ]
         }
     }
-//    dexOptions {
-//        javaMaxHeapSize "4g"
-//    }
+    dexOptions {
+
+//        preDexLibrarOpies = false
+//        additionalParameters=['--core-library']
+    }
     android {
         lintOptions {
             abortOnError false
@@ -83,6 +118,7 @@ android {
             exclude 'META-INF/NOTICE.txt'
             exclude 'META-INF/notice.txt'
             exclude 'META-INF/ASL2.0'
+            exclude ''
             doNotStrip '*/mips/*.so'
             doNotStrip '*/mips64/*.so'
             doNotStrip '*/x86/*.so'
@@ -175,7 +211,7 @@ dependencies {
     //
     compile files('libs/GetuiSDK2.12.4.0.jar')
     //  更改扫描二维码为maven库
-    compile 'cn.bingoogolapple:bga-qrcode-zxing:1.2.4'
+    compile 'cn.bingoogolapple:bga-qrcode-zxing:1.3.6'
     //
     //    compile project(':imagepicker')
     compile 'com.github.bumptech.glide:glide:3.7.0'
@@ -199,7 +235,7 @@ dependencies {
     compile 'com.android.support:cardview-v7:27.1.1'
     compile 'com.scwang.smartrefresh:SmartRefreshLayout:1.1.0-alpha-14'
     compile files('libs/AMap3DMap_6.4.1_AMapSearch_6.1.0_AMapLocation_4.2.0_20180906.jar')
-    compile project(':libbleserver')
+    compile project(':sensor-kit')
     compile 'com.android.support.constraint:constraint-layout:1.1.3'
     //    compile 'com.gyf.immersionbar:immersionbar:2.3.2-beta01'
     //protobuf
@@ -217,4 +253,7 @@ dependencies {
     compile project(':bottomnavigation')
     //Calendar view
     compile project(':calendarview')
+    compile('com.mapbox.mapboxsdk:mapbox-android-sdk:5.5.3') {
+        transitive = true
+    }
 }

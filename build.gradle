@@ -1,5 +1,5 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-ext{
+ext {
     minSdkVersion = 20
     compileSdkVersion = 21
     targetSdkVersion = 27
@@ -16,18 +16,21 @@ allprojects {
             jcenter()
             maven { url "https://jitpack.io" }
             google()
+            mavenCentral()
         }
     }
     repositories {
         jcenter()
         maven { url "https://jitpack.io" }
         google()
+        mavenCentral()
     }
 }
 buildscript {
     repositories {
         jcenter()
         google()
+        mavenCentral()
         maven { url "https://jitpack.io" }
     }
     dependencies {
@@ -37,9 +40,10 @@ buildscript {
         // in the individual module build.gradle files
     }
 }
-
+configurations.all { resolutionStrategy.force 'com.android.support:multidex:1.0.3' }
 
 
 task clean(type: Delete) {
     delete rootProject.buildDir
 }
+

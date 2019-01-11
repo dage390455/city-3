@@ -7,7 +7,9 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractResultActivity;
+import com.sensoro.smartcity.activity.ContractServiceActivity;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IContractInfoActivityView;
@@ -20,7 +22,6 @@ import com.sensoro.smartcity.server.bean.ContractListInfo;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractAddRsp;
 import com.sensoro.smartcity.server.response.ContractInfoRsp;
-import com.sensoro.smartcity.util.AESUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
 
@@ -29,12 +30,14 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
 import rx.schedulers.Schedulers;
 
 public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoActivityView> implements IOnCreate,
         Constants {
+
     private Activity mContext;
     private int serviceType;
     //
@@ -126,7 +129,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
     private void requestData(int contractId) {
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getContractInfo(contractId + "").subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-                .subscribe(new CityObserver<ContractInfoRsp>() {
+                .subscribe(new CityObserver<ContractInfoRsp>(this) {
                     @Override
                     public void onCompleted(ContractInfoRsp responseBase) {
                         mContractInfo = responseBase.getData();
@@ -142,7 +145,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             } else {
                                 try {
                                     String[] ts = createdAt.split("T");
-                                    createdAt = ts[0];
+                                    createdAt = ts[0].replaceAll("-",".");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     createdAt = "-";
@@ -156,7 +159,7 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                             } else {
                                 try {
                                     String[] ts = confirmTime.split("T");
-                                    confirmTime = ts[0];
+                                    confirmTime = ts[0].replaceAll("-",".");
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                     confirmTime = "-";
@@ -328,25 +331,25 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                 if (!RegexUtils.checkContractNotEmpty(line4)) {
                     line4 = null;
                 }
-                RetrofitServiceHelper.INSTANCE.getNewContract(1, serviceType, null, null, line3, line4,
-                        line1, line2, line6, line5, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
-
-                    @Override
-                    public void onCompleted(ContractAddRsp contractAddRsp) {
-                        ContractAddInfo data = contractAddRsp.getData();
-                        id = data.getId();
-                        LogUtils.loge(this, "id = " + id);
-                        handleCode(id + "", text);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+//                RetrofitServiceHelper.INSTANCE.getNewContract(1, serviceType, null, null, line3, line4,
+//                        line1, line2, line6, line5, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
                 break;
             case 2:
                 Integer sex = null;
@@ -356,48 +359,48 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                     sex = 2;
                 }
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line3, sex, null, null,
-                        line1, null, null, line4, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
-
-                    @Override
-                    public void onCompleted(ContractAddRsp contractAddRsp) {
-                        ContractAddInfo data = contractAddRsp.getData();
-                        int id = data.getId();
-                        LogUtils.loge(this, "id = " + id);
-                        handleCode(id + "", text);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+//                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line3, sex, null, null,
+//                        line1, null, null, line4, phone, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        int id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
                 break;
             case 3:
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line4, null, null, null,
-                        line2, line1, null, line5, line3, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
-                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
-
-
-                    @Override
-                    public void onCompleted(ContractAddRsp contractAddRsp) {
-                        ContractAddInfo data = contractAddRsp.getData();
-                        int id = data.getId();
-                        LogUtils.loge(this, "id = " + id);
-                        handleCode(id + "", text);
-                        getView().dismissProgressDialog();
-                    }
-
-                    @Override
-                    public void onErrorMsg(int errorCode, String errorMsg) {
-                        getView().dismissProgressDialog();
-                        getView().toastShort(errorMsg);
-                    }
-                });
+//                RetrofitServiceHelper.INSTANCE.getNewContract(2, serviceType, line4, null, null, null,
+//                        line2, line1, null, line5, line3, placeType, deviceList, serviceTimePeriod, null, serviceTime, serviceTimeFirst).subscribeOn
+//                        (Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ContractAddRsp>(this) {
+//
+//
+//                    @Override
+//                    public void onCompleted(ContractAddRsp contractAddRsp) {
+//                        ContractAddInfo data = contractAddRsp.getData();
+//                        int id = data.getId();
+//                        LogUtils.loge(this, "id = " + id);
+//                        handleCode(id + "", text);
+//                        getView().dismissProgressDialog();
+//                    }
+//
+//                    @Override
+//                    public void onErrorMsg(int errorCode, String errorMsg) {
+//                        getView().dismissProgressDialog();
+//                        getView().toastShort(errorMsg);
+//                    }
+//                });
                 break;
             default:
                 break;
@@ -406,17 +409,18 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
 
     private void handleCode(String code, String text) {
         Intent intent = new Intent();
+        final String url = CONTRACT_WE_CHAT_BASE_URL + code;
         intent.setClass(mContext, ContractResultActivity.class);
-        switch (serviceType) {
-            case 1:
-            case 2:
-                code = AESUtil.contractEncode(phone, code);
-                break;
-            case 3:
-                code = AESUtil.contractEncode(line3, code);
-                break;
-        }
-        intent.putExtra("code", code);
+//        switch (serviceType) {
+//            case 1:
+//            case 2:
+//                code = AESUtil.contractEncode(phone, code);
+//                break;
+//            case 3:
+//                code = AESUtil.contractEncode(line3, code);
+//                break;
+//        }
+        intent.putExtra("code", url);
         if (text.startsWith("查看")) {
             intent.putExtra(EXTRA_CONTRACT_RESULT_TYPE, false);
         } else {
@@ -453,6 +457,168 @@ public class ContractInfoActivityPresenter extends BasePresenter<IContractInfoAc
                     }
                 }
                 break;
+            case EVENT_DATA__CONTRACT_EDIT_REFRESH_CODE:
+                if (data instanceof Integer) {
+                    requestData((Integer) data);
+                }
+
+                break;
         }
+    }
+
+    public void startToEdit() {
+        String no = mContext.getString(R.string.no);
+        Intent intent = new Intent();
+        intent.setClass(mContext, ContractServiceActivity.class);
+        int createdType = mContractInfo.getCreated_type();
+        intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, Constants.CONTRACT_ORIGIN_TYPE_EDIT);
+        intent.putExtra(EXTRA_CONTRACT_TYPE, createdType);
+        intent.putExtra(EXTRA_CONTRACT_ID, mContractInfo.getId());
+        String placeType = mContractInfo.getPlace_type();
+        if (TextUtils.isEmpty(placeType)) {
+            placeType = no;
+        }
+        intent.putExtra("place_type", placeType);
+        intent.putExtra("service_life", mContractInfo.getServiceTime());
+        intent.putExtra("service_life_first", mContractInfo.getFirstPayTimes());
+        intent.putExtra("service_life_period", mContractInfo.getPayTimes());
+        List<ContractsTemplateInfo> devices = mContractInfo.getDevices();
+        ContractsTemplateInfo[] objects = devices.toArray(new ContractsTemplateInfo[0]);
+        intent.putExtra("contract_devices", objects);
+        String uid = mContractInfo.getUid();
+        if (!TextUtils.isEmpty(uid)) {
+            intent.putExtra("contract_uid", uid);
+        }
+        switch (createdType) {
+            case 1:
+                addExtraCreateType1(intent, no);
+                break;
+            case 2:
+                addExtraCreateType2(intent, no);
+                break;
+            case 3:
+                addExtraCreateType3(intent, no);
+                break;
+        }
+        getView().startAC(intent);
+
+
+    }
+
+    private void addExtraCreateType3(Intent intent, String no) {
+        String customer_enterprise_name = mContractInfo.getCustomer_enterprise_name();
+        if (TextUtils.isEmpty(customer_enterprise_name)) {
+            customer_enterprise_name = no;
+        }
+        intent.putExtra("company_name", customer_enterprise_name);
+
+        String customer_name = mContractInfo.getCustomer_name();
+        if (TextUtils.isEmpty(customer_name)) {
+            customer_name = no;
+        }
+        intent.putExtra("person_name", customer_name);
+
+        String customer_phone = mContractInfo.getCustomer_phone();
+        if (TextUtils.isEmpty(customer_phone)) {
+            customer_phone = no;
+        }
+        intent.putExtra("customer_phone", customer_phone);
+
+        String card_id = mContractInfo.getCard_id();
+        if (TextUtils.isEmpty(card_id)) {
+            card_id = no;
+        }
+        intent.putExtra("id_number", card_id);
+
+        String customer_address = mContractInfo.getCustomer_address();
+        if (TextUtils.isEmpty(customer_address)) {
+            customer_address = no;
+        }
+        intent.putExtra("address", customer_address);
+
+    }
+
+    private void addExtraCreateType2(Intent intent, String no) {
+        String customer_name = mContractInfo.getCustomer_name();
+        if (TextUtils.isEmpty(customer_name)) {
+            customer_name = no;
+        }
+        intent.putExtra("person_name", customer_name);
+
+        int sex = mContractInfo.getSex();
+        switch (sex) {
+            case 1:
+                intent.putExtra("sex", mContext.getString(R.string.male));
+                break;
+            case 2:
+                intent.putExtra("sex", mContext.getString(R.string.female));
+                break;
+            default:
+                intent.putExtra("sex", no);
+                break;
+        }
+
+        String card_id = mContractInfo.getCard_id();
+        if (TextUtils.isEmpty(card_id)) {
+            card_id = no;
+        }
+        intent.putExtra("id_number", card_id);
+
+        String customer_address = mContractInfo.getCustomer_address();
+        if (TextUtils.isEmpty(customer_address)) {
+            customer_address = no;
+        }
+        intent.putExtra("address", customer_address);
+
+        String customer_phone = mContractInfo.getCustomer_phone();
+        if (TextUtils.isEmpty(customer_phone)) {
+            customer_phone = no;
+        }
+        intent.putExtra("customer_phone", customer_phone);
+
+    }
+
+    private void addExtraCreateType1(Intent intent, String no) {
+        String customer_name = mContractInfo.getCustomer_name();
+        if (TextUtils.isEmpty(customer_name)) {
+            customer_name = no;
+        }
+        intent.putExtra("legal_person", customer_name);
+
+        String customer_enterprise_name = mContractInfo.getCustomer_enterprise_name();
+        if (TextUtils.isEmpty(customer_enterprise_name)) {
+            customer_enterprise_name = no;
+        }
+        intent.putExtra("company_name", customer_enterprise_name);
+
+        String enterprise_card_id = mContractInfo.getEnterprise_card_id();
+        if (TextUtils.isEmpty(enterprise_card_id)) {
+            enterprise_card_id = no;
+        }
+        intent.putExtra("credit_code", enterprise_card_id);
+
+        String enterprise_register_id = mContractInfo.getEnterprise_register_id();
+        if (TextUtils.isEmpty(enterprise_card_id)) {
+            enterprise_register_id = no;
+        }
+        intent.putExtra("registration_number", enterprise_register_id);
+
+        String customer_address = mContractInfo.getCustomer_address();
+        if (TextUtils.isEmpty(customer_address)) {
+            customer_address = no;
+        }
+        intent.putExtra("address", customer_address);
+
+        String customer_enterprise_validity = mContractInfo.getCustomer_enterprise_validity();
+        if (TextUtils.isEmpty(customer_enterprise_validity)) {
+            customer_enterprise_validity = no;
+        }
+        intent.putExtra("validity_period", customer_enterprise_validity);
+
+        String customer_phone = mContractInfo.getCustomer_phone();
+        if (TextUtils.isEmpty(customer_phone)) {
+            customer_phone = no;
+        }
+        intent.putExtra("customer_phone", customer_phone);
     }
 }

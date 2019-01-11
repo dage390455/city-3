@@ -29,9 +29,7 @@ public class BleObserver implements BLEDeviceListener<BLEDevice> {
     }
 
     public void unregisterBleObserver(BLEDeviceListener<BLEDevice> listener) {
-        if (hashSet.contains(listener)) {
-            hashSet.remove(listener);
-        }
+        hashSet.remove(listener);
     }
 
     public void clearObserver() {

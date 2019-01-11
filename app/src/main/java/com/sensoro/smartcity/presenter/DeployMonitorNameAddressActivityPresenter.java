@@ -21,12 +21,15 @@ import java.util.List;
 public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDeployMonitorNameAddressActivityView> implements Constants {
     private Activity mContext;
     private final List<String> mHistoryKeywords = new ArrayList<>();
+    private int deployType;
+    private String originName;
 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-
         String sn = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_TO_SN);
+        originName = mContext.getIntent().getStringExtra(EXTRA_DEPLOY_ORIGIN_NAME_ADDRESS);
+        deployType = mContext.getIntent().getIntExtra(EXTRA_DEPLOY_TYPE, -1);
         if (!TextUtils.isEmpty(sn)) {
             getView().updateTvTitle(sn);
         }
@@ -83,7 +86,7 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
         }
     }
 
-    public void doChoose(String text) {
+    public void doChoose(final String text) {
         if (!TextUtils.isEmpty(text)) {
             byte[] bytes = new byte[0];
             try {
@@ -100,6 +103,45 @@ public class DeployMonitorNameAddressActivityPresenter extends BasePresenter<IDe
             getView().toastShort(mContext.getString(R.string.must_enter_name_address));
             return;
         }
+        doResult(text);
+        //TODO 暂时去掉重名检测
+//        //跟原先名字一样 保存
+//        if (text.equals(originName)) {
+//            doResult(text);
+//            return;
+//        }
+//        //基站设备不进行校验
+//        if (deployType != -1 && deployType == TYPE_SCAN_DEPLOY_STATION) {
+//            doResult(text);
+//            return;
+//        }
+//        getView().showProgressDialog();
+//        RetrofitServiceHelper.INSTANCE.getDeviceNameValid(text).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<ResponseBase>(this) {
+//            @Override
+//            public void onCompleted(ResponseBase responseBase) {
+//                if (isAttachedView()) {
+//                    getView().dismissProgressDialog();
+//                    doResult(text);
+//                }
+//            }
+//
+//            @Override
+//            public void onErrorMsg(int errorCode, String errorMsg) {
+////                if (errorCode==4007108){
+//////此code为重名
+//////                }
+//                if (isAttachedView()) {
+//                    getView().dismissProgressDialog();
+//                    getView().toastShort(errorMsg);
+//                }
+//
+//
+//            }
+//        });
+//
+    }
+
+    private void doResult(String text) {
         save(text);
 //        mKeywordEt.clearFocus();
         EventData eventData = new EventData();

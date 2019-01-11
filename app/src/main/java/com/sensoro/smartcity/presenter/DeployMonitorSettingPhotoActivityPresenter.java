@@ -97,6 +97,7 @@ public class DeployMonitorSettingPhotoActivityPresenter extends BasePresenter<ID
             getView().showDialog(this, names);
         } else {
             //打开预览
+
             Intent intentPreview = new Intent(mContext, ImagePreviewDelActivity.class);
             intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, (ArrayList<ImageItem>) images);
             intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);

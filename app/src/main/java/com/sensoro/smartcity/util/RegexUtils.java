@@ -17,7 +17,12 @@ public class RegexUtils {
         if (TextUtils.isEmpty(phoneNum)) {
             return false;
         }
-        final String regex = "^((\\+86){0,1}1[2|3|4|5|6|7|8|9](\\d){9}|(\\d{3,4}-){0,1}(\\d{7,8})(-\\d{1,4}){0,1})$";
+        String regex;
+        if (AppUtils.isChineseLanguage()) {
+            regex = "^((\\+86){0,1}1[2|3|4|5|6|7|8|9](\\d){9}|(\\d{3,4}-){0,1}(\\d{7,8})(-\\d{1,4}){0,1})$";
+        } else {
+            regex = "^\\d+$";
+        }
 //        final String regex = "^(\\+86){0,1}1[3|4|5|6|7|8|9](\\d){9}$";
         Pattern p = Pattern.compile(regex);
         return p.matcher(phoneNum).matches();
@@ -137,5 +142,24 @@ public class RegexUtils {
      */
     public static boolean checkContractNotEmpty(String content) {
         return !TextUtils.isEmpty(content) && !"无".equals(content);
+    }
+
+    public static boolean checkContractIsEmpty(String content) {
+        return TextUtils.isEmpty(content) || "无".equals(content);
+    }
+
+    /**
+     * 不能包含字母和数字
+     *
+     * @param customName
+     * @return
+     */
+    public static boolean checkContractName(String customName) {
+        if (TextUtils.isEmpty(customName)) {
+            return false;
+        }
+        final String regex = ".*[a-zA-z0-9].*";
+        Pattern p = Pattern.compile(regex);
+        return !p.matcher(customName).matches();
     }
 }

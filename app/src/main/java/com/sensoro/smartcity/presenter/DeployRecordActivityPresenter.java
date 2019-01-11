@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 import android.widget.LinearLayout;
 
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployRecordDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.base.BasePresenter;
@@ -40,8 +41,9 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
     private Long endTime;
     private Activity mActivity;
     private CalendarPopUtils mCalendarPopUtils;
-    private volatile int cur_page = 1;
+    private volatile int cur_page = 0;
     private final List<String> mSearchHistoryList = new ArrayList<>();
+    private final List<DeployRecordInfo> dataList = new ArrayList<>();
 
     @Override
     public void initData(Context context) {
@@ -84,10 +86,10 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
 
         switch (direction) {
             case DIRECTION_DOWN:
-                cur_page = 1;
+                cur_page = 0;
                 getView().showProgressDialog();
-                RetrofitServiceHelper.INSTANCE.getDeployRecordList(searchText, temp_startTime, temp_endTime, owners, signalQuality).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>() {
+                RetrofitServiceHelper.INSTANCE.getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, cur_page * 20, null).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
                     @Override
                     public void onCompleted(DeployRecordRsp recordRsp) {
                         List<DeployRecordInfo> data = recordRsp.getData();
@@ -97,8 +99,12 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
                         } else {
                             getView().setSearchButtonTextVisible(false);
                         }
+                        dataList.clear();
+                        if (data != null && data.size() > 0) {
+                            dataList.addAll(data);
+                        }
+                        getView().updateRcContentData(dataList);
                         getView().onPullRefreshComplete();
-                        getView().updateRcContentData(data);
                         getView().dismissProgressDialog();
 
                     }
@@ -112,6 +118,39 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
                 });
                 break;
             case DIRECTION_UP:
+                cur_page++;
+                getView().showProgressDialog();
+                RetrofitServiceHelper.INSTANCE.getDeployRecordList(null, searchText, temp_startTime, temp_endTime, null, null, 20, 20 * cur_page, null).subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeployRecordRsp>(this) {
+                    @Override
+                    public void onCompleted(DeployRecordRsp recordRsp) {
+                        List<DeployRecordInfo> data = recordRsp.getData();
+                        if (!TextUtils.isEmpty(tempSearch)) {
+//            getView().setSelectedDateSearchText(searchText);
+                            getView().setSearchButtonTextVisible(true);
+                        } else {
+                            getView().setSearchButtonTextVisible(false);
+                        }
+                        if (data == null || data.size() == 0) {
+                            getView().toastShort(mActivity.getString(R.string.no_more_data));
+                            cur_page--;
+                        } else {
+                            dataList.addAll(data);
+                        }
+                        getView().updateRcContentData(dataList);
+                        getView().onPullRefreshComplete();
+                        getView().dismissProgressDialog();
+
+                    }
+
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        cur_page--;
+                        getView().onPullRefreshComplete();
+                        getView().dismissProgressDialog();
+                        getView().toastShort(errorMsg);
+                    }
+                });
                 break;
         }
     }
@@ -166,10 +205,11 @@ public class DeployRecordActivityPresenter extends BasePresenter<IDeployRecordAc
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
+                getView().finishAc();
+                break;
             case EVENT_DATA_DEPLOY_RESULT_CONTINUE:
                 requestSearchData(DIRECTION_DOWN, null);
                 break;

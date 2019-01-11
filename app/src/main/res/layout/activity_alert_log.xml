@@ -213,7 +213,7 @@
     <View
         android:id="@+id/view3"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_height"
         android:background="@color/c_dfdfdf"
         app:layout_constraintBottom_toTopOf="@id/ac_alert_ll_bottom"
         app:layout_constraintEnd_toEndOf="parent"

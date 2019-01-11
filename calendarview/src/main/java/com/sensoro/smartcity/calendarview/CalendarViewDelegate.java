@@ -175,7 +175,9 @@ final class CalendarViewDelegate {
     /**
      * 标记的主题色和选中的主题色
      */
-    private int mSchemeThemeColor, mSelectedThemeColor;
+    private int mSchemeThemeColor, mSelectedThemeColor,mSelectedLastThemeColor;
+
+
 
 
     /**
@@ -390,6 +392,8 @@ final class CalendarViewDelegate {
         mCurDayLunarTextColor = array.getColor(R.styleable.CalendarView_current_day_lunar_text_color, Color.RED);
 
         mSelectedThemeColor = array.getColor(R.styleable.CalendarView_selected_theme_color, 0x50CFCFCF);
+        mSelectedLastThemeColor = array.getColor(R.styleable.CalendarView_selected_last_theme_color, 0x29C093);
+
         mSelectedTextColor = array.getColor(R.styleable.CalendarView_selected_text_color, 0xFF111111);
 
         mSelectedLunarTextColor = array.getColor(R.styleable.CalendarView_selected_lunar_text_color, 0xFF111111);
@@ -975,5 +979,9 @@ final class CalendarViewDelegate {
         }
         addSchemesFromMap(calendars);
         return calendars;
+    }
+
+    public int getSelectedLastThemeColor() {
+        return mSelectedLastThemeColor;
     }
 }

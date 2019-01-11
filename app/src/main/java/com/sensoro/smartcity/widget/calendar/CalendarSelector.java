@@ -123,7 +123,7 @@ public class CalendarSelector extends SingleMonthSelector {
         segmentSelectListener.onSegmentClick(ssDay);
         if(segmentSelectListener.onInterceptSelect(ssDay)) return;
 
-        if(!startSelectedRecord.isRecord() && !endSelectedRecord.isRecord()){ // init status
+        if(!startSelectedRecord.isRecord() && !endSelectedRecord.isRecord()){ // init deviceStatus
             startSelectedRecord.position = position;
             startSelectedRecord.day = ssDay;
             monthView.addSelectedDay(ssDay);

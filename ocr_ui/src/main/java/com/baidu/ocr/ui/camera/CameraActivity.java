@@ -3,15 +3,6 @@
  */
 package com.baidu.ocr.ui.camera;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-
-import com.baidu.idcardquality.IDcardQualityProcess;
-import com.baidu.ocr.ui.R;
-import com.baidu.ocr.ui.crop.CropView;
-import com.baidu.ocr.ui.crop.FrameOverlayView;
-
 import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
@@ -28,10 +19,22 @@ import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 import android.view.Surface;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
+
+import com.baidu.idcardquality.IDcardQualityProcess;
+import com.baidu.ocr.ui.R;
+import com.baidu.ocr.ui.crop.CropView;
+import com.baidu.ocr.ui.crop.FrameOverlayView;
+
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class CameraActivity extends Activity {
 
@@ -277,6 +280,9 @@ public class CameraActivity extends Activity {
     private View.OnClickListener takeButtonOnClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            if(contentType.equals(CONTENT_TYPE_GENERAL) ){
+                overlayView.resetFrameRect();
+            }
             cameraView.takePicture(outputFile, takePictureCallback);
         }
     };
@@ -367,6 +373,9 @@ public class CameraActivity extends Activity {
     }
 
     private void doConfirmResult() {
+        Intent intent = new Intent();
+        intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, contentType);
+        setResult(Activity.RESULT_OK, intent);
         CameraThreadPool.execute(new Runnable() {
             @Override
             public void run() {
@@ -375,15 +384,14 @@ public class CameraActivity extends Activity {
                     Bitmap bitmap = ((BitmapDrawable) displayImageView.getDrawable()).getBitmap();
                     bitmap.compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream);
                     fileOutputStream.close();
+                    EventBus.getDefault().post("ocr_ui__file_success");
                 } catch (IOException e) {
                     e.printStackTrace();
+                    EventBus.getDefault().post("ocr_ui__file_failed");
                 }
-                Intent intent = new Intent();
-                intent.putExtra(CameraActivity.KEY_CONTENT_TYPE, contentType);
-                setResult(Activity.RESULT_OK, intent);
-                finish();
             }
         });
+        finish();
     }
 
     private View.OnClickListener confirmButtonOnClickListener = new View.OnClickListener() {

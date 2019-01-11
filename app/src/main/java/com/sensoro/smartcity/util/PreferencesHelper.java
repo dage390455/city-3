@@ -11,6 +11,10 @@ import com.sensoro.smartcity.constant.SearchHistoryTypeConstants;
 import com.sensoro.smartcity.model.EventLoginData;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
+import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
+import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
+import com.sensoro.smartcity.server.bean.MergeTypeStyles;
+import com.sensoro.smartcity.server.bean.SensorTypeStyles;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -75,6 +79,7 @@ public final class PreferencesHelper implements Constants {
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, eventLoginData.hasSignalCheck);
         editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, eventLoginData.hasSignalConfig);
         editor.putBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, eventLoginData.hasBadSignalUpload);
+        editor.putBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, eventLoginData.hasDevicePositionCalibration);
         //
         editor.apply();
     }
@@ -105,6 +110,7 @@ public final class PreferencesHelper implements Constants {
             boolean hasDeviceSignalCheck = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CHECK, false);
             boolean hasDeviceSignalConfig = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_SIGNAL_CONFIG, false);
             boolean hasBadSignalUpload = sp.getBoolean(EXTRA_GRANTS_HAS_BAD_SIGNAL_UPLOAD, false);
+            boolean hasDevicePositionCalibration = sp.getBoolean(EXTRA_GRANTS_HAS_DEVICE_POSITION_CALIBRATION, false);
             final EventLoginData eventLoginData = new EventLoginData();
             eventLoginData.phoneId = phoneId;
             eventLoginData.userId = userId;
@@ -127,6 +133,7 @@ public final class PreferencesHelper implements Constants {
             eventLoginData.hasSignalCheck = hasDeviceSignalCheck;
             eventLoginData.hasSignalConfig = hasDeviceSignalConfig;
             eventLoginData.hasBadSignalUpload = hasBadSignalUpload;
+            eventLoginData.hasDevicePositionCalibration = hasDevicePositionCalibration;
             mEventLoginData = eventLoginData;
         }
         return mEventLoginData;
@@ -138,7 +145,10 @@ public final class PreferencesHelper implements Constants {
      * @param username
      * @param pwd
      */
-    public void saveLoginNamePwd(String username, String pwd) {
+    public boolean saveLoginNamePwd(String username, String pwd) {
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(pwd)) {
+            return false;
+        }
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_NAME_PWD, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
@@ -146,6 +156,7 @@ public final class PreferencesHelper implements Constants {
         String aes_pwd = AESUtil.encode(pwd);
         editor.putString(PREFERENCE_KEY_PASSWORD, aes_pwd);
         editor.apply();
+        return true;
     }
 
     public Map<String, String> getLoginNamePwd() {
@@ -178,12 +189,16 @@ public final class PreferencesHelper implements Constants {
         editor.apply();
     }
 
-    public void saveSessionId(String sessionId) {
+    public boolean saveSessionId(String sessionId) {
+        if (TextUtils.isEmpty(sessionId)) {
+            return false;
+        }
         SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOGIN_ID, Context
                 .MODE_PRIVATE);
         SharedPreferences.Editor editor = sp.edit();
         editor.putString(PREFERENCE_KEY_SESSION_ID, sessionId);
         editor.apply();
+        return true;
     }
 
     public String getSessionId() {
@@ -198,18 +213,39 @@ public final class PreferencesHelper implements Constants {
                 .MODE_PRIVATE).edit().clear().apply();
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_SPLASH_LOGIN_DATA, Context
                 .MODE_PRIVATE).edit().clear().apply();
+        this.mEventLoginData = null;
     }
 
-    public void saveDeployNameAddressHistory(String history) {
+    public boolean saveDeployNameAddressHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
         SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, history).apply();
+        return true;
+    }
+
+    public boolean saveDeployWeChatRelationHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, history).apply();
+        return true;
     }
 
     public String getDeployNameAddressHistory() {
         return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_NAME_ADDRESS, null);
     }
 
-    public void saveDeployTagsHistory(String hisory) {
-        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_TAG, hisory).apply();
+    public String getDeployWeChatRelationHistory() {
+        return SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_DEPLOY_WE_CHAT_RELATION, null);
+    }
+
+    public boolean saveDeployTagsHistory(String history) {
+        if (TextUtils.isEmpty(history)) {
+            return false;
+        }
+        SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_DEPLOY_HISTORY, Activity.MODE_PRIVATE).edit().putString(PREFERENCE_KEY_DEPLOY_TAG, history).apply();
+        return true;
     }
 
     public String getDeployTagsHistory() {
@@ -217,12 +253,13 @@ public final class PreferencesHelper implements Constants {
     }
 
     public DeviceMergeTypesInfo getLocalDevicesMergeTypes() {
-        if (mDeviceMergeTypesInfo == null) {
-            String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
-            if (!TextUtils.isEmpty(json)) {
-                mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
+        try {
+            if (mDeviceMergeTypesInfo == null) {
+                String json = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Activity.MODE_PRIVATE).getString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, null);
+                if (!TextUtils.isEmpty(json)) {
+                    mDeviceMergeTypesInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceMergeTypesInfo.class);
+                }
             }
-        }
 //        if (mDeviceMergeTypesInfo != null) {
 //            //加入全部的类型数据
 //            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = mDeviceMergeTypesInfo.getConfig();
@@ -244,20 +281,24 @@ public final class PreferencesHelper implements Constants {
 //                sensorType.put("all", new SensorTypeStyles());
 //            }
 //        }
-        return mDeviceMergeTypesInfo;
+            return mDeviceMergeTypesInfo;
+        } catch (Throwable t) {
+            return null;
+        }
     }
 
-    public void saveLocalDevicesMergeTypes(DeviceMergeTypesInfo deviceMergeTypesInfo) {
-        if (deviceMergeTypesInfo != null) {
-            mDeviceMergeTypesInfo = deviceMergeTypesInfo;
-            String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(mDeviceMergeTypesInfo);
-            SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
-                    .MODE_PRIVATE);
-            SharedPreferences.Editor editor = sp.edit();
-            editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
-            editor.apply();
+    public boolean saveLocalDevicesMergeTypes(DeviceMergeTypesInfo deviceMergeTypesInfo) {
+        if (deviceMergeTypesInfo == null) {
+            return false;
         }
-
+        mDeviceMergeTypesInfo = deviceMergeTypesInfo;
+        String json = RetrofitServiceHelper.INSTANCE.getGson().toJson(mDeviceMergeTypesInfo);
+        SharedPreferences sp = SensoroCityApplication.getInstance().getSharedPreferences(PREFERENCE_LOCAL_DEVICES_MERGETYPES, Context
+                .MODE_PRIVATE);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putString(PREFERENCE_KEY_LOCAL_DEVICES_MERGETYPES, json);
+        editor.apply();
+        return true;
     }
 
     public boolean saveSearchHistoryText(String text, int type) {
@@ -350,5 +391,111 @@ public final class PreferencesHelper implements Constants {
             oldHistoryList.addAll(Arrays.asList(oldText.split(",")));
         }
         return oldHistoryList;
+    }
+
+    /**
+     * 获取配置字段 --故障主字段
+     *
+     * @param mainFunctionMainType
+     * @return
+     */
+    public MalfunctionTypeStyles getConfigMalfunctionMainTypes(String mainFunctionMainType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                DeviceMergeTypesInfo.DeviceMergeTypeConfig.MalfunctionTypeBean malfunctionType = config.getMalfunctionType();
+                if (malfunctionType != null) {
+                    Map<String, MalfunctionTypeStyles> mainTypes = malfunctionType.getMainTypes();
+                    if (mainTypes != null) {
+                        return mainTypes.get(mainFunctionMainType);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取配置字段 --故障子字段
+     *
+     * @param mainFunctionSubType
+     * @return
+     */
+    public MalfunctionTypeStyles getConfigMalfunctionSubTypes(String mainFunctionSubType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                DeviceMergeTypesInfo.DeviceMergeTypeConfig.MalfunctionTypeBean malfunctionType = config.getMalfunctionType();
+                if (malfunctionType != null) {
+                    Map<String, MalfunctionTypeStyles> subTypes = malfunctionType.getSubTypes();
+                    if (subTypes != null) {
+                        return subTypes.get(mainFunctionSubType);
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取配置字段 --设备副类型
+     *
+     * @param deviceType
+     * @return
+     */
+    public DeviceTypeStyles getConfigDeviceType(String deviceType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                Map<String, DeviceTypeStyles> deviceTypeStylesMap = config.getDeviceType();
+                if (deviceTypeStylesMap != null) {
+                    return deviceTypeStylesMap.get(deviceType);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取配置字段 --设备主类型
+     *
+     * @param mergeType
+     * @return
+     */
+    public MergeTypeStyles getConfigMergeType(String mergeType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                Map<String, MergeTypeStyles> mergeTypeStylesMap = config.getMergeType();
+                if (mergeTypeStylesMap != null) {
+                    return mergeTypeStylesMap.get(mergeType);
+                }
+            }
+        }
+        return null;
+    }
+
+    /**
+     * 获取配置字段 --传感器类型
+     *
+     * @param sensorType
+     * @return
+     */
+    public SensorTypeStyles getConfigSensorType(String sensorType) {
+        DeviceMergeTypesInfo localDevicesMergeTypes = getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                Map<String, SensorTypeStyles> sensorTypeStylesMap = config.getSensorType();
+                if (sensorTypeStylesMap != null) {
+                    return sensorTypeStylesMap.get(sensorType);
+                }
+            }
+        }
+        return null;
     }
 }

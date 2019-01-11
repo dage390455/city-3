@@ -17,9 +17,11 @@ package com.sensoro.smartcity.calendarview;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.IntentFilter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -50,6 +52,7 @@ public final class MonthViewPager extends ViewPager {
      * 是否使用滚动到某一天
      */
     private boolean isUsingScrollToCalendar = false;
+    private MonthViewPagerAdapter monthViewPagerAdapter;
 
     public MonthViewPager(Context context) {
         this(context, null);
@@ -83,7 +86,9 @@ public final class MonthViewPager extends ViewPager {
         mMonthCount = 12 * (mDelegate.getMaxYear() - mDelegate.getMinYear())
                 - mDelegate.getMinYearMonth() + 1 +
                 mDelegate.getMaxYearMonth();
-        setAdapter(new MonthViewPagerAdapter());
+        monthViewPagerAdapter = new MonthViewPagerAdapter();
+        setAdapter(monthViewPagerAdapter);
+
         addOnPageChangeListener(new OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -294,6 +299,92 @@ public final class MonthViewPager extends ViewPager {
         if (view != null) {
             view.setSelectedCalendar(mDelegate.mIndexCalendar);
             view.invalidate();
+            if (mParentLayout != null) {
+                mParentLayout.updateSelectPosition(view.getSelectedIndex(mDelegate.mIndexCalendar));
+            }
+        }
+        if (mParentLayout != null) {
+            int week = CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart());
+            mParentLayout.updateSelectWeek(week);
+        }
+
+        if (mDelegate.mCalendarSelectListener != null) {
+            mDelegate.mCalendarSelectListener.onCalendarSelect(calendar, false);
+        }
+        if (mDelegate.mInnerListener != null) {
+            mDelegate.mInnerListener.onMonthDateSelected(calendar, false);
+        }
+
+        updateSelected();
+    }
+
+    void setStartSelectedCalendar(int year, int month, int day) {
+        Calendar calendar = new Calendar();
+        calendar.setYear(year);
+        calendar.setMonth(month);
+        calendar.setDay(day);
+        calendar.setCurrentDay(calendar.equals(mDelegate.getCurrentDay()));
+        LunarCalendar.setupLunarCalendar(calendar);
+        mDelegate.mIndexCalendar = calendar;
+        mDelegate.mSelectedCalendar = calendar;
+        mDelegate.updateSelectCalendarScheme();
+        int y = calendar.getYear() - mDelegate.getMinYear();
+        int position = 12 * y + calendar.getMonth() - mDelegate.getMinYearMonth();
+
+        mDelegate.mSelectedStartRangeCalendar = calendar;
+        mDelegate.mSelectedEndRangeCalendar = null;
+        if (mDelegate.mCalendarRangeSelectListener != null) {
+            mDelegate.mCalendarRangeSelectListener.onCalendarRangeSelect(calendar,
+                    false);
+        }
+        BaseMonthView view = (BaseMonthView) findViewWithTag(position);
+        if (view != null) {
+            view.setSelectedCalendar(mDelegate.mIndexCalendar);
+            view.invalidate();
+
+
+            if (mParentLayout != null) {
+                mParentLayout.updateSelectPosition(view.getSelectedIndex(mDelegate.mIndexCalendar));
+            }
+        }
+        if (mParentLayout != null) {
+            int week = CalendarUtil.getWeekFromDayInMonth(calendar, mDelegate.getWeekStart());
+            mParentLayout.updateSelectWeek(week);
+        }
+
+        if (mDelegate.mCalendarSelectListener != null) {
+            mDelegate.mCalendarSelectListener.onCalendarSelect(calendar, false);
+        }
+        if (mDelegate.mInnerListener != null) {
+            mDelegate.mInnerListener.onMonthDateSelected(calendar, false);
+        }
+
+        updateSelected();
+        }
+
+    void setEndSelectedCalendar(int year, int month, int day) {
+        Calendar calendar = new Calendar();
+        calendar.setYear(year);
+        calendar.setMonth(month);
+        calendar.setDay(day);
+        calendar.setCurrentDay(calendar.equals(mDelegate.getCurrentDay()));
+        LunarCalendar.setupLunarCalendar(calendar);
+        mDelegate.mIndexCalendar = calendar;
+        mDelegate.mSelectedCalendar = calendar;
+        mDelegate.updateSelectCalendarScheme();
+        int y = calendar.getYear() - mDelegate.getMinYear();
+        int position = 12 * y + calendar.getMonth() - mDelegate.getMinYearMonth();
+        mDelegate.mSelectedEndRangeCalendar = calendar;
+        if (mDelegate.mCalendarRangeSelectListener != null) {
+            mDelegate.mCalendarRangeSelectListener.onCalendarRangeSelect(calendar,
+                    true);
+        }
+        BaseMonthView view = (BaseMonthView) findViewWithTag(position);
+        if (view != null) {
+            view.setSelectedCalendar(mDelegate.mIndexCalendar);
+            view.invalidate();
+
+
             if (mParentLayout != null) {
                 mParentLayout.updateSelectPosition(view.getSelectedIndex(mDelegate.mIndexCalendar));
             }

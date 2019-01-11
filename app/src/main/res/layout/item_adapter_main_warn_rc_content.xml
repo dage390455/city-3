@@ -64,7 +64,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_height"
         android:layout_marginEnd="20dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
@@ -80,7 +80,7 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="20dp"
         android:layout_marginTop="8dp"
-        android:background="@drawable/shape_btn_corner_29c_bg"
+        android:background="@drawable/shape_btn_corner_2_29c_bg"
         android:paddingBottom="6dp"
         android:paddingEnd="8dp"
         android:paddingStart="8dp"

@@ -12,6 +12,7 @@ import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.presenter.DeployResultActivityPresenter;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import butterknife.BindView;
@@ -54,6 +55,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     LinearLayout acDeployResultTvLlContact;
     @BindView(R.id.ac_deploy_result_tv_contact)
     TextView acDeployResultTvContact;
+    @BindView(R.id.ac_deploy_result_ll_we_chat)
+    LinearLayout acDeployResultLlWeChat;
+    @BindView(R.id.ac_deploy_result_tv_we_chat)
+    TextView acDeployResultTvWeChat;
     @BindView(R.id.ac_deploy_result_tv_signal)
     TextView acDeployResultTvSignal;
     @BindView(R.id.ac_deploy_result_ll_status)
@@ -76,6 +81,10 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     LinearLayout acDeployResultBottom;
     @BindView(R.id.ac_deploy_result_tv_error_msg)
     TextView acDeployResultTvErrorMsg;
+    @BindView(R.id.ac_deploy_result_ll_setting)
+    LinearLayout acDeployResultLlSetting;
+    @BindView(R.id.ac_deploy_result_tv_setting)
+    TextView acDeployResultTvSetting;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -86,7 +95,9 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     private void initView() {
-
+        if (!AppUtils.isChineseLanguage()) {
+            acDeployResultLlWeChat.setVisibility(View.GONE);
+        }
     }
 
 
@@ -147,6 +158,15 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     public void setContactTextView(String content) {
         acDeployResultTvLlContact.setVisibility(View.VISIBLE);
         acDeployResultTvContact.setText(content);
+    }
+
+    @Override
+    public void setWeChatTextView(String content) {
+        if (AppUtils.isChineseLanguage()) {
+            acDeployResultLlWeChat.setVisibility(View.VISIBLE);
+            acDeployResultTvWeChat.setText(content);
+        }
+
     }
 
     @Override
@@ -211,6 +231,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     }
 
     @Override
+    public void setResultSettingVisible(boolean isVisible) {
+        acDeployResultLlSetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
     public void setArrowsLeftVisible(boolean isVisible) {
         acDeployResultImvArrowsLeft.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
@@ -218,6 +243,11 @@ public class DeployResultActivity extends BaseActivity<IDeployResultActivityView
     @Override
     public void setTitleText(String text) {
         acDeployResultTitle.setText(text);
+    }
+
+    @Override
+    public void setDeployResultHasSetting(String setting) {
+        acDeployResultTvSetting.setText(setting);
     }
 
 

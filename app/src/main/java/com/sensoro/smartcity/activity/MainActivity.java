@@ -57,12 +57,11 @@ public class MainActivity extends BaseActivity<IMainView, MainPresenter> impleme
     }
 
     private void initBottomBar() {
-        //todo
-        BottomNavigationItem homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, "首页");
-        warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, "预警");
+        BottomNavigationItem homeItem = new BottomNavigationItem(R.drawable.selector_ac_main_home, mActivity.getString(R.string.main_page_home));
+        warnItem = new BottomNavigationItem(R.drawable.selector_ac_main_warning, mActivity.getString(R.string.main_page_warn));
         warnItem.setBadgeItem(new TextBadgeItem());
-        BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_malfunction, "故障");
-        BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, "管理");
+        BottomNavigationItem malfunctionItem = new BottomNavigationItem(R.drawable.selector_ac_main_malfunction, mActivity.getString(R.string.main_page_malfunction));
+        BottomNavigationItem managerItem = new BottomNavigationItem(R.drawable.selector_ac_main_manage, mActivity.getString(R.string.main_page_manage));
         acMainBottomBar.setTabSelectedListener(this);
         acMainBottomBar
                 .addItem(homeItem)

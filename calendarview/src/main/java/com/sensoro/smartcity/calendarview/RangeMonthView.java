@@ -17,6 +17,7 @@ package com.sensoro.smartcity.calendarview;
 
 import android.content.Context;
 import android.graphics.Canvas;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -29,6 +30,9 @@ public abstract class RangeMonthView extends BaseMonthView {
         super(context);
     }
 
+    private Calendar startDate;
+    private Calendar endDate;
+
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -38,6 +42,7 @@ public abstract class RangeMonthView extends BaseMonthView {
         onPreviewHook();
         int count = mLineCount * 7;
         int d = 0;
+
         for (int i = 0; i < mLineCount; i++) {
             for (int j = 0; j < 7; j++) {
                 Calendar calendar = mItems.get(d);
@@ -73,6 +78,7 @@ public abstract class RangeMonthView extends BaseMonthView {
         int y = i * mItemHeight;
         onLoopStart(x, y);
         boolean isSelected = isCalendarSelected(calendar);
+
         boolean hasScheme = calendar.hasScheme();
         boolean isPreSelected = isSelectPreCalendar(calendar);
         boolean isNextSelected = isSelectNextCalendar(calendar);
@@ -93,7 +99,7 @@ public abstract class RangeMonthView extends BaseMonthView {
                 onDrawSelected(canvas, calendar, x, y, false, isPreSelected, isNextSelected);
             }
         }
-        onDrawText(canvas, calendar, x, y, hasScheme, isSelected);
+        onDrawText(canvas, calendar, x, y, hasScheme, isSelected,isPreSelected, isNextSelected);
     }
 
     /**
@@ -160,27 +166,41 @@ public abstract class RangeMonthView extends BaseMonthView {
                 return;
             }
         }
-
-        if (mDelegate.mSelectedStartRangeCalendar == null || mDelegate.mSelectedEndRangeCalendar != null) {
+        int isSmall = -1;
+        if (mDelegate.mSelectedStartRangeCalendar != null && mDelegate.mSelectedEndRangeCalendar != null) {
             mDelegate.mSelectedStartRangeCalendar = calendar;
             mDelegate.mSelectedEndRangeCalendar = null;
         } else {
-            int compare = calendar.compareTo(mDelegate.mSelectedStartRangeCalendar);
-            if (mDelegate.getMinSelectRange() == -1 && compare <= 0) {
+            if (mDelegate.mSelectedStartRangeCalendar == null) {
                 mDelegate.mSelectedStartRangeCalendar = calendar;
                 mDelegate.mSelectedEndRangeCalendar = null;
-            } else if (compare < 0) {
-                mDelegate.mSelectedStartRangeCalendar = calendar;
-                mDelegate.mSelectedEndRangeCalendar = null;
-            } else if (compare == 0 &&
-                    mDelegate.getMinSelectRange() == 1) {
-                mDelegate.mSelectedEndRangeCalendar = calendar;
-            } else {
-                mDelegate.mSelectedEndRangeCalendar = calendar;
+            } else if (mDelegate.mSelectedEndRangeCalendar == null) {
+                int compare = calendar.compareTo(mDelegate.mSelectedStartRangeCalendar);
+                if (compare <= 0) {
+                    mDelegate.mSelectedEndRangeCalendar = mDelegate.mSelectedStartRangeCalendar;
+                    mDelegate.mSelectedStartRangeCalendar = calendar;
+                    //回调两次
+                    isSmall = 1;
+
+                } else {
+                    mDelegate.mSelectedEndRangeCalendar = calendar;
+                }
             }
+//            int compare = calendar.compareTo(mDelegate.mSelectedStartRangeCalendar);
+//            if (mDelegate.getMinSelectRange() == -1 && compare <= 0) {
+//                mDelegate.mSelectedStartRangeCalendar = calendar;
+//                mDelegate.mSelectedEndRangeCalendar = null;
+//            } else if (compare < 0) {
+//                mDelegate.mSelectedStartRangeCalendar = calendar;
+//                mDelegate.mSelectedEndRangeCalendar = null;
+//            } else if (compare == 0 &&
+//                    mDelegate.getMinSelectRange() == 1) {
+//                mDelegate.mSelectedEndRangeCalendar = calendar;
+//            } else {
+//                mDelegate.mSelectedEndRangeCalendar = calendar;
+//            }
 
         }
-
         mCurrentItem = mItems.indexOf(calendar);
 
         if (!calendar.isCurrentMonth() && mMonthViewPager != null) {
@@ -201,8 +221,15 @@ public abstract class RangeMonthView extends BaseMonthView {
             }
         }
         if (mDelegate.mCalendarRangeSelectListener != null) {
-            mDelegate.mCalendarRangeSelectListener.onCalendarRangeSelect(calendar,
-                    mDelegate.mSelectedEndRangeCalendar != null);
+            if(isSmall == 1){
+                mDelegate.mCalendarRangeSelectListener.onCalendarRangeSelect(mDelegate.mSelectedStartRangeCalendar,false);
+                mDelegate.mCalendarRangeSelectListener.onCalendarRangeSelect(mDelegate.mSelectedEndRangeCalendar,true);
+
+            }else{
+                mDelegate.mCalendarRangeSelectListener.onCalendarRangeSelect(calendar,
+                        mDelegate.mSelectedEndRangeCalendar != null);
+            }
+
         }
     }
 
@@ -272,5 +299,5 @@ public abstract class RangeMonthView extends BaseMonthView {
      * @param hasScheme  是否是标记的日期
      * @param isSelected 是否选中
      */
-    protected abstract void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected);
+    protected abstract void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected,boolean isSelectedPre, boolean isSelectedNext);
 }

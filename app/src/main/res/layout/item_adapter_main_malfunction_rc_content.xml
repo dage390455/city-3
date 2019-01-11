@@ -8,15 +8,29 @@
     android:layout_marginTop="12dp">
 
     <TextView
+        android:id="@+id/main_malfunction_rc_content_tv_time"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text="@string/unknown"
+        android:textSize="14sp"
+        android:textColor="@color/c_a6a6a6"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintStart_toEndOf="@+id/main_malfunction_rc_content_tv_reason"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="16dp"
+        app:layout_goneMarginStart="4dp"/>
+    <TextView
         android:id="@+id/main_malfunction_rc_content_tv_state"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="16dp"
-        android:text="未知"
+        android:text="@string/unknown"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@id/main_malfunction_rc_content_tv_time"
+        app:layout_constraintBottom_toBottomOf="@id/main_malfunction_rc_content_tv_time"/>
 
     <View
         android:id="@+id/main_malfunction_rc_content_view"
@@ -32,24 +46,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
-        android:text="未知"
+        android:text="@string/unknown"
         android:textSize="16sp"
         app:layout_constraintBottom_toBottomOf="@id/main_malfunction_rc_content_tv_state"
         app:layout_constraintStart_toEndOf="@id/main_malfunction_rc_content_view"
         app:layout_goneMarginStart="4dp"/>
-    <TextView
-        android:id="@+id/main_malfunction_rc_content_tv_time"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
-        android:text="未知"
-        android:textSize="14sp"
-        android:textColor="@color/c_a6a6a6"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginEnd="20dp"
-        app:layout_constraintBottom_toBottomOf="@id/main_malfunction_rc_content_tv_state"
-        app:layout_constraintStart_toEndOf="@id/main_malfunction_rc_content_tv_reason"
-        app:layout_goneMarginStart="4dp"/>
+
 
     <TextView
         android:id="@+id/main_malfunction_rc_content_tv_content"

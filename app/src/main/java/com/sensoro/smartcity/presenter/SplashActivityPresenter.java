@@ -27,13 +27,16 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     @Override
     public void initData(Context context) {
         mContext = (Activity) context;
-        //TODO 逻辑判断
+        // 逻辑判断
         initPushSDK();
         checkLoginState();
         LogUtils.loge("SplashActivityPresenter create ");
     }
 
     private void checkLoginState() {
+//        Intent intent = new Intent(mContext, ContractPreviewActivity.class);
+//        getView().startAC(intent);
+//        getView().finishAc();
         try {
             RetrofitServiceHelper.INSTANCE.getBaseUrlType();
             String sessionID = RetrofitServiceHelper.INSTANCE.getSessionId();
@@ -71,7 +74,8 @@ public class SplashActivityPresenter extends BasePresenter<ISplashActivityView> 
     }
 
     private void openMain(final EventLoginData eventLoginData) {
-        //TODO 数据加载
+        // 提前加载数据
+        PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {

@@ -1,5 +1,7 @@
 package com.sensoro.smartcity.server.bean;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.support.annotation.NonNull;
 
 import java.io.Serializable;
@@ -57,4 +59,41 @@ public class ContractsTemplateInfo implements Serializable, Comparable<Contracts
         return o.deviceType.compareTo(this.deviceType);
 //        return 0;
     }
+
+//    @Override
+//    public int describeContents() {
+//        return 0;
+//    }
+//
+//    @Override
+//    public void writeToParcel(Parcel dest, int flags) {
+//        dest.writeString(this.deviceType);
+//        dest.writeString(this.name);
+//        dest.writeString(this.hardwareVersion);
+//        dest.writeInt(this.quantity);
+//        dest.writeInt(this.price);
+//    }
+
+//    public ContractsTemplateInfo() {
+//    }
+//
+//    protected ContractsTemplateInfo(Parcel in) {
+//        this.deviceType = in.readString();
+//        this.name = in.readString();
+//        this.hardwareVersion = in.readString();
+//        this.quantity = in.readInt();
+//        this.price = in.readInt();
+//    }
+
+//    public static final Creator<ContractsTemplateInfo> CREATOR = new Creator<ContractsTemplateInfo>() {
+//        @Override
+//        public ContractsTemplateInfo createFromParcel(Parcel source) {
+//            return new ContractsTemplateInfo(source);
+//        }
+//
+//        @Override
+//        public ContractsTemplateInfo[] newArray(int size) {
+//            return new ContractsTemplateInfo[size];
+//        }
+//    };
 }

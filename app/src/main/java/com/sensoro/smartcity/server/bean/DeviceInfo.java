@@ -43,6 +43,16 @@ public class DeviceInfo implements Serializable, Comparable {
     private String malfunctionType;
     private Map<String, MalfunctionDataBean> malfunctionData;
     private String address;
+    private boolean deployFlag;
+
+
+    public boolean isDeployFlag() {
+        return deployFlag;
+    }
+
+    public void setDeployFlag(boolean deployFlag) {
+        this.deployFlag = deployFlag;
+    }
 
 
     public String getAddress() {

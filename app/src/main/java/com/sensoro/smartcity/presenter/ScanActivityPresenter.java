@@ -10,6 +10,7 @@ import android.os.Vibrator;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.DeployManualActivity;
+import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IScanActivityView;
@@ -17,7 +18,6 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.smartcity.util.DeployAnalyzerUtils;
 import com.sensoro.smartcity.util.LogUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -33,7 +33,7 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
     private Activity mContext;
     private static final float BEEP_VOLUME = 0.10f;
     private MediaPlayer mediaPlayer;
-    private int scanType = -1;
+    public int scanType = -1;
     private InspectionTaskDeviceDetail mDeviceDetail;
     private InspectionIndexTaskInfo mTaskInfo;
 
@@ -84,7 +84,6 @@ public class ScanActivityPresenter extends BasePresenter<IScanActivityView> impl
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:

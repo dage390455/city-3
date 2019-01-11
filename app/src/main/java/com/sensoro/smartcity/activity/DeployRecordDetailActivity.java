@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -18,9 +19,10 @@ import com.sensoro.smartcity.base.BaseActivity;
 import com.sensoro.smartcity.imainviews.IDeployRecordDetailActivityView;
 import com.sensoro.smartcity.presenter.DeployRecordDetailActivityPresenter;
 import com.sensoro.smartcity.server.bean.DeployRecordInfo;
+import com.sensoro.smartcity.util.AppUtils;
 import com.sensoro.smartcity.widget.SensoroLinearLayoutManager;
-import com.sensoro.smartcity.widget.toast.SensoroToast;
 import com.sensoro.smartcity.widget.SpacesItemDecoration;
+import com.sensoro.smartcity.widget.toast.SensoroToast;
 
 import java.util.List;
 
@@ -45,6 +47,8 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     TextView acDeployRecordDetailTvTime;
     @BindView(R.id.ac_deploy_record_detail_rc_contact)
     RecyclerView acDeployRecordDetailRcContact;
+    @BindView(R.id.ac_deploy_record_detail_tv_we_chat)
+    TextView acDeployRecordDetailTvWeChat;
     @BindView(R.id.ac_deploy_record_detail_tv_pic_count)
     TextView acDeployRecordDetailTvPicCount;
     @BindView(R.id.ac_deploy_record_detail_tv_fixed_point_signal)
@@ -55,8 +59,21 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     LinearLayout acDeployRecordDetailLlFixedPoint;
     @BindView(R.id.ac_deploy_record_detail_ll_deploy_pic)
     LinearLayout acDeployRecordDetailLlDeployPic;
+    @BindView(R.id.ac_deploy_device_record_detail_tv_device_type)
+    TextView acDeployDeviceRecordDetailTvDeviceType;
+    @BindView(R.id.ac_deploy_device_detail_deploy_record_setting_line)
+    View acDeployDeviceDetailDeployRecordSettingLine;
+    @BindView(R.id.ac_deploy_device_detail_ll_deploy_record_setting)
+    LinearLayout acDeployDeviceDetailLlDeployRecordSetting;
+    @BindView(R.id.ac_deploy_device_detail_tv_deploy_record_setting)
+    TextView acDeployDeviceDetailTvDeployRecordSetting;
+    @BindView(R.id.ll_deploy_record_detail_we_chat)
+    LinearLayout llDeployRecordDetailWeChat;
+    @BindView(R.id.line_we_chat)
+    View lineWeChat;
     private TagAdapter mTagAdapter;
     private ContactAdapter mContactAdapter;
+
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -71,7 +88,10 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
         includeTextTitleTvTitle.setVisibility(View.GONE);
         initRcTag();
-
+        if (!AppUtils.isChineseLanguage()) {
+            lineWeChat.setVisibility(View.GONE);
+            llDeployRecordDetailWeChat.setVisibility(View.GONE);
+        }
         initRcContact();
     }
 
@@ -187,6 +207,11 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
     }
 
     @Override
+    public void seDeployWeChat(String text) {
+        acDeployRecordDetailTvWeChat.setText(text);
+    }
+
+    @Override
     public void setPicCount(String content) {
         acDeployRecordDetailTvPicCount.setText(content);
     }
@@ -238,5 +263,30 @@ public class DeployRecordDetailActivity extends BaseActivity<IDeployRecordDetail
             acDeployRecordDetailTvFixedPointSignal.setBackground(getResources().getDrawable(R.drawable.shape_signal_none));
         }
         acDeployRecordDetailTvFixedPointSignal.setText(signal_text);
+    }
+
+    @Override
+    public void setDeployDeviceRecordDeviceType(String text) {
+        acDeployDeviceRecordDetailTvDeviceType.setText(text);
+    }
+
+    @Override
+    public void setDeployDetailDeploySettingVisible(boolean isVisible) {
+        acDeployDeviceDetailDeployRecordSettingLine.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+        acDeployDeviceDetailLlDeployRecordSetting.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void setDeployDeviceDetailDeploySetting(String setting) {
+        if (TextUtils.isEmpty(setting)) {
+            setDeployDetailDeploySettingVisible(false);
+            acDeployDeviceDetailTvDeployRecordSetting.setTextColor(mActivity.getResources().getColor(R.color.c_a6a6a6));
+            acDeployDeviceDetailTvDeployRecordSetting.setText(mActivity.getString(R.string.not_setting));
+        } else {
+            setDeployDetailDeploySettingVisible(true);
+            acDeployDeviceDetailTvDeployRecordSetting.setTextColor(mActivity.getResources().getColor(R.color.c_252525));
+            acDeployDeviceDetailTvDeployRecordSetting.setText(setting);
+        }
+
     }
 }

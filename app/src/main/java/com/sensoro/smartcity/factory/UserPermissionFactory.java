@@ -40,6 +40,7 @@ public class UserPermissionFactory {
         eventLoginData.hasSignalCheck = getHasSignalCheck(grants);
         eventLoginData.hasSignalConfig = getHasSignalConfig(grants);
         eventLoginData.hasBadSignalUpload = getHasBadSignalUpload(grants);
+        eventLoginData.hasDevicePositionCalibration = getHasDevicePositionCalibration(grants);
         LogUtils.loge("logPresenter", "eventLoginData = " + eventLoginData.toString());
         //
         UserInfo.Account account = userInfo.getAccount();
@@ -237,6 +238,22 @@ public class UserPermissionFactory {
     }
 
     /**
+     * 设备位置校准
+     *
+     * @param grants
+     * @return
+     */
+    private static boolean getHasDevicePositionCalibration(GrantsInfo grants) {
+        if (grants != null) {
+            List<String> grantsDevice = grants.getDevice();
+            if (grantsDevice != null) {
+                return grantsDevice.contains("modify");
+            }
+        }
+        return false;
+    }
+
+    /**
      * 信号测试权限
      *
      * @param grants
@@ -294,7 +311,7 @@ public class UserPermissionFactory {
         if (grants != null) {
             List<String> grantsDeploy = grants.getDeploy();
             if (grantsDeploy != null) {
-                return grantsDeploy.contains("badSignalUpload");
+                return grantsDeploy.contains("_badSignalUpload");
             }
         }
         return false;

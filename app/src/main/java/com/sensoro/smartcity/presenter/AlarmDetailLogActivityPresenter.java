@@ -65,12 +65,13 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         eventData.code = EVENT_DATA_ALARM_DETAIL_RESULT;
         eventData.data = deviceAlarmLogInfo;
         EventBus.getDefault().post(eventData);
-        getView().finishAc();
+        if (isAttachedView()) {
+            getView().finishAc();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         //
@@ -111,25 +112,34 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     public void refreshData(boolean isInit) {
         //
         String deviceName = deviceAlarmLogInfo.getDeviceName();
-        getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
-        String alarmTime = DateUtil.getStrTimeToday(mContext, deviceAlarmLogInfo.getCreatedTime(), 1);
+        if (isAttachedView()) {
+            getView().setDeviceNameTextView(TextUtils.isEmpty(deviceName) ? deviceAlarmLogInfo.getDeviceSN() : deviceName);
+        }
+        long createdTime = deviceAlarmLogInfo.getCreatedTime();
+        String alarmTime = DateUtil.getStrTimeToday(mContext, createdTime, 1);
         //TODO 半年累计报警次数
         long current = System.currentTimeMillis();
         if (isInit) {
-            getView().showProgressDialog();
+            if (isAttachedView()) {
+                getView().showProgressDialog();
+            }
         }
         RetrofitServiceHelper.INSTANCE.getAlarmCount(current - 3600 * 24 * 180 * 1000L, current, null, deviceAlarmLogInfo.getDeviceSN()).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<AlarmCountRsp>(this) {
             @Override
             public void onCompleted(AlarmCountRsp alarmCountRsp) {
                 int count = alarmCountRsp.getCount();
-                getView().setAlarmCount(count + "");
-                getView().dismissProgressDialog();
+                if (isAttachedView()) {
+                    getView().setAlarmCount(count + "");
+                    getView().dismissProgressDialog();
+                }
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
-                getView().toastShort(errorMsg);
+                if (isAttachedView()) {
+                    getView().dismissProgressDialog();
+                    getView().toastShort(errorMsg);
+                }
             }
         });
 //        getView().setDisplayStatus(deviceAlarmLogInfo.getDisplayStatus());
@@ -140,32 +150,42 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             for (int i = recordInfoArray.length - 1; i >= 0; i--) {
                 mList.add(recordInfoArray[i]);
             }
-            getView().updateAlertLogContentAdapter(mList);
+            if (isAttachedView()) {
+                getView().updateAlertLogContentAdapter(mList);
+            }
             //
             switch (deviceAlarmLogInfo.getDisplayStatus()) {
                 case DISPLAY_STATUS_CONFIRM:
                     isReConfirm = false;
-                    getView().setConfirmColor(mContext.getResources().getColor(R.color.white));
-                    getView().setConfirmBg(R.drawable.shape_btn_corner_29c_bg_4dp);
-                    getView().setConfirmText(mContext.getString(R.string.confirming));
+                    if (isAttachedView()) {
+                        getView().setConfirmColor(mContext.getResources().getColor(R.color.white));
+                        getView().setConfirmBg(R.drawable.shape_btn_corner_29c_bg_4dp);
+                        getView().setConfirmText(mContext.getString(R.string.alarm_log_alarm_warn_confirm));
+                    }
                     break;
                 case DISPLAY_STATUS_ALARM:
                 case DISPLAY_STATUS_MIS_DESCRIPTION:
                 case DISPLAY_STATUS_TEST:
                 case DISPLAY_STATUS_RISKS:
                     isReConfirm = true;
-                    getView().setConfirmColor(mContext.getResources().getColor(R.color.c_252525));
-                    getView().setConfirmBg(R.drawable.shape_bg_solid_fa_stroke_df_corner_4dp);
-                    getView().setConfirmText(mContext.getString(R.string.confirming_again));
+                    if (isAttachedView()) {
+                        getView().setConfirmColor(mContext.getResources().getColor(R.color.c_252525));
+                        getView().setConfirmBg(R.drawable.shape_bg_solid_fa_stroke_df_corner_4dp);
+                        getView().setConfirmText(mContext.getString(R.string.confirming_again));
+                    }
                     break;
             }
             for (AlarmInfo.RecordInfo recordInfo : recordInfoArray) {
                 if (recordInfo.getType().equals("recovery")) {
-                    getView().setCurrentAlarmState(0, alarmTime);
+                    if (isAttachedView()) {
+                        getView().setCurrentAlarmState(0, alarmTime);
+                    }
                     return;
                 }
             }
-            getView().setCurrentAlarmState(1, alarmTime);
+            if (isAttachedView()) {
+                getView().setCurrentAlarmState(1, alarmTime);
+            }
         }
 
 
@@ -194,14 +214,18 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
                 intent.setClass(mContext, VideoPlayActivity.class);
                 intent.putExtra("path_record", (Serializable) imageItem);
                 intent.putExtra("video_del", true);
-                getView().startAC(intent);
+                if (isAttachedView()) {
+                    getView().startAC(intent);
+                }
             } else {
                 //
                 Intent intentPreview = new Intent(mContext, ImageAlarmPhotoDetailActivity.class);
                 intentPreview.putExtra(ImagePicker.EXTRA_IMAGE_ITEMS, items);
                 intentPreview.putExtra(ImagePicker.EXTRA_SELECTED_IMAGE_POSITION, position);
                 intentPreview.putExtra(ImagePicker.EXTRA_FROM_ITEMS, true);
-                getView().startAC(intentPreview);
+                if (isAttachedView()) {
+                    getView().startAC(intentPreview);
+                }
             }
 
         }
@@ -218,7 +242,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
         String tempNumber = deviceAlarmLogInfo.getDeviceNotification().getContent();
 
         if (TextUtils.isEmpty(tempNumber)) {
-            getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+            if (isAttachedView()) {
+                getView().toastShort(mContext.getString(R.string.no_find_contact_phone_number));
+            }
         } else {
             AppUtils.diallPhone(tempNumber, mContext);
         }
@@ -231,47 +257,61 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
             if (AppUtils.doNavigation(mContext, destPosition)) {
                 return;
             } else {
-                getView().toastShort(mContext.getString(R.string.location_not_obtained));
+                if (isAttachedView()) {
+                    getView().toastShort(mContext.getString(R.string.location_not_obtained));
+                }
             }
         }
-        getView().toastShort(mContext.getString(R.string.location_not_obtained));
+        if (isAttachedView()) {
+            getView().toastShort(mContext.getString(R.string.location_not_obtained));
+        }
     }
 
     @Override
     public void onPopupCallback(int statusResult, int statusType, int statusPlace, List<ScenesData> scenesDataList, String remark) {
-        getView().setUpdateButtonClickable(false);
-        getView().showProgressDialog();
+        if (isAttachedView()) {
+            getView().setUpdateButtonClickable(false);
+            getView().showProgressDialog();
+        }
         RetrofitServiceHelper.INSTANCE.doUpdatePhotosUrl(deviceAlarmLogInfo.get_id(), statusResult, statusType,
                 statusPlace, remark, isReConfirm, scenesDataList).subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new CityObserver<DeviceAlarmItemRsp>(this) {
 
 
-                            @Override
-                            public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
-                                if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
-                                    getView().toastShort(mContext.getResources().getString(R.string
-                                            .tips_commit_success));
-                                    deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
-                                    refreshData(false);
-                                } else {
-                                    getView().toastShort(mContext.getResources().getString(R.string
-                                            .tips_commit_failed));
-                                }
-                                getView().dismissProgressDialog();
-                                getView().dismissAlarmPopupView();
+                    @Override
+                    public void onCompleted(DeviceAlarmItemRsp deviceAlarmItemRsp) {
+                        if (deviceAlarmItemRsp.getErrcode() == ResponseBase.CODE_SUCCESS) {
+                            if (isAttachedView()) {
+                                getView().toastShort(mContext.getResources().getString(R.string
+                                        .tips_commit_success));
                             }
+                            deviceAlarmLogInfo = deviceAlarmItemRsp.getData();
+                            refreshData(false);
+                        } else {
+                            if (isAttachedView()) {
+                                getView().toastShort(mContext.getResources().getString(R.string
+                                        .tips_commit_failed));
+                            }
+                        }
+                        if (isAttachedView()) {
+                            getView().dismissProgressDialog();
+                            getView().dismissAlarmPopupView();
+                        }
+                    }
 
-                            @Override
-                            public void onErrorMsg(int errorCode, String errorMsg) {
-                                getView().dismissProgressDialog();
-                                getView().toastShort(errorMsg);
-                                getView().setUpdateButtonClickable(true);
-                            }
-                        });
+                    @Override
+                    public void onErrorMsg(int errorCode, String errorMsg) {
+                        if (isAttachedView()) {
+                            getView().dismissProgressDialog();
+                            getView().toastShort(errorMsg);
+                            getView().setUpdateButtonClickable(true);
+                        }
+                    }
+                });
     }
 
     public void handlerActivityResult(int requestCode, int resultCode, Intent data) {
-        //TODO 对照片信息统一处理
+        // 对照片信息统一处理
         if (resultCode == ImagePicker.RESULT_CODE_ITEMS) {
             //添加图片返回
             if (data != null && requestCode == REQUEST_CODE_SELECT) {
@@ -337,7 +377,9 @@ public class AlarmDetailLogActivityPresenter extends BasePresenter<IAlarmDetailL
     public void doAlarmHistory() {
         Intent intent = new Intent(mContext, AlarmHistoryLogActivity.class);
         intent.putExtra(EXTRA_SENSOR_SN, deviceAlarmLogInfo.getDeviceSN());
-        getView().startAC(intent);
+        if (isAttachedView()) {
+            getView().startAC(intent);
+        }
     }
 
     @Override

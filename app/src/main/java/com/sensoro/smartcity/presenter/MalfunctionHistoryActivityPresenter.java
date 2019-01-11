@@ -15,6 +15,8 @@ import com.sensoro.smartcity.server.response.MalfunctionListRsp;
 import com.sensoro.smartcity.util.DateUtil;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -30,6 +32,20 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
     private Long startTime;
     private Long endTime;
     private final List<MalfunctionListInfo> mMalfunctionInfoList = new ArrayList<>();
+    private final Comparator<MalfunctionListInfo> deviceMalfunctionInfoComparator = new Comparator<MalfunctionListInfo>() {
+        @Override
+        public int compare(MalfunctionListInfo o1, MalfunctionListInfo o2) {
+            long l = o2.getCreatedTime() - o1.getCreatedTime();
+            if (l > 0) {
+                return 1;
+            } else if (l < 0) {
+                return -1;
+            } else {
+                return 0;
+            }
+
+        }
+    };
 
     @Override
     public void initData(Context context) {
@@ -101,6 +117,7 @@ public class MalfunctionHistoryActivityPresenter extends BasePresenter<IMalfunct
         }
         List<MalfunctionListInfo> malfunctionListInfoList = malfunctionListRsp.getData();
         mMalfunctionInfoList.addAll(malfunctionListInfoList);
+        Collections.sort(mMalfunctionInfoList, deviceMalfunctionInfoComparator);
         getView().updateMalfunctionListAdapter(mMalfunctionInfoList);
     }
 

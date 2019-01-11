@@ -5,18 +5,6 @@ import java.util.List;
 
 public class InspectionIndexTaskInfo implements Serializable{
 
-    /**
-     * deviceSummary : [{"type":"fhsj_smoke","num":1}]
-     * identifier : XJ201809201409063438
-     * status : 0
-     * createdTime : 1537426266343
-     * createdBy : 5b3b95bb4c6a5ffb40b0dc81
-     * endTime : 1538323200000
-     * beginTime : 1536768000000
-     * inspectorIds : ["5ba218e768443250d09741d3"]
-     * name : 北京市望京soho一期巡检任务
-     * id : 5ba3435a94ae2459e6830a34
-     */
 
     private String identifier;
     private int status;

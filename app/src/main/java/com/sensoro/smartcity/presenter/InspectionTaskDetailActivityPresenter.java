@@ -91,7 +91,6 @@ public class InspectionTaskDetailActivityPresenter extends BasePresenter<IInspec
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         //上报异常结果成功

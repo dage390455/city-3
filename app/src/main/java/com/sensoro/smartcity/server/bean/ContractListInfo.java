@@ -5,40 +5,6 @@ import java.util.List;
 
 public class ContractListInfo implements Serializable {
 
-    /**
-     * id : 111
-     * created_type : 1
-     * card_id : null
-     * sex : 0
-     * enterprise_card_id : 无
-     * enterprise_register_id : 无
-     * cid : null
-     * customer_name : 无
-     * customer_enterprise_name : 无
-     * customer_enterprise_validity : null
-     * customer_address : 无
-     * customer_phone : 13111111111
-     * place_type : 企业
-     * uid : 590c235044aa4369905d455b
-     * appId : 50I35FhvOAw9
-     * username : 宁波升哲物联网科技有限公司
-     * operator : DEMO
-     * address : 慈溪市白沙街道文化北路 185 号 (宝洁大厦 14 层)
-     * phone : 0574-63590777
-     * contract_type : 1
-     * contract_confirm_url : null
-     * contract_number : CIXI-ZH-20180731-3
-     * ctid : 0
-     * devices : [{"deviceType":"温度贴片","hardwareVersion":"1","quantity":1,"price":3000},{"deviceType":"烟雾传感器",
-     * "hardwareVersion":"1","quantity":1,"price":3000},{"deviceType":"可燃气体传感器","hardwareVersion":"1","quantity":2,
-     * "price":3000}]
-     * payTimes : 2
-     * confirmed : true
-     * serviceTime : 2
-     * confirmTime : null
-     * createdAt : 2018-07-31T06:13:12.981Z
-     * updatedAt : 2018-07-31T06:13:12.981Z
-     */
 
     private int id;
     private int created_type;
@@ -70,6 +36,16 @@ public class ContractListInfo implements Serializable {
     private String confirmTime;
     private String createdAt;
     private String updatedAt;
+    private String fdd_viewpdf_url;
+
+    public String getFdd_viewpdf_url() {
+        return fdd_viewpdf_url;
+    }
+
+    public void setFdd_viewpdf_url(String fdd_viewpdf_url) {
+        this.fdd_viewpdf_url = fdd_viewpdf_url;
+    }
+
     private List<ContractsTemplateInfo> devices;
 
 

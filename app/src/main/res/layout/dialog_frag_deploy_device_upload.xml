@@ -29,7 +29,7 @@
     android:layout_marginTop="16dp"/>
     <View
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_height"
         android:layout_marginTop="24dp"
         android:background="@color/c_dfdfdf"/>
     <LinearLayout

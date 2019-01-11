@@ -76,8 +76,8 @@ public class AlarmDetailPhotoAdapter extends RecyclerView.Adapter<AlarmDetailPho
             itemView.setOnClickListener(this);
             //根据条目位置设置图片
             ScenesData scenesData = mData.get(position);
-            boolean isVideo = scenesData.type.equalsIgnoreCase("video");
-            if (isVideo){
+            boolean isVideo = "video".equalsIgnoreCase(scenesData.type);
+            if (isVideo) {
                 Glide.with(mContext)                             //配置上下文
                         .load(scenesData.thumbUrl)
                         .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
@@ -85,7 +85,7 @@ public class AlarmDetailPhotoAdapter extends RecyclerView.Adapter<AlarmDetailPho
                         .placeholder(R.drawable.ic_default_image)    //设置占位图片
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                         .into(ivPicAlarm);
-            }else {
+            } else {
                 Glide.with(mContext)                             //配置上下文
                         .load(scenesData.url)
                         .thumbnail(0.01f)//设置图片路径(fix #8,文件名包含%符号 无法识别和显示)
@@ -94,7 +94,7 @@ public class AlarmDetailPhotoAdapter extends RecyclerView.Adapter<AlarmDetailPho
                         .diskCacheStrategy(DiskCacheStrategy.ALL)//缓存全尺寸
                         .into(ivPicAlarm);
             }
-            iv_record.setVisibility(isVideo ?View.VISIBLE:View.GONE);
+            iv_record.setVisibility(isVideo ? View.VISIBLE : View.GONE);
 //            ivPicAlarm.setImageResource(R.drawable.ic_default_image);
 
 //            ImagePicker.getInstance().getImageLoader().displayImage((Activity) mContext, url, ivPicAlarm, 0, 0);

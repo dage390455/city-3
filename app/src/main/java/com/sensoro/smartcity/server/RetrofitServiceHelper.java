@@ -13,6 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
+import com.sensoro.smartcity.server.bean.DeployContralSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
@@ -58,7 +59,9 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Cache;
@@ -477,8 +480,8 @@ public enum RetrofitServiceHelper {
      * @param endTime
      * @return
      */
-    public Observable<DeployRecordRsp> getDeployRecordList(String searchText, Long beginTime, Long endTime, String owners, String signalQuality) {
-        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(searchText, beginTime, endTime, owners, signalQuality);
+    public Observable<DeployRecordRsp> getDeployRecordList(String sn, String searchText, Long beginTime, Long endTime, String owners, String signalQuality, Integer limit, Integer offset, Boolean group) {
+        Observable<DeployRecordRsp> deployRecordList = retrofitService.getDeployRecordList(sn, searchText, beginTime, endTime, owners, signalQuality, limit, offset, group);
         RxApiManager.getInstance().add("getDeployRecordList", deployRecordList.subscribe());
         return deployRecordList;
     }
@@ -496,18 +499,18 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, HashMap<String, DeployContralSettingData> settingMap) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (name != null) {
                 jsonObject.put("name", name);
             }
@@ -518,12 +521,29 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
+                JSONArray jsonArrayImg = new JSONArray();
                 for (String url : imgUrls) {
-                    jsonArray.put(url);
+                    jsonArrayImg.put(url);
                 }
-                jsonObject.put("imgUrls", jsonArray);
+                jsonObject.put("imgUrls", jsonArrayImg);
             }
+            if (!TextUtils.isEmpty(wxPhone)) {
+                jsonObject.put("wxPhone", wxPhone);
+            }
+            if (settingMap != null) {
+                JSONObject jsonObjectOut = new JSONObject();
+                for (Map.Entry<String, DeployContralSettingData> entrySet : settingMap.entrySet()) {
+                    String key = entrySet.getKey();
+                    if (!TextUtils.isEmpty(key)) {
+                        DeployContralSettingData value = entrySet.getValue();
+                        JSONObject jsonObjectIn = new JSONObject();
+                        jsonObjectIn.put("initValue", value.getInitValue());
+                        jsonObjectOut.put(key, jsonObjectIn);
+                    }
+                }
+                jsonObject.put("config", jsonObjectOut);
+            }
+
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -540,7 +560,7 @@ public enum RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls) {
+            name, String contact, String content, List<String> imgUrls, String wxPhone) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -554,13 +574,13 @@ public enum RetrofitServiceHelper {
             }
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (!TextUtils.isEmpty(name)) {
                 jsonObject.put("name", name);
             }
@@ -571,11 +591,14 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("content", content);
             }
             if (imgUrls != null && imgUrls.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
+                JSONArray jsonArrayImg = new JSONArray();
                 for (String url : imgUrls) {
-                    jsonArray.put(url);
+                    jsonArrayImg.put(url);
                 }
-                jsonObject.put("imgUrls", jsonArray);
+                jsonObject.put("imgUrls", jsonArrayImg);
+            }
+            if (!TextUtils.isEmpty(wxPhone)) {
+                jsonObject.put("wxPhone", wxPhone);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -602,13 +625,13 @@ public enum RetrofitServiceHelper {
         try {
             jsonObject.put("lon", lon);
             jsonObject.put("lat", lat);
+            JSONArray jsonArray = new JSONArray();
             if (tags != null && tags.size() > 0) {
-                JSONArray jsonArray = new JSONArray();
                 for (String temp : tags) {
                     jsonArray.put(temp);
                 }
-                jsonObject.put("tags", jsonArray);
             }
+            jsonObject.put("tags", jsonArray);
             if (name != null) {
                 jsonObject.put("name", name);
             }
@@ -775,7 +798,7 @@ public enum RetrofitServiceHelper {
         return contractstemplate;
     }
 
-    public Observable<ContractAddRsp> getNewContract(Integer contractType, int createType, String cardId,
+    public Observable<ContractAddRsp> getNewContract(Integer contractType, String cardId,
                                                      Integer sex, String enterpriseCardId,
                                                      String enterpriseRegisterId,
                                                      String customerName,
@@ -785,7 +808,7 @@ public enum RetrofitServiceHelper {
                                                      String customerAddress,
                                                      String customerPhone,
                                                      String placeType,
-                                                     ArrayList<ContractsTemplateInfo> devicesList,
+                                                     List<ContractsTemplateInfo> devicesList,
                                                      int payTimes,
                                                      //可选
                                                      Boolean confirmed,
@@ -795,7 +818,7 @@ public enum RetrofitServiceHelper {
             if (contractType != null) {
                 jsonObject.put("contract_type", contractType);
             }
-            jsonObject.put("created_type", createType);
+//            jsonObject.put("created_type", createType);
             if (cardId != null) {
                 jsonObject.put("card_id", cardId);
             }
@@ -1209,7 +1232,7 @@ public enum RetrofitServiceHelper {
         return devicesMergeTypes;
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec){
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1217,21 +1240,21 @@ public enum RetrofitServiceHelper {
             for (String sn : snList) {
                 jsonSnList.put(sn);
             }
-            jsonObject.put("snList",jsonSnList);
-            jsonObject.put("type",type);
+            jsonObject.put("snList", jsonSnList);
+            jsonObject.put("type", type);
 
-            if(interval != null){
-                jsonObject.put("interval",type);
+            if (interval != null) {
+                jsonObject.put("interval", type);
             }
-            if(rules != null){
+            if (rules != null) {
                 JSONArray jsonRules = new JSONArray();
                 for (String rule : rules) {
                     jsonRules.put(rule);
                 }
-                jsonObject.put("rules",jsonRules);
+                jsonObject.put("rules", jsonRules);
             }
-            if(switchSpec != null){
-                jsonObject.put("switchSpec",switchSpec);
+            if (switchSpec != null) {
+                jsonObject.put("switchSpec", switchSpec);
             }
 
         } catch (JSONException e) {
@@ -1242,5 +1265,110 @@ public enum RetrofitServiceHelper {
         Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation = retrofitService.doMonitorPointOperation(body);
         RxApiManager.getInstance().add("doMonitorPointOperation", doMonitorPointOperation.subscribe());
         return doMonitorPointOperation;
+    }
+
+    public Observable<DeviceDeployRsp> doDevicePositionCalibration(String sn, Double lon, Double lat) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("lon", lon);
+            jsonObject.put("lat", lat);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+
+        Observable<DeviceDeployRsp> doDevicePositionCalibration = retrofitService.doDevicePositionCalibration(sn, body);
+        RxApiManager.getInstance().add("doDevicePositionCalibration", doDevicePositionCalibration.subscribe());
+        return doDevicePositionCalibration;
+    }
+
+    public Observable<ResponseBase> modifyContract(String uid, Integer contractID, Integer contractType, String cardId, Integer sex, String enterpriseCardId,
+                                                   String enterpriseRegisterId,
+                                                   String customerName,
+                                                   String customerEnterpriseName,
+                                                   String customerEnterpriseValidity,
+                                                   //必选
+                                                   String customerAddress,
+                                                   String customerPhone,
+                                                   String placeType,
+                                                   List<ContractsTemplateInfo> devicesList,
+                                                   int payTimes,
+                                                   //可选
+                                                   Boolean confirmed,
+                                                   int serviceTime, int firstPayTimes) {
+        JSONObject jsonObject = new JSONObject();
+        try {
+            if (!TextUtils.isEmpty(uid)) {
+                jsonObject.put("uid", uid);
+            }
+            jsonObject.put("id", contractID);
+
+            if (contractType != null) {
+                jsonObject.put("contract_type", contractType);
+            }
+//            jsonObject.put("created_type", createType);
+            if (!TextUtils.isEmpty(cardId)) {
+                jsonObject.put("card_id", cardId);
+            }
+            if (sex != null) {
+                jsonObject.put("sex", sex);
+            }
+            if (!TextUtils.isEmpty(enterpriseCardId)) {
+                jsonObject.put("enterprise_card_id", enterpriseCardId);
+            }
+            if (!TextUtils.isEmpty(enterpriseRegisterId)) {
+                jsonObject.put("enterprise_register_id", enterpriseRegisterId);
+            }
+            if (!TextUtils.isEmpty(customerName)) {
+                jsonObject.put("customer_name", customerName);
+            }
+            if (!TextUtils.isEmpty(customerEnterpriseName)) {
+                jsonObject.put("customer_enterprise_name", customerEnterpriseName);
+            }
+            if (!TextUtils.isEmpty(customerEnterpriseValidity)) {
+                jsonObject.put("customer_enterprise_validity", customerEnterpriseValidity);
+            }
+            jsonObject.put("customer_address", customerAddress);
+            jsonObject.put("customer_phone", customerPhone);
+            jsonObject.put("place_type", placeType);
+            JSONArray jsonArray = new JSONArray();
+            if (devicesList != null) {
+                for (ContractsTemplateInfo contractsTemplateInfo : devicesList) {
+                    String deviceType = contractsTemplateInfo.getDeviceType();
+                    String hardwareVersion = contractsTemplateInfo.getHardwareVersion();
+                    int quantity = contractsTemplateInfo.getQuantity();
+                    JSONObject jsonObject1 = new JSONObject();
+                    jsonObject1.put("deviceType", deviceType);
+                    jsonObject1.put("hardwareVersion", hardwareVersion);
+                    jsonObject1.put("quantity", quantity);
+                    jsonArray.put(jsonObject1);
+
+                }
+            }
+            jsonObject.put("devices", jsonArray);
+            jsonObject.put("payTimes", payTimes);
+            if (confirmed != null) {
+                jsonObject.put("confirmed", confirmed);
+            }
+            jsonObject.put("serviceTime", serviceTime);
+            jsonObject.put("firstPayTimes", firstPayTimes);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+
+        RequestBody body = RequestBody.create(MediaType.parse("application/json"), jsonObject.toString());
+        Observable<ResponseBase> modifyContract = retrofitService.modifyContract(body);
+        RxApiManager.getInstance().add("modifyContract", modifyContract.subscribe());
+        return modifyContract;
+    }
+
+    /**
+     * 检测设备名称是否重名
+     *
+     * @param name
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceNameValid(String name) {
+        return retrofitService.getDeviceNameValid(name);
     }
 }

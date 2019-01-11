@@ -11,7 +11,7 @@ import android.text.TextUtils;
 import android.util.Log;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.activity.ContractIndexActivity;
+import com.sensoro.smartcity.activity.ContractEditorActivity;
 import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
@@ -67,6 +67,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     private volatile boolean needRefreshContent = false;
     private volatile boolean needShowAlarmWindow = false;
     private volatile boolean needRefreshHeader = false;
+    private volatile boolean needFreshAll = false;
     //
     private volatile int totalMonitorPoint;
     private int mSoundId;
@@ -139,9 +140,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void requestInitData(boolean needShowProgressDialog) {
         if (PreferencesHelper.getInstance().getUserData().isSupperAccount) {
+            needFreshAll = false;
             return;
         }
         if (!PreferencesHelper.getInstance().getUserData().hasDeviceBrief) {
+            needFreshAll = false;
             return;
         }
         if (needShowProgressDialog) {
@@ -205,10 +208,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
+                needFreshAll = false;
             }
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
+                needFreshAll = errorCode == ERR_CODE_NET_CONNECT_EX;
                 getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
                 getView().refreshHeaderData(true, mHomeTopModels);
                 getView().refreshContentData(true, mHomeTopModels);
@@ -223,6 +228,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
+
             }
         });
     }
@@ -323,26 +329,35 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         mContext.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                if (needRefreshContent) {
-                    if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3] || homeTopModelCacheFresh[4]) {
-                        getView().refreshContentData(false, mHomeTopModels);
-                        homeTopModelCacheFresh[0] = false;
-                        homeTopModelCacheFresh[1] = false;
-                        homeTopModelCacheFresh[2] = false;
-                        homeTopModelCacheFresh[3] = false;
-                        homeTopModelCacheFresh[4] = false;
+                if (needFreshAll) {
+                    requestInitData(false);
+                } else {
+                    if (needRefreshContent) {
+                        if (homeTopModelCacheFresh[0] || homeTopModelCacheFresh[1] || homeTopModelCacheFresh[2] || homeTopModelCacheFresh[3] || homeTopModelCacheFresh[4]) {
+                            homeTopModelCacheFresh[0] = false;
+                            homeTopModelCacheFresh[1] = false;
+                            homeTopModelCacheFresh[2] = false;
+                            homeTopModelCacheFresh[3] = false;
+                            homeTopModelCacheFresh[4] = false;
+                            if (isAttachedView()) {
+                                getView().refreshContentData(false, mHomeTopModels);
+                            }
+                        }
+                        needRefreshContent = false;
                     }
-                    needRefreshContent = false;
-                }
-                if (needRefreshHeader) {
-                    getView().refreshHeaderData(false, mHomeTopModels);
-                    getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
-                    if (needAlarmPlay) {
-                        playSound();
+                    if (needRefreshHeader) {
+                        if (isAttachedView()) {
+                            getView().refreshHeaderData(false, mHomeTopModels);
+                            getView().setDetectionPoints(WidgetUtil.handlerNumber(String.valueOf(totalMonitorPoint)));
+                            if (needAlarmPlay) {
+                                playSound();
+                            }
+                            shoAlarmWindow();
+                        }
+
+                        needAlarmPlay = false;
+                        needRefreshHeader = false;
                     }
-                    shoAlarmWindow();
-                    needAlarmPlay = false;
-                    needRefreshHeader = false;
                 }
 
             }
@@ -350,15 +365,15 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private void handleDevicePush(DeviceInfo deviceInfo) {
+        //TODO 添加过滤未部署的逻辑
+        boolean deployFlag = deviceInfo.isDeployFlag();
+        if (!deployFlag) {
+            return;
+        }
         String mergeType = deviceInfo.getMergeType();
         if (TextUtils.isEmpty(mergeType)) {
-            try {
-                String deviceType = deviceInfo.getDeviceType();
-                DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-                mergeType = config.getDeviceType().get(deviceType).getMergeType();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+            String deviceType = deviceInfo.getDeviceType();
+            mergeType = WidgetUtil.handleMergeType(deviceType);
         }
         if (TextUtils.isEmpty(mTypeSelectedType)) {
             organizeJsonData(deviceInfo);
@@ -414,11 +429,12 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     //子线程处理
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
-        //TODO 后台线程处理消息
+        //后台线程处理消息
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:
+                break;
             case EVENT_DATA_SOCKET_DATA_INFO:
                 if (data instanceof DeviceInfo) {
                     handleDevicePush((DeviceInfo) data);
@@ -471,9 +487,29 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        requestInitData(true);
+                        if (isAttachedView()) {
+                            requestInitData(true);
+                        }
+
                     }
                 });
+                break;
+            case EVENT_DATA_DEVICE_SOCKET_FLUSH:
+                //TODO
+                needFreshAll = true;
+                LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+                break;
+            case EVENT_DATA_LOCK_SCREEN_ON:
+                //TODO 暂时不加
+                if (data instanceof Boolean) {
+//                    needFreshAll = (boolean) data;
+                }
+                LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
+                break;
+            case EVENT_DATA_NET_WORK_CHANGE:
+                //TODO 暂时不加
+//                needFreshAll = true;
+                LogUtils.loge("CONNECTIVITY_ACTION --->> 网络变化 ");
                 break;
         }
     }
@@ -820,7 +856,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     }
 
     private void enterAlarmLogPop(DeviceAlarmLogInfo deviceAlarmLogInfo) {
-        //TODO 弹起预警记录的dialog
         AlarmLogPopUtils mAlarmLogPop = new AlarmLogPopUtils(mContext, this);
         mAlarmLogPop.refreshData(deviceAlarmLogInfo);
         mAlarmLogPop.show();
@@ -841,7 +876,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void doContract() {
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasContract) {
-                Intent intent = new Intent(mContext, ContractIndexActivity.class);
+                Intent intent = new Intent(mContext, ContractEditorActivity.class);
+                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
                 getView().startAC(intent);
                 return;
             }
@@ -851,17 +887,24 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
     public void updateSelectDeviceTypePopAndShow() {
         mMergeTypes.clear();
-        final DeviceMergeTypesInfo.DeviceMergeTypeConfig config = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
-        Map<String, MergeTypeStyles> mergeType = config.getMergeType();
-        Set<Map.Entry<String, MergeTypeStyles>> entries = mergeType.entrySet();
-        for (Map.Entry<String, MergeTypeStyles> entry : entries) {
-            String key = entry.getKey();
-            MergeTypeStyles mergeTypeStyles = entry.getValue();
-            if (mergeTypeStyles.isOwn()) {
-                mMergeTypes.add(key);
+        DeviceMergeTypesInfo localDevicesMergeTypes = PreferencesHelper.getInstance().getLocalDevicesMergeTypes();
+        if (localDevicesMergeTypes != null) {
+            final DeviceMergeTypesInfo.DeviceMergeTypeConfig config = localDevicesMergeTypes.getConfig();
+            if (config != null) {
+                Map<String, MergeTypeStyles> mergeType = config.getMergeType();
+                if (mergeType != null) {
+                    Set<Map.Entry<String, MergeTypeStyles>> entries = mergeType.entrySet();
+                    for (Map.Entry<String, MergeTypeStyles> entry : entries) {
+                        String key = entry.getKey();
+                        MergeTypeStyles mergeTypeStyles = entry.getValue();
+                        if (mergeTypeStyles.isOwn()) {
+                            mMergeTypes.add(key);
+                        }
+                    }
+                    Collections.sort(mMergeTypes);
+                }
             }
         }
-        Collections.sort(mMergeTypes);
         getView().updateSelectDeviceTypePopAndShow(mMergeTypes);
     }
 
@@ -890,7 +933,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             StringBuilder stringBuilder = new StringBuilder();
             switch (mCurrentHomeTopModel.type) {
                 case 0:
-                    stringBuilder.append(mContext.getString(R.string.main_page_warm));
+                    stringBuilder.append(mContext.getString(R.string.main_page_warn));
                     break;
                 case 1:
                     stringBuilder.append(mContext.getString(R.string.normal));

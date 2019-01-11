@@ -31,16 +31,20 @@ public abstract class CityObserver<T> implements Observer<T> {
     private final WeakReference<BasePresenter> presenterWeakReference;
     private boolean needPresenter;
 
+    /**
+     * 如果不需要绑定Activity的生命周期，传入null即可
+     *
+     * @param basePresenter
+     */
     public CityObserver(BasePresenter basePresenter) {
-        presenterWeakReference = new WeakReference<>(basePresenter);
-        needPresenter = true;
+        if (basePresenter == null) {
+            presenterWeakReference = null;
+            needPresenter = false;
+        } else {
+            presenterWeakReference = new WeakReference<>(basePresenter);
+            needPresenter = true;
+        }
     }
-
-    public CityObserver() {
-        presenterWeakReference = null;
-        needPresenter = false;
-    }
-
 
     @Override
     public void onError(Throwable e) {
@@ -52,9 +56,13 @@ public abstract class CityObserver<T> implements Observer<T> {
                 e instanceof TimeoutException) {
             //网络错误
             if (AppUtils.isChineseLanguage()) {
-                onErrorMsg(ERR_CODE_NET_CONNECT_EX, "似乎已断开与互联网的连接。");
+                if (viewAttachedAlive()) {
+                    onErrorMsg(ERR_CODE_NET_CONNECT_EX, "似乎已断开与互联网的连接。");
+                }
             } else {
-                onErrorMsg(ERR_CODE_NET_CONNECT_EX, "It seems to have disconnected from the internet.");
+                if (viewAttachedAlive()) {
+                    onErrorMsg(ERR_CODE_NET_CONNECT_EX, "It seems to have disconnected from the internet.");
+                }
             }
 
         } else if (e instanceof HttpException) {
@@ -64,7 +72,7 @@ public abstract class CityObserver<T> implements Observer<T> {
             String responseMsg = httpException.response().toString();
             try {
                 String errorBody = httpException.response().errorBody().string();
-                JSONObject jsonObject = null;
+                JSONObject jsonObject;
                 if (AppUtils.isChineseLanguage()) {
                     try {
                         jsonObject = new JSONObject(errorBody);
@@ -80,7 +88,9 @@ public abstract class CityObserver<T> implements Observer<T> {
                             return;
                         }
                         String errinfo = jsonObject.getString("errinfo");
-                        onErrorMsg(errcode, errinfo);
+                        if (viewAttachedAlive()) {
+                            onErrorMsg(errcode, errinfo);
+                        }
                     } catch (JSONException e1) {
                         try {
                             jsonObject = new JSONObject(errorBody);
@@ -88,12 +98,18 @@ public abstract class CityObserver<T> implements Observer<T> {
                             int errcode = jsonObject.getInt("errcode");
                             String errmsg = jsonObject.getString("errmsg");
                             LogUtils.loge(this, "onError = " + log + ",errcode = " + errcode);
-                            onErrorMsg(code, errmsg);
+                            if (viewAttachedAlive()) {
+                                onErrorMsg(code, errmsg);
+                            }
                         } catch (JSONException e2) {
                             if (AppUtils.isChineseLanguage()) {
-                                onErrorMsg(code, "服务器json数据不标准：" + errorBody);
+                                if (viewAttachedAlive()) {
+                                    onErrorMsg(code, "服务器json数据不标准：" + errorBody);
+                                }
                             } else {
-                                onErrorMsg(code, "Server json data is not standard:" + errorBody);
+                                if (viewAttachedAlive()) {
+                                    onErrorMsg(code, "Server json data is not standard:" + errorBody);
+                                }
                             }
 
                         }
@@ -113,7 +129,9 @@ public abstract class CityObserver<T> implements Observer<T> {
                             return;
                         }
                         String errmsg = jsonObject.getString("errmsg");
-                        onErrorMsg(errcode, errmsg);
+                        if (viewAttachedAlive()) {
+                            onErrorMsg(errcode, errmsg);
+                        }
                     } catch (JSONException e1) {
                         try {
                             jsonObject = new JSONObject(errorBody);
@@ -121,12 +139,18 @@ public abstract class CityObserver<T> implements Observer<T> {
                             int errcode = jsonObject.getInt("errcode");
                             String errinfo = jsonObject.getString("errinfo");
                             LogUtils.loge(this, "onError = " + log + ",errcode = " + errcode);
-                            onErrorMsg(code, errinfo);
+                            if (viewAttachedAlive()) {
+                                onErrorMsg(code, errinfo);
+                            }
                         } catch (JSONException e2) {
                             if (AppUtils.isChineseLanguage()) {
-                                onErrorMsg(code, "服务器json数据不标准：" + errorBody);
+                                if (viewAttachedAlive()) {
+                                    onErrorMsg(code, "服务器json数据不标准：" + errorBody);
+                                }
                             } else {
-                                onErrorMsg(code, "Server json data is not standard:" + errorBody);
+                                if (viewAttachedAlive()) {
+                                    onErrorMsg(code, "Server json data is not standard:" + errorBody);
+                                }
                             }
                         }
                     }
@@ -134,17 +158,25 @@ public abstract class CityObserver<T> implements Observer<T> {
 
             } catch (IOException er) {
                 if (AppUtils.isChineseLanguage()) {
-                    onErrorMsg(code, "数据格式不准确： " + responseMsg);
+                    if (viewAttachedAlive()) {
+                        onErrorMsg(code, "数据格式不准确： " + responseMsg);
+                    }
                 } else {
-                    onErrorMsg(code, "Inaccurate data format： " + responseMsg);
+                    if (viewAttachedAlive()) {
+                        onErrorMsg(code, "Inaccurate data format： " + responseMsg);
+                    }
                 }
 
             }
         } else {
             if (AppUtils.isChineseLanguage()) {
-                onErrorMsg(ERR_CODE_UNKNOWN_EX, "未知网络错误: " + message);
+                if (viewAttachedAlive()) {
+                    onErrorMsg(ERR_CODE_UNKNOWN_EX, "未知网络错误: " + message);
+                }
             } else {
-                onErrorMsg(ERR_CODE_UNKNOWN_EX, "Unknown network error: " + message);
+                if (viewAttachedAlive()) {
+                    onErrorMsg(ERR_CODE_UNKNOWN_EX, "Unknown network error: " + message);
+                }
             }
 
         }
@@ -161,18 +193,29 @@ public abstract class CityObserver<T> implements Observer<T> {
 
     @Override
     public void onNext(T t) {
+        if (viewAttachedAlive()) {
+            onCompleted(t);
+        }
+    }
+
+    /**
+     * 判断是否还有view存在
+     *
+     * @return
+     */
+    private boolean viewAttachedAlive() {
         if (needPresenter) {
             if (presenterWeakReference != null) {
                 if (presenterWeakReference.get() != null && presenterWeakReference.get().isAttachedView()) {
-                    onCompleted(t);
+                    return true;
                 } else {
                     LogUtils.loge(this, "------->>界面在未完成任务前销毁！！！");
                 }
             }
         } else {
-            onCompleted(t);
+            return true;
         }
-
+        return false;
     }
 
     public abstract void onCompleted(T t);

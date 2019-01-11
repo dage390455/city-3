@@ -58,7 +58,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
     private int finish = 2;
     private final List<InspectionTaskDeviceDetail> mDevices = new ArrayList<>();
     private final List<String> mSearchHistoryList = new ArrayList<>();
-    private static final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
+    private final HashSet<String> BLE_DEVICE_SET = new HashSet<>();
     private final Handler mHandler = new Handler(Looper.getMainLooper());
     private volatile boolean canFreshBle = true;
     private InspectionIndexTaskInfo mTaskInfo;
@@ -154,7 +154,6 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
@@ -221,7 +220,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
                     list.add(sc3);
                     getView().updateSelectDeviceStatusList(list);
                     if (needPop) {
-                    getView().showSelectDeviceStatusPop();
+                        getView().showSelectDeviceStatusPop();
                     }
                     getView().dismissProgressDialog();
                     getView().setBottomInspectionStateTitle(mContext.getString(R.string.i_have_inspected) + "： " + check, mContext.getString(R.string.not_inspected) + "： " + uncheck);
@@ -478,7 +477,7 @@ public class InspectionTaskActivityPresenter extends BasePresenter<IInspectionTa
         getView().startAC(intent);
     }
 
-    public void doSelectTypeDevice(DeviceTypeModel deviceTypeModel,String searchText) {
+    public void doSelectTypeDevice(DeviceTypeModel deviceTypeModel, String searchText) {
         StringBuilder stringBuilder = new StringBuilder();
         List<String> deviceTypes = deviceTypeModel.deviceTypes;
         if (deviceTypes != null && deviceTypes.size() > 0) {

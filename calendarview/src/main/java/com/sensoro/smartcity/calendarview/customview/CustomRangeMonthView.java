@@ -3,6 +3,7 @@ package com.sensoro.smartcity.calendarview.customview;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import android.graphics.RectF;
 
 import com.sensoro.smartcity.calendarview.Calendar;
 import com.sensoro.smartcity.calendarview.RangeMonthView;
@@ -36,14 +37,21 @@ public class CustomRangeMonthView extends RangeMonthView {
             if (isSelectedNext) {
                 canvas.drawRect(x, cy - mRadius, x + mItemWidth, cy + mRadius, mSelectedPaint);
             } else {//最后一个，the last
-                canvas.drawRect(x, cy - mRadius, cx, cy + mRadius, mSelectedPaint);
-                canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
+//                canvas.drawRect(x, cy - mRadius, cx, cy + mRadius, mSelectedPaint);
+                drawRoundRect(canvas, x, cy);
+                canvas.drawRect(x, cy - mRadius, cx, cy + mRadius, mSelectedLastPaint);
+//                canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
             }
         } else {
-            if(isSelectedNext){
+            if (isSelectedNext) {
                 canvas.drawRect(cx, cy - mRadius, x + mItemWidth, cy + mRadius, mSelectedPaint);
             }
-            canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
+            drawRoundRect(canvas, x, cy);
+            if(isSelectedNext){
+                canvas.drawRect(cx, cy - mRadius, x+mItemWidth, cy + mRadius, mSelectedLastPaint);
+            }
+
+//            canvas.drawCircle(cx, cy, mRadius, mSelectedPaint);
             //
         }
 
@@ -54,22 +62,67 @@ public class CustomRangeMonthView extends RangeMonthView {
     protected void onDrawScheme(Canvas canvas, Calendar calendar, int x, int y, boolean isSelected) {
         int cx = x + mItemWidth / 2;
         int cy = y + mItemHeight / 2;
-        canvas.drawCircle(cx, cy, mRadius, mSchemePaint);
+
+        drawRoundRect(canvas, x, cy);
+//        canvas.drawCircle(cx, cy, mRadius, mSchemePaint);
+    }
+
+    private void drawRoundRect(Canvas canvas, int x, int cy) {
+        RectF rectF = new RectF(x, cy - mRadius, x + mItemWidth, cy + mRadius);
+        canvas.drawRoundRect(rectF, 10, 10, mSelectedLastPaint);
     }
 
     @Override
-    protected void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected) {
+    protected void onDrawText(Canvas canvas, Calendar calendar, int x, int y, boolean hasScheme, boolean isSelected, boolean isSelectedPre, boolean isSelectedNext) {
         float baselineY = mTextBaseLine + y;
         int cx = x + mItemWidth / 2;
 
         boolean isInRange = isInRange(calendar);
         boolean isEnable = !onCalendarIntercept(calendar);
 
+//        if (isSelectedPre) {
+//            if (isSelectedNext) {
+//                canvas.drawText(String.valueOf(calendar.getDay()),
+//                        cx,
+//                        baselineY,
+//                        mSelectTextPaint);
+//            } else {
+//                canvas.drawText(String.valueOf(calendar.getDay()),
+//                        cx,
+//                        baselineY,
+//                        mSelectedTextLastColor);
+//            }
+//        } else {
+//            if (isSelectedNext) {
+//                canvas.drawText(String.valueOf(calendar.getDay()),
+//                        cx,
+//                        baselineY,
+//                        mSelectTextPaint);
+//            }
+//            canvas.drawText(String.valueOf(calendar.getDay()),
+//                    cx,
+//                    baselineY,
+//                    mSelectedTextLastColor);
+//
+//        }
         if (isSelected) {
-            canvas.drawText(String.valueOf(calendar.getDay()),
-                    cx,
-                    baselineY,
-                    mSelectTextPaint);
+            if(!isSelectedPre){
+                canvas.drawText(String.valueOf(calendar.getDay()),
+                        cx,
+                        baselineY,
+                        mSelectedTextLastColor);
+            }else if(!isSelectedNext){
+                canvas.drawText(String.valueOf(calendar.getDay()),
+                        cx,
+                        baselineY,
+                        mSelectedTextLastColor);
+            }else{
+                canvas.drawText(String.valueOf(calendar.getDay()),
+                        cx,
+                        baselineY,
+                        mSelectTextPaint);
+            }
+
         } else if (hasScheme) {
             canvas.drawText(String.valueOf(calendar.getDay()),
                     cx,

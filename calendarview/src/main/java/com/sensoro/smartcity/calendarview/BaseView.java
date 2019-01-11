@@ -75,6 +75,10 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      * 被选择的日期背景色
      */
     protected Paint mSelectedPaint = new Paint();
+    /**
+     * 被选择的两头的日期背景色
+     */
+    protected Paint mSelectedLastPaint = new Paint();
 
     /**
      * 标记的文本画笔
@@ -85,6 +89,8 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
      * 选中的文本画笔
      */
     protected Paint mSelectTextPaint = new Paint();
+
+    protected Paint mSelectedTextLastColor = new Paint();
 
     /**
      * 当前日期文本颜色画笔
@@ -195,6 +201,13 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mSelectTextPaint.setFakeBoldText(true);
         mSelectTextPaint.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
 
+        mSelectedTextLastColor.setAntiAlias(true);
+        mSelectedTextLastColor.setStyle(Paint.Style.FILL);
+        mSelectedTextLastColor.setTextAlign(Paint.Align.CENTER);
+        mSelectedTextLastColor.setColor(Color.parseColor("#FFFFFF"));
+        mSelectedTextLastColor.setFakeBoldText(true);
+        mSelectedTextLastColor.setTextSize(CalendarUtil.dipToPx(context, TEXT_SIZE));
+
         mSchemePaint.setAntiAlias(true);
         mSchemePaint.setStyle(Paint.Style.FILL);
         mSchemePaint.setStrokeWidth(2);
@@ -216,6 +229,10 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         mSelectedPaint.setStyle(Paint.Style.FILL);
         mSelectedPaint.setStrokeWidth(2);
 
+        mSelectedLastPaint.setAntiAlias(true);
+        mSelectedLastPaint.setStyle(Paint.Style.FILL);
+        mSelectedLastPaint.setStrokeWidth(2);
+
         setOnClickListener(this);
         setOnLongClickListener(this);
     }
@@ -235,6 +252,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         this.mCurMonthLunarTextPaint.setColor(delegate.getCurrentMonthLunarTextColor());
         this.mSelectedLunarTextPaint.setColor(delegate.getSelectedLunarTextColor());
         this.mSelectTextPaint.setColor(delegate.getSelectedTextColor());
+        this.mSelectedTextLastColor.setColor(Color.parseColor("#FFFFFF"));
         this.mOtherMonthLunarTextPaint.setColor(delegate.getOtherMonthLunarTextColor());
         this.mSchemeLunarTextPaint.setColor(delegate.getSchemeLunarTextColor());
 
@@ -247,6 +265,7 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
         this.mCurDayTextPaint.setTextSize(delegate.getDayTextSize());
         this.mSchemeTextPaint.setTextSize(delegate.getDayTextSize());
         this.mSelectTextPaint.setTextSize(delegate.getDayTextSize());
+        this.mSelectedTextLastColor.setTextSize(delegate.getDayTextSize());
 
         this.mCurMonthLunarTextPaint.setTextSize(delegate.getLunarTextSize());
         this.mSelectedLunarTextPaint.setTextSize(delegate.getLunarTextSize());
@@ -256,6 +275,9 @@ public abstract class BaseView extends View implements View.OnClickListener, Vie
 
         this.mSelectedPaint.setStyle(Paint.Style.FILL);
         this.mSelectedPaint.setColor(delegate.getSelectedThemeColor());
+
+        this.mSelectedLastPaint.setStyle(Paint.Style.FILL);
+        this.mSelectedLastPaint.setColor(Color.parseColor("#29C093"));
 
         updateItemHeight();
     }

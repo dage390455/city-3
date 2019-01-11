@@ -459,7 +459,6 @@ public class InspectionTaskActivity extends BaseActivity<IInspectionTaskActivity
                 break;
             case R.id.ac_inspection_task_ll_search:
             case R.id.ac_inspection_task_et_search:
-                //TODO
                 acInspectionTaskEtSearch.requestFocus();
                 acInspectionTaskEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);

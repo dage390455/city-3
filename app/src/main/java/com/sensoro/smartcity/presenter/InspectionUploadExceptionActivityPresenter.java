@@ -206,7 +206,6 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         if (code == EVENT_DATA_ALARM_POP_IMAGES) {
@@ -221,7 +220,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                                 selImageList.clear();
                             }
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     }
@@ -232,7 +231,7 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 //                            adapter.setMaxImgCount(9);
                             selImageList.clear();
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     }
@@ -242,13 +241,13 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
                         if (alarmPopModel.imageItems != null) {
 //                            adapter.setMaxImgCount(9);
                             selImageList.addAll(alarmPopModel.imageItems);
-//                            adapter.setImages(selImageList);
+//                            adapter.updateImages(selImageList);
                             getView().updateImageList(selImageList);
                         }
                     } else if (alarmPopModel.requestCode == REQUEST_CODE_PLAY_RECORD) {
 //                        adapter.setMaxImgCount(9);
 //                        selImageList.clear();
-//                        adapter.setImages(selImageList);
+//                        adapter.updateImages(selImageList);
                     }
 
                 }
@@ -302,7 +301,10 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
 
     @Override
     public void onStart() {
-        getView().showUploadProgressDialog(mContext.getString(R.string.please_wait), 0);
+        if (isAttachedView()) {
+            getView().showUploadProgressDialog(mContext.getString(R.string.please_wait), 0);
+        }
+
     }
 
     @Override
@@ -311,24 +313,33 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         for (ScenesData scenesData : scenesDataList) {
             s.append(scenesData.url).append("\n");
         }
-        getView().dismissUploadProgressDialog();
-//        toastShort("上传成功---");
         LogUtils.loge(this, "上传成功---" + s);
-        //TODO 上传结果
-        doUploadInspectionException(scenesDataList);
+        if (isAttachedView()) {
+            getView().dismissUploadProgressDialog();
+//        toastShort("上传成功---");
+            // 上传结果
+            doUploadInspectionException(scenesDataList);
 //        mListener.onPopupCallback(selectResult, selectType, selectPlace, scenesDataList, mRemark);
+        }
+
     }
 
     @Override
     public void onError(String errMsg) {
 //        setUpdateButtonClickable(true);
-        getView().dismissUploadProgressDialog();
-        getView().toastShort(errMsg);
+        if (isAttachedView()) {
+            getView().dismissUploadProgressDialog();
+            getView().toastShort(errMsg);
+        }
+
     }
 
     @Override
     public void onProgress(String content, double percent) {
-        getView().showUploadProgressDialog(content, percent);
+        if (isAttachedView()) {
+            getView().showUploadProgressDialog(content, percent);
+        }
+
     }
 
     @Override

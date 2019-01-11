@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ActivityManager;
 import android.content.ClipData;
 import android.content.ClipboardManager;
+import android.content.ContentProviderOperation;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
@@ -11,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.View;
@@ -21,8 +23,11 @@ import android.widget.EditText;
 
 import com.amap.api.location.AMapLocation;
 import com.amap.api.maps.model.LatLng;
+import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.SensoroCityApplication;
+import com.sensoro.smartcity.push.ThreadPoolManager;
 import com.sensoro.smartcity.server.bean.AlarmInfo;
+import com.sensoro.smartcity.widget.popup.SelectDialog;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -50,8 +55,11 @@ public class AppUtils {
 
     public static boolean isActivityTop(Context context, Class<?> activityClass) {
         ActivityManager manager = (ActivityManager) context.getSystemService(Context.ACTIVITY_SERVICE);
-        String name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
-        return name.equals(activityClass.getName());
+        String name = null;
+        if (manager != null) {
+            name = manager.getRunningTasks(1).get(0).topActivity.getClassName();
+        }
+        return name != null && name.equals(activityClass.getName());
     }
 
     /**
@@ -71,23 +79,87 @@ public class AppUtils {
 //            SensoroToast.INSTANCE.makeText("位置坐标信息错误", Toast.LENGTH_SHORT).show();
             return false;
         }
-        AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
-        if (lastKnownLocation != null) {
-            double lat = lastKnownLocation.getLatitude();//获取纬度
-            double lon = lastKnownLocation.getLongitude();//获取经度
-            LatLng startPosition = new LatLng(lat, lon);
-            if (isAppInstalled(activity, "com.autonavi.minimap")) {
-                openGaoDeMap(activity, startPosition, destPosition);
-            } else if (isAppInstalled(activity, "com.baidu.BaiduMap")) {
-                openBaiDuMap(activity, startPosition, destPosition);
-            } else {
-                openOther(activity, startPosition, destPosition);
+        if (AppUtils.isChineseLanguage()) {
+            AMapLocation lastKnownLocation = SensoroCityApplication.getInstance().mLocationClient.getLastKnownLocation();
+            if (lastKnownLocation != null) {
+                double lat = lastKnownLocation.getLatitude();//获取纬度
+                double lon = lastKnownLocation.getLongitude();//获取经度
+                LatLng startPosition = new LatLng(lat, lon);
+                if (isAppInstalled(activity, "com.autonavi.minimap")) {
+                    openGaoDeMap(activity, startPosition, destPosition);
+                } else if (isAppInstalled(activity, "com.baidu.BaiduMap")) {
+                    openBaiDuMap(activity, startPosition, destPosition);
+                } else {
+                    openOther(activity, startPosition, destPosition);
+                }
+                return true;
             }
-            return true;
+            return false;
+        } else {
+            return doNavigation(activity, GPSUtil.gcj02_To_Gps84(destPosition.latitude, destPosition.longitude), null);
         }
-        return false;
+
 
     }
+
+    public static boolean doNavigation(Activity activity, double[] destPosition, String text) {
+
+        if (destPosition == null || destPosition.length != 2 || destPosition[0] == 0 || destPosition[1] == 0) {
+//            SensoroToast.INSTANCE.makeText("位置坐标信息错误", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        if (isAppInstalled(activity, "com.google.android.apps.maps")) {
+            goNaviByGoogleMap(activity, destPosition[0], destPosition[1], null);
+        } else {
+//            Toast.makeText(activity, "您尚未安装谷歌地图", Toast.LENGTH_LONG)
+//                    .show();
+//            Uri uri = Uri
+//                    .parse("market://details?id=com.google.android.apps.maps");
+//            Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+//            activity.startActivity(intent);
+            Intent intent = new Intent();
+            intent.setAction("android.intent.action.VIEW");
+//            parameters
+            LogUtils.loge("doNavigation = " + destPosition[1] + "," + destPosition[0]);
+            String url = "https://www.google.com/maps/search/?api=1&query=" + destPosition[0] + "," + destPosition[1];
+//            String url = "https://www.google.com/maps/search/?api=1&query=" + destPosition[1] + "," + destPosition[0];
+//            String url = "http://uri.amap.com/navigation?from=" + startPosition.longitude + "," + startPosition.latitude
+//                    + ",当前位置" +
+//                    "&to=" + destPosition.longitude + "," + destPosition.latitude + "," +
+//                    "设备部署位置&mode=car&policy=1&src=mypage&coordinate=gaode&callnative=0";
+            LogUtils.loge("doNavigation = " + url);
+            Uri content_url = Uri.parse(url);
+            intent.setData(content_url);
+            activity.startActivity(intent);
+
+
+        }
+        return true;
+    }
+
+    private static void goNaviByGoogleMap(Activity activity, double lat, double lon, String address) {
+        final String GOOGLE_MAP_NAVI_URI = "google.navigation:q=";
+        Uri uri;
+        if (TextUtils.isEmpty(address)) {
+            uri = Uri.parse(GOOGLE_MAP_NAVI_URI + lat + "," + lon);
+        } else {
+            uri = Uri.parse(GOOGLE_MAP_NAVI_URI + lat + "," + lon + "," + address);
+        }
+        Intent mapIntent = new Intent(Intent.ACTION_VIEW, uri);
+        mapIntent.setPackage("com.google.android.apps.maps");
+        activity.startActivity(mapIntent);
+        //        Intent intent = new Intent(Intent.ACTION_VIEW,
+//                Uri.parse("http://maps.google.com/maps?"
+//                        + "saddr="+ mCurrentLatLng.latitude+ "," + mCurrentLatLng.longitude
+//                        + "&daddr=" + mEndLat+ "," + mEndLng
+//                        +"&avoid=highway"
+//                        +"&language=zh-CN")
+//        );
+//
+//        intent.setClassName("com.google.android.apps.maps","com.google.android.maps.MapsActivity");
+//        startActivity(intent);
+    }
+
 
     private static void openGaoDeMap(Activity activity, LatLng startPosition, LatLng destPosition) {
 
@@ -315,8 +387,8 @@ public class AppUtils {
     }
 
     public static void openInputMethodManager(Context context, EditText editText) {
-        InputMethodManager imm = (InputMethodManager)context.getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.showSoftInput(editText,InputMethodManager.SHOW_IMPLICIT);
+        InputMethodManager imm = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.showSoftInput(editText, InputMethodManager.SHOW_IMPLICIT);
     }
 
     public static void dismissInputMethodManager(Context context) {
@@ -441,4 +513,47 @@ public class AppUtils {
 
     }
 
+    public static void addToPhoneContact(final Context context, final String name, final String number) {
+        ThreadPoolManager.getInstance().execute(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    ArrayList<ContentProviderOperation> ops = new ArrayList<>();
+                    ContentProviderOperation.Builder builder = ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI);
+                    builder.withValue(ContactsContract.RawContacts.ACCOUNT_TYPE, null);
+                    builder.withValue(ContactsContract.RawContacts.ACCOUNT_NAME, null);
+                    ops.add(builder.build());
+                    // Name
+                    builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
+                    builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0);
+                    builder.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.StructuredName.CONTENT_ITEM_TYPE);
+                    builder.withValue(ContactsContract.CommonDataKinds.StructuredName.DISPLAY_NAME, name);
+                    ops.add(builder.build());
+                    // Number
+                    builder = ContentProviderOperation.newInsert(ContactsContract.Data.CONTENT_URI);
+                    builder.withValueBackReference(ContactsContract.Data.RAW_CONTACT_ID, 0);
+                    builder.withValue(ContactsContract.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
+                    builder.withValue(ContactsContract.CommonDataKinds.Phone.NUMBER, number);
+                    builder.withValue(ContactsContract.CommonDataKinds.Phone.TYPE, ContactsContract.CommonDataKinds.Phone.TYPE_MOBILE);
+                    ops.add(builder.build());
+                    context.getContentResolver().applyBatch(ContactsContract.AUTHORITY, ops);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+    }
+
+    /**
+     * 合同选择场地性质dialog
+     */
+    public static SelectDialog showDialog(Activity activity,SelectDialog.SelectDialogListener listener, List<String> items) {
+        SelectDialog dialog = new SelectDialog(activity, R.style
+                .transparentFrameWindowStyle,
+                listener, items);
+        if (!activity.isFinishing()) {
+            dialog.show();
+        }
+        return dialog;
+    }
 }

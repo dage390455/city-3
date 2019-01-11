@@ -24,6 +24,7 @@ public final class EventLoginData implements Serializable {
     public boolean hasSignalCheck = false;
     public boolean hasSignalConfig = false;
     public boolean hasBadSignalUpload = false;
+    public boolean hasDevicePositionCalibration = false;
     public boolean needAuth = false;
 
     @Override
@@ -50,7 +51,8 @@ public final class EventLoginData implements Serializable {
                 ", hasInspectionDeviceList=" + hasInspectionDeviceList +
                 ", hasInspectionDeviceModify=" + hasInspectionDeviceModify +
                 ", hasBadSignalUpload=" + hasBadSignalUpload +
+                ", hasDevicePositionCalibration=" + hasDevicePositionCalibration +
                 ", needAuth=" + needAuth +
-                '}' ;
+                '}';
     }
 }

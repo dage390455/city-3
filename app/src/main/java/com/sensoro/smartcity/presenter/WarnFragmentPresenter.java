@@ -131,7 +131,10 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                     mContext.runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
-                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                            if (isAttachedView()){
+                                getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                            }
+
                         }
                     });
                 }
@@ -308,7 +311,10 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        if (isAttachedView()){
+                            getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                        }
+
                     }
                 });
             }
@@ -359,7 +365,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
 
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         Object data = eventData.data;
         switch (code) {
@@ -374,7 +379,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
                 mContext.runOnUiThread(new Runnable() {
                     @Override
                     public void run() {
-                        requestSearchData(DIRECTION_DOWN, null);
+                        if (isAttachedView()){
+                            requestSearchData(DIRECTION_DOWN, null);
+                        }
                     }
                 });
                 break;
@@ -460,7 +467,9 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             mContext.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
-                    getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                    if (isAttachedView()){
+                        getView().updateAlarmListAdapter(mDeviceAlarmLogInfoList);
+                    }
                     needFresh = false;
                 }
             });

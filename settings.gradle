@@ -1,1 +1,1 @@
-include ':app', ':cosmocalendar', ':ocr_ui', ':bottomnavigation', ':calendarview', 'libbleserver'
+include ':app', ':cosmocalendar', ':ocr_ui', ':bottomnavigation','sensor-kit',':calendarview'

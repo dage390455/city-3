@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.text.TextUtils;
 
 import com.sensoro.smartcity.R;
+import com.sensoro.smartcity.analyzer.DeployAnalyzerUtils;
 import com.sensoro.smartcity.base.BasePresenter;
 import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployManualActivityView;
@@ -13,7 +14,6 @@ import com.sensoro.smartcity.iwidget.IOnCreate;
 import com.sensoro.smartcity.model.EventData;
 import com.sensoro.smartcity.server.bean.InspectionIndexTaskInfo;
 import com.sensoro.smartcity.server.bean.InspectionTaskDeviceDetail;
-import com.sensoro.smartcity.util.DeployAnalyzerUtils;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -67,7 +67,6 @@ public class DeployManualActivityPresenter extends BasePresenter<IDeployManualAc
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(EventData eventData) {
-        //TODO 可以修改以此种方式传递，方便管理
         int code = eventData.code;
         switch (code) {
             case EVENT_DATA_DEPLOY_RESULT_FINISH:

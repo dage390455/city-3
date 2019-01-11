@@ -61,7 +61,7 @@ public interface RetrofitService {
     String LOGIN = "sessions";
     String LOGOUT = "sessions/current";
     String USER_ACCOUNT_LIST = "users";
-//    String DEVICE_INFO_LIST = "prov1/devices/details/app";
+    //    String DEVICE_INFO_LIST = "prov1/devices/details/app";
     String DEVICE_INFO_LIST = "prov2/devices/details/app";
     //
     String STATION_INFO = "stations/";
@@ -72,9 +72,9 @@ public interface RetrofitService {
     String DEVICE_ALARM_HISTORY = "prov1/alarms/list/app";
     String DEVICE_ALARM_LOG = "alarmplay";
     String DEVICE_MALFUNCTION_LOG = "prov1/malfunctions";
-//    String DEVICE_BRIEF_LIST = "stats/device/brief/app";
+    //    String DEVICE_BRIEF_LIST = "stats/device/brief/app";
     String DEVICE_BRIEF_LIST = "prov2/stats/device/brief/app";
-//    String DEVICE_TYPE_COUNT = "prov1/devices/status/count";
+    //    String DEVICE_TYPE_COUNT = "prov1/devices/status/count";
     String DEVICE_TYPE_COUNT = "prov2/devices/status/count";
     String DOUBLE_CHECK = "tfa/totp/verify";
     String APP_UPDATE = "http://api.fir" +
@@ -89,8 +89,9 @@ public interface RetrofitService {
     String GET_DEVICES_MERGE_TYPES = "devices/mergeTypes";
     String GET_DEPOLY_RECORD_LIST = "prov1/deploy/list";
     String MONITOR_POINT_OPERATION = "devices/list/task";
-//    String DEPLOY_DEVICE_DETAIL = "devices/detail";
+    //    String DEPLOY_DEVICE_DETAIL = "devices/detail";
     String DEPLOY_DEVICE_DETAIL = "prov2/devices/detail";
+
     @FormUrlEncoded
     @POST(LOGIN)
     Observable<LoginRsp> login(@Field("phone") String phone, @Field("password") String pwd, @Field("phoneId") String
@@ -138,7 +139,7 @@ public interface RetrofitService {
     @GET(DEVICE_MALFUNCTION_LOG)
     Observable<MalfunctionListRsp> getDeviceMalfunctionLogList(@Query("count") int count, @Query("page") int page, @Query
             ("sn") String sn, @Query("deviceName") String deviceName, @Query("search") String search, @Query
-                                                                ("beginTime") Long beginTime,
+                                                                       ("beginTime") Long beginTime,
                                                                @Query("endTime") Long endTime);
 
     @GET(USER_ACCOUNT_LIST)
@@ -176,8 +177,9 @@ public interface RetrofitService {
     Observable<DeployStationInfoRsp> doStationDeploy(@Path("sn") String sn, @Body RequestBody requestBody);
 
     @GET(GET_DEPOLY_RECORD_LIST)
-    Observable<DeployRecordRsp> getDeployRecordList(@Query("search") String searchText, @Query("beginTime") Long beginTime,
-                                                    @Query("endTime") Long endTime, @Query("owners") String owners, @Query("signalQuality")String signalQuality);
+    Observable<DeployRecordRsp> getDeployRecordList(@Query("sn") String sn, @Query("search") String searchText, @Query("beginTime") Long beginTime,
+                                                    @Query("endTime") Long endTime, @Query("owners") String owners, @Query("signalQuality") String signalQuality, @Query("limit") Integer limit, @Query("offset") Integer offset, @Query("group") Boolean group);
+
     @PUT("alarmplay/{id}")
     Observable<DeviceAlarmItemRsp> doUpdatePhotosUrl(@Path("id") String id, @Body RequestBody requestBody);
 
@@ -206,8 +208,11 @@ public interface RetrofitService {
     @POST("contracts")
     Observable<ContractAddRsp> newContract(@Body RequestBody requestBody);
 
-    @GET("contracts/"+"{id}")
-    Observable<ContractInfoRsp> getContractInfo(@Path("id")String id);
+    @PUT("contracts")
+    Observable<ResponseBase> modifyContract(@Body RequestBody requestBody);
+
+    @GET("contracts/{id}")
+    Observable<ContractInfoRsp> getContractInfo(@Path("id") String id);
 
     @POST("contracts/_search")
     Observable<ContractsListRsp> searchContract(@Body RequestBody requestBody);
@@ -269,5 +274,11 @@ public interface RetrofitService {
     @PUT(MONITOR_POINT_OPERATION)
     Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(@Body RequestBody requestBody);
 
+    @PUT("devices/gps/{sn}")
+    Observable<DeviceDeployRsp> doDevicePositionCalibration(@Path("sn") String sn, @Body RequestBody requestBody);
+
+    @GET("devices/valid")
+//    Observable<DevicesMergeTypesRsp> getDevicesMergeTypes(@Header("x-session-id") String sessionId);
+    Observable<ResponseBase> getDeviceNameValid(@Query("name") String name);
 }
 
