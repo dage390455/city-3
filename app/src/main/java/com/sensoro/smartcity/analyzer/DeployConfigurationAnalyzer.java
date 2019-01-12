@@ -86,7 +86,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.t1Th = 80;//A项线温度
         sensoroSensor.acrelFires.t2Th = 80;//B项线温度
         sensoroSensor.acrelFires.t3Th = 80;//C项线温度
-        sensoroSensor.acrelFires.t4Th = 80;//箱体温度
+        sensoroSensor.acrelFires.t4Th = 60;//箱体温度
         sensoroSensor.acrelFires.valHighSet = 1200;
         sensoroSensor.acrelFires.valLowSet = 800;
         sensoroSensor.acrelFires.currHighSet = 1000 * value / dev;
@@ -150,7 +150,7 @@ public class DeployConfigurationAnalyzer {
             for (SensoroMantunData mantunData : sensoroSensor.mantunDatas) {
                 mantunData.id = 0; //现阶段只有一组，所以id为0，如果多组，则依次赋值
                 mantunData.currentTh = value; //过流
-                mantunData.powerTh = value * 220 / 1000; //过载
+                mantunData.powerTh = value * 220; //过载
             }
         }
     }

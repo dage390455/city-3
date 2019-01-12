@@ -61,10 +61,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="20dp"
                     android:layout_marginTop="20dp"
-                    android:layout_marginEnd="20dp"
                     android:layout_marginBottom="20dp"
                     android:textColor="@color/c_a6a6a6"
-                    android:text="111"
                     android:textSize="14sp" />
                 <TextView
                     android:id="@+id/ac_deploy_device_detail_tv_device_type"
@@ -72,7 +70,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="20dp"
                     android:layout_marginEnd="20dp"
-                    android:text="222"
                     android:layout_marginBottom="20dp"
                     android:layout_alignParentEnd="true"
                     android:textColor="@color/c_a6a6a6"
