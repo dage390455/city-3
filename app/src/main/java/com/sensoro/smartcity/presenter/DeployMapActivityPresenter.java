@@ -139,7 +139,11 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             address = ts;
         }
         deployAnalyzerModel.address = address;
-        LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
+        try {
+            LogUtils.loge("deployMapModel", "----" + deployAnalyzerModel.address);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (TextUtils.isEmpty(address)) {
             deviceMarker.hideInfoWindow();
         } else {
@@ -396,7 +400,11 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
             LatLonPoint lp = new LatLonPoint(latLng.latitude, latLng.longitude);
             RegeocodeQuery query = new RegeocodeQuery(lp, 200, GeocodeSearch.AMAP);
             geocoderSearch.getFromLocationAsyn(query);
-            LogUtils.loge("latLng = " + latLng.toString());
+            try {
+                LogUtils.loge("latLng = " + latLng.toString());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } else {
             backToCurrentLocation();
         }
@@ -487,7 +495,11 @@ public class DeployMapActivityPresenter extends BasePresenter<IDeployMapActivity
                         if (deployAnalyzerModel.sn.equalsIgnoreCase(sn)) {
                             deployAnalyzerModel.updatedTime = deviceInfo.getUpdatedTime();
                             deployAnalyzerModel.signal = deviceInfo.getSignal();
-                            LogUtils.loge(this, "地图也刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                            try {
+                                LogUtils.loge(this, "地图也刷新信号 -->> deployMapModel.updatedTime = " + deployAnalyzerModel.updatedTime + ",deployMapModel.signal = " + deployAnalyzerModel.signal);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             getView().refreshSignal(deployAnalyzerModel.updatedTime, deployAnalyzerModel.signal);
                         }
                     } catch (NullPointerException e) {

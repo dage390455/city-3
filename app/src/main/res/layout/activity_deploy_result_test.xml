@@ -8,7 +8,6 @@
         android:id="@+id/ac_deploy_result_ll_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-
         android:layout_marginTop="20dp"
         android:orientation="horizontal">
 
@@ -38,7 +37,7 @@
     <View
         android:id="@+id/ac_deploy_result_line"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/view_divider_height"
         android:layout_below="@id/ac_deploy_result_ll_title"
         android:layout_marginTop="16dp"
         android:background="@color/c_dfdfdf" />

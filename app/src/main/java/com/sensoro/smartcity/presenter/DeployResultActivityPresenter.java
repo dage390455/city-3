@@ -10,7 +10,7 @@ import com.sensoro.smartcity.constant.Constants;
 import com.sensoro.smartcity.imainviews.IDeployResultActivityView;
 import com.sensoro.smartcity.model.DeployResultModel;
 import com.sensoro.smartcity.model.EventData;
-import com.sensoro.smartcity.server.bean.DeployContralSettingData;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.util.DateUtil;
 
 import org.greenrobot.eventbus.EventBus;
@@ -168,7 +168,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             .getFullParseDatePoint(mContext, deployResultModel.updateTime));
                 }
                 if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
-                    DeployContralSettingData settingData = deployResultModel.settingData;
+                    DeployControlSettingData settingData = deployResultModel.settingData;
                     if (settingData != null) {
                         getView().setDeployResultHasSetting(mContext.getString(R.string.had_setting));
                     } else {
@@ -246,7 +246,7 @@ public class DeployResultActivityPresenter extends BasePresenter<IDeployResultAc
                             .getFullParseDatePoint(mContext, deployResultModel.updateTime));
                 }
                 if (DEVICE_CONTROL_DEVICE_TYPES.contains(deployResultModel.deviceType)) {
-                    DeployContralSettingData settingData = deployResultModel.settingData;
+                    DeployControlSettingData settingData = deployResultModel.settingData;
                     if (settingData != null) {
                         getView().setDeployResultHasSetting(mContext.getString(R.string.had_setting));
                     } else {

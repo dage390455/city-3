@@ -128,6 +128,16 @@
                     android:textColor="@color/c_a6a6a6"
                     android:textSize="14sp" />
 
+                <TextView
+                    android:id="@+id/ac_deploy_pic_tv_installation_site_tip"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/ac_deploy_pic_tv_installation_site"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/need_to_see_the_wire_diameter_connection"
+                    android:textColor="@color/c_a6a6a6"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
 
                 <RelativeLayout
                     android:layout_width="wrap_content"

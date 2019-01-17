@@ -15,9 +15,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.MalfunctionListInfo;
+import com.sensoro.smartcity.server.bean.MalfunctionTypeStyles;
 import com.sensoro.smartcity.util.DateUtil;
+import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.PreferencesHelper;
 
 import java.util.ArrayList;
@@ -30,7 +31,6 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
     private final Context mContext;
     private String mMalfunctionText;
     private List<MalfunctionListInfo.RecordsBean> mRecordInfoList = new ArrayList<>();
-    private DeviceMergeTypesInfo.DeviceMergeTypeConfig deviceMergeTypeConfig;
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus0 = new ArrayList<>();
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus1 = new ArrayList<>();
     private List<MalfunctionListInfo.RecordsBean.Event> receiveStautus2 = new ArrayList<>();
@@ -61,7 +61,23 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.smoke_icon);
                 holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext, recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.VISIBLE);
-                holder.itemMalfunctionDetailChildMalfunctionCause.setText(recordsBean.getMalfunctionText());
+                String subFunctionType = recordsBean.getMalfunctionSubType();
+                if (!TextUtils.isEmpty(subFunctionType)) {
+                    MalfunctionTypeStyles malfunctionTypeStyles = PreferencesHelper.getInstance().getConfigMalfunctionSubTypes(subFunctionType);
+                    if (malfunctionTypeStyles != null) {
+                        String name = malfunctionTypeStyles.getName();
+                        if (!TextUtils.isEmpty(name)) {
+                            try {
+                                LogUtils.loge("subFunctionType = " + subFunctionType);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
+                            holder.itemMalfunctionDetailChildMalfunctionCause.setText(name);
+                            break;
+                        }
+                    }
+                }
+                holder.itemMalfunctionDetailChildMalfunctionCause.setText(mContext.getString(R.string.unknown));
                 break;
             case "recovery":
                 String content = mMalfunctionText + mContext.getString(R.string.recover_normal);
@@ -162,7 +178,6 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
         if (TextUtils.isEmpty(mMalfunctionText)) {
             mMalfunctionText = mContext.getString(R.string.unknown_malfunction);
         }
-        deviceMergeTypeConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
     }
 
     @Override
@@ -182,7 +197,7 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
         @BindView(R.id.ll_confirm)
         LinearLayout llConfirm;
 
-        public MalfunctionDetailRcContentViewHolder(View itemView) {
+        MalfunctionDetailRcContentViewHolder(View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
         }

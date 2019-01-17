@@ -73,6 +73,8 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     RelativeLayout acDeployPicRlShopPic;
     @BindView(R.id.ac_deploy_pic_tv_save)
     TextView acDeployPicTvSave;
+    @BindView(R.id.ac_deploy_pic_tv_installation_site_tip)
+    TextView acDeployPicTvInstallationSiteTip;
 
     @Override
     protected void onCreateInit(Bundle savedInstanceState) {
@@ -105,7 +107,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void startACForResult(Intent intent, int requestCode) {
-        startActivityForResult(intent,requestCode);
+        startActivityForResult(intent, requestCode);
     }
 
     @Override
@@ -130,7 +132,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
 
     @Override
     public void toastShort(String msg) {
-        SensoroToast.INSTANCE.makeText(msg,Toast.LENGTH_SHORT).show();
+        SensoroToast.INSTANCE.makeText(msg, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -142,7 +144,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     @OnClick({R.id.include_text_title_imv_arrows_left, R.id.ac_deploy_pic_ll_add_device_pic,
             R.id.ac_deploy_pic_imv_device_pic, R.id.ac_deploy_pic_imv_device_pic_delete, R.id.ac_deploy_pic_ll_installation_site,
             R.id.ac_deploy_pic_imv_installation_site_pic, R.id.ac_deploy_pic_imv_installation_site_pic_delete, R.id.ac_deploy_pic_ll_shop_pic,
-            R.id.ac_deploy_pic_imv_shop_pic, R.id.ac_deploy_pic_imv_shop_pic_delete,R.id.ac_deploy_pic_tv_save})
+            R.id.ac_deploy_pic_imv_shop_pic, R.id.ac_deploy_pic_imv_shop_pic_delete, R.id.ac_deploy_pic_tv_save})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.include_text_title_imv_arrows_left:
@@ -208,7 +210,7 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
                 .placeholder(R.drawable.ic_default_image)//设置占位图片
                 .thumbnail(0.01f)
                 .diskCacheStrategy(DiskCacheStrategy.ALL);
-        switch (index){
+        switch (index) {
             case 0:
                 acDeployPicLlAddDevicePic.setVisibility(View.GONE);
                 acDeployPicRlDevicePic.setVisibility(View.VISIBLE);
@@ -233,6 +235,11 @@ public class DeployMonitorDeployPicActivity extends BaseActivity<IDeployMonitorD
     public void setSaveBtnStatus(boolean isEnable) {
         acDeployPicTvSave.setEnabled(isEnable);
         acDeployPicTvSave.setBackgroundResource(isEnable ? R.drawable.shape_bg_corner_29c_shadow : R.drawable.shape_bg_solid_df_corner);
+    }
+
+    @Override
+    public void setDeployPicTvInstallationSiteTipVisible(boolean isVisible) {
+        acDeployPicTvInstallationSiteTip.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

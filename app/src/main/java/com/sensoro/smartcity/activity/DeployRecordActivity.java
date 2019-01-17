@@ -138,7 +138,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
             @Override
             public void afterTextChanged(Editable s) {
-                mDeployRecordSearchEtClear.setVisibility(s.length()>0 ? View.VISIBLE : View.GONE);
+                mDeployRecordSearchEtClear.setVisibility(s.length() > 0 ? View.VISIBLE : View.GONE);
             }
         });
 
@@ -161,7 +161,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
     }
 
     private void initRcSearchHistory() {
-        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity){
+        SensoroLinearLayoutManager layoutManager = new SensoroLinearLayoutManager(mActivity) {
             @Override
             public boolean canScrollVertically() {
                 return false;
@@ -175,7 +175,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
         layoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         rvSearchHistory.setLayoutManager(layoutManager);
 //        int spacingInPixels = AppUtils.dp2px(mRootFragment.getActivity(),12);
-        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity,6)));
+        rvSearchHistory.addItemDecoration(new SpacesItemDecoration(false, AppUtils.dp2px(mActivity, 6)));
         mSearchHistoryAdapter = new SearchHistoryAdapter(mActivity, new
                 RecycleViewItemClickListener() {
                     @Override
@@ -187,9 +187,9 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                         }
                         mDeployRecordSearchEtClear.setVisibility(View.VISIBLE);
                         acDeployRecordEtSearch.clearFocus();
-                        AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
+                        AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
                         setSearchHistoryVisible(false);
-                        mPresenter.requestSearchData(DIRECTION_DOWN,text);
+                        mPresenter.requestSearchData(DIRECTION_DOWN, text);
                     }
                 });
         rvSearchHistory.setAdapter(mSearchHistoryAdapter);
@@ -197,7 +197,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     private void initRefreshLayout() {
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
-        refreshLayout.setEnableLoadMore(false);
+        refreshLayout.setEnableLoadMore(true);
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
             public void onRefresh(@NonNull final RefreshLayout refreshLayout) {
@@ -247,7 +247,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
                     if (newState == 0) {
                         mReturnTopImageView.setVisibility(View.VISIBLE);
                         mReturnTopImageView.setAnimation(returnTopAnimation);
-                        if (returnTopAnimation.hasEnded()) {
+                        if (returnTopAnimation != null && returnTopAnimation.hasEnded()) {
                             mReturnTopImageView.startAnimation(returnTopAnimation);
                         }
                     } else {
@@ -332,15 +332,15 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @OnClick({R.id.ac_deploy_record_imv_finish, R.id.ac_deploy_record_imv_calendar, R.id.ac_deploy_record_deploy_rl_new_device
             , R.id.alarm_return_top, R.id.ac_deploy_record_imv_date_close, R.id.tv_deploy_device_search_cancel,
-            R.id.ac_deploy_record_frame_search,R.id.ac_deploy_record_search_imv_clear,R.id.btn_search_clear
-    ,R.id.ac_deploy_record_et_search})
+            R.id.ac_deploy_record_frame_search, R.id.ac_deploy_record_search_imv_clear, R.id.btn_search_clear
+            , R.id.ac_deploy_record_et_search})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_record_imv_finish:
                 finishAc();
                 break;
             case R.id.ac_deploy_record_imv_calendar:
-                AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
+                AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
                 mPresenter.doCalendar(acDeployRecordTitleRoot);
                 break;
             case R.id.ac_deploy_record_deploy_rl_new_device:
@@ -358,19 +358,19 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
             case R.id.tv_deploy_device_search_cancel:
                 doCancelSearch();
                 setSearchHistoryVisible(false);
-                AppUtils.dismissInputMethodManager(mActivity,acDeployRecordEtSearch);
+                AppUtils.dismissInputMethodManager(mActivity, acDeployRecordEtSearch);
                 break;
             case R.id.ac_deploy_record_frame_search:
             case R.id.ac_deploy_record_et_search:
                 acDeployRecordEtSearch.requestFocus();
                 acDeployRecordEtSearch.setCursorVisible(true);
                 setSearchHistoryVisible(true);
-                AppUtils.openInputMethodManager(mActivity,acDeployRecordEtSearch);
+                AppUtils.openInputMethodManager(mActivity, acDeployRecordEtSearch);
                 break;
             case R.id.ac_deploy_record_search_imv_clear:
                 acDeployRecordEtSearch.getText().clear();
                 acDeployRecordEtSearch.requestFocus();
-                AppUtils.openInputMethodManager(mActivity,acDeployRecordEtSearch);
+                AppUtils.openInputMethodManager(mActivity, acDeployRecordEtSearch);
                 setSearchHistoryVisible(true);
                 break;
             case R.id.btn_search_clear:
@@ -454,7 +454,7 @@ public class DeployRecordActivity extends BaseActivity<IDeployRecordActivityView
 
     @Override
     public void updateSearchHistoryList(List<String> data) {
-        btnSearchClear.setVisibility(data.size() >0 ? View.VISIBLE : View.GONE);
+        btnSearchClear.setVisibility(data.size() > 0 ? View.VISIBLE : View.GONE);
         mSearchHistoryAdapter.updateSearchHistoryAdapter(data);
     }
 }

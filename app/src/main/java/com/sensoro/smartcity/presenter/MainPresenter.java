@@ -99,7 +99,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         EventBus.getDefault().post(eventData);
                         break;
                     case Intent.ACTION_LOCALE_CHANGED:
-                        LogUtils.loge("Language : isChina = " + AppUtils.isChineseLanguage());
+                        try {
+                            LogUtils.loge("Language : isChina = " + AppUtils.isChineseLanguage());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         reLogin();
                         break;
                     case CONNECTIVITY_ACTION:
@@ -111,23 +115,40 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                 if (activeNetwork.isConnected()) {
                                     if (activeNetwork.getType() == ConnectivityManager.TYPE_WIFI) {
                                         netCanUse = true;
-                                        LogUtils.loge("CONNECTIVITY_ACTION--->>当前WiFi连接可用 ");
+                                        try {
+                                            LogUtils.loge("CONNECTIVITY_ACTION--->>当前WiFi连接可用 ");
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
                                     } else if (activeNetwork.getType() == ConnectivityManager.TYPE_MOBILE) {
                                         netCanUse = true;
-                                        LogUtils.loge("CONNECTIVITY_ACTION--->>当前移动网络连接可用 ");
+                                        try {
+                                            LogUtils.loge("CONNECTIVITY_ACTION--->>当前移动网络连接可用 ");
+                                        } catch (Throwable throwable) {
+                                            throwable.printStackTrace();
+                                        }
                                     }
                                 } else {
-                                    LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
+                                    try {
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>info.getTypeName()" + activeNetwork.getTypeName());
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>getSubtypeName()" + activeNetwork.getSubtypeName());
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>getState()" + activeNetwork.getState());
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>getDetailedState()"
+                                                + activeNetwork.getDetailedState().name());
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>getDetailedState()" + activeNetwork.getExtraInfo());
+                                        LogUtils.loge("CONNECTIVITY_ACTION--->>getType()" + activeNetwork.getType());
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
                                 }
-                                LogUtils.loge("CONNECTIVITY_ACTION--->>info.getTypeName()" + activeNetwork.getTypeName());
-                                LogUtils.loge("CONNECTIVITY_ACTION--->>getSubtypeName()" + activeNetwork.getSubtypeName());
-                                LogUtils.loge("CONNECTIVITY_ACTION--->>getState()" + activeNetwork.getState());
-                                LogUtils.loge("CONNECTIVITY_ACTION--->>getDetailedState()"
-                                        + activeNetwork.getDetailedState().name());
-                                LogUtils.loge("CONNECTIVITY_ACTION--->>getDetailedState()" + activeNetwork.getExtraInfo());
-                                LogUtils.loge("CONNECTIVITY_ACTION--->>getType()" + activeNetwork.getType());
+
                             } else {   // not connected to the internet
-                                LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
+                                try {
+                                    LogUtils.loge("CONNECTIVITY_ACTION--->>当前没有网络连接，请确保你已经打开网络 ");
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                             }
                         }
                         if (netCanUse) {
@@ -144,7 +165,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                         if (pingNetCanUse) {
                                             EventData eventData2 = new EventData();
                                             eventData2.code = EVENT_DATA_NET_WORK_CHANGE;
-                                            LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
+                                            try {
+                                                LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
+                                            } catch (Throwable throwable) {
+                                                throwable.printStackTrace();
+                                            }
                                             EventBus.getDefault().post(eventData2);
                                         }
                                     }
@@ -184,7 +209,6 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             return;
         }
         initViewPager();
-        mScreenReceiver = new ScreenBroadcastReceiver();
         mHandler.postDelayed(new Runnable() {
             @Override
             public void run() {
@@ -196,6 +220,7 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                 intentFilter.addAction(Intent.ACTION_LOCALE_CHANGED);
                 intentFilter.addAction(ConnectivityManager.CONNECTIVITY_ACTION);
 //        CONNECTIVITY_CHANGE WIFI_STATE_CHANGED&STATE_CHANGE
+                mScreenReceiver = new ScreenBroadcastReceiver();
                 mContext.registerReceiver(mScreenReceiver, intentFilter);
             }
         }, 3000);
@@ -220,7 +245,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
         //
         if (null != eventLoginData) {
             //赋值
-            LogUtils.loge("onDataEvent ---->>>" + eventLoginData.toString());
+            try {
+                LogUtils.loge("onDataEvent ---->>>" + eventLoginData.toString());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             PreferencesHelper.getInstance().saveUserData(eventLoginData);
             //显示账户信息
 //            getView().showAccountInfo(mEventLoginData.userName, mEventLoginData.phone);
@@ -264,7 +293,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                             JSONArray jsonArray = (JSONArray) arg;
                             final JSONObject jsonObject = jsonArray.getJSONObject(0);
                             String json = jsonObject.toString();
-                            LogUtils.loge(this, "socket-->>> DeviceInfoListener jsonArray = " + json);
+                            try {
+                                LogUtils.loge(this, "socket-->>> DeviceInfoListener jsonArray = " + json);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (hasDeviceBriefControl()) {
                                 try {
                                     DeviceInfo data = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json,
@@ -299,7 +332,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
                             String json = jsonObject.toString();
-                            LogUtils.loge(this, "socket-->>> DeviceAlarmCountListener jsonArray = " + json);
+                            try {
+                                LogUtils.loge(this, "socket-->>> DeviceAlarmCountListener jsonArray = " + json);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (hasDeviceBriefControl()) {
                                 try {
                                     DeviceAlarmCount deviceAlarmCount = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmCount.class);
@@ -335,7 +372,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
                             String json = jsonObject.toString();
-                            LogUtils.loge(this, "socket-->>> DeviceAlarmDisplayStatusListener json = " + json);
+                            try {
+                                LogUtils.loge(this, "socket-->>> DeviceAlarmDisplayStatusListener json = " + json);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (hasAlarmInfoControl()) {
                                 try {
                                     DeviceAlarmLogInfo deviceAlarmLogInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, DeviceAlarmLogInfo.class);
@@ -410,7 +451,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                         if (arg instanceof JSONObject) {
                             JSONObject jsonObject = (JSONObject) arg;
                             String json = jsonObject.toString();
-                            LogUtils.loge(this, "socket-->>> DeviceTaskResultListener json = " + json);
+                            try {
+                                LogUtils.loge(this, "socket-->>> DeviceTaskResultListener json = " + json);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             MonitorPointOperationTaskResultInfo monitorPointOperationTaskResultInfo = RetrofitServiceHelper.INSTANCE.getGson().fromJson(json, MonitorPointOperationTaskResultInfo.class);
                             EventData eventData = new EventData();
                             eventData.code = EVENT_DATA_SOCKET_MONITOR_POINT_OPERATION_TASK_RESULT;
@@ -444,12 +489,20 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
                                 }
                                 EventData eventData2 = new EventData();
                                 eventData2.code = EVENT_DATA_NET_WORK_CHANGE;
-                                LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
+                                try {
+                                    LogUtils.loge("CONNECTIVITY_ACTION--->>重新拉取");
+                                } catch (Throwable throwable) {
+                                    throwable.printStackTrace();
+                                }
                                 EventBus.getDefault().post(eventData2);
                             }
                             Beta.checkUpgrade(false, false);
                             mHandler.postDelayed(mRunnable, 5 * 1000);
-                            LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
+                            try {
+                                LogUtils.loge("TaskRunnable == pingNetCanUse = " + pingNetCanUse + ",检查更新");
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                         }
                     });
                 }
@@ -580,7 +633,10 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
 
     @Override
     public void onDestroy() {
-        mContext.unregisterReceiver(mScreenReceiver);
+        if (mScreenReceiver != null) {
+            mContext.unregisterReceiver(mScreenReceiver);
+        }
+
         mHandler.removeCallbacksAndMessages(null);
         if (EventBus.getDefault().isRegistered(this)) {
             EventBus.getDefault().unregister(this);
@@ -599,7 +655,11 @@ public class MainPresenter extends BasePresenter<IMainView> implements Constants
             mSocket = null;
         }
         mFragmentList.clear();
-        LogUtils.loge(this, "onDestroy");
+        try {
+            LogUtils.loge(this, "onDestroy");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)

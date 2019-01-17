@@ -46,7 +46,11 @@ public class BannerAlphaHelper implements ViewTreeObserver.OnGlobalLayoutListene
                 switch (newState) {
                     case RecyclerView.SCROLL_STATE_IDLE:
                         int currentItem = getCurrentItem();
-                        LogUtils.loge(this, "onScrollStateChanged -->> currentItem = " + currentItem);
+                        try {
+                            LogUtils.loge(this, "onScrollStateChanged -->> currentItem = " + currentItem);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         mLinearSnapHelper.mNoNeedToScroll = currentItem == 0 || currentItem == mRecyclerView.getAdapter().getItemCount() - 1;
                         if (mLinearSnapHelper.finalSnapDistance[0] == 0
                                 && mLinearSnapHelper.finalSnapDistance[1] == 0) {

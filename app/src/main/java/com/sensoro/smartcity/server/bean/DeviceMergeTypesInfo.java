@@ -51,8 +51,39 @@ public class DeviceMergeTypesInfo implements Serializable {
             this.sensorType = sensorType;
         }
 
+        public MalfunctionTypeBean getMalfunctionType() {
+            return malfunctionType;
+        }
+
+        public void setMalfunctionType(MalfunctionTypeBean malfunctionType) {
+            this.malfunctionType = malfunctionType;
+        }
+
         private Map<String, DeviceTypeStyles> deviceType;
         private Map<String, MergeTypeStyles> mergeType;
         private Map<String, SensorTypeStyles> sensorType;
+        private MalfunctionTypeBean malfunctionType;
+
+        public static class MalfunctionTypeBean {
+            private Map<String, MalfunctionTypeStyles> mainTypes;
+            private Map<String, MalfunctionTypeStyles> subTypes;
+
+            //
+            public Map<String, MalfunctionTypeStyles> getMainTypes() {
+                return mainTypes;
+            }
+
+            public void setMainTypes(Map<String, MalfunctionTypeStyles> mainTypes) {
+                this.mainTypes = mainTypes;
+            }
+
+            public Map<String, MalfunctionTypeStyles> getSubTypes() {
+                return subTypes;
+            }
+
+            public void setSubTypes(Map<String, MalfunctionTypeStyles> subTypes) {
+                this.subTypes = subTypes;
+            }
+        }
     }
 }

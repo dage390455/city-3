@@ -96,7 +96,11 @@ public class BannerRecyclerView extends RecyclerView {
 
     public void dispatchOnPageSelected(int position) {
         if (currentPosition == position) return;
-        LogUtils.loge(this, "dispatchOnPageSelected -->> currentItem = " + position);
+        try {
+            LogUtils.loge(this, "dispatchOnPageSelected -->> currentItem = " + position);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         currentPosition = position;
         if (mOnPageChangeListener != null) {
             mOnPageChangeListener.onPageSelected(position);

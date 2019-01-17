@@ -13,7 +13,7 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import com.sensoro.smartcity.SensoroCityApplication;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
-import com.sensoro.smartcity.server.bean.DeployContralSettingData;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.ScenesData;
 import com.sensoro.smartcity.server.response.AlarmCountRsp;
 import com.sensoro.smartcity.server.response.AuthRsp;
@@ -58,7 +58,6 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -214,7 +213,11 @@ public enum RetrofitServiceHelper {
         final HttpLoggingInterceptor logging = new HttpLoggingInterceptor(new HttpLoggingInterceptor.Logger() {
             @Override
             public void log(String s) {
-                LogUtils.loge(this, "retrofit------------>" + s);
+                try {
+                    LogUtils.loge(this, "retrofit------------>" + s);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
         logging.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -499,7 +502,7 @@ public enum RetrofitServiceHelper {
      * @return
      */
     public Observable<DeviceDeployRsp> doDevicePointDeploy(String sn, double lon, double lat, List<String> tags, String
-            name, String contact, String content, String wxPhone, List<String> imgUrls, HashMap<String, DeployContralSettingData> settingMap) {
+            name, String contact, String content, String wxPhone, List<String> imgUrls, HashMap<String, DeployControlSettingData> settingMap) {
         JSONObject jsonObject = new JSONObject();
         try {
             jsonObject.put("lon", lon);
@@ -532,12 +535,16 @@ public enum RetrofitServiceHelper {
             }
             if (settingMap != null) {
                 JSONObject jsonObjectOut = new JSONObject();
-                for (Map.Entry<String, DeployContralSettingData> entrySet : settingMap.entrySet()) {
+                for (Map.Entry<String, DeployControlSettingData> entrySet : settingMap.entrySet()) {
                     String key = entrySet.getKey();
                     if (!TextUtils.isEmpty(key)) {
-                        DeployContralSettingData value = entrySet.getValue();
+                        DeployControlSettingData value = entrySet.getValue();
                         JSONObject jsonObjectIn = new JSONObject();
                         jsonObjectIn.put("initValue", value.getInitValue());
+                        Double diameterValue = value.getDiameterValue();
+                        if (diameterValue != null) {
+                            jsonObjectIn.put("diameterValue", diameterValue);
+                        }
                         jsonObjectOut.put(key, jsonObjectIn);
                     }
                 }
@@ -560,7 +567,7 @@ public enum RetrofitServiceHelper {
     }
 
     public Observable<DeviceDeployRsp> doInspectionChangeDeviceDeploy(String oldSn, String newSn, String taskId, Integer reason, double lon, double lat, List<String> tags, String
-            name, String contact, String content, List<String> imgUrls,String wxPhone) {
+            name, String contact, String content, List<String> imgUrls, String wxPhone) {
         JSONObject jsonObject = new JSONObject();
         try {
             if (!TextUtils.isEmpty(newSn)) {
@@ -598,7 +605,7 @@ public enum RetrofitServiceHelper {
                 jsonObject.put("imgUrls", jsonArrayImg);
             }
             if (!TextUtils.isEmpty(wxPhone)) {
-                jsonObject.put("wxPhone",wxPhone);
+                jsonObject.put("wxPhone", wxPhone);
             }
         } catch (JSONException e) {
             e.printStackTrace();
@@ -798,7 +805,7 @@ public enum RetrofitServiceHelper {
         return contractstemplate;
     }
 
-    public Observable<ContractAddRsp> getNewContract(Integer contractType, int createType, String cardId,
+    public Observable<ContractAddRsp> getNewContract(Integer contractType, String cardId,
                                                      Integer sex, String enterpriseCardId,
                                                      String enterpriseRegisterId,
                                                      String customerName,
@@ -808,7 +815,7 @@ public enum RetrofitServiceHelper {
                                                      String customerAddress,
                                                      String customerPhone,
                                                      String placeType,
-                                                     ArrayList<ContractsTemplateInfo> devicesList,
+                                                     List<ContractsTemplateInfo> devicesList,
                                                      int payTimes,
                                                      //可选
                                                      Boolean confirmed,
@@ -818,7 +825,7 @@ public enum RetrofitServiceHelper {
             if (contractType != null) {
                 jsonObject.put("contract_type", contractType);
             }
-            jsonObject.put("created_type", createType);
+//            jsonObject.put("created_type", createType);
             if (cardId != null) {
                 jsonObject.put("card_id", cardId);
             }
@@ -1232,7 +1239,7 @@ public enum RetrofitServiceHelper {
         return devicesMergeTypes;
     }
 
-    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec) {
+    public Observable<MonitorPointOperationRequestRsp> doMonitorPointOperation(List<String> snList, String type, Integer interval, List<String> rules, Integer switchSpec, Double diameter) {
         JSONObject jsonObject = new JSONObject();
 
         try {
@@ -1255,6 +1262,9 @@ public enum RetrofitServiceHelper {
             }
             if (switchSpec != null) {
                 jsonObject.put("switchSpec", switchSpec);
+            }
+            if (diameter != null) {
+                jsonObject.put("wireDiameter", diameter);
             }
 
         } catch (JSONException e) {
@@ -1282,7 +1292,7 @@ public enum RetrofitServiceHelper {
         return doDevicePositionCalibration;
     }
 
-    public Observable<ResponseBase> modifyContract(String uid, Integer contractID, Integer contractType, Integer createType, String cardId, Integer sex, String enterpriseCardId,
+    public Observable<ResponseBase> modifyContract(String uid, Integer contractID, Integer contractType, String cardId, Integer sex, String enterpriseCardId,
                                                    String enterpriseRegisterId,
                                                    String customerName,
                                                    String customerEnterpriseName,
@@ -1291,7 +1301,7 @@ public enum RetrofitServiceHelper {
                                                    String customerAddress,
                                                    String customerPhone,
                                                    String placeType,
-                                                   ArrayList<ContractsTemplateInfo> devicesList,
+                                                   List<ContractsTemplateInfo> devicesList,
                                                    int payTimes,
                                                    //可选
                                                    Boolean confirmed,
@@ -1306,7 +1316,7 @@ public enum RetrofitServiceHelper {
             if (contractType != null) {
                 jsonObject.put("contract_type", contractType);
             }
-            jsonObject.put("created_type", createType);
+//            jsonObject.put("created_type", createType);
             if (!TextUtils.isEmpty(cardId)) {
                 jsonObject.put("card_id", cardId);
             }
@@ -1360,5 +1370,15 @@ public enum RetrofitServiceHelper {
         Observable<ResponseBase> modifyContract = retrofitService.modifyContract(body);
         RxApiManager.getInstance().add("modifyContract", modifyContract.subscribe());
         return modifyContract;
+    }
+
+    /**
+     * 检测设备名称是否重名
+     *
+     * @param name
+     * @return
+     */
+    public Observable<ResponseBase> getDeviceNameValid(String name) {
+        return retrofitService.getDeviceNameValid(name);
     }
 }

@@ -1,19 +1,14 @@
 package com.sensoro.smartcity.widget.dialog;
 
 import android.app.Activity;
-import android.bluetooth.BluetoothAdapter;
-import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.annotation.ColorInt;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.sensoro.smartcity.R;
-import com.sensoro.smartcity.util.AppUtils;
 
 public class TipOperationDialogUtils {
 
@@ -23,7 +18,9 @@ public class TipOperationDialogUtils {
     private final TextView mTvConfirm;
     private final TextView mTvTitle;
     private final LinearLayout mLlEtRoot;
+    private final LinearLayout mLlEtDiameter;
     private final EditText mEt;
+    private final EditText mEtDiameter;
     private TipDialogUtilsClickListener listener;
     private CustomCornerDialog mDialog;
     private Activity mActivity;
@@ -36,13 +33,15 @@ public class TipOperationDialogUtils {
 
     public TipOperationDialogUtils(Activity activity) {
         mActivity = activity;
-        View view = View.inflate(activity, R.layout.item_dialog_monitor_point_operation, null);
+        final View view = View.inflate(activity, R.layout.item_dialog_monitor_point_operation, null);
         mTvTitle = view.findViewById(R.id.dialog_tip_operation_tv_title);
         mTvMessage = view.findViewById(R.id.dialog_tip_operation_tv_message);
         mTvCancel = view.findViewById(R.id.dialog_tip_operation_tv_cancel);
         mTvConfirm = view.findViewById(R.id.dialog_tip_operation_tv_confirm);
         mLlEtRoot = view.findViewById(R.id.dialog_operation_ll_et_root);
         mEt = view.findViewById(R.id.dialog_operation_et);
+        mLlEtDiameter = view.findViewById(R.id.dialog_operation_ll_et_diameter);
+        mEtDiameter = view.findViewById(R.id.dialog_operation_et_diameter);
 //        AlertDialog.Builder builder = new AlertDialog.Builder(activity);
 //        builder.setView(view);
 //        builder.setCancelable(false);
@@ -52,7 +51,7 @@ public class TipOperationDialogUtils {
 //            window.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 //        }
 
-        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view,true);
+        mDialog = new CustomCornerDialog(activity, R.style.CustomCornerDialogStyle, view, true);
 
         mTvCancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,10 +67,15 @@ public class TipOperationDialogUtils {
         mTvConfirm.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(mLlEtRoot.getVisibility() == View.VISIBLE){
-                    listener.onConfirmClick(mEt.getText().toString());
-                }else{
-                    listener.onConfirmClick(null);
+                if (mLlEtRoot.getVisibility() == View.VISIBLE) {
+                    if (mLlEtDiameter.getVisibility() == View.VISIBLE) {
+                        listener.onConfirmClick(mEt.getText().toString(), mEtDiameter.getText().toString());
+                    } else {
+                        listener.onConfirmClick(mEt.getText().toString(), null);
+                    }
+
+                } else {
+                    listener.onConfirmClick(null, null);
                 }
             }
         });
@@ -101,7 +105,12 @@ public class TipOperationDialogUtils {
         mTvMessage.setText(text);
     }
 
-    public void setTipCacnleText(String text, @ColorInt int color) {
+    public void setTipMessageText(String text, int color) {
+        mTvMessage.setText(text);
+        mTvMessage.setTextColor(mActivity.getResources().getColor(color));
+    }
+
+    public void setTipCancelText(String text, @ColorInt int color) {
         mTvCancel.setText(text);
         mTvCancel.setTextColor(color);
     }
@@ -149,12 +158,15 @@ public class TipOperationDialogUtils {
         mLlEtRoot.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
+    public void setDiameterVisible(boolean isVisible) {
+        mLlEtDiameter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
+    }
 
 
     public interface TipDialogUtilsClickListener {
         void onCancelClick();
 
-        void onConfirmClick(String content);
+        void onConfirmClick(String content, String diameter);
     }
 
 }

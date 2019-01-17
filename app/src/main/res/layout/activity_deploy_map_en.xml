@@ -8,12 +8,6 @@
 
     <include layout="@layout/item_include_text_title" />
 
-    <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/c_fafafa"
-        android:contentDescription="@null" />
-
 
     <RelativeLayout
         android:layout_width="match_parent"

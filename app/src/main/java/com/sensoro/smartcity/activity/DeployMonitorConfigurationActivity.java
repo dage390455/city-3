@@ -44,6 +44,10 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     TextView acDeployConfigurationTvConfiguration;
     @BindView(R.id.ac_deploy_configuration_tv_near)
     TextView acDeployConfigurationTvNear;
+    @BindView(R.id.ll_ac_deploy_configuration_diameter)
+    LinearLayout llAcDeployConfigurationDiameter;
+    @BindView(R.id.ac_deploy_configuration_et_diameter)
+    EditText acDeployConfigurationEtDiameter;
     private BleConfigurationDialogUtils bleConfigDialog;
 
     @Override
@@ -74,6 +78,22 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
                 updateBtnStatus(s.toString().length() > 0);
             }
         });
+//        acDeployConfigurationEtDiameter.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                updateBtnStatus(s.toString().length() > 0);
+//            }
+//        });
         bleConfigDialog = new BleConfigurationDialogUtils(mActivity, mActivity.getString(R.string.connecting));
     }
 
@@ -133,7 +153,7 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.ac_deploy_configuration_tv_configuration:
-                mPresenter.doConfiguration(acDeployConfigurationEtEnter.getText().toString());
+                mPresenter.doConfiguration(acDeployConfigurationEtEnter.getText().toString(), acDeployConfigurationEtDiameter.getText().toString());
                 break;
             case R.id.include_text_title_imv_arrows_left:
                 finishAc();
@@ -182,8 +202,13 @@ public class DeployMonitorConfigurationActivity extends BaseActivity<IDeployMoni
 
     @Override
     public void setTvEnterValueRange(int minValue, int maxValue) {
-        String string = String.format(Locale.CHINESE,"%s%d-%d",mActivity.getString(R.string.deploy_configuration_enter_tip),minValue,maxValue);
+        String string = String.format(Locale.CHINESE, "%s%d-%d", mActivity.getString(R.string.deploy_configuration_enter_tip), minValue, maxValue);
         acDeployConfigurationTvEnterTip.setText(string);
+    }
+
+    @Override
+    public void setLlAcDeployConfigurationDiameterVisible(boolean isVisible) {
+        llAcDeployConfigurationDiameter.setVisibility(isVisible ? View.VISIBLE : View.GONE);
     }
 
     @Override

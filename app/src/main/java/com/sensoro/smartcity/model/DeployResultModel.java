@@ -1,6 +1,6 @@
 package com.sensoro.smartcity.model;
 
-import com.sensoro.smartcity.server.bean.DeployContralSettingData;
+import com.sensoro.smartcity.server.bean.DeployControlSettingData;
 import com.sensoro.smartcity.server.bean.DeviceInfo;
 
 import java.io.Serializable;
@@ -19,7 +19,7 @@ public class DeployResultModel implements Serializable {
     public String phone;
     public String address;
     public String deviceType;
-    public DeployContralSettingData settingData;
+    public DeployControlSettingData settingData;
     public int stationStatus;
     public DeviceInfo deviceInfo;
 }

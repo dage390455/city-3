@@ -54,7 +54,11 @@ public abstract class BaseActivity<V, P extends BasePresenter<V>> extends AppCom
         if (view instanceof BaseActivity) {
             mActivity = (BaseActivity) view;
         } else {
-            LogUtils.loge(this, "当前View转换异常！");
+            try {
+                LogUtils.loge(this, "当前View转换异常！");
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             mActivity = this;
         }
         setTheme(R.style.MyTheme);

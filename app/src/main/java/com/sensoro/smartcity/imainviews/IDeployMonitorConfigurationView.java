@@ -20,4 +20,6 @@ public interface IDeployMonitorConfigurationView extends IToast, IActivityIntent
     boolean hasEditTextContent();
 
     void setTvEnterValueRange(int minValue, int maxValue);
+
+    void setLlAcDeployConfigurationDiameterVisible(boolean isVisible);
 }

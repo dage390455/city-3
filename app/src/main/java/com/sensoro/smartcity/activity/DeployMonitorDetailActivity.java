@@ -81,6 +81,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     View lastView;
     @BindView(R.id.deploy_detail_iv_arrow_we_chat)
     ImageView deployDetailIvArrowWeChat;
+    @BindView(R.id.ac_deploy_device_detail_tv_device_sn)
+    TextView acDeployDeviceDetailTvDeviceSn;
     @BindView(R.id.ac_deploy_device_detail_tv_device_type)
     TextView acDeployDeviceDetailTvDeviceType;
     @BindView(R.id.ac_deploy_device_detail_deploy_setting_line)
@@ -123,7 +125,7 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
         tipBleDialogUtils = new TipBleDialogUtils(mActivity);
         mLoadBleConfigDialogBuilder = new ProgressUtils.Builder(mActivity);
         mLoadBleConfigDialog = new ProgressUtils(mLoadBleConfigDialogBuilder.setMessage(mActivity.getString(R.string.get_the_middle_profile)).build());
-
+        includeTextTitleTvTitle.setText(R.string.device_deployment);
         includeTextTitleTvSubtitle.setVisibility(View.GONE);
 //        updateUploadState(true);
         initUploadDialog();
@@ -299,8 +301,8 @@ public class DeployMonitorDetailActivity extends BaseActivity<IDeployMonitorDeta
     }
 
     @Override
-    public void setDeviceTitleName(String name) {
-        includeTextTitleTvTitle.setText(name);
+    public void setDeviceSn(String sn) {
+        acDeployDeviceDetailTvDeviceSn.setText(sn);
     }
 
     @Override

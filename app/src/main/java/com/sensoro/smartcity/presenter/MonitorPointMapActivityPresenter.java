@@ -319,12 +319,20 @@ public class MonitorPointMapActivityPresenter extends BasePresenter<IMonitorPoin
                 req.scene = SendMessageToWX.Req.WXSceneSession;
                 req.message = msg;
                 boolean b = SensoroCityApplication.getInstance().api.sendReq(req);
-                LogUtils.loge(this, "toShareWeChat: isSuc = " + b + ",bitmapLength = " + ratio);
+                try {
+                    LogUtils.loge(this, "toShareWeChat: isSuc = " + b + ",bitmapLength = " + ratio);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
 
             @Override
             public void onMapScreenShot(Bitmap bitmap, int i) {
-                LogUtils.loge(this, "onMapScreenShot: i = " + i);
+                try {
+                    LogUtils.loge(this, "onMapScreenShot: i = " + i);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
     }

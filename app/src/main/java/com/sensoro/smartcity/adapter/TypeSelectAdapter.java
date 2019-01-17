@@ -21,15 +21,14 @@ import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.model.DeviceTypeModel;
-import com.sensoro.smartcity.server.bean.DeviceMergeTypesInfo;
 import com.sensoro.smartcity.server.bean.DeviceTypeStyles;
 import com.sensoro.smartcity.server.bean.MergeTypeStyles;
 import com.sensoro.smartcity.util.PreferencesHelper;
+import com.sensoro.smartcity.util.WidgetUtil;
 import com.sensoro.smartcity.widget.RecycleViewItemClickListener;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +41,6 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     private List<String> mDeviceTypeList = new ArrayList<>();
 
     private int typeStyle = 1;
-    private DeviceMergeTypesInfo.DeviceMergeTypeConfig typesConfig;
 
     public TypeSelectAdapter(Context context) {
         mContext = context;
@@ -67,31 +65,40 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
             changeIconColor(holder, position != selectPosition, mContext.getResources().getDrawable(R.drawable.type_all_test));
         } else {
             final int index = position - 1;
-            String name = "";
-            String image = "";
-            Map<String, MergeTypeStyles> mergeTypeMap = typesConfig.getMergeType();
-            Map<String, DeviceTypeStyles> deviceTypeMap = typesConfig.getDeviceType();
+            String name = null;
+            String image = null;
             switch (typeStyle) {
                 case 1:
+                    //巡检部分为deviceType
                     String deviceType = mDeviceTypeList.get(index);
-                    DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
-                    String category = deviceTypeStyles.getCategory();
-                    MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(deviceTypeStyles.getMergeType());
-                    if (TextUtils.isEmpty(category)) {
-                        name = mergeTypeStyles.getName();
-                    } else {
-                        name = mergeTypeStyles.getName() + category;
+                    DeviceTypeStyles deviceTypeStyles = PreferencesHelper.getInstance().getConfigDeviceType(deviceType);
+                    if (deviceTypeStyles != null) {
+                        String category = deviceTypeStyles.getCategory();
+                        String mergeType = deviceTypeStyles.getMergeType();
+                        MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+                        if (mergeTypeStyles != null) {
+                            name = mergeTypeStyles.getName();
+                            if (!TextUtils.isEmpty(category)) {
+                                name = name + category;
+                            }
+                            image = mergeTypeStyles.getImage();
+                        }
+
                     }
-                    image = mergeTypeStyles.getImage();
-//            int resId = mergeTypeStyles.getResId();
-                    //
                     break;
                 case 2:
+                    //设备首页字段为mergeType
                     String mergeType = mDeviceTypeList.get(index);
-                    MergeTypeStyles mergeTypeStyles1 = mergeTypeMap.get(mergeType);
-                    name = mergeTypeStyles1.getName();
-                    image = mergeTypeStyles1.getImage();
+                    MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+                    if (mergeTypeStyles != null) {
+                        name = mergeTypeStyles.getName();
+                        image = mergeTypeStyles.getImage();
+                    }
                     break;
+            }
+
+            if (TextUtils.isEmpty(name)) {
+                name = mContext.getString(R.string.unknown);
             }
             holder.itemPopSelectTvTypeName.setText(name);
             Glide.with(mContext)                             //配置上下文
@@ -111,12 +118,6 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
                     }).centerCrop().into(holder.itemPopSelectImvTypeIcon);
 
         }
-//        DeviceTypeModel deviceTypeModel = mDeviceTypeList.get(position);
-//        holder.itemPopSelectImvTypeIcon.setImageResource(deviceTypeModel.iconRes);
-//        holder.itemPopSelectTvTypeName.setText(deviceTypeModel.name);
-        //
-//        holder.itemPopSelectTvTypeName.setTextColor(position != selectPosition ? Color.WHITE :
-//                mContext.getResources().getColor(R.color.c_252525));
         holder.itemPopSelectLlRoot.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -139,31 +140,24 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
             deviceTypeModel.name = mContext.getString(R.string.all_types);
             deviceTypeModel.iconRes = R.mipmap.type_all;
         } else {
-            Map<String, DeviceTypeStyles> deviceTypeMap = typesConfig.getDeviceType();
-            Map<String, MergeTypeStyles> mergeTypeMap = typesConfig.getMergeType();
             final int index = position - 1;
-            ArrayList<String> strs = new ArrayList<>();
             switch (typeStyle) {
                 case 1:
                     String deviceType = mDeviceTypeList.get(index);
-                    DeviceTypeStyles deviceTypeStyles = deviceTypeMap.get(deviceType);
-                    String category = deviceTypeStyles.getCategory();
-                    MergeTypeStyles mergeTypeStyles = mergeTypeMap.get(deviceTypeStyles.getMergeType());
-                    String name = mergeTypeStyles.getName();
-//                    String image = mergeTypeStyles.getImage();
-                    if (TextUtils.isEmpty(category)) {
-                        deviceTypeModel.name = name;
-                    } else {
-                        deviceTypeModel.name = name + category;
-                    }
+                    ArrayList<String> strs = new ArrayList<>();
+                    deviceTypeModel.name = WidgetUtil.getInspectionDeviceName(deviceType);
                     strs.add(deviceType);
                     deviceTypeModel.deviceTypes = strs;
                     break;
                 case 2:
                     String mergeType = mDeviceTypeList.get(index);
-                    MergeTypeStyles mergeTypeStyles1 = mergeTypeMap.get(mergeType);
-                    deviceTypeModel.name = mergeTypeStyles1.getName();
-                    deviceTypeModel.deviceTypes = mergeTypeStyles1.getDeviceTypes();
+                    MergeTypeStyles mergeTypeStyles = PreferencesHelper.getInstance().getConfigMergeType(mergeType);
+                    if (mergeTypeStyles != null) {
+                        deviceTypeModel.name = mergeTypeStyles.getName();
+                        deviceTypeModel.deviceTypes = mergeTypeStyles.getDeviceTypes();
+                        break;
+                    }
+                    deviceTypeModel.name = mContext.getString(R.string.unknown);
                     break;
             }
 
@@ -180,7 +174,6 @@ public class TypeSelectAdapter extends RecyclerView.Adapter<TypeSelectAdapter.Ty
     public void updateDeviceTypList(List<String> list) {
         mDeviceTypeList.clear();
         mDeviceTypeList.addAll(list);
-        typesConfig = PreferencesHelper.getInstance().getLocalDevicesMergeTypes().getConfig();
         notifyDataSetChanged();
     }
 

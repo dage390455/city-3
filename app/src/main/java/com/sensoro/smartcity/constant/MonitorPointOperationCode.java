@@ -7,4 +7,6 @@ public interface MonitorPointOperationCode {
     int QUERY = 0x04;
     int SELF_CHECK = 0x05;
     int AIR_SWITCH_CONFIG = 0x06;
+    int AIR_SWITCH_POWER_OFF = 0x07;
+    int AIR_SWITCH_POWER_ON = 0x08;
 }

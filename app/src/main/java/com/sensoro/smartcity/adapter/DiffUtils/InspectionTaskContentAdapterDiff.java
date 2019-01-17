@@ -17,7 +17,11 @@ public class InspectionTaskContentAdapterDiff extends DiffCallBack<InspectionTas
     public boolean getItemsTheSame(int oldItemPosition, int newItemPosition) {
         InspectionTaskDeviceDetail oldIn = mOldList.get(oldItemPosition);
         InspectionTaskDeviceDetail newIn = mNewList.get(newItemPosition);
-        LogUtils.loge(this, "getContentsTheSame bNear = " + true + ",old = " + oldIn.isNearBy_local() + ",new = " + newIn.isNearBy_local());
+        try {
+            LogUtils.loge(this, "getContentsTheSame bNear = " + true + ",old = " + oldIn.isNearBy_local() + ",new = " + newIn.isNearBy_local());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         return oldIn.getId().equalsIgnoreCase(newIn.getId());
     }
 
@@ -27,7 +31,11 @@ public class InspectionTaskContentAdapterDiff extends DiffCallBack<InspectionTas
         boolean nearBy_local = oldData.isNearBy_local();
         boolean nearBy_local1 = newData.isNearBy_local();
         boolean bNear = nearBy_local == nearBy_local1;
-        LogUtils.loge(this, "getContentsTheSame bNear = " + bNear + ",old = " + nearBy_local + ",new = " + nearBy_local1);
+        try {
+            LogUtils.loge(this, "getContentsTheSame bNear = " + bNear + ",old = " + nearBy_local + ",new = " + nearBy_local1);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         String oldDataName = oldData.getName();
         String newDataName = newData.getName();
         if (!TextUtils.isEmpty(newDataName)) {

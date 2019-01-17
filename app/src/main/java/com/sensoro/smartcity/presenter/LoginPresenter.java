@@ -36,6 +36,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Map;
 
 import rx.android.schedulers.AndroidSchedulers;
@@ -52,7 +53,12 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
         Beta.checkUpgrade(false, false);
         readLoginData();
         initSeverUrl();
-        AppUtils.addToPhoneContact(mContext, "升哲安全服务", "（0570）2296646");
+        ArrayList<String> nameList = new ArrayList<>();
+        nameList.add(mContext.getString(R.string.sensoro_number));
+        ArrayList<String> numberList = new ArrayList<>();
+        numberList.add("(0570)2296646");
+        numberList.add("(010)53876304");
+        AppUtils.addToPhoneContact(mContext, nameList, numberList);
     }
 
     private void readLoginData() {
@@ -112,7 +118,11 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
             getView().toastShort(mContext.getResources().getString(R.string.tips_login_pwd_empty));
         } else {
             final String phoneId = PushManager.getInstance().getClientid(SensoroCityApplication.getInstance());
-            LogUtils.loge(this, "------phoneId = " + phoneId);
+            try {
+                LogUtils.loge(this, "------phoneId = " + phoneId);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             getView().showProgressDialog();
             //
             RetrofitServiceHelper.INSTANCE.login(account, pwd, phoneId).subscribeOn
@@ -155,28 +165,48 @@ public class LoginPresenter extends BasePresenter<ILoginView> implements Constan
                     for (Map.Entry<String, DeviceTypeStyles> next : deviceType.entrySet()) {
                         String key = next.getKey();
                         DeviceTypeStyles value = next.getValue();
-                        LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
+                        try {
+                            LogUtils.loge("getDevicesMergeTypes---DeviceTypeStyles>> " + key + "," + value.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                     }
                     Map<String, MergeTypeStyles> mergeType = config.getMergeType();
                     for (Map.Entry<String, MergeTypeStyles> next : mergeType.entrySet()) {
                         String key = next.getKey();
                         MergeTypeStyles value = next.getValue();
-                        LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
+                        try {
+                            LogUtils.loge("getDevicesMergeTypes---MergeTypeStyles>> " + key + "," + value.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                     }
                     Map<String, SensorTypeStyles> sensorType = config.getSensorType();
                     for (Map.Entry<String, SensorTypeStyles> next : sensorType.entrySet()) {
                         String key = next.getKey();
                         SensorTypeStyles value = next.getValue();
-                        LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> " + key + "," + value.toString());
+                        try {
+                            LogUtils.loge("getDevicesMergeTypes---SensorTypeStyles>> " + key + "," + value.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                     }
-                    LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
+                    try {
+                        LogUtils.loge("getDevicesMergeTypes--->> " + deviceType.size() + "," + mergeType.size() + "," + sensorType.size());
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                 }
             }
         }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DevicesMergeTypesRsp>(LoginPresenter.this) {
             @Override
             public void onCompleted(DevicesMergeTypesRsp devicesMergeTypesRsp) {
                 openNextActivity(eventLoginData);
-                LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
+                try {
+                    LogUtils.loge("DevicesMergeTypesRsp ....." + eventLoginData.toString());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
 
 
