@@ -49,7 +49,11 @@ public abstract class CityObserver<T> implements Observer<T> {
     @Override
     public void onError(Throwable e) {
         String message = e.getMessage();
-        LogUtils.loge(this, "onError e : " + message);
+        try {
+            LogUtils.loge(this, "onError e : " + message);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         //在这里做全局的错误处理
         if (e instanceof UnknownHostException || e instanceof ConnectException ||
                 e instanceof SocketTimeoutException ||
@@ -77,7 +81,11 @@ public abstract class CityObserver<T> implements Observer<T> {
                     try {
                         jsonObject = new JSONObject(errorBody);
                         String log = jsonObject.toString();
-                        LogUtils.loge(this, "onError = " + log);
+                        try {
+                            LogUtils.loge(this, "onError = " + log);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         int errcode = jsonObject.getInt("errcode");
                         if (errcode == 4000002) {
                             EventData eventData = new EventData();
@@ -97,7 +105,11 @@ public abstract class CityObserver<T> implements Observer<T> {
                             String log = jsonObject.toString();
                             int errcode = jsonObject.getInt("errcode");
                             String errmsg = jsonObject.getString("errmsg");
-                            LogUtils.loge(this, "onError = " + log + ",errcode = " + errcode);
+                            try {
+                                LogUtils.loge(this, "onError = " + log + ",errcode = " + errcode);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (viewAttachedAlive()) {
                                 onErrorMsg(code, errmsg);
                             }
@@ -118,7 +130,11 @@ public abstract class CityObserver<T> implements Observer<T> {
                     try {
                         jsonObject = new JSONObject(errorBody);
                         String log = jsonObject.toString();
-                        LogUtils.loge(this, "onError = " + log);
+                        try {
+                            LogUtils.loge(this, "onError = " + log);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         int errcode = jsonObject.getInt("errcode");
                         if (errcode == 4000002) {
                             EventData eventData = new EventData();
@@ -138,7 +154,11 @@ public abstract class CityObserver<T> implements Observer<T> {
                             String log = jsonObject.toString();
                             int errcode = jsonObject.getInt("errcode");
                             String errinfo = jsonObject.getString("errinfo");
-                            LogUtils.loge(this, "onError = " + log + ",errcode = " + errcode);
+                            try {
+                                LogUtils.loge(this, "onError = " + log + ",errcode = " + errcode);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             if (viewAttachedAlive()) {
                                 onErrorMsg(code, errinfo);
                             }
@@ -209,7 +229,11 @@ public abstract class CityObserver<T> implements Observer<T> {
                 if (presenterWeakReference.get() != null && presenterWeakReference.get().isAttachedView()) {
                     return true;
                 } else {
-                    LogUtils.loge(this, "------->>界面在未完成任务前销毁！！！");
+                    try {
+                        LogUtils.loge(this, "------->>界面在未完成任务前销毁！！！");
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                 }
             }
         } else {

@@ -2,10 +2,8 @@ package com.sensoro.smartcity.activity;
 
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.v4.graphics.drawable.DrawableCompat;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -76,12 +74,13 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
     }
 
     private void changeIconArrowsColor() {
-        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.arrows_left);
-        Drawable.ConstantState state = drawable.getConstantState();
-        DrawableCompat.wrap(state == null ? drawable : state.newDrawable());
-        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
-        DrawableCompat.setTint(drawable, Color.WHITE);
-        includeTextTitleImvArrowsLeft.setImageDrawable(drawable);
+//        Drawable drawable = mActivity.getResources().getDrawable(R.drawable.arrows_left);
+//        Drawable.ConstantState state = drawable.getConstantState();
+//        DrawableCompat.wrap(state == null ? drawable : state.newDrawable());
+//        drawable.setBounds(0, 0, drawable.getIntrinsicHeight(), drawable.getIntrinsicHeight());
+//        DrawableCompat.setTint(drawable, Color.WHITE);
+//        includeTextTitleImvArrowsLeft.setImageDrawable(drawable);
+        includeTextTitleImvArrowsLeft.setColorFilter(mActivity.getResources().getColor(R.color.white));
     }
 
     @Override
@@ -215,7 +214,11 @@ public class ScanActivity extends BaseActivity<IScanActivityView, ScanActivityPr
 
     @Override
     public void onScanQRCodeOpenCameraError() {
-        LogUtils.loge(this, "扫描出错！！！！！！！");
+        try {
+            LogUtils.loge(this, "扫描出错！！！！！！！");
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
     }
 
     @Override

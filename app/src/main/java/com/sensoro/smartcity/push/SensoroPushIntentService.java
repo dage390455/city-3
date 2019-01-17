@@ -55,7 +55,11 @@ public class SensoroPushIntentService extends GTIntentService {
         String messageid = msg.getMessageId();
         byte[] payload = msg.getPayload();
         String payloadId = msg.getPayloadId();
-        LogUtils.logd(this, "payloadId = " + payloadId);
+        try {
+            LogUtils.logd(this, "payloadId = " + payloadId);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         String pkg = msg.getPkgName();
         String cid = msg.getClientId();
 
@@ -204,7 +208,11 @@ public class SensoroPushIntentService extends GTIntentService {
         msg.what = 0;
         msg.obj = data;
         SensoroCityApplication.sendMessage(msg);
-        LogUtils.loge("push ---->>> " + data);
+        try {
+            LogUtils.loge("push ---->>> " + data);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
 //        SensoroCityApplication.getInstance().pushNotification(data);
     }
 }

@@ -12,7 +12,7 @@ import android.util.Log;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.ContractEditorActivity;
-import com.sensoro.smartcity.activity.MonitorPointDetailActivity;
+import com.sensoro.smartcity.activity.MonitorPointElectricDetailActivity;
 import com.sensoro.smartcity.activity.ScanActivity;
 import com.sensoro.smartcity.activity.SearchMonitorActivity;
 import com.sensoro.smartcity.adapter.MainHomeFragRcContentAdapter;
@@ -150,7 +150,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         if (needShowProgressDialog) {
             getView().showProgressDialog();
         }
-        LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
+        try {
+            LogUtils.loge(this, "刷新Top,内容数据： " + System.currentTimeMillis());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         RetrofitServiceHelper.INSTANCE.getDeviceTypeCount().subscribeOn(Schedulers
                 .io()).flatMap(new Func1<DeviceTypeCountRsp, Observable<DeviceInfoListRsp>>() {
             @Override
@@ -205,9 +209,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 if (mHomeTopModels.size() > 0) {
                     updateHeaderTop(mHomeTopModels.get(0));
                 }
-                getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
+                getView().dismissProgressDialog();
                 needFreshAll = false;
             }
 
@@ -225,9 +229,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     updateHeaderTop(mHomeTopModels.get(0));
                 }
                 getView().toastShort(errorMsg);
-                getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
                 getView().recycleViewRefreshComplete();
+                getView().dismissProgressDialog();
 
             }
         });
@@ -398,7 +402,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
     public void clickItem(int position, HomeTopModel homeTopModel) {
         try {
             DeviceInfo deviceInfo = homeTopModel.innerAdapter.getData().get(position);
-            Intent intent = new Intent(mContext, MonitorPointDetailActivity.class);
+            Intent intent = new Intent();
+            intent.setClass(mContext, MonitorPointElectricDetailActivity.class);
             intent.putExtra(EXTRA_DEVICE_INFO, deviceInfo);
             intent.putExtra(EXTRA_SENSOR_NAME, deviceInfo.getName());
             intent.putExtra(EXTRA_SENSOR_TYPES, deviceInfo.getSensorTypes());
@@ -453,9 +458,17 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     if (tempAlarmCount == 0 && currentAlarmCount > 0) {
                         needAlarmPlay = true;
                     }
-                    LogUtils.loge("malfunctionCount = " + malfunctionCount);
+                    try {
+                        LogUtils.loge("malfunctionCount = " + malfunctionCount);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     needShowAlarmWindow = currentAlarmCount > tempAlarmCount;
-                    LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
+                    try {
+                        LogUtils.loge("EVENT_DATA_SOCKET_DATA_COUNT-->> tempAlarmCount = " + tempAlarmCount + ",currentAlarmCount = " + currentAlarmCount + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     tempAlarmCount = currentAlarmCount;
                     //
                     mHomeTopModels.clear();
@@ -497,19 +510,31 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             case EVENT_DATA_DEVICE_SOCKET_FLUSH:
                 //TODO
                 needFreshAll = true;
-                LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+                try {
+                    LogUtils.loge("EVENT_DATA_DEVICE_SOCKET_FLUSH --->> 添加、删除、迁移设备");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
             case EVENT_DATA_LOCK_SCREEN_ON:
                 //TODO 暂时不加
                 if (data instanceof Boolean) {
 //                    needFreshAll = (boolean) data;
                 }
-                LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
+                try {
+                    LogUtils.loge("EVENT_DATA_LOCK_SCREEN_ON --->> 手机亮屏");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
             case EVENT_DATA_NET_WORK_CHANGE:
                 //TODO 暂时不加
 //                needFreshAll = true;
-                LogUtils.loge("CONNECTIVITY_ACTION --->> 网络变化 ");
+                try {
+                    LogUtils.loge("CONNECTIVITY_ACTION --->> 网络变化 ");
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 break;
         }
     }
@@ -522,7 +547,11 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                 try {
                     int position = getView().getFirstVisibleItemPosition();
                     requestDataByStatus(mHomeTopModels.get(position));
-                    LogUtils.loge("shoAlarmWindow  position = " + position + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type + ",mCurrentHomeTopModel.value = " + mCurrentHomeTopModel.value);
+                    try {
+                        LogUtils.loge("shoAlarmWindow  position = " + position + ",mCurrentHomeTopModel.type = " + mCurrentHomeTopModel.type + ",mCurrentHomeTopModel.value = " + mCurrentHomeTopModel.value);
+                    } catch (Throwable throwable) {
+                        throwable.printStackTrace();
+                    }
                     if (needShowAlarmWindow && mCurrentHomeTopModel.type != 0) {
                         getView().showAlarmInfoView();
                     }
@@ -563,9 +592,9 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
-                            getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);
                             getView().recycleViewRefreshComplete();
+                            getView().dismissProgressDialog();
                         }
                     });
                     break;
@@ -590,7 +619,6 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                     }).observeOn(AndroidSchedulers.mainThread()).subscribe(new CityObserver<DeviceInfoListRsp>(this) {
                         @Override
                         public void onCompleted(DeviceInfoListRsp deviceInfoListRsp) {
-                            getView().dismissProgressDialog();
                             try {
                                 List<DeviceInfo> data = deviceInfoListRsp.getData();
                                 if (data.size() == 0) {
@@ -600,13 +628,14 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
+                            getView().dismissProgressDialog();
                         }
 
                         @Override
                         public void onErrorMsg(int errorCode, String errorMsg) {
-                            getView().dismissProgressDialog();
                             getView().toastShort(errorMsg);
                             getView().recycleViewRefreshComplete();
+                            getView().dismissProgressDialog();
                         }
                     });
                     break;
@@ -795,8 +824,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+                getView().dismissProgressDialog();
                 getView().dismissAlarmInfoView();
             }
         });
@@ -839,8 +868,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
             public void onCompleted(DeviceAlarmLogRsp deviceAlarmLogRsp) {
 //                getView().dismissProgressDialog();
                 if (deviceAlarmLogRsp.getData().size() == 0) {
-                    getView().dismissProgressDialog();
                     getView().toastShort(mContext.getString(R.string.no_alert_log_information_was_obtained));
+                    getView().dismissProgressDialog();
                 } else {
                     DeviceAlarmLogInfo deviceAlarmLogInfo = deviceAlarmLogRsp.getData().get(0);
                     enterAlarmLogPop(deviceAlarmLogInfo);
@@ -849,8 +878,8 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
 
             @Override
             public void onErrorMsg(int errorCode, String errorMsg) {
-                getView().dismissProgressDialog();
                 getView().toastShort(errorMsg);
+                getView().dismissProgressDialog();
             }
         });
     }
@@ -877,7 +906,7 @@ public class HomeFragmentPresenter extends BasePresenter<IHomeFragmentView> impl
         if (PreferencesHelper.getInstance().getUserData() != null) {
             if (PreferencesHelper.getInstance().getUserData().hasContract) {
                 Intent intent = new Intent(mContext, ContractEditorActivity.class);
-                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE,1);
+                intent.putExtra(Constants.EXTRA_CONTRACT_ORIGIN_TYPE, 1);
                 getView().startAC(intent);
                 return;
             }

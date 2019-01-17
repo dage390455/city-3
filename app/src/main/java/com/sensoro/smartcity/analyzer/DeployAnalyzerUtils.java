@@ -184,6 +184,7 @@ public enum DeployAnalyzerUtils implements Constants {
                 deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.updatedTime = data.getUpdatedTime();
                 deployAnalyzerModel.nameAndAddress = data.getName();
+                deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.deviceType = data.getDeviceType();
                 deployAnalyzerModel.sn = data.getSn();
                 deployAnalyzerModel.blePassword = data.getBlePassword();
@@ -305,6 +306,7 @@ public enum DeployAnalyzerUtils implements Constants {
                             deployAnalyzerModel.deployType = TYPE_SCAN_DEPLOY_STATION;
                             deployAnalyzerModel.sn = deployStationInfo.getSn();
                             deployAnalyzerModel.nameAndAddress = deployStationInfo.getName();
+                            deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
                             List<Double> lonlat = deployStationInfo.getLonlat();
                             deployAnalyzerModel.status = deployStationInfo.getNormalStatus();
                             if (lonlat != null && lonlat.size() > 1 && lonlat.get(0) != 0 && lonlat.get(1) != 0) {
@@ -399,6 +401,7 @@ public enum DeployAnalyzerUtils implements Constants {
                         deployAnalyzerModel.sn = data.getSn();
                         deployAnalyzerModel.deviceType = data.getDeviceType();
                         deployAnalyzerModel.nameAndAddress = data.getName();
+                        deployAnalyzerModel.status = data.getStatus();
                         deployAnalyzerModel.notOwn = data.isNotOwn();
                         deployAnalyzerModel.blePassword = data.getBlePassword();
                         deployAnalyzerModel.signal = data.getSignal();
@@ -474,7 +477,11 @@ public enum DeployAnalyzerUtils implements Constants {
             public void onCompleted(ResponseBase responseBase) {
                 if (responseBase.getErrcode() == 0) {
                     try {
-                        LogUtils.loge("qrcodeId = " + result);
+                        try {
+                            LogUtils.loge("qrcodeId = " + result);
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         Intent intent = new Intent();
                         intent.setClass(activity, ScanLoginResultActivity.class);
                         intent.putExtra("qrcodeId", result);
@@ -599,6 +606,7 @@ public enum DeployAnalyzerUtils implements Constants {
                 DeployDeviceInfo data = deployDeviceDetailRsp.getData();
                 deployAnalyzerModel.deployType = scanType;
                 deployAnalyzerModel.nameAndAddress = data.getName();
+                deployAnalyzerModel.status = data.getStatus();
                 deployAnalyzerModel.deviceType = data.getDeviceType();
                 deployAnalyzerModel.weChatAccount = data.getWxPhone();
                 deployAnalyzerModel.status = data.getStatus();

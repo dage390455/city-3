@@ -339,11 +339,12 @@
         <activity android:name=".activity.DeployMonitorConfigurationActivity" />
         <activity android:name=".activity.DeployMapENActivity" />
         <activity android:name=".activity.MonitorPointMapENActivity" />
+        <activity android:name=".activity.MonitorPointElectricDetailActivity" />
+        <activity android:name=".activity.EarlyWarningThresholdSettingActivity" />
         <activity android:name=".activity.ContractEditorActivity" />
         <activity android:name=".activity.ContractCreationSuccessActivity" />
         <activity android:name=".activity.ContractDetailActivity" />
         <activity android:name=".activity.ContractPreviewActivity" />
-
         <provider
             android:name=".widget.imagepicker.ImagePickerProvider"
             android:authorities="${applicationId}.provider"

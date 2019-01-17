@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.text.TextUtils;
+import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.sensoro.smartcity.R;
@@ -245,8 +246,8 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
         getView().setSelectedDateLayoutVisible(true);
         startTime = DateUtil.strToDate(startDate).getTime();
         endTime = DateUtil.strToDate(endDate).getTime();
-        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-                .getMothDayFormatDate(endTime));
+        getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
+                .getCalendarYearMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         getView().showProgressDialog();
         RetrofitServiceHelper.INSTANCE.getDeviceAlarmLogList(1, null, null, null, tempSearch, startTime, endTime,
@@ -435,7 +436,6 @@ public class WarnFragmentPresenter extends BasePresenter<IWarnFragmentView> impl
             temp_startTime = startTime;
             temp_endTime = endTime;
         }
-
         mCalendarPopUtils.show(fgMainWarnTitleRoot, temp_startTime, temp_endTime);
 
 

@@ -14,7 +14,6 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.annotation.RequiresApi;
 import android.support.v4.app.NotificationCompat;
-import android.support.v4.app.NotificationManagerCompat;
 
 import com.sensoro.smartcity.R;
 import com.sensoro.smartcity.activity.MainActivity;
@@ -118,12 +117,20 @@ public class NotificationUtils extends ContextWrapper {
                     (content).build();
             getManager().notify(noID++, notification);
             notification.flags = Notification.FLAG_AUTO_CANCEL;
-            LogUtils.loge("sendNotification -->> " + noID);
+            try {
+                LogUtils.loge("sendNotification -->> " + noID);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         } else {
             Notification notification = getNotification_25(content).build();
             notification.flags = Notification.FLAG_AUTO_CANCEL;
             getManager().notify(noID++, notification);
-            LogUtils.loge("sendNotification -->> " + noID);
+            try {
+                LogUtils.loge("sendNotification -->> " + noID);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
         }
     }
 

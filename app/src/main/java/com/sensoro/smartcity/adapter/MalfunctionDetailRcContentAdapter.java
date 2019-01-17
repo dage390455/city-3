@@ -61,14 +61,17 @@ public class MalfunctionDetailRcContentAdapter extends RecyclerView.Adapter<Malf
                 holder.itemMalfunctionDetailContentImvIcon.setImageResource(R.drawable.smoke_icon);
                 holder.itemMalfunctionDetailContentTvTime.setText(DateUtil.getStrTimeToday(mContext, recordsBean.getUpdatedTime(), 0));
                 holder.llConfirm.setVisibility(View.VISIBLE);
-//                recordsBean.getMalfunctionText()
-                String malfunctionType = recordsBean.getMalfunctionType();
-                if (!TextUtils.isEmpty(malfunctionType)) {
-                    MalfunctionTypeStyles malfunctionTypeStyles = PreferencesHelper.getInstance().getConfigMalfunctionSubTypes(malfunctionType);
+                String subFunctionType = recordsBean.getMalfunctionSubType();
+                if (!TextUtils.isEmpty(subFunctionType)) {
+                    MalfunctionTypeStyles malfunctionTypeStyles = PreferencesHelper.getInstance().getConfigMalfunctionSubTypes(subFunctionType);
                     if (malfunctionTypeStyles != null) {
                         String name = malfunctionTypeStyles.getName();
                         if (!TextUtils.isEmpty(name)) {
-                            LogUtils.loge("malfunctionType = " + malfunctionType);
+                            try {
+                                LogUtils.loge("subFunctionType = " + subFunctionType);
+                            } catch (Throwable throwable) {
+                                throwable.printStackTrace();
+                            }
                             holder.itemMalfunctionDetailChildMalfunctionCause.setText(name);
                             break;
                         }

@@ -28,7 +28,7 @@
             app:current_month_text_color="@color/c_252525"
             app:day_text_size="14sp"
             app:max_select_range="-1"
-            app:min_select_range="3"
+            app:min_select_range="-1"
             app:min_year="2004"
             app:month_view="com.sensoro.smartcity.calendarview.customview.CustomRangeMonthView"
             app:month_view_show_mode="mode_only_current"

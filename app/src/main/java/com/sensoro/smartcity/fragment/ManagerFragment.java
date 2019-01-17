@@ -107,7 +107,7 @@ public class ManagerFragment extends BaseFragment<IManagerFragmentView, ManagerF
 
     private void initVersionDialog() {
         mVersionDialog = new VersionDialogUtils(mRootFragment.getActivity());
-        mVersionDialog.setTipMessageText(mRootFragment.getString(R.string.version_tip_text)+"  " + AppUtils.getVersionName(mRootFragment.getActivity()));
+        mVersionDialog.setTipMessageText(mRootFragment.getString(R.string.version_tip_text) + "  " + AppUtils.getVersionName(mRootFragment.getActivity()));
         mVersionDialog.setTipCacnleText(mRootFragment.getString(R.string.ok), mRootFragment.getActivity().getResources().getColor(R.color.c_a6a6a6));
         mVersionDialog.setVersionDialogUtilsClickListener(this);
     }

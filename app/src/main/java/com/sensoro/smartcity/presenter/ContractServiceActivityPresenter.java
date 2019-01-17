@@ -27,7 +27,6 @@ import com.sensoro.smartcity.server.CityObserver;
 import com.sensoro.smartcity.server.RetrofitServiceHelper;
 import com.sensoro.smartcity.server.bean.ContractsTemplateInfo;
 import com.sensoro.smartcity.server.response.ContractsTemplateRsp;
-import com.sensoro.smartcity.server.response.ResponseBase;
 import com.sensoro.smartcity.util.FileUtil;
 import com.sensoro.smartcity.util.LogUtils;
 import com.sensoro.smartcity.util.RegexUtils;
@@ -648,7 +647,11 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                                             line4 = words_result证件编号.getWords();
                                         }
                                     }
-                                    LogUtils.loge(this, businessLicenseData.toString());
+                                    try {
+                                        LogUtils.loge(this, businessLicenseData.toString());
+                                    } catch (Throwable throwable) {
+                                        throwable.printStackTrace();
+                                    }
                                 } catch (Exception e) {
                                     e.printStackTrace();
                                 }
@@ -705,7 +708,11 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                 line4 = "无";
                 try {
                     if (result != null) {
-                        LogUtils.loge(this, result.toString());
+                        try {
+                            LogUtils.loge(this, result.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                         Word resultName = result.getName();
                         if (resultName != null) {
                             line1 = resultName.getWords();
@@ -722,7 +729,11 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
                         if (resultAddress != null) {
                             line4 = resultAddress.getWords();
                         }
-                        LogUtils.loge(this, result.toString());
+                        try {
+                            LogUtils.loge(this, result.toString());
+                        } catch (Throwable throwable) {
+                            throwable.printStackTrace();
+                        }
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -735,7 +746,11 @@ public class ContractServiceActivityPresenter extends BasePresenter<IContractSer
             public void onError(OCRError error) {
                 getView().dismissProgressDialog();
                 getView().toastShort(mContext.getString(R.string.identification_number_failed) + error.getMessage());
-                LogUtils.loge(this, error.getMessage());
+                try {
+                    LogUtils.loge(this, error.getMessage());
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
             }
         });
     }

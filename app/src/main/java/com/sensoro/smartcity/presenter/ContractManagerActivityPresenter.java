@@ -508,8 +508,8 @@ public class ContractManagerActivityPresenter extends BasePresenter<IContractMan
         getView().setSelectedDateLayoutVisible(true);
         startTime = DateUtil.strToDate(startDate).getTime();
         endTime = DateUtil.strToDate(endDate).getTime();
-        getView().setSelectedDateSearchText(DateUtil.getMothDayFormatDate(startTime) + "-" + DateUtil
-                .getMothDayFormatDate(endTime));
+        getView().setSelectedDateSearchText(DateUtil.getCalendarYearMothDayFormatDate(startTime) + " ~ " + DateUtil
+                .getCalendarYearMothDayFormatDate(endTime));
         endTime += 1000 * 60 * 60 * 24;
         refreshData(DIRECTION_DOWN);
 

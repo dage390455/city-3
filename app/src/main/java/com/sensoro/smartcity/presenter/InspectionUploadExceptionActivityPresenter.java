@@ -313,7 +313,11 @@ public class InspectionUploadExceptionActivityPresenter extends BasePresenter<II
         for (ScenesData scenesData : scenesDataList) {
             s.append(scenesData.url).append("\n");
         }
-        LogUtils.loge(this, "上传成功---" + s);
+        try {
+            LogUtils.loge(this, "上传成功---" + s);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (isAttachedView()) {
             getView().dismissUploadProgressDialog();
 //        toastShort("上传成功---");

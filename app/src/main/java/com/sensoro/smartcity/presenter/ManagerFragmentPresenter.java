@@ -116,7 +116,11 @@ public class ManagerFragmentPresenter extends BasePresenter<IManagerFragmentView
         }
         int versionCode = upgradeInfo.versionCode;
         int currentVersionCode = AppUtils.getVersionCode(mContext);
-        LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
+        try {
+            LogUtils.loge("versionCode = " + versionCode + ",currentVersionCode = " + currentVersionCode);
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         return currentVersionCode != 0 && versionCode > currentVersionCode;
     }
 

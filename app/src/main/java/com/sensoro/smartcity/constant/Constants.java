@@ -154,7 +154,7 @@ public interface Constants {
 
     int[] confirmAlarmResultInfoArray = {R.string.text_fire_alarm_empty, R.string.text_fire_alarm, R.string.text_no_fire_alarm, R.string.text_fire_alarm_test,
             R.string.text_fire_alarm_risk};
-    int[] confirmAlarmTypeArray = {R.string.the_ohter, R.string.alarm_type_bnormal_power, R.string.alarm_type_production_operation, R.string.alarm_type_smoke, R.string.alarm_type_indoor_fire, R.string.alarm_type_cooking, R.string.alarm_type_gas_leak, R.string.alarm_type_artificial_arson};
+    int[] confirmAlarmTypeArray = {R.string.the_ohter, R.string.alarm_type_bnormal_power, R.string.alarm_type_production_operation, R.string.alarm_type_smoke, R.string.alarm_type_indoor_fire, R.string.alarm_type_cooking, R.string.alarm_type_gas_leak, R.string.alarm_type_artificial_arson, R.string.alarm_type_combustible_self_ignition};
     //    private final String[] confirmAlarmPlaceArray = {"其他", "小区", "工厂", "居民作坊", "仓库", "商铺店面", "商场", "出租房",};
     int[] confirmAlarmPlaceArray = {R.string.the_ohter, R.string.community, R.string.factory, R.string.resident_workshop, R.string.warehouse, R.string.shop_storefront, R.string.the_mall, R.string.rental_house};
 //    String[] WEEK_TITLE_ARRAY = {"星期一", "星期二", "星期三", "星期四", "星期五", "星期六", "星期日"};
@@ -225,6 +225,7 @@ public interface Constants {
     String EXTRA_SETTING_WE_CHAT_RELATION = "extra_setting_we_chat_relation";
     String EXTRA_SETTING_CONTACT = "extra_setting_contact";
     String EXTRA_SETTING_DEPLOY_CONTACT = "extra_setting_deploy_contact";
+    String EXTRA_SETTING_DEPLOY_DEVICE_TYPE = "extra_setting_deploy_device_type";
     String EXTRA_SETTING_CONTENT = "extra_setting_content";
     String EXTRA_SETTING_INDEX = "extra_setting_index";
     String EXTRA_SETTING_TAG_LIST = "extra_tag_list";
@@ -323,8 +324,6 @@ public interface Constants {
     int REQUEST_CODE_INIT_CONFIG = 0x114;
 
 
-
-
     //上传图片相关id
     int IMAGE_ITEM_ADD = -1;
     int REQUEST_CODE_PREVIEW = 0x101;
@@ -402,11 +401,12 @@ public interface Constants {
         add("lpg");
     }};
 
-    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(2) {
+    ArrayList<String> DEVICE_CONTROL_DEVICE_TYPES = new ArrayList<String>(3) {
         {
             add("fhsj_elec_fires");
             add("acrel_fires");
             add("acrel_single");
+            add("mantun_fires");
         }
     };
     int[] MONTHS = {R.string.january,R.string.february,R.string.march,R.string.april,R.string.may,R.string.june

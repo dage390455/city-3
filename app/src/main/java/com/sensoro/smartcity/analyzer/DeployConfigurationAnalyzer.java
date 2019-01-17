@@ -3,6 +3,7 @@ package com.sensoro.smartcity.analyzer;
 import android.text.TextUtils;
 
 import com.sensoro.libbleserver.ble.SensoroDevice;
+import com.sensoro.libbleserver.ble.SensoroMantunData;
 import com.sensoro.libbleserver.ble.SensoroSensor;
 
 import java.util.Random;
@@ -35,6 +36,11 @@ public class DeployConfigurationAnalyzer {
                 result[0] = 12;
                 result[1] = 84;
                 break;
+            case "mantun_fires":
+                //慢炖空开
+                result[0] = 0;
+                result[1] = 80;
+                break;
         }
         return result;
 
@@ -57,6 +63,10 @@ public class DeployConfigurationAnalyzer {
                 //安科瑞单相电
                 configAcrelSingle(sensoroDevice.getSensoroSensorTest(), enterValue);
                 break;
+            case "mantun_fires":
+                //慢炖空开
+                configMantunFires(sensoroDevice.getSensoroSensorTest(), enterValue);
+                break;
             default:
                 sensoroDevice = null;
                 break;
@@ -76,7 +86,7 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.t1Th = 80;//A项线温度
         sensoroSensor.acrelFires.t2Th = 80;//B项线温度
         sensoroSensor.acrelFires.t3Th = 80;//C项线温度
-        sensoroSensor.acrelFires.t4Th = 80;//箱体温度
+        sensoroSensor.acrelFires.t4Th = 60;//箱体温度
         sensoroSensor.acrelFires.valHighSet = 1200;
         sensoroSensor.acrelFires.valLowSet = 800;
         sensoroSensor.acrelFires.currHighSet = 1000 * value / dev;
@@ -133,5 +143,15 @@ public class DeployConfigurationAnalyzer {
         sensoroSensor.acrelFires.ct = 1;
         sensoroSensor.acrelFires.cmd = 2;
         sensoroSensor.acrelFires.currHighType = 1;
+    }
+
+    private static void configMantunFires(SensoroSensor sensoroSensor, int value) {
+        if (sensoroSensor.mantunDatas != null && sensoroSensor.mantunDatas.size() > 0) {
+            for (SensoroMantunData mantunData : sensoroSensor.mantunDatas) {
+                mantunData.id = 0; //现阶段只有一组，所以id为0，如果多组，则依次赋值
+                mantunData.currentTh = value; //过流
+                mantunData.powerTh = value * 220; //过载
+            }
+        }
     }
 }

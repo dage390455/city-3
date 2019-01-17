@@ -7,20 +7,20 @@ import com.sensoro.smartcity.BuildConfig;
 public class LogUtils {
     private static boolean isShowLog = BuildConfig.DEBUG;
     private static String TAG = "sensoro_log";
-
-    public static void loge(String msg) {
+    //防止异常
+    public static void loge(String msg) throws Throwable {
         if (isShowLog) {
             e(TAG, msg);
         }
     }
 
-    public static void logd(String msg) {
+    public static void logd(String msg) throws Throwable {
         if (isShowLog) {
             d(TAG, msg);
         }
     }
 
-    public static void loge(Object o, String msg) {
+    public static void loge(Object o, String msg) throws Throwable {
 
         if (isShowLog) {
             if (o instanceof String) {
@@ -32,7 +32,7 @@ public class LogUtils {
         }
     }
 
-    public static void logd(Object o, String msg) {
+    public static void logd(Object o, String msg) throws Throwable {
         if (isShowLog) {
             if (o instanceof String) {
                 d((String) o, msg);

@@ -55,7 +55,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
         ButterKnife.bind(this);
         initView();
         mPresenter.initData(mActivity);
-        initCreateContractDilog();
+        initCreateContractDialog();
     }
 
     private void initView() {
@@ -66,11 +66,11 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
 
     }
 
-    private void initCreateContractDilog() {
+    private void initCreateContractDialog() {
         mCreateContractDialog = new TipOperationDialogUtils(mActivity, true);
         mCreateContractDialog.setTipTitleText(mActivity.getString(R.string.create_contract));
         mCreateContractDialog.setTipMessageText(mActivity.getString(R.string.create_contract_tip_message));
-        mCreateContractDialog.setTipCacnleText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
+        mCreateContractDialog.setTipCancelText(mActivity.getString(R.string.cancel), mActivity.getResources().getColor(R.color.c_a6a6a6));
         mCreateContractDialog.setTipConfirmText(mActivity.getString(R.string.dialog_input_confirm), mActivity.getResources().getColor(R.color.c_29c093));
         mCreateContractDialog.setTipDialogUtilsClickListener(this);
     }
@@ -224,7 +224,7 @@ public class ContractEditorActivity extends BaseActivity<IContractEditorView, Co
     }
 
     @Override
-    public void onConfirmClick(String content) {
+    public void onConfirmClick(String content, String diameter) {
         mCreateContractDialog.dismiss();
         if (mDialogOrigin == 1) {
             mPersonalContractFragment.doCreateContract();

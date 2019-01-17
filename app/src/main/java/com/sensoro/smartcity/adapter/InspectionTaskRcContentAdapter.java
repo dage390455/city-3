@@ -84,14 +84,22 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
 
     @Override
     public void onBindViewHolder(@NonNull InspectionTaskRcContentHolder holder, int position, @NonNull List<Object> payloads) {
-        LogUtils.loge(this, "onBindViewHolder-->>> payloads.size = " + payloads.size());
+        try {
+            LogUtils.loge(this, "onBindViewHolder-->>> payloads.size = " + payloads.size());
+        } catch (Throwable throwable) {
+            throwable.printStackTrace();
+        }
         if (payloads.isEmpty()) {
             super.onBindViewHolder(holder, position, payloads);
         } else {
             HashMap map = (HashMap) payloads.get(0);
             Integer status = (Integer) map.get("status");
             if (status != null) {
-                LogUtils.loge(this, "status change -->> " + status);
+                try {
+                    LogUtils.loge(this, "status change -->> " + status);
+                } catch (Throwable throwable) {
+                    throwable.printStackTrace();
+                }
                 setStatus(holder, status);
             }
             Boolean bNear = (Boolean) map.get("bNear");
@@ -102,7 +110,11 @@ public class InspectionTaskRcContentAdapter extends RecyclerView.Adapter<Inspect
             if (!TextUtils.isEmpty(name)) {
                 setName(holder, name);
             }
-            LogUtils.loge(this, "onBindViewHolder-->>> status = " + status + ",bNear = " + bNear + ",name = " + name);
+            try {
+                LogUtils.loge(this, "onBindViewHolder-->>> status = " + status + ",bNear = " + bNear + ",name = " + name);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             setListener(holder, position);
         }
     }

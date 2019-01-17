@@ -39,7 +39,11 @@ public class BleObserver implements BLEDeviceListener<BLEDevice> {
     @Override
     public void onNewDevice(BLEDevice bleDevice) {
         if (bleDevice != null) {
-            LogUtils.loge("BleObserver-->> onNewDevice = " + bleDevice.getSn());
+            try {
+                LogUtils.loge("BleObserver-->> onNewDevice = " + bleDevice.getSn());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             if (!hashSet.isEmpty()) {
                 for (BLEDeviceListener<BLEDevice> bleDeviceListener : hashSet) {
                     bleDeviceListener.onNewDevice(bleDevice);
@@ -52,7 +56,11 @@ public class BleObserver implements BLEDeviceListener<BLEDevice> {
     @Override
     public void onGoneDevice(BLEDevice bleDevice) {
         if (bleDevice != null) {
-            LogUtils.loge("BleObserver-->> onGoneDevice = " + bleDevice.getSn());
+            try {
+                LogUtils.loge("BleObserver-->> onGoneDevice = " + bleDevice.getSn());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             if (!hashSet.isEmpty()) {
                 for (BLEDeviceListener<BLEDevice> bleDeviceListener : hashSet) {
                     bleDeviceListener.onGoneDevice(bleDevice);
@@ -65,7 +73,11 @@ public class BleObserver implements BLEDeviceListener<BLEDevice> {
     @Override
     public void onUpdateDevices(ArrayList<BLEDevice> deviceList) {
         if (deviceList != null && deviceList.size() > 0) {
-            LogUtils.loge("BleObserver-->> onUpdateDevices.size() = " + deviceList.size());
+            try {
+                LogUtils.loge("BleObserver-->> onUpdateDevices.size() = " + deviceList.size());
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
             if (!hashSet.isEmpty()) {
                 for (BLEDeviceListener<BLEDevice> bleDeviceListener : hashSet) {
                     bleDeviceListener.onUpdateDevices(deviceList);

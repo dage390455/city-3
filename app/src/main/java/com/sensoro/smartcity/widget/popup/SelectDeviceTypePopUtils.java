@@ -64,7 +64,6 @@ public class SelectDeviceTypePopUtils {
             @Override
             public void onItemClick(View view, int position) {
                 listener.onSelectDeviceTypeItemClick(view, position, mTypeSelectAdapter.getItem(position));
-
             }
         });
 

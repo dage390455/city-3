@@ -5,6 +5,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v4.util.Pair;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +38,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarView.OnDaySelectObserver
-        ,*/
+public class CalendarPopUtils implements
         CalendarView.OnCalendarRangeSelectListener, Constants, PopupWindow.OnDismissListener, CalendarView.OnMonthChangeListener {
 
     @BindView(R.id.ac_calendar_ll_start_month)
@@ -171,6 +171,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
         try {
             if (startTime == -1 || endTime == -1) {
                 calendarView.setSelectedCalendar(calendarView.getCurYear(),calendarView.getCurMonth(),calendarView.getCurDay(),true);
+                return;
             }
 
             endTime -= 1000 * 60 * 60 * 24;
@@ -253,30 +254,30 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
 
     }
 
-    @Override
-    public void onDayRangeSelected(Pair<Day, Day> days) {
-        try {
-            isMultiple = true;
-            Calendar calendarFirst = days.first.getCalendar();
-            Calendar calendarEnd = days.second.getCalendar();
-            int firstMonth = calendarFirst.get(Calendar.MONTH) + 1;
-            int endMonth = calendarEnd.get(Calendar.MONTH) + 1;
-            startDate = calendarFirst.get(Calendar.YEAR) + "/" + firstMonth + "/" + calendarFirst.get
-                    (Calendar.DAY_OF_MONTH);
-            endDate = calendarEnd.get(Calendar.YEAR) + "/" + endMonth + "/" + calendarEnd.get(Calendar
-                    .DAY_OF_MONTH);
-            String temp_startDate = calendarFirst.get(Calendar.YEAR) + "-" + firstMonth + "-" + calendarFirst
-                    .get(Calendar.DAY_OF_MONTH);
-            String temp_endDate = calendarEnd.get(Calendar.YEAR) + "-" + endMonth + "-" + calendarEnd.get
-                    (Calendar.DAY_OF_MONTH);
-            setStartDate(firstMonth + "." + calendarFirst.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
-            setEndDate(endMonth + "." + calendarEnd.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-    }
+//    @Override
+//    public void onDayRangeSelected(Pair<Day, Day> days) {
+//        try {
+//            isMultiple = true;
+//            Calendar calendarFirst = days.first.getCalendar();
+//            Calendar calendarEnd = days.second.getCalendar();
+//            int firstMonth = calendarFirst.get(Calendar.MONTH) + 1;
+//            int endMonth = calendarEnd.get(Calendar.MONTH) + 1;
+//            startDate = calendarFirst.get(Calendar.YEAR) + "/" + firstMonth + "/" + calendarFirst.get
+//                    (Calendar.DAY_OF_MONTH);
+//            endDate = calendarEnd.get(Calendar.YEAR) + "/" + endMonth + "/" + calendarEnd.get(Calendar
+//                    .DAY_OF_MONTH);
+//            String temp_startDate = calendarFirst.get(Calendar.YEAR) + "-" + firstMonth + "-" + calendarFirst
+//                    .get(Calendar.DAY_OF_MONTH);
+//            String temp_endDate = calendarEnd.get(Calendar.YEAR) + "-" + endMonth + "-" + calendarEnd.get
+//                    (Calendar.DAY_OF_MONTH);
+//            setStartDate(firstMonth + "." + calendarFirst.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
+//            setEndDate(endMonth + "." + calendarEnd.get(Calendar.DAY_OF_MONTH), calendarFirst.get(Calendar.YEAR) + "");
+//
+//        } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+//
+//    }
 
     private void setEndDate(String monthDay, String year) {
         acCalendarLlEndMonth.setVisibility(View.VISIBLE);
@@ -340,6 +341,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
 
     @Override
     public void onCalendarRangeSelect(com.sensoro.smartcity.calendarview.Calendar calendar, boolean isEnd) {
+
         if (isEnd) {
             endDate = calendar.getYear() + "/" + calendar.getMonth() + "/" + calendar.getDay();
             setEndDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
@@ -348,6 +350,7 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
             endDate = startDate;
             setStartDate(calendar.getMonth() + "." + calendar.getDay(), String.valueOf(calendar.getYear()));
         }
+        Log.e("hcs","start:::"+startDate+"end"+endDate);
     }
 
     @Override
