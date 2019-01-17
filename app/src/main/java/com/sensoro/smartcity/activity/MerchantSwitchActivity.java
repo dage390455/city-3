@@ -50,21 +50,27 @@ import static com.sensoro.smartcity.constant.Constants.DIRECTION_UP;
 
 public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivityView, MerchantSwitchActivityPresenter> implements IMerchantSwitchActivityView
         , View.OnClickListener, AbsListView.OnScrollListener, AdapterView.OnItemClickListener {
-    private ListView mPullListView;
-    private ImageView mMenuListImageView;
-    private View seperatorView;
-    private View seperatorBottomView;
-    private TextView mCurrentNameTextView;
-    private TextView mCurrentPhoneTextView;
-    private ImageView mCurrentStatusImageView;
-    private MerchantAdapter mMerchantAdapter;
-    private RelativeLayout rlTitleAccount;
-    private ImageView mReturnTopImageView;
+    @BindView(R.id.fragment_merchant_list)
+    ListView mPullListView;
+    @BindView(R.id.merchant_iv_menu_list)
+    ImageView mMenuListImageView;
+    @BindView(R.id.merchant_list_sep)
+    View seperatorView;
+    @BindView(R.id.merchant_list_bottom_sep)
+    View seperatorBottomView;
+    @BindView(R.id.merchant_current_name)
+    TextView mCurrentNameTextView;
+    @BindView(R.id.merchant_current_phone)
+    TextView mCurrentPhoneTextView;
+    @BindView(R.id.merchant_current_status)
+    ImageView mCurrentStatusImageView;
+    @BindView(R.id.rl_title_account)
+    RelativeLayout rlTitleAccount;
+    @BindView(R.id.merchant_return_top)
+    ImageView mReturnTopImageView;
     //
-    private ProgressUtils mProgressUtils;
-    private boolean isShowDialog = true;
-    private SmartRefreshLayout refreshLayout;
-
+    @BindView(R.id.refreshLayout)
+    SmartRefreshLayout refreshLayout;
     @BindView(R.id.rv_search_history)
     RecyclerView rvSearchHistory;
     @BindView(R.id.btn_search_clear)
@@ -85,8 +91,11 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     LinearLayout merchantLlListRoot;
     @BindView(R.id.merchant_tv_cancel)
     TextView merchantTvCancel;
-    private SearchHistoryAdapter mSearchHistoryAdapter;
 
+    private ProgressUtils mProgressUtils;
+    private boolean isShowDialog = true;
+    private SearchHistoryAdapter mSearchHistoryAdapter;
+    private MerchantAdapter mMerchantAdapter;
     @Override
     protected void onDestroy() {
         if (mProgressUtils != null) {
@@ -97,20 +106,9 @@ public class MerchantSwitchActivity extends BaseActivity<IMerchantSwitchActivity
     }
 
     private void initView() {
-        mReturnTopImageView = (ImageView) findViewById(R.id.merchant_return_top);
         mReturnTopImageView.setOnClickListener(this);
-        mMenuListImageView = (ImageView) findViewById(R.id.merchant_iv_menu_list);
         mMenuListImageView.setOnClickListener(this);
-        mCurrentNameTextView = (TextView) findViewById(R.id.merchant_current_name);
-        mCurrentPhoneTextView = (TextView) findViewById(R.id.merchant_current_phone);
-        mCurrentStatusImageView = (ImageView) findViewById(R.id.merchant_current_status);
-        seperatorView = findViewById(R.id.merchant_list_sep);
-        seperatorBottomView = findViewById(R.id.merchant_list_bottom_sep);
-        rlTitleAccount = (RelativeLayout) findViewById(R.id.rl_title_account);
-        refreshLayout = findViewById(R.id.refreshLayout);
-
         mProgressUtils = new ProgressUtils(new ProgressUtils.Builder(mActivity).build());
-        mPullListView = findViewById(R.id.fragment_merchant_list);
         refreshLayout.setEnableAutoLoadMore(false);//开启自动加载功能（非必须）
         refreshLayout.setOnRefreshListener(new OnRefreshListener() {
             @Override
