@@ -106,6 +106,8 @@ public class CalendarPopUtils implements OnDayRangeSelectedListener, /*CalendarV
         mPopupWindow.setOutsideTouchable(true);
         mPopupWindow.setFocusable(true);
 //        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
+        mPopupWindow.setBackgroundDrawable(new ColorDrawable(mActivity.getResources().getColor(R.color.c_B3000000)));
+        mPopupWindow.setAnimationStyle(R.style.DialogFragmentDropDownAnim);
         initView();
         mPopupWindow.setContentView(view);
 
